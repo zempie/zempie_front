@@ -1,0 +1,413 @@
+<template>
+  <!-- 상단영역 -->
+  <div class="header">
+    <dl>
+      <dt>
+        <div class="header-logo-menu">
+          <p>
+            <NuxtLink to="/">
+              <img src="~/assets/images/zempie-logo-black.png" />
+            </NuxtLink>
+          </p>
+          <ul class="menu">
+            <li class="uppercase">
+              <NuxtLink to="/"> community </NuxtLink>
+            </li>
+            <li class="uppercase">
+              <NuxtLink to="/"> games </NuxtLink>
+            </li>
+            <li class="uppercase">
+              <NuxtLink to="/"> ZEMJAM </NuxtLink>
+            </li>
+            isLogin{{
+              isLogin
+            }}
+            <!--
+            <li>
+              <router-link
+                to="/community-list"
+                :class="$route.name === 'CommunityList' ? 'active' : ''"
+              >
+                COMMUNITY
+              </router-link>
+            </li>
+            <li>
+              <router-link
+                to="/game-list"
+                :class="$route.name === 'GameList' ? 'active' : ''"
+                >GAMES
+              </router-link>
+            </li>
+            <li>
+              <router-link
+                to="/zem-jam"
+                :class="$route.name === 'zemJam' ? 'active' : ''"
+                >ZEMJAM
+              </router-link>
+            </li>-->
+          </ul>
+        </div>
+      </dt>
+
+      <dd>
+        <div class="header-search">
+          <div class="input-search-line">
+            <i class="uil uil-search"></i>
+            <div>
+              <input
+                type="text"
+                name=""
+                title="keywords"
+                :placeholder="`${i18n.t('needSearchInput')}`"
+                v-model="searchInput"
+              />
+              <!-- @keyup.enter="moveSearchPage"
+                                   v-debounce:150ms="searchType" -->
+            </div>
+          </div>
+        </div>
+        <div class="header-language">
+          <v-select
+            class="hl-select-box"
+            :options="options"
+            :placeholder="i18n.t('korean')"
+            :reduce="(option) => option.code"
+            label="label"
+            @input="setSelectedLang"
+            v-model="selectedLang"
+          >
+            <template #open-indicator="{ attributes }">
+              <span v-bind="attributes"
+                ><i class="uil uil-angle-down" style="font-size: 20px"></i
+              ></span>
+            </template>
+          </v-select>
+        </div>
+
+        <!-- 로그인 했을 때 -->
+        <div class="header-info" v-if="isLogin">
+          logout
+          <!--            <button class="btn-circle-icon" @click="isOpenMessage = !isOpenMessage">-->
+          <!--              <i class="uil uil-comment-alt"></i>-->
+          <!--              <span></span>-->
+          <!--            </button>-->
+          <!--            -->
+          <!--            <button class="btn-circle-icon ml10" @click="isOpenMessage = !isOpenMessage">-->
+          <!--              <i class="uil uil-bell"></i>-->
+          <!--              <span></span>-->
+          <!--            </button>-->
+
+          <!-- <button class="btn-circle-none ml5" @click="isOpenSetting = !isOpenSetting">
+                            <i class="uil uil-setting"></i>
+                        </button> -->
+          <!-- </div> -->
+          <!--                    <div class="header-login" v-else>-->
+          <!--                        <button class="btn-default" @click="login"><i class="uil uil-user"></i>{{ t('login') }}</button>-->
+          <!--                    </div>-->
+
+          <!-- 모바일 - 우측버튼 -->
+          <!-- <div class="header-info-mobile" v-if="$store.getters.user"> -->
+          <!--                    <button class="btn-none" @click="isOpenMessage = !isOpenMessage">-->
+          <!--                        <i class="uil uil-comment" style="font-size:21px;"></i>-->
+          <!--                        <span></span>-->
+          <!--                    </button>-->
+          <!--                    <button class="btn-none" @click="isOpenMessage = !isOpenMessage">-->
+          <!--                        <i class="uil uil-bell" style="font-size:23px;"></i>-->
+          <!--                        <span></span>-->
+          <!--                    </button>-->
+          <!-- <button class="btn-none" @click="isOpenSetting = !isOpenSetting">
+                            <i class="uil uil-setting"></i>
+                        </button> -->
+          <!-- </div> -->
+          <!--                    <div class="header-login" v-else>-->
+          <!--                        <button class="btn-default" @click="login"><i class="uil uil-user"></i>{{ t('login') }}</button>-->
+          <!--                    </div>-->
+          <!-- 모바일 - 우측버튼 끝 -->
+          <!-- 모바일 - 좌측영역 -->
+          <!-- <div class="header-side-mobile" :style="isHeaderSideMobile ? 'left:0px;' : '' "
+                         id="headerSideMobile">
+                        <div class="hsm-close"><i class="uil uil-times" v-on:click="headerSideCloseMobile"></i></div>
+                        <div class="hsm-search">
+                            <div class="input-search-line-mobile" @click="isOpenSearch = !isOpenSearch">
+                                <p><i class="uil uil-search"></i>
+                                <p>
+                                <div><input type="text" name="" title="keywords"
+                                            :placeholder="t('needSearchInput')"/></div>
+                            </div>
+                        </div>
+                        <div class="hsm-menu">
+                            <router-link :to="`/${$i18n.locale}/communityList`" @click.native="headerSideCloseMobile"><i class="uil uil-comment"></i>
+                                Community
+                            </router-link>
+                            <router-link :to="`/${$i18n.locale}/gameList`" @click.native="headerSideCloseMobile"><i class="uil uil-robot"></i> Games
+                            </router-link>
+                            <router-link :to="`/${$i18n.locale}/zem-jam`" @click.native="headerSideCloseMobile"><i class="uil uil-comment"></i>
+                                ZEMJAM
+                            </router-link>
+                        </div>
+
+                    </div>
+                    <div class="header-side-bg-mobile" :style="isHeaderSideBgMobile ? 'display:block;' : '' "
+                         id="headerSideBgMobile" v-on:click="headerSideCloseMobile">
+                        &nbsp;-->
+        </div>
+        <!-- 모바일 - 좌측영역 끝 -->
+        <!-- 로그인 했을 때 끝 -->
+        <!-- 로그인 안했을 때 -->
+        <div class="header-login" v-else>
+          <NuxtLink to="/login">
+            <button flat class="btn-default">
+              <i class="uil uil-user"></i>{{ i18n.t('login') }}
+            </button>
+          </NuxtLink>
+        </div>
+        <!-- 로그인 안했을 때 끝 -->
+
+        <!--          <div class="header-info-mobile">-->
+        <!--            <button class="btn-none" @click="isOpenMessage = !isOpenMessage">-->
+        <!--              <i class="uil uil-comment"></i>-->
+        <!--              <span></span>-->
+        <!--            </button>-->
+        <!--            <button class="btn-none" @click="isOpenMessage = !isOpenMessage">-->
+        <!--              <i class="uil uil-bell"></i>-->
+        <!--              <span></span>-->
+        <!--            </button>-->
+        <!--            <button class="btn-none" @click="isOpenSetting = !isOpenSetting">-->
+        <!--              <i class="uil uil-setting"></i>-->
+        <!--            </button>-->
+        <!--          </div>-->
+
+        <!-- <div class="header-search-mobile">
+                  <div class="input-search" @click="isOpenSearch = !isOpenSearch">
+                    <p><i class="uil uil-search"></i><p>
+                    <div><input type="text" name="" title="keywords" placeholder="검색어를 입력하세요." /></div>
+                  </div>
+                </div> -->
+
+        <!-- 검색 리스트 -->
+        <!-- <template v-if="searchInput.length > 0">
+                    <dropdown-menu :isOpen="isOpenSearch" @closed="isOpenSearch = false" :overlay="false"
+                                   class="header-search-dropdown">
+
+                        <div slot="body" class="header-search-list">
+                            <div>
+                                <template v-if="userList && userList.length > 0">
+                                    <h2>{{ t('user.name') }}</h2>
+                                    <div v-for="user in userList"
+                                         :key="user.id"
+                                         @click="userPage(user.channel_id)">
+                                        <dl>
+                                            <dt>
+                                                <UserAvatar :user="user" :tag="'span'"></UserAvatar>
+                                                {{ user.name }}
+                                            </dt>
+                                            <dd><i class="uil uil-user"></i></dd>
+                                        </dl>
+                                    </div>
+                                </template>
+                                <template v-if="gameList && gameList.length > 0">
+                                    <h2>{{ t('game.name') }}</h2>
+                                    <div v-for="game in gameList" :key="game.id"
+                                         @click="moveGamePage(game.pathname)"
+                                    >
+                                        <dl>
+                                            <dt>
+                                        <span
+                                            :style="`background:url(${game.profile_img ||  game.url_thumb}) center center / cover no-repeat; background-size:cover;`"></span>
+                                                {{ game.title }}
+                                            </dt>
+                                            <dd><i class="uil uil-robot"></i></dd>
+                                        </dl>
+                                    </div>
+                                </template>
+                                <template v-if="groupList &&groupList.length > 0">
+                                    <h2>{{ t('community.name') }}</h2>
+                                    <div v-for="group in groupList" :key="group.id" @click="groupPage(group.id)">
+                                        <dl>
+                                            <dt>
+                                        <span
+                                            :style="`background:url(${group.profile_img}) center center / cover no-repeat; background-size:cover;`"></span>
+                                                {{ group.name }}
+                                            </dt>
+                                            <dd><i class="uil uil-comments"></i></dd>
+                                        </dl>
+                                    </div>
+                                </template>
+
+                            </div>
+                        </div>
+                    </dropdown-menu>
+                </template> -->
+        <!-- 검색 리스트 끝 -->
+
+        <!-- 신규 메세지 -->
+        <!-- 퍼블리싱 페이지에서 붙여와서 사용-->
+        <!-- 신규 메세지 끝 -->
+
+        <!-- 설정 -->
+        <!-- <dropdown-menu v-if="$store.getters.user" :isOpen="isOpenSetting" @closed="isOpenSetting = false"
+                               :overlay="false" class="header-setting-dropdown">
+
+                    <div slot="body" class="header-setting">
+                        <dl>
+                            <dt>
+                                <UserAvatar :user="$store.getters.user" :tag="'span'"></UserAvatar>
+                            </dt>
+                            <dd>
+                                <h2>{{ user.name }}</h2>
+                            </dd>
+                        </dl>
+                        <div>
+                            <h2>{{ t('myProfile') }}</h2>
+                            <div>
+                                <router-link :to="`/${$i18n.locale}/myChannel`" @click.native="isOpenSetting = false"><i
+                                    class="uil uil-user"></i>
+                                    {{ t('myChannel') }}
+                                </router-link>
+                                <router-link :to="`/${$i18n.locale}/projectList`"><i class="uil uil-robot"></i>
+                                    {{ t('gameStudio') }}
+                                </router-link>
+                                <router-link :to="`/${$i18n.locale}/user/${user.channel_id}/settings`"
+                                             @click.native="isOpenSetting = false"><i
+                                    class="uil uil-setting"></i>
+                                    {{ t('account.settings') }}
+                                </router-link>
+                            </div>
+                        </div>
+                        <div>
+                            <h2>{{ t('group') }}</h2>
+                            <div>
+                                <router-link @click.native="isOpenSetting = false"
+                                             :to="`/${$i18n.locale}/user/${user.channel_id}/manageJoinedGroup`"><i
+                                    class="uil uil-users-alt"></i>
+                                    {{ t('joined.group') }}
+                                </router-link>
+                            </div>
+                        </div>
+                        <p @click="logout"><a class="btn-default w100p">{{ t('logout') }}</a></p>
+                    </div>
+                </dropdown-menu> -->
+        <!-- 설정 끝 -->
+      </dd>
+    </dl>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import {
+  ref,
+  reactive,
+  onMounted,
+  useContext,
+  watch,
+  computed,
+} from '@nuxtjs/composition-api'
+import { useUserStore } from '~/store/user'
+
+const { i18n } = useContext()
+
+const searchInput = ref('')
+const userStore = useUserStore()
+
+const options = [
+  { code: 'ko', label: '한국어' },
+  { code: 'en', label: 'English' },
+]
+const selectedLang = ref('ko')
+const isLogin = computed(() => userStore.$state.isLogin)
+const userInfo = computed(() => userStore.$state.user)
+
+// const fUser = ref(computed(() => userStore.$state.fUser))
+
+watch(
+  () => userStore.$state.fUser,
+  (val) => {
+    if (val) {
+      const access_token =
+        sessionStorage.getItem('access_token') ??
+        sessionStorage.setItem('access_token', val.accessToken)
+      console.log('val', val)
+      console.log('access_token', access_token)
+
+      if (access_token && !userInfo.value) {
+        console.log('get user info')
+        userStore.setUserInfo()
+        // $store.dispatch('UserInfo')
+      }
+      // else {
+      //   onFlogin(firebase_accessToken.value)
+      // }
+    }
+  }
+)
+
+function setSelectedLang(lang: string) {
+  // this.$i18n.locale = lang;
+  // this.$router.push({
+  //     params: {locale: lang}
+  // })
+}
+
+onMounted(() => {
+  // firebase_accessToken.value = firebase.state.fUser.accessToken
+  // console.log('fb.getApp.length ', fb?.getApp.length)
+  // console.log('>>', userStore.$state.accessToken)
+})
+</script>
+
+<style lang="scss" scoped>
+.menu li .active {
+  color: #f97316;
+}
+
+// q-select
+
+@media all and (max-width: 479px) {
+  //.header > dl {width:90%; padding:15px 0;}
+  //.header-logo-menu p {display:flex; align-items:center; margin-right:0;}
+  //.header-logo-menu p i {display:block; font-size:22px; margin-right:10px;}
+  //.header-logo-menu p a img {width:100px;}
+  //.header-logo-menu ul {display:none;}
+  //.header-search {display:none;}
+  //.header-language {display:none;}
+  .header-login {
+    display: block !important;
+  }
+  //.header-info {display:none;}
+  //.header-info-mobile {display:block;}
+}
+@media all and (min-width: 480px) and (max-width: 767px) {
+  //.header > dl {width:470px; padding:15px 0;}
+  //.header-logo-menu p {display:flex; align-items:center; margin-right:0;}
+  //.header-logo-menu p i {display:block; font-size:22px; margin-right:10px;}
+  //.header-logo-menu p a img {width:100px;}
+  //.header-logo-menu ul {display:none;}
+  //.header-search {display:none;}
+  //.header-language {display:none;}
+  .header-login {
+    display: block !important;
+  }
+  //.header-info {display:none;}
+  //.header-info-mobile {display:block;}
+}
+@media all and (min-width: 768px) and (max-width: 991px) {
+  //.header > dl {width:750px;}
+  //.header-search {display:none;}
+  //.header-language {display:none;}
+  .header-login {
+    display: block !important;
+  }
+  //.header-info {display:none;}
+  //.header-info-mobile {display:block;}
+}
+@media all and (min-width: 992px) and (max-width: 1199px) {
+  .header > dl {
+    width: 970px;
+  }
+  .header-info-mobile {
+    display: none;
+  }
+}
+@media all and (min-width: 1200px) {
+}
+</style>
