@@ -23,7 +23,6 @@ export default defineNuxtConfig({
       options:{},
       middleware:['auth']
     },
-  buildDir:'../nuxt_webserver/public',
   css: [
       '@/assets/css/animate.css',
       '@/assets/css/jquery-ui.css',
