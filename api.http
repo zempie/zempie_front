@@ -1,0 +1,3 @@
+@zempieApi = http://localhost:8280/api/v1
+
+GET {{zempieApi}}/games

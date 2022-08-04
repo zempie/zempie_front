@@ -3,3 +3,59 @@
 .uppercase {
   text-transform: uppercase;
 }
+
+.full-width {
+  width: 100%;
+}
+
+.bg-grey-1{
+  background-color: #ededed;
+}
+
+.grey-text{
+  background-color: #ededed;
+  border-radius: 10px;
+  min-height:16px;
+}
+
+
+.el-popper {
+  .el-popper__arrow{
+
+    display:none;
+  }
+}
+
+.el-select-dropdown__item{
+  margin:7px !important;
+}
+.el-select-dropdown__item.selected{
+  color:#f97316 !important
+}
+.el-select-dropdown__item.hover{
+  color:#fff !important;
+  background-color: #f97316 !important;
+  border-radius: 4px;
+  
+}
+
+.modal-area-type {
+  max-width: 380px !important;
+  border-radius: 10px !important;  
+  position: absolute !important;
+  left: 50%;
+  top: 50%;
+  margin: 0px !important;
+  transform: translate(-50%, -50%);
+  .modal-alert{
+
+    border-radius: 10px;
+  }
+  .el-dialog__header {
+    display: none !important;
+  }
+  .el-dialog__body{
+    padding:0px;
+    
+  }
+}

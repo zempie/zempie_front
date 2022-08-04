@@ -19,22 +19,15 @@ import {
   AuthProvider
 } from 'firebase/auth'
 
-import * as firebase from 'firebase/app'
-
-import { config } from '~/plugins/firebase'
+// import { config } from '~/plugins/firebase'
 
 
-import { useUserStore } from '~/store/user'
+// import { useUserStore } from '~/store/user'
 
-
+// const {$firebaseApp} = useNuxtApp()
 
 // import { getMessaging, getToken, onMessage } from 'firebase/messaging'
-if (!firebase) {
-  console.log('init app')
-  //@ts-ignore
-  firebase.initializeApp(config)
 
-}
 const authInstance = getAuth()
 
 
@@ -48,26 +41,27 @@ const state = reactive({
 // check
 
 onIdTokenChanged(authInstance, (user: any) => {
-  const userStore = useUserStore()
-  if (user) {
-    state.fUser = user
+  // const userStore = useUserStore()
+  // if (user) {
+  //   state.fUser = user
 
-    userStore.$state.fUser = user;
-    // res.user.providerData.forEach((profile) => {
-    //   state.fUser.photoURL = profile.photoURL ?? 'img/profile_default.png'
-    // });
+  //   userStore.$state.fUser = user;
+  //   // res.user.providerData.forEach((profile) => {
+  //   //   state.fUser.photoURL = profile.photoURL ?? 'img/profile_default.png'
+  //   // });
 
 
-    console.info('fb login', user)
-  } else {
-    // console.info('No login')
-  }
+  //   console.info('fb login', user)
+  // } else {
+  //   // console.info('No login')
+  // }
 })
 
 //const messagingInstance = getMessaging()
 
 // join
 async function signUpEmail(email: string, passwd: string) {
+
   return createUserWithEmailAndPassword(authInstance, email, passwd)
     .then((res: UserCredential) => {
       state.fUser = res.user
@@ -89,10 +83,12 @@ async function signUpEmail(email: string, passwd: string) {
       throw { message }
     })
 }
+const { $firebaseAuth } = useNuxtApp();
 
+// const {$firebaseAuth} = 
 // login
 async function signInEmail(email: string, passwd: string) {
-  return signInWithEmailAndPassword(authInstance, email, passwd)
+  return signInWithEmailAndPassword($firebaseAuth, email, passwd)
     .then((res: UserCredential) => {
       state.fUser = res.user
     })

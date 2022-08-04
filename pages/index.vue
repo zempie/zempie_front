@@ -1,16 +1,9 @@
 <template>
   <div class="wrap">
-    <Header />
-    <!-- <Nuxt /> -->
     <div class="main-bg">
       <div class="main-copy">
         <p>
-          <img
-            src="../assets/images/main_copy.svg"
-            width="500"
-            alt=""
-            title=""
-          />
+          <img src="/images/main_copy.svg" width="500" alt="" title="" />
         </p>
       </div>
 
@@ -21,13 +14,9 @@
 
         <ul style="margin: 40px 0px">
           <span class="card-game">
-            <GameCard v-for="game in 8" />
+            <GameCardSk v-for="game in 8" />
           </span>
         </ul>
-      </div>
-      <!-- <div class="main-upload">
-        <p></p>
-      </div> -->
 
       <div class="main-visual">
         <h2><span style="font: 36px/46px 'Jalnan'">Communities</span></h2>
@@ -44,35 +33,70 @@
           <li class="thumbmail" v-for="post in 8"></li>
         </ul>
       </div>
+      <!-- <div class="main-upload">
+        <p></p>
+      </div> -->
+
+      <div class="main-visual">
+        <h2><span style="font: 36px/46px 'Jalnan'">Communities</span></h2>
+
+        <div class="card-timeline">
+          <CommunityCardSk v-for="commi in 4" />
+
+        </div>
+      </div>
+
+      <div class="main-visual">
+        <h2><span style="font: 36px/46px 'Jalnan'">Recent posts</span></h2>
+
+        <ul style="margin-top: 40px" class="post-container">
+          <li class="thumbmail" v-for="post in 8"></li>
+        </ul>
+      </div>
     </div>
     <Footer />
   </div>
 </template>
 
 <script lang="ts" setup>
-import Footer from '~/layouts/_footer.vue'
-import Header from '~/layouts/_header.vue'
-import GameCard from '~/components/_homeGameCard.vue'
-import CommunityCard from '~/components/community/_communityCard.vue'
+
+const GAME_COUNT = 8;
+
+onMounted(() => {
+  getRecentGames()
+})
+
+function getRecentGames() {
+  const payload = {
+    limit: GAME_COUNT,
+    offset: 0,
+
+
+  }
+  // game.list()
+
+}
+
+
 </script>
 
 <style scoped lang="scss">
 .mv-animal02 {
   z-index: 998 !important;
 }
+
 .mv-play {
   top: 0px;
 }
+
 .main-bg {
-  background: url('~/assets/images/main_bg01_fixed.png') center 70px no-repeat;
+  background: url('/images/main_bg01_fixed.png') center 70px no-repeat;
   background-size: cover;
   padding-bottom: 100px;
 }
 
-.main-visual {
-  // width: 1225px;
-}
-.main-visual > h3 {
+
+.main-visual>h3 {
   background: none !important;
   height: auto !important;
 }

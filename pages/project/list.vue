@@ -1,0 +1,547 @@
+<template>
+  <NuxtLayout name="studio">
+    <div class="content-studio">
+      <!-- 상단배너 -->
+      <div class="studio-banner bg03">
+        <h2>{{ $t("projectList.banner.text") }}</h2>
+        <p>{{ $t("projectList.banner.info") }}</p>
+      </div>
+      <!-- 상단배너 끝 -->
+
+      <!-- 모든게임 끝 -->
+      <div class="studio-all-game">
+        <dl>
+          <dt>
+            <div class="input-search-default">
+              <p><i class="uil uil-search"></i></p>
+              <div>
+                <input type="text" name="" title="keywords" :placeholder="$t('needSearchInput')" @input="searchProject"
+                  v-model="searchKeyword" />
+              </div>
+            </div>
+          </dt>
+          <dd>
+            <NuxtLink :to="localePath('/project/upload')" class="btn-default"><i class="uil uil-plus"></i>{{
+                $t("gameUpload")
+            }}</NuxtLink>
+          </dd>
+        </dl>
+
+        <ul class="ag-title">
+          <li>{{ $t("game.thumbnail") }}</li>
+          <li>
+            {{ $t("game.title") }}
+            <i v-if="isTitleSortAsc" class="uil uil-angle-up" style="font-size:20px; cursor: pointer;"
+              @click="sortAscList('name'); isTitleSortAsc = !isTitleSortAsc "></i>
+            <i v-else class="uil uil-angle-down" style="font-size:20px; cursor: pointer;"
+              @click="sortDescList('name'); isTitleSortAsc = !isTitleSortAsc"></i>
+          </li>
+          <li>
+            {{ $t("game.uploadDate") }}
+            <i v-if="isDateSortAsc" class="uil uil-angle-up" style="font-size:20px; cursor: pointer;"
+              @click="sortAscList('created_at'); isDateSortAsc = !isDateSortAsc"></i>
+            <i v-else class="uil uil-angle-down" style="font-size:20px; cursor: pointer;"
+              @click="sortDescList('created_at'); isDateSortAsc = !isDateSortAsc"></i>
+          </li>
+          <li>
+            {{ $t("game.status") }}
+            <i v-if="isStageSortAsc" class="uil uil-angle-up" style="font-size:20px; cursor: pointer;"
+              @click="sortAscList('stage'); isStageSortAsc = !isStageSortAsc"></i>
+            <i v-else class="uil uil-angle-down" style="font-size:20px; cursor: pointer;"
+              @click="sortDescList('stage'); isStageSortAsc = !isStageSortAsc"></i>
+          </li>
+          <li>
+            {{ $t("game.playCnt") }}
+            <i v-if="isPlayCountSortAsc" class="uil uil-angle-up" style="font-size:20px; cursor: pointer;"
+              @click="sortAscListByGame('count_start'); isPlayCountSortAsc = !isPlayCountSortAsc"></i>
+            <i v-else class="uil uil-angle-down" style="font-size:20px; cursor: pointer;"
+              @click="sortDescListByGame('count_start'); isPlayCountSortAsc = !isPlayCountSortAsc"></i>
+          </li>
+          <li>
+            {{ $t("game.likeCnt") }}
+            <i v-if="isLikeCountSortAsc" class="uil uil-angle-up" style="font-size:20px; cursor: pointer;"
+              @click="sortAscListByGame('count_heart'); isLikeCountSortAsc = !isLikeCountSortAsc"></i>
+            <i v-else class="uil uil-angle-down" style="font-size:20px; cursor: pointer;"
+              @click="sortDescListByGame('count_heart'); isLikeCountSortAsc = !isLikeCountSortAsc"></i>
+          </li>
+        </ul>
+
+        <div v-if="isPending">
+          <!-- FIXME: loading spinner 아니면 loading progress -->
+          <ul>
+            <li class="bg-grey-1" style="width: 80%; margin: 0 auto; border-radius: 10px"></li>
+          </ul>
+        </div>
+
+        <template v-else-if="projects.length">
+          <div>
+            <ul v-for="project in projects" :key="project.id" @click="goToProjectPage(project.id)">
+              <li>
+                <span> {{ $t("game.thumbnail") }}: </span>
+                <p :style="`background: url(${project.picture_web ||
+                project.picture ||
+                project.url_thumb ||
+                '/images/default.png'
+                }?t=${Date.now()}) center center / cover no-repeat; background-size: cover;`"></p>
+              </li>
+              <li>
+                <span> {{ $t("game.title") }}: </span> &nbsp;&nbsp;{{
+                    project.name
+                }}
+              </li>
+
+              <li>
+                <span> {{ $t("game.uploadDate") }}: </span> &nbsp;&nbsp;
+                {{ dayjs(project.created_at).format("YYYY-MM-DD") }}
+              </li>
+              <li>
+                <span> {{ $t("game.status") }}: </span> &nbsp;&nbsp;
+                {{ eUploadStage[project.stage] }}
+
+              </li>
+              <li>
+                <span> {{ $t("game.playCnt") }}: </span> &nbsp;&nbsp;{{
+                    project.game?.count_start
+                }}
+              </li>
+              <li>
+                <span> {{ $t("game.likeCnt") }}:</span> &nbsp;&nbsp;{{
+                    project.game.count_heart
+                }}
+              </li>
+            </ul>
+          </div>
+          <!-- 페이지네이션 -->
+
+          <div class="studio-pagination">
+            <dl>
+              <dd>{{ currPage }}-{{ totalPage }} of {{ totalCount }}</dd>
+              <dd>
+                <span @click="prevPage()" :class="[currPage !== 1 ? '' : 'disabled', 'prev-btn']"><i
+                    class="uil uil-angle-left-b"></i></span>&nbsp;&nbsp;
+                <span @click="nextPage()" :class="[
+                  currPage === totalPage ? 'disabled' : '',
+                  'next-btn',
+                ]">
+                  <i class="uil uil-angle-right-b"></i></span>
+              </dd>
+            </dl>
+          </div>
+          <!--             페이지네이션 끝-->
+
+        </template>
+
+        <div v-else>
+          <ul>
+            <li style="width: 100%">{{ $t("no.game") }}</li>
+          </ul>
+        </div>
+      </div>
+      <!-- 모든게임 끝 -->
+    </div>
+  </NuxtLayout>
+</template>
+
+<script setup lang="ts">
+import dayjs from "dayjs";
+import { useLocalePath } from "vue-i18n-routing";
+import { IProject, eUploadStage } from "~~/types"
+
+const localePath = useLocalePath();
+const $router = useRouter();
+
+const projects = ref([]);
+const isPending = ref(true);
+
+const searchKeyword = ref('')
+
+const isTitleSortAsc = ref(true)
+const isDateSortAsc = ref(true)
+const isStageSortAsc = ref(true)
+const isPlayCountSortAsc = ref(true)
+const isLikeCountSortAsc = ref(true)
+
+const pageSize = ref(10);
+const currPage = ref(1);
+const totalCount = ref(0);
+const totalPage = computed(() => Math.ceil(totalCount.value / pageSize.value))
+
+const { data, pending } = await project.list();
+
+// useHead({
+//   title: title.value,
+//   meta: [{
+//     name: 'description',
+//     content: description.value
+//   }]
+// })
+
+
+onMounted(async () => {
+  if (data.value) {
+    projects.value = (data.value as any).result
+    pagingByClient()
+  }
+  isPending.value = pending.value;
+});
+
+function searchProject() {
+  const { result } = data.value as any;
+
+  if (searchKeyword.value.length) {
+    const project = result.filter((project: IProject) => { return project.name?.includes(searchKeyword.value) })
+    projects.value = project
+    totalCount.value = project.length
+  } else {
+    projects.value = (data.value as any).result
+    pagingByClient()
+  }
+
+}
+
+
+
+function nextPage() {
+  document.documentElement.scrollTop = 0;
+  currPage.value += 1;
+  pagingByClient()
+}
+function prevPage() {
+  document.documentElement.scrollTop = 0;
+  currPage.value -= 1;
+  pagingByClient()
+}
+
+function pagingByClient() {
+  const start = (currPage.value - 1) * pageSize.value;
+  const end = start + pageSize.value
+
+  totalCount.value = projects.value.length
+  projects.value = projects.value.slice(start, end)
+
+
+}
+
+function goToProjectPage(id: number) {
+  setProjectInfo(id)
+  $router.push(localePath(`/project/${id}`))
+}
+
+function setProjectInfo(id: number) {
+  const { result } = data.value as any;
+  const project = result.find((project: IProject) => project.id === id)
+  useProject().setProjectInfo(project)
+}
+
+function sortAscList(key: string) {
+  projects.value.sort((a, b) => {
+    return a[key] < b[key] ? -1 : a[key] > b[key] ? 1 : 0
+  })
+}
+
+function sortDescList(key: string) {
+  projects.value.sort((a, b) => {
+    return a[key] > b[key] ? -1 : a[key] < b[key] ? 1 : 0
+  })
+}
+
+function sortAscListByGame(key: string) {
+  projects.value.sort((a, b) => {
+    return a.game[key] < b.game[key] ? -1 : a.game[key] > b.game[key] ? 1 : 0
+  })
+}
+
+function sortDescListByGame(key: string) {
+  projects.value.sort((a, b) => {
+    return a.game[key] > b.game[key] ? -1 : a.game[key] < b.game[key] ? 1 : 0
+  })
+}
+
+</script>
+
+<style scoped lang="scss">
+//transition
+.list-item {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.list-enter-active,
+.list-leave-active {
+  transition: all 1s;
+}
+
+.list-enter,
+.list-leave-to
+
+/* .list-leave-active below version 2.1.8 */
+  {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+//pagination
+.prev-btn.disabled,
+.next-btn.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+//transition으로 인한 css 수정
+.studio-all-game {
+  width: 1200px;
+  margin: 30px auto;
+  background-color: #fff;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+}
+
+.studio-all-game>dl {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 30px;
+  border-bottom: #e9e9e9 1px solid;
+}
+
+.studio-all-game>div>ul {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  padding: 0px 30px;
+  text-align: center;
+  border-bottom: 1px solid #f1f1f1;
+  transition: all 0.4s ease-in-out;
+}
+
+.studio-all-game>ul.ag-title {
+  background-color: #f9f9f9;
+}
+
+.studio-all-game>ul.ag-title>li {
+  font-weight: 500;
+  font-size: 17px;
+}
+
+.studio-all-game>div>ul>li {
+  padding: 25px 0px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 16px;
+  color: #333;
+}
+
+.studio-all-game>div>ul>li>span {
+  display: none;
+}
+
+.studio-all-game>div>ul>li>p {
+  width: 70px;
+  height: 70px;
+  border-radius: 5px;
+  margin: auto;
+}
+
+.studio-all-game>div>ul:hover {
+  background-color: #f9f9f9;
+}
+
+.studio-all-game .ag-empty {
+  padding: 150px 0;
+  text-align: center;
+}
+
+.studio-all-game .ag-empty>p {
+  width: 60px;
+  height: 60px;
+  margin: auto;
+  padding-top: 15px;
+  text-align: center;
+  font-size: 24px;
+  color: #c1c1c1;
+  border-radius: 50%;
+  background-color: #f1f1f1;
+}
+
+.studio-all-game .ag-empty>h4 {
+  margin-top: 25px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 16px;
+}
+
+.studio-all-game>div>ul>li:nth-child(1) {
+  width: 15%;
+}
+
+.studio-all-game>div>ul>li:nth-child(2) {
+  width: 40%;
+  text-align: left;
+}
+
+.studio-all-game>div>ul>li:nth-child(3) {
+  width: 15%;
+}
+
+.studio-all-game>div>ul>li:nth-child(4) {
+  width: 10%;
+}
+
+.studio-all-game>div>ul>li:nth-child(5) {
+  width: 10%;
+}
+
+.studio-all-game>div>ul>li:nth-child(6) {
+  width: 10%;
+}
+
+@media all and (max-width: 479px) {
+  .studio-all-game {
+    width: 90%;
+    margin: 20px auto;
+    padding: 0 15px;
+  }
+
+  .studio-all-game>dl {
+    flex-wrap: wrap;
+    padding: 20px;
+  }
+
+  .studio-all-game>dl dt {
+    width: 100%;
+  }
+
+  .studio-all-game>dl dd {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .studio-all-game>dl dd a {
+    width: 100%;
+  }
+
+  .studio-all-game>ul.ag-title {
+    display: none;
+  }
+
+  .studio-all-game>div>ul {
+    display: block;
+    margin-top: 10px;
+    padding: 15px 30px;
+    border: 2px solid #f1f1f1;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.05);
+  }
+
+  .studio-all-game>div>ul>li {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 5px 0px;
+    font-size: 13px;
+  }
+
+  .studio-all-game>div>ul>li {
+    width: 100% !important;
+  }
+
+  .studio-all-game>div>ul>li>p {
+    margin: 0 0 0 15px;
+  }
+
+  .studio-all-game>div>ul>li>span {
+    display: block;
+    font-size: 14px;
+  }
+}
+
+@media all and (min-width: 480px) and (max-width: 767px) {
+  .studio-all-game {
+    width: 470px;
+    margin: 20px auto;
+    padding: 0 20px;
+  }
+
+  .studio-all-game>dl {
+    flex-wrap: wrap;
+    padding: 20px;
+  }
+
+  .studio-all-game>dl dt {
+    width: 100%;
+  }
+
+  .studio-all-game>dl dd {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .studio-all-game>dl dd a {
+    width: 100%;
+  }
+
+  .studio-all-game>ul.ag-title {
+    display: none;
+  }
+
+  .studio-all-game>div>ul {
+    display: block;
+    margin-top: 15px;
+    padding: 15px 30px;
+    border: 2px solid #f1f1f1;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.05);
+  }
+
+  .studio-all-game>div>ul>li {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px 0px;
+    font-size: 14px;
+  }
+
+  .studio-all-game>div>ul>li {
+    width: 100% !important;
+  }
+
+  .studio-all-game>div>ul>li>p {
+    margin: 0 0 0 15px;
+  }
+
+  .studio-all-game>div>ul>li>span {
+    display: block;
+    font-size: 15px;
+  }
+}
+
+@media all and (min-width: 768px) and (max-width: 991px) {
+  .studio-all-game {
+    width: 750px;
+  }
+
+  .studio-all-game>ul.ag-title>li {
+    font-size: 16px;
+  }
+
+  .studio-all-game>div>ul>li {
+    padding: 20px 0px;
+    font-size: 15px;
+  }
+
+  .studio-all-game>div>ul>li>p {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+@media all and (min-width: 992px) and (max-width: 1199px) {
+  .studio-all-game {
+    width: 970px;
+  }
+}
+
+@media all and (min-width: 1200px) {}
+</style>

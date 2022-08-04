@@ -1,0 +1,61 @@
+<template>
+  <ClientOnly>
+    <li style="position: relative;">
+      <div class="bg-grey-1"></div>
+      <dl>
+        <dt>
+          <p
+            style="background: url( '/images/300_300_default_profile.png' ) center center no-repeat; background-size: cover;">
+          </p>
+        </dt>
+        <dd>
+          <h2 class="grey-text" style="width: 150px;">
+
+          </h2>
+          <p class="grey-text" style=" width: 80px;"></p>
+          <ul>
+            <li>
+              <p class="grey-text" style=" min-height: 20px; width: 20px;"></p>
+            </li>
+          </ul>
+        </dd>
+      </dl>
+    </li>
+  </ClientOnly>
+
+</template>
+
+<script setup lang="ts">
+</script>
+
+<style scoped lang="scss">
+.grey-text {
+  background-color: #ddd;
+  min-height: 16px;
+  border-radius: 10px;
+}
+</style>
+
+<!-- 
+<template>
+  <li>
+    <div class="thumbnail"
+      style="background: url( '/images/Totem_breaker.png' ) center center / cover no-repeat; background-size: cover;">
+    </div>
+    <dl>
+      <dt>
+        <span
+          style="background:url('/images/zempie_logo_154_155.png') center center / cover no-repeat; background-size:cover;"></span>
+      </dt>
+      <dd>
+        <h2>Totem breaker</h2>
+        <h3>Zempie</h3>
+      </dd>
+    </dl>
+  </li>
+</template>
+
+<script lang="ts" setup></script>
+
+<style scoped lang="scss">
+</style> -->
