@@ -1,7 +1,7 @@
 <template>
   <li style="position: relative ">
-    <img v-if="gameInfo?.game_jam?.is_awarded" src="/images/medal2.png"
-      style="position: absolute; right:10px; top:10px" />
+    <!-- <img v-if="gameInfo?.game_jam?.is_awarded" src="/images/medal2.png"
+      style="position: absolute; right:10px; top:10px" /> -->
 
     <div @click="moveGamePage"
       :style="`background: url( ${thumbnail} ) center center / cover no-repeat; background-size: cover;`"></div>
