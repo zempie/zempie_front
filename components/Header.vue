@@ -113,8 +113,7 @@
         </div>
 
 
-        <div class="header-login" v-else-if="!useCookie(config.COOKIE_NAME)">
-          {{ !useCookie(config.COOKIE_NAME) }}
+        <div class="header-login" v-else-if="!useCookie(config.COOKIE_NAME).value">
           <NuxtLink :to="localePath('/login')">
             <button class="btn-default"><i class="uil uil-user"></i>{{ t('login') }}</button>
           </NuxtLink>

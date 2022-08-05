@@ -4,11 +4,11 @@
       <dt>
         <ul>
           <li>
-            <h2 class=" numbers"> </h2>
+            <h2 class="numbers"> </h2>
             <h3>Member</h3>
           </li>
           <li>
-            <h2 class=" numbers"></h2>
+            <h2 class="numbers"></h2>
             <h3>Posts</h3>
           </li>
           <li>

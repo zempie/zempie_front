@@ -7,26 +7,7 @@
 //   document.body.removeChild(input);
 // }
 
-// function numToKMB(num: number) {
-//   let result: any = num;
 
-//   if(num < 1000){
-//       result = num;
-//   }
-//   else if (num >= 1000 && num < 1000000) {
-//       result = parseInt(String(num / 1000)) + 'K'
-//   }
-//   else if (num >= 1000000 && num < 1000000000) {
-//       result = parseInt(String(num / 1000000)) + 'M'
-//   }
-//   else if (num >= 1000000000 && num < 1000000000000) {
-//       result = parseInt(String(num / 1000000000))+ 'B'
-//   }
-//   else if(num >= 1000000000000 ){
-//       result = parseInt(String(num / 1000000000000))+ 'T'
-//   }
-//   return result;
-// }
 
 // export default class StringHelper {
 //   static msToMinuteSecond(ms: number): string {
@@ -92,6 +73,27 @@
 //   }
 //   return str.substr( 0, count );
 // }
+
+export const numToKMB = (num: number) => {
+  let result: any = num;
+
+  if(num < 1000){
+      result = num;
+  }
+  else if (num >= 1000 && num < 1000000) {
+      result = parseInt(String(num / 1000)) + 'K'
+  }
+  else if (num >= 1000000 && num < 1000000000) {
+      result = parseInt(String(num / 1000000)) + 'M'
+  }
+  else if (num >= 1000000000 && num < 1000000000000) {
+      result = parseInt(String(num / 1000000000))+ 'B'
+  }
+  else if(num >= 1000000000000 ){
+      result = parseInt(String(num / 1000000000000))+ 'T'
+  }
+  return result;
+}
 
 export const emailRegex =  /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/
 

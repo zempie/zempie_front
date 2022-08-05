@@ -1,6 +1,5 @@
 <template>
   <NuxtLayout>
-    <NuxtLoadingIndicator />
     <NuxtPage />
   </NuxtLayout>
 </template>
@@ -17,7 +16,7 @@ provide(ID_INJECTION_KEY, {
   current: 0,
 })
 onMounted(() => {
-  
+
   const lang = navigator.language.split('-')[0]
   if (lang === 'ko' || lang === 'en') {
     locale.value = lang

@@ -53,12 +53,25 @@
     <div class="result-container">
 
       <!-- <transition-group name="list-complete" > -->
-      <!-- FIXME: transition-group -->
+
+
       <div class="card-timeline">
-        <CommunityCardSk v-for="com in 4" />
+        <TransitionGroup name="fade">
+          <CommunityCardSk v-show="isPending" v-for="com in 4" :key="com" />
+          <CommunityCard v-show="!isPending" v-for="community in communities" :community="community"
+            :key="community.id">
+            <!-- TODO: ux 개선 사항 정리후 적용 -->
+            <template v-slot:subBtn>
+              <!-- <SubscribeBtn :community="community" /> -->
+            </template>
+          </CommunityCard>
+        </TransitionGroup>
       </div>
-      <!-- </transition-group> -->
-      <!--            <div class="no-result" v-if="!communityList || communityList.length === 0">-->
+
+
+
+
+
       <!--                <h1>검색 결과가 없습니다.</h1>-->
       <!--                <img src="../../assets/images/not-found.png" width="100px" height="100px"/>-->
       <!--            </div>-->
@@ -102,88 +115,91 @@
 </template>
 
 <script lang="ts" setup>
+import { ICommunityPayload } from '~~/types';
+import SubscribeBtn from '~~/components/community/subscribeBtn.vue';
 // import * as Api from '~/api'
 // import firebase from '~/scripts/firebase'
 // import { useUserStore } from '~/store/user'
 
 
-interface CommunityPayload {
-  limit: number,
-  offset: number,
-  community: string,
-  sort: string,
-  show: string,
-
-}
 
 // const { i18n, $toast } = useContext()
 
 // metaSetting !: MetaSetting;
 // clickManager: ClickManager = new ClickManager();
-const communityList: any = ref([]);
+const communities: any = ref([]);
 const filter = ref(0);
 // private isSearched: boolean = false;
 
 //fetch data object
 const limit = ref(20);
 const offset = ref(0);
-const community = ref('');
+// const community = ref('');
 const sort = ref('');
 const show = ref('')
 const searchInput = ref('');
 // isAddData: boolean = false;
 // unCommunityId: string = ''
 // user !: any;
+const isPending = ref(true)
 
+const obj: ICommunityPayload = {
+  limit: 20,
+  offset: 0,
+  community: '',
+  sort: '',
+  show: ''
+}
 
+const { data, error, pending } = await community.list()
 
 // isFirstLoading: boolean = true;
 
-onMounted(() => {
-  // fetch();
+onMounted(async () => {
+  if (data.value) {
+    console.log(data.value)
+    communities.value = data.value
+  }
+  isPending.value = pending.value
 })
 
-function fetch() {
-
-}
 
 // beforeDestroy() {
 //     window.removeEventListener("scroll", this.scrollCheck);
 // }
 
-// function fetch() {
-//     const obj: CommunityPayload = {
-//         limit: limit.value,
-//         offset: offset.value,
-//         community: searchInput.value,
-//         sort: sort.value,
-//         show: show.value
-//     }
+async function fetch() {
+  console.log('fetch')
 
-//     Api.community.getList(obj)
-//         .then((res: any) => {
-//             communityList.value = res;
-//             // if (this.isAddData) {
-//             //     if (res.length > 0) {
-//             //         this.communityList = [...this.communityList, ...res]
-//             //     }
-//             //     else {
-//             //         window.removeEventListener("scroll", this.scrollCheck);
-//             //     }
-//             // }
-//             // else {
-//             //     this.communityList = res;
-//             //     this.isAddData = true
-//             // }
-//         })
-//         .catch((err: AxiosError) => {
-//             console.log(err)
-//         })
-//         .finally(() => {
-//             // this.isFirstLoading = false;
-//             // this.createMetaSetting();
-//         })
-// }
+
+
+
+
+
+  // Api.community.getList(obj)
+  //     .then((res: any) => {
+  //         communityList.value = res;
+  //         // if (this.isAddData) {
+  //         //     if (res.length > 0) {
+  //         //         this.communityList = [...this.communityList, ...res]
+  //         //     }
+  //         //     else {
+  //         //         window.removeEventListener("scroll", this.scrollCheck);
+  //         //     }
+  //         // }
+  //         // else {
+  //         //     this.communityList = res;
+  //         //     this.isAddData = true
+  //         // }
+  //     })
+  //     .catch((err: AxiosError) => {
+  //         console.log(err)
+  //     })
+  //     .finally(() => {
+  //         // this.isFirstLoading = false;
+  //         // this.createMetaSetting();
+  //     })
+}
 
 // scrollCheck() {
 //     if (scrollDone(document.documentElement)) {
@@ -348,5 +364,30 @@ svg {
     font-size: 18px;
     margin-bottom: 10px;
   }
+}
+
+
+//transition
+.component-fade-enter-active,
+.component-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.component-fade-enter,
+.component-fade-leave-to
+
+/* .component-fade-leave-active below version 2.1.8 */
+  {
+  opacity: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.15s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

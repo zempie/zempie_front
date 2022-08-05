@@ -1,19 +1,20 @@
 export interface IUser{
+  name: string,
+  id: number,
   channel_id:string,
   email:string,
-  email_verified:boolean,  
-  follower_cnt: number,
-  following_cnt: number,
-  is_following: boolean,
-  games: [],
-  id: number,
-  is_developer: boolean,
-  name: string,
-  picture: string,
-  profile: any,
-  setting: any,
-  uid: string
+  uid: string,
+  email_verified?:boolean,  
+  follower_cnt?: number,
+  following_cnt?: number,
+  is_following?: boolean,
+  games?: IGame[],
+  is_developer?: boolean,  
+  picture?: string,
+  profile?: any,
+  setting?: any,
 }
+
 
 
 
@@ -34,6 +35,7 @@ export interface IGame{
   count_start: number,
   created_at: string,
   deleted_at: string,
+  updated_at: string,
   description: string,
   enabled: boolean,
   hashtags: string,
@@ -42,7 +44,6 @@ export interface IGame{
   pathname: string,
   stage: number,
   title: string,
-  updated_at: string,
   url_game: string,
   url_thumb: string,
   url_thumb_gif: string,
@@ -50,6 +51,7 @@ export interface IGame{
   userId: number,
   user_id: number,
   version: string,
+  user:IUser,
 }
 
 
@@ -76,3 +78,38 @@ export interface IProject{
   userId: number,
   user_id: number,
 }
+
+export interface ICommunityPayload{
+  limit: number,
+  offset: number,
+  community: string,
+  sort: string,
+  show: string,
+}
+
+
+
+
+export interface IUserChannel{
+  id:number,
+  uid: string,
+  name:string,
+  channel_id: string,
+  email: string,
+  picture: string,
+  is_developer: boolean,
+  following_cnt: number,
+  follower_cnt: number
+  projects:IProject[],
+  profile:{
+    level: number,
+    exp: number,
+    following_cnt: number,
+    follower_cnt: number,
+    state_msg: string,
+    description: string,
+    url_banner: string
+  },
+  games:IGame[]
+}
+

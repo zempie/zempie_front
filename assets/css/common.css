@@ -514,7 +514,7 @@
   height: 150px;
   margin: 0 auto;
   border-radius: 15px;
-  background: url('../images/1200_150_game.png');
+  background: url('/images/1200_150_game.png');
   background-size: cover;
   box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -527,7 +527,7 @@
   height: 150px;
   margin: 0 auto;
   border-radius: 15px;
-  background: url('../images/zemjam.png');
+  background: url('/images/zemjam.png');
   background-size: cover;
   box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.1);
   overflow: hidden;

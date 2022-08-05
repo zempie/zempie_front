@@ -4,8 +4,8 @@
     <p style="background-color: #808080"></p>
 
     <div class="ct-info">
-      <h3 class=" grey-text bg-grey-1"> </h3>
-      <p class=" grey-text bg-grey-1" style="min-height: 50px;">
+      <h3 class="grey-text bg-grey-1"> </h3>
+      <p class="grey-text bg-grey-1" style="min-height: 50px;">
       </p>
       <dl>
         <dd>

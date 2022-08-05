@@ -29,11 +29,13 @@
     </dl> -->
 
     <transition name="component-fade" mode="out-in">
-      <ul>
+      <ul> {{ games }}
         <!-- <transition-group name="list-complete" > -->
         <div class="card-game">
           <GameCardSk v-for="sk in 16" />
+          <GameCard v-for="game in games" :game="game" />
         </div>
+
         <!-- <GameCard v-for="game in games" :key="game.id" :game="game" /> -->
         <!-- </transition-group> -->
 
@@ -58,10 +60,10 @@ import 'swiper/css';
 // metaSetting !: MetaSetting;
 // toast = new Toast();
 
-// games: any = [];
+const games = ref([]);
 const category = ref(0);
 
-// //parameters
+
 // limit: number = 20;
 // offset: number = 0;
 // sort: string = 'c';
@@ -93,6 +95,19 @@ const TSSswiperOption = ref({
       //slidesPerView: 7
     }
   }
+})
+
+const { data, error, pending } = await game.list();
+
+
+onMounted(() => {
+  if (data.value) {
+    const { result } = data.value
+
+    games.value = result.games
+  }
+
+
 })
 
 

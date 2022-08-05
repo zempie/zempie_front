@@ -1,4 +1,5 @@
 import EX from '~/plugins/example'
+import { ICommunityPayload } from '~~/types';
 
 const delay = (ms:number) => new Promise((_) => setTimeout(_, ms))
 
@@ -55,16 +56,13 @@ const communityFetch = async(method: string, url: string, data = null, withCrede
     }    
   }
 
-
-  const result =  await useFetch(url, {
+  return await useFetch(url, {
     method:method,  
     body:data,
     baseURL:config.COMMUNITY_API,
-    headers: accessToken? {'Authorization' :  `Bearer ${accessToken}`} : {},
+    headers: accessToken && withCredentials? {'Authorization' :  `Bearer ${accessToken}`} : {},
     initialCache:false,
   })
-
-  return result
 
 
 }
@@ -118,7 +116,12 @@ export const user = {
   }, 
   follow(){
     // return communityFetch('post', )
+  },
+  joinedCommunity(userId:number){
+    return communityFetch('get', `/user/${userId}/list/community`, undefined, false)
+
   }
+  
 }
 
 export const game = {
@@ -131,6 +134,9 @@ export const game = {
   verifyPath(pathName: string){
     return studioFetch('get', `/studio/verify-pathname/${pathName}`, undefined, false);
   },
+  getInfo(pathname: string) {  
+    return useFetchData('get', `/launch/game/${pathname}`, undefined, false)
+}
   
 }
 
@@ -147,5 +153,15 @@ export const project = {
  update(id: number, formData:FormData){
   return studioFetch('post', `/studio/project/${id}`, formData, false)
  }        
+}
+
+export const community = {
+   list(obj:ICommunityPayload){
+      return  communityFetch('get', '/community/list', obj, false)
+  },
+  subscribe(communityId: number, userId: number){
+    return communityFetch('post', `/community/${communityId}/subscribe`, undefined, true);
+
+  }
 }
 

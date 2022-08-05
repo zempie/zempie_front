@@ -37,7 +37,8 @@ export default defineNuxtPlugin(async(nuxtApp)=>{
 })
 
 async function setAuthCookie(accessToken: string){
-  const { data } = await useFetch('/api/setAuthCookie', { method: 'post', body: { accessToken: accessToken } })
+  const { data } = await useFetch('/api/setAuthCookie', { method: 'post', body: { accessToken: accessToken }, initialCache:false,})
+  console.log('data')
   return data;
 }
 

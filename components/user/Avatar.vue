@@ -1,16 +1,14 @@
 <template>
+
     <!-- <img src="~/assets/images/300_300_default_profile.png" /> -->
     <div v-if="tag === 'div'" :class="user && user.uid ? 'user-avatar' : ''"
         :style="`background: url('${profile_url}') center center  / cover no-repeat; background-size: cover;`"></div>
 
     <span v-else-if="tag === 'span'"
         :style="`background: url('${profile_url}') center center  / cover no-repeat; background-size: cover;`"></span>
-    <!-- 
-   <p
-        :class="user && user.uid ? 'user-avatar' : ''"
-        @click="moveUserPage"
-        v-else-if="tag === 'p'"
-        :style="`background: url('${picture}') center center  / cover no-repeat; background-size: cover;`"></p> -->
+
+    <p v-else-if="tag === 'p'"
+        :style="`background: url('${profile_url}') center center  / cover no-repeat; background-size: cover;`"></p>
 </template>
 
 <script setup lang="ts">
