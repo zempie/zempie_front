@@ -21,7 +21,6 @@
                     Copyright ⓒ Fromthered Inc. All rights reserved.
                 </div>
             </dt>
-            <!-- social -->
             <dd>
                 <a :href="config.ZEMPIE_INSTA_URL" target="_blank" class="insta-icon">
                     <i class="uil uil-instagram"></i>
@@ -33,7 +32,6 @@
                     <i class="uil uil-facebook"></i>
                 </a>
             </dd>
-            <!-- /social -->
         </dl>
     </div>
 </template>

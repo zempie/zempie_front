@@ -3,7 +3,7 @@ import { IUser } from "~~/types"
 export default function () {
   const user = useState('user', () => ({
     isLogin:false,
-    info:{} as IUser,
+    info:null as IUser,
     fUser:null
   }))
 

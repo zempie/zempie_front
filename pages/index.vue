@@ -1,5 +1,6 @@
 <template>
   <div class="wrap">
+
     <div class="main-bg">
       <div class="main-copy">
         <p>
@@ -8,6 +9,8 @@
       </div>
 
       <div class="main-visual">
+
+
         <h2>
           <span style="font: 36px/46px 'Jalnan'">Recent games</span>
         </h2>
@@ -41,7 +44,11 @@
         <h2><span style="font: 36px/46px 'Jalnan'">Communities</span></h2>
 
         <div class="card-timeline">
-          <CommunityCardSk v-for="commi in 4" />
+          <CommunityCardSk v-show='cPending' v-for="commi in 4" />
+          <CommunityCard v-show="!cPending" v-for="community in communities" :community="community"
+            :key="community.id" />
+
+
 
         </div>
       </div>
@@ -59,23 +66,12 @@
 </template>
 
 <script lang="ts" setup>
-
 const GAME_COUNT = 8;
+const COMMUNITY_COUNT = 4;
+const POST_COUNT = 8;
 
-onMounted(() => {
-  getRecentGames()
-})
-
-function getRecentGames() {
-  const payload = {
-    limit: GAME_COUNT,
-    offset: 0,
-
-
-  }
-  // game.list()
-
-}
+const { data, pending, error } = await game.list({ limit: GAME_COUNT, offset: 0 })
+const { data: communities, pending: cPending, error: cError } = await community.list({ limit: COMMUNITY_COUNT })
 
 
 </script>
@@ -174,6 +170,43 @@ function getRecentGames() {
       width: 31.333%;
       margin: 1%;
     }
+  }
+}
+
+
+
+
+
+.ProseMirror {
+  >*+* {
+    margin-top: 0.75em;
+  }
+
+  code {
+    background-color: rgba(#616161, 0.1);
+    color: #616161;
+  }
+}
+
+.content {
+  padding: 1rem 0 0;
+
+  h3 {
+    margin: 1rem 0 0.5rem;
+  }
+
+  pre {
+    border-radius: 5px;
+    color: #333;
+  }
+
+  code {
+    display: block;
+    white-space: pre-wrap;
+    font-size: 0.8rem;
+    padding: 0.75rem 1rem;
+    background-color: #e9ecef;
+    color: #495057;
   }
 }
 </style>

@@ -1,11 +1,13 @@
-// function execCommandCopy(text: string) {
-//   const input = document.createElement('input') as HTMLInputElement;
-//   document.body.appendChild(input);
-//   input.value = text;
-//   input.select();
-//   document.execCommand('copy');
-//   document.body.removeChild(input);
-// }
+import * as dayjs from 'dayjs'
+
+export const  execCommandCopy = (text: string) => {
+  const input = document.createElement('input') as HTMLInputElement;
+  document.body.appendChild(input);
+  input.value = text;
+  input.select();
+  document.execCommand('copy');
+  document.body.removeChild(input);
+}
 
 
 
@@ -73,6 +75,21 @@
 //   }
 //   return str.substr( 0, count );
 // }
+
+export const dateFormat = (sec: number) =>{
+    
+    if (dayjs().diff(dayjs(sec), 'm') < 1) {
+        return dayjs().diff(dayjs(sec), 's') + '초 전'
+    } else if (dayjs().diff(dayjs(sec), 'h') < 1) {
+        return dayjs().diff(dayjs(sec), 'm') + '분 전'
+    } else if (dayjs().diff(dayjs(sec), 'd') < 1) {
+        return dayjs().diff(dayjs(sec), 'h') + '시간 전'
+    } else if (dayjs().diff(dayjs(sec), 'd') <= 7) {
+        return dayjs().diff(dayjs(sec), 'd') + '일 전'
+    } else {
+        return dayjs(sec).locale('ko').format('LL')
+    }
+}
 
 export const numToKMB = (num: number) => {
   let result: any = num;

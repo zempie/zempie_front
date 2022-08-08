@@ -59,3 +59,11 @@
     
   }
 }
+
+
+.el-dropdown-menu__item:focus {
+  border-radius: 10px;
+  background-color: #ededed !important;
+  color:#f97316 !important
+
+}

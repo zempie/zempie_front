@@ -95,10 +95,10 @@ onMounted(async () => {
 
 
 async function getChannelHeaderInfo() {
-  const { data, pending } = await user.getUserInfo(channelId.value)
-  isPending.value = pending.value
-  const { result } = data.value;
-  userInfo.value = result.target
+  // const { data, pending } = await user.getUserInfo(channelId.value)
+  // isPending.value = pending.value
+  // const { result } = data.value;
+  // userInfo.value = result.target
 
 }
 

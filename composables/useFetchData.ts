@@ -47,22 +47,26 @@ const communityFetch = async(method: string, url: string, data = null, withCrede
   const config = useRuntimeConfig();
   const accessToken = useCookie(config.COOKIE_NAME).value
 
+  const options = {
+    method:method,  
+    baseURL:config.COMMUNITY_API,
+    headers: accessToken && withCredentials? {'Authorization' :  `Bearer ${accessToken}`} : {},
+    initialCache:false,
+  }
+
   if (method === 'get') {    
     url = url + '?_=' + Date.now()
     if(data) {
       for (let d in data) {
           if (data[d]) url += `&${d}=${data[d]}`
       }
-    }    
+    }     
+  }else{
+    options['body'] = data;
   }
 
-  return await useFetch(url, {
-    method:method,  
-    body:data,
-    baseURL:config.COMMUNITY_API,
-    headers: accessToken && withCredentials? {'Authorization' :  `Bearer ${accessToken}`} : {},
-    initialCache:false,
-  })
+ 
+  return await useFetch<any>(url, options)
 
 
 }
@@ -125,7 +129,7 @@ export const user = {
 }
 
 export const game = {
-  list(obj : {limit:number, offset:number, category:string, sort:string, dir: string}){
+  list(obj : {limit:number, offset:number, category?:string, sort?:string, dir?: string}){
     return useFetchData('get', '/games', obj, false)
   },
   upload(formData:FormData) {
@@ -136,7 +140,10 @@ export const game = {
   },
   getInfo(pathname: string) {  
     return useFetchData('get', `/launch/game/${pathname}`, undefined, false)
-}
+  },
+  getTimeline(gameId: number, obj?: { limit: number, offset:number, sort: string, media: string}){
+    return communityFetch('get', `/timeline/game/${gameId}`, obj, false)
+  }
   
 }
 
@@ -161,7 +168,10 @@ export const community = {
   },
   subscribe(communityId: number, userId: number){
     return communityFetch('post', `/community/${communityId}/subscribe`, undefined, true);
+  },
+  search(obj: any) {
+    return communityFetch('get', `/search`, obj, false)
+}
 
-  }
 }
 

@@ -59,6 +59,7 @@
         </div>
       </dt>
       <dd>
+        <PostTimeline />
         <!-- <Timeline v-if='user' :currPage="'game'" :id="game.id" :game="game" :key="this.$route.query.media"
             ></Timeline> -->
       </dd>
@@ -76,7 +77,7 @@
           </dl>
         </div>
         <div class="ta-copy-link">
-          <a><em>Copy Game Link</em> <span><i class="uil uil-link"></i></span></a>
+          <a @click="copyUrl"><em>Copy Game Link</em> <span><i class="uil uil-link"></i></span></a>
         </div>
       </dt>
 
@@ -88,9 +89,16 @@
 
 <script setup lang="ts">
 import { IUserChannel } from '~~/types';
+import { execCommandCopy } from '~/scripts/utils'
 import { useLocalePath } from 'vue-i18n-routing';
+import { ElMessage } from 'element-plus';
+import { useI18n } from 'vue-i18n';
+
 
 const localePath = useLocalePath();
+const config = useRuntimeConfig();
+const { t, locale } = useI18n()
+
 const userInfo = ref({} as IUserChannel)
 
 const games = computed(() => useChannel().userChannel.value.info?.games)
@@ -107,98 +115,103 @@ onMounted(async () => {
   // userInfo.value = result.target
 })
 
-    // toast = new Toast();
-    // games: any[] = [];
-    // totalGameCnt = 0;
+// toast = new Toast();
+// games: any[] = [];
+// totalGameCnt = 0;
 
-    // TASswiperOption = {
-    //     slidesPerView: 1,
-    //     spaceBetween: 20,
-    //     navigation: {
-    //         nextEl: '.ta-screenshot .swiper-button-next',
-    //         prevEl: '.ta-screenshot .swiper-button-prev'
-    //     },
-    // }
-    // gamePath = this.$route.params.gamePath;
-    // user: any = '';
-    // game: any = this.$store.getters.gameInfo;
-    // imgSrc = '';
-    // hashtags = [];
-
-
-    // async mounted() {
-    //     await this.$store.dispatch("loginState");
-    //     this.fetch();
-
-    // }
-
-    // fetch() {
-
-    //     this.$api.gameInfo(this.gamePath)
-    //         .then((res: any) => {
-    //             const {result} = res;
-    //             const {game} = result;
-    //             this.$store.commit('gameInfo', game)
-    //             this.game = game;
-    //             this.user = game.user
-    //             this.hashtags = (game.hashtags.length > 0) ? game.hashtags.split(",") : undefined;
-
-    //             this.$store.commit('currPage', {
-    //                 game_id: game.id
-    //             })
-
-    //             this.$gtag.event('visit_game_page', {
-    //                 'gameId': game.id,
-    //             });
-    //             this.gameListFetch();
+// TASswiperOption = {
+//     slidesPerView: 1,
+//     spaceBetween: 20,
+//     navigation: {
+//         nextEl: '.ta-screenshot .swiper-button-next',
+//         prevEl: '.ta-screenshot .swiper-button-prev'
+//     },
+// }
+// gamePath = this.$route.params.gamePath;
+// user: any = '';
+// game: any = this.$store.getters.gameInfo;
+// imgSrc = '';
+// hashtags = [];
 
 
-    //         })
-    //         .catch((err: any) => {
+// async mounted() {
+//     await this.$store.dispatch("loginState");
+//     this.fetch();
+
+// }
+
+// fetch() {
+
+//     this.$api.gameInfo(this.gamePath)
+//         .then((res: any) => {
+//             const {result} = res;
+//             const {game} = result;
+//             this.$store.commit('gameInfo', game)
+//             this.game = game;
+//             this.user = game.user
+//             this.hashtags = (game.hashtags.length > 0) ? game.hashtags.split(",") : undefined;
+
+//             this.$store.commit('currPage', {
+//                 game_id: game.id
+//             })
+
+//             this.$gtag.event('visit_game_page', {
+//                 'gameId': game.id,
+//             });
+//             this.gameListFetch();
 
 
-    //         })
-    // }
+//         })
+//         .catch((err: any) => {
 
 
-    // gameListFetch() {
-    //     this.$api.userChannel(this.user.channel_id)
-    //         .then((res: any) => {
-    //             const {target} = res;
-    //             const {games} = target;
-    //             this.$store.commit('gameList', games)
-    //             if (games.length > 0) {
-    //                 this.totalGameCnt = games.length;
-    //             }
-    //             this.games = games.slice(0, 5)
-    //         })
-    //         .catch((err: AxiosError) => {
-    //             // this.$router.push(`/${this.$i18n.locale}`)
-    //             // console.log('err', err)
-    //         })
+//         })
+// }
 
 
-    // }
+// gameListFetch() {
+//     this.$api.userChannel(this.user.channel_id)
+//         .then((res: any) => {
+//             const {target} = res;
+//             const {games} = target;
+//             this.$store.commit('gameList', games)
+//             if (games.length > 0) {
+//                 this.totalGameCnt = games.length;
+//             }
+//             this.games = games.slice(0, 5)
+//         })
+//         .catch((err: AxiosError) => {
+//             // this.$router.push(`/${this.$i18n.locale}`)
+//             // console.log('err', err)
+//         })
 
-    // beforeDestroy() {
-    //     this.$store.commit('currPage', null)
-    // }
 
-    // openImgModal(imgSrc: string) {
-    //     this.imgSrc = imgSrc;
-    //     (this.$refs.originScreenShootImgModal as any).show();
-    // }
+// }
 
-    // closeImgModal() {
-    //     (this.$refs.originScreenShootImgModal as any).hide();
-    // }
+// beforeDestroy() {
+//     this.$store.commit('currPage', null)
+// }
 
-    // copyUrl() {
-    //     const url = `${process.env.VUE_APP_LAUNCHER_URL}game/${this.game.pathname}`;
-    //     execCommandCopy(url)
-    //     this.toast.clear();
-    //     this.toast.successToast(`${this.$t('copied.clipboard')}`)
-    // }
+// openImgModal(imgSrc: string) {
+//     this.imgSrc = imgSrc;
+//     (this.$refs.originScreenShootImgModal as any).show();
+// }
+
+// closeImgModal() {
+//     (this.$refs.originScreenShootImgModal as any).hide();
+// }
+
+function copyUrl() {
+
+  const url = `${config.BASE_API}/game/${game.value.pathname}`;
+  execCommandCopy(url)
+  ElMessage.closeAll()
+  ElMessage({
+    message: t('copied.clipboard'),
+    type: 'success'
+  })
+
+}
 
     // moveGamePage(pathname: string) {
     //     this.$router.push(`/${this.$i18n.locale}/timeline/game/${pathname}`)

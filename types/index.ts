@@ -81,10 +81,10 @@ export interface IProject{
 
 export interface ICommunityPayload{
   limit: number,
-  offset: number,
-  community: string,
-  sort: string,
-  show: string,
+  offset?: number,
+  community?: string,
+  sort?: string,
+  show?: string,
 }
 
 

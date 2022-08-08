@@ -62,6 +62,8 @@ export default defineNuxtConfig({
     COOKIE_DOMAIN:process.env.COOKIE_DOMAIN,
     COMMUNITY_API:process.env.COMMUNITY_API,
     STUDIO_API:process.env.STUDIO_API,
+    ZEMPIE_URL:process.env.ZEMPIE_URL,
+    LAUNCHER_URL:process.env.LAUNCHER_URL,
 },
 
 })
