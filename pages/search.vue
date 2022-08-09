@@ -1,89 +1,73 @@
 <template>
   <div class="content">
-    <div class="visual-title">
-      <h2>'{{ keyword }}' <span>{{ $t('search.result') }}</span></h2>
-    </div>
-
-    <dl class="area-title" v-if="userList?.length">
-      <dt>Users <span>{{ userList?.length }}</span></dt>
-    </dl>
-    <ul v-if="userList">
-      <transition-group name="list-complete" class="card-follow">
-        <li v-for="user in userList" :key="user.id">
-          <div class="cf-img"></div>
-          <UserAvatar :user="user" :tag="'p'"></UserAvatar>
-
-          <!--                <p :style="{'background' : 'url(' + member.picture || '../../assets/images/300_300_default_profile.png' + ') center center no-repeat', 'background-size' : 'cover'}"></p>-->
-          <div class="cf-info">
-            <h3>{{ user.name }}</h3>
-            <p></p>
-            <dl>
-              <dd>
-                <h4>{{ user.followers_cnt }}</h4>
-                <p>Followers</p>
-              </dd>
-              <dt>
-                <p></p>
-              </dt>
-              <dd>
-                <h4>{{ user.followings_cnt }}</h4>
-                <p>Followings</p>
-              </dd>
-            </dl>
-          </div>
-        </li>
-      </transition-group>
-      <li class="more-card" v-if="userList?.length > 3">
-        <h3><i class="uil uil-plus"></i></h3>
-        <h4>{{ $t('search.viewAll') }}</h4>
-      </li>
-    </ul>
+    <ClientOnly>
+      <div class="visual-title">
+        <h2>'{{ keyword }}' <span>{{ $t('search.result') }}</span></h2>
+      </div>
 
 
-    <dl class="area-title" v-if="gameList?.length > 0">
-      <dt>Games <span>{{ gameList?.length }}</span></dt>
-    </dl>
+      <dl class="area-title" v-if="results.users?.length">
+        <dt>Users <span>{{ results.users?.length }}</span></dt>
+      </dl>
+      <ul v-if="results.users.length">
 
-    <ul v-if="gameList">
-      <transition-group name="list-complete" class="card-game">
-        <li v-for="game in gameList" :key="game.id">
+        <ul class="card-follow">
+          <TransitionGroup name="list-complete">
+            <UserCard v-for="user in results.users" :key="user.id" :user="user" />
+            <!-- <li class="more-card" v-if="userList?.length > 2">
+            <h3><i class="uil uil-plus"></i></h3>
+            <h4>{{ $t('search.viewAll') }}</h4>
+          </li> -->
+          </TransitionGroup>
+        </ul>
+
+      </ul>
+
+
+      <dl class="area-title" v-if="results.games?.length > 0">
+        <dt>Games <span>{{ results.games?.length }}</span></dt>
+      </dl>
+
+      <ul v-if="results.games.length" class="card-game">
+        <TransitionGroup name="list-complete">
+          <GameCard v-for="game in results.games" :key="game.id" />
+          <!-- <li v-for="game in results.games" :key="game.id">
           <div
-            :style="`background: url( ${game && game.url_thumb_webp || game.url_thumb} ) center center no-repeat; background-size: cover;`">
+            :style="`background: url( ${game?.url_thumb_webp || game.url_thumb} ) center center no-repeat; background-size: cover;`">
           </div>
           <dl>
             <dt>
 
-              <P
+              <p
                 :style="`background: url(${game.user && game.user.picture || '/img/300_300_default_profile.png'}) center center no-repeat; background-size: cover;`">
-              </P>
+              </p>
             </dt>
             <dd>
               <h2>{{ game && game.title }}</h2>
               <p>{{ game.user && game.user.name }}</p>
               <ul>
-                <!--                            <li><img src="../../assets/images/charge_game_icon.svg" alt=""></li>-->
-                <!--                            <li><img src="../../assets/images/hot_game_icon.svg" alt=""></li>-->
                 <li><img src="/images/zempie_game_icon.svg" alt=""></li>
               </ul>
             </dd>
           </dl>
-        </li>
-      </transition-group>
+        </li> -->
+        </TransitionGroup>
 
-    </ul>
-
-    <dl class="area-title" v-if="postList?.length">
-      <dt>Posts <span>{{ postList?.length }}</span></dt>
-    </dl>
-    <div class="ta-search-post" v-if="postList" :style="postList ? 'padding:0px ;' : ''">
-      <ul class="ta-post">
-        <div v-for="feed in postList" :key="feed.id">
-          <!--                    {{feed}}-->
-          <Feed :feed="feed"></Feed>
-        </div>
       </ul>
-    </div>
 
+      <dl class="area-title" v-if="results.posts?.length">
+        <dt>Posts <span>{{ results.posts?.length }}</span></dt>
+      </dl>
+      <div class="ta-search-post" v-if="results.posts.length" :style="results.posts.length ? 'padding:0px ;' : ''">
+        <ul class="ta-post">
+          <div v-for="feed in results.posts" :key="feed.id">
+            <PostFeed :feed="feed" />
+            <!--                    {{feed}}-->
+            <!-- <Feed :feed="feed"></Feed> -->
+          </div>
+        </ul>
+      </div>
+    </ClientOnly>
 
   </div>
 </template>
@@ -92,23 +76,26 @@
 
 const $route = useRoute();
 
-const keyword = computed(() => $route.query.q)
+const keyword = ref($route.query.q)
 
 const userList = ref([])
 const gameList = ref([])
 const communityList = ref([])
 const postList = ref([])
+const config = useRuntimeConfig()
 
-const { data, error, pending } = await community.search({ q: keyword.value })
+const { data: results, error, pending, refresh } = await useFetch<any>(() => `/search?q=${keyword.value}`, { baseURL: config.COMMUNITY_API });
 
-onMounted(() => {
-  const { posts, games, community: comList, users } = data.value
-  userList.value = users;
-  gameList.value = games
-  communityList.value = comList
-  postList.value = posts
 
-})
+watch(
+  () => $route.query.q,
+  (newKeyword: string) => {
+    keyword.value = newKeyword;
+    refresh()
+  }
+)
+
+
 
 
 // import Feed from "@/components/timeline/_feed.vue";

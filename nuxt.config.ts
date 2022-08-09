@@ -40,6 +40,7 @@ export default defineNuxtConfig({
   modules: [
     'cookie-universal-nuxt',
     ['@nuxtjs/i18n',i18n],
+    '@vueuse/nuxt',
   ],
   
    

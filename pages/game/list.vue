@@ -1,71 +1,68 @@
 <template>
   <div class="content">
+    <ClientOnly>
 
-    <div class="visual-title">
-      <h2><span>Games</span></h2>
-    </div>
-    <!-- <div class="jam-visual-title"></div> -->
-    <div class="tab-search-swiper">
+      <div class="visual-title">
+        <h2><span>Games</span></h2>
+      </div>
+      <!-- <div class="jam-visual-title"></div> -->
+      <div class="tab-search-swiper">
 
-      <swiper class="swiper-area" :slides-per-view="5" :options="TSSswiperOption">
-        <swiper-slide>
-          <a @click="clickCategory(0);" :class="category === 0 ? 'active' : ''">
-            game
-            <!-- {{ $t('projectList.banner.text') }} -->
-          </a>
-        </swiper-slide>
-        <swiper-slide>
-          <a @click="clickCategory(3);" :class="category === 3 ? 'active' : ''">
-            zem
-            <!-- {{ $t('gameList.jam') }} -->
-          </a>
-        </swiper-slide>
-      </swiper>
-    </div>
+        <div class="swiper-area">
+          <div class="swiper-slide">
+            <a @click="clickCategory(0);" :class="category === 0 ? 'active' : ''">
+              game
+              <!-- {{ $t('projectList.banner.text') }} -->
+            </a>
+          </div>
+          <div class="swiper-slide">
+            <a @click="clickCategory(3);" :class="category === 3 ? 'active' : ''">
+              zem
+              <!-- {{ $t('gameList.jam') }} -->
+            </a>
+          </div>
+        </div>
+      </div>
 
-    <!-- TODO: 게임 갯수 표현: 게임 100개 이상일때 주석 제거 -->
-    <!-- <dl class="area-title">
+      <!-- TODO: 게임 갯수 표현: 게임 100개 이상일때 주석 제거 -->
+      <!-- <dl class="area-title">
       <dt>Games <span>{{ games.length }}</span></dt>
     </dl> -->
 
-    <transition name="component-fade" mode="out-in">
-      <ul> {{ games }}
-        <!-- <transition-group name="list-complete" > -->
-        <div class="card-game">
-          <GameCardSk v-for="sk in 16" />
-          <GameCard v-for="game in games" :game="game" />
-        </div>
+      <Transition name="component-fade" mode="out-in">
+        <ul>
+          <!-- <transition-group name="list-complete" > -->
+          <div class="card-game">
+            <GameCardSk v-if="pending" v-for="sk in 16" :key="sk" />
+            <GameCard v-else v-for="game in data.result?.games" :gameInfo="game" :key="game.id" />
+          </div>
 
-        <!-- <GameCard v-for="game in games" :key="game.id" :game="game" /> -->
-        <!-- </transition-group> -->
+          <!-- <GameCard v-for="game in games" :key="game.id" :game="game" /> -->
+          <!-- </transition-group> -->
 
-        <!--            <li class="more-card" v-if="games && games.length>3">-->
-        <!--                <div>-->
-        <!--                    <h3><i class="uil uil-plus"></i></h3>-->
-        <!--                    <p>모두보기</p>-->
-        <!--                </div>-->
-        <!--            </li>-->
-      </ul>
+          <!--            <li class="more-card" v-if="games && games.length>3">-->
+          <!--                <div>-->
+          <!--                    <h3><i class="uil uil-plus"></i></h3>-->
+          <!--                    <p>모두보기</p>-->
+          <!--                </div>-->
+          <!--            </li>-->
+        </ul>
 
-    </transition>
-    <div ref="div"></div>
+      </Transition>
+    </ClientOnly>
   </div>
 </template>
 
 <script setup lang="ts" >
-import { Swiper, SwiperSlide } from 'swiper/vue'
+import { useInfiniteScroll } from '@vueuse/core'
 
-import 'swiper/css';
+const config = useRuntimeConfig()
 
-// metaSetting !: MetaSetting;
-// toast = new Toast();
-
-const games = ref([]);
+// const games = ref([]);
+const el = ref<HTMLElement>(null)
 const category = ref(0);
-
-
-// limit: number = 20;
-// offset: number = 0;
+const limit = ref(20)
+const offset = ref(0)
 // sort: string = 'c';
 // dir: string = 'asc'
 
@@ -75,40 +72,18 @@ const category = ref(0);
 
 
 // keyword: string | (string | null)[] = '';
-const TSSswiperOption = ref({
-  slidesPerView: 8,
-  spaceBetween: 0,
-  breakpoints: {
-    300: {
-      slidesPerView: 2.5
-    },
-    480: {
-      slidesPerView: 3.5
-    },
-    768: {
-      slidesPerView: 4.5
-    },
-    992: {
-      slidesPerView: 6
-    },
-    1200: {
-      //slidesPerView: 7
-    }
-  }
+
+
+
+const { data, error, pending, refresh } = await useFetch<any>(() => `/games?_=${Date.now()}&limit=${limit.value}&offset=${offset.value}&category=${category.value}`, { baseURL: config.BASE_API, initialCache: false });
+//await game.list(payload);
+
+useInfiniteScroll(el, () => {
+  offset.value += limit.value
+  refresh()
 })
 
-const { data, error, pending } = await game.list();
 
-
-onMounted(() => {
-  if (data.value) {
-    const { result } = data.value
-
-    games.value = result.games
-  }
-
-
-})
 
 
 
@@ -171,6 +146,8 @@ onMounted(() => {
 
 function clickCategory(selected: number) {
   category.value = selected
+
+  refresh()
   // this.initData();
   // this.fetch();
 

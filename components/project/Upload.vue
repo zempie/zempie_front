@@ -30,6 +30,7 @@
       <ProjectSelectStage v-if="uploadStage === eUploadStage.NONE" />
       <ProjectAddGameInfo v-else />
 
+
       <!-- <transition name="component-fade" mode="out-in">
                 <SelectStage v-show="stepOne()"
                              @stage="getStage"
@@ -62,7 +63,7 @@ import { eUploadStage } from "~~/types"
 
 const { uploadProject } = useProject();
 
-const uploadStage = computed(() => uploadProject.value.stage)
+const uploadStage = computed(() => uploadProject.value.form.stage)
 
 watch(
   () => uploadStage.value,

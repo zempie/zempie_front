@@ -29,6 +29,8 @@ export default defineNuxtPlugin(async(nuxtApp)=>{
     if(user){      
       await setAuthCookie((user as any).accessToken)  
       await setUserInfo()
+      useUser().setFirebaseUser(user);
+
     } 
 
   })
@@ -38,7 +40,6 @@ export default defineNuxtPlugin(async(nuxtApp)=>{
 
 async function setAuthCookie(accessToken: string){
   const { data } = await useFetch('/api/setAuthCookie', { method: 'post', body: { accessToken: accessToken }, initialCache:false,})
-  console.log('data')
   return data;
 }
 
@@ -57,6 +58,7 @@ async function setUserInfo(){
       const{error:err} = error.value.data;
     
       if(err.code === 20001){
+
         alert('회원가입이 완료되지않았습니다. 회원가입을 진행해주세요')
         
          router.push('/join')

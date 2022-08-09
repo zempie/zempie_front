@@ -1,8 +1,7 @@
 <template>
-
-    <!-- <img src="~/assets/images/300_300_default_profile.png" /> -->
-    <div v-if="tag === 'div'" :class="user && user.uid ? 'user-avatar' : ''"
-        :style="`background: url('${profile_url}') center center  / cover no-repeat; background-size: cover;`"></div>
+    <div v-if="tag === 'div'" :class="user?.uid ? 'user-avatar' : ''"
+        :style="`background: url('${profile_url}') center center  / cover no-repeat; background-size: cover;`">
+    </div>
 
     <span v-else-if="tag === 'span'"
         :style="`background: url('${profile_url}') center center  / cover no-repeat; background-size: cover;`"></span>
@@ -12,25 +11,18 @@
 </template>
 
 <script setup lang="ts">
-
-const $router = useRouter();
-
 const props = defineProps({
     user: Object,
     tag: {
         default: 'div',
         type: String
     }
-
 })
 const profile_url = ref('')
 
 onMounted(() => {
     profile_url.value = props.user?.picture ? props.user.picture + `?t=${Date.now()}` : `/images/300_300_default_profile.png`
 })
-    // @Prop() user!: any;
-    // @Prop() tag !: string;
-
     // picture = ''
 
     // async mounted() {
@@ -53,5 +45,6 @@ onMounted(() => {
 <style scoped lang="scss">
 .user-avatar {
     cursor: pointer;
+    border-radius: 100%;
 }
 </style>

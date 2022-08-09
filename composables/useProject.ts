@@ -4,8 +4,11 @@ export default function () {
   const projectById = useState('projectById', () => ({    
       info: null as IProject
   }))
+
   const uploadProject = useState('uploadProject', () =>({
-    stage:eUploadStage.NONE,
+    form:{
+      stage:eUploadStage.NONE,
+    },
   }))
 
 
@@ -20,12 +23,21 @@ export default function () {
 
 
   const setStage = (stage:number) =>{
-    uploadProject.value.stage = stage;
+    uploadProject.value.form.stage = stage;
   }
   const resetStage = () =>{
-    uploadProject.value.stage = eUploadStage.NONE;
+    uploadProject.value.form.stage = eUploadStage.NONE;
   }
 
+  const setForm = (form: any)=>{
+    uploadProject.value.form = form
+  }
+
+  const resetForm = ()=>{
+    uploadProject.value.form = {
+      stage:eUploadStage.NONE,
+    }
+  }
 
   return {
     projectById,
@@ -33,6 +45,8 @@ export default function () {
     setProjectInfo,
     resetProjectInfo,
     setStage,
-    resetStage    
+    resetStage,
+    setForm,
+    resetForm    
   }
 }

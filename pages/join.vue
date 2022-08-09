@@ -16,15 +16,15 @@
           <li>
             <!-- FIXME: error message margin, padding -->
             <input type="text" name="register-email" v-model="v$.email.$model"
-              :placeholder="$t('login.email.placeholder')" class="w100p h60" :readonly="fUser.email" />
+              :placeholder="$t('login.email.placeholder')" class="w100p h60" :readonly="fUser?.email" />
 
             <h3 class="input-errors" v-for="error of v$.email.$errors" :key="error.$uid">
               <i class="uil uil-check"></i>{{ error.$message }}
             </h3>
           </li>
-          <li>
+          <li v-if="!fUser?.email">
             <input type="password" name="register-password" v-model="v$.password.$model" title=""
-              :placeholder="$t('password')" class="w100p h60" />
+              :placeholder="$t('password')" class="w100p h60" autocomplete="off" />
 
             <h3 class="input-errors" v-for="error of v$.password.$errors" :key="error.$uid">
               <i class="uil uil-check"></i>{{ error.$message }}
@@ -42,7 +42,7 @@
           </li> -->
           <li>
             <input type="text" name="register-username" v-model="v$.username.$model" title="" :placeholder="$t('name')"
-              class="w100p h60" />
+              class="w100p h60" autocomplete="off" />
             <h3 class="input-errors" v-for="error of v$.username.$errors" :key="error.$uid">
               <i class="uil uil-check"></i>{{ error.$message }}
             </h3>
@@ -156,6 +156,7 @@ const { $firebaseAuth, $cookies } = useNuxtApp()
 const config = useRuntimeConfig()
 const { t, locale } = useI18n()
 const localePath = useLocalePath();
+const router = useRouter();
 
 const form = reactive({
   email: "",
@@ -205,8 +206,9 @@ const fUser = ref(computed(() => useUser().user.value.fUser))
 definePageMeta({
   layout: 'layout-none',
 });
+
 onMounted(() => {
-  if (fUser) form.email = fUser.value.email;
+  if (fUser.value) form.email = fUser.value.email;
 
   // console.log('fb', $firebaseApp)
 
@@ -267,7 +269,7 @@ const errorAgree = ref(false);
 // }
 
 async function register() {
-
+  if (fUser.value) { console.log('fuser!', fUser.value); await joinZempie(); return; }
   const result = await v$.value.$validate()
 
   if (!form.policyAgreement) {
@@ -276,6 +278,8 @@ async function register() {
   } else {
     if (!result) return;
   }
+
+
 
 
   try {
@@ -330,7 +334,12 @@ async function joinZempie() {
     // nickname:form.nickname,
 
   }
-  await useUser().joinUser(payload)
+  try {
+    await useUser().joinUser(payload)
+    router.replace('/')
+  } catch (err: any) {
+    console.error(err)
+  }
   // try {
 
 
@@ -339,7 +348,7 @@ async function joinZempie() {
   //   console.log('join zemp', data.value)
   // } catch (err: any) {
   //   console.error(err)
-  // }
+  //  }
 
 }
   // this.$api.signUp(obj)

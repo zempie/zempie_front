@@ -45,10 +45,6 @@
 
 
         <dl>
-          <!--                    <dt>-->
-          <!--                        <router-link to="#">아이디찾기</router-link>-->
-          <!--                    </dt>-->
-          <!--                    <dd>|</dd>-->
           <dt>
             <!-- <NuxtLink :to="localePath('/password-search')">{{ $t('reset.pwd') }}</NuxtLink> -->
           </dt>
@@ -65,7 +61,7 @@
           <dt></dt>
         </dl>
         <ul>
-          <li>
+          <li @click="google">
             <img src="/images/google_icon.png" alt="google-login" title="" />
           </li>
         </ul>
@@ -83,7 +79,7 @@ import useVuelidate from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
 import { useI18n } from 'vue-i18n';
 import { emailRegex, passwordRegex } from '~/scripts/utils'
-import { signInWithEmailAndPassword, type UserCredential } from 'firebase/auth'
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, type UserCredential } from 'firebase/auth'
 import { useLocalePath } from 'vue-i18n-routing';
 
 const { $firebaseAuth, $cookies } = useNuxtApp()
@@ -259,7 +255,20 @@ async function onSubmit() {
 //         }
 //     }
 
+async function google() {
+  const provider = new GoogleAuthProvider();
 
+  await signInWithPopup($firebaseAuth, provider);
+
+
+
+  // if (user) {
+  //   useUser().setFirebaseUser(user);
+  //   //  const token = await firebase.auth().currentUser?.getIdToken();
+  // }
+
+
+}
 //     async google() {
 //         await this.$store.dispatch("loginState");
 

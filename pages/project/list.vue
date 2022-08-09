@@ -316,11 +316,11 @@ function sortDescListByGame(key: string) {
 
 .studio-all-game>ul.ag-title {
   background-color: #f9f9f9;
-}
 
-.studio-all-game>ul.ag-title>li {
-  font-weight: 500;
-  font-size: 17px;
+  li {
+    font-weight: 500;
+    font-size: 16px !important;
+  }
 }
 
 .studio-all-game>div>ul>li {

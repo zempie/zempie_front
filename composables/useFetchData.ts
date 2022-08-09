@@ -6,11 +6,17 @@ const delay = (ms:number) => new Promise((_) => setTimeout(_, ms))
 // const BASE_API = process.env.BASE_API
 // const COMMUNITY_API = process.env.COMMUNITY_API
 
+
  const useFetchData = async(method: string, url: string, data = null, withCredentials:boolean = false,  error = false) => {
   const config = useRuntimeConfig();
   const accessToken = useCookie(config.COOKIE_NAME).value
   
-  
+  const options = {
+    method:method,  
+    baseURL:config.BASE_API,
+    headers: accessToken && withCredentials? {'Authorization' :  `Bearer ${accessToken}`} : {},
+    initialCache:false,
+  }
   if (EX[url]) {
     console.log('[testAPI]', method, url, data, error)
     await delay(1000)
@@ -28,16 +34,10 @@ const delay = (ms:number) => new Promise((_) => setTimeout(_, ms))
           if (data[d]) url += `&${d}=${data[d]}`
       }
     }    
+  }else{
+    options['body'] = data;
   }
-
-
-  const result =  await useFetch(url, {
-    method:method,  
-    body:data,
-    baseURL:config.BASE_API,
-    headers: accessToken? {'Authorization' :  `Bearer ${accessToken}`} : {},
-    initialCache:false,
-  })
+  const result =  await useFetch(url, options)
 
   return result
   
@@ -75,7 +75,13 @@ const communityFetch = async(method: string, url: string, data = null, withCrede
 const studioFetch = async(method: string, url: string, data = null, withCredentials:boolean = false,  error = false) => {
   const config = useRuntimeConfig();
   const accessToken = useCookie(config.COOKIE_NAME).value
-
+  
+  const options = {
+    method:method,  
+    baseURL:config.STUDIO_API,
+    headers: accessToken && withCredentials? {'Authorization' :  `Bearer ${accessToken}`} : {},
+    initialCache:false,
+  }
   if (method === 'get') {    
     url = url + '?_=' + Date.now()
     if(data) {
@@ -83,16 +89,12 @@ const studioFetch = async(method: string, url: string, data = null, withCredenti
           if (data[d]) url += `&${d}=${data[d]}`
       }
     }    
+  }else{
+    options['body'] = data;
   }
 
 
-return await useFetch(url, {
-    method:method,  
-    body:data,
-    baseURL:config.STUDIO_API,
-    headers: accessToken? {'Authorization' :  `Bearer ${accessToken}`} : {},
-    initialCache:false,
-  })
+return await useFetch<any>(url, options)
 }
 
 
@@ -129,14 +131,14 @@ export const user = {
 }
 
 export const game = {
-  list(obj : {limit:number, offset:number, category?:string, sort?:string, dir?: string}){
+  list(obj : {limit:number, offset:number, category?:number, sort?:string, dir?: string}){
     return useFetchData('get', '/games', obj, false)
   },
   upload(formData:FormData) {
-    return studioFetch('post', '/studio/project', formData, false);
+    return studioFetch('post', '/studio/project', formData, true);
   },
   verifyPath(pathName: string){
-    return studioFetch('get', `/studio/verify-pathname/${pathName}`, undefined, false);
+    return studioFetch('get', `/studio/verify-pathname/${pathName}`, undefined, true);
   },
   getInfo(pathname: string) {  
     return useFetchData('get', `/launch/game/${pathname}`, undefined, false)

@@ -124,8 +124,11 @@
             <!-- /message -->
 
             <button class="btn-circle-none">
-              <NuxtLink :to="localePath(`/channel/${user.channel_id}`)">
-                <UserAvatar style="width:30px; height:30px;" :user="user" />
+              <NuxtLink :to="localePath(`/channel/${user?.channel_id}`)">
+                <ClientOnly>
+                  <UserAvatar style="width:30px; height:30px;" :user="user" />
+                </ClientOnly>
+
               </NuxtLink>
             </button>
             <el-dropdown trigger="click" ref="userMenu">
@@ -492,7 +495,7 @@ const search = _.debounce(async () => {
 }, 300)
 
 function moveSearchPage() {
-  $router.push(`search?q=${searchInput.value}`)
+  $router.push(localePath(`/search`) + `?q=${searchInput.value}`)
   // initSearchData()
 }
 

@@ -7,8 +7,8 @@
             <UserAvatar :user="feed.user" :tag="'span'"></UserAvatar>
           </dt>
 
-          <dd v-if="feed.user && feed.user.name">
-            <h2>{{ feed.user && feed.user.name }} uploaded a {{ feed.post_type }} post</h2>
+          <dd v-if="feed.user?.name">
+            <h2>{{ feed.user?.name }} uploaded a {{ feed.post_type }} post</h2>
             <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{ dateFormat(feed.createdAt) }}</p>
 
           </dd>
@@ -19,7 +19,7 @@
           </dd>
         </dl>
       </dt>
-      <dd v-if="feed.user && feed.user.name">
+      <dd v-if="feed.user?.name">
         <!-- <dropdown-menu :overlay="false" class="tapl-more-dropdown" :isOpen="isOpenReportModal"
           @closed="isOpenReportModal = false;">
           <a class="btn-circle-none pt6" slot="trigger" @click="isOpenReportModal = !isOpenReportModal"><i
@@ -471,6 +471,7 @@ function copyUrl() {
 
 .tapl-content {
   word-break: break-all;
+  color: #000;
 
 }
 

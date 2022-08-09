@@ -17,7 +17,9 @@
 
         <ul style="margin: 40px 0px">
           <span class="card-game">
-            <GameCardSk v-for="game in 8" />
+            <GameCardSk v-if="pending" v-for="game in 8" :key="game" />
+            <GameCard v-else v-for="game in data.result?.games" :gameInfo="game" :key="game.id" />
+
           </span>
         </ul>
 

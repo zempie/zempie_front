@@ -15,8 +15,6 @@
         </h2>
         <p>{{ gameInfo.user?.name }}</p>
         <ul>
-          <!--                            <li><img src="../../assets/images/charge_game_icon.svg" alt=""></li>-->
-          <!--                            <li><img src="../../assets/images/hot_game_icon.svg" alt=""></li>-->
           <li>
             <img src="/images/zempie_game_icon.svg" alt="" />
           </li>
