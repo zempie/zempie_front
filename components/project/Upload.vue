@@ -1,8 +1,6 @@
 <template>
-  <!-- 2단영역 -->
   <dl class="studio-upload-area">
     <dt>
-      <!-- 단계 -->
       <ul class="studio-upload-step">
         <li :class="[uploadStage === eUploadStage.NONE ? 'active' : '', 'step']">
           <p>STEP 01</p>
@@ -19,43 +17,13 @@
         <li class="publish-btn ">
           <h4>{{ $t('publishing') }}</h4>
         </li>
-        <!-- <li class="publish-btn">
-          <h4>{{ $t('update') }}</h4>
-        </li> -->
       </ul>
-      <!-- 단계 끝 -->
     </dt>
     <dd>
-      <!-- 게임단계 -->
       <ProjectSelectStage v-if="uploadStage === eUploadStage.NONE" />
       <ProjectAddGameInfo v-else />
-
-
-      <!-- <transition name="component-fade" mode="out-in">
-                <SelectStage v-show="stepOne()"
-                             @stage="getStage"
-                             :projectInfo="projectInfo"/>
-            </transition>
-            <transition name="component-fade" mode="out-in">
-                <AddGameInfo v-show="stepTwo()"
-                             @stage="getStage"
-                             @gameInfoDone="getGameInfo"
-                             @isActivePublish="getPublishState"
-                             :isUpdateProject = 'isUpdateProject'
-                             :isEditProject="projectInfo ? true: false"
-                             :projectInfo="projectInfo"/>
-            </transition>
-            <transition name="component-fade" mode="out-in">
-                <AddGameFile v-show="stepThree()"
-                             @gameInfoDone="getGameInfo"
-                             :isEditProject="projectInfo ? true: false"
-                />
-            </transition> -->
-      <!--                <router-view></router-view>-->
-      <!-- 게임단계 끝 -->
     </dd>
   </dl>
-  <!-- 2단영역 끝 -->
 </template>
 
 <script setup lang="ts">

@@ -44,7 +44,8 @@
                 <i class="uil uil-times" @click="deleteChip(i)"></i>
               </div>
 
-              <input v-model="chipInput" @keyup.enter="saveChip" @keydown.delete="backspaceDelete">
+              <input v-model="chipInput" @keyup.enter="saveChip" @keydown.delete="backspaceDelete"
+                :placeholder="$t('addGameInfo.game.tags')">
 
             </div>
             <transition-group name="fade">
@@ -73,7 +74,7 @@
               <li v-if="!prevThumbnail">
                 <div>
                   <div style="height: 0px; overflow: hidden">
-                    <input type="file" @change="onFileChange"
+                    <input type="file" @change="onImgChange"
                       accept="image/jpeg, image/png, image/svg, image/jpg, image/webp, image/bmp," ref="thumbnail"
                       name="fileInput" />
                   </div>
@@ -91,7 +92,7 @@
                 </transition>
                 <p>
 
-                  <button class="btn-gray" @click="uploadFile"><i class="uil uil-upload"></i>&nbsp;
+                  <button class="btn-gray" @click="uploadThumbnail"><i class="uil uil-upload"></i>&nbsp;
                     {{ $t('addGameInfo.game.thumbnail') }}
 
                   </button>
@@ -104,12 +105,12 @@
                   :style="{ 'background': 'url(' + prevThumbnail + ') center center / cover no-repeat', 'background-size': 'cover' }"
                   style="border:#e9e9e9 2px solid;">
                   <div style="height: 0px; overflow: hidden">
-                    <input type="file" @change="onFileChange" accept=image/* ref="thumbnail" name="fileInput" />
+                    <input type="file" @change="onImgChange" accept=image/* ref="thumbnail" name="fileInput" />
                   </div>
                 </div>
 
                 <p>
-                  <button class="btn-gray" @click="uploadFile"><i class="uil uil-upload"></i>&nbsp;
+                  <button class="btn-gray" @click="uploadThumbnail"><i class="uil uil-upload"></i>&nbsp;
                     {{ $t('addGameInfo.game.thumbnail') }}
 
                   </button>
@@ -121,59 +122,50 @@
             </ul>
           </dd>
         </dl>
-        <!--    <dl class="suii-content">
-                <dt> {{ $t('previewImage.title') }}</dt>
-                <dd>
-                    <ul class="image-upload">
-                        <li v-if="!prevGif">
-                            <div>
-                                <div style="height: 0px; overflow: hidden">
-                                    <input type="file"
-                                           @change="onGifChange"
-                                           accept=image/gif
-                                           ref="thumbnailGif"
-                                           name="fileInput"/>
-                                </div>
-                                <p><i class="uil uil-image-v"></i></p>
-                                <h2>
-                                    {{ $t('addGameInfo.game.thumbnail.size') }} 512* 512<br/>
-                                    (up to 4MB)
-                                </h2>
-                            </div>
-                            <p>
-                                <button class="btn-gray" @click="uploadGif"><i class="uil uil-upload"></i>&nbsp;
-                                    {{ $t('addGameInfo.game.thumbnail') }}
-                                </button>
+        <dl class="suii-content">
+          <dt> {{ $t('previewImage.title') }}</dt>
+          <dd>
+            <ul class="image-upload">
+              <li v-if="!prevGif">
+                <div>
+                  <div style="height: 0px; overflow: hidden">
+                    <input type="file" @change="onGifChange" accept=image/gif ref="gifThumbnail" name="fileInput" />
+                  </div>
+                  <p><i class="uil uil-image-v"></i></p>
+                  <h2>
+                    {{ $t('addGameInfo.game.thumbnail.size') }} 512* 512<br />
+                    (up to 4MB)
+                  </h2>
+                </div>
+                <p>
+                  <button class="btn-gray" @click="uploadGif"><i class="uil uil-upload"></i>&nbsp;
+                    {{ $t('addGameInfo.game.thumbnail') }}
+                  </button>
 
-                            </p>
-                        </li>
-                        <li v-else>
-                            <div
-                                :style="{'background' : 'url(' + prevGif + ') center center / cover no-repeat', 'background-size' : 'cover'}"
-                                style="border:#e9e9e9 2px solid;">
-                                <div style="height: 0px; overflow: hidden">
-                                    <input type="file"
-                                           @change="onGifChange"
-                                           accept=image/*
-                                           ref="thumbnailGif"
-                                           name="fileInput"/>
-                                </div>
-                            </div>
-                            <p>
-                                <button class="btn-gray" @click="uploadGif"><i class="uil uil-upload"></i>&nbsp;
-                                    {{ $t('addGameInfo.game.thumbnail') }}
-                                </button>
-                                <button class="btn-circle-icon" @click="deleteThumbnail2"><i
-                                    class="uil uil-trash-alt"></i>
-                                </button>
-                            </p>
-                        </li>
-                    </ul>
-                </dd>
-            </dl>
-            
+                </p>
+              </li>
+              <li v-else>
+                <div
+                  :style="{ 'background': 'url(' + prevGif + ') center center / cover no-repeat', 'background-size': 'cover' }"
+                  style="border:#e9e9e9 2px solid;">
+                  <div style="height: 0px; overflow: hidden">
+                    <input type="file" @change="onGifChange" accept=image/* ref="gifThumbnail" name="fileInput" />
+                  </div>
+                </div>
+                <p>
+                  <button class="btn-gray" @click="uploadGif"><i class="uil uil-upload"></i>&nbsp;
+                    {{ $t('addGameInfo.game.thumbnail') }}
+                  </button>
+                  <button class="btn-circle-icon" @click="deleteGif"><i class="uil uil-trash-alt"></i>
+                  </button>
+                </p>
+              </li>
+            </ul>
+          </dd>
+        </dl>
 
-            -->
+
+
         <dl class="suii-content">
           <dt style="padding-top: 5px">{{ $t("게임ID 자동작성") }}</dt>
           <dd>
@@ -276,7 +268,7 @@ import { useI18n } from "vue-i18n";
 import { randomString } from "~~/scripts/utils.js";
 import { useLocalePath } from "vue-i18n-routing";
 
-const THUMBNAIL_MAX_SIZE = 4
+const IMAGE_MAX_SIZE = 4
 const localePath = useLocalePath();
 const { t, locale } = useI18n();
 const router = useRouter();
@@ -292,6 +284,11 @@ const thumbnail = ref<HTMLElement>()
 const thumbFile = ref<File>()
 const prevThumbnail = ref<String | ArrayBuffer>('')
 const isThumbErr = ref(false)
+
+const gifThumbnail = ref<HTMLElement>()
+const gifThumFile = ref<File>()
+const prevGif = ref<String | ArrayBuffer>('')
+
 // prevThumbnail: any = '';
 
 
@@ -480,6 +477,7 @@ async function save() {
 
   form.hashtags = hashtagsArr.value.toString();
   form.project_picture = thumbFile.value;
+  form.project_picture2 = gifThumFile.value;
   await createGamePath();
   const isValid = await v$.value.$validate();
 
@@ -631,18 +629,15 @@ async function createGamePath() {
 // }
 
 
-function uploadFile() {
+function uploadThumbnail() {
   thumbnail.value.click();
 }
 
-// uploadGif() {
-//     (this.$refs.thumbnailGif as HTMLElement).click();
-// }
 
-function onFileChange(event: { target: { files: any } }) {
+function onImgChange(event: { target: { files: any } }) {
   const file = event.target.files[0]
 
-  if (file.size < 1024 * 1024 * THUMBNAIL_MAX_SIZE) {
+  if (file.size < 1024 * 1024 * IMAGE_MAX_SIZE) {
 
     // this.fileName = event.target.files[0].name
     thumbFile.value = file;
@@ -673,21 +668,32 @@ function onFileChange(event: { target: { files: any } }) {
 //     this.thumbFile2 = 'rm_file2';
 // }
 
-// onGifChange(event: { target: { files: any } }) {
-//     if (event.target.files[0].size < 1024 * 1024 * 4) {
-//         this.thumbFile2 = event.target.files[0];
-//         // this.fileName = event.target.files[0].name
-//         // this.updateFile = event.target.files[0]
-//         const reader = new FileReader();
-//         reader.onload = e => {
-//             this.prevGif = e.target!.result
-//         };
-//         reader.readAsDataURL(event.target.files[0]);
-//     }
-//     else {
-//         alert(`${this.$t('maxFile.size.4mb')}`)
-//     }
-// }
+
+
+function uploadGif() {
+  gifThumbnail.value.click();
+}
+function onGifChange(event: { target: { files: any } }) {
+  const gifFile = event.target.files[0]
+
+  if (gifFile.size < 1024 * 1024 * IMAGE_MAX_SIZE) {
+    gifThumFile.value = gifFile;
+    // this.fileName = gifFile.name
+    // this.updateFile = gifFile
+    const reader = new FileReader();
+    reader.onload = e => {
+      prevGif.value = e.target!.result
+    };
+    reader.readAsDataURL(gifFile);
+  }
+  else {
+    alert(`${this.$t('maxFile.size.4mb')}`)
+  }
+}
+
+function deleteGif() {
+  prevGif.value = '';
+}
 
 // checkActivePublish() {
 //     if (this.$store.getters.gameStage === this.gameStage.Dev) {
@@ -759,7 +765,8 @@ function onFileChange(event: { target: { files: any } }) {
 // }
 
 function saveChip() {
-  if (!hashtagsArr.value.includes(chipInput.value.trim())) {
+
+  if (!hashtagsArr.value.includes(chipInput.value.trim()) && !!chipInput.value.trim()) {
     ((hashtagsArr.value.indexOf(chipInput.value) === -1)) && hashtagsArr.value.push(chipInput.value.trim());
   }
 
