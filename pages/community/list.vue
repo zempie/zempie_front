@@ -36,15 +36,15 @@
       <dd>
         <div class="sort-default">
           <a @click="sortGroups(0)" :class="filter === 0 ? 'active' : ''"><i class="uis uis-check"></i>
-            <!-- {{ i18n.t('filter.recent') }}  -->
+            {{ $t('filter.recent') }}
           </a>
           <span>·</span>
           <a @click="sortGroups(1)" :class="filter === 1 ? 'active' : ''"><i class="uis uis-check"></i>
-            <!-- {{ i18n.t('filter.subscribe') }} -->
+            {{ $t('filter.subscribe') }}
           </a>
           <span>·</span>
           <a @click="sortGroups(2)" :class="filter === 2 ? 'active' : ''"><i class="uis uis-check"></i>
-            <!-- {{ i18n.t('filter.alphabet') }} -->
+            {{ $t('filter.alphabet') }}
           </a>
         </div>
       </dd>
@@ -60,9 +60,8 @@
           <CommunityCardSk v-show="isPending" v-for="com in 4" :key="com" />
           <CommunityCard v-show="!isPending" v-for="community in communities" :community="community"
             :key="community.id">
-            <!-- TODO: ux 개선 사항 정리후 적용 -->
             <template v-slot:subBtn>
-              <!-- <SubscribeBtn :community="community" /> -->
+              <CommunitySubscribeBtn :community="community" class="w100p" @fetch="fetch" />
             </template>
           </CommunityCard>
         </TransitionGroup>
@@ -116,7 +115,6 @@
 
 <script lang="ts" setup>
 import { ICommunityPayload } from '~~/types';
-import SubscribeBtn from '~~/components/community/subscribeBtn.vue';
 // import * as Api from '~/api'
 // import firebase from '~/scripts/firebase'
 // import { useUserStore } from '~/store/user'
@@ -150,27 +148,26 @@ const obj: ICommunityPayload = {
   sort: '',
   show: ''
 }
-
-const { data, error, pending } = await community.list()
+// TODO: 무한 스크롤 적용
 
 // isFirstLoading: boolean = true;
 
-onMounted(async () => {
-  if (data.value) {
-    console.log(data.value)
-    communities.value = data.value
-  }
-  isPending.value = pending.value
-})
 
 
 // beforeDestroy() {
 //     window.removeEventListener("scroll", this.scrollCheck);
 // }
+await fetch()
 
 async function fetch() {
-  console.log('fetch')
 
+  const { data, error, pending, refresh } = await community.list(obj)
+
+  if (data.value) {
+    console.log(data.value)
+    communities.value = data.value
+  }
+  isPending.value = pending.value
 
 
 
@@ -246,18 +243,19 @@ function sortGroups(sorted: number) {
 
   filter.value = sorted;
   // if (this.clickManager.doubleClickCheck() === false) {
-  //     if (filter === 0) {
-  //         this.sort = '';
-  //         this.fetch()
-  //     }
-  //     else if (filter === 1) {
-  //         this.sort = 'SUBSCRIBE'
-  //         this.fetch()
-  //     }
-  //     else if (filter === 2) {
-  //         this.sort = 'ALPAHBETIC'
-  //         this.fetch()
-  //     }
+
+  if (filter.value === 0) {
+    obj.sort = '';
+    fetch()
+  }
+  else if (filter.value === 1) {
+    obj.sort = 'SUBSCRIBE'
+    fetch()
+  }
+  else if (filter.value === 2) {
+    obj.sort = 'ALPAHBETIC'
+    fetch()
+  }
 
 }
 

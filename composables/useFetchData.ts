@@ -7,7 +7,7 @@ const delay = (ms:number) => new Promise((_) => setTimeout(_, ms))
 // const COMMUNITY_API = process.env.COMMUNITY_API
 
 
- const useFetchData = async(method: string, url: string, data = null, withCredentials:boolean = false,  error = false) => {
+ const useFetchData = async(method: string, url: string, data = null, withCredentials:boolean = false,   error = false) => {
   const config = useRuntimeConfig();
   const accessToken = useCookie(config.COOKIE_NAME).value
   
@@ -166,10 +166,13 @@ export const project = {
 
 export const community = {
    list(obj:ICommunityPayload){
-      return  communityFetch('get', '/community/list', obj, false)
+      return  communityFetch('get', '/community/list', obj, true)
   },
-  subscribe(communityId: number, userId: number){
+  subscribe(communityId: number){
     return communityFetch('post', `/community/${communityId}/subscribe`, undefined, true);
+  },
+  unsubscribe(communityId: number){
+    return communityFetch('post', `/community/${communityId}/unsubscribe`, undefined, true);
   },
   search(obj: any) {
     return communityFetch('get', `/search`, obj, false)

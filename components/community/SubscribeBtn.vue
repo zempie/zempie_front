@@ -1,47 +1,38 @@
 <template>
-  <!-- <a class="btn-sub w120 mr10" v-if="$route.meta.title === 'ManageJoinedGroup'" @click="unsubscribe">
-    {{ $t('isSubscribing') }}</a> -->
-  <a class="btn-default w120 mr10" :community="community" @click.stop="subscribe">{{
+  <a v-if="!community.is_subscribed" class="btn-default  mr10" :community="community" @click.stop="subscribe">{{
       $t('subscribe.btn')
   }}</a>
-
-  <!-- <a class="btn-sub w120 mr10" v-else @click="unsubscribe">{{ $t('isSubscribing') }}</a> -->
+  <a v-else class="btn-sub  mr10" @click.stop="unsubscribe">{{ $t('isSubscribing') }}</a>
 </template>
 
 <script setup lang="ts">
-
 const props = defineProps({
   community: Object
 })
+const emit = defineEmits(['fetch'])
+
+const isLogin = computed(() => useUser().user.value.isLogin)
 
 async function subscribe() {
-  const { data, error } = await community.subscribe(props.community.id, useUser().user.value.info.id)
+  if (isLogin) {
+    const { data, error } = await community.subscribe(props.community.id)
+    if (!error.value) {
+      emit('fetch')
+    }
 
+  } else {
+    useModal().openLoginModal()
+  }
 }
 
+async function unsubscribe() {
+  const { data, error } = await community.unsubscribe(props.community.id)
 
+  if (!error.value) {
+    emit('fetch')
+  }
+}
 
-    // subscribe() {
-    //     if (this.user) {
-    //         this.$api.subscribe({user_id: this.user.id, community_id: this.community.id})
-    //             .then((res: AxiosResponse) => {
-    //                 this.$emit('reFetch')
-    //             }).catch((err: AxiosError) => {
-    //             if (err.message) {
-    //                 alert(err.message)
-    //             }
-    //         })
-    //     }
-    //     else {
-    //         this.$store.commit('needLogin', true)
-    //         this.$modal.show('needLogin')
-    //     }
-    // }
-
-    // unsubscribe() {
-    //     this.$emit('unsubscribe', this.community.id)
-
-    // }
 </script>
 
 <style scoped lang="scss">

@@ -8,7 +8,7 @@
       <!-- <div class="jam-visual-title"></div> -->
       <div class="tab-search-swiper">
 
-        <div class="swiper-area">
+        <div class="swiper-area uppercase">
           <div class="swiper-slide">
             <a @click="clickCategory(0);" :class="category === 0 ? 'active' : ''">
               game
@@ -30,7 +30,7 @@
     </dl> -->
       <ul>
         <div class="card-game">
-          <TransitionGroup name="list-complete" mode="fade">
+          <TransitionGroup name="fade">
             <GameCardSk v-if="isPending" v-for="sk in 16" :key="sk" />
             <GameCard v-else v-for="game in games" :gameInfo="game" :key="game.id" />
           </TransitionGroup>
@@ -42,23 +42,20 @@
 </template>
 
 <script setup lang="ts" >
-import { useWindowSize, useWindowScroll } from '@vueuse/core'
-const config = useRuntimeConfig()
+import _ from 'lodash'
 
+const LIMIT_SIZE = 20
 const el = ref<HTMLElement>(null)
 const category = ref(0);
-const limit = ref(20)
+const limit = ref(LIMIT_SIZE)
 const offset = ref(0)
 // sort: string = 'c';
 // dir: string = 'asc'
 
-// //state
 const isAddData = ref(false);
 const games = ref([])
 const isPending = ref(true)
 
-
-// keyword: string | (string | null)[] = '';
 
 
 
@@ -71,9 +68,7 @@ onMounted(() => {
 
 function scroll() {
   window.onscroll = () => {
-    const { width, height } = useWindowSize()
-    const { x, y } = useWindowScroll()
-    if (y.value === document.documentElement.scrollTop) {
+    if (document.documentElement.scrollTop + window.innerHeight >= document.documentElement.scrollHeight) {
       if (isAddData.value) {
         offset.value += limit.value;
         fetch()
@@ -90,7 +85,6 @@ async function fetch() {
   }
 
   const { data } = await game.list(payload)
-  // const { data } = await useFetch<any>(() => `/games?_=${Date.now()}&limit=${limit.value}&offset=${offset.value}&category=${category.value}`, { baseURL: config.BASE_API, initialCache: false });
   const { result } = data.value
 
 
@@ -100,35 +94,19 @@ async function fetch() {
     }
     else {
       isAddData.value = false
-      window.removeEventListener("scroll", scroll);
     }
   }
   else {
     games.value = result.games;
-    isAddData.value = true
+    if (result.games.length < LIMIT_SIZE) {
+      isAddData.value = false;
+    } else {
+      isAddData.value = true
+    }
+
   }
   isPending.value = false
 }
-// async mounted() {
-//     // console.log(useScroll)
-//   // const { x, y, isScrolling, arrivedState, directions } = useScroll(this.el)
-
-
-//     // console.log(x,y)
-//     await this.$store.dispatch("loginState");
-//     this.fetch()
-//     this.metaSetting = new MetaSetting({
-//         title: `${this.$t('gameList')} | Zempie.com`, //게임 리스트
-//         meta: [
-//             {name: 'description', content: `${this.$t('gameList.desc')}`},
-//             {property: 'og:url', content: `${this.$store.getters.homeUrl}/${this.$i18n.locale}/gameList`},
-//             {property: 'og:title', content: `${this.$t('gameList')} | Zempie.com`},
-//             {property: 'og:description', content: `${this.$t('gameList.desc')}`},
-//         ]
-//     });
-//     window.addEventListener("scroll", this.scrollCheck);
-// }
-
 // beforeDestroy() {
 //     this.$store.dispatch('resetResearchData')
 //     this.initData();
@@ -165,17 +143,14 @@ async function fetch() {
 
 // }
 
-function clickCategory(selected: number) {
+const clickCategory = _.debounce((selected: number) => {
   category.value = selected
   initData()
   fetch()
-  // this.initData();
-  // this.fetch();
-
-}
+}, 300)
 
 function initData() {
-  limit.value = 20;
+  limit.value = LIMIT_SIZE;
   offset.value = 0;
   isAddData.value = false
   games.value = []
@@ -211,73 +186,23 @@ function initData() {
 </script>
 
 <style scoped>
-.toasted,
-.toast-success {
-  color: #F97316 !important;
-  border-color: #F97316 !important;
-}
-
-.section-banner {
-  padding: 0;
-  display: flex;
-  align-content: space-around;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-.stats-decoration-title {
-  padding: 2px 6px;
-  font-size: 16px;
-  text-overflow: ellipsis;
-  font-weight: 600;
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
-  color: #fff;
-  border-radius: 6px;
-  background-color: #1d2333;
-}
-
-.cf-info {
-  height: 100%;
-}
-
-.cf-img {
-  background-color: #f39800;
-}
-
 .swiper-slide {
   cursor: pointer;
 }
 
-
-.list-complete-item {
-  display: inline-block;
-  margin-right: 10px;
+.fade-move,
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.5s;
 }
 
-.list-complete-enter,
-.list-complete-leave-to
-
-/* .list-complete-leave-active below version 2.1.8 */
-  {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
   transform: translateY(30px);
 }
 
-.list-complete-enter-active {
-  transition: all 1s;
-}
-
-.component-fade-enter-active,
-.component-fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.component-fade-enter-from,
-.component-fade-leave-to {
-  opacity: 0;
+.fade-leave-active {
+  position: absolute;
 }
 </style>
