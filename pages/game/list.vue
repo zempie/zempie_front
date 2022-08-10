@@ -1,9 +1,9 @@
 <template>
-  <div class="content">
+  <div class="content" ref="el">
     <ClientOnly>
-
       <div class="visual-title">
         <h2><span>Games</span></h2>
+
       </div>
       <!-- <div class="jam-visual-title"></div> -->
       <div class="tab-search-swiper">
@@ -28,37 +28,23 @@
       <!-- <dl class="area-title">
       <dt>Games <span>{{ games.length }}</span></dt>
     </dl> -->
-
-      <Transition name="component-fade" mode="out-in">
-        <ul>
-          <!-- <transition-group name="list-complete" > -->
-          <div class="card-game">
-            <GameCardSk v-if="pending" v-for="sk in 16" :key="sk" />
-            <GameCard v-else v-for="game in data.result?.games" :gameInfo="game" :key="game.id" />
-          </div>
-
-          <!-- <GameCard v-for="game in games" :key="game.id" :game="game" /> -->
-          <!-- </transition-group> -->
-
-          <!--            <li class="more-card" v-if="games && games.length>3">-->
-          <!--                <div>-->
-          <!--                    <h3><i class="uil uil-plus"></i></h3>-->
-          <!--                    <p>모두보기</p>-->
-          <!--                </div>-->
-          <!--            </li>-->
-        </ul>
-
-      </Transition>
+      <ul>
+        <div class="card-game">
+          <TransitionGroup name="list-complete" mode="fade">
+            <GameCardSk v-if="isPending" v-for="sk in 16" :key="sk" />
+            <GameCard v-else v-for="game in games" :gameInfo="game" :key="game.id" />
+          </TransitionGroup>
+        </div>
+      </ul>
     </ClientOnly>
+
   </div>
 </template>
 
 <script setup lang="ts" >
-import { useInfiniteScroll } from '@vueuse/core'
-
+import { useWindowSize, useWindowScroll } from '@vueuse/core'
 const config = useRuntimeConfig()
 
-// const games = ref([]);
 const el = ref<HTMLElement>(null)
 const category = ref(0);
 const limit = ref(20)
@@ -67,27 +53,62 @@ const offset = ref(0)
 // dir: string = 'asc'
 
 // //state
-// isAddData: boolean = false;
-// hasData: boolean = true;
+const isAddData = ref(false);
+const games = ref([])
+const isPending = ref(true)
 
 
 // keyword: string | (string | null)[] = '';
 
 
 
-const { data, error, pending, refresh } = await useFetch<any>(() => `/games?_=${Date.now()}&limit=${limit.value}&offset=${offset.value}&category=${category.value}`, { baseURL: config.BASE_API, initialCache: false });
-//await game.list(payload);
+await fetch()
 
-useInfiniteScroll(el, () => {
-  offset.value += limit.value
-  refresh()
+onMounted(() => {
+  scroll()
 })
 
 
+function scroll() {
+  window.onscroll = () => {
+    const { width, height } = useWindowSize()
+    const { x, y } = useWindowScroll()
+    if (y.value === document.documentElement.scrollTop) {
+      if (isAddData.value) {
+        offset.value += limit.value;
+        fetch()
+      }
+    }
+  }
+}
+
+async function fetch() {
+  const payload = {
+    limit: limit.value,
+    offset: offset.value,
+    category: category.value
+  }
+
+  const { data } = await game.list(payload)
+  // const { data } = await useFetch<any>(() => `/games?_=${Date.now()}&limit=${limit.value}&offset=${offset.value}&category=${category.value}`, { baseURL: config.BASE_API, initialCache: false });
+  const { result } = data.value
 
 
-
-
+  if (isAddData.value) {
+    if (result.games.length > 0) {
+      games.value = [...games.value, ...result.games]
+    }
+    else {
+      isAddData.value = false
+      window.removeEventListener("scroll", scroll);
+    }
+  }
+  else {
+    games.value = result.games;
+    isAddData.value = true
+  }
+  isPending.value = false
+}
 // async mounted() {
 //     // console.log(useScroll)
 //   // const { x, y, isScrolling, arrivedState, directions } = useScroll(this.el)
@@ -146,11 +167,18 @@ useInfiniteScroll(el, () => {
 
 function clickCategory(selected: number) {
   category.value = selected
-
-  refresh()
+  initData()
+  fetch()
   // this.initData();
   // this.fetch();
 
+}
+
+function initData() {
+  limit.value = 20;
+  offset.value = 0;
+  isAddData.value = false
+  games.value = []
 }
 
 

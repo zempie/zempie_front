@@ -1610,6 +1610,15 @@
   dependencies:
     vue-demi "^0.13.4"
 
+"@vueuse/components@^9.1.0":
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/@vueuse/components/-/components-9.1.0.tgz#fe0ffe4213c9f5ecdbb00eca6b440b1a35780e92"
+  integrity sha512-8LeCIYZSzQBNlgEWwVmxT9Zs4desJO7w/7gFcq9XT5kEzPs8AsUnAfFSK8fasvgpD2Fu0NtzXnaiFYkKZsSFLQ==
+  dependencies:
+    "@vueuse/core" "9.1.0"
+    "@vueuse/shared" "9.1.0"
+    vue-demi "*"
+
 "@vueuse/core@9.1.0", "@vueuse/core@^9.1.0":
   version "9.1.0"
   resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-9.1.0.tgz#f0fb13fd99768c0eb617169a2d2c1cbd5f5a52eb"
@@ -5606,6 +5615,11 @@ vue-i18n@beta:
     "@intlify/shared" "9.2.0"
     "@intlify/vue-devtools" "9.2.0"
     "@vue/devtools-api" "^6.2.1"
+
+vue-infinite-loading@^2.4.5:
+  version "2.4.5"
+  resolved "https://registry.yarnpkg.com/vue-infinite-loading/-/vue-infinite-loading-2.4.5.tgz#cc20fd40af7f20188006443c99b60470cf1de1b3"
+  integrity sha512-xhq95Mxun060bRnsOoLE2Be6BR7jYwuC89kDe18+GmCLVrRA/dU0jrGb12Xu6NjmKs+iTW0AA6saSEmEW4cR7g==
 
 vue-router@^4.1.2:
   version "4.1.3"
