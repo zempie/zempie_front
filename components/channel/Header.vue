@@ -32,11 +32,11 @@
 </template>
 
 <script setup lang="ts">
-
-
+import { PropType } from 'vue';
+import { IUserChannel } from '~~/types'
 
 const props = defineProps({
-  userInfo: Object
+  userInfo: Object as PropType<IUserChannel>
 })
 
 const isMine = computed(() => {

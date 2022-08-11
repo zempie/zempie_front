@@ -153,27 +153,22 @@
                       <NuxtLink :to="localePath('/project/list')"><i class="uil uil-robot"></i>
                         {{ $t('gameStudio') }}
                       </NuxtLink>
-                      <!--<NuxtLink :to="`/${$i18n.locale}/user/${user.channel_id}/settings`"><i class="uil uil-setting"></i>
-                      {{ $t('account.settings') }}
-                    </NuxtLink> -->
+
                     </div>
                   </div>
                   <div>
                     <h2>{{ $t('group') }}</h2>
                     <div>
-                      <!-- <NuxtLink :to="`/${$i18n.locale}/user/${user.channel_id}/manageJoinedGroup`"><i
-                        class="uil uil-users-alt"></i>
-                      {{ $t('joined.group') }}
-                    </NuxtLink> -->
+                      <NuxtLink :to="localePath(`/profile/${user.channel_id}/communities`)"><i
+                          class="uil uil-users-alt"></i>
+                        {{ $t('joined.group') }}
+                      </NuxtLink>
                     </div>
                   </div>
                   <p><a class="btn-default w100p" @click="logout">{{ $t('logout') }}</a></p>
                 </div>
               </template>
             </el-dropdown>
-
-
-
           </div>
 
 

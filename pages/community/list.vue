@@ -114,6 +114,7 @@
 </template>
 
 <script lang="ts" setup>
+import _ from 'lodash'
 import { ICommunityPayload } from '~~/types';
 // import * as Api from '~/api'
 // import firebase from '~/scripts/firebase'
@@ -238,26 +239,23 @@ async function fetch() {
 //         })
 // }
 
-function sortGroups(sorted: number) {
-  // this.isAddData = false;
-
+const sortGroups = _.debounce(async (sorted: number) => {
   filter.value = sorted;
-  // if (this.clickManager.doubleClickCheck() === false) {
 
   if (filter.value === 0) {
     obj.sort = '';
-    fetch()
+    await fetch()
   }
   else if (filter.value === 1) {
     obj.sort = 'SUBSCRIBE'
-    fetch()
+    await fetch()
   }
   else if (filter.value === 2) {
     obj.sort = 'ALPAHBETIC'
-    fetch()
+    await fetch()
   }
 
-}
+}, 300)
 
     // searchCommunity(e: Event) {
     //     e.preventDefault();

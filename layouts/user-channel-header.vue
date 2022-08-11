@@ -53,13 +53,13 @@ import { IUserChannel } from "~~/types"
 import { useLocalePath } from 'vue-i18n-routing';
 
 const localePath = useLocalePath();
-const $route = useRoute();
+const route = useRoute();
 
-const userInfo = ref({} as IUserChannel)
+const userInfo = ref<IUserChannel>()
 
 const isPending = ref(true)
-const channelId = computed(() => $route.params.id as string)
-const routeQuery = computed(() => $route.query.media)
+const channelId = computed(() => route.params.id as string)
+const routeQuery = computed(() => route.query.media)
 
 onMounted(async () => {
   await getChannelHeaderInfo()

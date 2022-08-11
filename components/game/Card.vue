@@ -25,10 +25,10 @@
 </template>
 
 <script setup lang="ts">
+import { PropType } from 'vue';
 import { IGame } from '~~/types';
 
 import { useLocalePath } from "vue-i18n-routing";
-import { PropType } from 'vue';
 
 const localePath = useLocalePath();
 const $router = useRouter();

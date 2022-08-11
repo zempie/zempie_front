@@ -7,7 +7,7 @@
       <transition name="component-fade" mode="out-in">
         <ul class="card-member">
 
-          <UserCardSK v-for="user in 4" />
+          <UserCardSk v-for="user in 4" />
 
           <!-- <MemberCard
                     v-for="member in followerList"

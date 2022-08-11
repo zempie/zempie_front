@@ -1,26 +1,32 @@
 <template>
-  <NuxtLayout name="community-header">
+  <NuxtLayout name="community">
     <div>
       <dl class="area-title">
-        <dt>Members <span> totalMembers</span></dt>
+        <dt>Members <span> {{ data.totalCount }}</span></dt>
       </dl>
-      <ul class="card-member">
-        <UserCardSK v-for="user in 4" v-if="isPending" />
-        <!-- <MemberCard
-                v-for="member in memberList"
-                :key="member.id"
-                :member="member"
-                @reFetch="reFetch"
-            >
-            </MemberCard> -->
+      <ul class="card-member" v-if="pending">
+        <UserCardSk v-for="user in 4" />
+      </ul>
+      <ul class="card-follow" v-else>
+        <UserCard v-for="member in data.result" :key="member.id" :user="member">
+          <template #followBtn>
+            <UserFollowBtn :user="member" class="mt20" @fetch="refresh" />
+          </template>
+        </UserCard>
       </ul>
     </div>
   </NuxtLayout>
 </template>
 
  <script setup lang="ts">
-
+const route = useRoute()
 const isPending = ref(true)
+
+const communityId = computed(() => route.params.id as string)
+
+const { data, pending, refresh } = await community.getMembers(communityId.value, { limit: 20, offset: 0 })
+console.log(data)
+
 
 //     metaSetting !: MetaSetting;
 //     communityId = this.$route.params.community_id;
@@ -66,11 +72,4 @@ const isPending = ref(true)
 
 
 <style lang="scss" scoped>
-svg {
-  vertical-align: middle;
-}
-
-.button-container {
-  display: flex;
-}
 </style>

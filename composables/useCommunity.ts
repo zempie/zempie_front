@@ -1,52 +1,35 @@
-import { IProject, eUploadStage } from "~~/types"
+import { ICommunity, eUploadStage } from "~~/types"
+
 
 export default function () {
-  const projectById = useState('projectById', () => ({    
-      info: null as IProject
+  
+  const community = useState('community', () => ({    
+      info: null as ICommunity
   }))
+  
+  const setCommunity = async (id: string) =>{
+    const config = useRuntimeConfig()
+    const accessToken = useCookie(config.COOKIE_NAME).value
 
-  const uploadProject = useState('uploadProject', () =>({
-    form:{
-      stage:eUploadStage.NONE,
-    },
-  }))
+    //FIXME: composable 왜 안되지??????
+    const { data, pending, error } = await useFetch<any>(`/community/${id}`,{
+      method:'get',
+      baseURL:config.COMMUNITY_API,
+      headers: accessToken ? {'Authorization' :  `Bearer ${accessToken}`} : {},
+    initialCache:false,
 
 
-
-  const setProjectInfo = (info: IProject) =>{
-    projectById.value.info = info;
+    })
+    community.value.info = data.value
   }
 
-  const resetProjectInfo = () =>{
-    projectById.value.info = null as IProject 
-  }
-
-
-  const setStage = (stage:number) =>{
-    uploadProject.value.form.stage = stage;
-  }
-  const resetStage = () =>{
-    uploadProject.value.form.stage = eUploadStage.NONE;
-  }
-
-  const setForm = (form: any)=>{
-    uploadProject.value.form = form
-  }
-
-  const resetForm = ()=>{
-    uploadProject.value.form = {
-      stage:eUploadStage.NONE,
-    }
+  const resetCommunity = () =>{
+    community.value.info = null as ICommunity 
   }
 
   return {
-    projectById,
-    uploadProject,
-    setProjectInfo,
-    resetProjectInfo,
-    setStage,
-    resetStage,
-    setForm,
-    resetForm    
+    community,
+    setCommunity,
+    resetCommunity,
   }
 }

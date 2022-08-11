@@ -5,7 +5,8 @@ export default function () {
       info: {} as IUserChannel
   }))
 
-  const setUserChannel = (info:IUserChannel) =>{
+  const setUserChannel = async (info:IUserChannel) =>{
+    const{data:communities, error} = await user.joinedCommunity(info.id)
     info.games.map((game)=>{
       game.user = {
         name:info.name,
@@ -16,12 +17,20 @@ export default function () {
         picture:info.picture,
       }
     })
+    info.communities = communities.value
     userChannel.value.info = info;
     
   }
 
   const resetUserChannel = () =>{
     userChannel.value.info = {} as IUserChannel 
+  }
+
+  const getUserJoinedCommunity = async(userId:number) =>{
+  
+    
+    return await user.joinedCommunity(userId)
+    
   }
 
   return {

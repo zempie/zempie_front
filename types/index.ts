@@ -110,6 +110,43 @@ export interface IUserChannel{
     description: string,
     url_banner: string
   },
+  communities:ICommunity[]
   games:IGame[]
+}
+
+
+
+export interface ICommunity{
+  banner_img: string,
+  channels: [{
+    community_id: string,
+    createdAt: number,
+    deletedAt: number,
+    description: string,
+    id: string,
+    profile_img: string,
+    state: string,
+    title: string,
+    updatedAt: number,
+    user_id: number,
+  }],
+  createdAt: number,
+  deletedAt: number,
+  description: string,
+  id: string,
+  is_certificated: boolean,
+  is_private: boolean,
+  is_subscribed: boolean,
+  manager_id: number,
+  member_cnt: number,
+  name: string,
+  owner_id: number,
+  posts_cnt: number,
+  profile_img: string,
+  state: string,
+  submanager_id: number,
+  updatedAt: number,
+  url: string,
+  visit_cnt: number,
 }
 

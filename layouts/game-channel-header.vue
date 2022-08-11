@@ -51,12 +51,12 @@ import { IGame } from '~~/types'
 import { useLocalePath } from 'vue-i18n-routing';
 
 const localePath = useLocalePath();
-const $route = useRoute();
+const route = useRoute();
 
 const gameInfo = ref({} as IGame)
 
-const gamePath = computed(() => $route.params.id as string)
-const routeQuery = computed(() => $route.query.media)
+const gamePath = computed(() => route.params.id as string)
+const routeQuery = computed(() => route.query.media)
 const isPending = ref(true)
 
 

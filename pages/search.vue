@@ -248,13 +248,6 @@ watch(
   background-color: #1d2333;
 }
 
-.cf-info {
-  height: 100%;
-}
-
-.cf-img {
-  background-color: #f39800;
-}
 
 /*transition*/
 

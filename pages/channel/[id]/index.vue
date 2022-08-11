@@ -1,5 +1,6 @@
 <template>
   <NuxtLayout name="user-channel-header">
+
     <ClientOnly>
       <dl class="three-area">
         <dt v-if="isPending">
@@ -25,7 +26,7 @@
             </dl>
             <template v-if="games?.length">
               <ul>
-                <li v-for="game in games.slice(0, 5)">
+                <li v-for="game in games?.slice(0, 5)">
                   <p :style="`background:url(${game.url_thumb_webp ||
                   'img/default.png'
                   }) center; background-size:cover;`"></p>
@@ -34,7 +35,7 @@
 
               </ul>
 
-              <div v-if="games.length > 5">
+              <div v-if="games?.length > 5">
                 <NuxtLink :to="localePath(`/channel/${channelId}/games`)" class="btn-default-samll w100p">{{
                     $t('moreView')
                 }}
@@ -50,39 +51,18 @@
         <dd>
           <TimelineSk v-if="isPending" />
         </dd>
-        <dt v-if="isPending">
-          <div class="ta-groups" style="margin-top:0px">
-            <h2>Group</h2>
-            <div>
-              <dl v-for="group in 4">
-                <dt><span
-                    style="background: url('/images/default.png') center center no-repeat; background-size: cover;"></span>
-                </dt>
-                <dd style="width:100%">
-                  <h2 class="grey-text"></h2>
-                  <h3 class="grey-text"></h3>
-                </dd>
-              </dl>
-            </div>
-          </div>
-        </dt>
-        <dt v-else>
-          <div class="ta-groups" style="margin-top:0px">
-            <h2>Group</h2>
-            <div>
-              <dl v-for="group in 4">
-                <dt><span
-                    style="background: url('/images/default.png') center center no-repeat; background-size: cover;"></span>
-                </dt>
-                <dd style="width:100%">
-                  <h2 class="grey-text"></h2>
-                  <h3 class="grey-text"></h3>
-                </dd>
-              </dl>
-            </div>
-          </div>
-        </dt>
 
+        <dt>
+          <div class="ta-groups" style="margin-top:0px">
+            <h2>Group</h2>
+            <div v-if="isPending">
+              <dl v-for="group in 4">
+                <CommunityListItemSk />
+              </dl>
+            </div>
+            <CommunityList v-else :communities="channelInfo.communities" />
+          </div>
+        </dt>
       </dl>
     </ClientOnly>
   </NuxtLayout>
@@ -90,24 +70,20 @@
 
  <script setup lang="ts">
 import { useLocalePath } from 'vue-i18n-routing';
-import { IGame } from '~~/types';
-const localePath = useLocalePath();
 
+const localePath = useLocalePath();
 const route = useRoute();
 const isPending = ref(true)
-const info = computed(() => useUser().user.value.info)
-const games: IGame[] = computed(() => useUser().user.value.info.games).value
+const channelInfo = computed(() => useChannel().userChannel.value.info)
+const games = computed(() => channelInfo.value.games)
 const channelId = computed(() => route.params.id as string)
 
-useNuxtApp().hooks.hook('page:finish', () => { isPending.value = false })
 
-onMounted(async () => {
-  console.log('mounted')
 
+
+onMounted(() => {
+  isPending.value = false
 })
-
-
-
 
 
 //  channel_id = this.$route.params.channel_id;
@@ -150,9 +126,6 @@ onMounted(async () => {
 
 
 //     }
-async function joinedCommunity() {
-  const { data, error } = await user.joinedCommunity(info.value.id);
-}
 //     communityFetch() {
 //         this.$api.joinedCommunityList(this.userId)
 //             .then((res: any) => {

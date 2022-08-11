@@ -1,13 +1,16 @@
 <template>
-  <a v-if="!community.is_subscribed" class="btn-default  mr10" :community="community" @click.stop="subscribe">{{
+  <a v-if="!community?.is_subscribed" class="btn-default  mr10" :community="community" @click.stop="subscribe">{{
       $t('subscribe.btn')
   }}</a>
   <a v-else class="btn-sub  mr10" @click.stop="unsubscribe">{{ $t('isSubscribing') }}</a>
 </template>
 
 <script setup lang="ts">
+import { PropType } from 'vue';
+import { ICommunity } from '~~/types';
+
 const props = defineProps({
-  community: Object
+  community: Object as PropType<ICommunity>
 })
 const emit = defineEmits(['fetch'])
 

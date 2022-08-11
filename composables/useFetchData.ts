@@ -65,7 +65,6 @@ const communityFetch = async(method: string, url: string, data = null, withCrede
     options['body'] = data;
   }
 
- 
   return await useFetch<any>(url, options)
 
 
@@ -120,8 +119,11 @@ export const user = {
   getUserInfo(channelId: string){
     return useFetchData('get', `/channel/${channelId}`,undefined, true)
   }, 
-  follow(){
-    // return communityFetch('post', )
+  follow(userId: number) {
+    return communityFetch('post', `/user/${userId}/follow`, undefined, true);
+  },
+  unfollow(userId: number) {
+    return communityFetch('post', `/user/${userId}/unfollow`, undefined, true);
   },
   joinedCommunity(userId:number){
     return communityFetch('get', `/user/${userId}/list/community`, undefined, false)
@@ -165,18 +167,24 @@ export const project = {
 }
 
 export const community = {
-   list(obj:ICommunityPayload){
+  list(obj:ICommunityPayload){
       return  communityFetch('get', '/community/list', obj, true)
   },
-  subscribe(communityId: number){
+  subscribe(communityId: string){
     return communityFetch('post', `/community/${communityId}/subscribe`, undefined, true);
   },
-  unsubscribe(communityId: number){
+  unsubscribe(communityId: string){
     return communityFetch('post', `/community/${communityId}/unsubscribe`, undefined, true);
   },
   search(obj: any) {
     return communityFetch('get', `/search`, obj, false)
-}
-
+  },
+  getInfo(id: string) {
+    return communityFetch('get', `/community/${id}`, undefined, true);
+  },
+  getMembers(communityId: string, obj:any){
+    return communityFetch('get', `/community/${communityId}/members`, obj, true);
+  },
+ 
 }
 

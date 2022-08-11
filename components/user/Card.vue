@@ -16,7 +16,11 @@
           <h4>{{ user.followings_cnt }}</h4>
           <p>Followings</p>
         </dd>
+
       </dl>
+      <slot name="followBtn"></slot>
+
+
     </div>
   </li>
 </template>
