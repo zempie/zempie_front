@@ -61,7 +61,7 @@
           <CommunityCard v-show="!isPending" v-for="community in communities" :community="community"
             :key="community.id">
             <template v-slot:subBtn>
-              <CommunitySubscribeBtn :community="community" class="w100p" @fetch="fetch" />
+              <CommunitySubscribeBtn :community="community" @fetch="fetch" />
             </template>
           </CommunityCard>
         </TransitionGroup>

@@ -2,7 +2,6 @@
   <ClientOnly>
     <!-- 상단영역 -->
     <div class="header">
-
       <dl>
         <dt>
           <div class="header-logo-menu">
@@ -126,7 +125,7 @@
             <button class="btn-circle-none">
               <NuxtLink :to="localePath(`/channel/${user?.channel_id}`)">
                 <ClientOnly>
-                  <UserAvatar style="width:30px; height:30px;" :user="user" />
+                  <UserAvatar style="width:30px; height:30px;" :user="user" :key="user?.picture" />
                 </ClientOnly>
 
               </NuxtLink>
@@ -137,7 +136,7 @@
               </button>
               <template #dropdown>
 
-                <div slot="body" class="header-setting" style="min-width:250px">
+                <div slot="body" class="header-setting" style="min-width:250px" @click="userMenu.handleClose()">
                   <dl style="margin:10px 0px 0px 0px">
 
                     <dd>
@@ -146,7 +145,7 @@
                   </dl>
                   <div>
                     <h2>{{ $t('myProfile') }} </h2>
-                    <div @click="userMenu.handleClose()">
+                    <div>
                       <NuxtLink :to="localePath(`/channel/${user.channel_id}`)"><i class="uil uil-user"></i>
                         {{ $t('myChannel') }}
                       </NuxtLink>
@@ -159,9 +158,16 @@
                   <div>
                     <h2>{{ $t('group') }}</h2>
                     <div>
-                      <NuxtLink :to="localePath(`/profile/${user.channel_id}/communities`)"><i
-                          class="uil uil-users-alt"></i>
+                      <NuxtLink :to="localePath(`/profile/${user.id}/communities`)"><i class="uil uil-users-alt"></i>
                         {{ $t('joined.group') }}
+                      </NuxtLink>
+                    </div>
+                  </div>
+                  <div>
+                    <h2>{{ $t('account') }}</h2>
+                    <div>
+                      <NuxtLink :to="localePath(`/profile/${user.id}`)"><i class="uil uil-setting"></i>
+                        {{ $t('my account') }}
                       </NuxtLink>
                     </div>
                   </div>
@@ -370,7 +376,6 @@
 
       <ClientOnly>
         <el-dialog v-model="isOpen" append-to-body custom-class="modal-area-type" :show-close="false">
-
           <div class="modal-alert">
             <dl class="ma-header">
               <dt>{{ $t('information') }}</dt>
@@ -440,6 +445,7 @@ watch(
     isOpen.value = state;
   }
 )
+
 // const isLogin = computed(() => userStore.$state.isLogin)
 // const user = computed(() => userStore.$state.user)
 
@@ -456,21 +462,22 @@ function switchLangauge() {
 }
 
 function logout() {
-  signOut($firebaseAuth)
-    .then(() => {
-      useUser().removeUserState();
-      $cookies.remove(config.COOKIE_NAME, {
-        path: '/',
-        domain: config.COOKIE_DOMAIN
-      })
-      $router.push('/')
-    })
-    .catch((error: any) => {
-      ElMessage({
-        message: error.message,
-        type: 'error'
-      })
-    })
+  useUser().logout();
+  // signOut($firebaseAuth)
+  //   .then(() => {
+  //     useUser().removeUserState();
+  //     $cookies.remove(config.COOKIE_NAME, {
+  //       path: '/',
+  //       domain: config.COOKIE_DOMAIN
+  //     })
+  //     $router.push('/')
+  //   })
+  //   .catch((error: any) => {
+  //     ElMessage({
+  //       message: error.message,
+  //       type: 'error'
+  //     })
+  //   })
 
 }
 

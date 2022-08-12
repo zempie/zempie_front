@@ -1,144 +1,168 @@
 <template>
   <NuxtLayout name="user-setting">
-    dslkfl;skdf;lskdfl;kd;l
-    <dl class="area-title">
-      <dt>Manage Group</dt>
-    </dl>
-    <Transition name="component-fade" mode="out-in">
-      <ul class="card-manage-group" v-if="communities?.length">
-
-        <CommunityCard v-show="!pending" v-for="community in communities" :community="community" :key="community?.id">
-          <template v-slot:subBtn>
-            <CommunitySubscribeBtn :community="community" class="w100p" @fetch="refresh" />
-          </template>
-        </CommunityCard>
-        <CommunityCard v-for="community in communities" :key="community?.id" :community="community">
-          <template v-slot:subBtn>
-            <CommunitySubscribeBtn :community="community" @fetch="refresh" />
-          </template>
-        </CommunityCard>
-      </ul>
-
-      <div class="no-result" v-else>
-        <h1> {{ $t('noJoined.community') }} </h1>
-        <img src="/images/not-found.png" width="100px" height="100px" />
+    <div class="info-input">
+      <div class="ii-title">
+        <h2>General Settings</h2>
+        <h3>{{ $t('userSetting.title') }}</h3>
       </div>
 
-    </Transition>
-    <!-- <modal :clickToClose="false" class="modal-area-type" name="deleteConfirm" width="90%" height="auto"
-               :maxWidth="380"
-               :scrollable="true"
-               :adaptive="true">
-            <div class="modal-alert">
-                <dl class="ma-header">
-                    <dt>{{ $t('information') }}</dt>
-                    <dd>
-                        <button @click="$modal.hide('deleteConfirm')"><i class="uil uil-times"></i></button>
-                    </dd>
-                </dl>
-                <div class="ma-content">
-                    <h2> {{$t('leave.community.text1')}}<br/>※ {{$t('leave.community.text2')}}</h2>
-                    <div>
-                        <button class="btn-default w48p" @click="yesUnsubscribe">{{ $t('yes') }}</button>
-                        <button class="btn-gray w48p" @click="$modal.hide('deleteConfirm')">{{ $t('no') }}</button>
-                    </div>
-                </div>
-            </div>
-        </modal> -->
+      <dl class="ii-card">
+        <dt>
+          <div :style="{ 'background-color': 'orange', 'background-size': 'cover' }"></div>
+          <p
+            :style="prevProfile ? `background: url(${prevProfile}) center center / cover no-repeat; background-size: cover;` : `background: url(/images/300_300_default_profile.png) center center / cover no-repeat; background-size: cover;`">
+          </p>
+        </dt>
+        <dd @click="uploadFile">
+          <div style="height: 0px; overflow: hidden">
+            <input type="file" @change="onFileChange" accept=image/* ref="profileImg" name="fileInput" />
+          </div>
+          <p><i class="uil uil-image-plus"></i></p>
+          <h2>Change Profile</h2>
+          <h3>{{ fileName }}</h3>
+          <div @click.stop="deleteImg">
+            <a><i class="uil uil-trash-alt"></i></a>
+          </div>
+        </dd>
+      </dl>
+      <div class="ii-form">
+        <ol>
+          <li>Email</li>
+          <li><input type="text" name="" title="" placeholder="" class="w100p" readonly :value="userInfo?.email" />
+          </li>
+          <li>&nbsp;</li>
+        </ol>
+        <ol>
+          <li>{{ $t('userSetting.name') }}</li>
+          <li><input type="text" name="" title="" readonly class="w100p" :value="userInfo?.name" />
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="area-btn">
+      <a @click="onSubmit" class="btn-default w250">{{ $t('save') }}</a>
+    </div>
+    <div class="delete-account" v-if="signUpType === 'password'">
+      <h2>{{ $t('userSetting.pwd.change') }}</h2>
+      <div>
+        <p>{{ $t('userSetting.pwd.change.info1') }} <span>
+            <NuxtLink :to="localePath(`/profile/${userInfo?.id}/change-password`)">
+              {{ $t('click') }}</NuxtLink>
+          </span>{{ $t('userSetting.pwd.change.info2') }}
+        </p>
+      </div>
+    </div>
+    <div class="delete-account">
+      <h2>{{ $t('userSetting.account.leave') }}</h2>
+      <div>
+        <p>{{ $t('userSetting.account.leave.info1') }}<span>
+            <NuxtLink :to="localePath(`/profile/${userInfo?.id}/leave`)">{{ $t('click') }}
+            </NuxtLink>
+          </span>
+          {{ $t('userSetting.pwd.change.info2') }}
+        </p>
+      </div>
+    </div>
   </NuxtLayout>
 </template>
 
 <script setup lang="ts">
+import { ElMessage } from "element-plus";
 
+import { useLocalePath } from 'vue-i18n-routing';
+import { useI18n } from 'vue-i18n';
+
+const MAX_FILE_SIZE = 3;
+const localePath = useLocalePath();
+const { t, locale } = useI18n()
+
+const profileImg = ref<HTMLElement>()
+const fileName = ref("");
+const prevProfile = ref<string | ArrayBuffer>("");
+const updateFile = ref<File>()
+
+const signUpType = computed(() => useUser().user.value.fUser?.providerData[0].providerId)
 const userInfo = computed(() => useUser().user.value.info)
 
-const { data: communities, error, pending, refresh } = await user.joinedCommunity(userInfo.value?.id)
+watch(
+  () => userInfo.value,
+  (val) => {
+    prevProfile.value = val.picture
+  }
+)
+
+function uploadFile() {
+  profileImg.value.click();
+}
+
+function onFileChange(event: any) {
+  const file = event.target.files[0]
+  if (file.size < 1024 * 1024 * MAX_FILE_SIZE) {
+    fileName.value = file.name
+    updateFile.value = file;
+    const reader = new FileReader();
+    reader.onload = e => {
+      prevProfile.value = e.target!.result
+    };
+    reader.readAsDataURL(file);
+    event.target.value = '';
+  }
+  else {
+    alert(t(`최대 파일 크기는 ${MAX_FILE_SIZE}mb입니다. `))
+  }
+
+}
 
 
-// import {Component, Prop, Vue} from "vue-property-decorator";
+function deleteImg(e: any) {
+  prevProfile.value = '';
+  fileName.value = '';
+}
 
-// import CommunityCard from "@/components/community/_communityCard.vue";
+async function onSubmit() {
+  const formData = new FormData();
 
-// import SubscribeBtn from "@/components/community/_subscribeBtn.vue";
-// import {AxiosError, AxiosResponse} from "axios";
-// import {mapGetters} from "vuex";
-// import {User} from "@/types";
+  if (updateFile.value) {
+    formData.append('file', updateFile.value);
+    formData.append('name', userInfo.value.name)
 
-// @Component({
-//     components: {CommunityCard, SubscribeBtn},
-//     computed: {...mapGetters(["user"])},
-// })
-// export default class ManageJoinedGroup extends Vue {
-//     communityList: any = [];
-//     user!: User;
-//     unCommunityId: string = ''
+    const { data, error, refresh, pending } = await user.updateInfo(formData)
 
-//     mounted() {
-//         this.fetch();
-//     }
+    if (!error.value) {
+      ElMessage({
+        message: t('userSetting.done'),
+        type: 'success'
+      })
+      useUser().setProfileImg(data.value.result.user.picture + `?_=${Date.now()}`)
+    } else {
+      ElMessage({
+        message: error.error.message,
+        type: 'error'
+      })
+    }
 
-//     fetch() {
+  } else {
+    formData.append('rm_picture', 'true');
+    const { data, error, refresh, pending } = await user.updateInfo(formData)
 
-//         this.$api.joinedCommunityList(this.$store.getters.user.id)
-//             .then((res: any) => {
-//                 this.communityList = res;
-//             })
-//             .catch((err: any) => {
+    if (!error.value) {
+      ElMessage({
+        message: t('userSetting.done'),
+        type: 'success'
+      })
+      useUser().setProfileImg(null)
 
-//             })
+    } else {
+      ElMessage({
+        message: error.error.message,
+        type: 'error'
+      })
+    }
+  }
+}
 
-
-//     }
-
-//     unsubscribe(communityId: string) {
-//         this.$modal.show('deleteConfirm')
-//         this.unCommunityId = communityId;
-//     }
-
-//     yesUnsubscribe() {
-//         this.$api.unsubscribe({user_id: this.user.id, community_id: this.unCommunityId})
-//             .then((res: any) => {
-//                 this.fetch();
-//             })
-//             .catch((err: any) => {
-//                 if (err.message) {
-//                     alert(err.message)
-//                 }
-//             })
-//             .finally(() => {
-//                 this.$modal.hide('deleteConfirm')
-//             })
-//     }
-
-// }
 </script>
 
 <style lang="scss" scoped>
-.no-result {
-  display: flex;
-  align-content: center;
-  justify-content: center;
-  flex-direction: column;
-  flex-wrap: wrap;
-
-  h1 {
-    color: #333;
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-
-  img {
-    margin: 0 auto
-  }
-}
-
-.component-fade-enter-active,
-.component-fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.component-fade-enter-from,
-.component-fade-leave-to {
-  opacity: 0;
-}
 </style>

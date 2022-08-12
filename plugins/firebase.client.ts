@@ -1,9 +1,11 @@
 import { defineNuxtPlugin } from '#app'
 import * as firebase from 'firebase/app'
 import { getAuth, onIdTokenChanged } from 'firebase/auth'
-
+const DAYSTOSEC_30 = 60 * 60 * 24 * 30;
 
 export default defineNuxtPlugin(async(nuxtApp)=>{  
+  const{ $cookies} = useNuxtApp()
+
   console.log('init firebase')
   const config = useRuntimeConfig();
   console.log('config', config)
@@ -26,11 +28,17 @@ export default defineNuxtPlugin(async(nuxtApp)=>{
 
   onIdTokenChanged(auth, async (user)=>{   
     
-    if(user){      
-      await setAuthCookie((user as any).accessToken)  
+    if(user){ 
+      $cookies.set(config.COOKIE_NAME, (user as any ).accessToken, {
+            maxAge:DAYSTOSEC_30,
+            path:'/',
+            domain:config.COOKIE_DOMAIN
+          }); 
+          console.log('config.COOKIE_NAME,', useCookie(config.COOKIE_NAME))
+      // await setAuthCookie((user as any ).accessToken)  
+      // TODO: 회원가입이 안된경우에는 실행하면 안되는데 
       await setUserInfo()
       useUser().setFirebaseUser(user);
-
     } 
 
   })
@@ -38,8 +46,8 @@ export default defineNuxtPlugin(async(nuxtApp)=>{
   nuxtApp.provide('firebaseAuth', auth);   
 })
 
-async function setAuthCookie(accessToken: string){
-  const { data } = await useFetch('/api/setAuthCookie', { method: 'post', body: { accessToken: accessToken }, initialCache:false,})
+async function setAuthCookie(accessToken: string){  
+  const { data } = await useFetch('/api/setAuthCookie', { method: 'post', body: { accessToken: accessToken }, initialCache:false})
   return data;
 }
 

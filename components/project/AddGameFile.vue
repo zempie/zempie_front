@@ -8,7 +8,7 @@
                     <p class="upload-file-container">
                         <label for="game-file"><i class="uil uil-file-plus" style="font-size:18px;"></i> &nbsp;
                             {{ $t('fileUpload') }}</label>
-                        <input @input="onFileChange" type="file" ref="gameFile" id="game-file" accept=".zip">
+                        <input @change="onFileChange" type="file" ref="gameFile" id="game-file" accept=".zip">
 
                         <ClipLoader v-if="isLoadingFile" :color="'#ff6e17'" :size="'20px'"></ClipLoader>
                         <button class="btn-circle-icon" @click="deleteFile" v-if="fileName">
@@ -223,6 +223,8 @@ async function onFileChange(e: any) {
     // }
 
     isLoadingFile.value = false;
+    e.target.value = '';
+
 }
 
 function deleteFile() {

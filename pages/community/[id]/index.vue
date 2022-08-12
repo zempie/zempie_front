@@ -39,29 +39,30 @@
 </template>
 <script setup lang="ts">
 import { dateFormat } from '~/scripts/utils'
-
-const config = useRuntimeConfig()
+const route = useRoute()
 
 const communityInfo = computed(() => useCommunity().community.value.info)
 const createdDate = computed(() => dateFormat(useCommunity().community.value.info?.createdAt));
 
 const communities = ref([])
 const isPending = ref(true)
-// FIXME: 컴포저블 왜 안되는지 확인 
-// const { data, pending } = await useFetch<any>('/community/list', {
-//   method: 'get',
-//   baseURL: config.COMMUNITY_API,
-// })
+const communityId = computed(() => route.params.id)
+
 
 onMounted(async () => {
-  const { data, pending } = await community.list();
+  await fetch()
+})
+
+async function fetch() {
+
+  const { data, pending } = await community.list({ limit: 6, offset: 0 });
   isPending.value = pending.value
   if (data.value) {
     communities.value = data.value?.filter((elem) => {
-      return elem.id !== communityInfo.value?.id
+      return elem.id !== communityId.value
     })
   }
-})
+}
 
 </script>    
 

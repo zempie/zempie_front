@@ -289,7 +289,6 @@ async function register() {
     console.log('user', result)
 
     useUser().setFirebaseUser(user);
-    $cookies.set(config.COOKIE_NAME, (user as any).accessToken)
 
     await joinZempie();
 
@@ -332,11 +331,11 @@ async function joinZempie() {
   const payload = {
     name: form.username,
     // nickname:form.nickname,
-
   }
+
   try {
     await useUser().joinUser(payload)
-    router.replace('/')
+    router.push('/')
   } catch (err: any) {
     console.error(err)
   }

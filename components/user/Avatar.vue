@@ -20,6 +20,7 @@ const props = defineProps({
 })
 const profile_url = ref('')
 
+
 onMounted(() => {
     profile_url.value = props.user?.picture ? props.user.picture + `?t=${Date.now()}` : `/images/300_300_default_profile.png`
 })

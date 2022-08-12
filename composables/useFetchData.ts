@@ -103,7 +103,9 @@ export const auth = {
   // getUserInfo() {
   //   return useFetchData('get', '/user/info', undefined, true)
   // },
-
+  setCookie(){
+    return useFetchData('get', '/__cookie', undefined, false) 
+  },
   login(){
     return useFetchData('get', '/user/info', undefined, true)
   },
@@ -126,10 +128,20 @@ export const user = {
     return communityFetch('post', `/user/${userId}/unfollow`, undefined, true);
   },
   joinedCommunity(userId:number){
-    return communityFetch('get', `/user/${userId}/list/community`, undefined, false)
-
+    return communityFetch('get', `/user/${userId}/list/community`, undefined, true)
+  },
+  followingList(obj: any, userId: number) {
+    return communityFetch('get', `/user/${userId}/list/following`, obj, true);
+  },
+  followerList(obj: any, userId: any) {
+    return communityFetch('get', `/user/${userId}/list/follower`, obj, true);
+  },
+  updateInfo(formData:FormData) {
+    return useFetchData('post', `/user/update/info`, formData, true);
+  },
+  leave(obj: {text: string, num: string}) {
+    return useFetchData('post', `/user/leave-zempie`,obj, true);  
   }
-  
 }
 
 export const game = {

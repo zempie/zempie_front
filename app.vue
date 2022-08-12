@@ -32,6 +32,10 @@ onMounted(() => {
 @import "https://unicons.iconscout.com/release/v3.0.3/css/line.css";
 
 body {
-  margin: 0px !important
+  margin: 0px !important;
+
+  .content {
+    min-height: calc(100vh - 200px) !important;
+  }
 }
 </style>
