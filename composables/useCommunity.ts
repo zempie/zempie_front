@@ -22,6 +22,9 @@ export default function () {
     })
     community.value.info = data.value
   }
+  const setSubscribe = () => {
+    community.value.info.is_subscribed = true
+  }
 
   const resetCommunity = () =>{
     community.value.info = null as ICommunity 
@@ -31,5 +34,6 @@ export default function () {
     community,
     setCommunity,
     resetCommunity,
+    setSubscribe
   }
 }

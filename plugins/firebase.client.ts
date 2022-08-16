@@ -1,6 +1,8 @@
 import { defineNuxtPlugin } from '#app'
 import * as firebase from 'firebase/app'
 import { getAuth, onIdTokenChanged } from 'firebase/auth'
+import * as Api from '~/composables/useFetchData'
+
 const DAYSTOSEC_30 = 60 * 60 * 24 * 30;
 
 export default defineNuxtPlugin(async(nuxtApp)=>{  
@@ -26,21 +28,20 @@ export default defineNuxtPlugin(async(nuxtApp)=>{
   const app = firebase.initializeApp(firebaseConfig);
   const auth = getAuth(app)
 
-  onIdTokenChanged(auth, async (user)=>{   
-    
+  onIdTokenChanged(auth, async (user)=>{ 
     if(user){ 
       $cookies.set(config.COOKIE_NAME, (user as any ).accessToken, {
             maxAge:DAYSTOSEC_30,
             path:'/',
             domain:config.COOKIE_DOMAIN
           }); 
-          console.log('config.COOKIE_NAME,', useCookie(config.COOKIE_NAME))
-      // await setAuthCookie((user as any ).accessToken)  
-      // TODO: 회원가입이 안된경우에는 실행하면 안되는데 
-      await setUserInfo()
-      useUser().setFirebaseUser(user);
-    } 
+     useUser().setFirebaseUser(user); 
+     console.log('useUser().user.value.isSignUp', useUser().user.value.isSignUp)
 
+     if(!useUser().user.value.isSignUp)  {
+      setUserInfo()
+     }
+    }
   })
   nuxtApp.provide('firebaseApp', app);  
   nuxtApp.provide('firebaseAuth', auth);   
@@ -52,28 +53,27 @@ async function setAuthCookie(accessToken: string){
 }
 
 async function setUserInfo(){
-   const router = useRouter();  
+   const router = useRouter(); 
 
     const { data, error } = await auth.login()
 
     if (data.value) {
       const { user } = data.value.result
-      useUser().setLogin(true)
+      useUser().setLogin()
       useUser().setUser(user)
       routerToHome()
     }else if(error.value){
-      
       const{error:err} = error.value.data;
+      
     
       if(err.code === 20001){
-
-        alert('회원가입이 완료되지않았습니다. 회원가입을 진행해주세요')
         
-         router.push('/join')
+       
+        // alert('회원가입이 완료되지않았습니다. 회원가입을 진행해주세요')
+        
+        //  router.push('/join')
       }
-
-    }
-  
+    }  
 }
 
 async function routerToHome(){

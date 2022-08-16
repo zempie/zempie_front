@@ -20,6 +20,26 @@
         </dl>
       </dt>
       <dd v-if="feed.user?.name">
+        <el-dropdown trigger="click" ref="feedMenu" popper-class="feed-menu">
+          <a class="btn-circle-none pt6" slot="trigger"><i class="uil uil-ellipsis-h font25"></i></a>
+          <template #dropdown>
+            <div slot="body" class="more-list fixed" @click="feedMenu.handleClose()" style="min-width:150px; ">
+              <template v-if="user && (user.id === (feed.user && feed.user.id))">
+                <a @click="openEdit">{{ $t('feed.edit') }}</a>
+                <a @click="showDeleteModal = true; feedId = feed.id">{{ $t('feed.delete') }}</a>
+
+              </template>
+              <template v-else>
+                <NuxtLink :to="`/${$i18n.locale}/channel/${feed.user && feed.user.channel_id}/timeline`">
+                  {{ $t('visit.userChannel') }}
+                </NuxtLink>
+                <!-- <a v-if="user" @click="report">{{ $t('post.report') }}</a>
+              <a v-if="user" @click="userReportModalOpen">{{ $t('post.report') }}유저 신고하기</a> -->
+              </template>
+            </div>
+          </template>
+        </el-dropdown>
+
         <!-- <dropdown-menu :overlay="false" class="tapl-more-dropdown" :isOpen="isOpenReportModal"
           @closed="isOpenReportModal = false;">
           <a class="btn-circle-none pt6" slot="trigger" @click="isOpenReportModal = !isOpenReportModal"><i
@@ -43,7 +63,8 @@
     </dl>
 
     <div>
-      <div class="tapl-content" v-html="feed.content" ref="contentDiv"></div>
+      <div class="tapl-content" v-html="feed.content" ref="contentDiv"
+        @click="$router.push(localePath(`/feed/${feed.id}`))"></div>
       <!-- 더보기 -->
       <!-- <div v-if="isOverflow" class='gradient'></div> -->
     </div>
@@ -123,21 +144,60 @@
       <CommentInput :postId="feed.id" @sendComment="editDone" @updateComment="updateDone" />
     </div> -->
 
+
+    <ClientOnly>
+      <el-dialog v-model="showDeleteModal" append-to-body custom-class="modal-area-type">
+        <div class="modal-alert">
+          <dl class="ma-header">
+            <dt> {{ $t('information') }}</dt>
+            <dd>
+              <button @click="showDeleteModal = false"><i class="uil uil-times"></i></button>
+            </dd>
+          </dl>
+          <div class="ma-content">
+            <h2>{{ $t('post.delete.modal.text1') }} <br />{{ $t('post.delete.modal.text2') }}
+            </h2>
+            <div>
+              <button class="btn-default w48p" @click="deletePost">{{ $t('delete') }}</button>
+              <button class="btn-gray w48p " style="border-radius:10px" @click="showDeleteModal = false">{{ $t('no')
+              }}</button>
+            </div>
+          </div>
+        </div>
+      </el-dialog>
+    </ClientOnly>
+
+
   </li>
 
 </template>
 
 <script setup lang="ts">
+import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElSelect, ElOption, ElMessage, ElDialog } from "element-plus";
+
 import { dateFormat, execCommandCopy } from '~/scripts/utils'
-import { ElMessage } from 'element-plus';
 import { useI18n } from 'vue-i18n';
+import { useLocalePath } from 'vue-i18n-routing';
 
 
+const localePath = useLocalePath();
 const config = useRuntimeConfig();
 const { t, locale } = useI18n()
 
+const feedMenu = ref()
+const showDeleteModal = ref(false)
+const feedId = ref(null)
+
+const user = computed(() => useUser().user.value.info)
+
 const props = defineProps({
   feed: Object
+})
+
+const emit = defineEmits(['fetch'])
+
+onMounted(() => {
+
 })
 // import {Component, Prop, Vue} from "vue-property-decorator";
 
@@ -240,7 +300,9 @@ const props = defineProps({
 
 
 function copyUrl() {
-  execCommandCopy(`${config.ZEMPIE_URL}/feed/${this.feed.id}`)
+
+  execCommandCopy(`${config.ZEMPIE_URL}/feed/${props.feed.id}`)
+
   ElMessage.closeAll()
   ElMessage({
     message: t('copied.clipboard'),
@@ -304,7 +366,9 @@ function copyUrl() {
 //             })
 //     }
 
+function openEdit() {
 
+}
 //     openEdit() {
 //         this.$modal.show('modalPost')
 //         this.$store.commit('feed', this.feed)
@@ -319,6 +383,18 @@ function copyUrl() {
 
 //     }
 
+async function deletePost() {
+  const { data, error, pending } = await post.delete(feedId.value)
+
+  if (!error.value) {
+    ElMessage({
+      message: t('posting.deleted'),
+      type: 'success'
+    })
+    emit('fetch')
+  }
+  showDeleteModal.value = false;
+}
 //     deletePost() {
 //         this.$emit('deleteFeed', this.feed.id)
 //         this.$modal.show('deleteModal')
@@ -469,11 +545,6 @@ function copyUrl() {
 
 // /더보기
 
-.tapl-content {
-  word-break: break-all;
-  color: #000;
-
-}
 
 pre {
   overflow: auto;
@@ -615,11 +686,6 @@ pre code {
   width: 100%;
 }
 
-.tapl-content {
-  overflow: hidden;
-  min-height: 100px;
-  max-height: 500px;
-}
 
 .btn-default {
   border-radius: 10px !important;

@@ -10,7 +10,8 @@ const router = useRouter();
   const user = useState('user', () => ({
     isLogin:false,
     info:null as IUser,
-    fUser:null
+    fUser:null,
+    isSignUp: false
   }))
 
 
@@ -22,8 +23,17 @@ const router = useRouter();
    user.value.info = {...info}
   }
 
-  const setLogin = (state:boolean) => {
-    user.value.isLogin = state;
+  const setLogin = () => {
+    user.value.isLogin = true;
+  }
+  const setLogout = () => {
+    user.value.isLogin = false;
+  }
+  const setSignup= () => {
+    user.value.isSignUp = true;
+  }
+  const unsetSignup= () => {
+    user.value.isSignUp = false;
   }
   const setProfileImg = (url:string) =>{
     user.value.info.picture = url;
@@ -32,6 +42,29 @@ const router = useRouter();
     user.value.fUser = null;
     user.value.info = {} as IUser;
     user.value.isLogin = false;
+  }
+
+  const login = async () =>{
+   const router = useRouter();  
+   const { data, error } = await auth.login()
+
+    if (data.value) {
+      const { user } = data.value.result
+      user.value.isLogin = true;
+      user.value.info = {...user}
+      routerToHome()
+    }else if(error.value){
+      
+      const{error:err} = error.value.data;
+    
+      if(err.code === 20001){
+
+        alert('회원가입이 완료되지않았습니다. 회원가입을 진행해주세요')
+        
+         router.push('/join')
+      }
+    } 
+
   }
 
   const logout = () =>{
@@ -57,15 +90,29 @@ const router = useRouter();
     const {data} = await auth.signUp(payload)
   }
 
+
+
   return {
     user,
     setUser,
     setFirebaseUser,
     setLogin,
+    setLogout,
     setProfileImg,
     joinUser,
     removeUserState,
-    logout
-    
+    logout,
+    login,
+    setSignup,
+    unsetSignup
+  }
+}
+
+
+async function routerToHome(){
+  const route = useRoute();
+  const router = useRouter();
+  if(route.name.toString().includes('login')){
+    router.push('/')
   }
 }

@@ -3,6 +3,7 @@
       $t('subscribe.btn')
   }}</a>
   <a v-else class="btn-sub mr10 w100p" @click.stop="modalIsOpen = true">{{ $t('isSubscribing') }}</a>
+
   <ClientOnly>
     <el-dialog v-model="modalIsOpen" append-to-body custom-class="modal-area-type" :show-close="false">
 

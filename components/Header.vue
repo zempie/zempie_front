@@ -117,6 +117,7 @@
             </el-select>
           </div>
           <!-- 로그인 했을 때 -->
+
           <div class="header-info ml10" v-if="isLogin" style="display:flex; ">
             <!-- message -->
 

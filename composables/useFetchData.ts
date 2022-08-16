@@ -200,3 +200,22 @@ export const community = {
  
 }
 
+export const post = {
+  upload(obj:any){
+    return communityFetch('post', `/post`, obj, true);
+  },
+  getUserPosts(channelId:string, obj:any){
+    return communityFetch('get', `/timeline/channel/${channelId}`, obj, false)
+  },
+  getCommunityPosts(communityId: string, obj:any){
+    return communityFetch('get', `/timeline/${communityId}/post`, obj, false)
+  },
+  getInfo(postId: string){
+    return communityFetch('get', `/post/${postId}`, undefined, false)   
+  },
+  delete(postId: string){
+    return communityFetch('delete', `/post/${postId}`, undefined,true)   
+  },
+
+}
+

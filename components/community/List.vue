@@ -1,5 +1,5 @@
 <template>
-  <div v-if="communities.length">
+  <div v-if="communities?.length">
     <dl v-for="community in communities" :key="community.id"
       @click="$router.push(localePath(`/community/${community.id}`))">
       <dt><span

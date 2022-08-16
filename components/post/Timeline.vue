@@ -28,13 +28,14 @@
 
       <div class="ta-message-send">
         <p>
-
           <UserAvatar :user="user" :tag="'span'"></UserAvatar>
         </p>
         <dl>
           <dt>
-            <input type="text" :placeholder="$t('postModalInput')" :readonly="!user"
-              @click="user ?? useModal().openLoginModal()" />
+            <input v-if="ableToPost" type="text" :placeholder="$t('postModalInput')" readonly
+              @click="user ? isTextEditorOpen = true : useModal().openLoginModal()" />
+            <slot v-else name="inputBox" />
+
           </dt>
           <dd><a><i class="uil uil-message"></i></a></dd>
         </dl>
@@ -49,7 +50,11 @@
         <div v-if="isPending" class="ta-post-none bg-grey-1">
           <p></p>
         </div>
-        <PostFeed v-for="feed in feeds" v-else-if="!isPending && feeds?.length" :feed="feed" :key="feed.id" />
+
+        <TransitionGroup name="fade" v-else-if="!isPending && feeds?.length">
+          <PostFeed v-for="(feed, idx) in feeds" :feed="feed" :key="idx" @fetch="refresh" />
+        </TransitionGroup>
+
         <div v-else class="ta-post-none">
           <p><span><i class="uil uil-layers-slash"></i></span></p>
           <h2> {{ $t('timeline.noPost') }}</h2>
@@ -69,7 +74,7 @@
                     @originImg="(val)=>originImg = val"
                 ></Feed> -->
       </ul>
-
+      <div ref="triggerDiv"></div>
       <!-- <div v-else-if="this.$store.getters.LoadingStatus || isFirstLoading"
                  style="opacity: 0.5;"
                  class="ta-post-none">
@@ -83,6 +88,14 @@
             </div> -->
 
     </dd>
+
+
+    <ClientOnly>
+      <el-dialog v-model="isTextEditorOpen" append-to-body custom-class="modal-area-type" :show-close="false"
+        :close-on-click-modal="false" :close-on-press-escape="false">
+        <TextEditor @closeModal="isTextEditorOpen = false" :type="type" @fetch="fetch" />
+      </el-dialog>
+    </ClientOnly>
     <!-- <modal name="writingModal" classes="post-modal" :clickToClose="false" :scrollable="true" height="auto">
             <Post @closePostModal="closePostModal" @reFetch="reFetch" @reMount="reMount" >
             </Post>
@@ -237,13 +250,36 @@
 </template>
 
 <script setup lang="ts">
+import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElSelect, ElOption, ElMessage, ElDialog } from "element-plus";
+
+const LIMIT_SIZE = 3
+
+const route = useRoute();
+
+
+const feeds = ref<any[]>([])
+const isPending = ref(true)
+
+const isTextEditorOpen = ref(false)
+
+const observer = ref(null)
+const triggerDiv = ref()
+const limit = ref(LIMIT_SIZE);
+const offset = ref(0);
+const isAddData = ref(false);
 
 const user = computed(() => useUser().user.value.info)
 const gameInfo = computed(() => useGame().game.value.info)
-const feeds = ref()
-const isPending = ref(true)
+const channelId = computed(() => route.params.id as string)
 
 
+const props = defineProps({
+  type: String,
+  ableToPost: {
+    type: Boolean,
+    default: true,
+  }
+})
 
 watch(
   () => gameInfo.value,
@@ -261,9 +297,90 @@ watch(
 )
 
 
-onMounted(() => {
+onMounted(async () => {
+  observer.value = new IntersectionObserver((entries) => {
+    handleIntersection(entries[0])
+  }, { root: null, threshold: 1 })
 
+  observer.value.observe(triggerDiv.value)
+  await fetch()
 })
+
+function handleIntersection(target) {
+  if (target.isIntersecting) {
+    if (isAddData.value) {
+      offset.value += limit.value;
+      fetch()
+    }
+    console.log("intersection")
+  } else {
+    console.log("?")
+  }
+
+}
+
+
+async function fetch() {
+  const payload = {
+    limit: limit.value,
+    offset: offset.value,
+  }
+  switch (props.type) {
+    case 'community':
+
+      const { data, error, refresh } = await post.getCommunityPosts(channelId.value, payload)
+      if (data.value) {
+        const { result, totalCount } = data.value
+        feeds.value = result;
+
+      }
+
+      break;
+    case 'user':
+
+      const { data: userPostData } = await post.getUserPosts(channelId.value, payload)
+      if (userPostData.value) {
+        const { result, totalCount } = userPostData.value
+
+        if (isAddData.value) {
+          if (result.length > 0) {
+            feeds.value = [...feeds.value, ...result];
+          } else {
+            isAddData.value = false;
+          }
+
+        } else {
+          feeds.value = result;
+          if (totalCount < limit.value) {
+            isAddData.value = false;
+          } else {
+            isAddData.value = true;
+          }
+        }
+
+      }
+      break;
+
+
+  }
+
+  isPending.value = false;
+
+}
+
+function initPaging() {
+  limit.value = LIMIT_SIZE;
+  offset.value = 0;
+  isAddData.value = false;
+  feeds.value = []
+}
+
+async function refresh() {
+  initPaging();
+  await fetch();
+
+}
+
 
 
     // @Prop() currPage!: string;
@@ -747,6 +864,24 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
+.fade-move,
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.5s;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.fade-leave-active {
+  position: absolute;
+}
+
+
+
 .pw-reset {
   padding-bottom: 44px !important;
   padding-top: 44px !important;

@@ -150,6 +150,7 @@ import { emailRegex, passwordRegex } from '~/scripts/utils'
 import { useI18n } from 'vue-i18n';
 import { createUserWithEmailAndPassword, type UserCredential } from 'firebase/auth'
 import { useLocalePath } from "vue-i18n-routing";
+import { resolve } from 'path';
 
 
 const { $firebaseAuth, $cookies } = useNuxtApp()
@@ -224,6 +225,11 @@ const v$ = useVuelidate(rules, form)
 // isNameReadOnly = false;
 
 const errorAgree = ref(false);
+
+onBeforeMount(() => {
+  //로그임 분기 처리 해야될듯
+
+})
 // allAgreement = false;
 
 // isDuplicatedNickname = false;
@@ -269,7 +275,7 @@ const errorAgree = ref(false);
 // }
 
 async function register() {
-  if (fUser.value) { console.log('fuser!', fUser.value); await joinZempie(); return; }
+  if (fUser.value) { await joinZempie(); return; }
   const result = await v$.value.$validate()
 
   if (!form.policyAgreement) {
@@ -279,25 +285,19 @@ async function register() {
     if (!result) return;
   }
 
-
-
-
   try {
+    useUser().setSignup()
     const result = await createUserWithEmailAndPassword($firebaseAuth, form.email, form.password)
     const { user } = result;
-
-    console.log('user', result)
-
-    useUser().setFirebaseUser(user);
-
     await joinZempie();
-
+    // await useUser().login()
+    // useUser().setFirebaseUser(user);
 
   } catch (error: any) {
 
     const { message } = error
     if (message.includes('auth/email-already-in-use')) {
-      const { data } = await auth.hasEmail({ email: form.email })
+      const { result } = await auth.hasEmail({ email: form.email })
       // if (data.value) {
 
       //   const { data: res } = data.value.result
@@ -308,7 +308,7 @@ async function register() {
       //     })
 
       //   } else {
-      await joinZempie();
+      // await joinZempie();
       // }
       // }
 
@@ -334,20 +334,20 @@ async function joinZempie() {
   }
 
   try {
-    await useUser().joinUser(payload)
-    router.push('/')
+    const { data } = await auth.signUp(payload)
+    const { user } = data.value.result;
+
+    if (user) {
+      useUser().setUser(user);
+      useUser().setLogin();
+      useUser().unsetSignup()
+    }
+
+    router.push(localePath('/'))
   } catch (err: any) {
     console.error(err)
   }
-  // try {
 
-
-  //   const { data } = await auth.signUp(payload)
-
-  //   console.log('join zemp', data.value)
-  // } catch (err: any) {
-  //   console.error(err)
-  //  }
 
 }
   // this.$api.signUp(obj)

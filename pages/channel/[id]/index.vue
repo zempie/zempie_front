@@ -43,13 +43,14 @@
               </div>
             </template>
             <ul v-else class="no-game">
-              <li style="padding:0 0 10px 0;">{{ $t('no.game') }}</li>
+              <li>{{ $t('no.game') }}</li>
             </ul>
           </div>
         </dt>
 
         <dd>
           <TimelineSk v-if="isPending" />
+          <PostTimeline type="user" v-else />
         </dd>
 
         <dt>
@@ -158,5 +159,15 @@ onMounted(() => {
 <style lang="scss" scoped>
 .swiper-slide {
   display: inline-block
+}
+
+.no-game {
+  height: 60px;
+  padding: 20px 20px 0 20px;
+
+  li {
+    margin-top: 0px;
+  }
+
 }
 </style>
