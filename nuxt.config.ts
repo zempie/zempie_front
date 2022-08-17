@@ -33,6 +33,7 @@ export default defineNuxtConfig({
       '@/assets/css/style.css',
       '@/assets/css/fonts.css',
       '@/assets/css/common.scss',
+      '@/assets/css/editor.scss',
       'element-plus/dist/index.css'
     ],
   

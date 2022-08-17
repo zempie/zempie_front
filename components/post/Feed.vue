@@ -125,6 +125,7 @@
     <ul class="tapl-option">
       <li>
         <ul>
+          <LikeBtn :feed="feed" />
           <!-- <LikeBtn :feed="feed"></LikeBtn>
           <li @click="openComments"><i class="uil uil-comment-alt-dots comment-icon" style="font-size:22px;"></i>&nbsp;
             {{ commentCnt }}
@@ -545,22 +546,6 @@ async function deletePost() {
 
 // /더보기
 
-
-pre {
-  overflow: auto;
-  background: #0D0D0D;
-  color: #fff;
-  font-family: JetBrainsMono, monospace;
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
-}
-
-pre code {
-  color: inherit;
-  padding: 0;
-  background: none;
-  font-size: .8rem;
-}
 
 .tapl-comment>ul {
   max-height: 500px;

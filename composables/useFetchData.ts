@@ -1,21 +1,21 @@
 import EX from '~/plugins/example'
 import { ICommunityPayload } from '~~/types';
 
-const delay = (ms:number) => new Promise((_) => setTimeout(_, ms))
+const delay = (ms: number) => new Promise((_) => setTimeout(_, ms))
 
 // const BASE_API = process.env.BASE_API
 // const COMMUNITY_API = process.env.COMMUNITY_API
 
 
- const useFetchData = async(method: string, url: string, data = null, withCredentials:boolean = false,   error = false) => {
+const useFetchData = async (method: string, url: string, data = null, withCredentials: boolean = false, error = false) => {
   const config = useRuntimeConfig();
   const accessToken = useCookie(config.COOKIE_NAME).value
-  
+
   const options = {
-    method:method,  
-    baseURL:config.BASE_API,
-    headers: accessToken && withCredentials? {'Authorization' :  `Bearer ${accessToken}`} : {},
-    initialCache:false,
+    method: method,
+    baseURL: config.BASE_API,
+    headers: accessToken && withCredentials ? { 'Authorization': `Bearer ${accessToken}` } : {},
+    initialCache: false,
   }
   if (EX[url]) {
     console.log('[testAPI]', method, url, data, error)
@@ -27,41 +27,41 @@ const delay = (ms:number) => new Promise((_) => setTimeout(_, ms))
     return Promise.resolve(EX[url][method].res)
   }
 
-  if (method === 'get') {    
+  if (method === 'get') {
     url = url + '?_=' + Date.now()
-    if(data) {
+    if (data) {
       for (let d in data) {
-          if (data[d]) url += `&${d}=${data[d]}`
+        if (data[d]) url += `&${d}=${data[d]}`
       }
-    }    
-  }else{
+    }
+  } else {
     options['body'] = data;
   }
-  const result =  await useFetch(url, options)
+  const result = await useFetch(url, options)
 
   return result
-  
+
 }
 
-const communityFetch = async(method: string, url: string, data = null, withCredentials:boolean = false,  error = false) => {
+const communityFetch = async (method: string, url: string, data = null, withCredentials: boolean = false, error = false) => {
   const config = useRuntimeConfig();
   const accessToken = useCookie(config.COOKIE_NAME).value
 
   const options = {
-    method:method,  
-    baseURL:config.COMMUNITY_API,
-    headers: accessToken && withCredentials? {'Authorization' :  `Bearer ${accessToken}`} : {},
-    initialCache:false,
+    method: method,
+    baseURL: config.COMMUNITY_API,
+    headers: accessToken && withCredentials ? { 'Authorization': `Bearer ${accessToken}` } : {},
+    initialCache: false,
   }
 
-  if (method === 'get') {    
+  if (method === 'get') {
     url = url + '?_=' + Date.now()
-    if(data) {
+    if (data) {
       for (let d in data) {
-          if (data[d]) url += `&${d}=${data[d]}`
+        if (data[d]) url += `&${d}=${data[d]}`
       }
-    }     
-  }else{
+    }
+  } else {
     options['body'] = data;
   }
 
@@ -71,29 +71,29 @@ const communityFetch = async(method: string, url: string, data = null, withCrede
 }
 
 
-const studioFetch = async(method: string, url: string, data = null, withCredentials:boolean = false,  error = false) => {
+const studioFetch = async (method: string, url: string, data = null, withCredentials: boolean = false, error = false) => {
   const config = useRuntimeConfig();
   const accessToken = useCookie(config.COOKIE_NAME).value
-  
+
   const options = {
-    method:method,  
-    baseURL:config.STUDIO_API,
-    headers: accessToken && withCredentials? {'Authorization' :  `Bearer ${accessToken}`} : {},
-    initialCache:false,
+    method: method,
+    baseURL: config.STUDIO_API,
+    headers: accessToken && withCredentials ? { 'Authorization': `Bearer ${accessToken}` } : {},
+    initialCache: false,
   }
-  if (method === 'get') {    
+  if (method === 'get') {
     url = url + '?_=' + Date.now()
-    if(data) {
+    if (data) {
       for (let d in data) {
-          if (data[d]) url += `&${d}=${data[d]}`
+        if (data[d]) url += `&${d}=${data[d]}`
       }
-    }    
-  }else{
+    }
+  } else {
     options['body'] = data;
   }
 
 
-return await useFetch<any>(url, options)
+  return await useFetch<any>(url, options)
 }
 
 
@@ -103,31 +103,31 @@ export const auth = {
   // getUserInfo() {
   //   return useFetchData('get', '/user/info', undefined, true)
   // },
-  setCookie(){
-    return useFetchData('get', '/__cookie', undefined, false) 
+  setCookie() {
+    return useFetchData('get', '/__cookie', undefined, false)
   },
-  login(){
+  login() {
     return useFetchData('get', '/user/info', undefined, true)
   },
-   hasEmail(obj: { email: string }) {
+  hasEmail(obj: { email: string }) {
     return useFetchData('post', '/user/has-email', obj, false)
   },
-  signUp(obj: { name: string; nickname?: string }) {    
+  signUp(obj: { name: string; nickname?: string }) {
     return useFetchData('post', '/user/sign-up', obj, true)
   },
 }
 
 export const user = {
-  getUserInfo(channelId: string){
-    return useFetchData('get', `/channel/${channelId}`,undefined, true)
-  }, 
+  getUserInfo(channelId: string) {
+    return useFetchData('get', `/channel/${channelId}`, undefined, true)
+  },
   follow(userId: number) {
     return communityFetch('post', `/user/${userId}/follow`, undefined, true);
   },
   unfollow(userId: number) {
     return communityFetch('post', `/user/${userId}/unfollow`, undefined, true);
   },
-  joinedCommunity(userId:number){
+  joinedCommunity(userId: number) {
     return communityFetch('get', `/user/${userId}/list/community`, undefined, true)
   },
   followingList(obj: any, userId: number) {
@@ -136,56 +136,56 @@ export const user = {
   followerList(obj: any, userId: any) {
     return communityFetch('get', `/user/${userId}/list/follower`, obj, true);
   },
-  updateInfo(formData:FormData) {
+  updateInfo(formData: FormData) {
     return useFetchData('post', `/user/update/info`, formData, true);
   },
-  leave(obj: {text: string, num: string}) {
-    return useFetchData('post', `/user/leave-zempie`,obj, true);  
+  leave(obj: { text: string, num: string }) {
+    return useFetchData('post', `/user/leave-zempie`, obj, true);
   }
 }
 
 export const game = {
-  list(obj : {limit:number, offset:number, category?:number, sort?:string, dir?: string}){
+  list(obj: { limit: number, offset: number, category?: number, sort?: string, dir?: string }) {
     return useFetchData('get', '/games', obj, false)
   },
-  upload(formData:FormData) {
+  upload(formData: FormData) {
     return studioFetch('post', '/studio/project', formData, true);
   },
-  verifyPath(pathName: string){
+  verifyPath(pathName: string) {
     return studioFetch('get', `/studio/verify-pathname/${pathName}`, undefined, true);
   },
-  getInfo(pathname: string) {  
+  getInfo(pathname: string) {
     return useFetchData('get', `/launch/game/${pathname}`, undefined, false)
   },
-  getTimeline(gameId: number, obj?: { limit: number, offset:number, sort: string, media: string}){
+  getTimeline(gameId: number, obj?: { limit: number, offset: number, sort: string, media: string }) {
     return communityFetch('get', `/timeline/game/${gameId}`, obj, false)
   }
-  
+
 }
 
 export const project = {
- list() {
-  return studioFetch('get', '/studio/project', undefined, true);
- },
- getInfoById(id: number){
-  return useFetchData('get', `/community/project/${id}`, undefined, true);
- },
- delete(id:number){
-  return studioFetch('delete', `/studio/project/${id}`, undefined, true);
- },
- update(id: number, formData:FormData){
-  return studioFetch('post', `/studio/project/${id}`, formData, false)
- }        
+  list() {
+    return studioFetch('get', '/studio/project', undefined, true);
+  },
+  getInfoById(id: number) {
+    return useFetchData('get', `/community/project/${id}`, undefined, true);
+  },
+  delete(id: number) {
+    return studioFetch('delete', `/studio/project/${id}`, undefined, true);
+  },
+  update(id: number, formData: FormData) {
+    return studioFetch('post', `/studio/project/${id}`, formData, false)
+  }
 }
 
 export const community = {
-  list(obj:ICommunityPayload){
-      return  communityFetch('get', '/community/list', obj, true)
+  list(obj: ICommunityPayload) {
+    return communityFetch('get', '/community/list', obj, true)
   },
-  subscribe(communityId: string){
+  subscribe(communityId: string) {
     return communityFetch('post', `/community/${communityId}/subscribe`, undefined, true);
   },
-  unsubscribe(communityId: string){
+  unsubscribe(communityId: string) {
     return communityFetch('post', `/community/${communityId}/unsubscribe`, undefined, true);
   },
   search(obj: any) {
@@ -194,28 +194,34 @@ export const community = {
   getInfo(id: string) {
     return communityFetch('get', `/community/${id}`, undefined, true);
   },
-  getMembers(communityId: string, obj:any){
+  getMembers(communityId: string, obj: any) {
     return communityFetch('get', `/community/${communityId}/members`, obj, true);
   },
- 
+
 }
 
 export const post = {
-  upload(obj:any){
+  upload(obj: any) {
     return communityFetch('post', `/post`, obj, true);
   },
-  getUserPosts(channelId:string, obj:any){
+  getUserPosts(channelId: string, obj: any) {
     return communityFetch('get', `/timeline/channel/${channelId}`, obj, false)
   },
-  getCommunityPosts(communityId: string, obj:any){
+  getCommunityPosts(communityId: string, obj: any) {
     return communityFetch('get', `/timeline/${communityId}/post`, obj, false)
   },
-  getInfo(postId: string){
-    return communityFetch('get', `/post/${postId}`, undefined, false)   
+  getInfo(postId: string) {
+    return communityFetch('get', `/post/${postId}`, undefined, false)
   },
-  delete(postId: string){
-    return communityFetch('delete', `/post/${postId}`, undefined,true)   
+  delete(postId: string) {
+    return communityFetch('delete', `/post/${postId}`, undefined, true)
   },
+  like(postId: string) {
+    return communityFetch('post', `/post/${postId}/like`, undefined, true)
+  },
+  unlike(postId: string) {
+    return communityFetch('post', `/post/${postId}/unlike`, undefined, true);
+  }
 
 }
 

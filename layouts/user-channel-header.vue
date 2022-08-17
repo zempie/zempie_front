@@ -69,9 +69,11 @@ onMounted(async () => {
 async function getChannelHeaderInfo() {
   const { data, pending } = await user.getUserInfo(channelId.value)
 
-  const { result } = data.value;
-  userInfo.value = result.target
-  useChannel().setUserChannel(userInfo.value)
+  if (data.value) {
+    const { result } = data.value;
+    userInfo.value = result.target
+    useChannel().setUserChannel(userInfo.value)
+  }
   isPending.value = pending.value
 
 }

@@ -25,7 +25,6 @@ const isPending = ref(true)
 const communityId = computed(() => route.params.id as string)
 
 const { data, pending, refresh } = await community.getMembers(communityId.value, { limit: 20, offset: 0 })
-console.log(data)
 
 
 //     metaSetting !: MetaSetting;

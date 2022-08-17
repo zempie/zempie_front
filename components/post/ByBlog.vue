@@ -1,4 +1,5 @@
 <template>
+
   <div style="height: 80vh">
     <EditorContent :editor="editor" class="editor-container blog" />
 
@@ -6,18 +7,24 @@
       <p>{{ charCount }}/{{ limit }}</p>
     </div>
   </div>
+
 </template>
 
 
 <script setup lang="ts">
-import Link from "@tiptap/extension-link";
 import { useI18n } from 'vue-i18n';
 
 import { useEditor, EditorContent } from '@tiptap/vue-3'
-
+import Link from "@tiptap/extension-link";
 import StarterKit from '@tiptap/starter-kit'
-
+import CharacterCount from "@tiptap/extension-character-count";
+import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight"
 import Placeholder from '@tiptap/extension-placeholder'
+import { lowlight } from 'lowlight/lib/core'
+import Typography from '@tiptap/extension-typography'
+import Highlight from '@tiptap/extension-highlight'
+
+import Image from '~/scripts/tiptap/image'
 
 const emit = defineEmits(['editorContent'])
 
@@ -34,26 +41,35 @@ const editor = useEditor({
   content: content.value,
   extensions: [
     StarterKit,
+    CodeBlockLowlight.configure({
+      lowlight,
+    }),
     Placeholder.configure({
       emptyEditorClass: 'is-editor-empty',
       placeholder: `${t('posting.placeholder')}`,
     }),
-    Link
+    CharacterCount.configure({
+      limit: limit.value,
+    }),
+    Link,
+    Typography,
+    Highlight,
+    Image
   ],
   onUpdate: () => {
-
-    emit('editorContent', editor.value.getHTML())
-
-
-    // this.$emit("isEmpty", this.editor!.isEmpty);
-    // this.charCnt = this.editor!.getCharacterCount();
-    // this.$store.commit("postContents", this.editor!.getHTML());
-    // this.$store.commit("isClearEditor", false);
+    charCount.value = editor.value.storage.characterCount.characters()
+    emit('editorContent', editor.value)
   },
+
+
 })
 
-// import { mapGetters } from "vuex";
-// import { Editor, EditorContent, VueRenderer } from "@tiptap/vue-2";
+
+// const urlToBlob = async (url: string) => {
+//   const result = await fetch(url)
+//   const blob = await result.blob()
+//   return URL.createObjectURL(blob)
+// }
 
 // import Placeholder from "@tiptap/extension-placeholder";
 // import Link from "@tiptap/extension-link";

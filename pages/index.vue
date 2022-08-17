@@ -1,6 +1,5 @@
 <template>
-  <div class="wrap">
-
+  <NuxtLayout class="wrap">
     <div class="main-bg">
       <div class="main-copy">
         <p>
@@ -9,15 +8,13 @@
       </div>
 
       <div class="main-visual">
-
-
         <h2>
           <span style="font: 36px/46px 'Jalnan'">Recent games</span>
         </h2>
 
         <ul style="margin: 40px 0px">
           <span class="card-game">
-            <GameCardSk v-if="pending" v-for="game in 8" :key="game" />
+            <GameCardSk v-if="pending" v-for="game in GAME_COUNT" :key="game" />
             <GameCard v-else v-for="game in data.result?.games" :gameInfo="game" :key="game.id" />
 
           </span>
@@ -46,12 +43,9 @@
         <h2><span style="font: 36px/46px 'Jalnan'">Communities</span></h2>
 
         <div class="card-timeline">
-          <CommunityCardSk v-show='cPending' v-for="commi in 4" />
+          <CommunityCardSk v-show='cPending' v-for="commi in COMMUNITY_COUNT" />
           <CommunityCard v-show="!cPending" v-for="community in communities" :community="community"
             :key="community.id" />
-
-
-
         </div>
       </div>
 
@@ -59,12 +53,11 @@
         <h2><span style="font: 36px/46px 'Jalnan'">Recent posts</span></h2>
 
         <ul style="margin-top: 40px" class="post-container">
-          <li class="thumbmail" v-for="post in 8"></li>
+          <li class="thumbmail" v-for="post in POST_COUNT"></li>
         </ul>
       </div>
     </div>
-    <Footer />
-  </div>
+  </NuxtLayout>
 </template>
 
 <script lang="ts" setup>

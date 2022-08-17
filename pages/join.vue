@@ -275,6 +275,7 @@ onBeforeMount(() => {
 // }
 
 async function register() {
+
   if (fUser.value) { await joinZempie(); return; }
   const result = await v$.value.$validate()
 
@@ -290,7 +291,7 @@ async function register() {
     const result = await createUserWithEmailAndPassword($firebaseAuth, form.email, form.password)
     const { user } = result;
     await joinZempie();
-    // await useUser().login()
+    // await useUser().login()-
     // useUser().setFirebaseUser(user);
 
   } catch (error: any) {
@@ -343,7 +344,11 @@ async function joinZempie() {
       useUser().unsetSignup()
     }
 
-    router.push(localePath('/'))
+
+    window.location.href = localePath('/')
+
+    //FIXME: router.push가 왜 안되는지 모르겠음 => blank page
+    // router.push(localePath('/'))
   } catch (err: any) {
     console.error(err)
   }

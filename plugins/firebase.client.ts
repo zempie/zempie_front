@@ -35,8 +35,8 @@ export default defineNuxtPlugin(async(nuxtApp)=>{
             path:'/',
             domain:config.COOKIE_DOMAIN
           }); 
+          console.log(config.COOKIE_DOMAIN)
      useUser().setFirebaseUser(user); 
-     console.log('useUser().user.value.isSignUp', useUser().user.value.isSignUp)
 
      if(!useUser().user.value.isSignUp)  {
       setUserInfo()

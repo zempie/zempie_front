@@ -1,5 +1,4 @@
 <template>
-  <!--    <div class="landing">-->
   <div class="login-bg pt50 pb50 " style="height:100vh; min-height:900px">
 
     <div class="login-logo">

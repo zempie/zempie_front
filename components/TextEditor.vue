@@ -13,6 +13,24 @@
       </div>
       <dl class="mp-type" :style="activeTab === 'BLOG' ? 'margin-top:20px;' : ''">
         <dt>
+          <div style="width: 30px" @click="uploadImageFile">
+            <a><i class="uil uil-image"></i></a>
+            <div style="height: 0px; overflow: hidden">
+              <input type="file" @input="onSelectImageFile" multiple accept=image/* ref="image" />
+            </div>
+          </div>
+          <div style="width: 30px" @click="uploaVideoFile">
+            <a href="#"><i class="uil uil-play-circle"></i></a>
+            <div style="height: 0px; overflow: hidden">
+              <input type="file" @input="onSelectVideoFile" accept=video/* ref="video" />
+            </div>
+          </div>
+          <div style="width: 30px" @click="uploadAudioFile">
+            <a href="#"><i class="uil uil-music"></i></a>
+            <div style="height: 0px; overflow: hidden">
+              <input type="file" @input="onSelectAudioFile" multiple accept=".mp3" ref="audio" />
+            </div>
+          </div>
         </dt>
         <dd>
           <button class="btn-default-samll w100 cancel-btn" @click="emit('closeModal')">Cancel</button>
@@ -24,22 +42,30 @@
 </template>
 
 <script setup lang="ts">
+import { Editor } from "@tiptap/vue-3";
 import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElSelect, ElOption, ElMessage, ElDialog } from "element-plus";
 import { useI18n } from 'vue-i18n';
 const { t, locale } = useI18n()
 
 const route = useRoute()
 const activeTab = ref("SNS")
+const video = ref<HTMLElement>()
+const image = ref<HTMLElement>()
+const audio = ref<HTMLElement>()
 
 const props = defineProps({
-  type: String
+  type: String,
+
 })
 
 const emit = defineEmits(['closeModal', 'fetch'])
 
+let contentJson = null
+
 const form = reactive({
   post_contents: '',
 })
+
 
 
 async function onSubmit() {
@@ -48,11 +74,19 @@ async function onSubmit() {
     post_state: activeTab.value,
     hashtags: [],
   }
+  // const imgContent = contentJson.content.filter((tag) => {
+  //     if (tag.content?.length > 0) {
+  //       return tag.content.filter(elem => elem.type === 'image')
+  //     }
+  //   }
+  // )
+
+
+
 
   switch (props.type) {
     case 'community':
       const communityId = route.params.id
-
 
       Object.assign(payload, {
         community: [{
@@ -93,12 +127,49 @@ async function onSubmit() {
   //                 })
 }
 
-function getEditorContent(content: string) {
-  form.post_contents = content
-  console.log(content)
+function getEditorContent(content: Editor) {
+
+  form.post_contents = content.getHTML()
+  contentJson = content.getJSON();
+
 }
 
 
+function uploaVideoFile() {
+  video.value.click()
+  //  if(activeTab === 'SNS') {
+  //             if (this.$store.getters.audioArr.length > 0 || this.$store.getters.imgArr.length > 0) {
+
+  //                     this.$modal.show('alertAttrModal')
+  //                 }else{
+  //                 (this.$refs.video as HTMLElement).click();
+  //             }
+  //             }
+  //             else {
+  //                 (this.$refs.video as HTMLElement).click();
+
+  //         }
+}
+
+function onSelectVideoFile() {
+
+}
+
+function uploadImageFile() {
+  image.value.click()
+}
+
+function onSelectImageFile() {
+
+}
+
+function uploadAudioFile() {
+  audio.value.click()
+}
+
+function onSelectAudioFile() {
+
+}
 </script>
 
 <style lang="scss" >

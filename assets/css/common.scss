@@ -65,26 +65,9 @@
   }
 }
 
-
 .el-dropdown-menu__item:focus {
   border-radius: 10px;
   background-color: #ededed !important;
   color:#f97316 !important
-
-}
-
-
-
-
-.tapl-content {
-  word-break: break-all;
-  color: #000;
-  overflow: hidden;
-  min-height: 100px;
-  max-height: 500px;
-
-  a{
-    color: #68cef8 !important;    
-  }
 
 }

@@ -43,7 +43,6 @@
       </div>
     </modal> -->
   </NuxtLayout>
-
 </template>
 
 <script setup lang="ts">

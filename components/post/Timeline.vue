@@ -92,8 +92,8 @@
 
     <ClientOnly>
       <el-dialog v-model="isTextEditorOpen" append-to-body custom-class="modal-area-type" :show-close="false"
-        :close-on-click-modal="false" :close-on-press-escape="false">
-        <TextEditor @closeModal="isTextEditorOpen = false" :type="type" @fetch="fetch" />
+        :close-on-click-modal="false" :close-on-press-escape="false" @close="closeEditor">
+        <TextEditor @closeModal="isTextEditorOpen = false" :type="type" @fetch="refresh" :key="editorKey" />
       </el-dialog>
     </ClientOnly>
     <!-- <modal name="writingModal" classes="post-modal" :clickToClose="false" :scrollable="true" height="auto">
@@ -250,23 +250,27 @@
 </template>
 
 <script setup lang="ts">
+import _ from 'lodash'
 import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElSelect, ElOption, ElMessage, ElDialog } from "element-plus";
 
-const LIMIT_SIZE = 3
+const LIMIT_SIZE = 20
 
 const route = useRoute();
+const config = useRuntimeConfig();
 
 
 const feeds = ref<any[]>([])
 const isPending = ref(true)
 
 const isTextEditorOpen = ref(false)
+const isEditorDestroy = ref(false)
+const editorKey = ref(0)
 
 const observer = ref(null)
 const triggerDiv = ref()
 const limit = ref(LIMIT_SIZE);
 const offset = ref(0);
-const isAddData = ref(false);
+const isAddData = ref(true);
 
 const user = computed(() => useUser().user.value.info)
 const gameInfo = computed(() => useGame().game.value.info)
@@ -312,13 +316,9 @@ function handleIntersection(target) {
       offset.value += limit.value;
       fetch()
     }
-    console.log("intersection")
-  } else {
-    console.log("?")
   }
 
 }
-
 
 async function fetch() {
   const payload = {
@@ -332,7 +332,6 @@ async function fetch() {
       if (data.value) {
         const { result, totalCount } = data.value
         feeds.value = result;
-
       }
 
       break;
@@ -340,10 +339,16 @@ async function fetch() {
 
       const { data: userPostData } = await post.getUserPosts(channelId.value, payload)
       if (userPostData.value) {
-        const { result, totalCount } = userPostData.value
+        let { result, totalCount } = userPostData.value
+
+        if (result.length > 0) {
+          isAddData.value = true;
+
+          result = result.filter(feed => feed.id !== null)
+        }
 
         if (isAddData.value) {
-          if (result.length > 0) {
+          if (result.length) {
             feeds.value = [...feeds.value, ...result];
           } else {
             isAddData.value = false;
@@ -379,6 +384,11 @@ async function refresh() {
   initPaging();
   await fetch();
 
+}
+
+function closeEditor() {
+  isEditorDestroy.value = true
+  editorKey.value = Date.now()
 }
 
 
