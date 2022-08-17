@@ -16,7 +16,7 @@
             <PostTimeline type="community" :ableToPost="communityInfo?.is_subscribed">
               <template #inputBox>
                 <input type="text" :placeholder="$t('postModalInput')" readonly
-                  @click="communityInfo?.is_subscribed ? '' : needSubscribe = true" />
+                  @click="isLogin ? (communityInfo?.is_subscribed ? '' : needSubscribe = true) : useModal().openLoginModal()" />
               </template>
             </PostTimeline>
           </dd>
@@ -74,10 +74,11 @@ const createdDate = computed(() => dateFormat(useCommunity().community.value.inf
 const communities = ref([])
 const isPending = ref(true)
 const needSubscribe = ref(false)
+const isLogin = computed(() => useUser().user.value.isLogin)
 
 const communityId = computed(() => route.params.id as string)
 
-console.log($nuxt)
+
 
 onMounted(async () => {
   await fetch()

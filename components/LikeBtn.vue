@@ -22,7 +22,7 @@ const likeCnt = ref(props.feed.like_cnt)
 
 const isLogin = computed(() => useUser().user.value.isLogin)
 
-async function setLike() {
+const setLike = _.debounce(async () => {
   if (!isLogin.value) {
     useModal().openLoginModal();
     return;
@@ -33,8 +33,9 @@ async function setLike() {
     likeCnt.value++;
   }
 
-}
-async function unsetLike() {
+}, 300)
+
+const unsetLike = _.debounce(async () => {
   if (!isLogin.value) {
     useModal().openLoginModal();
     return;
@@ -44,10 +45,9 @@ async function unsetLike() {
     isLiked.value = false
     likeCnt.value--;
   }
-}
-// import {User} from "../../types";
+}, 300)
 
-// import ClickManager from '@/script/clickManager'
+
 
 // @Component({
 //     components: {},

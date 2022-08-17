@@ -33,9 +33,8 @@
         <dl>
           <dt>
             <input v-if="ableToPost" type="text" :placeholder="$t('postModalInput')" readonly
-              @click="user ? isTextEditorOpen = true : useModal().openLoginModal()" />
+              @click="isLogin ? isTextEditorOpen = true : useModal().openLoginModal()" />
             <slot v-else name="inputBox" />
-
           </dt>
           <dd><a><i class="uil uil-message"></i></a></dd>
         </dl>
@@ -273,6 +272,7 @@ const offset = ref(0);
 const isAddData = ref(true);
 
 const user = computed(() => useUser().user.value.info)
+const isLogin = computed(() => useUser().user.value.isLogin)
 const gameInfo = computed(() => useGame().game.value.info)
 const channelId = computed(() => route.params.id as string)
 
