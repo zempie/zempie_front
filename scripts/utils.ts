@@ -1,13 +1,13 @@
 
-import * as dayjs from 'dayjs'
+import dayjs from 'dayjs';
 
-export const  execCommandCopy = (text: string) => {
-  const input = document.createElement('input') as HTMLInputElement;
-  document.body.appendChild(input);
-  input.value = text;
-  input.select();
-  document.execCommand('copy');
-  document.body.removeChild(input);
+export const execCommandCopy = (text: string) => {
+    const input = document.createElement('input') as HTMLInputElement;
+    document.body.appendChild(input);
+    input.value = text;
+    input.select();
+    document.execCommand('copy');
+    document.body.removeChild(input);
 }
 
 
@@ -76,8 +76,8 @@ export const  execCommandCopy = (text: string) => {
 //   return str.substr( 0, count );
 // }
 
-export const dateFormat = (sec: number) =>{
-    
+export const dateFormat = (sec: number) => {
+
     if (dayjs().diff(dayjs(sec), 'm') < 1) {
         return dayjs().diff(dayjs(sec), 's') + '초 전'
     } else if (dayjs().diff(dayjs(sec), 'h') < 1) {
@@ -92,36 +92,36 @@ export const dateFormat = (sec: number) =>{
 }
 
 export const numToKMB = (num: number) => {
-  let result: any = num;
+    let result: any = num;
 
-  if(num < 1000){
-      result = num;
-  }
-  else if (num >= 1000 && num < 1000000) {
-      result = parseInt(String(num / 1000)) + 'K'
-  }
-  else if (num >= 1000000 && num < 1000000000) {
-      result = parseInt(String(num / 1000000)) + 'M'
-  }
-  else if (num >= 1000000000 && num < 1000000000000) {
-      result = parseInt(String(num / 1000000000))+ 'B'
-  }
-  else if(num >= 1000000000000 ){
-      result = parseInt(String(num / 1000000000000))+ 'T'
-  }
-  return result;
+    if (num < 1000) {
+        result = num;
+    }
+    else if (num >= 1000 && num < 1000000) {
+        result = parseInt(String(num / 1000)) + 'K'
+    }
+    else if (num >= 1000000 && num < 1000000000) {
+        result = parseInt(String(num / 1000000)) + 'M'
+    }
+    else if (num >= 1000000000 && num < 1000000000000) {
+        result = parseInt(String(num / 1000000000)) + 'B'
+    }
+    else if (num >= 1000000000000) {
+        result = parseInt(String(num / 1000000000000)) + 'T'
+    }
+    return result;
 }
 
-export const emailRegex =  /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/
+export const emailRegex = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/
 
-export const passwordRegex =  /^(?=.*[a-zA-Z])((?=.*\d)|(?=.*\W)).{6,20}$/
+export const passwordRegex = /^(?=.*[a-zA-Z])((?=.*\d)|(?=.*\W)).{6,20}$/
 
-export const randomString  = (count : number = 11 ) =>{
-  let str = Math.random().toString(36).substr(2,11);
-  while( str.length < count ) {
-      str += Math.random().toString(36).substr(2,11);
-  }
-  return str.substr( 0, count );
+export const randomString = (count: number = 11) => {
+    let str = Math.random().toString(36).substr(2, 11);
+    while (str.length < count) {
+        str += Math.random().toString(36).substr(2, 11);
+    }
+    return str.substr(0, count);
 }
 
 // export {

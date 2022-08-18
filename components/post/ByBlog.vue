@@ -18,7 +18,7 @@ import { useEditor, EditorContent } from '@tiptap/vue-3'
 import Link from "@tiptap/extension-link";
 import StarterKit from '@tiptap/starter-kit'
 import CharacterCount from "@tiptap/extension-character-count";
-import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight"
+// import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight"
 import Placeholder from '@tiptap/extension-placeholder'
 // import { lowlight } from 'lowlight/lib/core'
 import Typography from '@tiptap/extension-typography'
@@ -41,7 +41,7 @@ const editor = useEditor({
   content: content.value,
   extensions: [
     StarterKit,
-    CodeBlockLowlight,
+    // CodeBlockLowlight,
     Placeholder.configure({
       emptyEditorClass: 'is-editor-empty',
       placeholder: `${t('posting.placeholder')}`,
