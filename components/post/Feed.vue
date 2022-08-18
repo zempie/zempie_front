@@ -174,12 +174,14 @@
 </template>
 
 <script setup lang="ts">
-import hljs from 'highlight.js'
+// import '~/scripts/prism.js'
+// import 'prismjs';
 import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElSelect, ElOption, ElMessage, ElDialog } from "element-plus";
 
 import { dateFormat, execCommandCopy } from '~/scripts/utils'
 import { useI18n } from 'vue-i18n';
 import { useLocalePath } from 'vue-i18n-routing';
+import hljs from 'highlight.js';
 
 
 const localePath = useLocalePath();

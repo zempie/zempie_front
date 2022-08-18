@@ -1,10 +1,10 @@
 .tapl-content {
   word-break: break-all;
   color: #000;
-  overflow: hidden;
+  overflow-y: hidden;
   min-height: 100px;
   max-height: 500px;
-
+  width: 100%;
 
 
   .attr-img {
@@ -15,7 +15,6 @@
     color: #68cef8 !important;
   } 
 }
-
 
 pre {
   background: #0D0D0D;

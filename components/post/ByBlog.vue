@@ -27,7 +27,7 @@ import Highlight from '@tiptap/extension-highlight'
 import Image from '~/scripts/tiptap/image'
 
 
-import { lowlight } from 'lowlight/lib/core'
+import { lowlight } from 'lowlight/lib/core.js'
 
 const emit = defineEmits(['editorContent'])
 

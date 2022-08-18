@@ -17,7 +17,9 @@ export default defineNuxtConfig({
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      { rel: 'stylesheet', href: "//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.6.0/build/styles/default.min.css" }],
+      // { rel: 'stylesheet', href: '//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.6.0/build/styles/default.min.css' },
+    ],
+
   },
 
   router: {
@@ -37,6 +39,9 @@ export default defineNuxtConfig({
     '@/assets/css/common.scss',
     '@/assets/css/editor.scss',
     'element-plus/dist/index.css',
+    // '@/assets/css/prism.css'
+
+
   ],
 
 

@@ -208,6 +208,10 @@ function onSelectAudioFile() {
   padding: 15px;
 
   .ProseMirror {
+
+    height: 100%;
+    overflow: auto;
+
     >*+* {
       margin-top: 0.75em;
     }
@@ -217,9 +221,6 @@ function onSelectAudioFile() {
     }
 
 
-    height: 100%;
-    overflow: auto;
-
     p.is-editor-empty:first-child::before {
       content: attr(data-placeholder);
       float: left;
@@ -228,21 +229,6 @@ function onSelectAudioFile() {
       height: 0;
     }
 
-    pre {
-      overflow: auto;
-      background: #0D0D0D;
-      color: #fff;
-      font-family: JetBrainsMono, monospace;
-      padding: 0.75rem 1rem;
-      border-radius: 0.5rem;
-    }
-
-    pre code {
-      color: inherit;
-      padding: 0;
-      background: none;
-      font-size: .8rem;
-    }
 
     ul {
       padding: 0 1.5rem;
@@ -263,26 +249,7 @@ function onSelectAudioFile() {
       line-height: 1.1;
     }
 
-    code {
-      background-color: rgba(#616161, 0.1);
-      color: #616161;
-    }
 
-    pre {
-      overflow: auto;
-      background: #0D0D0D;
-      color: #FFF;
-      font-family: 'JetBrainsMono', monospace;
-      padding: 0.75rem 1rem;
-      border-radius: 0.5rem;
-
-      code {
-        color: inherit;
-        padding: 0;
-        background: none;
-        font-size: 0.8rem;
-      }
-    }
 
     img {
       max-width: 100%;
