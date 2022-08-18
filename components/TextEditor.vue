@@ -128,7 +128,7 @@ async function onSubmit() {
 }
 
 function getEditorContent(content: Editor) {
-
+  console.log(content)
   form.post_contents = content.getHTML()
   contentJson = content.getJSON();
 

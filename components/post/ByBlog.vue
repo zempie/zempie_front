@@ -14,17 +14,20 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 
-import { useEditor, EditorContent } from '@tiptap/vue-3'
+import { useEditor, EditorContent, VueNodeViewRenderer } from '@tiptap/vue-3'
 import Link from "@tiptap/extension-link";
 import StarterKit from '@tiptap/starter-kit'
 import CharacterCount from "@tiptap/extension-character-count";
-// import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight"
+import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight"
 import Placeholder from '@tiptap/extension-placeholder'
-// import { lowlight } from 'lowlight/lib/core'
+
 import Typography from '@tiptap/extension-typography'
 import Highlight from '@tiptap/extension-highlight'
 
 import Image from '~/scripts/tiptap/image'
+
+
+import { lowlight } from 'lowlight/lib/core'
 
 const emit = defineEmits(['editorContent'])
 
@@ -41,7 +44,7 @@ const editor = useEditor({
   content: content.value,
   extensions: [
     StarterKit,
-    // CodeBlockLowlight,
+    CodeBlockLowlight.configure({ lowlight }),
     Placeholder.configure({
       emptyEditorClass: 'is-editor-empty',
       placeholder: `${t('posting.placeholder')}`,

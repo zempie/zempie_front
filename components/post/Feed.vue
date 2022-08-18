@@ -174,6 +174,7 @@
 </template>
 
 <script setup lang="ts">
+import hljs from 'highlight.js'
 import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElSelect, ElOption, ElMessage, ElDialog } from "element-plus";
 
 import { dateFormat, execCommandCopy } from '~/scripts/utils'
@@ -198,7 +199,10 @@ const props = defineProps({
 const emit = defineEmits(['fetch'])
 
 onMounted(() => {
-
+  document.querySelectorAll('pre')
+    .forEach((block) => {
+      hljs.highlightBlock(block)
+    })
 })
 // import {Component, Prop, Vue} from "vue-property-decorator";
 
@@ -485,6 +489,7 @@ async function deletePost() {
 //         console.log("?")
 //     }
 </script>
+
 <style lang="scss" scoped>
 // transition
 

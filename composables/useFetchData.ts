@@ -205,10 +205,10 @@ export const post = {
     return communityFetch('post', `/post`, obj, true);
   },
   getUserPosts(channelId: string, obj: any) {
-    return communityFetch('get', `/timeline/channel/${channelId}`, obj, false)
+    return communityFetch('get', `/timeline/channel/${channelId}`, obj, true)
   },
   getCommunityPosts(communityId: string, obj: any) {
-    return communityFetch('get', `/timeline/${communityId}/post`, obj, false)
+    return communityFetch('get', `/timeline/${communityId}/post`, obj, true)
   },
   getInfo(postId: string) {
     return communityFetch('get', `/post/${postId}`, undefined, false)
