@@ -1,7 +1,8 @@
 <template>
   <div id="gamePage">
     <ClientOnly>
-      <iframe ref="game" class="iframe" :style="`height:${iframeHeight};`" :src="url"></iframe>
+      <iframe ref="game" class="iframe" :style="`height:${iframeHeight};`"
+        :src="`${config.LAUNCHER_URL}/game/${gamePath}`"></iframe>
     </ClientOnly>
   </div>
 </template>
@@ -33,7 +34,7 @@ onMounted(async () => {
   if (data.value) {
     const { game, my_emotions, my_heart } = data.value.result
     gameData.value = game
-    url.value = `/${config.LAUNCHER_URL}/game/${gamePath.value}`;
+    // url.value = `/${config.LAUNCHER_URL}/game/${gamePath.value}`;
 
     window.addEventListener("message", onMessage);
     window.addEventListener("resize", onResize);
