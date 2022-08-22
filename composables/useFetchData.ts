@@ -6,6 +6,35 @@ const delay = (ms: number) => new Promise((_) => setTimeout(_, ms))
 // const BASE_API = process.env.BASE_API
 // const COMMUNITY_API = process.env.COMMUNITY_API
 
+function baseOption(method: string, withCredentials: boolean, body?: object) {
+  const config = useRuntimeConfig();
+  const accessToken = useCookie(config.COOKIE_NAME).value
+
+  const options = {
+    method: method,
+    headers: accessToken && withCredentials ? { 'Authorization': `Bearer ${accessToken}` } : {},
+    initialCache: false,
+  }
+  if (method === 'post') {
+    options['body'] = body;
+  }
+  return options
+}
+
+export const getZempieFetchOptions = (method = 'get', withCredentials = false, body?: object) => {
+  const config = useRuntimeConfig();
+  const options = baseOption(method, withCredentials, body)
+  options['baseURL'] = config.BASE_API
+  return options
+}
+
+export const getComFetchOptions = (method = 'get', withCredentials = false, body?: object) => {
+  const config = useRuntimeConfig();
+  const options = baseOption(method, withCredentials, body)
+  options['baseURL'] = config.COMMUNITY_API
+  return options
+}
+
 
 const useFetchData = async (method: string, url: string, data = null, withCredentials: boolean = false, error = false) => {
   const config = useRuntimeConfig();
@@ -17,6 +46,7 @@ const useFetchData = async (method: string, url: string, data = null, withCreden
     headers: accessToken && withCredentials ? { 'Authorization': `Bearer ${accessToken}` } : {},
     initialCache: false,
   }
+
   if (EX[url]) {
     console.log('[testAPI]', method, url, data, error)
     await delay(1000)

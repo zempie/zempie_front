@@ -1,74 +1,70 @@
 <template>
-  <NuxtLayout class="wrap">
-    <div class="main-bg">
-      <div class="main-copy">
-        <p>
-          <img src="/images/main_copy.svg" width="500" alt="" title="" />
-        </p>
-      </div>
+  <div class="main-bg">
+    <div class="main-copy">
+      <p>
+        <img src="/images/main_copy.svg" width="500" alt="" title="" />
+      </p>
+    </div>
 
-      <div class="main-visual">
-        <h2>
-          <span style="font: 36px/46px 'Jalnan'">Recent games</span>
-        </h2>
+    <div class="main-visual">
+      <h2>
+        <span style="font: 36px/46px 'Jalnan'">Recent games</span>
+      </h2>
 
-        <ul style="margin: 40px 0px">
-          <span class="card-game">
-            <GameCardSk v-if="pending" v-for="game in GAME_COUNT" :key="game" />
-            <GameCard v-else v-for="game in data.result?.games" :gameInfo="game" :key="game.id" />
-
-          </span>
-        </ul>
-
-      <div class="main-visual">
-        <h2><span style="font: 36px/46px 'Jalnan'">Communities</span></h2>
-
-        <div class="card-timeline">
-          <CommunityCard v-for="commi in 4" />
-        </div>
-      </div>
-
-      <div class="main-visual">
-        <h2><span style="font: 36px/46px 'Jalnan'">Recent posts</span></h2>
-
-        <ul style="margin-top: 40px" class="post-container">
-          <li class="thumbmail" v-for="post in 8"></li>
-        </ul>
-      </div>
-      <!-- <div class="main-upload">
+      <ul style="margin: 40px 0px">
+        <span class="card-game">
+          <GameCardSk v-if="pending" v-for="game in GAME_COUNT" :key="game" />
+          <GameCard
+            v-else
+            v-for="game in data.result?.games"
+            :gameInfo="game"
+            :key="game.id"
+          />
+        </span>
+      </ul>
+    </div>
+    <!-- <div class="main-upload">
         <p></p>
       </div> -->
 
-      <div class="main-visual">
-        <h2><span style="font: 36px/46px 'Jalnan'">Communities</span></h2>
+    <div class="main-visual">
+      <h2><span style="font: 36px/46px 'Jalnan'">Communities</span></h2>
 
-        <div class="card-timeline">
-          <CommunityCardSk v-show='cPending' v-for="commi in COMMUNITY_COUNT" />
-          <CommunityCard v-show="!cPending" v-for="community in communities" :community="community"
-            :key="community.id" />
-        </div>
-      </div>
-
-      <div class="main-visual">
-        <h2><span style="font: 36px/46px 'Jalnan'">Recent posts</span></h2>
-
-        <ul style="margin-top: 40px" class="post-container">
-          <li class="thumbmail" v-for="post in POST_COUNT"></li>
-        </ul>
+      <div class="card-timeline">
+        <CommunityCardSk v-show="cPending" v-for="commi in COMMUNITY_COUNT" />
+        <CommunityCard
+          v-show="!cPending"
+          v-for="community in communities"
+          :community="community"
+          :key="community.id"
+        />
       </div>
     </div>
-  </NuxtLayout>
+
+    <div class="main-visual">
+      <h2><span style="font: 36px/46px 'Jalnan'">Recent posts</span></h2>
+
+      <ul style="margin-top: 40px" class="post-container">
+        <li class="thumbmail" v-for="post in POST_COUNT"></li>
+      </ul>
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
-const GAME_COUNT = 8;
-const COMMUNITY_COUNT = 4;
-const POST_COUNT = 8;
+const GAME_COUNT = 8
+const COMMUNITY_COUNT = 4
+const POST_COUNT = 8
 
-const { data, pending, error } = await game.list({ limit: GAME_COUNT, offset: 0 })
-const { data: communities, pending: cPending, error: cError } = await community.list({ limit: COMMUNITY_COUNT })
-
-
+const { data, pending, error } = await game.list({
+  limit: GAME_COUNT,
+  offset: 0,
+})
+const {
+  data: communities,
+  pending: cPending,
+  error: cError,
+} = await community.list({ limit: COMMUNITY_COUNT })
 </script>
 
 <style scoped lang="scss">
@@ -86,8 +82,7 @@ const { data: communities, pending: cPending, error: cError } = await community.
   padding-bottom: 100px;
 }
 
-
-.main-visual>h3 {
+.main-visual > h3 {
   background: none !important;
   height: auto !important;
 }

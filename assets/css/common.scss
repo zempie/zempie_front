@@ -45,7 +45,7 @@
 }
 
 .modal-area-type {
-  max-width: 380px !important;
+  max-width: 500px !important;
   border-radius: 10px !important;  
   position: absolute !important;
   left: 50%;
@@ -70,4 +70,22 @@
   background-color: #ededed !important;
   color:#f97316 !important
 
+}
+
+// swiper-css
+
+
+.swiper-pagination-bullet-active{
+
+  background-color:#f97316 !important;
+}
+
+.mp-image{
+  .swiper-wrapper {
+    display: flex
+  }
+  .swiper-pagination-bullet{
+    background-color:#fff !important;
+    opacity: 1 !important;
+  }
 }

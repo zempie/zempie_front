@@ -2,28 +2,51 @@
   <NuxtLayout name="user-channel-header">
     <div>
       <dl class="area-title">
-        <dt>Followings <span>Followings.length</span></dt>
+        <dt>Followings <span>{{ totalCount }}</span></dt>
       </dl>
-      <transition name="component-fade" mode="out-in">
-        <ul class="card-member">
-
-          <UserCardSK v-for="user in 4" />
-
-          <!-- <MemberCard
-                    v-for="member in followerList"
-                    :key="member.id"
-                    :member="member"
-                    @reFetch="reFetch"
-                ></MemberCard> -->
-        </ul>
-
-
-      </transition>
+      {{ users }}
+      <UserList :users="users" :isPending="isPending" />
+      <div v-if="!isPending && !users.length" class="no-result">
+        <h1>{{ $t('no.followers') }}</h1>
+        <img src="/images/not-found.png" />
+      </div>
     </div>
   </NuxtLayout>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+const userId = computed(() => useChannel().userChannel.value.info.id)
+
+const isPending = ref(true)
+const totalCount = ref()
+const users = ref([])
+
+watch(userId, async () => {
+  await fetch()
+})
+
+
+onMounted(async () => {
+  if (userId.value) {
+    await fetch()
+  }
+})
+
+async function fetch() {
+
+  const { data, error, pending } = await useFetch<{ totalCount: number, result: [], pageInfo: {} }>
+    (`/user/${userId.value}/list/following`, getComFetchOptions('get', true))
+  console.log(data)
+  if (!error.value) {
+    totalCount.value = data.value.totalCount;
+    users.value = data.value.result
+  }
+  isPending.value = false;
+
+}
+
+
+// console.log(useChannel().userChannel.value.info)
   // @Prop() userId!: any;
   // private followerList: any = [];
   // private totalCnt: number = 0;
@@ -95,5 +118,27 @@
 .component-fade-enter-from,
 .component-fade-leave-to {
   opacity: 0;
+}
+
+
+.no-result {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+
+  h1 {
+    color: #333;
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  img {
+    margin: 0 auto;
+    width: 100px;
+    height: 100px;
+  }
+
 }
 </style>

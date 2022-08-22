@@ -7,13 +7,10 @@
         <h3>&nbsp;{{ $t('changePwd.info') }}</h3>
       </div>
       <dl class="ii-card">
-        <!-- TODO: 비밀번호를 다시 입력해야되지 않나 -->
-
         <div>
-          <input @keyup.enter="sendEmail" type="text" v-model="email" name="" title=""
-            :placeholder="$t('login.email.placeholder')" @input="isEmailErr = false" class="w100p h60" />
-          <p :class="isEmailErr ? 'email-error' : 'email-no-error'">{{ $t('login.email.format.err') }}
-          </p>
+          <input @input="email ? (isEmailErr = false) : isEmailErr = true" @keyup.enter="sendEmail" type="text"
+            v-model="email" :placeholder="$t('login.email.placeholder')" class="w100p h60" />
+          <p v-if="isEmailErr" class="email-error">{{ $t('login.empty.email') }} </p>
         </div>
 
         <p>
@@ -42,16 +39,67 @@
         </div>
       </div>
     </modal> -->
+
+    <el-dialog v-model="openModal" append-to-body custom-class="modal-area-type" :show-close="false">
+      <div class="modal-alert">
+        <dl class="ma-header">
+          <dt>{{ $t('information') }}</dt>
+          <dd>
+            <button @click="openModal = false"><i class="uil uil-times"></i></button>
+          </dd>
+        </dl>
+        <div class="ma-content">
+          <h2>{{ $t('send.email.info1') }}<br />
+            {{ $t('send.email.info2') }}</h2>
+          <div>
+            <button class="btn-default" style="width: 100%" @click="openModal = false">{{ $t('confirm') }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
   </NuxtLayout>
 </template>
 
 <script setup lang="ts">
+import { ElDialog, ElMessage } from "element-plus";
+import { sendPasswordResetEmail } from 'firebase/auth'
+import { useI18n } from 'vue-i18n';
+
+const { t, locale } = useI18n()
 
 const email = ref('')
-const user = computed(() => useUser().user.value.info)
 const isEmailErr = ref(false)
+const openModal = ref(false)
 
-function sendEmail() {
+const { $firebaseAuth } = useNuxtApp()
+
+const user = computed(() => useUser().user.value.info)
+
+async function sendEmail() {
+  if (!email.value) {
+    isEmailErr.value = true
+    return
+  }
+
+  if (email.value !== user.value.email) {
+    ElMessage({
+      message: t('이메일이 일치하지않습니다. 다시 입력해주세요'),
+      type: 'error'
+    })
+    return
+  }
+
+  try {
+    await sendPasswordResetEmail($firebaseAuth, email.value);
+    openModal.value = true;
+
+  } catch (error: any) {
+    ElMessage({
+      message: error.message,
+      type: 'error'
+    })
+  }
 
 }
 // import {Component, Prop, Vue} from "vue-property-decorator";
@@ -107,6 +155,7 @@ function sendEmail() {
 }
 
 .email-error {
+  margin-left: 10px;
   margin-top: 10px;
   display: inline-block !important;
   color: #c5292a;

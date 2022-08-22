@@ -7,7 +7,7 @@
       <UserList :users="users" :isPending="isPending" />
       <div v-if="!isPending && !users.length" class="no-result">
         <h1>{{ $t('no.followers') }}</h1>
-        <img src="/images/not-found.png" width="100px" height="100px" />
+        <img src="/images/not-found.png" style="width:100px; height:100px" />
       </div>
     </div>
   </NuxtLayout>

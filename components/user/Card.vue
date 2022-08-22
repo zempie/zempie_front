@@ -19,8 +19,6 @@
 
       </dl>
       <slot name="followBtn"></slot>
-
-
     </div>
   </li>
 </template>

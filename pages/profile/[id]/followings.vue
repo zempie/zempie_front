@@ -6,15 +6,16 @@
       </dl>
       <UserList :users="users" :isPending="isPending" />
       <div v-if="!isPending && !users.length" class="no-result">
-        <h1>{{ $t('no.followings') }}</h1>
-        <img src="/images/not-found.png" width="100px" height="100px" />
+        <h1>{{ $t('no.following') }}</h1>
+        <img src="/images/not-found.png" />
       </div>
 
     </div>
   </NuxtLayout>
 </template>
 
-<script setup lang="ts">import { IUser } from '~~/types';
+<script setup lang="ts">
+import { IUser } from '~~/types';
 
 const MAX_PAGE_SIZE = 20
 const route = useRoute();
@@ -39,7 +40,7 @@ async function fetch() {
   const { data, pending, refresh, error } = await user.followingList(payload, userId.value as number)
   if (!error.value) {
     totalCount.value = data.value.totalCount
-    users.value = data.value.result.map((user) => {
+    users.value = data.value.result.map((user: any) => {
       return {
         name: user.name,
         id: user.id,
@@ -73,7 +74,9 @@ async function fetch() {
   }
 
   img {
-    margin: 0 auto
+    margin: 0 auto;
+    width: 100px;
+    height: 100px;
   }
 
 }

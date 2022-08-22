@@ -1,53 +1,78 @@
 <template>
   <div class="modal-post">
     <ul class="mp-header">
-      <li :class="activeTab === 'SNS' ? 'active' : ''"><i class="uil uil-file-landscape"></i>
+      <li :class="activeTab === 'SNS' ? 'active' : ''" @click="activeTab = 'SNS'"><i class="uil uil-file-landscape"></i>
         SNS
       </li>
-      <li :class="activeTab === 'BLOG' ? 'active' : ''"><i class="uil uil-files-landscapes"></i> Blog
+      <li :class="activeTab === 'BLOG' ? 'active' : ''" @click="activeTab = 'BLOG'"><i
+          class="uil uil-files-landscapes"></i> Blog
       </li>
     </ul>
     <div>
-      <PostByBlog @editorContent="getEditorContent" />
-      <div class="mp-category">
+      <!-- <PostBySns v-if="activeTab === 'SNS'" /> -->
+      <PostByBlog @editorContent="getEditorContent" :postType='activeTab' />
+
+      <div v-if="attachFiles.img.length && activeTab === 'SNS'" class="mp-image" style="padding-bottom: 0px">
+        <dd style="width: 100%;">
+          <swiper :modules="[Pagination]" class="swiper-area" :slides-per-view="3" :space-between="10"
+            :pagination="{ clickable: true }">
+            <swiper-slide v-for="(img, idx) in attachFiles.img" :key="idx"
+              :style="`padding-bottom: 43px; background: url(${img.url}) center center / cover no-repeat; background-size:cover;`">
+              <span @click="deleteImg(idx)"><i class="uil uil-times-circle"></i></span>
+            </swiper-slide>
+            <div class="swiper-pagination" slot="pagination"></div>
+          </swiper>
+        </dd>
       </div>
-      <dl class="mp-type" :style="activeTab === 'BLOG' ? 'margin-top:20px;' : ''">
+      <div class="mp-category">
+
+      </div>
+      <dl class="mp-type">
         <dt>
           <div style="width: 30px" @click="uploadImageFile">
             <a><i class="uil uil-image"></i></a>
             <div style="height: 0px; overflow: hidden">
-              <input type="file" @input="onSelectImageFile" multiple accept=image/* ref="image" />
+              <input type="file" @change="onSelectImageFile" multiple accept=image/* ref="image" />
             </div>
           </div>
           <div style="width: 30px" @click="uploaVideoFile">
             <a href="#"><i class="uil uil-play-circle"></i></a>
             <div style="height: 0px; overflow: hidden">
-              <input type="file" @input="onSelectVideoFile" accept=video/* ref="video" />
+              <input type="file" @change="onSelectVideoFile" accept=video/* ref="video" />
             </div>
           </div>
           <div style="width: 30px" @click="uploadAudioFile">
             <a href="#"><i class="uil uil-music"></i></a>
             <div style="height: 0px; overflow: hidden">
-              <input type="file" @input="onSelectAudioFile" multiple accept=".mp3" ref="audio" />
+              <input type="file" @change="onSelectAudioFile" multiple accept=".mp3" ref="audio" />
             </div>
           </div>
         </dt>
+
         <dd>
           <button class="btn-default-samll w100 cancel-btn" @click="emit('closeModal')">Cancel</button>
           <button class="btn-default-samll w100" @click="onSubmit">Post</button>
         </dd>
       </dl>
     </div>
+
   </div>
 </template>
 
 <script setup lang="ts">
+import { Pagination } from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+
 import { Editor } from "@tiptap/vue-3";
 import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElSelect, ElOption, ElMessage, ElDialog } from "element-plus";
+
 import { useI18n } from 'vue-i18n';
 const { t, locale } = useI18n()
 
 const route = useRoute()
+
+
+
 const activeTab = ref("SNS")
 const video = ref<HTMLElement>()
 const image = ref<HTMLElement>()
@@ -55,18 +80,23 @@ const audio = ref<HTMLElement>()
 
 const props = defineProps({
   type: String,
-
 })
+
+const editor = ref<Editor>()
+
+const attachFiles = ref({
+  img: [],
+  video: [],
+  audio: []
+})
+
 
 const emit = defineEmits(['closeModal', 'fetch'])
 
-let contentJson = null
 
 const form = reactive({
   post_contents: '',
 })
-
-
 
 async function onSubmit() {
   const payload = {
@@ -74,6 +104,26 @@ async function onSubmit() {
     post_state: activeTab.value,
     hashtags: [],
   }
+
+  if (attachFiles.value.img.length || attachFiles.value.audio.length || attachFiles.value.video.length) {
+
+
+    const formData = new FormData();
+
+    for (const img of attachFiles.value.img) {
+      formData.append(img.name, img.file)
+    }
+
+    const { data, error, pending } = await useFetch<{ result: [] }>('/community/att', getZempieFetchOptions('post', true, formData))
+
+    payload['attatchment_files'] = data.value.result;
+  }
+
+
+
+
+
+
   // const imgContent = contentJson.content.filter((tag) => {
   //     if (tag.content?.length > 0) {
   //       return tag.content.filter(elem => elem.type === 'image')
@@ -88,21 +138,18 @@ async function onSubmit() {
     case 'community':
       const communityId = route.params.id
 
-      Object.assign(payload, {
-        community: [{
-          id: communityId
-        }]
-      })
 
-
+      payload['community'] = [{
+        id: communityId
+      }]
       break;
   }
 
 
 
-  const { data, error } = await post.upload(payload);
+  const { error: uploadError } = await post.upload(payload);
 
-  if (!error.value) {
+  if (!uploadError.value) {
 
     emit('closeModal')
     emit('fetch')
@@ -128,12 +175,47 @@ async function onSubmit() {
 }
 
 function getEditorContent(content: Editor) {
-  console.log(content)
+  editor.value = content
   form.post_contents = content.getHTML()
-  contentJson = content.getJSON();
+
 
 }
 
+function uploadImageFile() {
+  image.value.click()
+}
+
+function onSelectImageFile(event: { target: { files: File[], value: string } }) {
+  const files = event.target.files;
+
+  for (const file of files) {
+    const reader = new FileReader();
+
+    reader.onload = async (e) => {
+
+      const url = e.target!.result as any
+      const result = await fetch(url)
+      const blob = await result.blob()
+      const blobUrl = URL.createObjectURL(blob)
+      attachFiles.value.img.push({
+        file: file,
+        name: file.name,
+        url: url
+      })
+      if (activeTab.value === 'BLOG') {
+        editor.value.chain().focus(null).setImage({ src: blobUrl }).run();
+      }
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  event.target.value = ''
+}
+
+function deleteImg(idx: number) {
+  attachFiles.value.img.splice(idx, 1)
+}
 
 function uploaVideoFile() {
   video.value.click()
@@ -155,13 +237,6 @@ function onSelectVideoFile() {
 
 }
 
-function uploadImageFile() {
-  image.value.click()
-}
-
-function onSelectImageFile() {
-
-}
 
 function uploadAudioFile() {
   audio.value.click()
@@ -176,6 +251,7 @@ function onSelectAudioFile() {
 @use "sass:math";
 
 .modal-post {
+
 
   .mp-category {
     width: 100%;
@@ -203,9 +279,10 @@ function onSelectAudioFile() {
 }
 
 .editor-container {
-  height: 100%;
+  min-height: 200px;
   text-align: left;
   padding: 15px;
+
 
   .ProseMirror {
 
@@ -257,8 +334,7 @@ function onSelectAudioFile() {
 
 
       &.ProseMirror-selectednode {
-        margin-left: 3px;
-        margin-top: 3px;
+        margin: 3px;
         outline: 3px solid #F97316;
       }
     }

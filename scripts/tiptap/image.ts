@@ -36,6 +36,7 @@ const urlToBlob = async (url: string) => {
 export default Node.create<ImageOptions>({
     name: 'image',
 
+
     defaultOptions: {
         inline: true,
         HTMLAttributes: {},

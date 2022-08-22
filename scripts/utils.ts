@@ -11,6 +11,7 @@ export const execCommandCopy = (text: string) => {
 }
 
 
+
 // export default class StringHelper {
 //   static msToMinuteSecond(ms: number): string {
 //       // const hour = Math.floor(ms / 3600000 );
@@ -87,7 +88,7 @@ export const dateFormat = (sec: number) => {
     } else if (dayjs().diff(dayjs(sec), 'd') <= 7) {
         return dayjs().diff(dayjs(sec), 'd') + '일 전'
     } else {
-        return dayjs(sec).locale('ko').format('LL')
+        return dayjs(sec).locale('ko').format('YYYY/MM/DD')
     }
 }
 

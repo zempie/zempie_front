@@ -33,7 +33,6 @@ const route = useRoute();
 const communities = ref<ICommunity[]>([])
 const isPending = ref(true)
 
-//FIXME: type 쓰는 방식이 다른게 있을듯
 const userId = computed(() => route.params.id as number | string)
 
 
@@ -55,6 +54,7 @@ async function fetch() {
 
 <style lang="scss" scoped>
 .no-result {
+  margin-left: 12.5px;
   display: flex;
   align-content: center;
   justify-content: center;

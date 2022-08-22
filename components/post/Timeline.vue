@@ -269,6 +269,7 @@ const observer = ref(null)
 const triggerDiv = ref()
 const limit = ref(LIMIT_SIZE);
 const offset = ref(0);
+const media = ref('')
 const isAddData = ref(true);
 
 const user = computed(() => useUser().user.value.info)
@@ -300,6 +301,14 @@ watch(
   { immediate: true }
 )
 
+watch(
+  () => route.query,
+  (query) => {
+    media.value = query.media as string;
+    refresh()
+  }
+)
+
 
 onMounted(async () => {
   observer.value = new IntersectionObserver((entries) => {
@@ -324,6 +333,7 @@ async function fetch() {
   const payload = {
     limit: limit.value,
     offset: offset.value,
+    media: media.value
   }
   switch (props.type) {
     case 'community':
@@ -341,14 +351,13 @@ async function fetch() {
       if (userPostData.value) {
         let { result, totalCount } = userPostData.value
 
-        if (result.length > 0) {
+        if (result?.length) {
           isAddData.value = true;
-
           result = result.filter(feed => feed.id !== null)
         }
 
         if (isAddData.value) {
-          if (result.length) {
+          if (result?.length) {
             feeds.value = [...feeds.value, ...result];
           } else {
             isAddData.value = false;
@@ -541,7 +550,7 @@ function closeEditor() {
     //                 })
     //                 .finally(() => {
     //                     this.isFirstLoading = false;
-    //                     this.timeline = _.orderBy(this.timeline, 'createdAt', 'desc')
+    //                     this.timeline = _.orderBy(this.timeline, 'created_at', 'desc')
     //                 })
 
     //             break;
@@ -574,7 +583,7 @@ function closeEditor() {
     //                 })
     //                 .finally(() => {
     //                     this.isFirstLoading = false;
-    //                     this.timeline = _.orderBy(this.timeline, 'createdAt', 'desc')
+    //                     this.timeline = _.orderBy(this.timeline, 'created_at', 'desc')
     //                 })
     //             break;
     //         case 'community':
@@ -612,7 +621,7 @@ function closeEditor() {
     //                 })
     //                 .finally(() => {
     //                     this.isFirstLoading = false;
-    //                     this.timeline = _.orderBy(this.timeline, 'createdAt', 'desc')
+    //                     this.timeline = _.orderBy(this.timeline, 'created_at', 'desc')
     //                 })
 
     //             break;
@@ -652,7 +661,7 @@ function closeEditor() {
     //                 })
     //                 .finally(() => {
     //                     this.isFirstLoading = false;
-    //                     this.timeline = _.orderBy(this.timeline, 'createdAt', 'desc')
+    //                     this.timeline = _.orderBy(this.timeline, 'created_at', 'desc')
     //                 })
 
     //             break;

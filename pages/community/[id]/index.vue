@@ -1,6 +1,7 @@
 <template>
   <NuxtLayout name="community">
     <ClientOnly>
+
       <div>
         <dl class="three-area" v-if="isPending">
           <CommunityChannelListSk />
@@ -67,9 +68,12 @@ import { dateFormat } from '~/scripts/utils'
 const route = useRoute()
 const router = useRouter()
 const $nuxt = useNuxtApp()
+const config = useRuntimeConfig()
+const accessToken = useCookie(config.COOKIE_NAME).value
+
 
 const communityInfo = computed(() => useCommunity().community.value.info)
-const createdDate = computed(() => dateFormat(useCommunity().community.value.info?.createdAt));
+const createdDate = computed(() => dateFormat(useCommunity().community.value.info?.created_at));
 
 const communities = ref([])
 const isPending = ref(true)
@@ -85,14 +89,14 @@ onMounted(async () => {
 })
 
 async function fetch() {
+  const { data, pending } = await useFetch<any>(() => `/community/list?limit=6&offset=0`, { method: 'get', baseURL: config.COMMUNITY_API, headers: accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {} })
 
-  const { data, pending } = await community.list({ limit: 6, offset: 0 });
-  isPending.value = pending.value
-  if (data.value) {
+  if (data.value.length) {
     communities.value = data.value?.filter((elem) => {
       return elem.id !== communityId.value
     })
   }
+  isPending.value = false;
 }
 
 async function subscribe() {

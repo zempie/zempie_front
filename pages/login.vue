@@ -3,7 +3,6 @@
 
     <div class="login-logo">
       <LoginWhiteLogoDt path='/' />
-
     </div>
 
     <div class="login-area">
@@ -45,7 +44,7 @@
 
         <dl>
           <dt>
-            <!-- <NuxtLink :to="localePath('/password-search')">{{ $t('reset.pwd') }}</NuxtLink> -->
+            <NuxtLink :to="localePath('/reset-password')">{{ $t('reset.pwd') }}</NuxtLink>
           </dt>
           <dd>|</dd>
           <dt>
@@ -84,7 +83,7 @@ import { useLocalePath } from 'vue-i18n-routing';
 const { $firebaseAuth, $cookies } = useNuxtApp()
 
 const { t, locale } = useI18n()
-const $router = useRouter();
+const router = useRouter();
 const localePath = useLocalePath();
 const config = useRuntimeConfig()
 

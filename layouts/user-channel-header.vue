@@ -5,8 +5,7 @@
       <ChannelHeader v-else :userInfo='userInfo' />
       <div class="tab-menu-swiper">
         <div class="swiper-area">
-          <NuxtLink :to="localePath(`/channel/${channelId}`)"
-            :class="[$route.name.toString().includes('channel-id__') ? 'active' : '', 'swiper-slide']">
+          <NuxtLink :to="localePath(`/channel/${channelId}`)" :class="[!routeQuery ? 'active' : '', 'swiper-slide']">
             <p><i class="uil uil-clock-three"></i></p>
             <h2>TIMELINE(ALL)</h2>
           </NuxtLink>

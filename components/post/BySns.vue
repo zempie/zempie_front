@@ -1,5 +1,10 @@
 <template>
-  <EditorContent :editor="editor" />
+  <div style="height: 80vh">
+    <EditorContent :editor="editor" class="editor-container blog" />
+    <div class="character-count">
+      <p>{{ charCount }}/{{ limit }}</p>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">

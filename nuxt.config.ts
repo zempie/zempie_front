@@ -39,6 +39,8 @@ export default defineNuxtConfig({
     '@/assets/css/common.scss',
     '@/assets/css/editor.scss',
     'element-plus/dist/index.css',
+    'swiper/css',
+    'swiper/css/pagination'
     // '@/assets/css/prism.css'
 
 

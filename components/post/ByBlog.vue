@@ -1,8 +1,6 @@
 <template>
-
-  <div style="height: 80vh">
-    <EditorContent :editor="editor" class="editor-container blog" />
-
+  <div style='min-height:200px'>
+    <EditorContent :editor="editor" :class="['editor-container', postType === 'SNS' ? 'sns' : 'blog']" />
     <div class="character-count">
       <p>{{ charCount }}/{{ limit }}</p>
     </div>
@@ -29,6 +27,8 @@ import Image from '~/scripts/tiptap/image'
 
 import { lowlight } from 'lowlight/lib/core.js'
 
+const BLOG_LIMIT = 5000
+const SNS_LIMIT = 300
 const emit = defineEmits(['editorContent'])
 
 
@@ -36,8 +36,14 @@ const { t, locale } = useI18n()
 
 
 const charCount = ref(0)
-const limit = ref(5000)
+
 const content = ref('')
+
+const props = defineProps({
+  postType: String,
+})
+
+const limit = computed(() => props.postType === 'SNS' ? SNS_LIMIT : BLOG_LIMIT)
 
 
 const editor = useEditor({
@@ -65,25 +71,12 @@ const editor = useEditor({
 
 })
 
+onMounted(() => {
+  emit('editorContent', editor.value)
+})
 
-// const urlToBlob = async (url: string) => {
-//   const result = await fetch(url)
-//   const blob = await result.blob()
-//   return URL.createObjectURL(blob)
-// }
 
-// import Placeholder from "@tiptap/extension-placeholder";
-// import Link from "@tiptap/extension-link";
-// import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
-// import Highlight from "@tiptap/extension-highlight";
-// import Typography from "@tiptap/extension-typography";
-// import Dropcursor from "@tiptap/extension-dropcursor";
-// import CharacterCount from "@tiptap/extension-character-count";
-// import Document from '@tiptap/extension-document'
-// import Paragraph from '@tiptap/extension-paragraph'
-// import Text from '@tiptap/extension-text'
-// import Code from '@tiptap/extension-code'
-// import lowlight from "lowlight";
+
 
 // //custom tiptap
 // import Video from "@/script/tiptap/customVideo";
@@ -97,10 +90,6 @@ const editor = useEditor({
 // import MentionList from "./MentionList.vue";
 // import tippy from "tippy.js";
 
-// @Component({
-//   computed: { ...mapGetters(["user"]) },
-//   components: { EditorContent },
-// })
 // export default class TiptapBlog extends Vue {
 //   feed!: any;
 //   //todo: imgPreviewArr 수정시사용하는지 확인

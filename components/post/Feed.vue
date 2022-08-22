@@ -1,5 +1,5 @@
 <template>
-  <li class="tap-list">
+  <li class="tap-list" v-if="feed">
     <dl class="tapl-title">
       <dt>
         <dl>
@@ -9,12 +9,12 @@
 
           <dd v-if="feed.user?.name">
             <h2>{{ feed.user?.name }} uploaded a {{ feed.post_type }} post</h2>
-            <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{ dateFormat(feed.createdAt) }}</p>
+            <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{ dateFormat(feed.created_at) }}</p>
 
           </dd>
           <dd v-else>
             <h2>{{ $t('feed.noUser.post') }}</h2>
-            <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{ dateFormat(feed.createdAt) }}</p>
+            <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{ dateFormat(feed.created_at) }}</p>
 
           </dd>
         </dl>
@@ -87,64 +87,41 @@
     </div> -->
     <!-- /더보기 -->
 
-    <!-- <template v-if="attachedFile && feed.post_type === 'SNS'">
+    <template v-if="feed.attatchment_files && feed.post_type === 'SNS'">
+      <img v-if="feed.attatchment_files.length === 1" style="height: 88%;margin: 0 auto; display: flex;"
+        :src="feed.attatchment_files[0].url" class="feed-img mt-3" />
+      <swiper v-else class="swiper" :modules="[Pagination]" style="height: 350px;" :pagination="{ clickable: true }">
+        <swiper-slide v-for="file in feed.attatchment_files">
+          <img v-if="file.type === 'image'" style="height: 88%;margin: 0 auto;display: flex;" :src="file.url"
+            class="feed-img mt-3" />
+        </swiper-slide>
+        <div class="swiper-pagination" slot="pagination"></div>
+      </swiper>
 
-      <template v-if="attachedFile.length === 1 && attachedFile[0].type === 'image'">
-        <img style="height: 88%;
-                             margin: 0 auto;
-                             display: flex;" :src="attachedFile[0].url" class="feed-img mt-3" />
-      </template>
-      <template v-else>
-        <div v-for="file in attachedFile">
-          <div class="video" v-if="file.type === 'video'">
-            <video width="100%" height="240" controls :src="file.url"></video>
-          </div>
+    </template>
 
-          <div class="audio" v-if="file.type === 'sound'">
-
-            <audio controls :src="file.url"></audio>
-            <p>{{ file.name }}</p>
-          </div>
-        </div>
-        <swiper class="swiper" :options="swiperOption" style="height: 350px;"
-          v-if="attachedFile.length > 0 && attachedFile[0].type === 'image'">
-          <template v-for="file in attachedFile">
-            <swiper-slide>
-              <img style="height: 88%;
-                             margin: 0 auto;
-                             display: flex;" v-if="file.type === 'image'" :src="file.url" class="feed-img mt-3" />
-            </swiper-slide>
-
-          </template>
-          <div class="swiper-pagination" slot="pagination"></div>
-        </swiper>
-      </template>
-    </template> -->
 
 
     <ul class="tapl-option">
       <li>
         <ul>
           <LikeBtn :feed="feed" />
-          <!-- <LikeBtn :feed="feed"></LikeBtn>
-          <li @click="openComments"><i class="uil uil-comment-alt-dots comment-icon" style="font-size:22px;"></i>&nbsp;
-            {{ commentCnt }}
-          </li> -->
+          <li @click="openComments"><i class="uil uil-comment-alt-dots comment-icon" style="font-size:22px;"></i>
+            {{ feed.comment_cnt }}
+          </li>
           <li><a @click="copyUrl"><i class="uil uil-share-alt" style="font-size:20px;"></i></a></li>
         </ul>
       </li>
     </ul>
-
-    <!-- <div v-show="isOpenedComments" :class="['tapl-comment', isOpenedComments ? 'open' : 'close']" :key="Date.now()">
+    <div v-show="isOpenedComments" :class="['tapl-comment', isOpenedComments ? 'open' : 'close']">
       <ul @scroll="scrollCheck">
-
         <li v-for="comment in comments" :key="comment.id">
-          <Comment :comment="comment" :editContent="comment.content" :postId="feed.id" @editDone="editDone" />
+          <Comment :comment="comment" :postId="feed.id" @refresh="commentRefresh" />
         </li>
       </ul>
-      <CommentInput :postId="feed.id" @sendComment="editDone" @updateComment="updateDone" />
-    </div> -->
-
+      <!-- <CommentInput :postId="feed.id" @sendComment="editDone" @updateComment="updateDone" /> -->
+      <CommentInput :postId="feed.id" @refresh="commentRefresh" />
+    </div>
 
     <ClientOnly>
       <el-dialog v-model="showDeleteModal" append-to-body custom-class="modal-area-type">
@@ -160,7 +137,7 @@
             </h2>
             <div>
               <button class="btn-default w48p" @click="deletePost">{{ $t('delete') }}</button>
-              <button class="btn-gray w48p " style="border-radius:10px" @click="showDeleteModal = false">{{ $t('no')
+              <button class="btn-gray w48p " @click="showDeleteModal = false">{{ $t('no')
               }}</button>
             </div>
           </div>
@@ -174,8 +151,8 @@
 </template>
 
 <script setup lang="ts">
-// import '~/scripts/prism.js'
-// import 'prismjs';
+import { Pagination } from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/vue';
 import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElSelect, ElOption, ElMessage, ElDialog } from "element-plus";
 
 import { dateFormat, execCommandCopy } from '~/scripts/utils'
@@ -184,6 +161,7 @@ import { useLocalePath } from 'vue-i18n-routing';
 import hljs from 'highlight.js';
 
 
+const COMMENT_LIMIT = 5
 const localePath = useLocalePath();
 const config = useRuntimeConfig();
 const { t, locale } = useI18n()
@@ -191,6 +169,15 @@ const { t, locale } = useI18n()
 const feedMenu = ref()
 const showDeleteModal = ref(false)
 const feedId = ref(null)
+const contentDiv = ref<HTMLElement>()
+
+
+const limit = ref(COMMENT_LIMIT)
+const offset = ref(0)
+const sort = ref(null)
+const comments = ref([])
+const isOpenedComments = ref(false)
+
 
 const user = computed(() => useUser().user.value.info)
 
@@ -201,12 +188,16 @@ const props = defineProps({
 const emit = defineEmits(['fetch'])
 
 onMounted(() => {
+
+  hljs.configure({
+    ignoreUnescapedHTML: true
+  });
   document.querySelectorAll('pre')
     .forEach((block) => {
-      hljs.highlightBlock(block)
+      hljs.highlightElement(block)
     })
+
 })
-// import {Component, Prop, Vue} from "vue-property-decorator";
 
 // import Post from "@/components/timeline/_post.vue";
 // import TiptapSns from "@/components/timeline/_tiptapSns.vue";
@@ -225,7 +216,6 @@ onMounted(() => {
 //     @Prop() feed!: any;
 
 //     toast = new Toast();
-//     isOpenedComments: boolean = false;
 //     likeList: any = [];
 
 //     attachedFile: any = '';
@@ -233,12 +223,8 @@ onMounted(() => {
 
 //     originImg: string = "";
 
-//     limit: number = 5;
-//     offset: number = 0;
-//     sort: string = '';
 
 //     isAddData: boolean = false;
-//     comments: any = [];
 //     user!: any;
 //     isOpenReportModal = false;
 
@@ -246,13 +232,8 @@ onMounted(() => {
 //     isMoreView: boolean | null = null;
 //     currScroll: number = 0;
 
-//     commentCnt: number = 0;
+const commentCnt = ref(0)
 
-//     swiperOption = {
-//         pagination: {
-//             el: '.swiper-pagination'
-//         }
-//     }
 
 //     mounted() {
 //         this.attachedFile = Array.isArray(this.feed.attatchment_files) ? this.feed.attatchment_files : JSON.parse(this.feed.attatchment_files)
@@ -262,31 +243,83 @@ onMounted(() => {
 //         // this.likeListFetch();
 //     }
 
-//     scrollCheck(e) {
-//         console.log(e.tartget)
-//         if (scrollDone(e.target)) {
 
-//             this.offset += this.limit;
-//             this.commentFetch();
-//         }
-//     }
 
 //     dateFormat(date: number) {
 //         return dateFormat(date);
 //     }
 
 
-//     openComments() {
+async function commentRefresh() {
+  commentInit()
+  await commentFetch()
 
-//         this.commentInit();
-//         this.isOpenedComments = !this.isOpenedComments;
+}
+async function openComments() {
+  commentInit();
+  isOpenedComments.value = !isOpenedComments.value;
 
-//         if (this.isOpenedComments && this.feed.comment_cnt > 0) {
-//             this.comments = []
-//             this.commentFetch()
-//         }
+  if (isOpenedComments.value && props.feed.comment_cnt > 0) {
+    await commentFetch()
+  }
 
-//     }
+}
+
+
+function commentInit() {
+  comments.value = [];
+  limit.value = COMMENT_LIMIT
+  offset.value = 0
+  sort.value = null
+}
+
+
+async function commentFetch() {
+
+  const { data, pending, error } = await useFetch<{ result: [] }>(`/post/${props.feed.id}/comment/list?limit=${limit.value}&offset=${offset.value}${sort.value ? '&sort=' + sort.value : ''}`, getComFetchOptions('get', true))
+  if (!error.value) {
+    if (data.value) {
+      comments.value = data.value.result
+    }
+  }
+
+  // async comments(post_id: string, obj: any) {
+  //     return await this.request('get', `${communityApi}post/${post_id}/comment/list`, obj, false)
+  // }
+
+
+
+  // this.$api.comments(this.feed.id, obj)
+  //     .then((res: any) => {
+  //         if (this.isAddData) {
+  //             if (res.result.length > 0) {
+  //                 this.comments = [...this.comments, ...res.result]
+  //             }
+  //             else {
+  //                 // console.log('no data')
+  //             }
+  //         }
+  //         else {
+  //             this.comments = res.result;
+  //             this.isAddData = true
+  //         }
+  //     })
+  //     .catch((err: AxiosError) => {
+
+  //     })
+  //     .finally(() => {
+
+  //     })
+}
+
+function scrollCheck(e) {
+  console.log(e.tartget)
+  // if (scrollDone(e.target)) {
+
+  //     this.offset += this.limit;
+  //     this.commentFetch();
+  // }
+}
 
 //     likeListFetch() {
 //         const obj = {
@@ -344,34 +377,6 @@ function copyUrl() {
 //         this.$router.push(`/${this.$i18n.locale}/search?hashtag=${hashtag}`)
 //     }
 
-//     commentFetch() {
-//         const obj = {
-//             limit: this.limit,
-//             offset: this.offset,
-//             sort: this.sort
-//         }
-//         this.$api.comments(this.feed.id, obj)
-//             .then((res: any) => {
-//                 if (this.isAddData) {
-//                     if (res.result.length > 0) {
-//                         this.comments = [...this.comments, ...res.result]
-//                     }
-//                     else {
-//                         // console.log('no data')
-//                     }
-//                 }
-//                 else {
-//                     this.comments = res.result;
-//                     this.isAddData = true
-//                 }
-//             })
-//             .catch((err: AxiosError) => {
-
-//             })
-//             .finally(() => {
-
-//             })
-//     }
 
 function openEdit() {
 
@@ -445,12 +450,6 @@ async function deletePost() {
 //     /**
 //      * 댓글
 //      * */
-//     commentInit() {
-//         this.comments = [];
-//         this.limit = 5;
-//         this.offset = 0;
-//         this.sort = '';
-//     }
 
 //     deleteComment(commentId: string) {
 //         this.commentCnt--;
@@ -674,16 +673,7 @@ async function deletePost() {
   }
 }
 
-.swiper-wrapper div {
-  width: 100%;
-}
 
-
-.btn-default {
-  border-radius: 10px !important;
-  display: block !important;
-  margin: 0 auto !important;
-}
 
 .tapl-comment.close {
   animation: fade-out 1s;

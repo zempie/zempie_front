@@ -120,7 +120,9 @@ import { ICommunityPayload } from '~~/types';
 // import firebase from '~/scripts/firebase'
 // import { useUserStore } from '~/store/user'
 
+const config = useRuntimeConfig()
 
+const accessToken = useCookie(config.COOKIE_NAME).value
 
 // const { i18n, $toast } = useContext()
 
@@ -158,11 +160,14 @@ const obj: ICommunityPayload = {
 // beforeDestroy() {
 //     window.removeEventListener("scroll", this.scrollCheck);
 // }
+
 await fetch()
 
 async function fetch() {
 
-  const { data, error, pending, refresh } = await community.list(obj)
+
+
+  const { data, pending } = await useFetch<any>(() => `/community/list?limit=${obj.limit}&offset=${obj.offset}&sort=${obj.sort}`, { method: 'get', initialCache: false, baseURL: config.COMMUNITY_API, headers: accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {} })
 
   if (data.value) {
     console.log(data.value)
@@ -325,7 +330,6 @@ svg {
 }
 
 .visual-img {
-  width: 1200px;
   color: #fff;
   display: flex;
   justify-content: center;
@@ -344,6 +348,50 @@ svg {
   }
 }
 
+
+
+
+@media all and (max-width: 479px) {
+  .visual-img {
+    width: 100% !important;
+    border-radius: 0 !important;
+  }
+}
+
+
+@media all and (max-width: 479px) {
+  .area-search-sort {
+    width: 100%;
+    border-radius: 0;
+
+  }
+
+  .area-search-sort dt {
+    width: 100%;
+  }
+
+  .area-search-sort dd {
+    width: 100%;
+    margin-top: 10px;
+  }
+}
+
+
+@media all and (max-width: 479px) {
+  .card-timeline {
+    width: 100%;
+
+  }
+
+  .card-timeline>li {
+    width: 100%;
+    border-radius: 0;
+
+    margin: 2% 0 2% 0;
+  }
+}
+
+
 .uil-times {
   display: inline-block;
   margin-right: 10px;
@@ -361,6 +409,7 @@ svg {
     margin-bottom: 10px;
   }
 }
+
 
 
 //transition

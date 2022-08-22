@@ -1,6 +1,7 @@
 <template >
   <template v-if="user.id !== loginUser?.id">
-    <p class="btn-default uppercase" @click.stop="unfollow" v-if="user?.is_following">Followed</p>
+    <p class="btn-default uppercase" @click.stop="unfollow" v-if="user?.is_following" style="background: #feb100;">
+      Followed</p>
     <p class="btn-default uppercase" @click.stop="follow" v-else> Follow</p>
   </template>
   <template v-else>
@@ -12,11 +13,14 @@
 </template>
 
 <script setup lang="ts" >
+import { ElMessage } from "element-plus";
 import { PropType } from 'vue';
 import { IUser } from '~~/types';
 import { useLocalePath } from 'vue-i18n-routing';
+import { useI18n } from "vue-i18n";
 
 const localePath = useLocalePath();
+const { t, locale } = useI18n();
 
 const isLogin = computed(() => useUser().user.value.isLogin)
 const loginUser = computed(() => useUser().user.value.info)
@@ -37,14 +41,10 @@ async function follow() {
 
   if (!error.value) {
     emit('fetch')
+    useChannel().setFollowing()
+  } else {
+    ElMessage.error(t('잠시후에 다시 시도해주세요'))
   }
-  // this.$api.follow(this.member.id)
-  //     .then((res: AxiosResponse) => {
-  //         this.$emit('reFetch')
-  //     })
-  //     .catch((err: AxiosError) => {
-
-  //     })
 
 }
 
@@ -52,14 +52,10 @@ async function unfollow() {
   const { data, error } = await user.unfollow(props.user.id)
   if (!error.value) {
     emit('fetch')
+    useChannel().setUnfollowing()
+  } else {
+    ElMessage.error(t('잠시후에 다시 시도해주세요'))
   }
-  // this.$api.unfollow(this.member.id)
-  //     .then((res: AxiosResponse) => {
-  //         this.$emit('reFetch')
-  //     })
-  //     .catch((err: AxiosError) => {
-
-  //     })
 
 }
 

@@ -1,15 +1,15 @@
-export interface IUser{
+export interface IUser {
   name: string,
   id: number,
-  channel_id:string,
-  email:string,
+  channel_id: string,
+  email: string,
   uid: string,
-  email_verified?:boolean,  
+  email_verified?: boolean,
   followers_cnt?: number,
   followings_cnt?: number,
   is_following?: boolean,
   games?: IGame[],
-  is_developer?: boolean,  
+  is_developer?: boolean,
   picture?: string,
   profile?: any,
   setting?: any,
@@ -26,7 +26,7 @@ export enum eUploadStage {
   MONETIZATION
 }
 
-export interface IGame{
+export interface IGame {
   activated: boolean,
   category: number,
   control_type: number,
@@ -51,11 +51,11 @@ export interface IGame{
   userId: number,
   user_id: number,
   version: string,
-  user:IUser,
+  user: IUser,
 }
 
 
-export interface IProject{
+export interface IProject {
   control_type: number,
   created_at: string,
   deleted_at: string,
@@ -79,7 +79,7 @@ export interface IProject{
   user_id: number,
 }
 
-export interface ICommunityPayload{
+export interface ICommunityPayload {
   limit: number,
   offset?: number,
   community?: string,
@@ -90,18 +90,20 @@ export interface ICommunityPayload{
 
 
 
-export interface IUserChannel{
-  id:number,
+export interface IUserChannel {
+  id: number,
   uid: string,
-  name:string,
+  name: string,
   channel_id: string,
   email: string,
   picture: string,
   is_developer: boolean,
+  is_following: boolean,
+  post_cnt: number,
   following_cnt: number,
   follower_cnt: number
-  projects:IProject[],
-  profile:{
+  projects: IProject[],
+  profile: {
     level: number,
     exp: number,
     following_cnt: number,
@@ -110,17 +112,17 @@ export interface IUserChannel{
     description: string,
     url_banner: string
   },
-  communities:ICommunity[]
-  games:IGame[]
+  communities: ICommunity[]
+  games: IGame[]
 }
 
 
 
-export interface ICommunity{
+export interface ICommunity {
   banner_img: string,
   channels: [{
     community_id: string,
-    createdAt: number,
+    created_at: number,
     deletedAt: number,
     description: string,
     id: string,
@@ -130,7 +132,7 @@ export interface ICommunity{
     updatedAt: number,
     user_id: number,
   }],
-  createdAt: number,
+  created_at: number,
   deletedAt: number,
   description: string,
   id: string,

@@ -4,6 +4,7 @@
       <dl class="area-title">
         <dt>Members <span> {{ data.totalCount }}</span></dt>
       </dl>
+
       <ul class="card-member" v-if="pending">
         <UserCardSk v-for="user in 4" />
       </ul>
@@ -19,12 +20,17 @@
 </template>
 
  <script setup lang="ts">
+import { IUser } from '~~/types';
+
 const route = useRoute()
 const isPending = ref(true)
 
 const communityId = computed(() => route.params.id as string)
 
-const { data, pending, refresh } = await community.getMembers(communityId.value, { limit: 20, offset: 0 })
+
+//TODO:커뮤니티 많아지면 수정해야됨 : 페이징
+const { data, pending, refresh } = await useFetch<{ result: IUser[], totalCount: number }>(`/community/${communityId.value}/members`, getComFetchOptions('get', true))
+
 
 
 //     metaSetting !: MetaSetting;

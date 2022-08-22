@@ -1,16 +1,16 @@
 <template>
   <div class="content" v-if="feed">
-    <div class=" area-view">
+    <div class="area-view">
       <ul class="ta-post">
         <li class="tap-list">
           <dl class="tapl-title">
             <dt>
               <dl>
                 <dt>
-                  <UserAvatar :user="feed?.user" :tag="'span'" />
+                  <UserAvatar :user="feed.user" :tag="'span'" />
                 </dt>
-                <dd v-if="feed?.user.name">
-                  <h2>{{ feed?.user.name }}</h2>
+                <dd v-if="feed.user">
+                  <h2>{{ feed.user.name }}</h2>
                   <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{ createdDate }}</p>
                 </dd>
                 <dd v-else>
@@ -62,7 +62,7 @@
           <ul class="tapl-option">
             <li>
               <ul>
-                <!-- <LikeBtn :feed="feed" /> -->
+                <LikeBtn :feed="feed" />
                 <li><i class="uil uil-comment-alt-dots" style="font-size:22px;"></i>&nbsp;
                   {{ feed.comment_cnt }}
                 </li>
@@ -96,10 +96,10 @@
           </ul>
           <div class="tapl-comment">
             <h2>{{ $t('comment') }} {{ feed.comment_cnt }}{{ $t('comment.count.unit') }} </h2>
-            <!-- <CommentInput :postId="feed.id" @sendComment="editDone" /> -->
+            <CommentInput :postId="feed.id" @refresh="commentRefresh" />
             <ul>
               <li v-for="comment in comments" :key="comment.id">
-                <!-- <Comment :comment="comment" :editContent="comment.content" :postId="feed.id" @editDone="editDone" /> -->
+                <Comment :comment="comment" :postId="feed.id" />
               </li>
             </ul>
 
@@ -205,6 +205,7 @@ import { useI18n } from 'vue-i18n';
 
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { execCommandCopy } from '~~/scripts/utils';
+import { comment } from 'postcss';
 // import { Component, Prop, Vue } from "vue-property-decorator";
 
 // import { dateFormat } from "@/script/moment";
@@ -239,6 +240,7 @@ import { execCommandCopy } from '~~/scripts/utils';
 // export default class FeedDetail extends Vue {
 //     toast = new Toast();
 //     feedId = this.$route.params.feedId;
+const COMMENT_LIMIT = 10;
 const route = useRoute();
 const { t, locale } = useI18n()
 
@@ -249,10 +251,11 @@ const createdDate = ref('');
 //     originImg: string = "";
 //     needLogin = false;
 //     user!: User;
-const comments = ref();
-//     limit: number = 10;
-//     offset: number = 0;
-//     sort: string = '';
+const comments = ref([]);
+
+const limit = ref(COMMENT_LIMIT);
+const offset = ref(0);
+const sort = ref(null)
 
 //     isAddData: boolean = false;
 const swiperOption = ref({
@@ -263,11 +266,12 @@ const swiperOption = ref({
 
 const feedId = computed(() => route.params.id as string)
 
-fetch()
+
+await fetch()
+await commentFetch()
 
 
-onMounted(() => {
-
+onMounted(async () => {
 })
 
 function editDone() {
@@ -311,19 +315,41 @@ function editDone() {
 //             })
 //     }
 
-async function fetch() {
 
-  const { data, error, pending } = await post.getInfo(feedId.value);
+async function fetch() {
+  // return communityFetch('ge', `/post/${postId}`, undefined, false)
+
+  const { data, error, pending } = await useFetch(`/post/${feedId.value}`, getComFetchOptions('get', true))
+
+  // const { data, error, pending } = await post.getInfo(feedId.value);
 
   if (data.value) {
     feed.value = data.value;
-
+    console.log(feed.value)
   }
   //   this.$api.feed(this.feedId)
   // .then((res: AxiosResponse) => {
   //     this.feed = res;
-  //     this.createdDate = dateFormat(this.feed.createdAt)!;
+  //     this.createdDate = dateFormat(this.feed.created_at)!;
   // })
+}
+
+
+async function commentRefresh() {
+  comments.value = [];
+  await commentFetch();
+
+}
+
+async function commentFetch() {
+
+  const { data, pending, error } = await useFetch<{ result: [] }>(`/post/${feedId.value}/comment/list?limit=${limit.value}&offset=${offset.value}${sort.value ? '&sort=' + sort.value : ''}`, getComFetchOptions('get', true))
+  if (!error.value) {
+    if (data.value) {
+      comments.value = data.value.result
+    }
+  }
+
 }
 
 //     reFetch() {
@@ -365,6 +391,8 @@ function copyUrl() {
 //         this.sort = '';
 //         window.addEventListener("scroll", this.scrollCheck);
 //     }
+
+
 
 //     commentFetch() {
 //         const obj = {

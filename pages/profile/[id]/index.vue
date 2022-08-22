@@ -49,14 +49,14 @@
         <p>{{ $t('userSetting.pwd.change.info1') }} <span>
             <NuxtLink :to="localePath(`/profile/${userInfo?.id}/change-password`)">
               {{ $t('click') }}</NuxtLink>
-          </span>{{ $t('userSetting.pwd.change.info2') }}
+          </span> {{ $t('userSetting.pwd.change.info2') }}
         </p>
       </div>
     </div>
     <div class="delete-account">
       <h2>{{ $t('userSetting.account.leave') }}</h2>
       <div>
-        <p>{{ $t('userSetting.account.leave.info1') }}<span>
+        <p>{{ $t('userSetting.account.leave.info1') }} <span>
             <NuxtLink :to="localePath(`/profile/${userInfo?.id}/leave`)">{{ $t('click') }}
             </NuxtLink>
           </span>
@@ -80,7 +80,7 @@ const { t, locale } = useI18n()
 const profileImg = ref<HTMLElement>()
 const fileName = ref("");
 const prevProfile = ref<string | ArrayBuffer>("");
-const updateFile = ref<File>()
+const updateFile = ref<File | null>()
 
 const signUpType = computed(() => useUser().user.value.fUser?.providerData[0].providerId)
 const userInfo = computed(() => useUser().user.value.info)
@@ -118,6 +118,7 @@ function onFileChange(event: any) {
 function deleteImg(e: any) {
   prevProfile.value = '';
   fileName.value = '';
+  updateFile.value = null;
 }
 
 async function onSubmit() {
@@ -135,6 +136,8 @@ async function onSubmit() {
         type: 'success'
       })
       useUser().setProfileImg(data.value.result.user.picture + `?_=${Date.now()}`)
+      updateFile.value = null;
+
     } else {
       ElMessage({
         message: error.error.message,
