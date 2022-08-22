@@ -6,8 +6,6 @@ export default function () {
   }))
 
   const setUserChannel = async (info: IUserChannel) => {
-
-
     const { data: communities, error } = await useFetch<[]>(`/user/${info.id}/list/community`, getComFetchOptions('get', true))
     info.games.map((game) => {
       game.user = {
@@ -38,6 +36,7 @@ export default function () {
   const setUnfollowing = () => {
     userChannel.value.info.is_following = false;
   }
+
 
 
   return {

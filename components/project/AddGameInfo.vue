@@ -44,8 +44,7 @@
                 <i class="uil uil-times" @click="deleteChip(i)"></i>
               </div>
 
-              <input v-model="chipInput" @keyup.enter="saveChip" @keydown.delete="backspaceDelete"
-                :placeholder="$t('addGameInfo.game.tags')">
+              <input v-model="chipInput" @keyup.enter="saveChip" @keydown.delete="backspaceDelete">
 
             </div>
             <transition-group name="fade">

@@ -49,33 +49,46 @@
 <script setup lang="ts">
 import { IGame } from '~~/types'
 import { useLocalePath } from 'vue-i18n-routing';
+import { truncate } from 'fs/promises';
 
 const localePath = useLocalePath();
 const route = useRoute();
 
-const gameInfo = ref({} as IGame)
+const gameInfo = ref<IGame>()
 
 const gamePath = computed(() => route.params.id as string)
 const routeQuery = computed(() => route.query.media)
 const isPending = ref(true)
 
 
-const { data, pending } = await game.getInfo(gamePath.value)
+const { data, pending } = await useFetch<any>(`/launch/game/${gamePath.value}`, getZempieFetchOptions('get', true))
+//  game.getInfo(gamePath.value)
 
 onMounted(async () => {
   if (data.value) {
     const { result } = data.value;
     gameInfo.value = result.game
     useGame().setGame(gameInfo.value);
-    isPending.value = pending.value
     await getUserInfo()
+    isPending.value = false
   }
 })
 
 async function getUserInfo() {
-  const { data, pending } = await user.getUserInfo(gameInfo.value.user.channel_id)
-  const { result } = data.value;
-  useChannel().setUserChannel(result.target)
+  console.log(gameInfo.value.user)
+  if (gameInfo.value.user) {
+    const { data, pending } = await user.getUserInfo(gameInfo.value.user.channel_id)
+    const { result } = data.value;
+    useChannel().setUserChannel(result.target)
+  } else {
+    gameInfo.value['user'] = {
+      name: '탈퇴한 회원입니다.',
+      id: -1,
+      channel_id: '',
+      email: '',
+      uid: '',
+    }
+  }
 }
 
 

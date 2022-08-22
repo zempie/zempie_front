@@ -259,7 +259,7 @@ async function upload() {
 
     for (let k in gameFileInfo) {
         formData.append(k, gameFileInfo[k]);
-    }UserChannelHeader
+    }
 
     for (let i = 0; i < uploadGameFiles.value.length; i++) {
         const file = uploadGameFiles.value[i];

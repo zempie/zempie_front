@@ -1,5 +1,5 @@
 <template>
-  <div class="visual-info-left" style="background-color:#f973165c;">
+  <div v-if="gameInfo" class="visual-info-left" style="background-color:#f973165c;">
     <dl>
       <dt>
         <dl>
@@ -11,8 +11,8 @@
             </div>
           </dt>
           <dd>
-            <h2> {{ gameInfo?.title }}<span></span></h2>
-            <h3>by@ {{ gameInfo?.user.name }}</h3>
+            <h2> {{ gameInfo.title }}<span></span></h2>
+            <h3>by@ {{ gameInfo.user?.name }}</h3>
             <div class="tag-item secondary" v-for="hashtag in gameInfo?.hashtags" :key="hashtag"><a>{{ hashtag }}</a>
             </div>
           </dd>
@@ -34,7 +34,8 @@
                         <p style="color:#fff">{{ likeCnt }}</p> -->
         </div>
 
-        <a v-if="gameInfo.stage !== eUploadStage.DEV" class=" btn-default w150" style="margin-left:12px">Play Game</a>
+        <a v-if="gameInfo.stage !== eUploadStage.DEV" @click="playGame" class="btn-default w150"
+          style="margin-left:12px">Play Game</a>
       </dd>
     </dl>
   </div>
@@ -50,6 +51,10 @@ const props = defineProps({
   gameInfo: Object as PropType<IGame>
 })
 
+function playGame() {
+  window.open(
+    `/play/${props.gameInfo.pathname}`, "_blank");
+}
 </script>
 
 <style lang="scss" scoped>
