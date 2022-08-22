@@ -3707,17 +3707,17 @@
 }
 
 .studio-upload-step>li:hover {
-  background-color: #ff6e17;
-  color: #fff;
+  /* background-color: #ff6e17;
+  color: #fff; */
 }
 
 .studio-upload-step>li:hover p {
-  color: #fff;
+  /* color: #fff; */
 }
 
 .studio-upload-step>li:hover h4 {
-  color: #fff;
-  background-color: rgba(255, 255, 255, 0.5);
+  /* color: #fff;
+  background-color: rgba(255, 255, 255, 0.5); */
 }
 
 .studio-upload-step>li.active {

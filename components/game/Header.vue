@@ -13,7 +13,8 @@
           <dd>
             <h2> {{ gameInfo.title }}<span></span></h2>
             <h3>by@ {{ gameInfo.user?.name }}</h3>
-            <div class="tag-item secondary" v-for="hashtag in gameInfo?.hashtags" :key="hashtag"><a>{{ hashtag }}</a>
+
+            <div class="tag-item secondary" v-for="hashtag in hashtags" :key="hashtag"><a>{{ hashtag }}</a>
             </div>
           </dd>
         </dl>
@@ -44,12 +45,14 @@
 
 <script setup lang="ts">
 import { IGame, eUploadStage } from '~~/types';
-
 import { PropType } from 'vue';
+
+const hashtags = computed(() => props.gameInfo.hashtags.length > 0 ? props.gameInfo.hashtags.split(",") : undefined)
 
 const props = defineProps({
   gameInfo: Object as PropType<IGame>
 })
+
 
 function playGame() {
   window.open(

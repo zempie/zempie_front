@@ -81,7 +81,9 @@ async function fetch() {
   const payload = {
     limit: limit.value,
     offset: offset.value,
-    category: category.value
+    category: category.value,
+
+
   }
 
   const { data } = await game.list(payload)

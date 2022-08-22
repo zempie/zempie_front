@@ -77,7 +77,7 @@ async function sendEmail() {
 
   const { data, error } = await useFetch<{ result: string }>('/user/has-email', getZempieFetchOptions('post', false, { email: email.value }))
 
-  if (data.value.result === 'EXIST') {
+  if (data.value.result) {
     try {
       await sendPasswordResetEmail($firebaseAuth, email.value);
       openModal.value = true;

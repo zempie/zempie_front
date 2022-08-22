@@ -1,214 +1,221 @@
 <template>
-
-  <div class="studio-upload-input">
-    <template v-if="!isFormDone">
-      <div class="sui-input">
-        <div class="suii-title">{{ $t("addGameInfo.title") }}</div>
-        <dl class="suii-content">
-          <dt>
-            {{ $t("addGameInfo.game.title") }}
-            <span style="color: red">*</span>
-          </dt>
-          <dd>
-            <input v-model="v$.name.$model" type="text" name="" title="" :placeholder="$t('addGameInfo.game.title')"
-              class="w100p" />
-            <transition-group name="fade">
-
-              <p class="input-errors" v-for="error of v$.name.$errors" :key="error.$uid">
-                <i class="uil uil-check"></i>{{ error.$message }}
-              </p>
-            </transition-group>
-          </dd>
-        </dl>
-
-        <dl class="suii-content">
-          <dt>
-            {{ $t("addGameInfo.game.desc") }}<span style="color: red">*</span>
-          </dt>
-          <dd>
-            <textarea v-model="v$.description.$model" name="" title="" :placeholder="$t('addGameInfo.game.desc')"
-              class="w100p h100"></textarea>
-            <transition-group name="fade">
-              <p class="input-errors" v-for="error of v$.description.$errors" :key="error.$uid">
-                <i class="uil uil-check"></i>{{ error.$message }}
-              </p>
-            </transition-group>
-          </dd>
-        </dl>
-        <dl class="suii-content">
-          <dt>{{ $t('addGameInfo.game.tags') }}<span style="color: red;">*</span></dt>
-          <dd>
-            <div class="chip-container">
-              <div class="chip" v-for="(chip, i) of hashtagsArr" :key="chip.id">
-                {{ chip }}
-                <i class="uil uil-times" @click="deleteChip(i)"></i>
-              </div>
-
-              <input v-model="chipInput" @keyup.enter="saveChip" @keydown.delete="backspaceDelete">
-
-            </div>
-            <transition-group name="fade">
-              <p class="input-errors" v-for="error of v$.hashtags.$errors" :key="error.$uid">
-                <i class="uil uil-check"></i>{{ error.$message }}
-              </p>
-            </transition-group>
-            <h2>
-              {{ $t('addGameInfo.game.tags.info') }}
-
-            </h2>
-          </dd>
-
-        </dl>
-
-
-
-        <dl class="suii-content">
-          <dt>
-            {{ $t('addGameInfo.game.thumbnail') }}
-            <span v-if="!projectInfo" style="color: red;">*</span>
-          </dt>
-          <dd>
-            <ul class="image-upload">
-
-              <li v-if="!prevThumbnail">
-                <div>
-                  <div style="height: 0px; overflow: hidden">
-                    <input type="file" @change="onImgChange"
-                      accept="image/jpeg, image/png, image/svg, image/jpg, image/webp, image/bmp," ref="thumbnail"
-                      name="fileInput" />
-                  </div>
-                  <p><i class="uil uil-image-v"></i></p>
-                  <h2>
-                    {{ $t('addGameInfo.game.thumbnail.size') }} 512* 512<br />
-                    (up to 4MB)
-                  </h2>
-                </div>
-
-                <transition name="component-fade" mode="out-in">
-                  <p class="valid-err" :key="isThumbErr" :class="isThumbErr ? 'active' : ''">
-                    {{ $t('addGameInfo.game.thumbnail.err') }}
-                  </p>
-                </transition>
-                <p>
-
-                  <button class="btn-gray" @click="uploadThumbnail"><i class="uil uil-upload"></i>&nbsp;
-                    {{ $t('addGameInfo.game.thumbnail') }}
-
-                  </button>
-
-                </p>
-
-              </li>
-              <li v-else>
-                <div
-                  :style="{ 'background': 'url(' + prevThumbnail + ') center center / cover no-repeat', 'background-size': 'cover' }"
-                  style="border:#e9e9e9 2px solid;">
-                  <div style="height: 0px; overflow: hidden">
-                    <input type="file" @change="onImgChange" accept=image/* ref="thumbnail" name="fileInput" />
-                  </div>
-                </div>
-
-                <p>
-                  <button class="btn-gray" @click="uploadThumbnail"><i class="uil uil-upload"></i>&nbsp;
-                    {{ $t('addGameInfo.game.thumbnail') }}
-
-                  </button>
-                  &nbsp; &nbsp;
-                  <button class="btn-circle-icon" @click="deleteThumbnail"><i class="uil uil-trash-alt"></i>
-                  </button>
-                </p>
-              </li>
-            </ul>
-          </dd>
-        </dl>
-        <dl class="suii-content">
-          <dt> {{ $t('previewImage.title') }}</dt>
-          <dd>
-            <ul class="image-upload">
-              <li v-if="!prevGif">
-                <div>
-                  <div style="height: 0px; overflow: hidden">
-                    <input type="file" @change="onGifChange" accept=image/gif ref="gifThumbnail" name="fileInput" />
-                  </div>
-                  <p><i class="uil uil-image-v"></i></p>
-                  <h2>
-                    {{ $t('addGameInfo.game.thumbnail.size') }} 512* 512<br />
-                    (up to 4MB)
-                  </h2>
-                </div>
-                <p>
-                  <button class="btn-gray" @click="uploadGif"><i class="uil uil-upload"></i>&nbsp;
-                    {{ $t('addGameInfo.game.thumbnail') }}
-                  </button>
-
-                </p>
-              </li>
-              <li v-else>
-                <div
-                  :style="{ 'background': 'url(' + prevGif + ') center center / cover no-repeat', 'background-size': 'cover' }"
-                  style="border:#e9e9e9 2px solid;">
-                  <div style="height: 0px; overflow: hidden">
-                    <input type="file" @change="onGifChange" accept=image/* ref="gifThumbnail" name="fileInput" />
-                  </div>
-                </div>
-                <p>
-                  <button class="btn-gray" @click="uploadGif"><i class="uil uil-upload"></i>&nbsp;
-                    {{ $t('addGameInfo.game.thumbnail') }}
-                  </button>
-                  <button class="btn-circle-icon" @click="deleteGif"><i class="uil uil-trash-alt"></i>
-                  </button>
-                </p>
-              </li>
-            </ul>
-          </dd>
-        </dl>
-
-
-
-        <dl class="suii-content">
-          <dt style="padding-top: 5px">{{ $t("게임ID 자동작성") }}</dt>
-          <dd>
-            <label class="switch-button">
-              <input type="checkbox" name="" v-model="isAuthGamePath" />
-              <span class="onoff-switch"></span>
-            </label>
-          </dd>
-        </dl>
-        <transition name="component-fade" mode="out-in">
-          <dl class="suii-content" v-if="!isAuthGamePath">
+  <ProjectStepMenu>
+    <template #uploadGameBtn>
+      <li class="publish-btn">
+        <h4 :class="uploadStage === eUploadStage.DEV ? 'active' : ''" @click="uploadGame">{{ $t('publishing') }}</h4>
+      </li>
+    </template>
+  </ProjectStepMenu>
+  <dd>
+    <div class="studio-upload-input">
+      <template v-if="!isFormDone">
+        <div class="sui-input">
+          <div class="suii-title">{{ $t("addGameInfo.title") }}</div>
+          <dl class="suii-content">
             <dt>
-              {{ $t("addGameInfo.game.id") }}
+              {{ $t("addGameInfo.game.title") }}
+              <span style="color: red">*</span>
             </dt>
             <dd>
-              <input v-model="v$.pathname.$model" type="text" name="" class="game-id-input w90p" title=""
-                :placeholder="$t('addGameInfo.game.id')" />
-              <!-- <p style="color: #C5292A; margin-top:10px">{{ gamePathError }}</p>
+              <input v-model="v$.name.$model" type="text" name="" title="" :placeholder="$t('addGameInfo.game.title')"
+                class="w100p" />
+              <TransitionGroup name="fade">
+
+                <p class="input-errors" v-for="error of v$.name.$errors" :key="error.$uid">
+                  <i class="uil uil-check"></i>{{ error.$message }}
+                </p>
+              </TransitionGroup>
+            </dd>
+          </dl>
+
+          <dl class="suii-content">
+            <dt>
+              {{ $t("addGameInfo.game.desc") }}<span style="color: red">*</span>
+            </dt>
+            <dd>
+              <textarea v-model="v$.description.$model" name="" title="" :placeholder="$t('addGameInfo.game.desc')"
+                class="w100p h100"></textarea>
+              <TransitionGroup name="fade">
+                <p class="input-errors" v-for="error of v$.description.$errors" :key="error.$uid">
+                  <i class="uil uil-check"></i>{{ error.$message }}
+                </p>
+              </TransitionGroup>
+            </dd>
+          </dl>
+          <dl class="suii-content">
+            <dt>{{ $t('addGameInfo.game.tags') }}<span style="color: red;">*</span></dt>
+            <dd>
+              <div class="chip-container">
+                <div class="chip" v-for="(chip, i) of hashtagsArr" :key="chip.id">
+                  {{ chip }}
+                  <i class="uil uil-times" @click="deleteChip(i)"></i>
+                </div>
+
+                <input v-model="chipInput" @blur="saveChip" @keyup.enter="saveChip" @keydown.delete="backspaceDelete">
+
+              </div>
+              <TransitionGroup name="fade">
+                <p class="input-errors" v-for="error of v$.hashtags.$errors" :key="error.$uid">
+                  <i class="uil uil-check"></i>{{ error.$message }}
+                </p>
+              </TransitionGroup>
+              <h2>
+                {{ $t('addGameInfo.game.tags.info') }}
+
+              </h2>
+            </dd>
+
+          </dl>
+
+
+
+          <dl class="suii-content">
+            <dt>
+              {{ $t('addGameInfo.game.thumbnail') }}
+              <span style="color: red;">*</span>
+            </dt>
+            <dd>
+              <ul class="image-upload">
+
+                <li v-if="!prevThumbnail">
+                  <div>
+                    <div style="height: 0px; overflow: hidden">
+                      <input type="file" @change="onImgChange"
+                        accept="image/jpeg, image/png, image/svg, image/jpg, image/webp, image/bmp," ref="thumbnail"
+                        name="fileInput" />
+                    </div>
+                    <p><i class="uil uil-image-v"></i></p>
+                    <h2>
+                      {{ $t('addGameInfo.game.thumbnail.size') }} 512* 512<br />
+                      (up to 4MB)
+                    </h2>
+                  </div>
+
+                  <transition name="component-fade" mode="out-in">
+                    <p class="valid-err" :class="isThumbErr ? 'active' : ''">
+                      {{ $t('addGameInfo.game.thumbnail.err') }}
+                    </p>
+                  </transition>
+                  <p>
+
+                    <button class="btn-gray" @click="uploadThumbnail"><i class="uil uil-upload"></i>&nbsp;
+                      {{ $t('addGameInfo.game.thumbnail') }}
+                    </button>
+
+                  </p>
+
+                </li>
+                <li v-else>
+                  <div
+                    :style="{ 'background': 'url(' + prevThumbnail + ') center center / cover no-repeat', 'background-size': 'cover' }"
+                    style="border:#e9e9e9 2px solid;">
+                    <div style="height: 0px; overflow: hidden">
+                      <input type="file" @change="onImgChange" accept=image/* ref="thumbnail" name="fileInput" />
+                    </div>
+                  </div>
+
+                  <p>
+                    <button class="btn-gray" @click="uploadThumbnail"><i class="uil uil-upload"></i>&nbsp;
+                      {{ $t('addGameInfo.game.thumbnail') }}
+
+                    </button>
+                    &nbsp; &nbsp;
+                    <button class="btn-circle-icon" @click="deleteThumbnail"><i class="uil uil-trash-alt"></i>
+                    </button>
+                  </p>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+          <dl class="suii-content">
+            <dt> {{ $t('previewImage.title') }}</dt>
+            <dd>
+              <ul class="image-upload">
+                <li v-if="!prevGif">
+                  <div>
+                    <div style="height: 0px; overflow: hidden">
+                      <input type="file" @change="onGifChange" accept=image/gif ref="gifThumbnail" name="fileInput" />
+                    </div>
+                    <p><i class="uil uil-image-v"></i></p>
+                    <h2>
+                      {{ $t('addGameInfo.game.thumbnail.size') }} 512* 512<br />
+                      (up to 4MB)
+                    </h2>
+                  </div>
+                  <p>
+                    <button class="btn-gray" @click="uploadGif"><i class="uil uil-upload"></i>&nbsp;
+                      {{ $t('addGameInfo.game.thumbnail') }}
+                    </button>
+
+                  </p>
+                </li>
+                <li v-else>
+                  <div
+                    :style="{ 'background': 'url(' + prevGif + ') center center / cover no-repeat', 'background-size': 'cover' }"
+                    style="border:#e9e9e9 2px solid;">
+                    <div style="height: 0px; overflow: hidden">
+                      <input type="file" @change="onGifChange" accept=image/* ref="gifThumbnail" name="fileInput" />
+                    </div>
+                  </div>
+                  <p>
+                    <button class="btn-gray" @click="uploadGif"><i class="uil uil-upload"></i>&nbsp;
+                      {{ $t('addGameInfo.game.thumbnail') }}
+                    </button>
+                    <button class="btn-circle-icon" @click="deleteGif"><i class="uil uil-trash-alt"></i>
+                    </button>
+                  </p>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
+
+
+          <dl class="suii-content">
+            <dt style="padding-top: 5px">{{ $t("게임ID 자동작성") }}</dt>
+            <dd>
+              <label class="switch-button">
+                <input type="checkbox" name="" v-model="isAuthGamePath" />
+                <span class="onoff-switch"></span>
+              </label>
+            </dd>
+          </dl>
+          <transition name="component-fade" mode="out-in">
+            <dl class="suii-content" v-if="!isAuthGamePath">
+              <dt>
+                {{ $t("addGameInfo.game.id") }}
+              </dt>
+              <dd>
+                <input v-model="v$.pathname.$model" type="text" name="" class="game-id-input w90p" title=""
+                  :placeholder="$t('addGameInfo.game.id')" />
+                <!-- <p style="color: #C5292A; margin-top:10px">{{ gamePathError }}</p>
             <p v-if="confirmedGamePath" style="color: #1fc944; margin-top:10px">
               {{ $t('addGameInfo.game.id.passed') }}
             </p> -->
-            </dd>
-            <a @click="checkPathName" class="btn-default w150">
-              {{ $t("addGameInfo.game.id.check") }}
+              </dd>
+              <ClipLoader v-if="waitGamePath" :color="'#ff6e17'" :size="'20px'"></ClipLoader>
+              <a @click="checkPathName" class="btn-default w150">
+                {{ $t("addGameInfo.game.id.check") }}
+              </a>
+            </dl>
+          </transition>
+        </div>
+        <ul class="sui-btn">
+          <li>
+            <a @click="prevPage" class="btn-line w150"><i class="uil uil-angle-left-b"></i>
+              {{ $t('previous') }}
             </a>
-          </dl>
-        </transition>
-      </div>
-      <ul class="sui-btn">
-        <li>
-          <a @click="prevPage" class="btn-line w150"><i class="uil uil-angle-left-b"></i>
-            {{ $t('previous') }}
-          </a>
-        </li>
-        <li>
-          <a v-if="uploadProject.stage === eUploadStage.DEV" @click="uploadGame" class="btn-default w150">
-            {{ $t("upload") }}
-          </a>
-          <a v-else @click="save" class="btn-default w150">
-            {{ $t('next') }}
-            <i class="uil uil-angle-right-b"></i></a>
-        </li>
-      </ul>
-      <!-- 
+          </li>
+          <li>
+            <a v-if="uploadProject.form.stage === eUploadStage.DEV" @click="uploadGame" class="btn-default w150">
+              {{ $t("upload") }}
+            </a>
+            <a v-else @click="save" class="btn-default w150">
+              {{ $t('next') }}
+              <i class="uil uil-angle-right-b"></i></a>
+          </li>
+        </ul>
+        <!-- 
 
 
         <div class="sui-input" style="margin-top:100px;" v-if="projectInfo">
@@ -224,7 +231,7 @@
 
         </div> -->
 
-      <!-- <modal :clickToClose="false"
+        <!-- <modal :clickToClose="false"
                class="modal-area-type" name="deleteProject" width="90%" height="auto" :maxWidth="380"
                :adaptive="true"
                :scrollable="true">
@@ -254,18 +261,22 @@
                 </div>
             </div>
         </modal> -->
-    </template>
-    <ProjectAddGameFile v-else />
-  </div>
+      </template>
+      <ProjectAddGameFile v-else @cancelFormDone="isFormDone = false" @uploadDone="isUploadDone = true" />
+    </div>
+  </dd>
 </template>
 
 <script setup lang="ts">
+import { ElMessage, ElMessageBox, ElLoading } from 'element-plus'
+import ClipLoader from 'vue-spinner/src/ClipLoader.vue';
 import { eUploadStage } from "~~/types"
 import useVuelidate from "@vuelidate/core";
 import { required, helpers, maxLength } from "@vuelidate/validators";
 import { useI18n } from "vue-i18n";
 import { randomString } from "~~/scripts/utils.js";
 import { useLocalePath } from "vue-i18n-routing";
+import { onBeforeRouteLeave } from 'vue-router';
 
 const IMAGE_MAX_SIZE = 4
 const localePath = useLocalePath();
@@ -278,6 +289,7 @@ const confirmedGamePath = ref();
 const hashtagsArr = ref([])
 const chipInput = ref('')
 const isFormDone = ref(false)
+const isUploadDone = ref(false)
 
 const thumbnail = ref<HTMLElement>()
 const thumbFile = ref<File>()
@@ -288,8 +300,8 @@ const gifThumbnail = ref<HTMLElement>()
 const gifThumFile = ref<File>()
 const prevGif = ref<String | ArrayBuffer>('')
 
-// prevThumbnail: any = '';
 
+const uploadStage = computed(() => uploadProject.value.form.stage)
 
 let form = reactive({
   name: "",
@@ -322,6 +334,7 @@ const rules = computed(() => {
 
 const v$ = useVuelidate(rules, form);
 
+
 // @Prop({default: false}) set!: boolean;
 // @Prop() projectInfo !: any;
 // @Prop() isEditProject !: any;
@@ -349,38 +362,52 @@ const v$ = useVuelidate(rules, form);
 // thumbFile2: any = null;
 
 // gamePathError: string = "";
-// waitGamePath: boolean = false;
+const waitGamePath = ref(false);
 
-// beforeRouteLeave(to, from, next) {
-//     if (to.name == "AddGameFile") {
-//         next();
-//     }
-//     else if (
-//         this.title ||
-//         this.description ||
-//         this.hashtagsArr.length > 0
-//         // ||  this.thumbFileUrl ||
-//         // this.thumbFile2Url
-//     ) {
-//         if (
-//             confirm(
-//                 "작성하신 글은 저장되지않고 지워집니다. 이 페이지를 나가시겠습니까?"
-//             )
-//         ) {
-//             this.resetLocalStorage();
-//             next();
+onBeforeRouteLeave((to, from, next) => {
 
-//         }
-//         else {
-//         }
-//     }
-//     else {
-//         this.resetLocalStorage();
-//         next();
-//     }
-// }
+  if (isUploadDone) {
+    next();
+    return;
+  }
 
-onMounted(() => { });
+  if (form.name || form.pathname || form.description || form.hashtags || form.project_picture || form.project_picture2) {
+    ElMessageBox.confirm(
+      "작성하신 글은 저장되지않고 지워집니다. 이 페이지를 나가시겠습니까?",
+      'Warning',
+      {
+        confirmButtonText: 'Cancel',
+        cancelButtonText: 'Leave',
+        type: 'warning',
+      }
+    )
+      .catch(() => {
+        next();
+        useProject().resetForm()
+      })
+  } else {
+    useProject().resetForm()
+    next()
+  }
+
+
+})
+
+
+onMounted(() => {
+
+  if (useProject().uploadProject.value.form.stage !== eUploadStage.NONE) {
+    const { stage, name, pathname, description, hashtags, project_picture, project_picture2 } = useProject().uploadProject.value.form
+    form.description = description
+    hashtagsArr.value = hashtags ? hashtags.split(',') : []
+    form.hashtags = hashtags
+    form.name = name
+    form.pathname = pathname
+    form.project_picture = project_picture
+    form.project_picture2 = project_picture2
+    form.stage = stage
+  }
+});
 
 
 
@@ -419,7 +446,14 @@ onMounted(() => { });
 // }
 
 function prevPage() {
+
+  form.hashtags = hashtagsArr?.value.toString();
+  form.project_picture = thumbFile?.value;
+  form.project_picture2 = gifThumFile?.value;
+  setForm(form)
+
   resetStage()
+
 
   //     this.resetLocalStorage();
   //     // this.$store.commit("gameStage", null);
@@ -467,12 +501,25 @@ function prevPage() {
 //     this.waitGamePath = false;
 // }
 
-function checkPathName() {
-  console.log(form.pathname);
-}
-async function save() {
+async function checkPathName() {
+  waitGamePath.value = true;
 
-  isFormDone.value = true
+  if (form.pathname) {
+    const { data, error } = await game.verifyPath(form.pathname)
+
+    const result = await this.$api.confirmGamePath(this.gamePath);
+    // if (result && result.success) {
+    //   this.confirmedGamePath = true;
+    //   this.gamePathError = "";
+    // }
+    // else {
+    //   this.gamePathError = `${this.$t('usedId')}`;// '사용중인 아이디 입니다. 다른 아이디를 입력하세요.';
+    // }
+  }
+  waitGamePath.value = false;
+}
+
+async function save() {
 
   form.hashtags = hashtagsArr.value.toString();
   form.project_picture = thumbFile.value;
@@ -480,30 +527,48 @@ async function save() {
   await createGamePath();
   const isValid = await v$.value.$validate();
 
-  if (!isValid) return;
+  if (!thumbFile.value) isThumbErr.value = true;
+
+  if (!isValid || isThumbErr.value) return;
   setForm(form)
   isFormDone.value = true;
+  useProject().setStepThree()
 }
 
 async function uploadGame() {
   form.hashtags = hashtagsArr.value.toString();
-  await createGamePath();
-  const isValid = await v$.value.$validate();
 
-  if (!isValid) return;
+  console.log(form)
+  return
+  if (uploadProject.value.form.stage !== eUploadStage.DEV) return;
 
-  isFormDone.value = true;
+  await save()
 
 
   //  const {gameInfoObj, gameFileInfoObj, uploadGameFiles} = this.$store.getters;
   const formData = new FormData();
   for (let k in form) {
     formData.append(k, form[k]);
+
+
   }
+  const loading = ElLoading.service({
+    lock: true,
+    text: 'Loading',
+    customClass: 'loading-spinner',
+    background: 'rgba(0, 0, 0, 0.7)',
+  })
   const { data, error } = await game.upload(formData);
-  if (!error.value) {
-    router.push(localePath("/project/list"));
-  }
+
+
+  setTimeout(() => {
+    loading.close()
+    useProject().resetForm()
+    if (!error.value) {
+      router.push(localePath("/project/list"));
+    }
+  }, 1000)
+
   //  this.$api.createProject(
   //      gameInfoObj,
   //      gameFileInfoObj,
@@ -633,7 +698,7 @@ function uploadThumbnail() {
 }
 
 
-function onImgChange(event: { target: { files: any } }) {
+function onImgChange(event: any) {
   const file = event.target.files[0]
 
   if (file.size < 1024 * 1024 * IMAGE_MAX_SIZE) {
@@ -657,10 +722,10 @@ function onImgChange(event: { target: { files: any } }) {
   }
 }
 
-// deleteThumbnail() {
-//     this.prevThumbnail = '';
-//     localStorage.removeItem('thumbnail')
-// }
+function deleteThumbnail() {
+  // this.prevThumbnail = '';
+  // localStorage.removeItem('thumbnail')
+}
 
 // deleteThumbnail2() {
 //     this.prevGif = '';
@@ -672,7 +737,7 @@ function onImgChange(event: { target: { files: any } }) {
 function uploadGif() {
   gifThumbnail.value.click();
 }
-function onGifChange(event: { target: { files: any } }) {
+function onGifChange(event: any) {
   const gifFile = event.target.files[0]
 
   if (gifFile.size < 1024 * 1024 * IMAGE_MAX_SIZE) {
@@ -924,4 +989,14 @@ function backspaceDelete({ which }) {
 }
 
 // /chips
+
+.publish-btn {
+  .active {
+    background-color: #ff6e17;
+    color: #fff;
+    cursor: pointer;
+  }
+
+
+}
 </style>

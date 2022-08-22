@@ -1,28 +1,7 @@
 <template>
   <dl class="studio-upload-area">
-    <dt>
-      <ul class="studio-upload-step">
-        <li :class="[uploadStage === eUploadStage.NONE ? 'active' : '', 'step']">
-          <p>STEP 01</p>
-          <h3> {{ $t('uploadGame.selectStage.text') }}</h3>
-        </li>
-        <li :class="[uploadStage !== eUploadStage.NONE ? 'active' : '', 'step']">
-          <p>STEP 02</p>
-          <h3>{{ $t('game.info') }}</h3>
-        </li>
-        <li class="step">
-          <p>STEP 03</p>
-          <h3>{{ $t('file.upload') }}</h3>
-        </li>
-        <li class="publish-btn ">
-          <h4>{{ $t('publishing') }}</h4>
-        </li>
-      </ul>
-    </dt>
-    <dd>
-      <ProjectSelectStage v-if="uploadStage === eUploadStage.NONE" />
-      <ProjectAddGameInfo v-else />
-    </dd>
+    <ProjectSelectStage v-if="uploadStage === eUploadStage.NONE" />
+    <ProjectAddGameInfo v-else />
   </dl>
 </template>
 
@@ -30,6 +9,7 @@
 import { eUploadStage } from "~~/types"
 
 const { uploadProject } = useProject();
+const readyToUpload = ref(false)
 
 const uploadStage = computed(() => uploadProject.value.form.stage)
 
@@ -75,24 +55,6 @@ watch(
 //                 this.$store.commit("gameStage", this.stage);
 //                 this.$store.commit('projectInfo', res);
 //                 this.isEditProject = true;
-//             })
-//     }
-
-//     uploadGame() {
-//         const {gameInfoObj, gameFileInfoObj, uploadGameFiles} = this.$store.getters;
-
-//         this.$api.createProject(
-//             gameInfoObj,
-//             gameFileInfoObj,
-//             uploadGameFiles
-//         )
-//             .then((res) => {
-
-//                 this.toast.successToast(`${this.$t('projectUpload.success.upload')}`);
-//                 this.$router.push(`/${this.$i18n.locale}/projectList`)
-//             })
-//             .catch((err) => {
-
 //             })
 //     }
 

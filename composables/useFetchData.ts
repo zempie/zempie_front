@@ -28,6 +28,14 @@ export const getZempieFetchOptions = (method = 'get', withCredentials = false, b
   return options
 }
 
+
+export const getStudioFetchOptions = (method = 'get', withCredentials = false, body?: object) => {
+  const config = useRuntimeConfig();
+  const options = baseOption(method, withCredentials, body)
+  options['baseURL'] = config.STUDIO_API
+  return options
+}
+
 export const getComFetchOptions = (method = 'get', withCredentials = false, body?: object) => {
   const config = useRuntimeConfig();
   const options = baseOption(method, withCredentials, body)
@@ -204,7 +212,7 @@ export const project = {
     return studioFetch('delete', `/studio/project/${id}`, undefined, true);
   },
   update(id: number, formData: FormData) {
-    return studioFetch('post', `/studio/project/${id}`, formData, false)
+    return studioFetch('post', `/studio/project/${id}`, formData, true)
   }
 }
 

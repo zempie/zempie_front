@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <dd>
         <div class="sui-input">
             <div class="suii-title">{{ $t('addGameFile.title') }}</div>
             <dl class="suii-content">
@@ -51,7 +51,7 @@
                         </dd>
                     </dl>
 
-                    <dl class="suii-content" v-if="(uploadProject.stage !== eUploadStage.DEV)">
+                    <dl class="suii-content" v-if="(uploadProject.form.stage !== eUploadStage.DEV)">
                         <dt>{{ $t('addGameFile.selectMode') }}</dt>
                         <dd>
                             <ul>
@@ -99,22 +99,26 @@
         </ul>
 
 
-    </div>
+    </dd>
 </template>
 
 <script setup lang="ts">
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue';
-import { ElMessage } from "element-plus";
+import { ElMessage, ElLoading } from "element-plus";
 import ZipUtil from "~~/scripts/zipUtil";
 import { eUploadStage } from "~~/types"
 import { useI18n } from "vue-i18n";
+import { useLocalePath } from 'vue-i18n-routing';
+
+const localePath = useLocalePath();
+
 
 
 const MAX_FILE_SIZE = 500;
 // @Prop() isEditProject !: any;
 const { uploadProject } = useProject();
 const { t, locale } = useI18n();
-
+const router = useRouter();
 // eGameStage = eGameStage;
 // projectId = this.$route.params.id;
 
@@ -139,6 +143,8 @@ const isFileEmpty = ref(false)
 const isAutoDeploy = ref(true)
 
 const isAdvancedOpen = ref(false)
+
+const emit = defineEmits(['cancelFormDone', 'uploadDone'])
 // const versionDescription = ref('')
 
 
@@ -168,8 +174,6 @@ async function onFileChange(e: any) {
     for (let f in files) {
         size += files[f].size;
     }
-    console.log(size)
-    console.log(limitSize)
 
     if (size > limitSize) {
         ElMessage.error(t('file.upload.overSize.500'))
@@ -266,7 +270,23 @@ async function upload() {
         formData.append(`file_${i + 1}`, file);
     }
 
+    const loading = ElLoading.service({
+        lock: true,
+        text: 'Loading',
+        customClass: 'loading-spinner',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
+
     const { data, error } = await game.upload(formData);
+
+    loading.close()
+    emit('uploadDone')
+    useProject().resetForm()
+
+    if (!error.value) {
+        router.push(localePath('/project/list'))
+
+    }
 
     //     const {uploadGameFiles, gameStage} = this.$store.getters;
 
@@ -375,12 +395,18 @@ async function upload() {
 // }
 
 function prevPage() {
+    emit('cancelFormDone')
+
     //     this.$emit('gameInfoDone', false)
 }
 
 </script>
 
 <style scoped lang="scss">
+.loading-spinner {
+    color: #f97316 !important
+}
+
 .file-err {
     color: #c5292a;
 

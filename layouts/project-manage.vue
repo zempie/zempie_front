@@ -13,24 +13,24 @@
         <!--                </swiper-slide>-->
         <div class="swiper-slide">
           <NuxtLink :to="localePath(`/project/${$route.params.id}`)"
-            :class="$route.name === 'ProjectUpdate' ? 'active' : ''">
+            :class="$route.name.toString().includes('project-id_') ? 'active' : ''">
             {{ $t('projectManager.edit.gameInfo') }}
           </NuxtLink>
         </div>
         <div class="swiper-slide">
-          <NuxtLink :to="localePath(`/versionManage/${$route.params.id}`)"
+          <NuxtLink :to="localePath(`/project/${$route.params.id}/version-manage`)"
             :class="$route.name === 'VersionManage' ? 'active' : ''">
             {{ $t('projectManager.manage.version') }}
           </NuxtLink>
         </div>
         <div class="swiper-slide">
-          <NuxtLink :to="`/${$i18n.locale}/addVersion/${$route.params.id}`"
+          <NuxtLink :to="localePath(`/project/${$route.params.id}/add-verison`)"
             :class="$route.name === 'AddVersion' ? 'active' : ''">
             {{ $t('projectManager.add.version') }}
           </NuxtLink>
         </div>
         <div class="swiper-slide">
-          <NuxtLink :to="`/${$i18n.locale}/deployManage/${$route.params.id}`"
+          <NuxtLink :to="localePath(`/project/${$route.params.id}/deploy-manage`)"
             :class="$route.name === 'DeployManage' ? 'active' : ''">
             {{ $t('projectManager.manage.deploy') }}
           </NuxtLink>
@@ -45,8 +45,6 @@
 import { useLocalePath } from 'vue-i18n-routing';
 
 const localePath = useLocalePath()
-
-
 
 
 </script>

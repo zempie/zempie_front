@@ -6,10 +6,10 @@
 <script setup lang="ts">
 import { ID_INJECTION_KEY } from 'element-plus'
 import { useI18n } from 'vue-i18n';
+import { useSwitchLocalePath } from 'vue-i18n-routing';
+
 const { locale } = useI18n();
-//TODO: auto login 처리
-
-
+const switchLocalePath = useSwitchLocalePath();
 
 provide(ID_INJECTION_KEY, {
   prefix: 100,
@@ -17,12 +17,16 @@ provide(ID_INJECTION_KEY, {
 })
 
 onMounted(() => {
-
+  console.log('?')
   const lang = navigator.language.split('-')[0]
-  if (lang === 'ko' || lang === 'en') {
-    locale.value = lang
+  if (lang === 'ko') {
+    locale.value = 'ko'
+    switchLocalePath('ko')
+
   } else {
     locale.value = 'en'
+    switchLocalePath('en')
+
   }
 
 

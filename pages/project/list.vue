@@ -1,6 +1,6 @@
 <template>
   <NuxtLayout name="studio">
-    <div class="content-studio">
+    <div class="content-studio" style="min-height: calc(100vh - 200px)">
       <!-- 상단배너 -->
       <div class="studio-banner bg03">
         <h2>{{ $t("projectList.banner.text") }}</h2>
@@ -67,14 +67,14 @@
         </ul>
 
         <div v-if="isPending">
-          <!-- FIXME: loading spinner 아니면 loading progress -->
           <ul>
-            <li class="bg-grey-1" style="width: 80%; margin: 0 auto; border-radius: 10px"></li>
+            <ClipLoader :color="'#ff6e17'" :size="'30px'" style=" margin: 0 auto; border-radius: 10px; height:100px; display: flex;align-items: center;
+    justify-content: center;" />
           </ul>
         </div>
 
         <template v-else-if="projects.length">
-          <div>
+          <TransitionGroup name="list-complete" tag="div">
             <ul v-for="project in projects" :key="project.id" @click="goToProjectPage(project.id)">
               <li>
                 <span> {{ $t("game.thumbnail") }}: </span>
@@ -110,8 +110,7 @@
                 }}
               </li>
             </ul>
-          </div>
-          <!-- 페이지네이션 -->
+          </TransitionGroup>
 
           <div class="studio-pagination">
             <dl>
@@ -127,7 +126,6 @@
               </dd>
             </dl>
           </div>
-          <!--             페이지네이션 끝-->
 
         </template>
 
@@ -137,12 +135,13 @@
           </ul>
         </div>
       </div>
-      <!-- 모든게임 끝 -->
     </div>
   </NuxtLayout>
 </template>
 
 <script setup lang="ts">
+import ClipLoader from 'vue-spinner/src/ClipLoader.vue';
+import _ from 'lodash';
 import dayjs from "dayjs";
 import { useLocalePath } from "vue-i18n-routing";
 import { IProject, eUploadStage } from "~~/types"
@@ -166,7 +165,7 @@ const currPage = ref(1);
 const totalCount = ref(0);
 const totalPage = computed(() => Math.ceil(totalCount.value / pageSize.value))
 
-const { data, pending } = await project.list();
+const { data, pending } = await useFetch('/studio/project', getStudioFetchOptions('get', true))
 
 // useHead({
 //   title: title.value,
@@ -185,7 +184,7 @@ onMounted(async () => {
   isPending.value = pending.value;
 });
 
-function searchProject() {
+const searchProject = _.debounce(() => {
   const { result } = data.value as any;
 
   if (searchKeyword.value.length) {
@@ -197,7 +196,7 @@ function searchProject() {
     pagingByClient()
   }
 
-}
+}, 300)
 
 
 
@@ -229,6 +228,7 @@ function goToProjectPage(id: number) {
 
 function setProjectInfo(id: number) {
   const { result } = data.value as any;
+
   const project = result.find((project: IProject) => project.id === id)
   useProject().setProjectInfo(project)
 }
@@ -261,23 +261,23 @@ function sortDescListByGame(key: string) {
 
 <style scoped lang="scss">
 //transition
-.list-item {
+.list-complete-item {
+  transition: all 1s;
   display: inline-block;
   margin-right: 10px;
 }
 
-.list-enter-active,
-.list-leave-active {
-  transition: all 1s;
-}
+.list-complete-enter,
+.list-complete-leave-to
 
-.list-enter,
-.list-leave-to
-
-/* .list-leave-active below version 2.1.8 */
+/* .list-complete-leave-active below version 2.1.8 */
   {
   opacity: 0;
   transform: translateY(30px);
+}
+
+.list-complete-leave-active {
+  position: absolute;
 }
 
 //pagination

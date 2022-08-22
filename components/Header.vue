@@ -24,8 +24,8 @@
                 </NuxtLink>
               </li>
               <li class="uppercase">
-                <NuxtLink :to="localePath('/join')"
-                  :class="$route.name.toString().includes('game-jam') ? 'active' : ''">
+                <NuxtLink :to="localePath('/zem-jam')"
+                  :class="$route.name.toString().includes('zem-jam') ? 'active' : ''">
                   ZEMJAM </NuxtLink>
               </li>
             </ul>
@@ -457,7 +457,15 @@ watch(
 
 onMounted(() => {
   isPending.value = false;
+  console.log(locale.value)
+  if (locale.value === 'ko') {
+    selectedLang.value = 'ko'
+  } else {
+    selectedLang.value = 'en'
+  }
+
 })
+
 function switchLangauge() {
   locale.value = selectedLang.value
 }

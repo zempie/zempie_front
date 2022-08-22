@@ -1,66 +1,79 @@
 <template>
-  <div class="studio-upload-input">
-    <div class="sui-input">
-      <div class="suii-title">{{ $t('addGameInfo.title') }}</div>
-      <dl class="suii-content">
-        <dt>{{ $t('addGameInfo.game.title') }}
-          <span style="color: red;">*</span>
-        </dt>
-        <dd>
-          <input v-model="v$.name.$model" type="text" name="" title="" :placeholder="$t('addGameInfo.game.title')"
-            class="w100p" />
-          <p class="input-errors" v-for="error of v$.name.$errors" :key="error.$uid">
-            <i class="uil uil-check"></i>{{ error.$message }}
-          </p>
-        </dd>
-      </dl>
-      <dl class="suii-content">
-        <dt>
-          {{ $t("addGameInfo.game.desc") }}<span style="color: red">*</span>
-        </dt>
-        <dd>
-          <textarea v-model="v$.description.$model" name="" title="" :placeholder="$t('addGameInfo.game.desc')"
-            class="w100p h100"></textarea>
-          <p class="input-errors" v-for="error of v$.description.$errors" :key="error.$uid">
-            <i class="uil uil-check"></i>{{ error.$message }}
-          </p>
-        </dd>
-      </dl>
-      <!--  <dl class="suii-content">
-                <dt>{{ $t('addGameInfo.game.desc') }}<span v-if="!projectInfo" style="color: red;">*</span></dt>
-                <dd>
-                    <textarea @focusout="autoSave" v-model="description" name="" title="" placeholder=""
-                              class="w100p h100"></textarea>
-                    <transition name="component-fade" mode="out-in">
-                        <p class="valid-err" :key="isDescErr" :class="isDescErr? 'active' :'' ">
-                            {{ $t('addGameInfo.game.desc.err') }}</p>
-                    </transition>
-                </dd>
-            </dl>
-            <dl class="suii-content">
-                <dt>{{ $t('addGameInfo.game.tags') }}<span v-if="!projectInfo" style="color: red;">*</span></dt>
-                <dd>
-                    <div class="chip-container">
-                        <div class="chip" v-for="(chip, i) of hashtagsArr" :key="chip.id">
-                            {{ chip }}
-                            <i class="uil uil-times" @click="deleteChip(i)"></i>
-                        </div>
+  <dt>
+    <!-- 단계 -->
+    <ul class="studio-upload-step">
+      <li :class="[projectById.step === 1 ? 'active' : '', 'step']">
+        <p>STEP 01</p>
+        <h3> {{ $t('uploadGame.selectStage.text') }}</h3>
+      </li>
+      <li :class="[projectById.step === 2 ? 'active' : '', 'step']">
+        <p>STEP 02</p>
+        <h3>{{ $t('game.info') }}</h3>
+      </li>
+      <li :class="[projectById.step === 3 ? 'active' : '', 'step']">
+        <p>STEP 03</p>
+        <h3>{{ $t('file.upload') }}</h3>
+      </li>
+      <li class="publish-btn ">
+        <h4>{{ $t('publishing') }}</h4>
+      </li>
+      <!-- <li class="publish-btn">
+          <h4>{{ $t('update') }}</h4>
+        </li> -->
+    </ul>
+    <!-- 단계 끝 -->
+  </dt>
+  <dd>
+    <div class="studio-upload-input">
 
-                        <input @focusout="autoSave" v-model="currentInput" @keyup.enter="saveChip"
-                               @keydown.delete="backspaceDelete">
+      <div class="sui-input">
+        <div class="suii-title">{{ $t('addGameInfo.title') }}</div>
+        <dl class="suii-content">
+          <dt>{{ $t('addGameInfo.game.title') }}
+            <span style="color: red;">*</span>
+          </dt>
+          <dd>
+            <input v-model="v$.name.$model" type="text" name="" title="" :placeholder="$t('addGameInfo.game.title')"
+              class="w100p" />
+            <p class="input-errors" v-for="error of v$.name.$errors" :key="error.$uid">
+              <i class="uil uil-check"></i>{{ error.$message }}
+            </p>
+          </dd>
+        </dl>
+        <dl class="suii-content">
+          <dt>
+            {{ $t("addGameInfo.game.desc") }}<span style="color: red">*</span>
+          </dt>
+          <dd>
+            <textarea v-model="v$.description.$model" name="" title="" :placeholder="$t('addGameInfo.game.desc')"
+              class="w100p h100"></textarea>
+            <p class="input-errors" v-for="error of v$.description.$errors" :key="error.$uid">
+              <i class="uil uil-check"></i>{{ error.$message }}
+            </p>
+          </dd>
+        </dl>
+        <dl class="suii-content">
+          <dt>{{ $t('addGameInfo.game.tags') }}<span style="color: red;">*</span></dt>
+          <dd>
+            <div class="chip-container">
+              <div class="chip" v-for="(chip, i) of hashtagsArr" :key="chip.id">
+                {{ chip }}
+                <i class="uil uil-times" @click="deleteChip(i)"></i>
+              </div>
+              <input v-model="chipInput" @blur="saveChip" @keyup.enter="saveChip" @keydown.delete="backspaceDelete">
+            </div>
+            <TransitionGroup name="fade">
+              <p class="input-errors" v-for="error of v$.hashtags.$errors" :key="error.$uid">
+                <i class="uil uil-check"></i>{{ error.$message }}
+              </p>
+            </TransitionGroup>
+            <h2>
+              {{ $t('addGameInfo.game.tags.info') }}
+            </h2>
+          </dd>
+        </dl>
 
-                    </div>
-                    <transition name="component-fade" mode="out-in">
-                        <p class="valid-err" :key="isHashtagErr" :class="isHashtagErr? 'active' :'' ">
-                            {{ $t('addGameInfo.game.tags.err') }}
-                        </p>
-                    </transition>
-                    <h2>
-                        {{ $t('addGameInfo.game.tags.info') }}
-
-                    </h2>
-                </dd>
-            </dl>
+        <!--   
             <dl class="suii-content">
                 <dt>
                     {{ $t('addGameInfo.game.thumbnail') }}
@@ -180,68 +193,69 @@
             
 
             -->
-      <dl class="suii-content">
-        <dt style="padding-top:5px;">게임 ID 자동 작성</dt>
+        <!-- <dl class="suii-content">
+        <dt style="padding-top:5px;">{{ $t('게임 ID 자동 작성') }}</dt>
         <dd>
           <label class="switch-button">
-            <input type="checkbox" name="" v-model="isAuthGamePath" />
+            <input type="checkbox" name="" v-model="isAuthGamePath" readonly />
             <span class="onoff-switch"></span>
           </label>
         </dd>
-      </dl>
-      <transition name="component-fade" mode="out-in">
-        <dl class="suii-content" v-if="!isAuthGamePath">
-          <dt>
-            {{ $t('addGameInfo.game.id') }}
-          </dt>
-          <dd>
-            <input v-model="v$.pathname.$model" type="text" name="" class="game-id-input" title="" placeholder="" />
-            <!-- <p style="color: #C5292A; margin-top:10px">{{ gamePathError }}</p>
+      </dl> -->
+        <Transition name="component-fade" mode="out-in">
+          <dl class="suii-content">
+            <dt>
+              {{ $t('addGameInfo.game.id') }}
+            </dt>
+            <dd>
+              <input v-model="v$.pathname.$model" type="text" name="" class="game-id-input w100p" title=""
+                placeholder="" />
+              <!-- <p style="color: #C5292A; margin-top:10px">{{ gamePathError }}</p>
             <p v-if="confirmedGamePath" style="color: #1fc944; margin-top:10px">
               {{ $t('addGameInfo.game.id.passed') }}
             </p> -->
-          </dd>
-          <!-- <a @click="checkGamePath" class="btn-default w150" v-if="!projectInfo">
+            </dd>
+            <!-- <a @click="checkGamePath" class="btn-default w150" v-if="!projectInfo">
             {{ $t('addGameInfo.game.id.check') }}
           </a> -->
 
-        </dl>
-      </transition>
-    </div>
-    <ul class="sui-btn">
-      <!-- <li>
-                <a @click="prevPage" class="btn-line w150"><i class="uil uil-angle-left-b"></i>
-                    {{ $t('previous') }}
-                </a>
-            </li> -->
-      <li>
+          </dl>
+        </Transition>
+      </div>
+      <ul class="sui-btn">
+        <li>
+          <a @click="prevPage" class="btn-line w150"><i class="uil uil-angle-left-b"></i>
+            {{ $t('previous') }}
+          </a>
+        </li>
+        <li>
 
-        <!-- <a v-if="ableFileUpload()" @click="save" class="btn-default w150">
+          <!-- <a v-if="ableFileUpload()" @click="save" class="btn-default w150">
                     {{ $t('next') }}
                     <i class="uil uil-angle-right-b"></i></a> -->
 
-        <a @click="updateProject" class="btn-default w150">
-          {{ $t('update') }}
-        </a>
-      </li>
-
-    </ul>
-
-
-
-    <div class="sui-input" style="margin-top:100px;">
-      <dl class="suii-content delete-area">
-        <dt>
-          {{ $t('addGameInfo.delete.game') }}
-        </dt>
-        <dd class="game-delete-btn"><a @click="isDeleteModalOpen = true" class="btn-default w150">
-            {{ $t('addGameInfo.delete') }}
+          <a @click="updateProject" class="btn-default w150">
+            {{ $t('update') }}
           </a>
-        </dd>
-      </dl>
+        </li>
 
-    </div>
-    <!-- <ClientOnly>
+      </ul>
+
+
+
+      <div class="sui-input" style="margin-top:100px;">
+        <dl class="suii-content delete-area">
+          <dt>
+            {{ $t('addGameInfo.delete.game') }}
+          </dt>
+          <dd class="game-delete-btn"><a @click="isDeleteModalOpen = true" class="btn-default w150">
+              {{ $t('addGameInfo.delete') }}
+            </a>
+          </dd>
+        </dl>
+
+      </div>
+      <!-- <ClientOnly>
       <el-dialog v-model="isDeleteModalOpen" append-to-body custom-class="modal-area-type" width="90%">
         <div class="modal-alert">
           <dl class="ma-header">
@@ -271,7 +285,8 @@
       </el-dialog>
 
     </ClientOnly> -->
-  </div>
+    </div>
+  </dd>
 </template>
 
 <script setup lang="ts">
@@ -290,8 +305,10 @@ const isAuthGamePath = ref(true)
 const confirmedGamePath = ref()
 
 const isDeleteModalOpen = ref(false)
+const hashtagsArr = ref([])
+const chipInput = ref('')
 
-const { projectById, resetProjectInfo } = useProject();
+const { projectById, resetProjectInfo, setStepTwoById, setStepOneById } = useProject();
 
 
 // let form = reactive({
@@ -301,11 +318,16 @@ const { projectById, resetProjectInfo } = useProject();
 // })
 
 
-const form = reactive({
-  name: projectById.value.info?.name,
-  pathname: projectById.value.info?.game.pathname,
-  description: projectById.value.info?.description,
-})
+
+
+let form = reactive({
+  name: "",
+  pathname: "",
+  description: "",
+  hashtags: '',
+  project_picture: null,
+  project_picture2: null
+});
 
 watch(
   () => projectById.value.info,
@@ -313,6 +335,8 @@ watch(
     form.name = newVal.name;
     form.description = newVal.description;
     form.pathname = newVal.game.pathname;
+    hashtagsArr.value = newVal.hashtags ? newVal.hashtags.split(',') : []
+
   }
 )
 
@@ -328,7 +352,9 @@ const rules = computed(() => {
     description: {
       required: helpers.withMessage(t("addGameInfo.game.desc.err"), required),
     },
-
+    hashtags: {
+      required: helpers.withMessage(t("addGameInfo.game.tags.err"), required),
+    },
   }
 
   return formRule
@@ -337,6 +363,19 @@ const rules = computed(() => {
 const v$ = useVuelidate(rules, form)
 
 
+onMounted(() => {
+
+  setStepTwoById()
+  if (projectById.value.info) {
+    const { stage, name, description, hashtags, game } = projectById.value.info
+    form.pathname = game.pathname
+    form.description = description
+    hashtagsArr.value = hashtags ? hashtags.split(',') : []
+    form.hashtags = hashtags
+    form.name = name
+
+  }
+});
 // @Prop({default: false}) set!: boolean;
 // @Prop() projectInfo !: any;
 // @Prop() isEditProject !: any;
@@ -462,12 +501,10 @@ async function createGamePath() {
 //     this.waitGamePath = false;
 // }
 
-// prevPage() {
-//     this.resetLocalStorage();
-//     // this.$store.commit("gameStage", null);
-//     this.$emit('stage', null)
-//     this.$emit('isActivePublish', false)
-// }
+function prevPage() {
+  setStepOneById();
+
+}
 
 // validityCheck() {
 //     let isError: boolean = false;
@@ -563,7 +600,10 @@ async function uploadGame() {
 
 
 async function updateProject() {
+  form.hashtags = hashtagsArr.value.toString();
+
   const isValid = await v$.value.$validate();
+  console.log(isValid)
   if (!isValid) return;
 
   const formData = new FormData();
@@ -741,111 +781,126 @@ async function deleteProject() {
 
 }
 
-    // deleteProject() {
-    //     this.$api.deleteProject(this.projectInfo.id)
-    //         .then((res) => {
-    //             this.$store.getters.projects[this.projectInfo.id] = null;
-    //             this.toast.clear();
-    //             this.toast.successToast(`${this.$t('deleted.game.success.msg')}`)
-    //         })
-    //         .catch(() => {
-    //             this.toast.clear();
-    //             this.toast.failToast(`${this.$t('deleted.game.fail.msg')}`)
+// deleteProject() {
+//     this.$api.deleteProject(this.projectInfo.id)
+//         .then((res) => {
+//             this.$store.getters.projects[this.projectInfo.id] = null;
+//             this.toast.clear();
+//             this.toast.successToast(`${this.$t('deleted.game.success.msg')}`)
+//         })
+//         .catch(() => {
+//             this.toast.clear();
+//             this.toast.failToast(`${this.$t('deleted.game.fail.msg')}`)
 
-    //         })
-    //         .finally(() => {
-    //             this.$modal.hide('deleteProject')
-    //             this.$router.replace(`/${this.$i18n.locale}/projectList`);
-    //         })
-    // }
+//         })
+//         .finally(() => {
+//             this.$modal.hide('deleteProject')
+//             this.$router.replace(`/${this.$i18n.locale}/projectList`);
+//         })
+// }
 
-    // uploadGame() {
-    //     const {gameInfoObj, gameFileInfoObj, uploadGameFiles} = this.$store.getters;
+// uploadGame() {
+//     const {gameInfoObj, gameFileInfoObj, uploadGameFiles} = this.$store.getters;
 
-    //     this.$api.createProject(
-    //         gameInfoObj,
-    //         gameFileInfoObj,
-    //         uploadGameFiles
-    //     )
-    //         .then((res) => {
+//     this.$api.createProject(
+//         gameInfoObj,
+//         gameFileInfoObj,
+//         uploadGameFiles
+//     )
+//         .then((res) => {
 
-    //             this.toast.successToast(`${this.$t('devLog.upload.done')}`);
-    //             this.$router.push(`/${this.$i18n.locale}/projectList`)
-    //         })
-    //         .catch((err) => {
+//             this.toast.successToast(`${this.$t('devLog.upload.done')}`);
+//             this.$router.push(`/${this.$i18n.locale}/projectList`)
+//         })
+//         .catch((err) => {
 
-    //         })
-    // }
+//         })
+// }
 
-    // ableFileUpload() {
-    //     // if (this.$store.getters.gameStage === eGameStage.Dev) {
-    //     //     console.log('dev 상태')
-    //     //     return false;
-    //     // }
-    //     // else
-    //     if (this.projectInfo && this.projectInfo.projectVersions.length !== 0) {
-    //         return false;
-    //     }
-    //     else {
-    //         return true;
-    //     }
-    // }
-
-
-    // /**
-    //  * tag chips
-    //  */
-    // saveChip() {
-    //     const {hashtagsArr, currentInput, set} = this;
-    //     if (!_.includes(hashtagsArr, currentInput.trim())) {
-    //         ((set && hashtagsArr.indexOf(currentInput) === -1) || !set) && hashtagsArr.push(currentInput.trim());
-    //     }
-    //     this.currentInput = '';
-    // }
-
-    // deleteChip(index) {
-    //     this.hashtagsArr.splice(index, 1);
-    // }
-
-    // backspaceDelete({which}) {
-    //     which == 8 && this.currentInput === '' && this.hashtagsArr.splice(this.hashtagsArr.length - 1);
-    // }
-
-    // /**
-    //  * 게임 정보 local storage 저장
-    //  */
-    // autoSave() {
-
-    //     if (this.title) {
-    //         localStorage.setItem('title', this.title)
-    //         this.isTitleErr = false;
-    //     }
-    //     else {
-    //         localStorage.removeItem('title')
-    //     }
-
-    //     if (this.description) {
-    //         localStorage.setItem('description', this.description)
-    //         this.isDescErr = false;
-    //     }
-    //     else {
-    //         localStorage.removeItem('description')
-    //     }
-
-    //     if (this.currentInput) {
-    //         this.saveChip();
-    //     }
-    //     if (this.hashtagsArr.length > 0) {
-    //         this.isHashtagErr = false;
-    //         localStorage.setItem('hashtagsArr', this.hashtagsArr.toString())
-    //     }
-    //     else {
-    //         localStorage.removeItem('hashtagsArr')
-    //     }
-    //     this.checkActivePublish();
-    // }
+// ableFileUpload() {
+//     // if (this.$store.getters.gameStage === eGameStage.Dev) {
+//     //     console.log('dev 상태')
+//     //     return false;
+//     // }
+//     // else
+//     if (this.projectInfo && this.projectInfo.projectVersions.length !== 0) {
+//         return false;
+//     }
+//     else {
+//         return true;
+//     }
+// }
 
 
+// /**
+//  * tag chips
+//  */
+// saveChip() {
+//     const {hashtagsArr, currentInput, set} = this;
+//     if (!_.includes(hashtagsArr, currentInput.trim())) {
+//         ((set && hashtagsArr.indexOf(currentInput) === -1) || !set) && hashtagsArr.push(currentInput.trim());
+//     }
+//     this.currentInput = '';
+// }
+
+// deleteChip(index) {
+//     this.hashtagsArr.splice(index, 1);
+// }
+
+// backspaceDelete({which}) {
+//     which == 8 && this.currentInput === '' && this.hashtagsArr.splice(this.hashtagsArr.length - 1);
+// }
+
+// /**
+//  * 게임 정보 local storage 저장
+//  */
+// autoSave() {
+
+//     if (this.title) {
+//         localStorage.setItem('title', this.title)
+//         this.isTitleErr = false;
+//     }
+//     else {
+//         localStorage.removeItem('title')
+//     }
+
+//     if (this.description) {
+//         localStorage.setItem('description', this.description)
+//         this.isDescErr = false;
+//     }
+//     else {
+//         localStorage.removeItem('description')
+//     }
+
+//     if (this.currentInput) {
+//         this.saveChip();
+//     }
+//     if (this.hashtagsArr.length > 0) {
+//         this.isHashtagErr = false;
+//         localStorage.setItem('hashtagsArr', this.hashtagsArr.toString())
+//     }
+//     else {
+//         localStorage.removeItem('hashtagsArr')
+//     }
+//     this.checkActivePublish();
+// }
+
+function backspaceDelete({ which }) {
+  which == 8 && chipInput.value === '' && hashtagsArr.value.splice(hashtagsArr.value.length - 1);
+}
+
+
+function saveChip() {
+
+  if (!hashtagsArr.value.includes(chipInput.value.trim()) && !!chipInput.value.trim()) {
+    ((hashtagsArr.value.indexOf(chipInput.value) === -1)) && hashtagsArr.value.push(chipInput.value.trim());
+  }
+
+  chipInput.value = ''
+}
+function deleteChip(index: number) {
+  hashtagsArr.value.splice(index, 1);
+}
 </script>
 
 <style scoped lang="scss">

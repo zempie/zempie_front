@@ -8,8 +8,9 @@
 <script setup lang="ts">
 import { onBeforeRouteLeave } from 'vue-router';
 
-const $route = useRoute()
-const projectId = computed(() => parseInt($route.params.id as string))
+const route = useRoute()
+const router = useRouter();
+const projectId = computed(() => parseInt(route.params.id as string))
 
 
 onMounted(async () => {
@@ -19,6 +20,7 @@ onMounted(async () => {
 async function fetch() {
   const { data } = await project.getInfoById(projectId.value)
   const { result } = data.value
+  console.log(result)
   useProject().setProjectInfo(result)
 }
 

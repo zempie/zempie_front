@@ -1,36 +1,12 @@
 <template>
   <!-- 2단영역 -->
   <dl class="studio-upload-area">
-    <dt>
-      <!-- 단계 -->
-      <ul class="studio-upload-step">
-        <li class="step">
-          <p>STEP 01</p>
-          <h3> {{ $t('uploadGame.selectStage.text') }}</h3>
-        </li>
-        <li class="step">
-          <p>STEP 02</p>
-          <h3>{{ $t('game.info') }}</h3>
-        </li>
-        <li class="step">
-          <p>STEP 03</p>
-          <h3>{{ $t('file.upload') }}</h3>
-        </li>
-        <li class="publish-btn ">
-          <h4>{{ $t('publishing') }}</h4>
-        </li>
-        <!-- <li class="publish-btn">
-          <h4>{{ $t('update') }}</h4>
-        </li> -->
-      </ul>
-      <!-- 단계 끝 -->
-    </dt>
-    <dd>
-      <!-- 게임단계 -->
-      <ProjectSelectStage v-if="stage === -1" />
-      <ProjectEditGameInfo v-else />
 
-      <!-- <transition name="component-fade" mode="out-in">
+    <!-- 게임단계 -->
+    <ProjectEditSelectStage v-if="projectById.step === 2" />
+    <ProjectEditGameInfo v-else />
+
+    <!-- <transition name="component-fade" mode="out-in">
                 <SelectStage v-show="stepOne()"
                              @stage="getStage"
                              :projectInfo="projectInfo"/>
@@ -50,14 +26,17 @@
                              :isEditProject="projectInfo ? true: false"
                 />
             </transition> -->
-      <!--                <router-view></router-view>-->
-      <!-- 게임단계 끝 -->
-    </dd>
+    <!--                <router-view></router-view>-->
+    <!-- 게임단계 끝 -->
   </dl>
   <!-- 2단영역 끝 -->
 </template>
 
 <script setup lang="ts">
+import { eUploadStage } from "~~/types"
+
+const { projectById, resetProjectInfo } = useProject();
+
 
 const stage = ref(computed(() => useProject().projectById.value.info?.stage))
 

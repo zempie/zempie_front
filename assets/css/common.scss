@@ -89,3 +89,12 @@
     opacity: 1 !important;
   }
 }
+
+.loading-spinner{
+  .el-loading-spinner .path {
+    stroke:#f97316 !important;
+  }
+  .el-loading-text{
+    color:#f97316 !important;
+  }
+}
