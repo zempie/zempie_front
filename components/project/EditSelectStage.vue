@@ -1,15 +1,16 @@
 <template>
   <ProjectStepMenu>
     <template #uploadGameBtn>
-      <li :class="[uploadStage === eUploadStage.DEV ? 'active' : '', 'publish-btn']">
-        <h4>{{ $t('publishing') }}</h4>
+      <li :lass="'publish-btn'">
+        <h4>{{ $t('update') }}</h4>
       </li>
     </template>
   </ProjectStepMenu>
   <dd>
 
     <ul class="studio-game-step">
-      <li @click="selectStage(eUploadStage.DEV)">
+
+      <li @click="selectStage(eGameStage.DEV)" :class="stage === 1 ? 'active' : ''">
         <dl>
           <dt><img src="/images/studio_icon01.png" :alt="$t('devLog')" title="" /></dt>
           <dd>
@@ -19,7 +20,7 @@
           </dd>
         </dl>
       </li>
-      <li @click="selectStage(eUploadStage.EARLY)">
+      <li @click="selectStage(eGameStage.EARLY)" :class="stage === 2 ? 'active' : ''">
         <dl>
           <dt><img src="/images/studio_icon02.png" :alt="$t('earlyAccess')" title="" /></dt>
           <dd>
@@ -28,7 +29,7 @@
           </dd>
         </dl>
       </li>
-      <li @click="selectStage(eUploadStage.COMPLETE)">
+      <li @click="selectStage(eGameStage.COMPLETE)" :class="stage === 3 ? 'active' : ''">
         <dl>
           <dt><img src="/images/studio_icon03.png" :alt="$t('complete')" title="" /></dt>
           <dd>
@@ -37,7 +38,7 @@
           </dd>
         </dl>
       </li>
-      <li>
+      <li :class="stage === 4 ? 'active' : ''">
         <p>
         </p>
         <dl>
@@ -81,16 +82,16 @@
 </template>
 
 <script setup lang="ts">
-import { eUploadStage } from '~~/types/index';
-const { uploadProject } = useProject();
+import { eGameStage } from '~~/types/index';
 
-const uploadStage = computed(() => uploadProject.value.form.stage)
+const stage = computed(() => useProject().editProject.value.info.stage)
+
 
 const router = useRouter();
 
 function selectStage(stage: number) {
-  useProject().setStage(stage)
-  useProject().setStepTwo()
+  useProject().setStageOnEdit(stage)
+  useProject().setStepTwoOnEdit()
 }
     // @Prop() projectInfo !: any;
     // uploadStage = eGameStage;

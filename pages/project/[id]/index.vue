@@ -6,27 +6,40 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeRouteLeave } from 'vue-router';
+
+useHead({
+  title: 'Zempie | Project upload ',
+  meta: [{
+    name: 'description',
+    content: 'project list'
+  }]
+})
+
+definePageMeta({
+  title: '게임 정보 수정',
+  name: 'projectId'
+})
 
 const route = useRoute()
 const router = useRouter();
 const projectId = computed(() => parseInt(route.params.id as string))
 
 
+
+
+
 onMounted(async () => {
-  if (!useProject().projectById.value.info) await fetch()
+  if (!useProject().editProject.value.info.id) await fetch()
 })
 
 async function fetch() {
   const { data } = await project.getInfoById(projectId.value)
   const { result } = data.value
-  console.log(result)
+
   useProject().setProjectInfo(result)
+  useProject().setStageOnEdit(result.stage)
 }
 
-onBeforeRouteLeave(() => {
-  console.log('leave page!')
-})
 
 
 </script>

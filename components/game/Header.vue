@@ -35,7 +35,7 @@
                         <p style="color:#fff">{{ likeCnt }}</p> -->
         </div>
 
-        <a v-if="gameInfo.stage !== eUploadStage.DEV" @click="playGame" class="btn-default w150"
+        <a v-if="gameInfo.stage !== eGameStage.DEV" @click="playGame" class="btn-default w150"
           style="margin-left:12px">Play Game</a>
       </dd>
     </dl>
@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { IGame, eUploadStage } from '~~/types';
+import { IGame, eGameStage } from '~~/types';
 import { PropType } from 'vue';
 
 const hashtags = computed(() => props.gameInfo.hashtags.length > 0 ? props.gameInfo.hashtags.split(",") : undefined)

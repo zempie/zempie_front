@@ -1,42 +1,40 @@
 <template>
   <div class="content-studio">
+    <StudioSideMenu />
+    <div class="studio-banner bg02">
+      <h2>{{ $route.meta.title }}</h2>
+      <p>{{ $route.meta.desc }}</p>
+    </div>
     <ClientOnly>
-      <div class="studio-banner bg02">
-        <h2>{{ $route.meta.title }}</h2>
-        <p>{{ $route.meta.desc }}</p>
+      <div class="tab-search-swiper">
+        <div class="swiper-area">
+          <div class="swiper-slide">
+            <NuxtLink :to="localePath(`/project/${$route.params.id}`)"
+              :class="$route.meta.name === 'projectId' ? 'active' : ''">
+              {{ $t('projectManager.edit.gameInfo') }}
+            </NuxtLink>
+          </div>
+          <div class="swiper-slide">
+            <NuxtLink :to="localePath(`/project/${$route.params.id}/version-manage`)"
+              :class="$route.meta.name === 'versionManage' ? 'active' : ''">
+              {{ $t('projectManager.manage.version') }}
+            </NuxtLink>
+          </div>
+          <div class="swiper-slide">
+            <NuxtLink :to="localePath(`/project/${$route.params.id}/add-version`)"
+              :class="$route.meta.name === 'addVersion' ? 'active' : ''">
+              {{ $t('projectManager.add.version') }}
+            </NuxtLink>
+          </div>
+          <div class="swiper-slide">
+            <NuxtLink :to="localePath(`/project/${$route.params.id}/deploy-manage`)"
+              :class="$route.meta.name === 'deployManage' ? 'active' : ''">
+              {{ $t('projectManager.manage.deploy') }}
+            </NuxtLink>
+          </div>
+        </div>
       </div>
     </ClientOnly>
-    <div class="tab-search-swiper">
-      <div class="swiper-area">
-        <!--                <swiper-slide>-->
-        <!--                    <router-link to="#">대시보드</router-link>-->
-        <!--                </swiper-slide>-->
-        <div class="swiper-slide">
-          <NuxtLink :to="localePath(`/project/${$route.params.id}`)"
-            :class="$route.name.toString().includes('project-id_') ? 'active' : ''">
-            {{ $t('projectManager.edit.gameInfo') }}
-          </NuxtLink>
-        </div>
-        <div class="swiper-slide">
-          <NuxtLink :to="localePath(`/project/${$route.params.id}/version-manage`)"
-            :class="$route.name === 'VersionManage' ? 'active' : ''">
-            {{ $t('projectManager.manage.version') }}
-          </NuxtLink>
-        </div>
-        <div class="swiper-slide">
-          <NuxtLink :to="localePath(`/project/${$route.params.id}/add-verison`)"
-            :class="$route.name === 'AddVersion' ? 'active' : ''">
-            {{ $t('projectManager.add.version') }}
-          </NuxtLink>
-        </div>
-        <div class="swiper-slide">
-          <NuxtLink :to="localePath(`/project/${$route.params.id}/deploy-manage`)"
-            :class="$route.name === 'DeployManage' ? 'active' : ''">
-            {{ $t('projectManager.manage.deploy') }}
-          </NuxtLink>
-        </div>
-      </div>
-    </div>
     <slot />
   </div>
 </template>
@@ -45,6 +43,19 @@
 import { useLocalePath } from 'vue-i18n-routing';
 
 const localePath = useLocalePath()
+const route = useRoute()
+
+
+const projectId = computed(() => parseInt(route.params.id as string))
+const { editProject, getProjectInfo } = useProject()
+
+onMounted(async () => {
+
+  if (!editProject.value.info.id) await getProjectInfo(projectId.value)
+})
+
+
+
 
 
 </script>

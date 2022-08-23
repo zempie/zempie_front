@@ -1,22 +1,22 @@
-import { ICommunity, eUploadStage } from "~~/types"
+import { ICommunity, eGameStage } from "~~/types"
 
 
 export default function () {
-  
-  const community = useState('community', () => ({    
-      info: null as ICommunity
+
+  const community = useState('community', () => ({
+    info: null as ICommunity
   }))
-  
-  const setCommunity = async (id: string) =>{
+
+  const setCommunity = async (id: string) => {
     const config = useRuntimeConfig()
     const accessToken = useCookie(config.COOKIE_NAME).value
 
     //FIXME: composable 왜 안되지??????
-    const { data, pending, error } = await useFetch<any>(`/community/${id}`,{
-      method:'get',
-      baseURL:config.COMMUNITY_API,
-      headers: accessToken ? {'Authorization' :  `Bearer ${accessToken}`} : {},
-    initialCache:false,
+    const { data, pending, error } = await useFetch<any>(`/community/${id}`, {
+      method: 'get',
+      baseURL: config.COMMUNITY_API,
+      headers: accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {},
+      initialCache: false,
 
 
     })
@@ -26,8 +26,8 @@ export default function () {
     community.value.info.is_subscribed = true
   }
 
-  const resetCommunity = () =>{
-    community.value.info = null as ICommunity 
+  const resetCommunity = () => {
+    community.value.info = null as ICommunity
   }
 
   return {

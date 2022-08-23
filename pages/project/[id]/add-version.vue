@@ -1,3 +1,209 @@
+<template>
+  <NuxtLayout name="project-manage">
+    <dd>
+      <div class="studio-upload-input">
+        <div class="sui-input">
+          <div class="suii-title">{{ $t('versionManage.addVersion') }}</div>
+          <dl class="suii-content">
+            <dt>{{ $t('gameUpload') }}</dt>
+            <ProjectZipFileUploader @sendZipFile="setZipFile" />
+
+          </dl>
+          <div class="suii-open" :class="isAdvancedOpen ? 'open' : 'close'" @click="isAdvancedOpen = !isAdvancedOpen">
+            <span> {{ $t('advanced.setting') }}</span> &nbsp;<i class="uil uil-sliders-v-alt"></i>
+          </div>
+          <transition name="component-fade" mode="out-in">
+            <div v-show="isAdvancedOpen">
+              <dl class="suii-content">
+                <dt>{{ $t('addGameFile.select.startFile.text1') }}</dt>
+                <dd>
+                  <select name="" title="" class="w100p">
+                    <option v-for="file in startFileOptions" :value="file">{{ file }}</option>
+                  </select>
+                </dd>
+              </dl>
+              <dl class="suii-content">
+                <dt>{{ $t('addGameFile.selectMode') }}</dt>
+                <dd>
+                  <ul>
+                    <li>
+                      <label class="switch-button">
+                        <input type="checkbox" name="" v-model="autoDeploy" />
+                        <span class="onoff-switch"></span>
+                      </label>
+                    </li>
+                    <li>Auto-deployment mode</li>
+                  </ul>
+                  <h2>
+                    {{ $t('addGameFile.selectMode.text1') }}<br />
+                    {{ $t('addGameFile.selectFile.text3') }}
+                  </h2>
+                </dd>
+              </dl>
+              <dl class="suii-content">
+                <dt>{{ $t('version') }}</dt>
+                <dd>
+                  <input v-model="version" type="text" class="w100p">
+                  <p v-if="isVersionError" style="color:red; margin:10px 10px 0px 10px;">{{
+                      $t('projectAddVersion.error.lowVersion')
+                  }}</p>
+                </dd>
+              </dl>
+              <div class="suii-close">
+                <button class="btn-line" @click="isAdvancedOpen = !isAdvancedOpen">{{ $t('close') }} &nbsp;&nbsp;<i
+                    class="uil uil-angle-up"></i></button>
+              </div>
+            </div>
+          </transition>
+        </div>
+
+      </div>
+      <ul class="sui-btn">
+        <li><a @click="upload" class="btn-default w150">
+            <span>{{ $t('upload') }}</span>
+          </a></li>
+      </ul>
+    </dd>
+  </NuxtLayout>
+</template>
+
+<script setup lang="ts">
+import { ElMessage, ElMessageBox, ElLoading } from 'element-plus'
+import { IVersion, eGameStage } from '~~/types'
+import Version from '~~/scripts/version'
+import { useLocalePath } from "vue-i18n-routing";
+
+
+useHead({
+  title: 'Zempie | Project version ',
+  meta: [{
+    name: 'description',
+    content: 'project list'
+  }]
+})
+
+definePageMeta({
+  title: '버전 추가',
+  name: 'addVersion'
+})
+
+const router = useRouter()
+const route = useRoute()
+const localePath = useLocalePath();
+
+const isAdvancedOpen = ref(false)
+const autoDeploy = ref(false)
+
+const startFileOptions = ref([])
+const startFile = ref('')
+const fileSize = ref(0)
+const version = ref()
+const uploadGameFiles = ref<File[]>([])
+
+const isVersionError = ref(false)
+
+const { editProject } = useProject()
+
+const projectId = computed(() => route.params.id)
+
+
+watch(
+  () => useProject().editProject.value.info,
+  (newVal) => {
+    let maxNumVersion = null;
+    for (const version of newVal.projectVersions) {
+      const ver: IVersion = version;
+      if (!maxNumVersion || maxNumVersion.number < ver.number) {
+        maxNumVersion = ver;
+        console.log(maxNumVersion)
+      }
+    }
+    const ver = new Version(maxNumVersion.version)
+    ver.patch++;
+    version.value = ver.toString();
+  }
+)
+
+
+function setZipFile(gameFile: { startFileList: [], startFile: string, size: number, gameFiles: File[] }) {
+  uploadGameFiles.value = gameFile.gameFiles;
+  startFileOptions.value = gameFile.startFileList
+  startFile.value = gameFile.startFile;
+  fileSize.value = gameFile.size
+
+  console.log(gameFile)
+
+}
+
+async function upload() {
+
+  if (!startFile.value) {
+    return;
+  }
+
+
+  if (!Version.validity(version.value)) {
+    return;
+  }
+  else {
+    const lastVersion = version.value;
+    if (lastVersion && Version.validity(lastVersion.version)) {
+      const newVersion = new Version(version.value);
+      const oldVersion = new Version(lastVersion.version);
+
+      if (!newVersion.isNew(oldVersion)) {
+        //이전 버전 보다 작음.
+        isVersionError.value = true;
+        return;
+      }
+    }
+  }
+
+
+  if (editProject.value.info.stage === eGameStage.DEV) {
+    autoDeploy.value = false;
+  }
+
+  const loading = ElLoading.service({
+    lock: true,
+    text: 'Loading',
+    customClass: 'loading-spinner',
+    background: 'rgba(0, 0, 0, 0.7)',
+  })
+
+  const formData = new FormData;
+  formData.append('project_id', String(editProject.value.info.id));
+  formData.append('version', version.value);
+  formData.append('startFile', startFile.value);
+  formData.append('autoDeploy', String(autoDeploy.value));
+  formData.append('description', editProject.value.info.description);
+  formData.append('stage', String(editProject.value.info.stage));
+
+  if (fileSize.value) {
+    formData.append('size', fileSize.value.toFixed(2));
+  }
+
+
+  for (let i = 0; i < uploadGameFiles.value.length; i++) {
+    const file = uploadGameFiles.value[i];
+    formData.append(`file_${i + 1}`, file);
+  }
+
+  const { data, pending, error } = await useFetch('/studio/version', getStudioFetchOptions('post', true, formData))
+
+
+  loading.close()
+  if (!error.value) {
+    router.push(localePath(`/project/${projectId.value}/version-manage`))
+  }
+
+
+}
+
+function deleteFile() {
+
+}
+</script>
 <!-- <template>
     <dd>
         <div class="studio-upload-input">
@@ -163,6 +369,8 @@ export default class AddVersion extends Vue {
 
     }
 
+  
+
     async onFileChange(e) {
 
         this.uploadGameFile = e.target.files[0];
@@ -248,86 +456,7 @@ export default class AddVersion extends Vue {
         (this.$refs.gameFile as any).value = '';
     }
 
-    async upload() {
-        if (this.isLoadingUpload) {
-            return;
-        }
-
-        let isError = false;
-
-        if (!Version.validity(this.version)) {
-            isError = true;
-            console.log('version error')
-            // this.versionError = this.$t('projectAddVersion.error.notValidVersion').toString();
-        }
-        else {
-
-            const lastVersion = this.$store.getters.lastVersion(this.projectId);
-
-            if (lastVersion && Version.validity(lastVersion.version)) {
-                const newVersion = new Version(this.version);
-                const oldVersion = new Version(lastVersion.version);
-
-                if (!newVersion.isNew(oldVersion)) {
-                    //이전 버전 보다 작음.
-                    isError = true;
-                    // this.versionError = this.$t('projectAddVersion.error.lowVersion').toString();
-                    return;
-                }
-            }
-        }
-
-
-        if (!this.uploadGameFiles.length) {
-            isError = true;
-            // this.uploadGameFileError = this.$t('projectAddVersion.error.noUploadFile').toString();
-        }
-
-        if (!this.startFileOptions.length) {
-            isError = true;
-        }
-
-        if (isError) {
-            // this.wait = false;
-            return;
-        }
-
-        if (this.$store.getters.gameStage === eGameStage.Dev) {
-            this.autoDeploy = false;
-        }
-        this.isLoadingUpload = true;
-        const version = await this.$api.createVersion(this.projectId, this.version, this.uploadGameFiles, this.startFile,
-            this.autoDeploy, this.totalSize, this.description, this.$store.getters.gameStage);
-
-        if (!version || version.error) {
-            // Notify.create({
-            //     message : this.$t('projectAddVersion.error.newVersionUploadFail').toString(),
-            //     position : 'top',
-            //     color : 'negative',
-            //     timeout: 2000
-            // });
-        }
-        else {
-            this.isLoadingUpload = false;
-            const project = this.$store.getters.project(this.projectId);
-            project.update_version_id = version.id;
-            project.projectVersions.push(version);
-
-            console.log(project)
-            project.versions ? project.versions[version.id] = version : this.$store.commit('versions', project.projectVersions);
-            ;
-
-            // Notify.create({
-            //     message : this.$t('projectAddVersion.success.uploadFile').toString(),
-            //     position : 'top',
-            //     color : 'primary',
-            //     timeout: 2000
-            // });
-            await this.$router.replace(`/${this.$i18n.locale}/projectList`);
-        }
-
-
-    }
+  
 
     updateProject() {
 
@@ -339,103 +468,104 @@ export default class AddVersion extends Vue {
 
 }
 </script>
-
+ -->
 <style scoped lang="scss">
-
-//
 .sui-btn {
-    width: 1200px;
-    margin: 30px auto;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
+  width: 1200px;
+  margin: 30px auto;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .studio-upload-input {
-    width: 1200px;
-    margin: 30px auto;
-    background-color: #fff;
-    box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.05);
-    border-radius: 10px;
+  width: 1200px;
+  margin: 30px auto;
+  background-color: #fff;
+  box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
 
-    .suii-open {
-        &.close {
-            border-bottom-left-radius: 10px;
-            border-bottom-right-radius: 10px;
-        }
-
-        .open {
-            border-bottom-left-radius: 0px;
-            border-bottom-right-radius: 0px;
-        }
-
+  .suii-open {
+    &.close {
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
     }
+
+    .open {
+      border-bottom-left-radius: 0px;
+      border-bottom-right-radius: 0px;
+    }
+
+  }
 }
 
 @media all and (max-width: 479px) {
-    .studio-upload-input, .sui-btn {
-        width: 90%;
-        margin: 20px auto;
-        padding: 0 15px;
-    }
+
+  .studio-upload-input,
+  .sui-btn {
+    width: 90%;
+    margin: 20px auto;
+    padding: 0 15px;
+  }
 }
 
 
 @media all and (min-width: 480px) and (max-width: 767px) {
-    .studio-upload-input, .sui-btn {
-        width: 470px;
-        margin: 20px auto;
-        padding: 0 15px;
-    }
+
+  .studio-upload-input,
+  .sui-btn {
+    width: 470px;
+    margin: 20px auto;
+    padding: 0 15px;
+  }
 }
 
 
 @media all and (min-width: 768px) and (max-width: 991px) {
-    .studio-upload-input, .sui-btn {
-        width: 750px;
-    }
+
+  .studio-upload-input,
+  .sui-btn {
+    width: 750px;
+  }
 }
 
 
 @media all and (min-width: 992px) and (max-width: 1199px) {
-    .studio-upload-input, .sui-btn {
-        width: 970px;
-    }
+
+  .studio-upload-input,
+  .sui-btn {
+    width: 970px;
+  }
 }
 
 
 //upload button
 .upload-file-container {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 
-    .btn-circle-icon {
-        margin-left: 10px
-    }
+  .btn-circle-icon {
+    margin-left: 10px
+  }
 }
 
-.file-size, .file-name {
-    margin: 10px 0px 10px;
+.file-size,
+.file-name {
+  margin: 10px 0px 10px;
 }
 
 
 //transition
-.component-fade-enter-active, .component-fade-leave-active {
-    transition: opacity .3s ease;
+.component-fade-enter-active,
+.component-fade-leave-active {
+  transition: opacity .3s ease;
 }
 
-.component-fade-enter, .component-fade-leave-to
-    /* .component-fade-leave-active below version 2.1.8 */
-{
-    opacity: 0;
+.component-fade-enter,
+.component-fade-leave-to
+
+/* .component-fade-leave-active below version 2.1.8 */
+  {
+  opacity: 0;
 }
-
-//spinner
-.v-spinner {
-    margin-left: 10px;
-    display: flex;
-    align-items: center;
-}
-
-
-</style> -->
+</style>

@@ -1,14 +1,50 @@
-import { IProject, eUploadStage } from "~~/types"
+import { IProject, eGameStage } from "~~/types"
 
 export default function () {
-  const projectById = useState('projectById', () => ({
-    info: null as IProject,
+
+  const editProject = useState('editProject', () => ({
+    info: {} as IProject,
     step: 1
   }))
 
+  const getProjectInfo = async (id: string | number) => {
+    const { data, error } = await useFetch<{ result: IProject }>(`/community/project/${id}`, getZempieFetchOptions('get', true))
+
+    if (data.value) {
+      const { result } = data.value
+      setProjectInfo(result)
+      useProject().setStageOnEdit(result.stage)
+    }
+
+  }
+
+  const setStageOnEdit = (stage: number) => {
+    editProject.value.info.stage = stage;
+  }
+
+  const setStepOneOnEdit = () => {
+    editProject.value.step = 1;
+  }
+  const setStepTwoOnEdit = () => {
+    editProject.value.step = 2;
+  }
+  const setStepThreeOnEdit = () => {
+    editProject.value.step = 3;
+  }
+
+  const setProjectInfo = (info: IProject) => {
+    editProject.value.info = info;
+  }
+
+  const resetProjectInfo = () => {
+    editProject.value.info = {} as IProject
+  }
+
+
+
   const uploadProject = useState('uploadProject', () => ({
     form: {
-      stage: eUploadStage.NONE,
+      stage: eGameStage.NONE,
       name: "",
       pathname: "",
       description: "",
@@ -18,18 +54,6 @@ export default function () {
     },
     step: 1
   }))
-
-
-
-  const setStepOneById = () => {
-    projectById.value.step = 1;
-  }
-  const setStepTwoById = () => {
-    projectById.value.step = 2;
-  }
-  const setStepThreeById = () => {
-    projectById.value.step = 3;
-  }
 
 
   const setStepOne = () => {
@@ -42,20 +66,13 @@ export default function () {
     uploadProject.value.step = 3;
   }
 
-  const setProjectInfo = (info: IProject) => {
-    projectById.value.info = info;
-  }
-
-  const resetProjectInfo = () => {
-    projectById.value.info = null as IProject
-  }
 
 
   const setStage = (stage: number) => {
     uploadProject.value.form.stage = stage;
   }
   const resetStage = () => {
-    uploadProject.value.form.stage = eUploadStage.NONE;
+    uploadProject.value.form.stage = eGameStage.NONE;
   }
 
   const setForm = (form: any) => {
@@ -64,7 +81,7 @@ export default function () {
 
   const resetForm = () => {
     uploadProject.value.form = {
-      stage: eUploadStage.NONE,
+      stage: eGameStage.NONE,
       name: "",
       pathname: "",
       description: "",
@@ -75,7 +92,7 @@ export default function () {
   }
 
   return {
-    projectById,
+    editProject,
     uploadProject,
     setProjectInfo,
     resetProjectInfo,
@@ -86,8 +103,10 @@ export default function () {
     setStepOne,
     setStepTwo,
     setStepThree,
-    setStepOneById,
-    setStepTwoById,
-    setStepThreeById
+    setStepOneOnEdit,
+    setStepTwoOnEdit,
+    setStepThreeOnEdit,
+    setStageOnEdit,
+    getProjectInfo
   }
 }

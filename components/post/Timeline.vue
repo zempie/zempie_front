@@ -252,7 +252,7 @@
 import _ from 'lodash'
 import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElSelect, ElOption, ElMessage, ElDialog } from "element-plus";
 
-const LIMIT_SIZE = 20
+const LIMIT_SIZE = 3
 
 const route = useRoute();
 const config = useRuntimeConfig();
@@ -326,7 +326,6 @@ function handleIntersection(target) {
       fetch()
     }
   }
-
 }
 
 async function fetch() {
@@ -338,10 +337,25 @@ async function fetch() {
   switch (props.type) {
     case 'community':
 
-      const { data, error, refresh } = await post.getCommunityPosts(channelId.value, payload)
+      const { data, error, refresh } = await useFetch<{ result: [], totalCount: number }>(`/timeline/${channelId.value}/post?_=${Date.now()}&limit=${limit.value}&offset=${offset.value}`,
+        getComFetchOptions('get', true))
+      // post.getCommunityPosts(channelId.value, payload)
       if (data.value) {
         const { result, totalCount } = data.value
-        feeds.value = result;
+        if (result.length > LIMIT_SIZE) {
+          isAddData.value = true
+        }
+        if (isAddData.value) {
+          if (result.length > 0) {
+            feeds.value = [...feeds.value, ...result]
+          }
+
+        }
+        else {
+          feeds.value = result;
+          isAddData.value = true
+        }
+
       }
 
       break;

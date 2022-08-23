@@ -1,12 +1,12 @@
 <template>
   <dl class="studio-upload-area">
-    <ProjectSelectStage v-if="uploadStage === eUploadStage.NONE" />
+    <ProjectSelectStage v-if="uploadStage === eGameStage.NONE" />
     <ProjectAddGameInfo v-else />
   </dl>
 </template>
 
 <script setup lang="ts">
-import { eUploadStage } from "~~/types"
+import { eGameStage } from "~~/types"
 
 const { uploadProject } = useProject();
 const readyToUpload = ref(false)

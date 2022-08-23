@@ -1,10 +1,9 @@
 <template>
-  <!-- 2단영역 -->
   <dl class="studio-upload-area">
 
     <!-- 게임단계 -->
-    <ProjectEditSelectStage v-if="projectById.step === 2" />
-    <ProjectEditGameInfo v-else />
+    <ProjectEditSelectStage v-if="editProject.step === 1" />
+    <ProjectEditGameInfo v-else-if="editProject.step === 2" />
 
     <!-- <transition name="component-fade" mode="out-in">
                 <SelectStage v-show="stepOne()"
@@ -29,16 +28,14 @@
     <!--                <router-view></router-view>-->
     <!-- 게임단계 끝 -->
   </dl>
-  <!-- 2단영역 끝 -->
 </template>
 
 <script setup lang="ts">
-import { eUploadStage } from "~~/types"
 
-const { projectById, resetProjectInfo } = useProject();
+const { editProject, resetProjectInfo } = useProject();
 
 
-const stage = ref(computed(() => useProject().projectById.value.info?.stage))
+const stage = ref(computed(() => useProject().editProject.value.info?.stage))
 
 watch(
   () => stage.value,

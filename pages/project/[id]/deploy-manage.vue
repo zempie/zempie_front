@@ -1,26 +1,27 @@
 <template>
-  <!-- <div>
+  <NuxtLayout name="project-manage">
     <div class="info-input">
       <div class="ii-title-one">
         {{ $t('deployManage.deployingVersion') }}
       </div>
-      {{ version }}
-      <div v-if="version" class="ii-form">
+      <div v-if="deployVersion" class="ii-form">
         <ul>
           <li>{{ $t('deployManage.show.version') }}</li>
-          <li><input readonly v-model="number" type="text" name="" title="" placeholder="" class="w100p" />
+          <li><input readonly v-model="deployVersion.number" type="text" name="" title="" placeholder=""
+              class="w100p" />
           </li>
         </ul>
         <ul>
           <li>{{ $t('deployManage.show.detailed.version') }}</li>
-          <li><input readonly v-model="version" type="text" name="" title="" placeholder="" class="w100p" />
+          <li><input readonly v-model="deployVersion.version" type="text" name="" title="" placeholder=""
+              class="w100p" />
           </li>
         </ul>
         <ol>
           <li>{{ $t('deployManage.undeploy.title') }}</li>
           <li>{{ $t('deployManage.undeploy.info') }}</li>
           <li>
-            <a @click="$modal.show('undeployConfirm')" class="btn-gray w100p">{{ $t('deployManage.undeploy.title')
+            <a class="btn-gray w100p" @click="showUndeployModal = true">{{ $t('deployManage.undeploy.title')
             }}</a>
           </li>
         </ol>
@@ -30,14 +31,13 @@
           <li style="width: 100%;"> {{ $t('deployManage.noDeployVersion') }}</li>
         </ul>
       </div>
-
       <div class="ii-title-one-line">
         {{ $t('deployManage.changeDeploy.version.title') }}
       </div>
       <div class="ii-form">
         <ul>
           <li> {{ $t('deployManage.changeDeploy.version.select') }}</li>
-          <li v-if="options[0]">
+          <li v-if="options.length">
             <select name="" title="" class="w100p" v-model="selectVersion">
               <option v-for="option in options" :value="option">{{ option }}</option>
             </select>
@@ -61,267 +61,206 @@
         </ol>
 
       </div>
+      <ClientOnly>
+        <el-dialog v-model="showUndeployModal" append-to-body custom-class="modal-area-type">
+          <div class="modal-alert">
+            <dl class="ma-header">
+              <dt>{{ $t('information') }}</dt>
+              <dd>
+                <button @click="showUndeployModal = false"><i class="uil uil-times"></i></button>
+              </dd>
+            </dl>
+            <div class="ma-content">
+              <h2>{{ $t('deployManage.undeploy.modal') }}</h2>
+              <div>
+                <button class="btn-default w48p" @click="undeploy">{{ $t('undeploy') }}</button>
+                <button class="btn-gray w48p" @click="showUndeployModal = false">{{ $t('no') }}</button>
+              </div>
+            </div>
+          </div>
+        </el-dialog>
+        <el-dialog v-model="showSelectStageModal" append-to-body custom-class="modal-area-type">
+          <div class="modal-alert">
+            <dl class="ma-header">
+              <dt>{{ $t('information') }}</dt>
+              <dd>
+                <button @click="showSelectStageModal = false"><i class="uil uil-times"></i></button>
+              </dd>
+            </dl>
+            <div class="ma-content">
+              <h2>{{ $t('deployManage.changeStage.modal.info1') }}<br />
+                {{ $t('deployManage.changeStage.modal.info2') }}
+              </h2>
+              <div class="stage-select-container">
+                <h2 style="margin-right: 10px">{{ $t('deployManage.changeStage.modal.title') }}</h2>
+                <select name="" title="" class="stage-select-box" v-model="selectedStage">
+                  <option v-for="option in stageOptions" :value="option.stage">{{ option.name }}</option>
+                </select>
+
+              </div>
+              <div style="margin-bottom: 10px">
+                <button class="btn-default w48p" @click="changeStage">{{ $t('change') }}</button>
+                <button class="btn-gray w48p" @click="showSelectStageModal = false">{{
+                    $t('cancel')
+                }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </el-dialog>
+      </ClientOnly>
     </div>
+  </NuxtLayout>
 
-    <modal :clickToClose="false" class="modal-area-type" name="selectStageModal" width="90%" height="auto"
-      :maxWidth="380" :adaptive="true" :scrollable="true">
-      <div class="modal-alert">
-        <dl class="ma-header">
-          <dt>{{ $t('information') }}</dt>
-          <dd>
-            <button @click="$modal.hide('selectStageModal')"><i class="uil uil-times"></i></button>
-          </dd>
-        </dl>
-        <div class="ma-content">
-          <h2>{{ $t('deployManage.changeStage.modal.info1') }}<br />
-            {{ $t('deployManage.changeStage.modal.info2') }}
-          </h2>
-          <div class="stage-select-container">
-            <h2 style="margin-right: 10px">{{ $t('deployManage.changeStage.modal.title') }}</h2>
-            <v-select class="stage-select-box" :reduce="name => name.stage" label="name" v-model="selectedStage"
-              style="z-index: 999; margin-top:0px;" :options="stageOptions" placeholder="단계 선택">
-              <template #open-indicator="{ attributes }">
-                <span v-bind="attributes"><i class="uil uil-angle-down" style="font-size:20px;"></i></span>
-              </template>
-            </v-select>
-          </div>
-          <div style="margin-bottom: 10px">
-            <button class="btn-default w48p" @click="changeStage()">{{ $t('change') }}</button>
-            <button class="btn-gray w48p" @click="$modal.hide('selectStageModal')">{{
-                $t('cancel')
-            }}
-            </button>
-          </div>
-        </div>
-      </div>
-    </modal>
-
-
-    <modal :clickToClose="false" class="modal-area-type" name="undeployConfirm" width="90%" height="auto"
-      :maxWidth="380" :adaptive="true" :scrollable="true">
-      <div class="modal-alert">
-        <dl class="ma-header">
-          <dt>{{ $t('information') }}</dt>
-          <dd>
-            <button @click="$modal.hide('undeployConfirm')"><i class="uil uil-times"></i></button>
-          </dd>
-        </dl>
-        <div class="ma-content">
-          <h2>{{ $t('deployManage.undeploy.modal') }}</h2>
-          <div>
-            <button class="btn-default w48p" @click="undeploy()">{{ $t('yes') }}</button>
-            <button class="btn-gray w48p" @click="$modal.hide('undeployConfirm')">{{ $t('no') }}</button>
-          </div>
-        </div>
-      </div>
-    </modal>
-  </div> -->
 </template>
 
 <script setup lang="ts">
-// import { Component, Prop, Vue } from "vue-property-decorator";
-// import * as _ from "lodash";
-// import Toast from "@/script/message";
-// import { eGameStage } from "@/common/enumData";
-// import store from "@/store";
+import { ElMessage, ElDialog, ElLoading } from 'element-plus'
+import { eGameStage, IProject, IVersion } from '~~/types';
+import { useI18n } from 'vue-i18n';
 
 
-// @Component({
-//   components: {},
-// })
-// export default class DeployManage extends Vue {
-//   toast = new Toast();
-
-//   projectId: any = this.$route.params.id;
-//   version: string = "";
-//   number: number = 0;
-//   selectVersion: string = '';
-//   options: string[] = [];
-//   deployVersion: any = null;
-//   wait: boolean = false;
-
-//   stage: number = 0;
-
-//   stageOptions = [{ name: 'Early Access', stage: eGameStage.Early }, { name: 'Complete', stage: eGameStage.Complete }];
-//   selectedStage = eGameStage.Early;
-
-//   // beforeRouteEnter(to, from, next){
-//   //     if(eGameStage.Dev === (from.params.id && store.getters.projects[from.params.id].stage)){
-//   //
-//   //         alert('배포 관리 할 게임이 없습니다. 개발 단계를 얼리억세스 이상으로 설정하여, 게임 파일을 업로드해주세요.')
-//   //     }else if(!from.params.id){
-//   //         next('/projectList')
-//   //     }
-//   //     else{
-//   //         next();
-//   //     }
-//   // }
-
-//   async mounted() {
-//     this.projectId = this.$route.params.id;
-//     await this.$store.dispatch("loginState");
-//     await this.loadVersions();
+const { t, locale } = useI18n()
 
 
-//   }
+useHead({
+  title: 'Zempie | Project version ',
+  meta: [{
+    name: 'description',
+    content: 'project list'
+  }]
+})
 
-//   loadVersions() {
-//     this.$api.getProject(this.$route.params.id)
-//       .then((res) => {
-//         // this.version = res.projectVersions;
-//         this.$store.commit('project', res)
+definePageMeta({
+  title: '배포 관리',
+  name: 'deployManage'
+})
 
-//       })
-//       .finally(() => {
-//         const project = this.$store.getters.project(this.projectId);
-//         const versions = this.$store.getters.versionList(this.projectId);
+const route = useRoute()
 
-
-//         if (project.deploy_version_id) {
-//           const deployVersion = _.find(
-//             versions,
-//             (v) => v.id === project.deploy_version_id
-//           );
-
-//           this.version = deployVersion.version;
-//           this.number = deployVersion.number;
-//           this.deployVersion = deployVersion;
-
-//         }
-
-//         const passedList = versions.filter((version) => {
-//           return version.state === "passed";
-//         });
-
-//         this.options = passedList.map((version) => version.version);
-
-//         this.selectVersion = this.options[0]
-//       })
-//   }
-
-//   deploy() {
-//     if (!this.selectVersion) {
-//       return;
-//     }
-
-//     const versions = this.$store.getters.versions(this.projectId);
-//     const project = this.$store.getters.project(this.projectId);
-
-//     if (this.hasDeployFile(versions)) {
-//       const version = _.find(
-//         versions,
-//         (v) => v.version === this.selectVersion
-//       );
-//       const deploy_version_id = version.id;
+const options = ref([]);
+const selectVersion = ref('')
+const showUndeployModal = ref(false)
+const deployVersion = ref<IVersion>()
+const showSelectStageModal = ref(false)
+const selectedStage = ref(eGameStage.EARLY)
+const stageOptions = [{ name: 'Early Access', stage: eGameStage.EARLY }, { name: 'Complete', stage: eGameStage.COMPLETE }];
 
 
-//       this.$api.updateProject({
-//         id: this.projectId as number,
-//         deploy_version_id,
-//       })
-//         .then((res) => {
-//           version.state = "deploy";
-//           if (this.deployVersion) {
-//             const preVersion = _.find(
-//               versions,
-//               (v) => v.number === this.deployVersion.number
-//             );
-//             preVersion.state = "passed";
-//             const project = this.$store.getters.project(this.projectId);
-//             project.deploy_version_id = version.id;
-//             console.log('project', project)
-//             console.log('version', version)
-//             if (project.update_version_id === version.id) {
-//               project.update_version_id = null;
-//             }
-//           }
+const projectId = computed(() => route.params.id as string)
 
-//           this.toast.clear();
-//           this.toast.successToast(`${this.selectVersion} ${this.$t('deployed.version')}`)
-//           this.$router.replace(`/${this.$i18n.locale}/versionManage/${this.projectId}`);
-//         })
-//         .catch(() => {
+const emit = defineEmits(['refresh'])
 
-//         })
-//     }
-//     else {
-//       if (project.stage === eGameStage.Dev) {
-//         this.$modal.show('selectStageModal')
-//       }
-//     }
-
-//   }
+const { editProject, getProjectInfo } = useProject()
 
 
-//   undeploy() {
 
-//     this.$api.updateProject({
-//       id: this.projectId,
-//       deploy_version_id: "0",
-//       stage: (eGameStage.Dev as any)
-//     })
-//       .then((res) => {
-//         if (this.deployVersion) {
-//           const versions = this.$store.getters.versions(this.projectId);
-//           const preVersion = _.find(
-//             versions,
-//             (v) => v.number === this.deployVersion.number
-//           );
-//           preVersion.state = "passed";
-//           const project = this.$store.getters.project(this.projectId);
-//           project.deploy_version_id = null;
-//         }
+watch(
+  () => editProject.value.info,
+  (newVal) => {
 
-//         this.toast.clear();
-//         this.toast.successToast(`${this.$t('deployVersion.version')}`)
-
-//         this.$router.replace(`/${this.$i18n.locale}/versionManage/${this.projectId}`);
-//       })
-//       .catch((err) => {
-//         console.error("error", err);
-//       })
+    setVersionInfo(newVal)
 
 
-//   }
+  }
+)
 
-//   changeStage() {
-//     const versions = this.$store.getters.versions(this.projectId);
-//     const version = _.find(
-//       versions,
-//       (v) => v.version === this.selectVersion
-//     );
-//     const deploy_version_id = version.id;
+onMounted(() => {
+  if (editProject.value.info.id) {
+    setVersionInfo(editProject.value.info)
+  }
+})
 
-//     const option: any = {
-//       id: this.projectId,
-//       stage: this.selectedStage,
-//       deploy_version_id
-//     };
+function setVersionInfo(info: IProject) {
 
-//     this.$api.updateProject(option)
-//       .then((res) => {
-//         this.$store.dispatch('project', this.projectId)
-//         this.toast.successToast(`${this.$t('deployManage.update.done')}`); // "업데이트 되었습니다."
-//         this.$router.push(`/${this.$i18n.locale}/versionManage/${this.projectId}`)
-//       })
-//       .catch((err) => {
+  deployVersion.value = info.projectVersions.find((version: IVersion) => { return version.id === info.deploy_version_id })
 
-//       })
-//       .finally(() => {
-//         this.$modal.hide('selectStageModal')
-//       })
-//   }
+  const passedList = info.projectVersions.filter((version: IVersion) => {
+    return version.state === "passed";
+  });
 
-//   hasDeployFile(versions: any) {
-//     const hasDeployFile = _.filter(versions, (version) => {
-//       return version.state === 'deploy';
-//     })
+  options.value = passedList.map((version: IVersion) => version.version);
+  if (options.value.length)
+    selectVersion.value = options.value[0]
+}
 
-//     return hasDeployFile.length === 0 ? false : true;
+async function undeploy() {
 
-//   }
+  const formData = new FormData();
 
-// }
+  formData.append('id', String(projectId.value));
+  formData.append('deploy_version_id', '0')
+  formData.append('stage', String(eGameStage.DEV))
+
+  const { data, refresh, error } = await useFetch(`/studio/project/${projectId.value}`, getStudioFetchOptions('post', true, formData))
+
+  if (!error.value) {
+    getProjectInfo(projectId.value)
+  }
+  showUndeployModal.value = false;
+}
+
+
+async function deploy() {
+
+  if (editProject.value.info.stage === eGameStage.DEV) {
+    showSelectStageModal.value = true;
+    return
+
+  }
+
+  const deployVersion: IVersion = useProject().editProject.value.info.projectVersions.find((version: IVersion) => {
+    return version.version = selectVersion.value
+  })
+
+
+  const formData = new FormData();
+
+  formData.append('id', String(projectId.value));
+  formData.append('deploy_version_id', String(deployVersion.id))
+
+
+  const { data, refresh, error } = await useFetch(`/studio/project/${projectId.value}`, getStudioFetchOptions('post', true, formData))
+
+  if (!error.value) {
+    getProjectInfo(projectId.value)
+
+    ElMessage({
+      message: t('해당버전이 배포되었습니다.'),
+      type: 'success'
+    })
+
+  }
+
+}
+
+async function changeStage() {
+  const deployVersion: IVersion = useProject().editProject.value.info.projectVersions.find((version: IVersion) => {
+    return version.version = selectVersion.value
+  })
+
+  const formData = new FormData();
+
+  formData.append('id', String(projectId.value));
+  formData.append('stage', String(selectedStage.value))
+  formData.append('deploy_version_id', String(deployVersion.id))
+
+
+
+  const { data, refresh, error } = await useFetch(`/studio/project/${projectId.value}`, getStudioFetchOptions('post', true, formData))
+
+  if (!error.value) {
+    getProjectInfo(projectId.value)
+
+    ElMessage({
+      message: t('해당버전이 배포되었습니다.'),
+      type: 'success'
+    })
+    showSelectStageModal.value = false;
+
+  }
+
+}
 </script>
 
 <style lang="scss" scoped>

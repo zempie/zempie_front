@@ -1,12 +1,13 @@
 <template>
     <div class="lnb">
         <ul>
-            <NuxtLink :to="localePath('/project/dashboard')">
+            <!-- TODO: ga연결 후 주석 제거 -->
+            <!-- <NuxtLink :to="localePath('/project/dashboard')">
                 <li>
                     <i class="uil uil-chart-pie-alt"></i>
                     <span>{{ $t('dashboard') }}</span>
                 </li>
-            </NuxtLink>
+            </NuxtLink> -->
             <NuxtLink :to="localePath('/project/list')">
                 <li>
 

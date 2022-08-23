@@ -18,7 +18,7 @@
   </dt>
 </template>
 <script setup lang="ts">
-import { eUploadStage } from "~~/types"
+import { eGameStage } from "~~/types"
 
 const { uploadProject } = useProject();
 

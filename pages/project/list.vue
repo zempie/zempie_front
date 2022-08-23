@@ -96,7 +96,7 @@
               </li>
               <li>
                 <span> {{ $t("game.status") }}: </span> &nbsp;&nbsp;
-                {{ eUploadStage[project.stage] }}
+                {{ eGameStage[project.stage] }}
 
               </li>
               <li>
@@ -144,7 +144,7 @@ import ClipLoader from 'vue-spinner/src/ClipLoader.vue';
 import _ from 'lodash';
 import dayjs from "dayjs";
 import { useLocalePath } from "vue-i18n-routing";
-import { IProject, eUploadStage } from "~~/types"
+import { IProject, eGameStage } from "~~/types"
 
 const localePath = useLocalePath();
 const $router = useRouter();
@@ -167,13 +167,13 @@ const totalPage = computed(() => Math.ceil(totalCount.value / pageSize.value))
 
 const { data, pending } = await useFetch('/studio/project', getStudioFetchOptions('get', true))
 
-// useHead({
-//   title: title.value,
-//   meta: [{
-//     name: 'description',
-//     content: description.value
-//   }]
-// })
+useHead({
+  title: 'Zempie | Project list',
+  meta: [{
+    name: 'description',
+    content: 'project list'
+  }]
+})
 
 
 onMounted(async () => {
@@ -223,6 +223,7 @@ function pagingByClient() {
 
 function goToProjectPage(id: number) {
   setProjectInfo(id)
+  useProject().setStepTwoOnEdit()
   $router.push(localePath(`/project/${id}`))
 }
 

@@ -1,42 +1,36 @@
 <template>
-  <div class="content" ref="el">
-    <ClientOnly>
-      <div class="visual-title">
-        <h2><span>Games</span></h2>
+  <div class="content">
+    <div class="visual-title">
+      <h2><span>Games</span></h2>
+    </div>
+    <div class="tab-search-swiper">
 
-      </div>
-      <!-- <div class="jam-visual-title"></div> -->
-      <div class="tab-search-swiper">
-
-        <div class="swiper-area uppercase">
-          <div class="swiper-slide">
-            <a @click="clickCategory(0);" :class="category === 0 ? 'active' : ''">
-              game
-              <!-- {{ $t('projectList.banner.text') }} -->
-            </a>
-          </div>
-          <div class="swiper-slide">
-            <a @click="clickCategory(3);" :class="category === 3 ? 'active' : ''">
-              zem
-              <!-- {{ $t('gameList.jam') }} -->
-            </a>
-          </div>
+      <div class="swiper-area uppercase">
+        <div class="swiper-slide">
+          <a @click="clickCategory(0);" :class="category === 0 ? 'active' : ''">
+            game
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a @click="clickCategory(3);" :class="category === 3 ? 'active' : ''">
+            zem
+          </a>
         </div>
       </div>
-
-      <!-- TODO: 게임 갯수 표현: 게임 100개 이상일때 주석 제거 -->
-      <!-- <dl class="area-title">
+    </div>
+    <!-- TODO: 게임 갯수 표현: 게임 100개 이상일때 주석 제거 -->
+    <!-- <dl class="area-title">
       <dt>Games <span>{{ games.length }}</span></dt>
     </dl> -->
-      <ul>
-        <div class="card-game">
-          <TransitionGroup name="fade">
-            <GameCardSk v-if="isPending" v-for="sk in 16" :key="sk" />
-            <GameCard v-else v-for="game in games" :gameInfo="game" :key="game.id" />
-          </TransitionGroup>
-        </div>
-      </ul>
-    </ClientOnly>
+    <ul class="card-game">
+      <ClientOnly>
+        <TransitionGroup name="fade">
+          <GameCardSk v-if="isPending" v-for="game in 16" :key="game" />
+          <GameCard v-else v-for="(game, index) in games" :gameInfo="game" :key="index" />
+        </TransitionGroup>
+      </ClientOnly>
+    </ul>
+    <div ref="triggerDiv"></div>
 
   </div>
 </template>
@@ -52,63 +46,81 @@ const offset = ref(0)
 // sort: string = 'c';
 // dir: string = 'asc'
 
+const triggerDiv = ref()
+const observer = ref(null)
 const isAddData = ref(false);
-const games = ref([])
+
+const games = ref<any[]>([])
 const isPending = ref(true)
 
-
-
-
-await fetch()
-
-onMounted(() => {
-  scroll()
+onMounted(async () => {
+  observer.value = new IntersectionObserver((entries) => {
+    handleIntersection(entries[0])
+  }, { root: null, threshold: 1 })
+  observer.value.observe(triggerDiv.value)
+  await fetch()
 })
 
 
-function scroll() {
-  window.onscroll = () => {
-    if (document.documentElement.scrollTop + window.innerHeight >= document.documentElement.scrollHeight) {
-      if (isAddData.value) {
-        offset.value += limit.value;
-        fetch()
-      }
+
+async function handleIntersection(target) {
+  if (target.isIntersecting) {
+    if (isAddData.value) {
+      offset.value += limit.value;
+      await fetch()
+    } else {
+      await fetch()
     }
   }
 }
+
+
 
 async function fetch() {
   const payload = {
     limit: limit.value,
     offset: offset.value,
     category: category.value,
-
-
   }
 
-  const { data } = await game.list(payload)
-  const { result } = data.value
+  const { data, pending, refresh } = await useFetch<{ result: { games: [] } }>(`/games?_=${Date.now()}&limit=${limit.value}&offset=${offset.value}&category=${category.value}`, getZempieFetchOptions('get', false))
 
+  // await game.list(payload)
 
-  if (isAddData.value) {
-    if (result.games.length > 0) {
-      games.value = [...games.value, ...result.games]
+  if (data.value) {
+    const { games: gameList } = data.value.result
+
+    if (isAddData.value) {
+      if (gameList.length > 0) {
+        games.value = [...games.value, ...gameList]
+      }
+
     }
     else {
-      isAddData.value = false
-    }
-  }
-  else {
-    games.value = result.games;
-    if (result.games.length < LIMIT_SIZE) {
-      isAddData.value = false;
-    } else {
+      games.value = gameList;
       isAddData.value = true
     }
+    // if (isAddData.value) {
+    //   if (result.games.length > 0) {
+    //     games.value = [...games.value, ...result.games]
+    //   }
+    //   else {
+    //     isAddData.value = false
+    //   }
+    // }
+    // else {
+    //   games.value = result.games;
+    //   if (result.games.length < LIMIT_SIZE) {
+    //     isAddData.value = false;
+    //   } else {
+    //     isAddData.value = true
+    //   }
+
+    // }
 
   }
-  isPending.value = false
 }
+isPending.value = false
 // beforeDestroy() {
 //     this.$store.dispatch('resetResearchData')
 //     this.initData();
@@ -157,34 +169,6 @@ function initData() {
   isAddData.value = false
   games.value = []
 }
-
-
-    // initData() {
-    //     window.addEventListener("scroll", this.scrollCheck);
-    //     this.isAddData = false
-    //     this.hasData = false
-    //     this.limit = 20;
-    //     this.offset = 0;
-    //     this.games = [];
-    //     this.sort = 'c';
-    //     this.dir = 'asc';
-    // }
-
-    // scrollCheck() {
-    //  if((this.$refs.div as any).offsetTop <= document.documentElement.scrollTop + document.documentElement.offsetHeight) {
-    //      this.offset += this.limit;
-    //      this.fetch();
-    //  }
-    //   // console.log( , )
-    //     // if (scrollDo
-    //     // ne(document.documentElement)) {
-    //     //
-    //     //     this.offset += this.limit;
-    //     //     this.fetch();
-    //     // }
-    // }
-
-
 </script>
 
 <style scoped>

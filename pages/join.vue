@@ -150,7 +150,7 @@ import { emailRegex, passwordRegex } from '~/scripts/utils'
 import { useI18n } from 'vue-i18n';
 import { createUserWithEmailAndPassword, type UserCredential } from 'firebase/auth'
 import { useLocalePath } from "vue-i18n-routing";
-import { resolve } from 'path';
+
 
 
 const { $firebaseAuth, $cookies } = useNuxtApp()
@@ -315,7 +315,8 @@ async function register() {
 
     } else if (message.includes('auth/weak-password')) {
 
-    } else {
+    } else if (message.includes('EMAIL_EXISTS')) {
+      ElMessage.error(t('joined.email'))
 
     }
 

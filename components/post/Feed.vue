@@ -87,11 +87,14 @@
     </div> -->
     <!-- /더보기 -->
 
-    <template v-if="feed.attatchment_files && feed.post_type === 'SNS'">
-      <img v-if="feed.attatchment_files.length === 1" style="height: 88%;margin: 0 auto; display: flex;"
-        :src="feed.attatchment_files[0].url" class="feed-img mt-3" />
+    <template v-if="attatchment_files && feed.post_type === 'SNS'">
+
+      <img v-if="attatchment_files.length === 1" style="height: 88%;margin: 0 auto; display: flex;"
+        :src="attatchment_files[0].url" class="feed-img mt-3" />
+
+      
       <swiper v-else class="swiper" :modules="[Pagination]" style="height: 350px;" :pagination="{ clickable: true }">
-        <swiper-slide v-for="file in feed.attatchment_files">
+        <swiper-slide v-for="file in attatchment_files">
           <img v-if="file.type === 'image'" style="height: 88%;margin: 0 auto;display: flex;" :src="file.url"
             class="feed-img mt-3" />
         </swiper-slide>
@@ -151,6 +154,8 @@
 </template>
 
 <script setup lang="ts">
+import { PropType } from 'vue';
+import { IFeed } from '~~/types';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElSelect, ElOption, ElMessage, ElDialog } from "element-plus";
@@ -180,9 +185,12 @@ const isOpenedComments = ref(false)
 
 
 const user = computed(() => useUser().user.value.info)
+const attatchment_files = computed(() => {
+  return Array.isArray(props.feed.attatchment_files) ? props.feed.attatchment_files : JSON.parse(props.feed.attatchment_files as string)
+})
 
 const props = defineProps({
-  feed: Object
+  feed: Object as PropType<IFeed>
 })
 
 const emit = defineEmits(['fetch'])

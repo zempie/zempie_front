@@ -1,7 +1,7 @@
 <template>
   <ProjectStepMenu>
     <template #uploadGameBtn>
-      <li :class="[uploadStage === eUploadStage.DEV ? 'active' : '', 'publish-btn']">
+      <li :class="[uploadStage === eGameStage.DEV ? 'active' : '', 'publish-btn']">
         <h4>{{ $t('publishing') }}</h4>
       </li>
     </template>
@@ -9,7 +9,7 @@
   <dd>
 
     <ul class="studio-game-step">
-      <li @click="selectStage(eUploadStage.DEV)">
+      <li @click="selectStage(eGameStage.DEV)">
         <dl>
           <dt><img src="/images/studio_icon01.png" :alt="$t('devLog')" title="" /></dt>
           <dd>
@@ -19,7 +19,7 @@
           </dd>
         </dl>
       </li>
-      <li @click="selectStage(eUploadStage.EARLY)">
+      <li @click="selectStage(eGameStage.EARLY)">
         <dl>
           <dt><img src="/images/studio_icon02.png" :alt="$t('earlyAccess')" title="" /></dt>
           <dd>
@@ -28,7 +28,7 @@
           </dd>
         </dl>
       </li>
-      <li @click="selectStage(eUploadStage.COMPLETE)">
+      <li @click="selectStage(eGameStage.COMPLETE)">
         <dl>
           <dt><img src="/images/studio_icon03.png" :alt="$t('complete')" title="" /></dt>
           <dd>
@@ -81,7 +81,7 @@
 </template>
 
 <script setup lang="ts">
-import { eUploadStage } from '~~/types/index';
+import { eGameStage } from '~~/types/index';
 const { uploadProject } = useProject();
 
 const uploadStage = computed(() => uploadProject.value.form.stage)

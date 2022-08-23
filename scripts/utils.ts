@@ -77,7 +77,7 @@ export const execCommandCopy = (text: string) => {
 //   return str.substr( 0, count );
 // }
 
-export const dateFormat = (sec: number) => {
+export const dateFormat = (sec: number | string) => {
 
     if (dayjs().diff(dayjs(sec), 'm') < 1) {
         return dayjs().diff(dayjs(sec), 's') + '초 전'

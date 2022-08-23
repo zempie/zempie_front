@@ -1,5 +1,5 @@
 <template>
-    <dd>
+    <div>
         <div class="sui-input">
             <div class="suii-title">{{ $t('addGameFile.title') }}</div>
             <dl class="suii-content">
@@ -51,7 +51,7 @@
                         </dd>
                     </dl>
 
-                    <dl class="suii-content" v-if="(uploadProject.form.stage !== eUploadStage.DEV)">
+                    <dl class="suii-content" v-if="(uploadProject.form.stage !== eGameStage.DEV)">
                         <dt>{{ $t('addGameFile.selectMode') }}</dt>
                         <dd>
                             <ul>
@@ -99,14 +99,14 @@
         </ul>
 
 
-    </dd>
+    </div>
 </template>
 
 <script setup lang="ts">
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue';
 import { ElMessage, ElLoading } from "element-plus";
 import ZipUtil from "~~/scripts/zipUtil";
-import { eUploadStage } from "~~/types"
+import { eGameStage } from "~~/types"
 import { useI18n } from "vue-i18n";
 import { useLocalePath } from 'vue-i18n-routing';
 

@@ -18,7 +18,7 @@ export interface IUser {
 
 
 
-export enum eUploadStage {
+export enum eGameStage {
   NONE = -1,
   DEV = 1,
   EARLY,
@@ -52,6 +52,7 @@ export interface IGame {
   user_id: number,
   version: string,
   user: IUser,
+  game_jam: any
 }
 
 
@@ -77,6 +78,24 @@ export interface IProject {
   updated_at: string,
   userId: number,
   user_id: number,
+}
+
+export interface IVersion {
+  autoDeploy: boolean,
+  created_at: string,
+  deleted_at: null
+  description: null
+  game_id: number,
+  id: number,
+  number: number,
+  projectId: number,
+  project_id: number,
+  reason: null
+  size: number,
+  state: string,
+  updated_at: string,
+  url: string,
+  version: string,
 }
 
 export interface ICommunityPayload {
@@ -114,6 +133,64 @@ export interface IUserChannel {
   },
   communities: ICommunity[]
   games: IGame[]
+}
+
+export interface IFeed {
+  liked: boolean,
+  is_pinned: boolean,
+  is_retweet: boolean,
+  id: string,
+  created_at: string,
+  updated_at: string,
+  deleted_at: string,
+  user_id: number,
+  post_type: string,
+  funtion_type: string,
+  attatchment_files: JSON | string,
+  visibility: string,
+  content: string,
+  hashtags: [],
+  user_tag: string,
+  like_cnt: number,
+  comment_cnt: number,
+  read_cnt: number,
+  shared_cnt: number,
+  scheduled_for: string,
+  status: string,
+  retweet_id: number,
+  user: {
+    follow_you: boolean,
+    is_following: boolean,
+    block_you: boolean,
+    is_blocked: boolean,
+    mutes_you: boolean,
+    is_muted: boolean,
+    id: number,
+    uid: string,
+    name: string,
+    channel_id: string,
+    picture: string,
+    email: string,
+    is_developer: number,
+    last_log_in: string,
+    created_at: string,
+    updated_at: string,
+    deleted_at: string,
+    followers_cnt: number,
+    followings_cnt: number
+  },
+  posted_at: {
+    created_at: string,
+    updated_at: string,
+    deleted_at: string,
+    community: [],
+    portfolio_ids: number,
+    id: string,
+    posts_id: string,
+    channel_id: string,
+    game_id: number
+  }
+
 }
 
 

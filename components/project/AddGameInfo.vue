@@ -2,7 +2,7 @@
   <ProjectStepMenu>
     <template #uploadGameBtn>
       <li class="publish-btn">
-        <h4 :class="uploadStage === eUploadStage.DEV ? 'active' : ''" @click="uploadGame">{{ $t('publishing') }}</h4>
+        <h4 :class="uploadStage === eGameStage.DEV ? 'active' : ''" @click="uploadGame">{{ $t('publishing') }}</h4>
       </li>
     </template>
   </ProjectStepMenu>
@@ -207,7 +207,7 @@
             </a>
           </li>
           <li>
-            <a v-if="uploadProject.form.stage === eUploadStage.DEV" @click="uploadGame" class="btn-default w150">
+            <a v-if="uploadProject.form.stage === eGameStage.DEV" @click="uploadGame" class="btn-default w150">
               {{ $t("upload") }}
             </a>
             <a v-else @click="save" class="btn-default w150">
@@ -270,7 +270,7 @@
 <script setup lang="ts">
 import { ElMessage, ElMessageBox, ElLoading } from 'element-plus'
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue';
-import { eUploadStage } from "~~/types"
+import { eGameStage } from "~~/types"
 import useVuelidate from "@vuelidate/core";
 import { required, helpers, maxLength } from "@vuelidate/validators";
 import { useI18n } from "vue-i18n";
@@ -396,7 +396,7 @@ onBeforeRouteLeave((to, from, next) => {
 
 onMounted(() => {
 
-  if (useProject().uploadProject.value.form.stage !== eUploadStage.NONE) {
+  if (useProject().uploadProject.value.form.stage !== eGameStage.NONE) {
     const { stage, name, pathname, description, hashtags, project_picture, project_picture2 } = useProject().uploadProject.value.form
     form.description = description
     hashtagsArr.value = hashtags ? hashtags.split(',') : []
@@ -538,9 +538,7 @@ async function save() {
 async function uploadGame() {
   form.hashtags = hashtagsArr.value.toString();
 
-  console.log(form)
-  return
-  if (uploadProject.value.form.stage !== eUploadStage.DEV) return;
+  if (uploadProject.value.form.stage !== eGameStage.DEV) return;
 
   await save()
 

@@ -1,9 +1,9 @@
 <template>
-  <li style="position: relative ">
-    <!-- <img v-if="gameInfo?.game_jam?.is_awarded" src="/images/medal2.png"
-      style="position: absolute; right:10px; top:10px" /> -->
+  <li @mouseenter="enterCard" @mouseleave="leaveCard" style="position: relative">
+    <img v-if="gameInfo?.game_jam?.is_awarded" src="/images/medal2.png"
+      style="position: absolute; right:10px; top:10px" />
 
-    <div @click="moveGamePage"
+    <div @click="moveGamePage" class="thumbnail"
       :style="`background: url( ${thumbnail} ) center center / cover no-repeat; background-size: cover;`"></div>
     <dl>
       <dt>
@@ -37,26 +37,18 @@ const props = defineProps({
   gameInfo: Object as PropType<IGame>
 })
 
+const thumbnail = ref(props.gameInfo?.url_thumb_webp || props.gameInfo?.url_thumb || '/images/default.png')
 
-const thumbnail = computed(() => props.gameInfo?.url_thumb_webp || props.gameInfo?.url_thumb || '/images/default.png')
+function enterCard() {
+  thumbnail.value =
+    props.gameInfo?.url_thumb_gif ||
+    props.gameInfo?.url_thumb_webp ||
+    props.gameInfo?.url_thumb;
+}
 
-
-// thumbnail: any = "";
-
-// mounted() {
-//     this.thumbnail = this.game.url_thumb_webp || this.game.url_thumb;
-// }
-
-// enterCard() {
-//     this.thumbnail =
-//         this.game.url_thumb_gif ||
-//         this.game.url_thumb_webp ||
-//         this.game.url_thumb;
-// }
-
-// leaveCard() {
-//     this.thumbnail = this.game.url_thumb_webp || this.game.url_thumb;
-// }
+function leaveCard() {
+  thumbnail.value = props.gameInfo?.url_thumb_webp || props.gameInfo?.url_thumb;
+}
 
 function playGame() {
   window.open(`/play/${props.gameInfo.pathname}`, "_blank");
