@@ -25,51 +25,49 @@
           </swiper>
         </dd>
       </div>
-      <div class="mp-category">
-        <ClientOnly>
-          <div class="mp-category" :style="attachFiles.img?.length ? '#e9e9e9 1px solid;' : ''">
-            <el-popover name="category" trigger="click">
-              <template #reference>
-                <button class="btn-line-small" style="width:30%;" @click="communityFetch"><i class="uil uil-plus"></i>
-                  <span v-if="postingChannels.length >= 2">Add</span>
-                  <span v-else>Add community</span>
-                </button>
-              </template>
-              <div class="mpc-more-dropdown">
-                <button class="category-group group-btn" @click="openChannel(com)"
-                  :class="isCommunityListOpen ? 'on' : 'off'" v-for="com in communityList">
-                  <p style="margin: 0 auto;"> {{ com.name }}</p>
-                </button>
-                <div :class="['channel-btn', isChannelListOpen ? 'on' : 'off']">
-                  <div class="back-group-btn" @click="backToCommunityList">
-                    <button class="category-group">
-                      <i class="uil uil-arrow-circle-left"></i>
-                      {{ selectedGroup?.name }}
-                    </button>
-                  </div>
-                  <button class="category-group" v-for="channel in channels" @click="selectChannel(channel)">
-                    {{ channel.title }}
+      <ClientOnly>
+        <div class="mp-category"
+          :style="attachFiles.img?.length ? 'border-top: #e9e9e9 1px solid; margin-top:10px; padding-top:10px;' : ''">
+          <el-popover name="category" trigger="click">
+            <template #reference>
+              <button class="btn-line-small" style="width:30%;" @click="communityFetch"><i class="uil uil-plus"></i>
+                <span v-if="postingChannels.length >= 2">Add</span>
+                <span v-else>Add community</span>
+              </button>
+            </template>
+            <div class="mpc-more-dropdown">
+              <button class="category-group group-btn" @click="openChannel(com)"
+                :class="isCommunityListOpen ? 'on' : 'off'" v-for="com in communityList">
+                <p style="margin: 0 auto;"> {{ com.name }}</p>
+              </button>
+              <div :class="['channel-btn', isChannelListOpen ? 'on' : 'off']">
+                <div class="back-group-btn" @click="backToCommunityList">
+                  <button class="category-group">
+                    <i class="uil uil-arrow-circle-left"></i>
+                    {{ selectedGroup?.name }}
                   </button>
                 </div>
+                <button class="category-group" v-for="channel in channels" @click="selectChannel(channel)">
+                  {{ channel.title }}
+                </button>
               </div>
-            </el-popover>
-            <swiper v-if="postingChannels.length" class="swiper-area" style="margin-left: 10px;" :space-between="10">
-              <swiper-slide class="community-slide" v-for="(postedAt, index) in postingChannels" :key="index">
-                <div class="category-select-finish">
-                  <div>
-                    <span>{{ postedAt.group.name }}</span> /
-                    <em>{{ postedAt.channel.title }}</em>
-                  </div>
-                  <div class="cross-btn" @click="deletePostingChannel(index)"><i class="uil uil-times"></i></div>
+            </div>
+          </el-popover>
+          <swiper v-if="postingChannels.length" class="swiper-area" style="margin-left: 10px;" :space-between="10">
+            <swiper-slide class="community-slide" v-for="(postedAt, index) in postingChannels" :key="index">
+              <div class="category-select-finish">
+                <div>
+                  <span>{{ postedAt.group.name }}</span> /
+                  <em>{{ postedAt.channel.title }}</em>
                 </div>
-              </swiper-slide>
-            </swiper>
+                <div class="cross-btn" @click="deletePostingChannel(index)"><i class="uil uil-times"></i></div>
+              </div>
+            </swiper-slide>
+          </swiper>
 
-          </div>
-        </ClientOnly>
-      </div>
+        </div>
+      </ClientOnly>
       <dl class="mp-type">
-
         <dt>
           <div style="width: 30px" @click="uploadImageFile">
             <a><i class="uil uil-image"></i></a>
@@ -89,10 +87,7 @@
               <input type="file" @change="onSelectAudioFile" multiple accept=".mp3" ref="audio" />
             </div>
           </div>
-
-
         </dt>
-
         <dd>
           <button class="btn-default-samll w100 cancel-btn" @click="closeTextEditor">Cancel</button>
           <button v-if="isEdit" class="btn-default-samll w100" @click="onUpdatePost">Update</button>
@@ -142,7 +137,7 @@ const attachFileArr = computed(() => {
   }
 })
 const hasFeedImg = computed(() => {
-  return attachFileArr.value[0].type === 'image'
+  return attachFileArr.value[0]?.type === 'image'
 })
 const activeTab = ref(props.feed?.post_type || "SNS")
 const video = ref<HTMLElement>()
@@ -162,8 +157,9 @@ const channels = ref()
 const postingChannels = ref([])
 
 
+
 const attachFiles = ref({
-  img: hasFeedImg ? attachFileArr.value : [],
+  img: hasFeedImg ? (attachFileArr.value ?? []) : [],
   video: [],
   audio: []
 })
@@ -177,7 +173,6 @@ const form = reactive({
 })
 
 onMounted(() => {
-  console.log('props.type', useCommunity().community.value.info)
   if (props.type === 'community') {
     if (props.channelInfo) {
       postingChannels.value = [{
@@ -285,6 +280,7 @@ function uploadImageFile() {
 }
 
 function onSelectImageFile(event: any) {
+  console.log(attachFiles.value)
   const files = event.target.files;
 
   for (const file of files) {
@@ -296,11 +292,13 @@ function onSelectImageFile(event: any) {
       const result = await fetch(url)
       const blob = await result.blob()
       const blobUrl = URL.createObjectURL(blob)
+
       attachFiles.value.img.push({
         file: file,
         name: file.name,
         url: url
       })
+
       if (activeTab.value === 'BLOG') {
         editor.value.chain().focus(null).setImage({ src: blobUrl }).run();
       }

@@ -282,7 +282,7 @@ const IMAGE_MAX_SIZE = 4
 const localePath = useLocalePath();
 const { t, locale } = useI18n();
 const router = useRouter();
-const { uploadProject, resetStage, setForm } = useProject();
+const { uploadProject, resetStage, setForm, setStepOne } = useProject();
 const isAuthGamePath = ref(true);
 const confirmedGamePath = ref();
 
@@ -366,12 +366,13 @@ const waitGamePath = ref(false);
 
 onBeforeRouteLeave((to, from, next) => {
 
-  if (isUploadDone) {
+  if (isUploadDone.value) {
     next();
     return;
   }
 
   if (form.name || form.pathname || form.description || form.hashtags || form.project_picture || form.project_picture2) {
+
     ElMessageBox.confirm(
       "작성하신 글은 저장되지않고 지워집니다. 이 페이지를 나가시겠습니까?",
       'Warning',
@@ -382,8 +383,8 @@ onBeforeRouteLeave((to, from, next) => {
       }
     )
       .catch(() => {
-        next();
         useProject().resetForm()
+        next();
       })
   } else {
     useProject().resetForm()
@@ -453,6 +454,8 @@ function prevPage() {
   setForm(form)
 
   resetStage()
+  setStepOne()
+
 
 
   //     this.resetLocalStorage();

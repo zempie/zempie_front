@@ -80,6 +80,8 @@ export default function () {
   }
 
   const resetForm = () => {
+    setStepOne();
+
     uploadProject.value.form = {
       stage: eGameStage.NONE,
       name: "",
