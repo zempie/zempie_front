@@ -172,7 +172,7 @@
 
 
           <dl class="suii-content">
-            <dt style="padding-top: 5px">{{ $t("게임ID 자동작성") }}</dt>
+            <dt style="padding-top: 5px">{{ $t("auto.game.id.generator") }}</dt>
             <dd>
               <label class="switch-button">
                 <input type="checkbox" name="" v-model="isAuthGamePath" />

@@ -1,5 +1,5 @@
 <template>
-  <div class="content" style="padding-top:70px;">
+  <div class="content">
     <ul class="ta-post">
       <dd>
         <div v-if="route.meta.name !== 'userChannel'" class="tab-search-swiper">
@@ -22,10 +22,10 @@
               </NuxtLink>
             </div>
             <div class="swiper-slide" style="width:25%; cursor:pointer;">
-              <NuxtLink :to="localePath(`/channel/${channelId}/followings`)"
+              <NuxtLink :to="localePath(`/channel/${channelId}/following`)"
                 :class="route.meta.name === 'userFollwoings' ? 'active' : ''">
                 <p class="mobile"><i class="uil uil-user-plus"></i>
-                  <span style="border:0">FOLLOWINGS</span>
+                  <span style="border:0">FOLLOWING</span>
                 </p>
               </NuxtLink>
             </div>
@@ -98,23 +98,25 @@ async function getChannelHeaderInfo() {
   width: 14%;
 }
 
+.content {
+  padding-top: 70px;
 
-.tab-search-swiper {
-  margin: 20px auto auto auto;
+  .tab-search-swiper {
+    margin: 20px auto auto auto;
 
 
-  .swiper-slide {
-    .mobile {
-      i {
-        font-size: 20px;
-      }
+    .swiper-slide {
+      .mobile {
+        i {
+          font-size: 20px;
+        }
 
-      span {
-        display: inline-block;
+        span {
+          display: inline-block;
+        }
       }
     }
   }
-
 }
 
 @media all and (max-width: 479px) {
@@ -137,20 +139,23 @@ async function getChannelHeaderInfo() {
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
+  .content {
+    padding-top: 60px;
 
-  .tab-search-swiper {
-    width: 100%;
-    margin: 0px;
+    .tab-search-swiper {
+      width: 100%;
+      margin: 0px;
 
-    .swiper-slide {
+      .swiper-slide {
 
-      .mobile {
-        span {
-          display: none;
+        .mobile {
+          span {
+            display: none;
+          }
         }
       }
-    }
 
+    }
   }
 }
 

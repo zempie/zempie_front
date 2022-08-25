@@ -4,36 +4,9 @@
 
     <dl class="three-area">
       <dt>
-        <!--      <div class="ta-screenshot">-->
-        <!--        <h2>Screenshot</h2>-->
-        <!--        <swiper class="swiper-area" :options="TASswiperOption">-->
-        <!--          <swiper-slide class="active">-->
-        <!--            <img src="https://i.pinimg.com/564x/5f/da/ff/5fdaff21e318fc69cb9509edb6b2706b.jpg" width="100%" alt=""-->
-        <!--                 title=""/>-->
-        <!--          </swiper-slide>-->
-        <!--          <swiper-slide>-->
-        <!--            <img src="https://i.pinimg.com/564x/5f/da/ff/5fdaff21e318fc69cb9509edb6b2706b.jpg" width="100%" alt=""-->
-        <!--                 title=""/>-->
-        <!--          </swiper-slide>-->
-        <!--          <swiper-slide>-->
-        <!--            <img src="https://i.pinimg.com/564x/5f/da/ff/5fdaff21e318fc69cb9509edb6b2706b.jpg" width="100%" alt=""-->
-        <!--                 title=""/>-->
-        <!--          </swiper-slide>-->
-        <!--          <swiper-slide>-->
-        <!--            <img src="https://i.pinimg.com/564x/5f/da/ff/5fdaff21e318fc69cb9509edb6b2706b.jpg" width="100%" alt=""-->
-        <!--                 title=""/>-->
-        <!--          </swiper-slide>-->
-        <!--          <swiper-slide>-->
-        <!--            <img src="https://i.pinimg.com/564x/5f/da/ff/5fdaff21e318fc69cb9509edb6b2706b.jpg" width="100%" alt=""-->
-        <!--                 title=""/>-->
-        <!--          </swiper-slide>-->
-        <!--          <div class="swiper-button-prev" slot="button-prev"></div>-->
-        <!--          <div class="swiper-button-next" slot="button-next"></div>-->
-        <!--        </swiper>-->
-        <!--      </div>-->
         <div class="ta-game-list">
           <dl>
-            <dt>Game</dt>
+            <dt>Games</dt>
           </dl>
           <template v-if="games?.length > 0">
             <ul>

@@ -26,9 +26,50 @@
         </dd>
       </div>
       <div class="mp-category">
+        <ClientOnly>
+          <div class="mp-category" :style="attachFiles.img?.length ? '#e9e9e9 1px solid;' : ''">
+            <el-popover name="category" trigger="click">
+              <template #reference>
+                <button class="btn-line-small" style="width:30%;" @click="communityFetch"><i class="uil uil-plus"></i>
+                  <span v-if="postingChannels.length >= 2">Add</span>
+                  <span v-else>Add community</span>
+                </button>
+              </template>
+              <div class="mpc-more-dropdown">
+                <button class="category-group group-btn" @click="openChannel(com)"
+                  :class="isCommunityListOpen ? 'on' : 'off'" v-for="com in communityList">
+                  <p style="margin: 0 auto;"> {{ com.name }}</p>
+                </button>
+                <div :class="['channel-btn', isChannelListOpen ? 'on' : 'off']">
+                  <div class="back-group-btn" @click="backToCommunityList">
+                    <button class="category-group">
+                      <i class="uil uil-arrow-circle-left"></i>
+                      {{ selectedGroup?.name }}
+                    </button>
+                  </div>
+                  <button class="category-group" v-for="channel in channels" @click="selectChannel(channel)">
+                    {{ channel.title }}
+                  </button>
+                </div>
+              </div>
+            </el-popover>
+            <swiper v-if="postingChannels.length" class="swiper-area" style="margin-left: 10px;" :space-between="10">
+              <swiper-slide class="community-slide" v-for="(postedAt, index) in postingChannels" :key="index">
+                <div class="category-select-finish">
+                  <div>
+                    <span>{{ postedAt.group.name }}</span> /
+                    <em>{{ postedAt.channel.title }}</em>
+                  </div>
+                  <div class="cross-btn" @click="deletePostingChannel(index)"><i class="uil uil-times"></i></div>
+                </div>
+              </swiper-slide>
+            </swiper>
 
+          </div>
+        </ClientOnly>
       </div>
       <dl class="mp-type">
+
         <dt>
           <div style="width: 30px" @click="uploadImageFile">
             <a><i class="uil uil-image"></i></a>
@@ -48,6 +89,8 @@
               <input type="file" @change="onSelectAudioFile" multiple accept=".mp3" ref="audio" />
             </div>
           </div>
+
+
         </dt>
 
         <dd>
@@ -69,13 +112,13 @@ import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 
 import { Editor } from "@tiptap/vue-3";
-import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElSelect, ElOption, ElMessage, ElDialog } from "element-plus";
+import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElSelect, ElPopover, ElMessage, ElDialog } from "element-plus";
 
 import { useI18n } from 'vue-i18n';
 const { t, locale } = useI18n()
 
 const route = useRoute()
-
+const popover = ref()
 
 const props = defineProps({
   type: String,
@@ -83,7 +126,8 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  feed: Object as PropType<IFeed>
+  feed: Object as PropType<IFeed>,
+  channelInfo: Object
 
 })
 
@@ -108,6 +152,16 @@ const audio = ref<HTMLElement>()
 
 const editor = ref<Editor>()
 
+
+
+const communityList = ref([])
+const isCommunityListOpen = ref(true)
+const isChannelListOpen = ref(false)
+const selectedGroup = ref()
+const channels = ref()
+const postingChannels = ref([])
+
+
 const attachFiles = ref({
   img: hasFeedImg ? attachFileArr.value : [],
   video: [],
@@ -122,15 +176,48 @@ const form = reactive({
   post_contents: '',
 })
 
+onMounted(() => {
+  console.log('props.type', useCommunity().community.value.info)
+  if (props.type === 'community') {
+    if (props.channelInfo) {
+      postingChannels.value = [{
+        group: useCommunity().community.value.info,
+        channel: props.channelInfo
+      }]
+    } else {
+      postingChannels.value = [{
+        group: useCommunity().community.value.info,
+        channel: useCommunity().community.value.info.channels[0]
+      }]
+    }
+  }
+
+})
+
 async function onSubmit() {
   const payload = {
     post_contents: form.post_contents,
     post_state: activeTab.value,
     hashtags: [],
+    community: [],
   }
 
-  if (attachFiles.value.img.length || attachFiles.value.audio.length || attachFiles.value.video.length) {
+  if (postingChannels.value.length) {
 
+    // payload['community'] = []
+    for (const element of postingChannels.value) {
+
+      payload.community.push({
+        id: element.group.id,
+        community: element.group,
+        channel_id: element.channel.id,
+        channel: element.channel
+      })
+    }
+  }
+
+  console.log(payload);
+  if (attachFiles.value.img.length || attachFiles.value.audio.length || attachFiles.value.video.length) {
     const formData = new FormData();
 
     for (const img of attachFiles.value.img) {
@@ -142,11 +229,6 @@ async function onSubmit() {
     payload['attatchment_files'] = data.value.result;
   }
 
-
-
-
-
-
   // const imgContent = contentJson.content.filter((tag) => {
   //     if (tag.content?.length > 0) {
   //       return tag.content.filter(elem => elem.type === 'image')
@@ -155,11 +237,7 @@ async function onSubmit() {
   // )
   switch (props.type) {
     case 'community':
-      const communityId = route.params.id
 
-      payload['community'] = [{
-        id: communityId
-      }]
 
       break;
     case 'game':
@@ -347,6 +425,44 @@ function closeTextEditor() {
   attachFiles.value.img = _.cloneDeep(initFiles)
   emit('closeModal')
 }
+
+
+async function communityFetch() {
+
+  const { data, error, pending } = await useFetch<[]>(`/user/${useUser().user.value.info.id}/list/community`, getComFetchOptions('get', true))
+
+  if (data.value) {
+    communityList.value = data.value
+  }
+
+}
+
+function openChannel(community: any) {
+  selectedGroup.value = community
+  isCommunityListOpen.value = !isCommunityListOpen.value
+  isChannelListOpen.value = !isChannelListOpen.value
+  channels.value = community.channels
+}
+
+function backToCommunityList() {
+  isCommunityListOpen.value = !isCommunityListOpen.value
+  isChannelListOpen.value = !isChannelListOpen.value
+}
+
+function selectChannel(channel: any) {
+
+  postingChannels.value = _.uniqBy([...postingChannels.value, {
+    group: selectedGroup.value,
+    channel: channel
+  }], 'channel.id')
+
+}
+
+function deletePostingChannel(idx: number) {
+  postingChannels.value.splice(idx, 1)
+
+}
+
 </script>
 
 <style lang="scss" >
@@ -494,6 +610,80 @@ function closeTextEditor() {
 
     &.ProseMirror-selectednode {
       outline: 3px solid #F97316;
+    }
+  }
+}
+
+.category-group {
+  width: 100%;
+  margin: 10px 10px 0px 0px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  background: #f5f5f5;
+  border: none;
+  cursor: pointer;
+
+  &.group-btn {
+    &.off {
+
+      display: none !important;
+    }
+  }
+
+}
+
+.back-group-btn {
+  .category-group {
+    justify-content: flex-start;
+    color: #0D0D0D;
+  }
+
+  .uil-arrow-circle-left {
+    font-size: 20px;
+    color: #f97316;
+    display: flex;
+  }
+}
+
+.channel-btn {
+  &.off {
+    display: none !important;
+  }
+}
+
+.community-slide {
+  width: 200px !important;
+
+
+  .category-select-finish {
+    width: 200px;
+    height: 30px;
+    justify-content: space-around;
+
+    div {
+      margin-left: 10px;
+
+      span {
+        text-overflow: ellipsis;
+        width: 70px;
+        overflow: hidden;
+        white-space: nowrap;
+        display: inline-block;
+      }
+
+      em {
+        overflow: hidden;
+        white-space: nowrap;
+        display: inline-block;
+      }
+    }
+
+    .cross-btn {
+      cursor: pointer;
+
     }
   }
 }

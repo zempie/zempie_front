@@ -6,10 +6,10 @@
       </div>
 
 
-      <dl class="area-title" v-if="results.users?.length">
+      <dl class="area-title" v-if="results.users?.length" style="margin-top:12.5px">
         <dt>Users <span>{{ results.users?.length }}</span></dt>
       </dl>
-      <ul v-if="results.users.length">
+      <ul class="user-list" v-if="results.users.length">
 
         <ul class="card-follow">
           <TransitionGroup name="list-complete">
@@ -24,33 +24,13 @@
       </ul>
 
 
-      <dl class="area-title" v-if="results.games?.length > 0">
+      <dl class="area-title" v-if="results.games?.length">
         <dt>Games <span>{{ results.games?.length }}</span></dt>
       </dl>
 
       <ul v-if="results.games.length" class="card-game">
         <TransitionGroup name="list-complete">
-          <GameCard v-for="game in results.games" :key="game.id" />
-          <!-- <li v-for="game in results.games" :key="game.id">
-          <div
-            :style="`background: url( ${game?.url_thumb_webp || game.url_thumb} ) center center no-repeat; background-size: cover;`">
-          </div>
-          <dl>
-            <dt>
-
-              <p
-                :style="`background: url(${game.user && game.user.picture || '/img/300_300_default_profile.png'}) center center no-repeat; background-size: cover;`">
-              </p>
-            </dt>
-            <dd>
-              <h2>{{ game && game.title }}</h2>
-              <p>{{ game.user && game.user.name }}</p>
-              <ul>
-                <li><img src="/images/zempie_game_icon.svg" alt=""></li>
-              </ul>
-            </dd>
-          </dl>
-        </li> -->
+          <GameCard v-for="game in results.games" :key="game.id" :gameInfo="game" />
         </TransitionGroup>
 
       </ul>
@@ -62,8 +42,7 @@
         <ul class="ta-post">
           <div v-for="feed in results.posts" :key="feed.id">
             <PostFeed :feed="feed" />
-            <!--                    {{feed}}-->
-            <!-- <Feed :feed="feed"></Feed> -->
+
           </div>
         </ul>
       </div>
@@ -84,7 +63,7 @@ const communityList = ref([])
 const postList = ref([])
 const config = useRuntimeConfig()
 
-const { data: results, error, pending, refresh } = await useFetch<any>(() => `/search?q=${keyword.value}`, { baseURL: config.COMMUNITY_API });
+const { data: results, error, pending, refresh } = await useFetch<any>(() => `/search?q=${keyword.value}`, getComFetchOptions('get', true));
 
 
 watch(
@@ -211,7 +190,7 @@ watch(
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .toasted,
 .toast-success {
   color: #F97316 !important;
@@ -262,4 +241,28 @@ watch(
 .list-complete-leave-active {
   position: absolute;
 }
+
+
+@media all and (max-width: 479px) {
+
+  .card-follow,
+  .ta-search-post {
+    width: 100%;
+  }
+}
+
+@media all and (min-width: 480px) and (max-width: 767px) {
+
+  .visual-title,
+  .area-title,
+  .card-game,
+  .ta-search-post,
+  .card-follow {
+    width: 100%
+  }
+}
+
+@media all and (min-width: 768px) and (max-width: 991px) {}
+
+@media all and (min-width: 992px) and (max-width: 1199px) {}
 </style>

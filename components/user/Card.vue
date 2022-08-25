@@ -14,7 +14,7 @@
         </dt>
         <dd>
           <h4>{{ user.followings_cnt }}</h4>
-          <p>Followings</p>
+          <p>following</p>
         </dd>
 
       </dl>

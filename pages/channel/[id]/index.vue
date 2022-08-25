@@ -5,7 +5,7 @@
         <dt v-if="isPending">
           <div class="ta-game-list">
             <dl>
-              <dt>Game</dt>
+              <dt>Games</dt>
             </dl>
             <ul v-for="game in 4">
               <li>
@@ -41,10 +41,10 @@
 
               </li>
               <li>
-                <NuxtLink :to="localePath(`/channel/${channelId}/followings`)">
+                <NuxtLink :to="localePath(`/channel/${channelId}/following`)">
                   <p style="background:#5D5FFE;cursor: pointer"><i class="uil uil-user-plus"></i></p>
                   <h2>{{ channelInfo.following_cnt }}</h2>
-                  <h3>Followings</h3>
+                  <h3>following</h3>
                 </NuxtLink>
 
               </li>
@@ -53,13 +53,13 @@
           </div>
           <div class="ta-game-list">
             <dl>
-              <dt>Game</dt>
+              <dt>Games</dt>
             </dl>
             <template v-if="games?.length">
               <ul>
                 <li v-for="game in games?.slice(0, 5)">
                   <p :style="`background:url(${game.url_thumb_webp ||
-                  'img/default.png'
+                  '/images/default.png'
                   }) center; background-size:cover;`"></p>
                   <h2 style="text-overflow: ellipsis; overflow: hidden">{{ game.title }}</h2>
                 </li>
@@ -83,20 +83,9 @@
           <TimelineSk v-if="isPending" />
           <PostTimeline type="user" :isMine="isMine" v-else />
         </dd>
-
         <dt>
-
-          <!-- <div class="ta-groups" style="margin-top:0px" v-if="isMine">
-            <h2>Info</h2>
-            <div v-if="isPending">
-              <dl v-for="group in 4">
-                <CommunityListItemSk />
-              </dl>
-            </div>
-            <UserAvatar :user="channelInfo" tag="p" />
-          </div> -->
           <div class="ta-groups" style="margin-top:0px">
-            <h2>Group</h2>
+            <h2>Community</h2>
             <div v-if="isPending">
               <dl v-for="group in 4">
                 <CommunityListItemSk />

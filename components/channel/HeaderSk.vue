@@ -15,7 +15,7 @@
             </li>
             <li>
               <h2>0</h2>
-              <h3>Followings</h3>
+              <h3>following</h3>
             </li>
           </ul>
         </dt>

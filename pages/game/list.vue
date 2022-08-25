@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <div class="visual-title">
+    <div :class="category === 0 ? 'visual-title' : 'jam-visual-title'">
       <h2><span>Games</span></h2>
     </div>
     <div class="tab-search-swiper">
@@ -173,7 +173,15 @@ function initData() {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.jam-visual-title {
+  background-position: center;
+
+  h2 {
+    display: none;
+  }
+}
+
 .swiper-slide {
   cursor: pointer;
   width: 50% !important;

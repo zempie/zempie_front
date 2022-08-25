@@ -113,9 +113,6 @@ const {
     .card-timeline {
       width: 100%;
       margin: 0 auto;
-      li {
-        border-radius: 0%;
-      }
     }
   }
 

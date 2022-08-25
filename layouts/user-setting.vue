@@ -12,7 +12,7 @@
             <a :class="$route.name.toString().includes('follower') ? 'active' : ''">{{ $t('follower') }}</a>
           </NuxtLink>
 
-          <NuxtLink :to="{ path: `/profile/${userInfo?.id}/followings` }" class="swiper-slide">
+          <NuxtLink :to="{ path: `/profile/${userInfo?.id}/following` }" class="swiper-slide">
             <a :class="$route.name.toString().includes('following') ? 'active' : ''">{{ $t('following') }}</a>
           </NuxtLink>
 

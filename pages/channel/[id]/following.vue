@@ -3,11 +3,11 @@
 
     <div>
       <dl class="area-title">
-        <dt>Followings <span>{{ totalCount }}</span></dt>
+        <dt>following <span>{{ totalCount }}</span></dt>
       </dl>
       <UserList :users="users" :isPending="isPending" />
       <div v-if="!isPending && !users.length" class="no-result">
-        <h1>{{ $t('no.followings') }}</h1>
+        <h1>{{ $t('no.following') }}</h1>
         <img src="/images/not-found.png" />
       </div>
     </div>
@@ -24,8 +24,8 @@ const users = ref([])
 
 
 definePageMeta({
-  title: 'user-followings',
-  name: 'userFollwoings'
+  title: 'user-following',
+  name: 'userFollwoing'
 })
 
 const isMine = computed(() => {

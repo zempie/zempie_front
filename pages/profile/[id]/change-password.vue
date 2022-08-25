@@ -84,7 +84,7 @@ async function sendEmail() {
 
   if (email.value !== user.value.email) {
     ElMessage({
-      message: t('이메일이 일치하지않습니다. 다시 입력해주세요'),
+      message: t('email.not.matched'),
       type: 'error'
     })
     return

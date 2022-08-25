@@ -11,10 +11,10 @@
           <CommunityAboutSk />
         </dl>
         <dl class="three-area" v-else>
-          <CommunityChannelList :community="communityInfo" />
+          <CommunityChannelList :community="communityInfo" @channelInfo="getChannelInfo" />
           <dd>
-            <!-- <TimelineSk /> -->
-            <PostTimeline type="community" :isSubscribed="communityInfo?.is_subscribed">
+            <PostTimeline type="community" :isSubscribed="communityInfo?.is_subscribed" :channelInfo="channelInfo"
+              :key="channelInfo?.id">
               <template #inputBox>
                 <input type="text" :placeholder="$t('postModalInput')" readonly
                   @click="isLogin ? (communityInfo?.is_subscribed ? '' : needSubscribe = true) : useModal().openLoginModal()" />
@@ -64,6 +64,7 @@
 <script setup lang="ts">
 import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElSelect, ElOption, ElMessage, ElDialog } from "element-plus";
 import { dateFormat } from '~/scripts/utils'
+import { IComChannel } from "~~/types";
 
 const route = useRoute()
 const router = useRouter()
@@ -82,7 +83,7 @@ const isLogin = computed(() => useUser().user.value.isLogin)
 
 const communityId = computed(() => route.params.id as string)
 
-
+const channelInfo = ref()
 
 onMounted(async () => {
   await fetch()
@@ -112,6 +113,10 @@ async function subscribe() {
     // })
   }
 
+}
+
+function getChannelInfo(info: IComChannel) {
+  channelInfo.value = info
 }
 
 </script>    

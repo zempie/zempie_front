@@ -12,7 +12,10 @@
           </dt>
           <dd>
             <h2> {{ gameInfo.title }}<span></span></h2>
-            <h3>by@ {{ gameInfo.user?.name }}</h3>
+            <h3 @click="moveUserPage" style="cursor:pointer">By
+
+              {{ gameInfo.user?.name }}
+            </h3>
 
             <div class="tag-item secondary" v-for="hashtag in hashtags" :key="hashtag"><a>{{ hashtag }}</a>
             </div>
@@ -43,15 +46,18 @@
 <script setup lang="ts">
 import _ from 'lodash'
 import { IGame, eGameStage } from '~~/types';
+import { useLocalePath } from 'vue-i18n-routing';
 import { PropType } from 'vue';
 
+const localePath = useLocalePath();
+const router = useRouter()
 const hashtags = computed(() => props.gameInfo.hashtags.length > 0 ? props.gameInfo.hashtags.split(",") : undefined)
 
 const props = defineProps({
   gameInfo: Object as PropType<IGame>
 })
 const isLike = ref(props.gameInfo?.is_like)
-const likeCnt = ref(props.gameInfo.count_heart)
+const likeCnt = ref(props.gameInfo?.count_heart)
 
 
 function playGame() {
@@ -86,6 +92,9 @@ const unsetLike = _.debounce(async () => {
 
 }, 300)
 
+function moveUserPage() {
+  router.push(localePath(`/channel/${props.gameInfo.user.channel_id}`))
+}
 
 </script>
 

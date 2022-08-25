@@ -2,7 +2,7 @@
   <NuxtLayout name="user-setting">
     <div>
       <dl class="area-title">
-        <dt>Followings <span>{{ totalCount }}</span></dt>
+        <dt>following <span>{{ totalCount }}</span></dt>
       </dl>
       <UserList :users="users" :isPending="isPending" />
       <div v-if="!isPending && !users.length" class="no-result">

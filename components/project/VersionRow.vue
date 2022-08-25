@@ -21,8 +21,8 @@
       <li></li>
       <li></li>
       <li>
-        <p><span>&ndash;</span> {{ $t('Upload file information') }}</p>
-        <p><span>&ndash;</span> {{ $t('Delete version ') }}</p>
+        <p><span>&ndash;</span> {{ $t('file.upload.info') }}</p>
+        <p><span>&ndash;</span> {{ $t('delete.version') }}</p>
       </li>
       <li>
         <p><span>&ndash;</span> {{ $t('file.size') }} : {{ version.size }}MB</p>

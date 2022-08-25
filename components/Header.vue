@@ -97,7 +97,7 @@
                           </el-dropdown-item>
                         </template>
                         <template v-if="!hasResearchResult">
-                          <h2>{{ t('검색 결과가 없습니다.') }}</h2>
+                          <h2>{{ t('no.search.result') }}</h2>
 
                         </template>
 
@@ -115,7 +115,7 @@
           </div>
 
           <!-- FIXME: popper-class: css수정 -->
-          <div class="header-language ">
+          <div class="header-language">
             <el-select class="hl-select-box" v-model="selectedLang" :placeholder="$t('korean')">
               <el-option v-for="item in options" :key="item.code" :label="item.label" :value="item.code"
                 @click="switchLangauge" />
@@ -162,7 +162,7 @@
                     <h2>{{ $t('account') }}</h2>
                     <div>
                       <NuxtLink :to="localePath(`/profile/${user.id}`)"><i class="uil uil-setting"></i>
-                        {{ $t('my account') }}
+                        {{ $t('my.account') }}
                       </NuxtLink>
                     </div>
                   </div>
@@ -689,7 +689,10 @@ function initSearchData() {
   //.header-logo-menu p a img {width:100px;}
   //.header-logo-menu ul {display:none;}
   //.header-search {display:none;}
-  //.header-language {display:none;}
+  .header-language {
+    display: block;
+  }
+
   .header-login {
     display: block !important;
   }
@@ -699,6 +702,12 @@ function initSearchData() {
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
+  .btn-circle-none {
+    &.mobile {
+      display: block;
+
+    }
+  }
 
   //.header > dl {width:470px; padding:15px 0;}
   //.header-logo-menu p {display:flex; align-items:center; margin-right:0;}
@@ -706,7 +715,10 @@ function initSearchData() {
   //.header-logo-menu p a img {width:100px;}
   //.header-logo-menu ul {display:none;}
   //.header-search {display:none;}
-  //.header-language {display:none;}
+  .header-language {
+    display: block;
+  }
+
   .header-login {
     display: block !important;
   }

@@ -9,10 +9,10 @@
         <NuxtLink :class="['swiper-slide', !routeQuery ? 'active' : '']"
           :to="localePath(`/community/${communityInfo?.id}`)">
           <p><i class="uil uil-clock-three"></i></p>
-          <h2>TIMELINE(ALL)</h2>
+          <h2>{{ $t('timeline') }}(ALL)</h2>
         </NuxtLink>
 
-        <NuxtLink :class="['swiper-slide', routeQuery === 'sns' ? 'active' : '',]"
+        <!-- <NuxtLink :class="['swiper-slide', routeQuery === 'sns' ? 'active' : '',]"
           :to="localePath(`/community/${communityInfo?.id}`) + '?media=sns'">
           <p><i class="uil uil-comment-dots"></i></p>
           <h2>SNS</h2>
@@ -22,24 +22,24 @@
           :to="localePath(`/community/${communityInfo?.id}`) + '?media=blog'">
           <p><i class="uil uil-edit"></i></p>
           <h2>BLOG</h2>
-        </NuxtLink>
+        </NuxtLink> -->
 
-        <NuxtLink :class="['swiper-slide', routeQuery === 'img' ? 'active' : '',]"
+        <NuxtLink :class="['swiper-slide', routeQuery === 'image' ? 'active' : '',]"
           :to="localePath(`/community/${communityInfo?.id}`) + '?media=image'">
           <p><i class="uil uil-image-edit"></i></p>
-          <h2>IMAGE</h2>
+          <h2>{{ $t('image') }}</h2>
         </NuxtLink>
 
         <NuxtLink :class="['swiper-slide', routeQuery === 'video' ? 'active' : '',]"
           :to="localePath(`/community/${communityInfo?.id}`) + '?media=video'">
           <p><i class="uil uil-play-circle"></i></p>
-          <h2>VIDEO</h2>
+          <h2>{{ $t('video') }}</h2>
         </NuxtLink>
 
         <NuxtLink :class="['swiper-slide', routeQuery === 'sound' ? 'active' : '',]"
           :to="localePath(`/community/${communityInfo?.id}`) + '?media=sound'">
           <p><i class="uil uil-music"></i></p>
-          <h2>AUDIO</h2>
+          <h2>{{ $t('audio') }}</h2>
         </NuxtLink>
       </div>
     </div>
@@ -72,4 +72,30 @@ onMounted(async () => {
 .swiper-slide {
   display: inline-block
 }
+
+.tab-menu-swiper {
+  .swiper-slide {
+    width: 25%;
+
+  }
+}
+
+@media all and (max-width: 479px) {
+  .swiper-slide {
+    h2 {
+      display: none;
+    }
+  }
+}
+
+@media all and (min-width: 480px) and (max-width: 767px) {
+  .tab-menu-swiper {
+    width: 100%;
+
+  }
+}
+
+@media all and (min-width: 768px) and (max-width: 991px) {}
+
+@media all and (min-width: 992px) and (max-width: 1199px) {}
 </style>

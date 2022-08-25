@@ -6,7 +6,7 @@
       style="background:url('/images/visual_top_img.png') center no-repeat; background-size: cover ">
 
       <div class="title">
-        Groups
+        Communities
         <!-- TODO: 커뮤니티 전체 개수 -->
         <!-- <span v-if="communityList && communityList.length > 0">({{ communityList.length }})</span> -->
       </div>

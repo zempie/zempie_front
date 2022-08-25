@@ -86,7 +86,8 @@
     <ClientOnly>
       <el-dialog v-model="isTextEditorOpen" append-to-body custom-class="modal-area-type" :show-close="false"
         :close-on-click-modal="false" :close-on-press-escape="false" @close="closeEditor">
-        <TextEditor @closeModal="isTextEditorOpen = false" :type="type" @refresh="refresh" :key="editorKey" />
+        <TextEditor @closeModal="isTextEditorOpen = false" :type="type" @refresh="refresh" :key="editorKey"
+          :channelInfo="channelInfo" />
       </el-dialog>
     </ClientOnly>
     <!-- <modal name="writingModal" classes="post-modal" :clickToClose="false" :scrollable="true" height="auto">
@@ -244,9 +245,13 @@
 
 <script setup lang="ts">
 import _ from 'lodash'
+import { PropType } from 'vue';
+import { IComChannel } from '~~/types';
+
 import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElSelect, ElOption, ElMessage, ElDialog } from "element-plus";
 
 import { useLocalePath } from 'vue-i18n-routing';
+import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
 
 const LIMIT_SIZE = 3
 
@@ -292,17 +297,20 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  channelInfo: Object as PropType<IComChannel>
 })
 
-watch(
+let watcher = watch(
   () => route.query,
   (query) => {
-    if (query.media) {
-      media.value = query.media as string;
-      refresh()
-    }
+    media.value = query.media as string;
+    refresh()
   }
 )
+
+onBeforeRouteLeave((to, from) => {
+  watcher()
+})
 
 
 onMounted(async () => {
@@ -324,42 +332,49 @@ function handleIntersection(target) {
 }
 
 async function fetch() {
-  console.log('refresh', props.type)
   const payload = {
     limit: limit.value,
     offset: offset.value,
     media: media.value
   }
+
   switch (props.type) {
     case 'community':
-
-      const { data, error, refresh } = await useFetch<{ result: [], totalCount: number }>(`/timeline/${channelId.value}/post?_=${Date.now()}&limit=${limit.value}&offset=${offset.value}&media=${media.value}`,
-        getComFetchOptions('get', true))
-      // post.getCommunityPosts(channelId.value, payload)
-      if (data.value) {
-        const { result, totalCount } = data.value
-        if (result.length > LIMIT_SIZE) {
-          isAddData.value = true
+      if (props.channelInfo) {
+        const { data, error, refresh } = await useFetch<{ result: [], totalCount: number }>(createQueryUrl(`/timeline/${channelId.value}/channel/${props.channelInfo.id}`, payload), getComFetchOptions('get', true))
+        if (data.value) {
+          dataPaging(data.value)
         }
-        if (isAddData.value) {
-          if (result.length > 0) {
-            feeds.value = [...feeds.value, ...result]
-          } else {
-            isAddData.value = false
-            observer.value.unobserve(triggerDiv.value)
-          }
-
+      } else {
+        const { data, error, refresh } = await useFetch<{ result: [], totalCount: number }>(createQueryUrl(`/timeline/${channelId.value}/post`, payload), getComFetchOptions('get', true))
+        if (data.value) {
+          dataPaging(data.value)
         }
-        else {
-          feeds.value = result;
-          isAddData.value = true
-        }
-
       }
+      // if (data.value) {
+      //   dataPaging(data.value)
+      // const { result, totalCount } = data.value
+      // if (result.length > LIMIT_SIZE) {
+      //   isAddData.value = true
+      // }
+      // if (isAddData.value) {
+      //   if (result.length > 0) {
+      //     feeds.value = [...feeds.value, ...result]
+      //   } else {
+      //     isAddData.value = false
+      //     observer.value.unobserve(triggerDiv.value)
+      //   }
+
+      // }
+      // else {
+      //   feeds.value = result;
+      //   isAddData.value = true
+      // }
+
+      // }
 
       break;
     case 'user':
-
       const { data: userPostData } = await post.getUserPosts(channelId.value, payload)
       if (userPostData.value) {
         let { result, totalCount } = userPostData.value
@@ -419,6 +434,28 @@ async function fetch() {
   }
 
   isPending.value = false;
+
+}
+
+function dataPaging(data: { result: [], totalCount: number }) {
+  const { result, totalCount } = data
+  const uniqueResult = _.uniqBy(result, 'id');
+  if (uniqueResult.length > LIMIT_SIZE) {
+    isAddData.value = true
+  }
+  if (isAddData.value) {
+    if (uniqueResult.length > 0) {
+      feeds.value = [...feeds.value, ...uniqueResult]
+    } else {
+      isAddData.value = false
+      observer.value.unobserve(triggerDiv.value)
+    }
+
+  }
+  else {
+    feeds.value = result;
+    isAddData.value = true
+  }
 
 }
 
@@ -1033,6 +1070,14 @@ input[type="radio"] {
   }
 }
 
+@media all and (max-width: 479px) {
+  .tab-search-swiper {
+    &.mobile {
+      display: block;
+    }
+  }
+}
+
 @media all and (min-width: 480px) and (max-width: 767px) {
   .tab-search-swiper {
     &.mobile {
@@ -1042,11 +1087,11 @@ input[type="radio"] {
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
-  // .tab-search-swiper {
-  //   &.mobile {
-  //     display: block;
-  //   }
-  // }
+  .tab-search-swiper {
+    &.mobile {
+      display: block;
+    }
+  }
 }
 
 @media all and (min-width: 992px) and (max-width: 1199px) {}

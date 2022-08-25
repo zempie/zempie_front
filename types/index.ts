@@ -198,18 +198,7 @@ export interface IFeed {
 
 export interface ICommunity {
   banner_img: string,
-  channels: [{
-    community_id: string,
-    created_at: number,
-    deletedAt: number,
-    description: string,
-    id: string,
-    profile_img: string,
-    state: string,
-    title: string,
-    updatedAt: number,
-    user_id: number,
-  }],
+  channels: IComChannel[],
   created_at: number,
   deletedAt: number,
   description: string,
@@ -228,5 +217,18 @@ export interface ICommunity {
   updatedAt: number,
   url: string,
   visit_cnt: number,
+}
+
+export interface IComChannel {
+  community_id: string,
+  created_at: number,
+  deletedAt: number,
+  description: string,
+  id: string,
+  profile_img: string,
+  state: string,
+  title: string,
+  updatedAt: number,
+  user_id: number,
 }
 

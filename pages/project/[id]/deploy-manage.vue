@@ -226,7 +226,7 @@ async function deploy() {
     getProjectInfo(projectId.value)
 
     ElMessage({
-      message: t('해당버전이 배포되었습니다.'),
+      message: t('version.deploy.done.'),
       type: 'success'
     })
 
@@ -253,7 +253,7 @@ async function changeStage() {
     getProjectInfo(projectId.value)
 
     ElMessage({
-      message: t('해당버전이 배포되었습니다.'),
+      message: t('version.deploy.done.'),
       type: 'success'
     })
     showSelectStageModal.value = false;

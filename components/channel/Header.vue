@@ -17,9 +17,9 @@
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink :to="localePath(`/channel/${userInfo.channel_id}/followings`)">
+            <NuxtLink :to="localePath(`/channel/${userInfo.channel_id}/following`)">
               <h2>{{ userInfo.following_cnt }}</h2>
-              <h3>Followings</h3>
+              <h3>following</h3>
             </NuxtLink>
 
           </li>

@@ -44,7 +44,7 @@
           <dt><img src="/images/studio_icon04.png" alt="" title="" /></dt>
           <dd>
             <h3>{{ $t('monetization') }}</h3>
-            <div>{{ $t('추후 게임 수익화를 위한 Zempie 파트너 서비스를 제공할 예정입니다.') }}</div>
+            <div>{{ $t('monetize.alert') }}</div>
           </dd>
         </dl>
       </li>

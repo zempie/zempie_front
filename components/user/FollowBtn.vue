@@ -43,7 +43,7 @@ async function follow() {
     emit('refresh')
     useChannel().setFollowing()
   } else {
-    ElMessage.error(t('잠시후에 다시 시도해주세요'))
+    ElMessage.error(t('try.later'))
   }
 
 }
@@ -54,7 +54,7 @@ async function unfollow() {
     emit('refresh')
     useChannel().setUnfollowing()
   } else {
-    ElMessage.error(t('잠시후에 다시 시도해주세요'))
+    ElMessage.error(t('try.later'))
   }
 
 }
