@@ -52,7 +52,8 @@ export interface IGame {
   user_id: number,
   version: string,
   user: IUser,
-  game_jam: any
+  game_jam: any,
+  is_like?: boolean
 }
 
 

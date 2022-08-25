@@ -10,9 +10,10 @@
     </ul>
     <div>
       <!-- <PostBySns v-if="activeTab === 'SNS'" /> -->
-      <PostByBlog @editorContent="getEditorContent" :postType='activeTab' />
+      <!-- <PostEdit v-if="isEdit" @editorContent="getEditorContent" :postType='activeTab' :feed="feed" /> -->
+      <PostByBlog @editorContent="getEditorContent" :postType='activeTab' :feed="feed" />
 
-      <div v-if="attachFiles.img.length && activeTab === 'SNS'" class="mp-image" style="padding-bottom: 0px">
+      <div v-if="attachFiles.img?.length && activeTab === 'SNS'" class="mp-image" style="padding-bottom: 0px">
         <dd style="width: 100%;">
           <swiper :modules="[Pagination]" class="swiper-area" :slides-per-view="3" :space-between="10"
             :pagination="{ clickable: true }">
@@ -50,8 +51,9 @@
         </dt>
 
         <dd>
-          <button class="btn-default-samll w100 cancel-btn" @click="emit('closeModal')">Cancel</button>
-          <button class="btn-default-samll w100" @click="onSubmit">Post</button>
+          <button class="btn-default-samll w100 cancel-btn" @click="closeTextEditor">Cancel</button>
+          <button v-if="isEdit" class="btn-default-samll w100" @click="onUpdatePost">Update</button>
+          <button v-else class="btn-default-samll w100" @click="onSubmit">Post</button>
         </dd>
       </dl>
     </div>
@@ -60,6 +62,9 @@
 </template>
 
 <script setup lang="ts">
+import _ from 'lodash'
+import { PropType } from 'vue';
+import { IFeed } from '~~/types';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 
@@ -72,26 +77,45 @@ const { t, locale } = useI18n()
 const route = useRoute()
 
 
+const props = defineProps({
+  type: String,
+  isEdit: {
+    type: Boolean,
+    default: false
+  },
+  feed: Object as PropType<IFeed>
 
-const activeTab = ref("SNS")
+})
+
+const initFiles = _.cloneDeep(props.feed?.attatchment_files)
+
+const attachFileArr = computed(() => {
+  if (props.feed) {
+    return Array.isArray(props.feed?.attatchment_files) ? props.feed?.attatchment_files : JSON.parse(props.feed?.attatchment_files as string)
+  }
+  else {
+    return []
+  }
+})
+const hasFeedImg = computed(() => {
+  return attachFileArr.value[0].type === 'image'
+})
+const activeTab = ref(props.feed?.post_type || "SNS")
 const video = ref<HTMLElement>()
 const image = ref<HTMLElement>()
 const audio = ref<HTMLElement>()
 
-const props = defineProps({
-  type: String,
-})
 
 const editor = ref<Editor>()
 
 const attachFiles = ref({
-  img: [],
+  img: hasFeedImg ? attachFileArr.value : [],
   video: [],
   audio: []
 })
 
 
-const emit = defineEmits(['closeModal', 'fetch'])
+const emit = defineEmits(['closeModal', 'refresh'])
 
 
 const form = reactive({
@@ -106,7 +130,6 @@ async function onSubmit() {
   }
 
   if (attachFiles.value.img.length || attachFiles.value.audio.length || attachFiles.value.video.length) {
-
 
     const formData = new FormData();
 
@@ -130,18 +153,17 @@ async function onSubmit() {
   //     }
   //   }
   // )
-
-
-
-
   switch (props.type) {
     case 'community':
       const communityId = route.params.id
 
-
       payload['community'] = [{
         id: communityId
       }]
+
+      break;
+    case 'game':
+      payload['game_id'] = useGame().game.value.info.id
       break;
   }
 
@@ -152,7 +174,7 @@ async function onSubmit() {
   if (!uploadError.value) {
 
     emit('closeModal')
-    emit('fetch')
+    emit('refresh')
     ElMessage({
       message: t('posting.done'),
       type: 'success'
@@ -178,14 +200,13 @@ function getEditorContent(content: Editor) {
   editor.value = content
   form.post_contents = content.getHTML()
 
-
 }
 
 function uploadImageFile() {
   image.value.click()
 }
 
-function onSelectImageFile(event: { target: { files: File[], value: string } }) {
+function onSelectImageFile(event: any) {
   const files = event.target.files;
 
   for (const file of files) {
@@ -244,6 +265,87 @@ function uploadAudioFile() {
 
 function onSelectAudioFile() {
 
+}
+
+async function onUpdatePost() {
+  console.log(attachFiles.value)
+
+  // for (const file of attachFiles.value.img.length) {
+  //   if (file)
+
+  // }
+
+  const newImgArr = attachFiles.value.img.filter(img => {
+    return !img.size
+  })
+
+  if (newImgArr.length) {
+    const formData = new FormData();
+
+    for (const img of newImgArr) {
+      formData.append(img.name, img.file)
+    }
+
+    const { data, error, pending } = await useFetch<{ result: { priority: number, url: string, type: string, name: string, size: number }[] }>('/community/att', getZempieFetchOptions('post', true, formData))
+
+    if (data.value) {
+      const { result } = data.value
+      for (const data of result) {
+        attachFiles.value.img.push({
+          priority: data.priority,
+          url: data.url,
+          type: data.type,
+          name: data.name,
+          size: data.size
+        })
+      }
+    }
+  }
+
+
+  // payload['attatchment_files'] = data.value.result;
+
+
+
+
+
+
+
+  const payload = {
+    post_id: props.feed.id,
+    post_state: activeTab.value,
+    attatchment_files: hasFeedImg.value ? attachFiles.value.img : attachFiles.value,
+    post_contents: form.post_contents,
+    // visibility: this.isPrivate ? "PRIVATE" : "PUBLIC",
+    hashtags: [],
+    // game_id:  this.$store.getters.currPage?.game_id,
+    // channel_id: this.user.channel_id,
+    // ...this.$store.getters.currPage,
+    // portfolio_ids: [""],
+    // scheduled_for: null
+  }
+  const { data, error, pending } = await useFetch(`/post/${props.feed.id}`, getComFetchOptions('put', true, payload))
+
+  if (!error.value) {
+
+    emit('closeModal')
+    emit('refresh')
+    ElMessage({
+      message: t('posting.edit.done'),
+      type: 'success'
+    })
+  } else {
+    ElMessage.error(t('posting.edit.fail'))
+  }
+  // return await this.request('put', `${communityApi}post/${obj.post_id}`, obj, false);
+
+
+
+}
+
+function closeTextEditor() {
+  attachFiles.value.img = _.cloneDeep(initFiles)
+  emit('closeModal')
 }
 </script>
 

@@ -16,8 +16,7 @@ provide(ID_INJECTION_KEY, {
   current: 0,
 })
 
-onMounted(() => {
-  console.log('?')
+onBeforeMount(() => {
   const lang = navigator.language.split('-')[0]
   if (lang === 'ko') {
     locale.value = 'ko'

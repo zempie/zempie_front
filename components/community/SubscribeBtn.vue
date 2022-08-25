@@ -38,7 +38,7 @@ const modalIsOpen = ref(false)
 const props = defineProps({
   community: Object as PropType<ICommunity>
 })
-const emit = defineEmits(['fetch'])
+const emit = defineEmits(['refresh'])
 
 const isLogin = computed(() => useUser().user.value.isLogin)
 
@@ -46,7 +46,7 @@ async function subscribe() {
   if (isLogin) {
     const { data, error } = await community.subscribe(props.community.id)
     if (!error.value) {
-      emit('fetch')
+      emit('refresh')
     }
 
   } else {
@@ -58,7 +58,7 @@ async function unsubscribe() {
   const { data, error } = await community.unsubscribe(props.community.id)
 
   if (!error.value) {
-    emit('fetch')
+    emit('refresh')
     modalIsOpen.value = false;
   }
 }

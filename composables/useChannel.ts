@@ -7,6 +7,7 @@ export default function () {
 
   const setUserChannel = async (info: IUserChannel) => {
     const { data: communities, error } = await useFetch<[]>(`/user/${info.id}/list/community`, getComFetchOptions('get', true))
+
     info.games.map((game) => {
       game.user = {
         name: info.name,
@@ -19,7 +20,15 @@ export default function () {
     })
     info.communities = communities.value
     userChannel.value.info = info;
+  }
 
+  const getChannelInfo = async (channelId: string) => {
+    const { data, error } = await useFetch<{ result: { target: IUserChannel } }>(`/channel/${channelId}`, getZempieFetchOptions('get', true))
+    if (data.value) {
+      console.log(data.value)
+      const { target } = data.value.result;
+      setUserChannel(target)
+    }
   }
 
   const resetUserChannel = () => {
@@ -44,6 +53,7 @@ export default function () {
     setUserChannel,
     resetUserChannel,
     setFollowing,
-    setUnfollowing
+    setUnfollowing,
+    getChannelInfo
   }
 }

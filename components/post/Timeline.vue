@@ -1,43 +1,37 @@
 <template>
   <ul class="ta-post">
     <dd>
-      <!-- 포스트 박스 -->
-      <!--        todo:내채널, 커뮤니티, 내 게임은 글 작성 가능
-                            남의 채널 남의 게임은 글 작성 불가 : v-if="this.user.uid === this.$route.params.channel_id"
-                            zempie 공식 커뮤니티 글 작성 블락(젬파이 지메일 계정 제외, f4cbce49-4626-4211-b954-31877da18b5b)
-                             -->
-
-
-      <!--            <template v-if="community.id === 'f4cbce49-4626-4211-b954-31877da18b5b'">-->
-      <!--                <div class="ta-message-send" v-if="user.uid='n8lFf5Nu51UTU4d7ph7gol0ESvs1'">-->
-      <!--                    <p>-->
-      <!--                        <UserAvatar :user="user" :tag="'span'"></UserAvatar>-->
-      <!--                    </p>-->
-      <!--                    <dl @click="openPostModal">-->
-      <!--                        <dt>-->
-      <!--                            <input-->
-      <!--                                type="text"-->
-      <!--                                readonly-->
-      <!--                                placeholder="무슨 생각을 하고 계신가요"/>-->
-      <!--                        </dt>-->
-      <!--                        <dd><a><i class="uil uil-message"></i></a></dd>-->
-      <!--                    </dl>-->
-      <!--                </div>-->
-      <!--            </template>-->
-      <!--            <template v-else>-->
-
-      <div class="ta-message-send">
+      <div class="ta-message-send" v-if="isMine">
         <p>
           <UserAvatar :user="user" :tag="'span'"></UserAvatar>
         </p>
         <dl>
           <dt>
-            <input v-if="ableToPost" type="text" :placeholder="$t('postModalInput')" readonly
+            <input v-if="isSubscribed" type="text" :placeholder="$t('postModalInput')" readonly
               @click="isLogin ? isTextEditorOpen = true : useModal().openLoginModal()" />
             <slot v-else name="inputBox" />
           </dt>
           <dd><a><i class="uil uil-message"></i></a></dd>
         </dl>
+      </div>
+
+      <div v-if="$route.meta.name === 'userChannel'" class="tab-search-swiper mobile"
+        style="width:100%; margin:0px 0px 20px 0px;">
+        <div class="swiper-area uppercase">
+          <div class="swiper-slide" style="width:50%; cursor:pointer;">
+            <a @click="timelineFilter();" :class="media ?? 'active'">
+              <p><i class=" uil uil-clock-three"></i>TIMELINE</p>
+            </a>
+          </div>
+          <div class="swiper-slide" style="width:50%; cursor:pointer;">
+
+            <NuxtLink :to="localePath(`/channel/${channelId}/games`)" @click.native="timelineFilter('game');"
+              :class="media === 'game' ? 'active' : ''">
+              <p><i class="uil uil-map-pin-alt"></i>GAME</p>
+            </NuxtLink>
+
+          </div>
+        </div>
       </div>
 
       <!-- <div class="ta-message-block" v-else-if="ableToPost() === 'block'">
@@ -51,7 +45,7 @@
         </div>
 
         <TransitionGroup name="fade" v-else-if="!isPending && feeds?.length">
-          <PostFeed v-for="(feed, idx) in feeds" :feed="feed" :key="idx" @fetch="refresh" />
+          <PostFeed v-for="(feed, idx) in feeds" :feed="feed" :key="idx" @refresh="refresh" />
         </TransitionGroup>
 
         <div v-else class="ta-post-none">
@@ -92,7 +86,7 @@
     <ClientOnly>
       <el-dialog v-model="isTextEditorOpen" append-to-body custom-class="modal-area-type" :show-close="false"
         :close-on-click-modal="false" :close-on-press-escape="false" @close="closeEditor">
-        <TextEditor @closeModal="isTextEditorOpen = false" :type="type" @fetch="refresh" :key="editorKey" />
+        <TextEditor @closeModal="isTextEditorOpen = false" :type="type" @refresh="refresh" :key="editorKey" />
       </el-dialog>
     </ClientOnly>
     <!-- <modal name="writingModal" classes="post-modal" :clickToClose="false" :scrollable="true" height="auto">
@@ -252,9 +246,12 @@
 import _ from 'lodash'
 import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElSelect, ElOption, ElMessage, ElDialog } from "element-plus";
 
+import { useLocalePath } from 'vue-i18n-routing';
+
 const LIMIT_SIZE = 3
 
 const route = useRoute();
+const localePath = useLocalePath();
 const config = useRuntimeConfig();
 
 
@@ -265,17 +262,20 @@ const isTextEditorOpen = ref(false)
 const isEditorDestroy = ref(false)
 const editorKey = ref(0)
 
-const observer = ref(null)
+const observer = ref<IntersectionObserver>(null)
 const triggerDiv = ref()
 const limit = ref(LIMIT_SIZE);
 const offset = ref(0);
-const media = ref('')
+const media = ref()
 const isAddData = ref(true);
+
 
 const user = computed(() => useUser().user.value.info)
 const isLogin = computed(() => useUser().user.value.isLogin)
 const gameInfo = computed(() => useGame().game.value.info)
+
 const channelId = computed(() => route.params.id as string)
+const gameId = computed(() => route.params.id as string)
 
 
 const props = defineProps({
@@ -283,29 +283,24 @@ const props = defineProps({
   ableToPost: {
     type: Boolean,
     default: true,
-  }
-})
-
-watch(
-  () => gameInfo.value,
-  async (newVal) => {
-    if (newVal) {
-      const { data, error, pending, refresh } = await game.getTimeline(newVal.id)
-      if (data.value) {
-        const { result } = data.value
-        feeds.value = result
-        isPending.value = false;
-      }
-    }
   },
-  { immediate: true }
-)
+  isSubscribed: {
+    type: Boolean,
+    default: true,
+  },
+  isMine: {
+    type: Boolean,
+    default: true,
+  },
+})
 
 watch(
   () => route.query,
   (query) => {
-    media.value = query.media as string;
-    refresh()
+    if (query.media) {
+      media.value = query.media as string;
+      refresh()
+    }
   }
 )
 
@@ -329,6 +324,7 @@ function handleIntersection(target) {
 }
 
 async function fetch() {
+  console.log('refresh', props.type)
   const payload = {
     limit: limit.value,
     offset: offset.value,
@@ -337,7 +333,7 @@ async function fetch() {
   switch (props.type) {
     case 'community':
 
-      const { data, error, refresh } = await useFetch<{ result: [], totalCount: number }>(`/timeline/${channelId.value}/post?_=${Date.now()}&limit=${limit.value}&offset=${offset.value}`,
+      const { data, error, refresh } = await useFetch<{ result: [], totalCount: number }>(`/timeline/${channelId.value}/post?_=${Date.now()}&limit=${limit.value}&offset=${offset.value}&media=${media.value}`,
         getComFetchOptions('get', true))
       // post.getCommunityPosts(channelId.value, payload)
       if (data.value) {
@@ -348,6 +344,9 @@ async function fetch() {
         if (isAddData.value) {
           if (result.length > 0) {
             feeds.value = [...feeds.value, ...result]
+          } else {
+            isAddData.value = false
+            observer.value.unobserve(triggerDiv.value)
           }
 
         }
@@ -374,7 +373,8 @@ async function fetch() {
           if (result?.length) {
             feeds.value = [...feeds.value, ...result];
           } else {
-            isAddData.value = false;
+            isAddData.value = false
+            observer.value.unobserve(triggerDiv.value)
           }
 
         } else {
@@ -387,6 +387,32 @@ async function fetch() {
         }
 
       }
+      break;
+    case 'game':
+      const { data: gamePostData, error: gameError, } = await useFetch<{ result: [], totalCount: number }>(createQueryUrl(`/timeline/game/${gameId.value}`, payload),
+        getComFetchOptions('get', true))
+      // post.getCommunityPosts(channelId.value, payload)
+      if (gamePostData.value) {
+        const { result, totalCount } = gamePostData.value
+        if (result.length > LIMIT_SIZE) {
+          isAddData.value = true
+        }
+        if (isAddData.value) {
+          if (result.length > 0) {
+            feeds.value = [...feeds.value, ...result]
+          } else {
+            isAddData.value = false
+            observer.value.unobserve(triggerDiv.value)
+          }
+
+        }
+        else {
+          feeds.value = result;
+          isAddData.value = true
+        }
+
+      }
+
       break;
 
 
@@ -407,6 +433,12 @@ async function refresh() {
   initPaging();
   await fetch();
 
+}
+
+function timelineFilter(selected?: string) {
+  media.value = selected;
+
+  // filter.value = media;
 }
 
 function closeEditor() {
@@ -993,4 +1025,29 @@ input[type="radio"]:checked+label {
 input[type="radio"] {
   display: none;
 }
+
+
+.tab-search-swiper {
+  &.mobile {
+    display: none;
+  }
+}
+
+@media all and (min-width: 480px) and (max-width: 767px) {
+  .tab-search-swiper {
+    &.mobile {
+      display: block;
+    }
+  }
+}
+
+@media all and (min-width: 768px) and (max-width: 991px) {
+  // .tab-search-swiper {
+  //   &.mobile {
+  //     display: block;
+  //   }
+  // }
+}
+
+@media all and (min-width: 992px) and (max-width: 1199px) {}
 </style>

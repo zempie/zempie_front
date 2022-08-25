@@ -47,7 +47,7 @@ const offset = ref(0)
 // dir: string = 'asc'
 
 const triggerDiv = ref()
-const observer = ref(null)
+const observer = ref<IntersectionObserver>(null)
 const isAddData = ref(false);
 
 const games = ref<any[]>([])
@@ -93,8 +93,10 @@ async function fetch() {
     if (isAddData.value) {
       if (gameList.length > 0) {
         games.value = [...games.value, ...gameList]
+      } else {
+        isAddData.value = false
+        observer.value.unobserve(triggerDiv.value)
       }
-
     }
     else {
       games.value = gameList;
@@ -119,8 +121,8 @@ async function fetch() {
     // }
 
   }
+  isPending.value = false
 }
-isPending.value = false
 // beforeDestroy() {
 //     this.$store.dispatch('resetResearchData')
 //     this.initData();
@@ -174,6 +176,7 @@ function initData() {
 <style scoped>
 .swiper-slide {
   cursor: pointer;
+  width: 50% !important;
 }
 
 .fade-move,

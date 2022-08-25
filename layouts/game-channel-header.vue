@@ -23,7 +23,7 @@
           </NuxtLink>
 
           <NuxtLink :class="[routeQuery === 'img' ? 'active' : '', 'swiper-slide']"
-            :to="localePath(`/game/${gamePath}`) + '?media=img'">
+            :to="localePath(`/game/${gamePath}`) + '?media=image'">
             <p><i class="uil uil-image-edit"></i></p>
             <h2>{{ $t('image') }}</h2>
           </NuxtLink>
@@ -34,8 +34,8 @@
             <h2>{{ $t('video') }}</h2>
           </NuxtLink>
 
-          <NuxtLink :class="[routeQuery === 'audio' ? 'active' : '', 'swiper-slide']"
-            :to="localePath(`/game/${gamePath}`) + '?media=audio'">
+          <NuxtLink :class="[routeQuery === 'sound' ? 'active' : '', 'swiper-slide']"
+            :to="localePath(`/game/${gamePath}`) + '?media=sound'">
             <p><i class="uil uil-music"></i></p>
             <h2>{{ $t('audio') }}</h2>
           </NuxtLink>
@@ -69,13 +69,12 @@ onMounted(async () => {
     const { result } = data.value;
     gameInfo.value = result.game
     useGame().setGame(gameInfo.value);
-    await getUserInfo()
+    // await getUserInfo()
     isPending.value = false
   }
 })
 
 async function getUserInfo() {
-  console.log(gameInfo.value.user)
   if (gameInfo.value.user) {
     const { data, pending } = await user.getUserInfo(gameInfo.value.user.channel_id)
     const { result } = data.value;

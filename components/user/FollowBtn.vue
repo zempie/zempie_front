@@ -26,7 +26,7 @@ const isLogin = computed(() => useUser().user.value.isLogin)
 const loginUser = computed(() => useUser().user.value.info)
 
 
-const emit = defineEmits(['fetch'])
+const emit = defineEmits(['refresh'])
 const props = defineProps({
   user: Object as PropType<IUser>
 })
@@ -40,7 +40,7 @@ async function follow() {
   const { data, error } = await user.follow(props.user.id)
 
   if (!error.value) {
-    emit('fetch')
+    emit('refresh')
     useChannel().setFollowing()
   } else {
     ElMessage.error(t('잠시후에 다시 시도해주세요'))
@@ -51,7 +51,7 @@ async function follow() {
 async function unfollow() {
   const { data, error } = await user.unfollow(props.user.id)
   if (!error.value) {
-    emit('fetch')
+    emit('refresh')
     useChannel().setUnfollowing()
   } else {
     ElMessage.error(t('잠시후에 다시 시도해주세요'))

@@ -6,6 +6,8 @@ const delay = (ms: number) => new Promise((_) => setTimeout(_, ms))
 // const BASE_API = process.env.BASE_API
 // const COMMUNITY_API = process.env.COMMUNITY_API
 
+
+
 function baseOption(method: string, withCredentials: boolean, body?: object) {
   const config = useRuntimeConfig();
   const accessToken = useCookie(config.COOKIE_NAME).value
@@ -15,10 +17,21 @@ function baseOption(method: string, withCredentials: boolean, body?: object) {
     headers: accessToken && withCredentials ? { 'Authorization': `Bearer ${accessToken}` } : {},
     initialCache: false,
   }
-  if (method === 'post') {
+  if (method === 'post' || method === 'put') {
     options['body'] = body;
   }
   return options
+}
+
+export const createQueryUrl = (url: string, queries: object) => {
+  url = url + '?_=' + Date.now()
+  if (queries) {
+    for (let d in queries) {
+      if (queries[d]) url += `&${d}=${queries[d]}`
+    }
+  }
+
+  return url
 }
 
 export const getZempieFetchOptions = (method = 'get', withCredentials = false, body?: object) => {

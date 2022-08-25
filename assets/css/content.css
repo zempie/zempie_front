@@ -1278,7 +1278,6 @@
     width: 100%;
     padding: 40px 20px;
     background: #fff;
-    border-radius: 0;
   }
 
   .login-area .la-logo {
@@ -1334,7 +1333,6 @@
     width: 100%;
     padding: 40px 20px;
     background: #fff;
-    border-radius: 0;
   }
 
   .login-area .la-logo {
@@ -1516,7 +1514,6 @@
     width: 100%;
     padding: 40px 20px;
     background: #fff;
-    border-radius: 0;
   }
 
   .login-join .lj-logo {
@@ -1567,7 +1564,6 @@
     width: 100%;
     padding: 40px 20px;
     background: #fff;
-    border-radius: 0;
   }
 
   .login-join .lj-logo {
@@ -1701,7 +1697,6 @@
     width: 100%;
     padding: 40px 20px;
     background: #fff;
-    border-radius: 0;
   }
 
   .login-agreement .lam-logo {
@@ -1737,7 +1732,6 @@
     width: 100%;
     padding: 40px 20px;
     background: #fff;
-    border-radius: 0;
   }
 
   .login-agreement .lam-logo {
@@ -1835,7 +1829,6 @@
     width: 100%;
     padding: 40px 20px;
     background: #fff;
-    border-radius: 0;
   }
 
   .login-email .le-logo {
@@ -1858,7 +1851,6 @@
     width: 100%;
     padding: 40px 20px;
     background: #fff;
-    border-radius: 0;
   }
 
   .login-email .le-logo {
@@ -1957,7 +1949,6 @@
     width: 100%;
     padding: 40px 20px;
     background: #fff;
-    border-radius: 0;
   }
 
   .pw-find .pf-logo {
@@ -1984,7 +1975,6 @@
     width: 100%;
     padding: 40px 20px;
     background: #fff;
-    border-radius: 0;
   }
 
   .pw-find .pf-logo {
@@ -2071,7 +2061,6 @@
     width: 100%;
     padding: 40px 20px;
     background: #fff;
-    border-radius: 0;
   }
 
   .pw-reset .pr-logo {
@@ -2103,7 +2092,6 @@
     width: 100%;
     padding: 40px 20px;
     background: #fff;
-    border-radius: 0;
   }
 
   .pw-reset .pr-logo {
@@ -2156,7 +2144,7 @@
 
 @media all and (max-width: 479px) {
   .three-area {
-    width: 90%;
+    width: 100%;
     margin: 20px auto;
   }
 
@@ -2180,7 +2168,7 @@
 
 @media all and (min-width: 480px) and (max-width: 767px) {
   .three-area {
-    width: 470px;
+    width: 100%;
     margin: 20px auto;
   }
 
@@ -2527,6 +2515,7 @@
 
 /* 메세지 */
 .ta-message-send {
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
   width: 100%;
@@ -2578,8 +2567,11 @@
 }
 
 @media all and (max-width: 479px) {
+
+
   .ta-message-send>p {
     width: 18%;
+
   }
 
   .ta-message-send>dl {
@@ -2885,7 +2877,7 @@
 }
 
 .ta-post .tap-list {
-  margin-top: 20px;
+  margin-bottom: 20px;
   border-radius: 10px;
   background: #fff;
   box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.1);
@@ -3106,6 +3098,12 @@
 }
 
 @media all and (max-width: 479px) {
+
+  .ta-post,
+  .tap-list {
+    border-radius: 0% !important;
+  }
+
   .ta-post .tap-list .tapl-title>dt>dl {
     align-items: flex-start;
   }
@@ -3206,7 +3204,7 @@
 
 /* 포스트 - 없을때 */
 .ta-post-none {
-  margin-top: 20px;
+  /* margin-top: 20px; */
   padding: 100px 20px;
   text-align: center;
   border-radius: 10px;

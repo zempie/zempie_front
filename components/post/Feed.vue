@@ -13,6 +13,7 @@
 
           </dd>
           <dd v-else>
+
             <h2>{{ $t('feed.noUser.post') }}</h2>
             <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{ dateFormat(feed.created_at) }}</p>
 
@@ -30,7 +31,7 @@
 
               </template>
               <template v-else>
-                <NuxtLink :to="`/${$i18n.locale}/channel/${feed.user && feed.user.channel_id}/timeline`">
+                <NuxtLink :to="localePath(`/channel/${feed.user && feed.user.channel_id}/timeline`)">
                   {{ $t('visit.userChannel') }}
                 </NuxtLink>
                 <!-- <a v-if="user" @click="report">{{ $t('post.report') }}</a>
@@ -63,38 +64,36 @@
     </dl>
 
     <div>
-      <div class="tapl-content" v-html="feed.content" ref="contentDiv"
+      <div class="tapl-content" v-html="feed.content" ref="feedDiv"
         @click="$router.push(localePath(`/feed/${feed.id}`))"></div>
-      <!-- 더보기 -->
-      <!-- <div v-if="isOverflow" class='gradient'></div> -->
+      <div v-if="isOverflow" class='gradient'></div>
     </div>
+    <template v-if="isOverflow">
+      <div v-if="!isMoreView" class="more-container">
+        <span>
+          <hr class="dot-line" />
+        </span><a @click="moreView">
+          {{ $t('moreView') }} </a><span>
+          <hr class="dot-line" />
+        </span>
+      </div>
 
-    <!-- <div v-if="isOverflow" class="more-container">
-      <span>
-        <hr class="dot-line" />
-      </span><a @click="moreView">
-        {{ $t('moreView') }} </a><span>
-        <hr class="dot-line" />
-      </span>
-    </div>
+      <div v-else class="more-container">
+        <span>
+          <hr class="dot-line" />
+        </span><a @click="closeView">{{ $t('closeView') }} </a><span>
+          <hr class="dot-line" />
+        </span>
+      </div>
+    </template>
+    <template v-if="initFiles && feed.post_type === 'SNS'">
 
-    <div v-if="!isOverflow && isMoreView" class="more-container">
-      <span>
-        <hr class="dot-line" />
-      </span><a @click="closeView">{{ $t('closeView') }} </a><span>
-        <hr class="dot-line" />
-      </span>
-    </div> -->
-    <!-- /더보기 -->
+      <img v-if="initFiles.length === 1" style="height: 88%;margin: 0 auto; display: flex;" :src="initFiles[0].url"
+        class="feed-img mt-3" />
 
-    <template v-if="attatchment_files && feed.post_type === 'SNS'">
 
-      <img v-if="attatchment_files.length === 1" style="height: 88%;margin: 0 auto; display: flex;"
-        :src="attatchment_files[0].url" class="feed-img mt-3" />
-
-      
       <swiper v-else class="swiper" :modules="[Pagination]" style="height: 350px;" :pagination="{ clickable: true }">
-        <swiper-slide v-for="file in attatchment_files">
+        <swiper-slide v-for="file in initFiles">
           <img v-if="file.type === 'image'" style="height: 88%;margin: 0 auto;display: flex;" :src="file.url"
             class="feed-img mt-3" />
         </swiper-slide>
@@ -146,6 +145,10 @@
           </div>
         </div>
       </el-dialog>
+      <el-dialog v-model="showEditModal" append-to-body custom-class="modal-area-type">
+        <TextEditor @closeModal="showEditModal = false" :isEdit="true" :feed="feed" @refresh="emit('refresh')" />
+        <!-- <TextEditor @closeModal="showEditModal = false" :type="type" @refresh="refresh" :key="editorKey" /> -->
+      </el-dialog>
     </ClientOnly>
 
 
@@ -154,6 +157,7 @@
 </template>
 
 <script setup lang="ts">
+import _ from 'lodash'
 import { PropType } from 'vue';
 import { IFeed } from '~~/types';
 import { Pagination } from 'swiper';
@@ -164,17 +168,25 @@ import { dateFormat, execCommandCopy } from '~/scripts/utils'
 import { useI18n } from 'vue-i18n';
 import { useLocalePath } from 'vue-i18n-routing';
 import hljs from 'highlight.js';
+import { useWindowScroll } from '@vueuse/core'
 
-
-const COMMENT_LIMIT = 5
+const { x, y } = useWindowScroll()
 const localePath = useLocalePath();
 const config = useRuntimeConfig();
 const { t, locale } = useI18n()
 
+
+const COMMENT_LIMIT = 5;
+const MAX_FEED_HEIGHT = 450;
+
 const feedMenu = ref()
 const showDeleteModal = ref(false)
+const showEditModal = ref(false)
 const feedId = ref(null)
-const contentDiv = ref<HTMLElement>()
+const feedDiv = ref<HTMLElement>()
+
+const isMoreView = ref(false)
+const currScroll = ref(0)
 
 
 const limit = ref(COMMENT_LIMIT)
@@ -184,16 +196,26 @@ const comments = ref([])
 const isOpenedComments = ref(false)
 
 
+
 const user = computed(() => useUser().user.value.info)
-const attatchment_files = computed(() => {
-  return Array.isArray(props.feed.attatchment_files) ? props.feed.attatchment_files : JSON.parse(props.feed.attatchment_files as string)
-})
 
 const props = defineProps({
   feed: Object as PropType<IFeed>
 })
 
-const emit = defineEmits(['fetch'])
+
+
+const attatchment_files = computed(() => {
+  return Array.isArray(props.feed.attatchment_files) ? props.feed.attatchment_files : JSON.parse(props.feed.attatchment_files as string)
+})
+
+const isOverflow = computed(() => {
+  return feedDiv.value?.clientHeight > MAX_FEED_HEIGHT ? true : false;
+})
+
+const initFiles = _.cloneDeep(attatchment_files.value)
+
+const emit = defineEmits(['refresh'])
 
 onMounted(() => {
 
@@ -235,10 +257,6 @@ onMounted(() => {
 //     isAddData: boolean = false;
 //     user!: any;
 //     isOpenReportModal = false;
-
-//     isOverflow: boolean | null = null;
-//     isMoreView: boolean | null = null;
-//     currScroll: number = 0;
 
 const commentCnt = ref(0)
 
@@ -387,6 +405,7 @@ function copyUrl() {
 
 
 function openEdit() {
+  showEditModal.value = true;
 
 }
 //     openEdit() {
@@ -411,15 +430,10 @@ async function deletePost() {
       message: t('posting.deleted'),
       type: 'success'
     })
-    emit('fetch')
+    emit('refresh')
   }
   showDeleteModal.value = false;
 }
-//     deletePost() {
-//         this.$emit('deleteFeed', this.feed.id)
-//         this.$modal.show('deleteModal')
-
-//     }
 
 //     report() {
 //         this.$emit('reportPost', this.feed.id)
@@ -427,33 +441,19 @@ async function deletePost() {
 //         this.$modal.show('modalReport')
 //     }
 
-//     /**
-//      * 더보기
-//      * */
-//     checkOverflow() {
-//         const ref = this.$refs.contentDiv;
+function moreView() {
+  feedDiv.value.style.maxHeight = '100%';
 
-//         if ((ref as any).clientHeight >= 450) {
-//             this.isOverflow = true;
-//         }
-//     }
+  isMoreView.value = true;
+  currScroll.value = y.value;
 
-//     moreView() {
-//         const ref = this.$refs.contentDiv;
-//         (ref as any).style.maxHeight = '100%';
-//         this.isOverflow = false;
-//         this.isMoreView = true;
-//         this.currScroll = document.documentElement.scrollTop;
+}
 
-//     }
-
-//     closeView() {
-//         const ref = this.$refs.contentDiv;
-//         (ref as any).style.maxHeight = '500px';
-//         this.isOverflow = true;
-//         this.isMoreView = false;
-//         window.scrollTo(0, this.currScroll);
-//     }
+function closeView() {
+  feedDiv.value.style.maxHeight = '500px';
+  isMoreView.value = false;
+  window.scrollTo(0, currScroll.value);
+}
 
 //     /**
 //      * 댓글

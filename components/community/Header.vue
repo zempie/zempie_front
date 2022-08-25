@@ -33,7 +33,7 @@
         <h3>{{ communityInfo?.description }} </h3>
       </dd>
       <dt>
-        <CommunitySubscribeBtn :community="communityInfo" @fetch="fetch" />
+        <CommunitySubscribeBtn :community="communityInfo" @refresh="fetch" />
       </dt>
     </dl>
   </div>

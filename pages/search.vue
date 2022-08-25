@@ -192,13 +192,6 @@ watch(
 //             })
 //     }
 
-
-//     toGamePage(gamePath: string, gameId: number) {
-//         this.$router.push(`/${this.$i18n.locale}/timeline/game/${gamePath}?game_id=${gameId}`)
-
-
-//     }
-
 //     @Watch('$route.query.q')
 //     watchQuery() {
 //         this.keyword = this.$route.query.q

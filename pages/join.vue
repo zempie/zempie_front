@@ -573,7 +573,6 @@ async function joinZempie() {
     width: 100%;
     padding: 40px 20px;
     background: #fff;
-    border-radius: 0;
     transform: translate(0, 0);
   }
 
@@ -609,7 +608,6 @@ async function joinZempie() {
     width: 100%;
     padding: 40px 20px;
     background: #fff;
-    border-radius: 0;
     transform: translate(0, 0);
   }
 

@@ -30,20 +30,23 @@ import Image from '~/scripts/tiptap/image'
 
 import { lowlight } from 'lowlight/lib/core.js'
 
-
+const BLOG_LIMIT = 5000
+const SNS_LIMIT = 300
 const emit = defineEmits(['editorContent'])
+
+
 const { t, locale } = useI18n()
+
+
+const charCount = ref(0)
+
 
 const props = defineProps({
   postType: String,
   feed: Object as PropType<IFeed>
 })
 
-const BLOG_LIMIT = 5000
-const SNS_LIMIT = 300
-const content = ref(props.feed?.content || '')
-const charCount = ref(0)
-
+const content = ref(props.feed.content)
 const limit = computed(() => props.postType === 'SNS' ? SNS_LIMIT : BLOG_LIMIT)
 
 
@@ -52,10 +55,10 @@ const editor = useEditor({
   extensions: [
     StarterKit,
     CodeBlockLowlight.configure({ lowlight }),
-    Placeholder.configure({
-      emptyEditorClass: 'is-editor-empty',
-      placeholder: `${t('posting.placeholder')}`,
-    }),
+    // Placeholder.configure({
+    //   emptyEditorClass: 'is-editor-empty',
+    //   placeholder: `${t('posting.placeholder')}`,
+    // }),
     CharacterCount.configure({
       limit: limit.value,
     }),

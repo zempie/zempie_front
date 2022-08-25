@@ -11,7 +11,7 @@
       <ul class="card-follow" v-else>
         <UserCard v-for="member in data.result" :key="member.id" :user="member">
           <template #followBtn>
-            <UserFollowBtn :user="member" class="mt20" @fetch="refresh" />
+            <UserFollowBtn :user="member" class="mt20" @refresh="refresh" />
           </template>
         </UserCard>
       </ul>

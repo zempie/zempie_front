@@ -1,6 +1,5 @@
 <template>
-  <NuxtLayout name="user-channel-header">
-
+  <NuxtLayout name="my-channel-header">
     <ClientOnly>
       <dl class="three-area">
         <dt v-if="isPending">
@@ -20,6 +19,38 @@
           </div>
         </dt>
         <dt v-else>
+          <div class="ta-myinfo" style="margin-bottom:20px">
+            <UserAvatar :user="channelInfo" :tag="'p'"></UserAvatar>
+            <h2>{{ channelInfo.name }}</h2>
+            <ul>
+              <li>
+                <NuxtLink :to="localePath(`/channel/${channelId}`)">
+                  <p style="background:#FEB100; cursor: pointer"><i class="uil uil-comment-chart-line"></i>
+                  </p>
+                  <h2>{{ channelInfo.post_cnt }}</h2>
+                  <h3>Posts</h3>
+                </NuxtLink>
+              </li>
+              <li>
+                <NuxtLink :to="localePath(`/channel/${channelId}/followers`)">
+
+                  <p style="background:#33E4CE;cursor: pointer"><i class="uil uil-users-alt"></i></p>
+                  <h2>{{ channelInfo.follower_cnt }}</h2>
+                  <h3>Followers</h3>
+                </NuxtLink>
+
+              </li>
+              <li>
+                <NuxtLink :to="localePath(`/channel/${channelId}/followings`)">
+                  <p style="background:#5D5FFE;cursor: pointer"><i class="uil uil-user-plus"></i></p>
+                  <h2>{{ channelInfo.following_cnt }}</h2>
+                  <h3>Followings</h3>
+                </NuxtLink>
+
+              </li>
+
+            </ul>
+          </div>
           <div class="ta-game-list">
             <dl>
               <dt>Game</dt>
@@ -50,10 +81,20 @@
 
         <dd>
           <TimelineSk v-if="isPending" />
-          <PostTimeline type="user" v-else />
+          <PostTimeline type="user" :isMine="isMine" v-else />
         </dd>
 
         <dt>
+
+          <!-- <div class="ta-groups" style="margin-top:0px" v-if="isMine">
+            <h2>Info</h2>
+            <div v-if="isPending">
+              <dl v-for="group in 4">
+                <CommunityListItemSk />
+              </dl>
+            </div>
+            <UserAvatar :user="channelInfo" tag="p" />
+          </div> -->
           <div class="ta-groups" style="margin-top:0px">
             <h2>Group</h2>
             <div v-if="isPending">
@@ -64,6 +105,7 @@
             <CommunityList v-else :communities="channelInfo.communities" />
           </div>
         </dt>
+
       </dl>
     </ClientOnly>
   </NuxtLayout>
@@ -79,7 +121,22 @@ const channelInfo = computed(() => useChannel().userChannel.value.info)
 const games = computed(() => channelInfo.value.games)
 const channelId = computed(() => route.params.id as string)
 
+useHead({
+  title: 'Zempie | Project version ',
+  meta: [{
+    name: 'description',
+    content: 'project list'
+  }]
+})
 
+definePageMeta({
+  title: 'user-channel',
+  name: 'userChannel'
+})
+
+const isMine = computed(() => {
+  return channelId.value === useUser().user.value.info?.channel_id
+})
 
 
 onMounted(() => {

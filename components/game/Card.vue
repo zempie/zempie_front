@@ -1,19 +1,19 @@
 <template>
-  <li @mouseenter="enterCard" @mouseleave="leaveCard" style="position: relative">
-    <img v-if="gameInfo?.game_jam?.is_awarded" src="/images/medal2.png"
+  <li v-if="gameInfo" @mouseenter="enterCard" @mouseleave="leaveCard" style="position: relative">
+    <img v-if="gameInfo.game_jam?.is_awarded" src="/images/medal2.png"
       style="position: absolute; right:10px; top:10px" />
 
     <div @click="moveGamePage" class="thumbnail"
       :style="`background: url( ${thumbnail} ) center center / cover no-repeat; background-size: cover;`"></div>
     <dl>
-      <dt>
-        <UserAvatar :user="gameInfo?.user" :tag="'p'"></UserAvatar>
+      <dt @click="moveUserPage">
+        <UserAvatar :user="gameInfo.user" :tag="'p'"></UserAvatar>
       </dt>
       <dd>
         <h2 @click="playGame">
-          {{ gameInfo?.title }}
+          {{ gameInfo.title }}
         </h2>
-        <p>{{ gameInfo.user?.name }}</p>
+        <p @click="moveUserPage">{{ gameInfo.user?.name }}</p>
         <ul>
           <li>
             <img src="/images/zempie_game_icon.svg" alt="" />
@@ -31,7 +31,7 @@ import { IGame } from '~~/types';
 import { useLocalePath } from "vue-i18n-routing";
 
 const localePath = useLocalePath();
-const $router = useRouter();
+const router = useRouter();
 
 const props = defineProps({
   gameInfo: Object as PropType<IGame>
@@ -56,8 +56,11 @@ function playGame() {
 
 function moveGamePage() {
   useGame().setGame(props.gameInfo)
-  $router.push(localePath(`/game/${props.gameInfo?.pathname}`))
+  router.push(localePath(`/game/${props.gameInfo?.pathname}`))
+}
 
+function moveUserPage() {
+  router.push(localePath(`/channel/${props.gameInfo?.user.channel_id}`))
 }
 </script>
 

@@ -14,7 +14,7 @@
           <CommunityChannelList :community="communityInfo" />
           <dd>
             <!-- <TimelineSk /> -->
-            <PostTimeline type="community" :ableToPost="communityInfo?.is_subscribed">
+            <PostTimeline type="community" :isSubscribed="communityInfo?.is_subscribed">
               <template #inputBox>
                 <input type="text" :placeholder="$t('postModalInput')" readonly
                   @click="isLogin ? (communityInfo?.is_subscribed ? '' : needSubscribe = true) : useModal().openLoginModal()" />

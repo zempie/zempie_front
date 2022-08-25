@@ -25,7 +25,7 @@
         </NuxtLink>
 
         <NuxtLink :class="['swiper-slide', routeQuery === 'img' ? 'active' : '',]"
-          :to="localePath(`/community/${communityInfo?.id}`) + '?media=img'">
+          :to="localePath(`/community/${communityInfo?.id}`) + '?media=image'">
           <p><i class="uil uil-image-edit"></i></p>
           <h2>IMAGE</h2>
         </NuxtLink>
@@ -36,8 +36,8 @@
           <h2>VIDEO</h2>
         </NuxtLink>
 
-        <NuxtLink :class="['swiper-slide', routeQuery === 'audio' ? 'active' : '',]"
-          :to="localePath(`/community/${communityInfo?.id}`) + '?media=audio'">
+        <NuxtLink :class="['swiper-slide', routeQuery === 'sound' ? 'active' : '',]"
+          :to="localePath(`/community/${communityInfo?.id}`) + '?media=sound'">
           <p><i class="uil uil-music"></i></p>
           <h2>AUDIO</h2>
         </NuxtLink>

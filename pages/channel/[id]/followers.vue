@@ -1,8 +1,8 @@
 <template>
-  <NuxtLayout name="user-channel-header">
+  <NuxtLayout name="my-channel-header">
     <div>
       <dl class="area-title">
-        <dt>Followings <span>{{ totalCount }}</span></dt>
+        <dt>Followers <span>{{ totalCount }}</span></dt>
       </dl>
       <UserList :users="users" :isPending="isPending" />
       <div v-if="!isPending && !users.length" class="no-result">
@@ -16,11 +16,21 @@
 <script setup lang="ts">
 
 const userId = computed(() => useChannel().userChannel.value.info.id)
+const route = useRoute()
 
 const isPending = ref(true)
 const totalCount = ref(0)
 const users = ref([])
 
+
+definePageMeta({
+  title: 'user-followers',
+  name: 'userFollowers'
+})
+
+const isMine = computed(() => {
+  return route.params.id === useUser().user.value.info?.channel_id
+})
 watch(userId, async () => {
   await fetch()
 })

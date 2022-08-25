@@ -1,9 +1,7 @@
 <template>
-  <NuxtLayout name="user-channel-header">
+  <NuxtLayout name="my-channel-header">
     <div v-if="games">
-
-      <dl class="area-title">
-
+      <dl class="area-title" style="margin-top:12.5px">
         <dt>Games <span>{{ games.length }}</span></dt>
         <dd>
           <NuxtLink :to="localePath(`/project/upload`)" v-if="isMine" class="btn-default-samll">
@@ -25,9 +23,17 @@
 </template>
 
 <script setup lang="ts">
+import { IUserChannel } from "~~/types"
+
 import { useI18n } from 'vue-i18n';
 import { useLocalePath } from 'vue-i18n-routing';
+
+definePageMeta({
+  title: 'user-game',
+  name: 'userGame'
+})
 const localePath = useLocalePath();
+const userInfo = ref<IUserChannel>()
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -35,10 +41,14 @@ const route = useRoute()
 const games = computed(() => useChannel().userChannel.value.info?.games)
 const isLoadDone = computed(() => useRender().state.value.isDone)
 
+const channelId = computed(() => route.params.id as string)
 
 const isMine = computed(() => {
   return route.params.id === useUser().user.value.info?.channel_id
 })
+
+await useChannel().getChannelInfo(channelId.value)
+
 
 
 </script>
@@ -72,4 +82,28 @@ const isMine = computed(() => {
 .component-fade-leave-to {
   opacity: 0;
 }
+
+
+@media all and (max-width: 479px) {
+  .area-title {
+    width: 100%;
+    padding: 15px 0;
+  }
+}
+
+@media all and (min-width: 480px) and (max-width: 767px) {
+
+  .area-title,
+  .card-game {
+    width: 100%;
+  }
+
+
+}
+
+@media all and (min-width: 768px) and (max-width: 991px) {}
+
+@media all and (min-width: 992px) and (max-width: 1199px) {}
+
+@media all and (min-width: 1200px) {}
 </style>

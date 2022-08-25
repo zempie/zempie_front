@@ -7,9 +7,14 @@
           <div class="header-logo-menu">
             <p>
               <NuxtLink to="/">
-                <img src="/images/zempie-logo-black.png" />
+                <img class="logo" src="/images/zempie-logo-black.png" />
+                <img class="mobile-logo" src="/images/zempie_logo_154_155.png" />
               </NuxtLink>
             </p>
+            <button class="btn-circle-none mobile" @click="isHeaderSideMobile = true">
+              <i class="uil uil-bars"></i>
+            </button>
+            <!-- <i class="uil uil-bars" v-on:click="headerSideOpenMobile"></i> -->
             <ul class="menu">
               <li class="uppercase">
 
@@ -116,32 +121,21 @@
                 @click="switchLangauge" />
             </el-select>
           </div>
-          <!-- 로그인 했을 때 -->
 
           <div class="header-info ml10" v-if="isLogin" style="display:flex; ">
-            <!-- message -->
 
-            <!-- /message -->
-
-            <button class="btn-circle-none">
-              <NuxtLink :to="localePath(`/channel/${user?.channel_id}`)">
-                <ClientOnly>
-                  <UserAvatar style="width:30px; height:30px;" :user="user" :key="user?.picture" />
-                </ClientOnly>
-
-              </NuxtLink>
-            </button>
             <el-dropdown trigger="click" ref="userMenu">
-              <button class="btn-circle-none" style="padding-top:5px">
-                <i class="uil uil-bars"></i>
-              </button>
+              <UserAvatar style="width:30px; height:30px;" :user="user" :key="user?.picture" />
+
               <template #dropdown>
 
                 <div slot="body" class="header-setting" style="min-width:250px" @click="userMenu.handleClose()">
                   <dl style="margin:10px 0px 0px 0px">
-
+                    <UserAvatar style="width:30px; height:30px;" :user="user" :key="user?.picture" />
                     <dd>
-                      <h2>{{ user.name }}</h2>
+                      <NuxtLink :to="localePath(`/channel/${user?.channel_id}`)">
+                        <h2>{{ user.name }}</h2>
+                      </NuxtLink>
                     </dd>
                   </dl>
                   <div>
@@ -188,49 +182,51 @@
           </div>
 
 
-          <!-- 모바일 - 우측버튼 -->
-          <!-- <div class="header-info-mobile" v-if="$store.getters.user"> -->
-          <!--                    <button class="btn-none" @click="isOpenMessage = !isOpenMessage">-->
-          <!--                        <i class="uil uil-comment" style="font-size:21px;"></i>-->
-          <!--                        <span></span>-->
-          <!--                    </button>-->
-          <!--                    <button class="btn-none" @click="isOpenMessage = !isOpenMessage">-->
-          <!--                        <i class="uil uil-bell" style="font-size:23px;"></i>-->
-          <!--                        <span></span>-->
-          <!--                    </button> -->
-          <!-- <button class="btn-none">
-            <i class="uil uil-comment"></i>
-          </button> -->
 
-          <!-- 모바일 - 우측버튼 끝 -->
-          <!-- 모바일 - 좌측영역 -->
-          <!-- <div class="header-side-mobile" :style="isHeaderSideMobile ? 'left:0px;' : '' "
-                         id="headerSideMobile">
-                        <div class="hsm-close"><i class="uil uil-times" v-on:click="headerSideCloseMobile"></i></div>
-                        <div class="hsm-search">
-                            <div class="input-search-line-mobile" @click="isOpenSearch = !isOpenSearch">
-                                <p><i class="uil uil-search"></i>
-                                <p>
-                                <div><input type="text" name="" title="keywords"
-                                            :placeholder="t('needSearchInput')"/></div>
-                            </div>
-                        </div>
-                        <div class="hsm-menu">
-                            <router-link :to="`/${$i18n.locale}/communityList`" @click.native="headerSideCloseMobile"><i class="uil uil-comment"></i>
-                                Community
-                            </router-link>
-                            <router-link :to="`/${$i18n.locale}/gameList`" @click.native="headerSideCloseMobile"><i class="uil uil-robot"></i> Games
-                            </router-link>
-                            <router-link :to="`/${$i18n.locale}/zem-jam`" @click.native="headerSideCloseMobile"><i class="uil uil-comment"></i>
-                                ZEMJAM
-                            </router-link>
-                        </div>
 
-                    </div>
-                    <div class="header-side-bg-mobile" :style="isHeaderSideBgMobile ? 'display:block;' : '' "
-                         id="headerSideBgMobile" v-on:click="headerSideCloseMobile">
-                        &nbsp;-->
-          <!-- </div> -->
+          <!-- TODO: 알람, 디엠 비턴 -->
+          <!-- <div class="header-info-mobile" v-if="isLogin">
+            <button class="btn-none" @click="isOpenMessage = !isOpenMessage">
+              <i class="uil uil-comment" style="font-size:21px;"></i>
+              <span></span>
+            </button>
+            <button class="btn-none" @click="isOpenMessage = !isOpenMessage">
+              <i class="uil uil-bell" style="font-size:23px;"></i>
+              <span></span>
+            </button>
+            <button class="btn-none">
+              <i class="uil uil-comment"></i>
+            </button>
+          </div> -->
+
+
+          <div class="header-side-mobile" :style="isHeaderSideMobile ? 'left:0px;' : ''" id="headerSideMobile">
+            <div class="hsm-close"><i class="uil uil-times" @click="isHeaderSideMobile = false"></i></div>
+            <div class="hsm-search">
+              <div class="input-search-line-mobile" @click="isOpenSearch = !isOpenSearch">
+                <p><i class="uil uil-search"></i></p>
+                <div><input type="text" name="" title="keywords" :placeholder="t('needSearchInput')" /></div>
+              </div>
+            </div>
+            <div class="hsm-menu">
+
+              <NuxtLink :to="localePath('/community/list')" @click.native="isHeaderSideMobile = false"><i
+                  class="uil uil-comment"></i>
+                Community
+              </NuxtLink>
+              <NuxtLink :to="localePath('/game/list')" @click.native="isHeaderSideMobile = false"><i
+                  class="uil uil-robot"></i> Games
+              </NuxtLink>
+              <NuxtLink :to="localePath('/zem-jam')" @click.native="isHeaderSideMobile = false"><i
+                  class="uil uil-comment"></i>
+                ZEMJAM
+              </NuxtLink>
+            </div>
+          </div>
+          <div class="header-side-bg-mobile" :style="isHeaderSideBgMobile ? 'display:block;' : ''"
+            id="headerSideBgMobile" v-on:click="headerSideCloseMobile">
+            &nbsp;
+          </div>
           <!-- 모바일 - 좌측영역 끝 -->
           <!-- 로그인 했을 때 끝 -->
           <!-- 로그인 안했을 때 -->
@@ -375,27 +371,25 @@
         </dd>
       </dl>
 
-      <ClientOnly>
-        <el-dialog v-model="isOpen" append-to-body custom-class="modal-area-type" :show-close="false">
-          <div class="modal-alert">
-            <dl class="ma-header">
-              <dt>{{ $t('information') }}</dt>
-              <dd>
-                <button @click="useModal().closeLoginModal()"><i class="uil uil-times"></i></button>
-              </dd>
-            </dl>
+      <el-dialog v-model="isOpen" append-to-body custom-class="modal-area-type" :show-close="false">
+        <div class="modal-alert">
+          <dl class="ma-header">
+            <dt>{{ $t('information') }}</dt>
+            <dd>
+              <button @click="useModal().closeLoginModal()"><i class="uil uil-times"></i></button>
+            </dd>
+          </dl>
 
-            <div class="ma-content">
-              <h2>{{ $t('needLogin.text1') }}<br />{{ $t('needLogin.text2') }}</h2>
-              <div>
-                <button class="btn-default" style="width: 100%" @click="$router.push(localePath('/login'))">
-                  {{ $t('login') }}</button>
-              </div>
+          <div class="ma-content">
+            <h2>{{ $t('needLogin.text1') }}<br />{{ $t('needLogin.text2') }}</h2>
+            <div>
+              <button class="btn-default" style="width: 100%" @click="$router.push(localePath('/login'))">
+                {{ $t('login') }}</button>
             </div>
-
           </div>
-        </el-dialog>
-      </ClientOnly>
+
+        </div>
+      </el-dialog>
 
 
     </div>
@@ -407,7 +401,6 @@ import _ from 'lodash'
 import { useI18n } from 'vue-i18n';
 import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElSelect, ElOption, ElMessage, ElDialog } from "element-plus";
 import { useLocalePath } from 'vue-i18n-routing';
-import { signOut } from 'firebase/auth'
 
 
 const { t, locale } = useI18n()
@@ -430,12 +423,16 @@ const userList = ref([])
 const gameList = ref([])
 const communityList = ref([])
 const hasResearchResult = ref(false)
+const isOpenMessage = ref(false)
+const isHeaderSideMobile = ref(false)
+const isOpenSearch = ref(false)
+const isHeaderSideBgMobile = ref(false)
 
 const options = [
   { code: 'ko', label: '한국어' },
   { code: 'en', label: 'English' },
 ]
-const selectedLang = ref('en')
+const selectedLang = ref(locale.value)
 
 const isOpen = ref(false)
 const { loginModal } = useModal();
@@ -446,25 +443,32 @@ watch(
     isOpen.value = state;
   }
 )
-
 // const isLogin = computed(() => userStore.$state.isLogin)
 // const user = computed(() => userStore.$state.user)
 
 // const fUser = ref(computed(() => userStore.$state.fUser))
 
+watch(
+  () => locale,
+  (val) => {
+    console.log(val.value)
+    if (val.value === 'ko') {
+      selectedLang.value = 'ko'
+    } else {
+      selectedLang.value = 'en'
+    }
+  }, { immediate: true })
 
 
-
-onMounted(() => {
+onBeforeMount(() => {
   isPending.value = false;
-  console.log(locale.value)
-  if (locale.value === 'ko') {
-    selectedLang.value = 'ko'
-  } else {
-    selectedLang.value = 'en'
-  }
+
 
 })
+
+function headerSideCloseMobile() {
+
+}
 
 function switchLangauge() {
   locale.value = selectedLang.value
@@ -550,6 +554,19 @@ function initSearchData() {
 </script>
 
 <style lang="scss" scoped>
+.mobile-logo {
+  display: none;
+}
+
+.btn-circle-none {
+  padding-top: 5px;
+
+  &.mobile {
+    display: none;
+
+  }
+}
+
 .menu li .active {
   color: #f97316;
 }
@@ -648,6 +665,23 @@ function initSearchData() {
 // q-select
 
 @media all and (max-width: 479px) {
+  .logo {
+    display: none;
+
+  }
+
+  .mobile-logo {
+    display: block;
+    width: 32px;
+    height: 32px;
+  }
+
+  .btn-circle-none {
+    &.mobile {
+      display: block;
+
+    }
+  }
 
   //.header > dl {width:90%; padding:15px 0;}
   //.header-logo-menu p {display:flex; align-items:center; margin-right:0;}

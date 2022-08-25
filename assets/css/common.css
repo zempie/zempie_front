@@ -161,7 +161,7 @@
 
 @media all and (max-width: 479px) {
   .visual-info-center {
-    width: 90%;
+    width: 100%;
     height: 350px;
   }
 
@@ -209,7 +209,7 @@
 
 @media all and (min-width: 480px) and (max-width: 767px) {
   .visual-info-center {
-    width: 470px;
+    width: 100%;
     height: 350px;
   }
 
@@ -364,7 +364,7 @@
 
 @media all and (max-width: 479px) {
   .visual-info-left {
-    width: 90%;
+    width: 100%;
     height: 350px;
   }
 
@@ -643,7 +643,7 @@
 
 @media all and (max-width: 479px) {
   .visual-title {
-    width: 90%;
+    width: 100%;
     height: 120px;
   }
 
@@ -1073,7 +1073,7 @@
 }
 
 .tab-menu-swiper .swiper-area .swiper-slide {
-  width: 14%;
+  width: 16%;
   padding: 15px 0 20px 0;
   text-align: center;
   border-top-left-radius: 10px;
@@ -1118,7 +1118,7 @@
 
 @media all and (max-width: 479px) {
   .tab-menu-swiper {
-    width: 90%;
+    width: 100%;
     margin: 20px auto 5px auto;
     padding: 10px 5px 0 5px;
   }
@@ -1278,7 +1278,7 @@
 
 @media all and (max-width: 479px) {
   .tab-search-swiper {
-    width: 90%;
+    width: 100%;
     margin: 20px auto 10px auto;
   }
 
@@ -2981,7 +2981,7 @@
 
 @media all and (max-width: 479px) {
   .card-game {
-    width: 90%;
+    width: 100%;
     margin: 0 auto;
   }
 

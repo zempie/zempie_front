@@ -37,21 +37,20 @@
           </dl>
           <template v-if="games?.length > 0">
             <ul>
-              <li v-for="game in games">
+              <li v-for="game in games.slice(0, 5)">
                 <p :style="`background:url(${game?.url_thumb_webp ||
                 game?.url_thumb ||
-              
                 '/images/default.png'
                 }) center; background-size:cover;`"></p>
                 <h2 style="text-overflow: ellipsis; overflow: hidden">{{ game?.title }}</h2>
               </li>
             </ul>
 
-            <!-- <div v-if="totalGameCnt > 5">
-                        <router-link :to="`/${$i18n.locale}/channel/${game.user.channel_id}/games`"
-                                     class="btn-default-samll w100p">{{ $t('moreView') }}
-                        </router-link>
-                    </div> -->
+            <div v-if="games.length > 5">
+              <NuxtLink :to="localePath(`/channel/${game.user.channel_id}/games`)" class="btn-default-samll w100p">
+                {{ $t('moreView') }}
+              </NuxtLink>
+            </div>
           </template>
           <ul v-else class="no-game">
             <li>{{ $t('no.game') }}</li>
@@ -59,7 +58,7 @@
         </div>
       </dt>
       <dd>
-        <PostTimeline />
+        <PostTimeline type="game" :isMine="isMine" />
         <!-- <Timeline v-if='user' :currPage="'game'" :id="game.id" :game="game" :key="this.$route.query.media"
             ></Timeline> -->
       </dd>
@@ -104,6 +103,8 @@ const userInfo = ref({} as IUserChannel)
 const games = computed(() => useChannel().userChannel.value.info?.games)
 
 const game = computed(() => useGame().game.value.info)
+
+const isMine = computed(() => useGame().game.value.info?.user.id === useUser().user.value.info?.id)
 
 
 
@@ -213,9 +214,6 @@ function copyUrl() {
 
 }
 
-    // moveGamePage(pathname: string) {
-    //     this.$router.push(`/${this.$i18n.locale}/timeline/game/${pathname}`)
-    // }
 
     // @Watch('$route.params.gamePath')
     // watchParams() {
@@ -292,6 +290,7 @@ function copyUrl() {
 
 .ta-about {
   .desc {
+    color: #000;
     line-break: auto;
   }
 }

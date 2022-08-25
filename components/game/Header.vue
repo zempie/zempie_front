@@ -22,17 +22,14 @@
 
       <dd>
         <div class="like-btn" style="flex-direction: column;">
-          <!-- <i
-                            v-if="!isLike"
-                            class="xi-heart-o like-icon"
-                            style="font-size:22px; color:#ff6e17;cursor: pointer;" @click="sendLike(true)">
+          <i v-if="!isLike" class="xi-heart-o like-icon" style="font-size:22px; color:#ff6e17;cursor: pointer;"
+            @click="setLike">
 
-                        </i>
-                        <i
-                            v-else class="xi-heart like-icon"
-                            style="font-size:22px; color:#ff6e17; cursor: pointer;" @click="sendLike(false)">
-                        </i>
-                        <p style="color:#fff">{{ likeCnt }}</p> -->
+          </i>
+          <i v-else class="xi-heart like-icon" style="font-size:22px; color:#ff6e17; cursor: pointer;"
+            @click="unsetLike">
+          </i>
+          <p style="color:#fff">{{ likeCnt }}</p>
         </div>
 
         <a v-if="gameInfo.stage !== eGameStage.DEV" @click="playGame" class="btn-default w150"
@@ -44,6 +41,7 @@
 </template>
 
 <script setup lang="ts">
+import _ from 'lodash'
 import { IGame, eGameStage } from '~~/types';
 import { PropType } from 'vue';
 
@@ -52,13 +50,50 @@ const hashtags = computed(() => props.gameInfo.hashtags.length > 0 ? props.gameI
 const props = defineProps({
   gameInfo: Object as PropType<IGame>
 })
+const isLike = ref(props.gameInfo?.is_like)
+const likeCnt = ref(props.gameInfo.count_heart)
 
 
 function playGame() {
   window.open(
     `/play/${props.gameInfo.pathname}`, "_blank");
 }
+
+const setLike = _.debounce(async () => {
+  isLike.value = true;
+
+  const payload = {
+    game_id: props.gameInfo.id,
+    on: true
+  }
+  const { data, error, refresh } = await useFetch(`/game/heart`, getZempieFetchOptions('post', true, payload));
+  if (!error.value) {
+    likeCnt.value++;
+  }
+}, 300)
+
+const unsetLike = _.debounce(async () => {
+  isLike.value = false;
+
+  const payload = {
+    game_id: props.gameInfo.id,
+    on: false
+  }
+  const { data, error, refresh } = await useFetch(`/game/heart`, getZempieFetchOptions('post', true, payload));
+  if (!error.value) {
+    likeCnt.value--;
+  }
+
+}, 300)
+
+
 </script>
 
 <style lang="scss" scoped>
+.like-btn {
+  height: 65px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>

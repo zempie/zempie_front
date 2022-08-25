@@ -61,7 +61,7 @@
           <CommunityCard v-show="!isPending" v-for="community in communities" :community="community"
             :key="community.id">
             <template v-slot:subBtn>
-              <CommunitySubscribeBtn :community="community" @fetch="fetch" />
+              <CommunitySubscribeBtn :community="community" @refresh="fetch" />
             </template>
           </CommunityCard>
         </TransitionGroup>
@@ -362,7 +362,6 @@ svg {
 @media all and (max-width: 479px) {
   .area-search-sort {
     width: 100%;
-    border-radius: 0;
 
   }
 
@@ -385,8 +384,6 @@ svg {
 
   .card-timeline>li {
     width: 100%;
-    border-radius: 0;
-
     margin: 2% 0 2% 0;
   }
 }

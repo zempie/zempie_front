@@ -15,7 +15,7 @@ import _ from 'lodash'
 const props = defineProps({
   feed: Object
 })
-const emit = defineEmits(['fetch'])
+const emit = defineEmits(['refresh'])
 
 const isLiked = ref(props.feed.liked)
 const likeCnt = ref(props.feed.like_cnt)

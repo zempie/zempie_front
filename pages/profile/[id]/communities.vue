@@ -11,7 +11,7 @@
           <CommunityCard v-if="communities.length" v-for="community in communities" :key="community?.id"
             :community="community">
             <template v-slot:subBtn>
-              <CommunitySubscribeBtn :community="community" @fetch="fetch" />
+              <CommunitySubscribeBtn :community="community" @refresh="fetch" />
             </template>
           </CommunityCard>
           <div class="no-result" v-else>
