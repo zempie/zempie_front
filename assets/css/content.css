@@ -2149,13 +2149,13 @@
   }
 
   .three-area>dt:nth-child(1) {
-    order: 2;
+    order: 1;
     width: 100%;
-    margin-top: 20px;
+    /* margin-top: 20px; */
   }
 
   .three-area>dd:nth-child(2) {
-    order: 1;
+    order: 2;
     width: 100%;
   }
 
@@ -2173,13 +2173,13 @@
   }
 
   .three-area>dt:nth-child(1) {
-    order: 2;
+    order: 1;
     width: 100%;
-    margin-top: 20px;
+    /* margin-top: 20px; */
   }
 
   .three-area>dd:nth-child(2) {
-    order: 1;
+    order: 2;
     width: 100%;
   }
 
@@ -2196,13 +2196,13 @@
   }
 
   .three-area>dt:nth-child(1) {
-    order: 2;
+    order: 1;
     width: 100%;
-    margin-top: 20px;
+    /* margin-top: 20px; */
   }
 
   .three-area>dd:nth-child(2) {
-    order: 1;
+    order: 2;
     width: 100%;
   }
 
@@ -2313,10 +2313,10 @@
 
 /* 게임 */
 .ta-game-list {
-  width: 100%;
+  /* width: 100%;
   border-radius: 10px;
   background: #fff;
-  box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.1); */
 }
 
 .ta-game-list>dl {
@@ -3281,6 +3281,7 @@
 }
 
 .studio-banner.bg02 {
+  background-position: center;
   background: url('/images/studio_banner_img02.svg') no-repeat;
 }
 
@@ -4462,13 +4463,14 @@
 @media all and (min-width: 1200px) {}
 
 /* 모든게임 */
-.studio-all-game {
+
+/* .studio-all-game {
   width: 1200px;
   margin: 30px auto;
   background-color: #fff;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.05);
   border-radius: 10px;
-}
+} 
 
 .studio-all-game>dl {
   display: flex;
@@ -4476,7 +4478,7 @@
   align-items: center;
   padding: 30px 30px;
   border-bottom: #e9e9e9 1px solid;
-}
+} 
 
 .studio-all-game>ul {
   display: flex;
@@ -4495,7 +4497,7 @@
 .studio-all-game>ul.ag-title>li {
   font-weight: 500;
   font-size: 17px;
-}
+}*/
 
 .studio-all-game>ul>li {
   padding: 25px 0px;
@@ -4548,10 +4550,11 @@
   width: 15%;
 }
 
+/* 
 .studio-all-game>ul>li:nth-child(2) {
   width: 40%;
   text-align: left;
-}
+} */
 
 .studio-all-game>ul>li:nth-child(3) {
   width: 15%;
@@ -4769,9 +4772,9 @@
 @media all and (min-width: 1200px) {}
 
 /* 페이지네이션 */
-.studio-pagination {
+/* .studio-pagination {
   padding: 35px 45px;
-}
+} */
 
 .studio-pagination>dl {
   display: flex;

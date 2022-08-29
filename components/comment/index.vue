@@ -1,14 +1,17 @@
 <template>
-  <dl v-if="comment">
+  <dl v-if="comment && !isCommentEdit">
     <dt>
+
+
       <dl>
         <dt>
           <UserAvatar :user="comment.user" :tag="'span'"></UserAvatar>
         </dt>
+
         <dd>
           <h2>{{ comment.user.name }} <span>{{ }}</span></h2>
           <div>
-            {{ comment.content }}
+            {{ commentContent }}
           </div>
           <p>
             <a v-if="isLiked" @click="unsetLike()">
@@ -31,7 +34,9 @@
         <template #dropdown>
 
           <div slot="body" class="more-list">
-            <a @click="editComment">{{ $t('comment.edit') }}</a>
+            <a @click="isCommentEdit = !isCommentEdit">{{ $t('comment.edit') }}</a>
+            <!-- <slot name="commentEdit"></slot> -->
+
             <!-- <a @click="$modal.show('deleteComment', { commentId: comment.id, postId: postId })">{{ $t('comment.delete')
           }}</a> -->
             <a @click="showDeleteModal = true">
@@ -41,7 +46,6 @@
           </div>
         </template>
       </el-dropdown>
-
     </dd>
 
     <ClientOnly>
@@ -67,35 +71,37 @@
     </ClientOnly>
 
   </dl>
-  <!-- <dl v-else>
-        <CommentInput
-            @updateComment="updateDone"
-            @sendComment="editDone"
-            :editContent="comment.content"
-            :postId="postId"
-            :commentId="comment.id"
-            :parentId="parentId"
-        ></CommentInput>
-    </dl> -->
-
-
-
-
+  <CommentInput v-if="isCommentEdit" @refresh="refresh" :postId="comment.post_id" :comment="comment" :isEdit="true" />
 </template>
 
 <script setup lang="ts">
 import _ from 'lodash'
 import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElSelect, ElOption, ElMessage, ElDialog } from "element-plus";
-const showDeleteModal = ref(false)
 
+const showDeleteModal = ref(false)
+const isCommentEdit = ref(false)
 const props = defineProps({
-  comment: Object
+  comment: Object,
+  isEdit: {
+    type: Boolean,
+    default: false,
+  }
 })
+
+const commentContent = ref(props.comment?.content || '');
+
 const emit = defineEmits(['refresh'])
 const isLiked = ref(props.comment.is_liked)
 const likeCnt = ref(props.comment.like_cnt)
 
 const { info: user, isLogin } = useUser().user.value
+
+function refresh(content: string) {
+  isCommentEdit.value = !isCommentEdit.value
+  commentContent.value = content;
+
+  emit('refresh', content)
+}
 // import {Component, Prop, Vue} from "vue-property-decorator";
 
 

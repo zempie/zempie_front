@@ -45,7 +45,8 @@
 }
 
 .modal-area-type {
-  max-width: 500px !important;
+  max-width: 100% !important;
+  min-width: 380px !important;
   border-radius: 10px !important;  
   position: absolute !important;
   left: 50%;

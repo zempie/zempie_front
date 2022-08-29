@@ -61,6 +61,10 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
+.swiper-slide {
+  width: 25% !important;
+}
+
 .darker-text {
   min-height: 18px;
   background-color: #333;

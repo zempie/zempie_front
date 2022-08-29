@@ -67,6 +67,8 @@ const editor = useEditor({
   onUpdate: () => {
     charCount.value = editor.value.storage.characterCount.characters()
     emit('editorContent', editor.value)
+    //TODO: 블로그 이미지 스토어에 저장 하고 업로드 하기 전에 등록하기 
+
   },
 
 
@@ -407,8 +409,7 @@ onMounted(() => {
 .character-count p {
   display: flex !important;
   justify-content: flex-end !important;
-  margin-right: 10px;
-  margin-top: 10px;
+  margin: 10px;
 }
 
 .editor-container {

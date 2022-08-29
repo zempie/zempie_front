@@ -203,9 +203,12 @@
           <div class="header-side-mobile" :style="isHeaderSideMobile ? 'left:0px;' : ''" id="headerSideMobile">
             <div class="hsm-close"><i class="uil uil-times" @click="isHeaderSideMobile = false"></i></div>
             <div class="hsm-search">
-              <div class="input-search-line-mobile" @click="isOpenSearch = !isOpenSearch">
+              <div class="input-search-line-mobile">
                 <p><i class="uil uil-search"></i></p>
-                <div><input type="text" name="" title="keywords" :placeholder="t('needSearchInput')" /></div>
+                <div>
+                  <input type="text" name="" title="keywords" v-model="searchInput" @keyup.enter="moveSearchPage"
+                    :placeholder="t('needSearchInput')" />
+                </div>
               </div>
             </div>
             <div class="hsm-menu">
@@ -398,6 +401,8 @@
 
 <script setup lang="ts" >
 import _ from 'lodash'
+//TODO: 모바일 메뉴 다른 곳 클릭하면 닫히게
+import { onClickOutside } from '@vueuse/core'
 import { useI18n } from 'vue-i18n';
 import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElSelect, ElOption, ElMessage, ElDialog } from "element-plus";
 import { useLocalePath } from 'vue-i18n-routing';
@@ -460,9 +465,9 @@ watch(
   }, { immediate: true })
 
 
+
 onBeforeMount(() => {
   isPending.value = false;
-
 
 })
 
@@ -510,6 +515,8 @@ const search = _.debounce(async () => {
 }, 300)
 
 function moveSearchPage() {
+  isHeaderSideMobile.value = false;
+
   $router.push(localePath(`/search`) + `?q=${searchInput.value}`)
   // initSearchData()
 }
@@ -728,10 +735,10 @@ function initSearchData() {
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
+  .header>dl {
+    width: 90%;
+  }
 
-  //.header > dl {width:750px;}
-  //.header-search {display:none;}
-  //.header-language {display:none;}
   .header-login {
     display: block !important;
 
@@ -743,7 +750,7 @@ function initSearchData() {
 
 @media all and (min-width: 992px) and (max-width: 1199px) {
   .header>dl {
-    width: 970px;
+    width: 90%;
   }
 
   .header-info-mobile {

@@ -11,15 +11,16 @@
                 </dt>
                 <dd v-if="feed.user">
                   <h2>{{ feed.user.name }}</h2>
-                  <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{ createdDate }}</p>
+                  <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{ dateFormat(feed.created_at) }}</p>
                 </dd>
                 <dd v-else>
                   <h2>{{ $t('feed.noUser.post') }}</h2>
-                  <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{ createdDate }}</p>
+                  <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{ dateFormat(feed.created_at) }}</p>
                 </dd>
               </dl>
             </dt>
             <dd>
+
               <!-- <FollowBtn :member="feed.user"></FollowBtn> -->
 
             </dd>
@@ -51,8 +52,8 @@
               <div v-for="file in feed.attatchment_files" :key="file.id">
                 <video class="sns-img" v-if="file.type === 'video'" width="320" height="240" controls
                   :src="file.url"></video>
-                <!--                                <audio v-if="file.type === 'sound' " controls :src="file.url"></audio>-->
-                <div class="audio" v-if="file.type === 'sound'">
+                <audio v-else-if="file.type === 'sound'" controls :src="file.url"></audio>
+                <div class="audio" v-else-if="file.type === 'sound'">
                   <audio controls :src="file.url"></audio>
                   <p>{{ file.name }}</p>
                 </div>
@@ -204,8 +205,8 @@ import { ElMessage } from 'element-plus';
 import { useI18n } from 'vue-i18n';
 
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { execCommandCopy } from '~~/scripts/utils';
-import { comment } from 'postcss';
+import { dateFormat, execCommandCopy } from '~~/scripts/utils';
+
 // import { Component, Prop, Vue } from "vue-property-decorator";
 
 // import { dateFormat } from "@/script/moment";
@@ -504,17 +505,34 @@ function copyUrl() {
 .tapl-movie-img {
   padding-bottom: 0px !important;
   height: auto !important;
+
+  div {
+
+    audio {
+      display: flex;
+      align-items: center;
+      border-radius: 5px;
+      background: #f5f5f5;
+      flex-direction: column;
+      width: 95%;
+      margin: 20px auto;
+
+      p {
+        width: 100%;
+        height: 30px;
+        padding-left: 20px;
+      }
+    }
+  }
 }
 
 .tapl-content {
   word-break: break-all;
-  // + img{
-  //    width: 100%;
-  //}
+
 }
 
 .feed-img {
-  width: 100%;
+  max-width: 100%;
 }
 
 .user-avatar {

@@ -114,7 +114,7 @@
                     </div>
                   </div>
 
-                  <p>
+                  <p style="width:130%;">
                     <button class="btn-gray" @click="uploadThumbnail"><i class="uil uil-upload"></i>&nbsp;
                       {{ $t('addGameInfo.game.thumbnail') }}
 
@@ -157,7 +157,7 @@
                       <input type="file" @change="onGifChange" accept=image/* ref="gifThumbnail" name="fileInput" />
                     </div>
                   </div>
-                  <p>
+                  <p style="width:130%;">
                     <button class="btn-gray" @click="uploadGif"><i class="uil uil-upload"></i>&nbsp;
                       {{ $t('addGameInfo.game.thumbnail') }}
                     </button>
@@ -535,6 +535,7 @@ async function save() {
   if (!isValid || isThumbErr.value) return;
   setForm(form)
   isFormDone.value = true;
+
   useProject().setStepThree()
 }
 
@@ -561,14 +562,16 @@ async function uploadGame() {
   })
   const { data, error } = await game.upload(formData);
 
+  if (!error.value) {
+    isUploadDone.value = true;
+    setTimeout(() => {
+      loading.close()
+      useProject().resetForm()
 
-  setTimeout(() => {
-    loading.close()
-    useProject().resetForm()
-    if (!error.value) {
       router.push(localePath("/project/list"));
-    }
-  }, 1000)
+
+    }, 1000)
+  }
 
   //  this.$api.createProject(
   //      gameInfoObj,
@@ -719,7 +722,8 @@ function onImgChange(event: any) {
 
   }
   else {
-    alert(`${this.$t('maxFile.size.4mb')}`)
+    ElMessage.error(t('maxFile.size.4mb'))
+
   }
 }
 
@@ -752,7 +756,7 @@ function onGifChange(event: any) {
     reader.readAsDataURL(gifFile);
   }
   else {
-    alert(`${this.$t('maxFile.size.4mb')}`)
+    ElMessage.error(t('maxFile.size.4mb'))
   }
 }
 

@@ -21,7 +21,7 @@
             </div>
           </dt>
           <dd>
-            <NuxtLink :to="localePath('/project/upload')" class="btn-default"><i class="uil uil-plus"></i>{{
+            <NuxtLink :to="localePath('/project/upload')" class="btn-default ml20"><i class="uil uil-plus"></i>{{
                 $t("gameUpload")
             }}</NuxtLink>
           </dd>
@@ -29,7 +29,7 @@
 
         <ul class="ag-title">
           <li>{{ $t("game.thumbnail") }}</li>
-          <li>
+          <li class="game-title">
             {{ $t("game.title") }}
             <i v-if="isTitleSortAsc" class="uil uil-angle-up" style="font-size:20px; cursor: pointer;"
               @click="sortAscList('name'); isTitleSortAsc = !isTitleSortAsc "></i>
@@ -295,45 +295,65 @@ function sortDescListByGame(key: string) {
   background-color: #fff;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.05);
   border-radius: 10px;
-}
 
-.studio-all-game>dl {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 30px 30px;
-  border-bottom: #e9e9e9 1px solid;
-}
-
-.studio-all-game>div>ul {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  padding: 0px 30px;
-  text-align: center;
-  border-bottom: 1px solid #f1f1f1;
-  transition: all 0.4s ease-in-out;
-}
-
-.studio-all-game>ul.ag-title {
-  background-color: #f9f9f9;
-
-  li {
-    font-weight: 500;
-    font-size: 16px !important;
+  dl {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 30px 30px;
   }
-}
 
-.studio-all-game>div>ul>li {
-  padding: 25px 0px;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 16px;
-  color: #333;
-}
 
-.studio-all-game>div>ul>li>span {
-  display: none;
+  ul {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    text-align: center;
+    border-bottom: 1px solid #f1f1f1;
+    transition: all 0.4s ease-in-out;
+
+    li {
+      padding: 25px 0px;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 16px;
+      color: #333;
+
+      &:nth-child(1) {
+        width: 15%;
+      }
+
+      &:nth-child(2) {
+        width: 35%;
+        text-align: left;
+      }
+
+      &:nth-child(3) {
+        width: 15%;
+      }
+
+      &:nth-child(4) {
+        width: 15%;
+      }
+
+      span {
+        display: none;
+      }
+    }
+
+    &.ag-title {
+      background-color: #f9f9f9;
+      padding: 0px;
+
+      li {
+        font-weight: 500;
+        font-size: 14px;
+
+
+      }
+    }
+  }
+
 }
 
 .studio-all-game>div>ul>li>p {
@@ -345,6 +365,7 @@ function sortDescListByGame(key: string) {
 
 .studio-all-game>div>ul:hover {
   background-color: #f9f9f9;
+
 }
 
 .studio-all-game .ag-empty {
@@ -371,22 +392,6 @@ function sortDescListByGame(key: string) {
   line-height: 16px;
 }
 
-.studio-all-game>div>ul>li:nth-child(1) {
-  width: 15%;
-}
-
-.studio-all-game>div>ul>li:nth-child(2) {
-  width: 40%;
-  text-align: left;
-}
-
-.studio-all-game>div>ul>li:nth-child(3) {
-  width: 15%;
-}
-
-.studio-all-game>div>ul>li:nth-child(4) {
-  width: 10%;
-}
 
 .studio-all-game>div>ul>li:nth-child(5) {
   width: 10%;
@@ -462,6 +467,10 @@ function sortDescListByGame(key: string) {
     width: 470px;
     margin: 20px auto;
     padding: 0 20px;
+
+    .ag-title {
+      font-size: 12px;
+    }
   }
 
   .studio-all-game>dl {
@@ -519,15 +528,22 @@ function sortDescListByGame(key: string) {
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
+
   .studio-all-game {
     width: 750px;
+
+    .ag-title {
+      li {
+        font-size: 12px !important;
+      }
+
+    }
   }
 
-  .studio-all-game>ul.ag-title>li {
-    font-size: 16px;
-  }
+
 
   .studio-all-game>div>ul>li {
+
     padding: 20px 0px;
     font-size: 15px;
   }

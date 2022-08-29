@@ -81,7 +81,7 @@
 
         <dd>
           <TimelineSk v-if="isPending" />
-          <PostTimeline type="user" :isMine="isMine" v-else />
+          <PostTimeline v-else type="user" :isMine="isMine" :key="channelId" />
         </dd>
         <dt>
           <div class="ta-groups" style="margin-top:0px">
@@ -214,6 +214,45 @@ onMounted(() => {
   li {
     margin-top: 0px;
   }
+}
+
+.ta-game-list {
+  display: block;
+  width: 100%;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.1);
+}
+
+@media all and (max-width: 479px) {
+
+  .ta-game-list {
+    display: none;
+  }
 
 }
+
+@media all and (min-width: 480px) and (max-width: 767px) {
+
+  .ta-game-list {
+    display: none;
+  }
+
+  .area-title,
+  .card-game {
+    width: 100%;
+  }
+
+
+}
+
+@media all and (min-width: 768px) and (max-width: 991px) {
+  .ta-game-list {
+    display: none;
+  }
+}
+
+@media all and (min-width: 992px) and (max-width: 1199px) {}
+
+@media all and (min-width: 1200px) {}
 </style>

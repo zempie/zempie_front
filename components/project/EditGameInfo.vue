@@ -100,7 +100,6 @@
 
                   <button class="btn-gray" @click="uploadFile"><i class="uil uil-upload"></i>&nbsp;
                     {{ $t('addGameInfo.game.thumbnail') }}
-
                   </button>
 
                 </p>
@@ -115,10 +114,9 @@
                   </div>
                 </div>
 
-                <p>
+                <p style="width:130%; text-align: left;">
                   <button class="btn-gray" @click="uploadFile"><i class="uil uil-upload"></i>&nbsp;
                     {{ $t('addGameInfo.game.thumbnail') }}
-
                   </button>
                   &nbsp; &nbsp;
                   <button class="btn-circle-icon" @click="deleteThumbnail"><i class="uil uil-trash-alt"></i>
@@ -147,7 +145,6 @@
                   <button class="btn-gray" @click="uploadGif"><i class="uil uil-upload"></i>&nbsp;
                     {{ $t('addGameInfo.game.thumbnail') }}
                   </button>
-
                 </p>
               </li>
               <li v-else>
@@ -158,10 +155,10 @@
                     <input type="file" @change="onGifChange" accept=image/* ref="thumbnailGif" name="fileInput" />
                   </div>
                 </div>
-                <p>
+                <p style="width:130%; text-align: left;">
                   <button class="btn-gray" @click="uploadGif"><i class="uil uil-upload"></i>&nbsp;
                     {{ $t('addGameInfo.game.thumbnail') }}
-                  </button>
+                  </button>&nbsp; &nbsp;
                   <button class="btn-circle-icon" @click="deleteThumbGif"><i class="uil uil-trash-alt"></i>
                   </button>
                 </p>

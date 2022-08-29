@@ -322,17 +322,17 @@
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
-  .header>dl {
-    width: 750px;
-  }
+  /* .header>dl {
+    width: 100%;
+  } */
 
   .header-search {
     display: none;
   }
 
-  .header-language {
+  /*   .header-language {
     display: none;
-  }
+  } */
 
   .header-login {
     display: none;
@@ -348,9 +348,9 @@
 }
 
 @media all and (min-width: 992px) and (max-width: 1199px) {
-  .header>dl {
+  /* .header>dl {
     width: 970px;
-  }
+  } */
 
   .header-info-mobile {
     display: none;

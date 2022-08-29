@@ -5,7 +5,7 @@
       <dt><span
           :style="`background: url(${community.profile_img}) center center no-repeat; background-size: cover;`"></span>
       </dt>
-      <dd style="width:100%">
+      <dd>
         <h2>{{ community.name }}</h2>
         <h3><i class="uil uil-chat-bubble-user"></i>{{ community.member_cnt }}</h3>
       </dd>
@@ -32,3 +32,12 @@ const props = defineProps({
   }
 })
 </script>
+<style lang="scss" scoped>
+dd {
+  width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+
+}
+</style>

@@ -23,7 +23,7 @@
           </dd>
           <dt>
             <div class="ta-about">
-              <h2>About Us</h2>
+              <h2>{{ $t('about.us') }}</h2>
               <div>
                 {{ communityInfo?.description }}
               </div>
@@ -33,14 +33,14 @@
               </dl>
             </div>
             <div class="ta-groups">
-              <h2>Group</h2>
+              <h2>{{ $t('other.communities') }}</h2>
               <CommunityList :communities="communities" />
             </div>
           </dt>
         </dl>
       </div>
 
-      <el-dialog v-model="needSubscribe" append-to-body custom-class="modal-area-type">
+      <el-dialog v-model="needSubscribe" append-to-body custom-class="modal-area-type" width="380px">
         <div class="modal-alert">
           <dl class="ma-header">
             <dt>{{ $t('information') }}</dt>
@@ -90,6 +90,7 @@ onMounted(async () => {
 })
 
 async function fetch() {
+  //TODO: query 수정 
   const { data, pending } = await useFetch<any>(() => `/community/list?limit=6&offset=0`, { method: 'get', baseURL: config.COMMUNITY_API, headers: accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {} })
 
   if (data.value.length) {

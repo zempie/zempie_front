@@ -883,7 +883,7 @@
 
 /* 상세 (전체영역) */
 .area-view {
-  width: 750px;
+  max-width: 750px;
   margin: 0 auto;
 }
 
@@ -2172,7 +2172,7 @@
 
 @media all and (max-width: 479px) {
   .card-follow {
-    width: 90%;
+    width: 100%;
     margin: 0 auto;
   }
 
@@ -3255,8 +3255,8 @@
   display: flex;
   align-items: center;
   margin-top: 15px;
-  padding: 20px;
-  border: #f97316 2px solid;
+  padding: 10px 20px 10px 10px;
+  border: #f9741662 1px solid;
   border-radius: 5px;
   background: #f5f5f5;
 }

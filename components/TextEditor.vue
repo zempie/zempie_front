@@ -13,18 +13,38 @@
       <!-- <PostEdit v-if="isEdit" @editorContent="getEditorContent" :postType='activeTab' :feed="feed" /> -->
       <PostByBlog @editorContent="getEditorContent" :postType='activeTab' :feed="feed" />
 
-      <div v-if="attachFiles.img?.length && activeTab === 'SNS'" class="mp-image" style="padding-bottom: 0px">
-        <dd style="width: 100%;">
-          <swiper :modules="[Pagination]" class="swiper-area" :slides-per-view="3" :space-between="10"
-            :pagination="{ clickable: true }">
-            <swiper-slide v-for="(img, idx) in attachFiles.img" :key="idx"
-              :style="`padding-bottom: 43px; background: url(${img.url}) center center / cover no-repeat; background-size:cover;`">
-              <span @click="deleteImg(idx)"><i class="uil uil-times-circle"></i></span>
-            </swiper-slide>
-            <div class="swiper-pagination" slot="pagination"></div>
-          </swiper>
-        </dd>
-      </div>
+      <template v-if="activeTab === 'SNS'">
+        <div v-if="attachFiles.img?.length" class="mp-image" style="padding-bottom: 0px">
+          <dd style="width: 100%;">
+            <swiper :modules="[Pagination]" class="swiper-area" :slides-per-view="3" :space-between="10"
+              :pagination="{ clickable: true }">
+              <swiper-slide v-for="(img, idx) in attachFiles.img" :key="idx"
+                :style="`padding-bottom: 43px; background: url(${img.url}) center center / cover no-repeat; background-size:cover;`">
+                <span @click="deleteImg(idx)"><i class="uil uil-times-circle"></i></span>
+              </swiper-slide>
+              <div class="swiper-pagination" slot="pagination"></div>
+            </swiper>
+          </dd>
+        </div>
+
+        <div v-if="attachFiles.video?.url" class="mp-midi">
+          <span @click="deleteVideo" class="delete-video-btn"><i class="uis uis-times-circle"></i></span>
+          <video style="width:100%;" :src="attachFiles.video?.url" title="YouTube video player" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></video>
+        </div>
+
+        <div v-if="attachFiles.audio?.length" class="mp-midi">
+          <ul v-for="(audio, idx) in attachFiles.audio" class="audio-wrapper">
+            <div class="btn-container">
+
+              <audio controls :src="audio.url"></audio>
+              <span class="delete-audio-btn" @click="deleteAudio(idx)"><i class="uis uis-times-circle"></i></span>
+            </div>
+            <p> {{ audio.name || audio.file.name }}</p>
+          </ul>
+        </div>
+      </template>
       <ClientOnly>
         <div class="mp-category"
           :style="attachFiles.img?.length ? 'border-top: #e9e9e9 1px solid; margin-top:10px; padding-top:10px;' : ''">
@@ -35,7 +55,8 @@
                 <span v-else>Add community</span>
               </button>
             </template>
-            <div class="mpc-more-dropdown">
+
+            <div v-if="communityList.length" class="mpc-more-dropdown">
               <button class="category-group group-btn" @click="openChannel(com)"
                 :class="isCommunityListOpen ? 'on' : 'off'" v-for="com in communityList">
                 <p style="margin: 0 auto;"> {{ com.name }}</p>
@@ -51,6 +72,9 @@
                   {{ channel.title }}
                 </button>
               </div>
+            </div>
+            <div v-else>
+              {{ $t('noJoined.community') }}
             </div>
           </el-popover>
           <swiper v-if="postingChannels.length" class="swiper-area" style="margin-left: 10px;" :space-between="10">
@@ -76,13 +100,13 @@
             </div>
           </div>
           <div style="width: 30px" @click="uploaVideoFile">
-            <a href="#"><i class="uil uil-play-circle"></i></a>
+            <a><i class="uil uil-play-circle"></i></a>
             <div style="height: 0px; overflow: hidden">
               <input type="file" @change="onSelectVideoFile" accept=video/* ref="video" />
             </div>
           </div>
           <div style="width: 30px" @click="uploadAudioFile">
-            <a href="#"><i class="uil uil-music"></i></a>
+            <a><i class="uil uil-music"></i></a>
             <div style="height: 0px; overflow: hidden">
               <input type="file" @change="onSelectAudioFile" multiple accept=".mp3" ref="audio" />
             </div>
@@ -160,9 +184,11 @@ const postingChannels = ref([])
 
 const attachFiles = ref({
   img: hasFeedImg ? (attachFileArr.value ?? []) : [],
-  video: [],
+  video: null,
   audio: []
 })
+
+
 
 
 const emit = defineEmits(['closeModal', 'refresh'])
@@ -211,15 +237,22 @@ async function onSubmit() {
     }
   }
 
-  console.log(payload);
-  if (attachFiles.value.img.length || attachFiles.value.audio.length || attachFiles.value.video.length) {
+  if (attachFiles.value.img.length || attachFiles.value.audio.length || attachFiles.value.video) {
     const formData = new FormData();
 
     for (const img of attachFiles.value.img) {
       formData.append(img.name, img.file)
     }
 
+    for (const audio of attachFiles.value.audio) {
+      formData.append(audio.name, audio.file)
+    }
+    if (attachFiles.value.video) {
+      formData.append(attachFiles.value.video.name, attachFiles.value.video.file)
+    }
+
     const { data, error, pending } = await useFetch<{ result: [] }>('/community/att', getZempieFetchOptions('post', true, formData))
+
 
     payload['attatchment_files'] = data.value.result;
   }
@@ -280,7 +313,16 @@ function uploadImageFile() {
 }
 
 function onSelectImageFile(event: any) {
-  console.log(attachFiles.value)
+  if (activeTab.value.toUpperCase() === 'SNS') {
+    if (attachFiles.value.video || attachFiles.value.audio.length) {
+      ElMessage({
+        message: t('post.fileType.err.text1'),
+        type: 'warning'
+      })
+      return;
+    }
+  }
+
   const files = event.target.files;
 
   for (const file of files) {
@@ -299,7 +341,7 @@ function onSelectImageFile(event: any) {
         url: url
       })
 
-      if (activeTab.value === 'BLOG') {
+      if (activeTab.value.toUpperCase() === 'BLOG') {
         editor.value.chain().focus(null).setImage({ src: blobUrl }).run();
       }
     };
@@ -316,30 +358,105 @@ function deleteImg(idx: number) {
 
 function uploaVideoFile() {
   video.value.click()
-  //  if(activeTab === 'SNS') {
-  //             if (this.$store.getters.audioArr.length > 0 || this.$store.getters.imgArr.length > 0) {
-
-  //                     this.$modal.show('alertAttrModal')
-  //                 }else{
-  //                 (this.$refs.video as HTMLElement).click();
-  //             }
-  //             }
-  //             else {
-  //                 (this.$refs.video as HTMLElement).click();
-
-  //         }
 }
 
-function onSelectVideoFile() {
+function onSelectVideoFile(event: any) {
+  if (activeTab.value.toUpperCase() === 'SNS') {
+    if (attachFiles.value.img.length || attachFiles.value.audio.length) {
+      ElMessage({
+        message: t('post.fileType.err.text1'),
+        type: 'warning'
+      })
+      return;
+    }
+  }
 
+  const files = event.target.files;
+
+  for (const file of files) {
+    const reader = new FileReader();
+
+    reader.onload = async (e) => {
+
+      const url = e.target!.result as any
+      const result = await fetch(url)
+      const blob = await result.blob()
+      const blobUrl = URL.createObjectURL(blob)
+
+      attachFiles.value.video = {
+        file: file,
+        name: file.name,
+        url: url
+      }
+
+      if (activeTab.value === 'BLOG') {
+        editor.value.chain().focus(null).setVideo({ src: blobUrl }).run();
+      }
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  event.target.value = ''
+
+}
+
+
+
+function deleteVideo() {
+  attachFiles.value.video = null;
 }
 
 
 function uploadAudioFile() {
+  if (activeTab.value.toUpperCase() === 'SNS') {
+    if (attachFiles.value.video || attachFiles.value.img.length) {
+      ElMessage({
+        message: t('post.fileType.err.text1'),
+        type: 'warning'
+      })
+      return;
+    }
+  }
   audio.value.click()
 }
 
-function onSelectAudioFile() {
+function onSelectAudioFile(event: any) {
+
+
+
+  const files = event.target.files;
+
+  for (const file of files) {
+    const reader = new FileReader();
+
+    reader.onload = async (e) => {
+
+      const url = e.target!.result as any
+      const result = await fetch(url)
+      const blob = await result.blob()
+      const blobUrl = URL.createObjectURL(blob)
+
+      attachFiles.value.audio.push({
+        file: file,
+        name: file.name,
+        url: url
+      })
+
+      if (activeTab.value === 'BLOG') {
+        editor.value.chain().focus(null).setAudio({ src: blobUrl }).run();
+      }
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  event.target.value = ''
+
+}
+
+function deleteAudio(idx: number) {
+  attachFiles.value.audio.splice(idx, 1)
 
 }
 
@@ -472,15 +589,79 @@ function deletePostingChannel(idx: number) {
   .mp-category {
     width: 100%;
     display: inline-flex;
-    padding: 0;
+    padding: 20px;
     border-bottom: 0px;
-    border-top: 0px;
+    border-top: #e9e9e9 1px solid;
 
 
-    .btn-line-small {
-      margin-left: 10px;
-    }
+
   }
+
+  .mp-midi {
+    .delete-video-btn {
+      display: flex;
+      justify-content: flex-end;
+      font-size: 20px;
+      color: #333;
+      cursor: pointer;
+
+      &:hover {
+        color: #f97316;
+      }
+    }
+
+
+    video {
+      max-height: 315px;
+    }
+
+    .audio-wrapper {
+      display: flex;
+      align-items: center;
+      border-radius: 5px;
+      background: #f5f5f5;
+      flex-direction: column;
+
+      .btn-container {
+        padding-bottom: 0px !important;
+        width: 100%;
+        padding-top: 0px !important;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: auto !important;
+
+      }
+
+      .delete-audio-btn {
+        font-size: 20px;
+        color: #333;
+        cursor: pointer;
+        display: flex;
+        justify-content: flex-end;
+
+        &:hover {
+          color: #f97316;
+        }
+      }
+
+      audio {
+        width: 100%;
+      }
+
+      p {
+        width: 100%;
+        height: 30px;
+        padding-left: 20px;
+      }
+    }
+
+  }
+
+
+
+
+
 
   .cancel-btn {
     margin-right: 10px;
@@ -685,4 +866,24 @@ function deletePostingChannel(idx: number) {
     }
   }
 }
+
+
+@media all and (max-width: 479px) {
+  // .mp-category {
+  //   .btn-line-small {
+  //     span:nth-child(2) {
+  //       display: none;
+  //     }
+  //   }
+
+  // }
+}
+
+@media all and (min-width: 480px) and (max-width: 767px) {}
+
+@media all and (min-width: 768px) and (max-width: 991px) {}
+
+@media all and (min-width: 992px) and (max-width: 1199px) {}
+
+@media all and (min-width: 1200px) {}
 </style>

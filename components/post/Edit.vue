@@ -20,7 +20,6 @@ import Link from "@tiptap/extension-link";
 import StarterKit from '@tiptap/starter-kit'
 import CharacterCount from "@tiptap/extension-character-count";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight"
-import Placeholder from '@tiptap/extension-placeholder'
 
 import Typography from '@tiptap/extension-typography'
 import Highlight from '@tiptap/extension-highlight'
@@ -55,10 +54,6 @@ const editor = useEditor({
   extensions: [
     StarterKit,
     CodeBlockLowlight.configure({ lowlight }),
-    // Placeholder.configure({
-    //   emptyEditorClass: 'is-editor-empty',
-    //   placeholder: `${t('posting.placeholder')}`,
-    // }),
     CharacterCount.configure({
       limit: limit.value,
     }),
@@ -410,8 +405,7 @@ onMounted(() => {
 .character-count p {
   display: flex !important;
   justify-content: flex-end !important;
-  margin-right: 10px;
-  margin-top: 10px;
+  margin: 10px;
 }
 
 .editor-container {

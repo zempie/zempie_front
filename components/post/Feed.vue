@@ -1,10 +1,13 @@
 <template>
   <li class="tap-list" v-if="feed">
+
     <dl class="tapl-title">
       <dt>
         <dl>
           <dt>
-            <UserAvatar :user="feed.user" :tag="'span'"></UserAvatar>
+            <NuxtLink :to="localePath(`/channel/${feed.user?.channel_id}`)">
+              <UserAvatar :user="feed.user" :tag="'span'"></UserAvatar>
+            </NuxtLink>
           </dt>
 
           <dd v-if="feed.user?.name">
@@ -24,14 +27,14 @@
         <el-dropdown trigger="click" ref="feedMenu" popper-class="feed-menu">
           <a class="btn-circle-none pt6" slot="trigger"><i class="uil uil-ellipsis-h font25"></i></a>
           <template #dropdown>
-            <div slot="body" class="more-list fixed" @click="feedMenu.handleClose()" style="min-width:150px; ">
+            <div slot="body" class="more-list fixed" style="min-width:150px; ">
               <template v-if="user && (user.id === (feed.user && feed.user.id))">
                 <a @click="openEdit">{{ $t('feed.edit') }}</a>
-                <a @click="showDeleteModal = true; feedId = feed.id">{{ $t('feed.delete') }}</a>
+                <a @click="showDeletePostModal = true; feedId = feed.id">{{ $t('feed.delete') }}</a>
 
               </template>
               <template v-else>
-                <NuxtLink :to="localePath(`/channel/${feed.user && feed.user.channel_id}/timeline`)">
+                <NuxtLink :to="localePath(`/channel/${feed.user && feed.user.channel_id}`)">
                   {{ $t('visit.userChannel') }}
                 </NuxtLink>
                 <!-- <a v-if="user" @click="report">{{ $t('post.report') }}</a>
@@ -64,6 +67,7 @@
     </dl>
 
     <div>
+
       <div class="tapl-content" v-html="feed.content" ref="feedDiv"
         @click="$router.push(localePath(`/feed/${feed.id}`))"></div>
       <div v-if="isOverflow" class='gradient'></div>
@@ -86,11 +90,17 @@
         </span>
       </div>
     </template>
-    <template v-if="initFiles && feed.post_type === 'SNS'">
+    <template v-if="initFiles.length && feed.post_type === 'SNS'">
 
-      <img v-if="initFiles.length === 1" style="height: 88%;margin: 0 auto; display: flex;" :src="initFiles[0].url"
-        class="feed-img mt-3" />
-
+      <div class="video" v-if="initFiles[0].type === 'video'">
+        <video style="width:100%; height: auto;" controls :src="initFiles[0].url"></video>
+      </div>
+      <div v-else-if="initFiles[0].type === 'sound'" v-for="file in initFiles" class="audio">
+        <audio controls :src="file.url"></audio>
+        <p>{{ file.name }}</p>
+      </div>
+      <img v-else-if="initFiles?.length === 1" style="height: 88%;margin: 0 auto; display: flex;"
+        :src="initFiles[0].url" class="feed-img mt-3" />
 
       <swiper v-else class="swiper" :modules="[Pagination]" style="height: 350px;" :pagination="{ clickable: true }">
         <swiper-slide v-for="file in initFiles">
@@ -115,23 +125,31 @@
         </ul>
       </li>
     </ul>
+
     <div v-show="isOpenedComments" :class="['tapl-comment', isOpenedComments ? 'open' : 'close']">
-      <ul @scroll="scrollCheck">
+      <ul ref="commentEl">
         <li v-for="comment in comments" :key="comment.id">
-          <Comment :comment="comment" :postId="feed.id" @refresh="commentRefresh" />
+          <Comment :comment="comment" :isEdit="isCommentEdit" @refresh="commentRefresh">
+            <!-- <template #commentEdit>
+              <a @click="isCommentEdit = !isCommentEdit">{{ $t('comment.edit') }}</a>
+            </template> -->
+          </Comment>
+
         </li>
       </ul>
       <!-- <CommentInput :postId="feed.id" @sendComment="editDone" @updateComment="updateDone" /> -->
+
+
       <CommentInput :postId="feed.id" @refresh="commentRefresh" />
     </div>
 
     <ClientOnly>
-      <el-dialog v-model="showDeleteModal" append-to-body custom-class="modal-area-type">
+      <el-dialog v-model="showDeletePostModal" append-to-body custom-class="modal-area-type">
         <div class="modal-alert">
           <dl class="ma-header">
             <dt> {{ $t('information') }}</dt>
             <dd>
-              <button @click="showDeleteModal = false"><i class="uil uil-times"></i></button>
+              <button @click="showDeletePostModal = false"><i class="uil uil-times"></i></button>
             </dd>
           </dl>
           <div class="ma-content">
@@ -139,7 +157,7 @@
             </h2>
             <div>
               <button class="btn-default w48p" @click="deletePost">{{ $t('delete') }}</button>
-              <button class="btn-gray w48p " @click="showDeleteModal = false">{{ $t('no')
+              <button class="btn-gray w48p " @click="showDeletePostModal = false">{{ $t('no')
               }}</button>
             </div>
           </div>
@@ -168,7 +186,7 @@ import { dateFormat, execCommandCopy } from '~/scripts/utils'
 import { useI18n } from 'vue-i18n';
 import { useLocalePath } from 'vue-i18n-routing';
 import hljs from 'highlight.js';
-import { useWindowScroll } from '@vueuse/core'
+import { useWindowScroll, useInfiniteScroll } from '@vueuse/core'
 
 const { x, y } = useWindowScroll()
 const localePath = useLocalePath();
@@ -180,7 +198,7 @@ const COMMENT_LIMIT = 5;
 const MAX_FEED_HEIGHT = 450;
 
 const feedMenu = ref()
-const showDeleteModal = ref(false)
+const showDeletePostModal = ref(false)
 const showEditModal = ref(false)
 const feedId = ref(null)
 const feedDiv = ref<HTMLElement>()
@@ -194,7 +212,29 @@ const offset = ref(0)
 const sort = ref(null)
 const comments = ref([])
 const isOpenedComments = ref(false)
+const commentEl = ref<HTMLElement | null>(null)
+const isAddData = ref(false)
 
+
+const isCommentEdit = ref(false)
+const commentCnt = ref(0)
+
+
+
+
+useInfiniteScroll(
+  commentEl,
+  async () => {
+
+
+    if (isAddData.value) {
+      offset.value += limit.value;
+      await commentFetch()
+    }
+
+  },
+  { distance: 10 }
+)
 
 
 const user = computed(() => useUser().user.value.info)
@@ -215,6 +255,8 @@ const isOverflow = computed(() => {
 
 const initFiles = _.cloneDeep(attatchment_files.value)
 
+
+
 const emit = defineEmits(['refresh'])
 
 onMounted(() => {
@@ -229,36 +271,6 @@ onMounted(() => {
 
 })
 
-// import Post from "@/components/timeline/_post.vue";
-// import TiptapSns from "@/components/timeline/_tiptapSns.vue";
-// import {dateFormat} from "@/script/moment";
-// import {AxiosError, AxiosResponse} from "axios";
-// import LikeBtn from "@/components/timeline/_likeBtn.vue";
-// import UserAvatar from "@/components/user/_userAvatar.vue";
-
-// import {mapGetters} from "vuex";
-// import {scrollDone} from "@/script/scrollManager";
-// import Toast from "@/script/message";
-// import CommentInput from "@/components/comment/_commentInput.vue";
-// import Comment from "@/components/timeline/Comment.vue";
-// import {Swiper, SwiperSlide} from "vue-awesome-swiper";
-
-//     @Prop() feed!: any;
-
-//     toast = new Toast();
-//     likeList: any = [];
-
-//     attachedFile: any = '';
-//     hashtags: any = '';
-
-//     originImg: string = "";
-
-
-//     isAddData: boolean = false;
-//     user!: any;
-//     isOpenReportModal = false;
-
-const commentCnt = ref(0)
 
 
 //     mounted() {
@@ -278,6 +290,7 @@ const commentCnt = ref(0)
 
 async function commentRefresh() {
   commentInit()
+  isCommentEdit.value = !isCommentEdit.value
   await commentFetch()
 
 }
@@ -302,12 +315,32 @@ function commentInit() {
 
 async function commentFetch() {
 
-  const { data, pending, error } = await useFetch<{ result: [] }>(`/post/${props.feed.id}/comment/list?limit=${limit.value}&offset=${offset.value}${sort.value ? '&sort=' + sort.value : ''}`, getComFetchOptions('get', true))
-  if (!error.value) {
-    if (data.value) {
-      comments.value = data.value.result
-    }
+  const query = {
+    offset: offset.value,
+    limit: limit.value,
+    sort: sort.value
   }
+
+  createQueryUrl(`/post/${props.feed.id}/comment/list`, query)
+
+  const { data, pending, error } = await useFetch<{ result: [] }>(createQueryUrl(`/post/${props.feed.id}/comment/list`, query), getComFetchOptions('get', true))
+
+  if (data.value) {
+    if (isAddData.value) {
+      if (data.value.result.length > 0) {
+        comments.value = [...comments.value, ...data.value.result]
+      } else {
+        isAddData.value = false
+      }
+    }
+    else {
+      comments.value = data.value.result
+
+      isAddData.value = true
+    }
+
+  }
+
 
   // async comments(post_id: string, obj: any) {
   //     return await this.request('get', `${communityApi}post/${post_id}/comment/list`, obj, false)
@@ -338,14 +371,6 @@ async function commentFetch() {
   //     })
 }
 
-function scrollCheck(e) {
-  console.log(e.tartget)
-  // if (scrollDone(e.target)) {
-
-  //     this.offset += this.limit;
-  //     this.commentFetch();
-  // }
-}
 
 //     likeListFetch() {
 //         const obj = {
@@ -432,7 +457,7 @@ async function deletePost() {
     })
     emit('refresh')
   }
-  showDeleteModal.value = false;
+  showDeletePostModal.value = false;
 }
 
 //     report() {

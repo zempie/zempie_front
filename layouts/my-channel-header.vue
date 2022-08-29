@@ -23,7 +23,7 @@
             </div>
             <div class="swiper-slide" style="width:25%; cursor:pointer;">
               <NuxtLink :to="localePath(`/channel/${channelId}/following`)"
-                :class="route.meta.name === 'userFollwoings' ? 'active' : ''">
+                :class="route.meta.name === 'userFollwoing' ? 'active' : ''">
                 <p class="mobile"><i class="uil uil-user-plus"></i>
                   <span style="border:0">FOLLOWING</span>
                 </p>
@@ -123,14 +123,12 @@ async function getChannelHeaderInfo() {
 
 
   .tab-search-swiper {
-    margin-top: 20px;
 
     .swiper-slide {
       .mobile {
 
-
         span {
-          display: none;
+          display: none !important;
         }
       }
     }
@@ -144,13 +142,12 @@ async function getChannelHeaderInfo() {
 
     .tab-search-swiper {
       width: 100%;
-      margin: 0px;
 
       .swiper-slide {
 
         .mobile {
           span {
-            display: none;
+            display: none !important;
           }
         }
       }

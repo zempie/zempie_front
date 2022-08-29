@@ -1,12 +1,15 @@
 <template>
-    <!-- <dl :class="commentId ? 'edit-comment' :''"> -->
       <dl @click='isLogin || useModal().openLoginModal()'>
         <UserAvatar :user="user" :tag="'p'" class="user"/>
-        <dt><input type="text" v-model="content" 
+        <dt>
+            <input type="text" v-model="content" 
                    :placeholder="$t('comment.input.placeholder')"
                    :readonly="!isLogin"
-                   @keyup.enter="!content || sendComment"/></dt>
-        <dd><a @click="!content || sendComment()"><i class="uil uil-message"></i></a></dd>
+                   @keyup.enter="!content || sendComment()"/>
+                   </dt>
+        <dd>
+            <a @click="!content || isEdit? editComment() :  sendComment()">
+        <i class="uil uil-message"></i></a></dd>
     </dl>
 </template>
 
@@ -14,16 +17,36 @@
 import _ from 'lodash'
 
 
+const props = defineProps({
+  postId:String,
+  comment:Object,
+    isEdit:{
+        type:Boolean,
+        default:false
+    } 
+})
 
-const content = ref(null)
+const content = ref(props.comment?.content || null)
 
 const {info:user, isLogin}  = useUser().user.value
 
-const props = defineProps({
-  postId:String
-})
 const emit = defineEmits(['refresh'])
 
+async function editComment(){
+     
+const payload = {
+    comment_id:props.comment.id,
+    post_id: props.postId,
+    content: content.value
+
+}
+    const {data, error, pending} = await useFetch(`/post/${props.postId}/comment/${props.comment.id}`, getComFetchOptions('post', true, payload)) 
+        if(!error.value){
+            emit('refresh', content.value)
+
+        }
+    
+}
 
 
 // import {Component, Prop, Vue, Watch} from "vue-property-decorator";
@@ -171,55 +194,33 @@ const sendComment = _.debounce(async ()=>{
     border: 1px solid #e9e9e9;
     margin-left: 6px;
 }
-
-.comment-box {
+dl{
     display: flex;
     align-items: center;
-    width: 100%;
-    padding: 20px 20px;
-    border-radius: 10px;
-    background: #fff;
-}
-
-.comment-box > p {
-    width: 12%;
-}
-
-.comment-box > p span {
-    display: inline-block;
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-}
-
-.comment-box > dl {
-    display: flex;
-    align-items: center;
-    width: 88%;
+    margin-top: 25px;
     border: #e5e5e5 1px solid;
     border-radius: 10px;
-}
+    dt{
+            width:100%;
 
-.comment-box > dl dt {
-    width: 80%;
-    padding: 0 5px;
-}
-
-.comment-box > dl dt input {
-    width: 100%;
-    border: none;
-}
-
-.comment-box > dl dt input:focus {
-    border: none;
+        input{
+border:none;
+            width:100%;
+            &:focus{
+                    border: none;
     box-shadow: none;
-}
-
-.comment-box > dl dd {
-    width: 20%;
+            }
+        }
+        
+       
+    }
+     dd{
+            width: 20%;
     padding-right: 15px;
     text-align: right;
     font-size: 20px;
+
+        }
 }
 
 .reply-send-wrapper {

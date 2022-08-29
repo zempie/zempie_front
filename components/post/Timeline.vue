@@ -43,12 +43,11 @@
         <div v-if="isPending" class="ta-post-none bg-grey-1">
           <p></p>
         </div>
-
         <TransitionGroup name="fade" v-else-if="!isPending && feeds?.length">
-          <PostFeed v-for="(feed, idx) in feeds" :feed="feed" :key="idx" @refresh="refresh" />
+          <PostFeed v-for="feed in feeds" :feed="feed" :key="feed.id" @refresh="refresh" />
         </TransitionGroup>
-
         <div v-else class="ta-post-none">
+
           <p><span><i class="uil uil-layers-slash"></i></span></p>
           <h2> {{ $t('timeline.noPost') }}</h2>
         </div>
@@ -85,7 +84,7 @@
 
     <ClientOnly>
       <el-dialog v-model="isTextEditorOpen" append-to-body custom-class="modal-area-type" :show-close="false"
-        :close-on-click-modal="false" :close-on-press-escape="false" @close="closeEditor">
+        :close-on-click-modal="false" :close-on-press-escape="false" @close="closeEditor" width="700px">
         <TextEditor @closeModal="isTextEditorOpen = false" :type="type" @refresh="refresh" :key="editorKey"
           :channelInfo="channelInfo" />
       </el-dialog>
@@ -246,12 +245,13 @@
 <script setup lang="ts">
 import _ from 'lodash'
 import { PropType } from 'vue';
-import { IComChannel } from '~~/types';
+import { IComChannel, IFeed } from '~~/types';
 
 import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElSelect, ElOption, ElMessage, ElDialog } from "element-plus";
 
 import { useLocalePath } from 'vue-i18n-routing';
 import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
+import { channel } from 'diagnostics_channel';
 
 const LIMIT_SIZE = 3
 
@@ -260,7 +260,7 @@ const localePath = useLocalePath();
 const config = useRuntimeConfig();
 
 
-const feeds = ref<any[]>([])
+const feeds = ref<IFeed[]>([])
 const isPending = ref(true)
 
 const isTextEditorOpen = ref(false)
@@ -272,7 +272,7 @@ const triggerDiv = ref()
 const limit = ref(LIMIT_SIZE);
 const offset = ref(0);
 const media = ref()
-const isAddData = ref(true);
+const isAddData = ref(false);
 
 
 const user = computed(() => useUser().user.value.info)
@@ -303,8 +303,10 @@ const props = defineProps({
 let watcher = watch(
   () => route.query,
   (query) => {
-    media.value = query.media as string;
-    refresh()
+    if (query.media) {
+      media.value = query.media as string;
+      refresh()
+    }
   }
 )
 
@@ -314,11 +316,14 @@ onBeforeRouteLeave((to, from) => {
 
 
 onMounted(async () => {
+
+  console.log('mounted', feeds.value);
   observer.value = new IntersectionObserver((entries) => {
     handleIntersection(entries[0])
   }, { root: null, threshold: 1 })
 
   observer.value.observe(triggerDiv.value)
+
   await fetch()
 })
 
@@ -326,13 +331,18 @@ function handleIntersection(target) {
   if (target.isIntersecting) {
     if (isAddData.value) {
       offset.value += limit.value;
+      console.log('intersection fetch')
       fetch()
     }
   }
 }
 
+onBeforeUnmount(() => {
+  initPaging();
+})
+
 async function fetch() {
-  const payload = {
+  const query = {
     limit: limit.value,
     offset: offset.value,
     media: media.value
@@ -341,12 +351,12 @@ async function fetch() {
   switch (props.type) {
     case 'community':
       if (props.channelInfo) {
-        const { data, error, refresh } = await useFetch<{ result: [], totalCount: number }>(createQueryUrl(`/timeline/${channelId.value}/channel/${props.channelInfo.id}`, payload), getComFetchOptions('get', true))
+        const { data, error, refresh } = await useFetch<{ result: [], totalCount: number }>(createQueryUrl(`/timeline/${channelId.value}/channel/${props.channelInfo.id}`, query), getComFetchOptions('get', true))
         if (data.value) {
           dataPaging(data.value)
         }
       } else {
-        const { data, error, refresh } = await useFetch<{ result: [], totalCount: number }>(createQueryUrl(`/timeline/${channelId.value}/post`, payload), getComFetchOptions('get', true))
+        const { data, error, refresh } = await useFetch<{ result: [], totalCount: number }>(createQueryUrl(`/timeline/${channelId.value}/post`, query), getComFetchOptions('get', true))
         if (data.value) {
           dataPaging(data.value)
         }
@@ -375,36 +385,34 @@ async function fetch() {
 
       break;
     case 'user':
-      const { data: userPostData } = await post.getUserPosts(channelId.value, payload)
+      const { data: userPostData } = await useFetch<{ result: IFeed[], totalCount: number }>(createQueryUrl(`/timeline/channel/${channelId.value}`, query), getComFetchOptions('get', true))
+
       if (userPostData.value) {
-        let { result, totalCount } = userPostData.value
+        // let { result, totalCount } = userPostData.value
 
-        if (result?.length) {
-          isAddData.value = true;
-          result = result.filter(feed => feed.id !== null)
-        }
+        // result = result.filter(feed => feed.id !== null)
 
-        if (isAddData.value) {
-          if (result?.length) {
-            feeds.value = [...feeds.value, ...result];
-          } else {
-            isAddData.value = false
-            observer.value.unobserve(triggerDiv.value)
-          }
+        // if (isAddData.value) {
+        //   if (result?.length > 0) {
+        //     feeds.value = [...feeds.value, ...result];
+        //   } else {
+        //     isAddData.value = false
+        //     observer.value.unobserve(triggerDiv.value)
+        //   }
 
-        } else {
-          feeds.value = result;
-          if (totalCount < limit.value) {
-            isAddData.value = false;
-          } else {
-            isAddData.value = true;
-          }
-        }
+        // } else {
+        //   feeds.value = result;
+
+        //   isAddData.value = true;
+
+        // }
+        dataPaging(userPostData.value)
 
       }
+
       break;
     case 'game':
-      const { data: gamePostData, error: gameError, } = await useFetch<{ result: [], totalCount: number }>(createQueryUrl(`/timeline/game/${gameId.value}`, payload),
+      const { data: gamePostData, error: gameError, } = await useFetch<{ result: [], totalCount: number }>(createQueryUrl(`/timeline/game/${gameId.value}`, query),
         getComFetchOptions('get', true))
       // post.getCommunityPosts(channelId.value, payload)
       if (gamePostData.value) {
@@ -437,14 +445,14 @@ async function fetch() {
 
 }
 
-function dataPaging(data: { result: [], totalCount: number }) {
+function dataPaging(data: { result: IFeed[], totalCount: number }) {
   const { result, totalCount } = data
-  const uniqueResult = _.uniqBy(result, 'id');
-  if (uniqueResult.length > LIMIT_SIZE) {
-    isAddData.value = true
-  }
+  const validFeed = result.filter((feed) => { return feed.id !== null })
+  const uniqueResult = _.uniqBy(validFeed, 'id');
+
+
   if (isAddData.value) {
-    if (uniqueResult.length > 0) {
+    if (result.length > 0) {
       feeds.value = [...feeds.value, ...uniqueResult]
     } else {
       isAddData.value = false
@@ -453,10 +461,9 @@ function dataPaging(data: { result: [], totalCount: number }) {
 
   }
   else {
-    feeds.value = result;
+    feeds.value = uniqueResult;
     isAddData.value = true
   }
-
 }
 
 function initPaging() {
@@ -464,6 +471,7 @@ function initPaging() {
   offset.value = 0;
   isAddData.value = false;
   feeds.value = []
+
 }
 
 async function refresh() {
