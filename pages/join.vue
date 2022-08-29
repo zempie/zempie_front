@@ -8,8 +8,8 @@
         <LoginWhiteLogoMb path='/login' />
       </div>
       <div class="lj-title">
-        <h3>{{ $t('join') }}</h3>
-        <p>{{ $t('join.text1') }}</p>
+        <h3>{{  $t('join')  }}</h3>
+        <p>{{  $t('join.text1')  }}</p>
       </div>
       <form class="lj-content">
         <ul>
@@ -19,7 +19,7 @@
               :placeholder="$t('login.email.placeholder')" class="w100p h60" :readonly="fUser?.email" />
 
             <h3 class="input-errors" v-for="error of v$.email.$errors" :key="error.$uid">
-              <i class="uil uil-check"></i>{{ error.$message }}
+              <i class="uil uil-check"></i>{{  error.$message  }}
             </h3>
           </li>
           <li v-if="!fUser?.email">
@@ -27,7 +27,7 @@
               :placeholder="$t('password')" class="w100p h60" autocomplete="off" />
 
             <h3 class="input-errors" v-for="error of v$.password.$errors" :key="error.$uid">
-              <i class="uil uil-check"></i>{{ error.$message }}
+              <i class="uil uil-check"></i>{{  error.$message  }}
             </h3>
 
 
@@ -44,7 +44,7 @@
             <input type="text" name="register-username" v-model="v$.username.$model" title="" :placeholder="$t('name')"
               class="w100p h60" autocomplete="off" />
             <h3 class="input-errors" v-for="error of v$.username.$errors" :key="error.$uid">
-              <i class="uil uil-check"></i>{{ error.$message }}
+              <i class="uil uil-check"></i>{{  error.$message  }}
             </h3>
           </li>
           <!--                    todo:백엔드에 닉네임 추가후 입력 -->
@@ -104,22 +104,22 @@
                       @click="form.policyAgreement ? errorAgree = true : errorAgree = false" />
 
                     <label for="agree"><i class="uil uil-check"></i></label>
-                    <span><label for="agree" style="text-decoration:underline;">{{ $t('terms') }} ({{
-                        $t('required')
-                    }})</label></span>
+                    <span><label for="agree" style="text-decoration:underline;">{{  $t('terms')  }} ({{
+                         $t('required') 
+                        }})</label></span>
                   </dt>
                   <dd>
-                    <NuxtLink :to="localePath('/terms')" target="_blank">{{ $t('view') }}</NuxtLink>
+                    <NuxtLink :to="localePath('/terms')" target="_blank">{{  $t('view')  }}</NuxtLink>
                   </dd>
                 </dl>
               </li>
-              <h3 :class="errorAgree ? 'error-agree' : 'agree'"><i class="uil uil-check"></i>{{ $t('agreement.text') }}
+              <h3 :class="errorAgree ? 'error-agree' : 'agree'"><i class="uil uil-check"></i>{{  $t('agreement.text')  }}
               </h3>
             </ul>
           </div>
         </div>
         <p>
-        <p @click="register" class="btn-default-big w100p">{{ $t('join') }}</p>
+        <p @click="register" class="btn-default-big w100p">{{  $t('join')  }}</p>
         </p>
         <!--                <dl>
                                     <dt></dt>
@@ -158,27 +158,27 @@ const { $firebaseAuth, $cookies } = useNuxtApp()
 const localePath = useLocalePath();
 const router = useRouter();
 
-// useHead({
-//   title: `${t('seo.join.title')} | Zempie`,
-//   meta: [
-//     {
-//       name: 'description',
-//       content: `${t('seo.join.desc')}`
-//     },
-//     {
-//       name: 'og:title',
-//       content: `${t('seo.join.title')}`
-//     },
-//     {
-//       name: 'og:description',
-//       content: `${t('seo.join.description')}`
-//     },
-//     {
-//       name: 'og:url',
-//       content: `${config.ZEMPIE_URL}${route.path}`
-//     },
-//   ]
-// })
+useHead({
+  title: `${t('seo.join.title')} | Zempie`,
+  meta: [
+    {
+      name: 'description',
+      content: `${t('seo.join.desc')}`
+    },
+    {
+      name: 'og:title',
+      content: `${t('seo.join.title')}`
+    },
+    {
+      name: 'og:description',
+      content: `${t('seo.join.description')}`
+    },
+    {
+      name: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.path}`
+    },
+  ]
+})
 
 
 const form = reactive({

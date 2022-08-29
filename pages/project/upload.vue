@@ -2,8 +2,8 @@
   <NuxtLayout name="studio">
     <div class="content-studio">
       <div class="studio-banner bg02">
-        <h2>{{ $t('uploadGame.selectStage.text') }}</h2>
-        <p>{{ $t('uploadGame.selectStage.info') }}
+        <h2>{{  $t('uploadGame.selectStage.text')  }}</h2>
+        <p>{{  $t('uploadGame.selectStage.info')  }}
         </p>
       </div>
       <ProjectUpload />
@@ -18,27 +18,27 @@ const { t, locale } = useI18n()
 const route = useRoute();
 const config = useRuntimeConfig()
 
-// useHead({
-//   title: `${t('seo.project.upload.title')} | Zempie`,
-//   meta: [
-//     {
-//       name: 'description',
-//       content: `${t('seo.project.upload.desc')}`
-//     },
-//     {
-//       name: 'og:title',
-//       content: `${t('seo.project.upload.title')}`
-//     },
-//     {
-//       name: 'og:description',
-//       content: `${t('seo.project.upload.description')}`
-//     },
-//     {
-//       name: 'og:url',
-//       content: `${config.ZEMPIE_URL}${route.path}`
-//     },
-//   ]
-// })
+useHead({
+  title: `${t('seo.project.upload.title')} | Zempie`,
+  meta: [
+    {
+      name: 'description',
+      content: `${t('seo.project.upload.desc')}`
+    },
+    {
+      name: 'og:title',
+      content: `${t('seo.project.upload.title')}`
+    },
+    {
+      name: 'og:description',
+      content: `${t('seo.project.upload.description')}`
+    },
+    {
+      name: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.path}`
+    },
+  ]
+})
 
 </script>
 

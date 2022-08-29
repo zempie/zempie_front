@@ -2,10 +2,10 @@
   <div class="content">
     <ClientOnly>
       <div class="visual-title">
-        <h2>'{{ keyword }}' <span>{{ $t('search.result') }}</span></h2>
+        <h2>'{{  keyword  }}' <span>{{  $t('search.result')  }}</span></h2>
       </div>
       <dl class="area-title" v-if="results.users?.length" style="margin-top:12.5px">
-        <dt>Users <span>{{ results.users?.length }}</span></dt>
+        <dt>Users <span>{{  results.users?.length  }}</span></dt>
       </dl>
       <ul class="user-list" v-if="results.users.length">
 
@@ -23,7 +23,7 @@
 
 
       <dl class="area-title" v-if="results.games?.length">
-        <dt>Games <span>{{ results.games?.length }}</span></dt>
+        <dt>Games <span>{{  results.games?.length  }}</span></dt>
       </dl>
 
       <ul v-if="results.games.length" class="card-game">
@@ -34,7 +34,7 @@
       </ul>
 
       <dl class="area-title" v-if="results.posts?.length">
-        <dt>Posts <span>{{ results.posts?.length }}</span></dt>
+        <dt>Posts <span>{{  results.posts?.length  }}</span></dt>
       </dl>
       <div class="ta-search-post" v-if="results.posts.length" :style="results.posts.length ? 'padding:0px ;' : ''">
         <ul class="ta-post">
@@ -57,6 +57,27 @@ const route = useRoute();
 const config = useRuntimeConfig()
 const $route = useRoute();
 
+useHead({
+  title: `${t('seo.search.title')} | Zempie`,
+  meta: [
+    {
+      name: 'description',
+      content: `${t('seo.search.desc')}`
+    },
+    {
+      name: 'og:title',
+      content: `${t('seo.search.title')}`
+    },
+    {
+      name: 'og:description',
+      content: `${t('seo.search.description')}`
+    },
+    {
+      name: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.path}`
+    },
+  ]
+})
 
 const keyword = ref($route.query.q)
 const userList = ref([])
@@ -65,27 +86,6 @@ const communityList = ref([])
 const postList = ref([])
 
 
-// useHead({
-//   title: `${t('seo.search.title')} | Zempie`,
-//   meta: [
-//     {
-//       name: 'description',
-//       content: `${t('seo.search.desc')}`
-//     },
-//     {
-//       name: 'og:title',
-//       content: `${t('seo.search.title')}`
-//     },
-//     {
-//       name: 'og:description',
-//       content: `${t('seo.search.description')}`
-//     },
-//     {
-//       name: 'og:url',
-//       content: `${config.ZEMPIE_URL}${route.path}`
-//     },
-//   ]
-// })
 
 
 const { data: results, error, pending, refresh } = await useFetch<any>(() => `/search?q=${keyword.value}`, getComFetchOptions('get', true));

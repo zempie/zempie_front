@@ -36,34 +36,36 @@ onMounted(async () => {
   if (data.value) {
     const { game, my_emotions, my_heart } = data.value.result
     gameData.value = game
+
+    console.log('game', gameData.value)
     // url.value = `/${config.LAUNCHER_URL}/game/${gamePath.value}`;
 
 
-    // useHead({
-    //   title: `${t('seo.terms.title')} | Zempie`,
-    //   meta: [
-    //     {
-    //       name: 'description',
-    //       content: `${t('seo.terms.desc')}`
-    //     },
-    //     {
-    //       name: 'og:title',
-    //       content: `${t('seo.terms.title')}`
-    //     },
-    //     {
-    //       name: 'og:description',
-    //       content: `${t('seo.terms.description')}`
-    //     },
-    //     {
-    //       name: 'og:url',
-    //       content: `${config.ZEMPIE_URL}${route.path}`
-    //     },
-    //     {
-    //       name: 'og:url',
-    //       content: `${gameData.value.url_thumb}`
-    //     },
-    //   ]
-    // })
+    useHead({
+      title: `${gameData.value.title} | Zempie`,
+      meta: [
+        {
+          name: 'description',
+          content: `${gameData.value.title}`
+        },
+        {
+          name: 'og:title',
+          content: `${gameData.value.description}`
+        },
+        {
+          name: 'og:description',
+          content: `${gameData.value.description}`
+        },
+        {
+          name: 'og:url',
+          content: `${config.ZEMPIE_URL}${route.path}`
+        },
+        {
+          name: 'og:image',
+          content: `${gameData.value.url_thumb}`
+        },
+      ]
+    })
 
 
     window.addEventListener("message", onMessage);

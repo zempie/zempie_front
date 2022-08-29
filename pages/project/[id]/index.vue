@@ -13,27 +13,27 @@ const route = useRoute()
 const router = useRouter();
 const config = useRuntimeConfig()
 
-// useHead({
-//   title: `${t('seo.project.title')} | Zempie`,
-//   meta: [
-//     {
-//       name: 'description',
-//       content: `${t('seo.project.desc')}`
-//     },
-//     {
-//       name: 'og:title',
-//       content: `${t('seo.project.title')}`
-//     },
-//     {
-//       name: 'og:description',
-//       content: `${t('seo.project.description')}`
-//     },
-//     {
-//       name: 'og:url',
-//       content: `${config.ZEMPIE_URL}${route.path}`
-//     },
-//   ]
-// })
+useHead({
+  title: `${t('seo.project.title')} | Zempie`,
+  meta: [
+    {
+      name: 'description',
+      content: `${t('seo.project.desc')}`
+    },
+    {
+      name: 'og:title',
+      content: `${t('seo.project.title')}`
+    },
+    {
+      name: 'og:description',
+      content: `${t('seo.project.description')}`
+    },
+    {
+      name: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.path}`
+    },
+  ]
+})
 
 definePageMeta({
   title: '게임 정보 수정',

@@ -3,27 +3,27 @@
     <dd>
       <div class="studio-upload-input">
         <div class="sui-input">
-          <div class="suii-title">{{ $t('versionManage.addVersion') }}</div>
+          <div class="suii-title">{{  $t('versionManage.addVersion')  }}</div>
           <dl class="suii-content">
-            <dt>{{ $t('gameUpload') }}</dt>
+            <dt>{{  $t('gameUpload')  }}</dt>
             <ProjectZipFileUploader @sendZipFile="setZipFile" />
 
           </dl>
           <div class="suii-open" :class="isAdvancedOpen ? 'open' : 'close'" @click="isAdvancedOpen = !isAdvancedOpen">
-            <span> {{ $t('advanced.setting') }}</span> &nbsp;<i class="uil uil-sliders-v-alt"></i>
+            <span> {{  $t('advanced.setting')  }}</span> &nbsp;<i class="uil uil-sliders-v-alt"></i>
           </div>
           <transition name="component-fade" mode="out-in">
             <div v-show="isAdvancedOpen">
               <dl class="suii-content">
-                <dt>{{ $t('addGameFile.select.startFile.text1') }}</dt>
+                <dt>{{  $t('addGameFile.select.startFile.text1')  }}</dt>
                 <dd>
                   <select name="" title="" class="w100p">
-                    <option v-for="file in startFileOptions" :value="file">{{ file }}</option>
+                    <option v-for="file in startFileOptions" :value="file">{{  file  }}</option>
                   </select>
                 </dd>
               </dl>
               <dl class="suii-content">
-                <dt>{{ $t('addGameFile.selectMode') }}</dt>
+                <dt>{{  $t('addGameFile.selectMode')  }}</dt>
                 <dd>
                   <ul>
                     <li>
@@ -35,22 +35,22 @@
                     <li>Auto-deployment mode</li>
                   </ul>
                   <h2>
-                    {{ $t('addGameFile.selectMode.text1') }}<br />
-                    {{ $t('addGameFile.selectFile.text3') }}
+                    {{  $t('addGameFile.selectMode.text1')  }}<br />
+                    {{  $t('addGameFile.selectFile.text3')  }}
                   </h2>
                 </dd>
               </dl>
               <dl class="suii-content">
-                <dt>{{ $t('version') }}</dt>
+                <dt>{{  $t('version')  }}</dt>
                 <dd>
                   <input v-model="version" type="text" class="w100p">
                   <p v-if="isVersionError" style="color:red; margin:10px 10px 0px 10px;">{{
-                      $t('projectAddVersion.error.lowVersion')
-                  }}</p>
+                     $t('projectAddVersion.error.lowVersion') 
+                    }}</p>
                 </dd>
               </dl>
               <div class="suii-close">
-                <button class="btn-line" @click="isAdvancedOpen = !isAdvancedOpen">{{ $t('close') }} &nbsp;&nbsp;<i
+                <button class="btn-line" @click="isAdvancedOpen = !isAdvancedOpen">{{  $t('close')  }} &nbsp;&nbsp;<i
                     class="uil uil-angle-up"></i></button>
               </div>
             </div>
@@ -60,7 +60,7 @@
       </div>
       <ul class="sui-btn">
         <li><a @click="upload" class="btn-default w150">
-            <span>{{ $t('upload') }}</span>
+            <span>{{  $t('upload')  }}</span>
           </a></li>
       </ul>
     </dd>
@@ -80,31 +80,31 @@ const route = useRoute()
 const localePath = useLocalePath();
 const config = useRuntimeConfig()
 
-// useHead({
-//   title: `${t('seo.project.add.verison.title')} | Zempie`,
-//   meta: [
-//     {
-//       name: 'description',
-//       content: `${t('seo.project.add.verison.desc')}`
-//     },
-//     {
-//       name: 'og:title',
-//       content: `${t('seo.project.add.verison.title')}`
-//     },
-//     {
-//       name: 'og:description',
-//       content: `${t('seo.project.add.verison.description')}`
-//     },
-//     {
-//       name: 'og:url',
-//       content: `${config.ZEMPIE_URL}${route.path}`
-//     },
-//   ]
-// })
+useHead({
+  title: `${t('seo.project.add.verison.title')} | Zempie`,
+  meta: [
+    {
+      name: 'description',
+      content: `${t('seo.project.add.verison.desc')}`
+    },
+    {
+      name: 'og:title',
+      content: `${t('seo.project.add.verison.title')}`
+    },
+    {
+      name: 'og:description',
+      content: `${t('seo.project.add.verison.description')}`
+    },
+    {
+      name: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.path}`
+    },
+  ]
+})
 
 
 definePageMeta({
-  title: `${t('projectManager.add.version')}`,
+  title: '버전 추가',
   name: 'addVersion'
 })
 

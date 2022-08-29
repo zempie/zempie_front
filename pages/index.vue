@@ -55,9 +55,34 @@
 import { useI18n } from 'vue-i18n'
 
 const { t, locale } = useI18n()
-const route = useRoute()
 const config = useRuntimeConfig()
+const route = useRoute()
 
+useHead({
+  title: `${t('seo.login.title')} | Zempie`,
+  meta: [
+    {
+      name: 'description',
+      content: `${t('seo.login.desc')}`,
+    },
+    {
+      name: 'og:title',
+      content: `${t('seo.login.title')}`,
+    },
+    {
+      name: 'og:description',
+      content: `${t('seo.login.description')}`,
+    },
+    {
+      name: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.path}`,
+    },
+    {
+      name: 'og:image',
+      content: 'image/sns-thumbnail.png',
+    },
+  ],
+})
 const GAME_COUNT = 8
 const COMMUNITY_COUNT = 4
 const POST_COUNT = 8
@@ -71,28 +96,6 @@ const {
   pending: cPending,
   error: cError,
 } = await community.list({ limit: COMMUNITY_COUNT })
-
-// useHead({
-//   title: `${t('seo.landing.title')}`,
-//   meta: [
-//     {
-//       name: 'description',
-//       content: `${t('seo.landing.desc')}`
-//     },
-//     {
-//       name: 'og:title',
-//       content: `${t('seo.landing.title')}`
-//     },
-//     {
-//       name: 'og:description',
-//       content: `${t('seo.landing.description')}`
-//     },
-//     {
-//       name: 'og:url',
-//       content: `${config.ZEMPIE_URL}${route.path}`
-//     },
-//   ]
-// })
 
 const { data, pending, error } = await game.list({
   limit: GAME_COUNT,

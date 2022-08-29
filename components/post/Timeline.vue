@@ -49,7 +49,7 @@
         <div v-else class="ta-post-none">
 
           <p><span><i class="uil uil-layers-slash"></i></span></p>
-          <h2> {{ t('timeline.noPost') }}</h2>
+          <h2> {{  t('timeline.noPost')  }}</h2>
         </div>
 
         <!-- <Feed
@@ -246,6 +246,7 @@
 import _ from 'lodash'
 import { PropType } from 'vue';
 import { IComChannel, IFeed } from '~~/types';
+import { useI18n } from 'vue-i18n';
 
 import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElSelect, ElOption, ElMessage, ElDialog } from "element-plus";
 

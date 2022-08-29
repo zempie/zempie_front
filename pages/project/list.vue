@@ -3,8 +3,8 @@
     <div class="content-studio" style="min-height: calc(100vh - 200px)">
       <!-- 상단배너 -->
       <div class="studio-banner bg03">
-        <h2>{{ $t("projectList.banner.text") }}</h2>
-        <p>{{ $t("projectList.banner.info") }}</p>
+        <h2>{{  $t("projectList.banner.text")  }}</h2>
+        <p>{{  $t("projectList.banner.info")  }}</p>
       </div>
       <!-- 상단배너 끝 -->
 
@@ -22,43 +22,43 @@
           </dt>
           <dd>
             <NuxtLink :to="localePath('/project/upload')" class="btn-default ml20"><i class="uil uil-plus"></i>{{
-                $t("gameUpload")
-            }}</NuxtLink>
+               $t("gameUpload") 
+              }}</NuxtLink>
           </dd>
         </dl>
 
         <ul class="ag-title">
-          <li>{{ $t("game.thumbnail") }}</li>
+          <li>{{  $t("game.thumbnail")  }}</li>
           <li class="game-title">
-            {{ $t("game.title") }}
+            {{  $t("game.title")  }}
             <i v-if="isTitleSortAsc" class="uil uil-angle-up" style="font-size:20px; cursor: pointer;"
               @click="sortAscList('name'); isTitleSortAsc = !isTitleSortAsc "></i>
             <i v-else class="uil uil-angle-down" style="font-size:20px; cursor: pointer;"
               @click="sortDescList('name'); isTitleSortAsc = !isTitleSortAsc"></i>
           </li>
           <li>
-            {{ $t("game.uploadDate") }}
+            {{  $t("game.uploadDate")  }}
             <i v-if="isDateSortAsc" class="uil uil-angle-up" style="font-size:20px; cursor: pointer;"
               @click="sortAscList('created_at'); isDateSortAsc = !isDateSortAsc"></i>
             <i v-else class="uil uil-angle-down" style="font-size:20px; cursor: pointer;"
               @click="sortDescList('created_at'); isDateSortAsc = !isDateSortAsc"></i>
           </li>
           <li>
-            {{ $t("game.status") }}
+            {{  $t("game.status")  }}
             <i v-if="isStageSortAsc" class="uil uil-angle-up" style="font-size:20px; cursor: pointer;"
               @click="sortAscList('stage'); isStageSortAsc = !isStageSortAsc"></i>
             <i v-else class="uil uil-angle-down" style="font-size:20px; cursor: pointer;"
               @click="sortDescList('stage'); isStageSortAsc = !isStageSortAsc"></i>
           </li>
           <li>
-            {{ $t("game.playCnt") }}
+            {{  $t("game.playCnt")  }}
             <i v-if="isPlayCountSortAsc" class="uil uil-angle-up" style="font-size:20px; cursor: pointer;"
               @click="sortAscListByGame('count_start'); isPlayCountSortAsc = !isPlayCountSortAsc"></i>
             <i v-else class="uil uil-angle-down" style="font-size:20px; cursor: pointer;"
               @click="sortDescListByGame('count_start'); isPlayCountSortAsc = !isPlayCountSortAsc"></i>
           </li>
           <li>
-            {{ $t("game.likeCnt") }}
+            {{  $t("game.likeCnt")  }}
             <i v-if="isLikeCountSortAsc" class="uil uil-angle-up" style="font-size:20px; cursor: pointer;"
               @click="sortAscListByGame('count_heart'); isLikeCountSortAsc = !isLikeCountSortAsc"></i>
             <i v-else class="uil uil-angle-down" style="font-size:20px; cursor: pointer;"
@@ -77,7 +77,7 @@
           <TransitionGroup name="list-complete" tag="div">
             <ul v-for="project in projects" :key="project.id" @click="goToProjectPage(project.id)">
               <li>
-                <span> {{ $t("game.thumbnail") }}: </span>
+                <span> {{  $t("game.thumbnail")  }}: </span>
                 <p :style="`background: url(${project.picture_web ||
                 project.picture ||
                 project.url_thumb ||
@@ -85,28 +85,28 @@
                 }?t=${Date.now()}) center center / cover no-repeat; background-size: cover;`"></p>
               </li>
               <li>
-                <span> {{ $t("game.title") }}: </span> &nbsp;&nbsp;{{
-                    project.name
+                <span> {{  $t("game.title")  }}: </span> &nbsp;&nbsp;{{
+                 project.name 
                 }}
               </li>
 
               <li>
-                <span> {{ $t("game.uploadDate") }}: </span> &nbsp;&nbsp;
-                {{ dayjs(project.created_at).format("YYYY-MM-DD") }}
+                <span> {{  $t("game.uploadDate")  }}: </span> &nbsp;&nbsp;
+                {{  dayjs(project.created_at).format("YYYY-MM-DD")  }}
               </li>
               <li>
-                <span> {{ $t("game.status") }}: </span> &nbsp;&nbsp;
-                {{ eGameStage[project.stage] }}
+                <span> {{  $t("game.status")  }}: </span> &nbsp;&nbsp;
+                {{  eGameStage[project.stage]  }}
 
               </li>
               <li>
-                <span> {{ $t("game.playCnt") }}: </span> &nbsp;&nbsp;{{
-                    project.game?.count_start
+                <span> {{  $t("game.playCnt")  }}: </span> &nbsp;&nbsp;{{
+                 project.game?.count_start 
                 }}
               </li>
               <li>
-                <span> {{ $t("game.likeCnt") }}:</span> &nbsp;&nbsp;{{
-                    project.game.count_heart
+                <span> {{  $t("game.likeCnt")  }}:</span> &nbsp;&nbsp;{{
+                 project.game.count_heart 
                 }}
               </li>
             </ul>
@@ -114,7 +114,7 @@
 
           <div class="studio-pagination">
             <dl>
-              <dd>{{ currPage }}-{{ totalPage }} of {{ totalCount }}</dd>
+              <dd>{{  currPage  }}-{{  totalPage  }} of {{  totalCount  }}</dd>
               <dd>
                 <span @click="prevPage()" :class="[currPage !== 1 ? '' : 'disabled', 'prev-btn']"><i
                     class="uil uil-angle-left-b"></i></span>&nbsp;&nbsp;
@@ -131,7 +131,7 @@
 
         <div v-else>
           <ul>
-            <li style="width: 100%">{{ $t("no.game") }}</li>
+            <li style="width: 100%">{{  $t("no.game")  }}</li>
           </ul>
         </div>
       </div>
@@ -153,27 +153,27 @@ const config = useRuntimeConfig()
 const localePath = useLocalePath();
 const $router = useRouter();
 
-// useHead({
-//   title: `${t('seo.project.list.title')} | Zempie`,
-//   meta: [
-//     {
-//       name: 'description',
-//       content: `${t('seo.project.list.desc')}`
-//     },
-//     {
-//       name: 'og:title',
-//       content: `${t('seo.project.list.title')}`
-//     },
-//     {
-//       name: 'og:description',
-//       content: `${t('seo.project.list.description')}`
-//     },
-//     {
-//       name: 'og:url',
-//       content: `${config.ZEMPIE_URL}${route.path}`
-//     },
-//   ]
-// })
+useHead({
+  title: `${t('seo.project.list.title')} | Zempie`,
+  meta: [
+    {
+      name: 'description',
+      content: `${t('seo.project.list.desc')}`
+    },
+    {
+      name: 'og:title',
+      content: `${t('seo.project.list.title')}`
+    },
+    {
+      name: 'og:description',
+      content: `${t('seo.project.list.description')}`
+    },
+    {
+      name: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.path}`
+    },
+  ]
+})
 
 const projects = ref([]);
 const isPending = ref(true);

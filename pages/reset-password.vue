@@ -5,42 +5,42 @@
     </div>
     <div class="pw-find">
       <div class="pf-title">
-        <h3>{{ $t('find.pwd.text') }}</h3>
-        <p>{{ $t('find.pwd.desc') }}</p>
+        <h3>{{  $t('find.pwd.text')  }}</h3>
+        <p>{{  $t('find.pwd.desc')  }}</p>
       </div>
       <div class="pf-content">
         <div><i class="uil uil-info-circle" style="font-size:16px; line-height:24px;"></i>&nbsp;&nbsp;{{
-            $t('find.pwd.input.text')
-        }}</div>
+           $t('find.pwd.input.text') 
+          }}</div>
         <ul>
           <li>
             <div>
               <input v-model="email" @input="email ? (isEmailErr = false) : isEmailErr = true" @keyup.enter="sendEmail"
                 type="text" :placeholder="$t('login.email.placeholder')" class="w100p h60" />
               <h3 class="input-errors" v-if="isEmailErr">
-                <i class="uil uil-check"></i>{{ $t('login.empty.email') }}
+                <i class="uil uil-check"></i>{{  $t('login.empty.email')  }}
               </h3>
             </div>
           </li>
         </ul>
         <p><button @click="sendEmail" class="btn-default-big">
-            {{ $t('send.email.btn') }}</button></p>
+            {{  $t('send.email.btn')  }}</button></p>
       </div>
     </div>
 
     <el-dialog v-model="openModal" append-to-body custom-class="modal-area-type" :show-close="false">
       <div class="modal-alert">
         <dl class="ma-header">
-          <dt>{{ $t('information') }}</dt>
+          <dt>{{  $t('information')  }}</dt>
           <dd>
             <button @click="closeModal"><i class=" uil uil-times"></i></button>
           </dd>
         </dl>
         <div class="ma-content">
-          <h2>{{ $t('send.email.modal.text1') }}<br />
-            {{ $t('send.email.modal.text2') }}</h2>
+          <h2>{{  $t('send.email.modal.text1')  }}<br />
+            {{  $t('send.email.modal.text2')  }}</h2>
           <div>
-            <button class="btn-default" style="width: 100%" @click="closeModal">{{ $t('confirm') }}</button>
+            <button class="btn-default" style="width: 100%" @click="closeModal">{{  $t('confirm')  }}</button>
           </div>
         </div>
       </div>
@@ -66,27 +66,27 @@ const openModal = ref(false)
 const email = ref('')
 const isEmailErr = ref(false)
 
-// useHead({
-//   title: `${t('seo.reset.pwd.title')} | Zempie`,
-//   meta: [
-//     {
-//       name: 'description',
-//       content: `${t('seo.reset.pwd.desc')}`
-//     },
-//     {
-//       name: 'og:title',
-//       content: `${t('seo.reset.pwd.title')}`
-//     },
-//     {
-//       name: 'og:description',
-//       content: `${t('seo.reset.pwd.description')}`
-//     },
-//     {
-//       name: 'og:url',
-//       content: `${config.ZEMPIE_URL}${route.path}`
-//     },
-//   ]
-// })
+useHead({
+  title: `${t('seo.reset.pwd.title')} | Zempie`,
+  meta: [
+    {
+      name: 'description',
+      content: `${t('seo.reset.pwd.desc')}`
+    },
+    {
+      name: 'og:title',
+      content: `${t('seo.reset.pwd.title')}`
+    },
+    {
+      name: 'og:description',
+      content: `${t('seo.reset.pwd.description')}`
+    },
+    {
+      name: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.path}`
+    },
+  ]
+})
 
 
 definePageMeta({

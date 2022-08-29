@@ -6,17 +6,17 @@
         </dt>
         <dd>
           <NuxtLink :to="localePath(`/project/${$route.params.id}/add-version`)" class="btn-default"><i
-              class="uil uil-plus"></i> {{ $t('versionManage.addVersion') }}
+              class="uil uil-plus"></i> {{  $t('versionManage.addVersion')  }}
           </NuxtLink>
         </dd>
       </dl>
 
       <ul class="gv-title">
         <li></li>
-        <li>{{ $t('versionManage.index') }}</li>
-        <li>{{ $t('versionManage.detailedVersion') }}</li>
-        <li>{{ $t('versionManage.state') }}</li>
-        <li>{{ $t('versionManage.creationDate') }}</li>
+        <li>{{  $t('versionManage.index')  }}</li>
+        <li>{{  $t('versionManage.detailedVersion')  }}</li>
+        <li>{{  $t('versionManage.state')  }}</li>
+        <li>{{  $t('versionManage.creationDate')  }}</li>
         <li></li>
       </ul>
 
@@ -37,27 +37,27 @@ const config = useRuntimeConfig()
 const localePath = useLocalePath();
 
 
-// useHead({
-//   title: `${t('seo.project.version.manage.title')} | Zempie`,
-//   meta: [
-//     {
-//       name: 'description',
-//       content: `${t('seo.project.version.manage.desc')}`
-//     },
-//     {
-//       name: 'og:title',
-//       content: `${t('seo.project.version.manage.title')}`
-//     },
-//     {
-//       name: 'og:description',
-//       content: `${t('seo.project.version.manage.description')}`
-//     },
-//     {
-//       name: 'og:url',
-//       content: `${config.ZEMPIE_URL}${route.path}`
-//     },
-//   ]
-// })
+useHead({
+  title: `${t('seo.project.version.manage.title')} | Zempie`,
+  meta: [
+    {
+      name: 'description',
+      content: `${t('seo.project.version.manage.desc')}`
+    },
+    {
+      name: 'og:title',
+      content: `${t('seo.project.version.manage.title')}`
+    },
+    {
+      name: 'og:description',
+      content: `${t('seo.project.version.manage.description')}`
+    },
+    {
+      name: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.path}`
+    },
+  ]
+})
 
 definePageMeta({
   title: '버전 관리',

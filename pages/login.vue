@@ -11,8 +11,8 @@
 
       </div>
       <div class="la-title">
-        <h3>{{ $t('login.text1') }}</h3>
-        <p>{{ $t('login.text2') }}</p>
+        <h3>{{  $t('login.text1')  }}</h3>
+        <p>{{  $t('login.text2')  }}</p>
       </div>
       <div class="la-content">
         <form>
@@ -20,7 +20,7 @@
             :placeholder="$t('login.email.placeholder')" class="w100p h60 " style="margin-bottom:10px"
             autocomplete="user-email" @keyup.enter="onSubmit" />
           <h2 class="input-errors" v-for="error of v$.email.$errors" :key="error.$uid">
-            <i class="uil uil-check"></i>{{ error.$message }}
+            <i class="uil uil-check"></i>{{  error.$message  }}
           </h2>
 
 
@@ -29,7 +29,7 @@
             style="margin-bottom:10px" @keyup.enter="onSubmit" />
 
           <h2 class="input-errors" v-for="error of v$.password.$errors" :key="error.$uid">
-            <i class="uil uil-check"></i>{{ error.$message }}
+            <i class="uil uil-check"></i>{{  error.$message  }}
           </h2>
 
         </form>
@@ -39,23 +39,23 @@
         <!--                    <input type="checkbox" name="" title="" id="auto-login"/> <label for="id-save"><i-->
         <!--                    class="uil uil-check"></i></label>&nbsp; <span><label for="auto-login">자동로그인</label></span>-->
         <!--                </div>-->
-        <p @click="onSubmit"><a class="btn-default-big">{{ $t('login') }}</a></p>
+        <p @click="onSubmit"><a class="btn-default-big">{{  $t('login')  }}</a></p>
 
 
         <dl>
           <dt>
-            <NuxtLink :to="localePath('/reset-password')">{{ $t('reset.pwd') }}</NuxtLink>
+            <NuxtLink :to="localePath('/reset-password')">{{  $t('reset.pwd')  }}</NuxtLink>
           </dt>
           <dd>|</dd>
           <dt>
-            <NuxtLink :to="localePath('/join')">{{ $t('join') }}</NuxtLink>
+            <NuxtLink :to="localePath('/join')">{{  $t('join')  }}</NuxtLink>
           </dt>
         </dl>
       </div>
       <div class="la-bottom">
         <dl>
           <dt></dt>
-          <dd>{{ $t('login.text3') }}</dd>
+          <dd>{{  $t('login.text3')  }}</dd>
           <dt></dt>
         </dl>
         <ul>
@@ -65,7 +65,7 @@
         </ul>
         <p>
           <span><i class="uil uil-info-circle" style="font-size:16px; line-height:24px;"></i></span>
-          {{ $t('login.text4') }}
+          {{  $t('login.text4')  }}
         </p>
       </div>
     </div>
@@ -89,27 +89,27 @@ const localePath = useLocalePath();
 const config = useRuntimeConfig()
 
 
-// useHead({
-//   title: `${t('seo.login.title')} | Zempie`,
-//   meta: [
-//     {
-//       name: 'description',
-//       content: `${t('seo.login.desc')}`
-//     },
-//     {
-//       name: 'og:title',
-//       content: `${t('seo.login.title')}`
-//     },
-//     {
-//       name: 'og:description',
-//       content: `${t('seo.login.description')}`
-//     },
-//     {
-//       name: 'og:url',
-//       content: `${config.ZEMPIE_URL}${route.path}`
-//     },
-//   ]
-// })
+useHead({
+  title: `${t('seo.login.title')} | Zempie`,
+  meta: [
+    {
+      name: 'description',
+      content: `${t('seo.login.desc')}`
+    },
+    {
+      name: 'og:title',
+      content: `${t('seo.login.title')}`
+    },
+    {
+      name: 'og:description',
+      content: `${t('seo.login.description')}`
+    },
+    {
+      name: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.path}`
+    },
+  ]
+})
 
 
 const form = reactive({

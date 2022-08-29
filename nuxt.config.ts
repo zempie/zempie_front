@@ -5,7 +5,7 @@ import { i18n } from './modules/i18n'
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
   head: {
-    title: 'zempie-nuxt',
+    title: 'Zempie',
     htmlAttrs: {
       lang: 'en',
     },
@@ -14,6 +14,10 @@ export default defineNuxtConfig({
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' },
+      {
+        name: 'og:title',
+        content: `Zempie`
+      },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },

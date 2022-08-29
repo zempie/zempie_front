@@ -2,11 +2,11 @@
   <NuxtLayout name="user-setting">
     <div>
       <dl class="area-title">
-        <dt>following <span>{{ totalCount }}</span></dt>
+        <dt>following <span>{{  totalCount  }}</span></dt>
       </dl>
       <UserList :users="users" :isPending="isPending" />
       <div v-if="!isPending && !users.length" class="no-result">
-        <h1>{{ $t('no.following') }}</h1>
+        <h1>{{  $t('no.following')  }}</h1>
         <img src="/images/not-found.png" />
       </div>
 
@@ -22,27 +22,27 @@ const { t, locale } = useI18n()
 const route = useRoute();
 const config = useRuntimeConfig()
 
-// useHead({
-//   title: `${t('seo.profile.following.title')} | Zempie`,
-//   meta: [
-//     {
-//       name: 'description',
-//       content: `${t('seo.profile.following.desc')}`
-//     },
-//     {
-//       name: 'og:title',
-//       content: `${t('seo.profile.following.title')}`
-//     },
-//     {
-//       name: 'og:description',
-//       content: `${t('seo.profile.following.description')}`
-//     },
-//     {
-//       name: 'og:url',
-//       content: `${config.ZEMPIE_URL}${route.path}`
-//     },
-//   ]
-// })
+useHead({
+  title: `${t('seo.profile.following.title')} | Zempie`,
+  meta: [
+    {
+      name: 'description',
+      content: `${t('seo.profile.following.desc')}`
+    },
+    {
+      name: 'og:title',
+      content: `${t('seo.profile.following.title')}`
+    },
+    {
+      name: 'og:description',
+      content: `${t('seo.profile.following.description')}`
+    },
+    {
+      name: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.path}`
+    },
+  ]
+})
 
 const MAX_PAGE_SIZE = 20
 

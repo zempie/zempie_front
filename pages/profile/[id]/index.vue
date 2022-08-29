@@ -3,7 +3,7 @@
     <div class="info-input">
       <div class="ii-title">
         <h2>General Settings</h2>
-        <h3>{{ $t('userSetting.title') }}</h3>
+        <h3>{{  $t('userSetting.title')  }}</h3>
       </div>
 
       <dl class="ii-card">
@@ -19,7 +19,7 @@
           </div>
           <p><i class="uil uil-image-plus"></i></p>
           <h2>Change Profile</h2>
-          <h3>{{ fileName }}</h3>
+          <h3>{{  fileName  }}</h3>
           <div @click.stop="deleteImg">
             <a><i class="uil uil-trash-alt"></i></a>
           </div>
@@ -33,7 +33,7 @@
           <li>&nbsp;</li>
         </ol>
         <ol>
-          <li>{{ $t('userSetting.name') }}</li>
+          <li>{{  $t('userSetting.name')  }}</li>
           <li><input type="text" name="" title="" readonly class="w100p" :value="userInfo?.name" />
           </li>
         </ol>
@@ -41,26 +41,26 @@
     </div>
 
     <div class="area-btn">
-      <a @click="onSubmit" class="btn-default w250">{{ $t('save') }}</a>
+      <a @click="onSubmit" class="btn-default w250">{{  $t('save')  }}</a>
     </div>
     <div class="delete-account" v-if="signUpType === 'password'">
-      <h2>{{ $t('userSetting.pwd.change') }}</h2>
+      <h2>{{  $t('userSetting.pwd.change')  }}</h2>
       <div>
-        <p>{{ $t('userSetting.pwd.change.info1') }} <span>
+        <p>{{  $t('userSetting.pwd.change.info1')  }} <span>
             <NuxtLink :to="localePath(`/profile/${userInfo?.id}/change-password`)">
-              {{ $t('click') }}</NuxtLink>
-          </span> {{ $t('userSetting.pwd.change.info2') }}
+              {{  $t('click')  }}</NuxtLink>
+          </span> {{  $t('userSetting.pwd.change.info2')  }}
         </p>
       </div>
     </div>
     <div class="delete-account">
-      <h2>{{ $t('userSetting.account.leave') }}</h2>
+      <h2>{{  $t('userSetting.account.leave')  }}</h2>
       <div>
-        <p>{{ $t('userSetting.account.leave.info1') }} <span>
-            <NuxtLink :to="localePath(`/profile/${userInfo?.id}/leave`)">{{ $t('click') }}
+        <p>{{  $t('userSetting.account.leave.info1')  }} <span>
+            <NuxtLink :to="localePath(`/profile/${userInfo?.id}/leave`)">{{  $t('click')  }}
             </NuxtLink>
           </span>
-          {{ $t('userSetting.pwd.change.info2') }}
+          {{  $t('userSetting.pwd.change.info2')  }}
         </p>
       </div>
     </div>
@@ -78,27 +78,27 @@ const { t, locale } = useI18n()
 const route = useRoute();
 const config = useRuntimeConfig()
 
-// useHead({
-//   title: `${t('seo.profile.info.title')} | Zempie`,
-//   meta: [
-//     {
-//       name: 'description',
-//       content: `${t('seo.profile.info.desc')}`
-//     },
-//     {
-//       name: 'og:title',
-//       content: `${t('seo.profile.info.title')}`
-//     },
-//     {
-//       name: 'og:description',
-//       content: `${t('seo.profile.info.description')}`
-//     },
-//     {
-//       name: 'og:url',
-//       content: `${config.ZEMPIE_URL}${route.path}`
-//     },
-//   ]
-// })
+useHead({
+  title: `${t('seo.profile.info.title')} | Zempie`,
+  meta: [
+    {
+      name: 'description',
+      content: `${t('seo.profile.info.desc')}`
+    },
+    {
+      name: 'og:title',
+      content: `${t('seo.profile.info.title')}`
+    },
+    {
+      name: 'og:description',
+      content: `${t('seo.profile.info.description')}`
+    },
+    {
+      name: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.path}`
+    },
+  ]
+})
 
 const MAX_FILE_SIZE = 3;
 

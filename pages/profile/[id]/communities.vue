@@ -15,7 +15,7 @@
             </template>
           </CommunityCard>
           <div class="no-result" v-else>
-            <h1> {{ t('noJoined.community') }} </h1>
+            <h1> {{  t('noJoined.community')  }} </h1>
             <img src="/images/not-found.png" width="100px" height="100px" />
           </div>
         </template>
@@ -34,7 +34,27 @@ const { t, locale } = useI18n()
 const route = useRoute();
 const config = useRuntimeConfig()
 
-
+useHead({
+  title: `${t('seo.profile.communities.title')} | Zempie`,
+  meta: [
+    {
+      name: 'description',
+      content: `${t('seo.profile.communities.desc')}`
+    },
+    {
+      name: 'og:title',
+      content: `${t('seo.profile.communities.title')}`
+    },
+    {
+      name: 'og:description',
+      content: `${t('seo.profile.communities.description')}`
+    },
+    {
+      name: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.path}`
+    },
+  ]
+})
 
 const communities = ref<ICommunity[]>([])
 const isPending = ref(true)
@@ -44,27 +64,7 @@ const userId = computed(() => route.params.id as number | string)
 
 onMounted(async () => {
 
-  // useHead({
-  //   title: `${t('seo.profile.communities.title')} | Zempie`,
-  //   meta: [
-  //     {
-  //       name: 'description',
-  //       content: `${t('seo.profile.communities.desc')}`
-  //     },
-  //     {
-  //       name: 'og:title',
-  //       content: `${t('seo.profile.communities.title')}`
-  //     },
-  //     {
-  //       name: 'og:description',
-  //       content: `${t('seo.profile.communities.description')}`
-  //     },
-  //     {
-  //       name: 'og:url',
-  //       content: `${config.ZEMPIE_URL}${route.path}`
-  //     },
-  //   ]
-  // })
+
   await fetch();
 })
 

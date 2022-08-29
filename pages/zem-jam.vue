@@ -24,9 +24,9 @@
                     <h2 data-scroll data-scroll-speed="1.3" data-scroll-delay="0.05">[ONLINE]</h2>
                     <h3 data-scroll data-scroll-speed="1.6" data-scroll-delay="0.05"
                         style=" font-family:'Russo One', 'NeoDunggeunmo'">
-                        {{ $t('zemjam.info1') }}
+                        {{  t('zemjam.info1')  }}
                         <br /><br />
-                        {{ $t('zemjam.info2') }}
+                        {{  t('zemjam.info2')  }}
 
                     </h3>
                     <div data-scroll data-scroll-speed="1.9" data-scroll-delay="0.05" data-scroll-direction=""
@@ -46,7 +46,7 @@
                     <h2 data-scroll data-scroll-speed="1" data-scroll-delay="0.05">ZEM JAM Is</h2>
                     <h3 data-scroll data-scroll-speed="1.3" data-scroll-delay="0.05"
                         style=" font-family:'Russo One', 'NeoDunggeunmo'">
-                        {{ $t('zemjam.info3') }}
+                        {{  t('zemjam.info3')  }}
                     </h3>
                     <div>
                         <p data-scroll data-scroll-speed="1.6"><img src="/images/zemjamis_img.png" alt="" title="" />
@@ -88,10 +88,10 @@
                             <h2 data-scroll data-scroll-speed="1" data-scroll-delay="0.05">OUR MISSION</h2>
                             <h3 data-scroll data-scroll-speed="1" data-scroll-delay="0.05"
                                 style=" font-family:'Russo One', 'NeoDunggeunmo'">
-                                {{ $t('zemjam.info4') }}
+                                {{  t('zemjam.info4')  }}
 
                                 <br /><br />
-                                {{ $t('zemjam.info5') }}
+                                {{  t('zemjam.info5')  }}
 
                             </h3>
                         </dd>
@@ -101,10 +101,10 @@
                             <h2 data-scroll data-scroll-speed="1" data-scroll-delay="0.05">ABOUT PARTICIPATING</h2>
                             <h3 data-scroll data-scroll-speed="1" data-scroll-delay="0.05"
                                 style=" font-family:'Russo One'">
-                                {{ $t('zemjam.info6') }}
+                                {{  t('zemjam.info6')  }}
 
                                 <br /><br />
-                                {{ $t('zemjam.info7') }}
+                                {{  t('zemjam.info7')  }}
 
                             </h3>
                         </li>
@@ -125,7 +125,7 @@
                     <h2 data-scroll data-scroll-speed="1" data-scroll-delay="0.05">WANT TO BECOME OUR PARTNER?</h2>
                     <h3 data-scroll data-scroll-speed="1" data-scroll-delay="0.05"
                         style=" font-family:'Russo One', 'NeoDunggeunmo'">
-                        {{ $t('zemjam.info8') }}
+                        {{  t('zemjam.info8')  }}
                     </h3>
                 </div>
             </div>
@@ -157,6 +157,33 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+
+const { t, locale } = useI18n()
+const route = useRoute();
+const config = useRuntimeConfig()
+
+useHead({
+    title: `${t('seo.zemjam.title')} | Zempie`,
+    meta: [
+        {
+            name: 'description',
+            content: `${t('seo.zemjam.desc')}`
+        },
+        {
+            name: 'og:title',
+            content: `${t('seo.zemjam.title')}`
+        },
+        {
+            name: 'og:description',
+            content: `${t('seo.zemjam.description')}`
+        },
+        {
+            name: 'og:url',
+            content: `${config.ZEMPIE_URL}${route.path}`
+        },
+    ]
+})
 
 definePageMeta({
     layout: 'header-only',

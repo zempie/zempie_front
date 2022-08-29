@@ -21,13 +21,13 @@
         <dt v-else>
           <div class="ta-myinfo" style="margin-bottom:20px">
             <UserAvatar :user="channelInfo" :tag="'p'"></UserAvatar>
-            <h2>{{ channelInfo.name }}</h2>
+            <h2>{{  channelInfo.name  }}</h2>
             <ul>
               <li>
                 <NuxtLink :to="localePath(`/channel/${channelId}`)">
                   <p style="background:#FEB100; cursor: pointer"><i class="uil uil-comment-chart-line"></i>
                   </p>
-                  <h2>{{ channelInfo.post_cnt }}</h2>
+                  <h2>{{  channelInfo.post_cnt  }}</h2>
                   <h3>Posts</h3>
                 </NuxtLink>
               </li>
@@ -35,7 +35,7 @@
                 <NuxtLink :to="localePath(`/channel/${channelId}/followers`)">
 
                   <p style="background:#33E4CE;cursor: pointer"><i class="uil uil-users-alt"></i></p>
-                  <h2>{{ channelInfo.follower_cnt }}</h2>
+                  <h2>{{  channelInfo.follower_cnt  }}</h2>
                   <h3>Followers</h3>
                 </NuxtLink>
 
@@ -43,7 +43,7 @@
               <li>
                 <NuxtLink :to="localePath(`/channel/${channelId}/following`)">
                   <p style="background:#5D5FFE;cursor: pointer"><i class="uil uil-user-plus"></i></p>
-                  <h2>{{ channelInfo.following_cnt }}</h2>
+                  <h2>{{  channelInfo.following_cnt  }}</h2>
                   <h3>following</h3>
                 </NuxtLink>
 
@@ -61,20 +61,20 @@
                   <p :style="`background:url(${game.url_thumb_webp ||
                   '/images/default.png'
                   }) center; background-size:cover;`"></p>
-                  <h2 style="text-overflow: ellipsis; overflow: hidden">{{ game.title }}</h2>
+                  <h2 style="text-overflow: ellipsis; overflow: hidden">{{  game.title  }}</h2>
                 </li>
 
               </ul>
 
               <div v-if="games?.length > 5">
                 <NuxtLink :to="localePath(`/channel/${channelId}/games`)" class="btn-default-samll w100p">{{
-                    $t('moreView')
-                }}
+                   $t('moreView') 
+                  }}
                 </NuxtLink>
               </div>
             </template>
             <ul v-else class="no-game">
-              <li>{{ $t('no.game') }}</li>
+              <li>{{  $t('no.game')  }}</li>
             </ul>
           </div>
         </dt>
@@ -102,6 +102,7 @@
 
  <script setup lang="ts">
 import { useLocalePath } from 'vue-i18n-routing';
+import { useI18n } from 'vue-i18n';
 
 
 const { t, locale } = useI18n()
