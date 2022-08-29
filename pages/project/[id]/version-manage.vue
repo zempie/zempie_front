@@ -28,24 +28,41 @@
 </template>
 <script setup lang="ts">
 import { IVersion } from '~~/types'
-
 import { useLocalePath } from 'vue-i18n-routing';
+import { useI18n } from 'vue-i18n';
 
-useHead({
-  title: 'Zempie | Project version ',
-  meta: [{
-    name: 'description',
-    content: 'project list'
-  }]
-})
+const { t, locale } = useI18n()
+const route = useRoute();
+const config = useRuntimeConfig()
+const localePath = useLocalePath();
+
+
+// useHead({
+//   title: `${t('seo.project.version.manage.title')} | Zempie`,
+//   meta: [
+//     {
+//       name: 'description',
+//       content: `${t('seo.project.version.manage.desc')}`
+//     },
+//     {
+//       name: 'og:title',
+//       content: `${t('seo.project.version.manage.title')}`
+//     },
+//     {
+//       name: 'og:description',
+//       content: `${t('seo.project.version.manage.description')}`
+//     },
+//     {
+//       name: 'og:url',
+//       content: `${config.ZEMPIE_URL}${route.path}`
+//     },
+//   ]
+// })
 
 definePageMeta({
   title: '버전 관리',
   name: 'versionManage'
 })
-
-const localePath = useLocalePath();
-const route = useRoute()
 
 
 const { data, error, pending, refresh } = await useFetch<{ result: { projectVersions: IVersion[] } }>(`/community/project/${route.params.id}`, getZempieFetchOptions('get', true))

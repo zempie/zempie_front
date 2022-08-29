@@ -16,9 +16,35 @@
 
 <script setup lang="ts">
 import { IUser } from '~~/types';
+import { useI18n } from 'vue-i18n';
+
+const { t, locale } = useI18n()
+const route = useRoute();
+const config = useRuntimeConfig()
+
+// useHead({
+//   title: `${t('seo.profile.following.title')} | Zempie`,
+//   meta: [
+//     {
+//       name: 'description',
+//       content: `${t('seo.profile.following.desc')}`
+//     },
+//     {
+//       name: 'og:title',
+//       content: `${t('seo.profile.following.title')}`
+//     },
+//     {
+//       name: 'og:description',
+//       content: `${t('seo.profile.following.description')}`
+//     },
+//     {
+//       name: 'og:url',
+//       content: `${config.ZEMPIE_URL}${route.path}`
+//     },
+//   ]
+// })
 
 const MAX_PAGE_SIZE = 20
-const route = useRoute();
 
 const userId = computed(() => route.params.id as number | string)
 

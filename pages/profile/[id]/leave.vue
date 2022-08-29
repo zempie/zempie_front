@@ -86,8 +86,32 @@ import { ElDialog, ElMessage } from "element-plus";
 import { useI18n } from 'vue-i18n';
 import { onBeforeRouteLeave } from "vue-router";
 
+const route = useRoute();
+const config = useRuntimeConfig()
 const { t, locale } = useI18n()
 const router = useRouter()
+
+// useHead({
+//   title: `${t('seo.leave.title')} | Zempie`,
+//   meta: [
+//     {
+//       name: 'description',
+//       content: `${t('seo.leave.desc')}`
+//     },
+//     {
+//       name: 'og:title',
+//       content: `${t('seo.leave.title')}`
+//     },
+//     {
+//       name: 'og:description',
+//       content: `${t('seo.leave.description')}`
+//     },
+//     {
+//       name: 'og:url',
+//       content: `${config.ZEMPIE_URL}${route.path}`
+//     },
+//   ]
+// })
 
 const reason = ref('')
 const isAgree = ref(false)

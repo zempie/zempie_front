@@ -119,24 +119,37 @@ import { ElMessage, ElDialog, ElLoading } from 'element-plus'
 import { eGameStage, IProject, IVersion } from '~~/types';
 import { useI18n } from 'vue-i18n';
 
-
 const { t, locale } = useI18n()
+const route = useRoute();
+const config = useRuntimeConfig()
 
-
-useHead({
-  title: 'Zempie | Project version ',
-  meta: [{
-    name: 'description',
-    content: 'project list'
-  }]
-})
+// useHead({
+//   title: `${t('seo.project.deploy.manage.title')} | Zempie`,
+//   meta: [
+//     {
+//       name: 'description',
+//       content: `${t('seo.project.deploy.manage.desc')}`
+//     },
+//     {
+//       name: 'og:title',
+//       content: `${t('seo.project.deploy.manage.title')}`
+//     },
+//     {
+//       name: 'og:description',
+//       content: `${t('seo.project.deploy.manage.description')}`
+//     },
+//     {
+//       name: 'og:url',
+//       content: `${config.ZEMPIE_URL}${route.path}`
+//     },
+//   ]
+// })
 
 definePageMeta({
-  title: '배포 관리',
+  title: `${t('projectManager.manage.deploy')}`,
   name: 'deployManage'
 })
 
-const route = useRoute()
 
 const options = ref([]);
 const selectVersion = ref('')

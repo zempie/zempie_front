@@ -54,7 +54,8 @@ import { useI18n } from 'vue-i18n';
 import { sendPasswordResetEmail } from 'firebase/auth'
 import { useLocalePath } from 'vue-i18n-routing';
 
-
+const route = useRoute();
+const config = useRuntimeConfig()
 const { t, locale } = useI18n()
 const { $firebaseAuth } = useNuxtApp()
 const localePath = useLocalePath();
@@ -64,6 +65,29 @@ const router = useRouter();
 const openModal = ref(false)
 const email = ref('')
 const isEmailErr = ref(false)
+
+// useHead({
+//   title: `${t('seo.reset.pwd.title')} | Zempie`,
+//   meta: [
+//     {
+//       name: 'description',
+//       content: `${t('seo.reset.pwd.desc')}`
+//     },
+//     {
+//       name: 'og:title',
+//       content: `${t('seo.reset.pwd.title')}`
+//     },
+//     {
+//       name: 'og:description',
+//       content: `${t('seo.reset.pwd.description')}`
+//     },
+//     {
+//       name: 'og:url',
+//       content: `${config.ZEMPIE_URL}${route.path}`
+//     },
+//   ]
+// })
+
 
 definePageMeta({
   layout: 'layout-none',

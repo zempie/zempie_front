@@ -9,12 +9,14 @@
 
 <script setup lang="ts">
 import { getIdToken } from 'firebase/auth'
+import { useI18n } from 'vue-i18n';
 
+const { t, locale } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const config = useRuntimeConfig();
-
 const { $firebaseAuth } = useNuxtApp()
+
 
 const url = ref('');
 const iframeHeight = ref('');
@@ -35,6 +37,34 @@ onMounted(async () => {
     const { game, my_emotions, my_heart } = data.value.result
     gameData.value = game
     // url.value = `/${config.LAUNCHER_URL}/game/${gamePath.value}`;
+
+
+    // useHead({
+    //   title: `${t('seo.terms.title')} | Zempie`,
+    //   meta: [
+    //     {
+    //       name: 'description',
+    //       content: `${t('seo.terms.desc')}`
+    //     },
+    //     {
+    //       name: 'og:title',
+    //       content: `${t('seo.terms.title')}`
+    //     },
+    //     {
+    //       name: 'og:description',
+    //       content: `${t('seo.terms.description')}`
+    //     },
+    //     {
+    //       name: 'og:url',
+    //       content: `${config.ZEMPIE_URL}${route.path}`
+    //     },
+    //     {
+    //       name: 'og:url',
+    //       content: `${gameData.value.url_thumb}`
+    //     },
+    //   ]
+    // })
+
 
     window.addEventListener("message", onMessage);
     window.addEventListener("resize", onResize);
@@ -119,7 +149,6 @@ function onChangedToken() {
 }
 
 async function onMessage(msg: MessageEvent) {
-  console.log(msg)
   const { type, channel_id } = msg.data;
 
   switch (type) {

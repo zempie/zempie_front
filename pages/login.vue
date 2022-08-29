@@ -84,8 +84,33 @@ const { $firebaseAuth, $cookies } = useNuxtApp()
 
 const { t, locale } = useI18n()
 const router = useRouter();
+const route = useRoute();
 const localePath = useLocalePath();
 const config = useRuntimeConfig()
+
+
+// useHead({
+//   title: `${t('seo.login.title')} | Zempie`,
+//   meta: [
+//     {
+//       name: 'description',
+//       content: `${t('seo.login.desc')}`
+//     },
+//     {
+//       name: 'og:title',
+//       content: `${t('seo.login.title')}`
+//     },
+//     {
+//       name: 'og:description',
+//       content: `${t('seo.login.description')}`
+//     },
+//     {
+//       name: 'og:url',
+//       content: `${config.ZEMPIE_URL}${route.path}`
+//     },
+//   ]
+// })
+
 
 const form = reactive({
   email: '',

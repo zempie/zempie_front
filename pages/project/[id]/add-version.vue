@@ -72,24 +72,42 @@ import { ElMessage, ElMessageBox, ElLoading } from 'element-plus'
 import { IVersion, eGameStage } from '~~/types'
 import Version from '~~/scripts/version'
 import { useLocalePath } from "vue-i18n-routing";
+import { useI18n } from 'vue-i18n';
 
-
-useHead({
-  title: 'Zempie | Project version ',
-  meta: [{
-    name: 'description',
-    content: 'project list'
-  }]
-})
-
-definePageMeta({
-  title: '버전 추가',
-  name: 'addVersion'
-})
-
+const { t, locale } = useI18n()
 const router = useRouter()
 const route = useRoute()
 const localePath = useLocalePath();
+const config = useRuntimeConfig()
+
+// useHead({
+//   title: `${t('seo.project.add.verison.title')} | Zempie`,
+//   meta: [
+//     {
+//       name: 'description',
+//       content: `${t('seo.project.add.verison.desc')}`
+//     },
+//     {
+//       name: 'og:title',
+//       content: `${t('seo.project.add.verison.title')}`
+//     },
+//     {
+//       name: 'og:description',
+//       content: `${t('seo.project.add.verison.description')}`
+//     },
+//     {
+//       name: 'og:url',
+//       content: `${config.ZEMPIE_URL}${route.path}`
+//     },
+//   ]
+// })
+
+
+definePageMeta({
+  title: `${t('projectManager.add.version')}`,
+  name: 'addVersion'
+})
+
 
 const isAdvancedOpen = ref(false)
 const autoDeploy = ref(false)
@@ -302,7 +320,6 @@ function deleteFile() {
     </dd>
 </template>
 
-<script lang="ts">
 import {Component, Prop, Vue, Watch} from "vue-property-decorator";
 import ZipUtil from "@/script/zipUtil";
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue';

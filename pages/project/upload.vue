@@ -12,6 +12,33 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+
+const { t, locale } = useI18n()
+const route = useRoute();
+const config = useRuntimeConfig()
+
+// useHead({
+//   title: `${t('seo.project.upload.title')} | Zempie`,
+//   meta: [
+//     {
+//       name: 'description',
+//       content: `${t('seo.project.upload.desc')}`
+//     },
+//     {
+//       name: 'og:title',
+//       content: `${t('seo.project.upload.title')}`
+//     },
+//     {
+//       name: 'og:description',
+//       content: `${t('seo.project.upload.description')}`
+//     },
+//     {
+//       name: 'og:url',
+//       content: `${config.ZEMPIE_URL}${route.path}`
+//     },
+//   ]
+// })
 
 </script>
 

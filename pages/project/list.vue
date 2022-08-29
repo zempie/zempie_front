@@ -145,9 +145,35 @@ import _ from 'lodash';
 import dayjs from "dayjs";
 import { useLocalePath } from "vue-i18n-routing";
 import { IProject, eGameStage } from "~~/types"
+import { useI18n } from 'vue-i18n';
 
+const { t, locale } = useI18n()
+const route = useRoute();
+const config = useRuntimeConfig()
 const localePath = useLocalePath();
 const $router = useRouter();
+
+// useHead({
+//   title: `${t('seo.project.list.title')} | Zempie`,
+//   meta: [
+//     {
+//       name: 'description',
+//       content: `${t('seo.project.list.desc')}`
+//     },
+//     {
+//       name: 'og:title',
+//       content: `${t('seo.project.list.title')}`
+//     },
+//     {
+//       name: 'og:description',
+//       content: `${t('seo.project.list.description')}`
+//     },
+//     {
+//       name: 'og:url',
+//       content: `${config.ZEMPIE_URL}${route.path}`
+//     },
+//   ]
+// })
 
 const projects = ref([]);
 const isPending = ref(true);
@@ -166,14 +192,6 @@ const totalCount = ref(0);
 const totalPage = computed(() => Math.ceil(totalCount.value / pageSize.value))
 
 const { data, pending } = await useFetch('/studio/project', getStudioFetchOptions('get', true))
-
-useHead({
-  title: 'Zempie | Project list',
-  meta: [{
-    name: 'description',
-    content: 'project list'
-  }]
-})
 
 
 onMounted(async () => {

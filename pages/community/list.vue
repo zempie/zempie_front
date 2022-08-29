@@ -36,15 +36,15 @@
       <dd>
         <div class="sort-default">
           <a @click="sortGroups(0)" :class="filter === 0 ? 'active' : ''"><i class="uis uis-check"></i>
-            {{ $t('filter.recent') }}
+            {{ t('filter.recent') }}
           </a>
           <span>·</span>
           <a @click="sortGroups(1)" :class="filter === 1 ? 'active' : ''"><i class="uis uis-check"></i>
-            {{ $t('filter.subscribe') }}
+            {{ t('filter.subscribe') }}
           </a>
           <span>·</span>
           <a @click="sortGroups(2)" :class="filter === 2 ? 'active' : ''"><i class="uis uis-check"></i>
-            {{ $t('filter.alphabet') }}
+            {{ t('filter.alphabet') }}
           </a>
         </div>
       </dd>
@@ -116,6 +116,9 @@
 <script lang="ts" setup>
 import _ from 'lodash'
 import { ICommunityPayload } from '~~/types';
+import { useI18n } from 'vue-i18n';
+
+const { t, locale } = useI18n()
 // import * as Api from '~/api'
 // import firebase from '~/scripts/firebase'
 // import { useUserStore } from '~/store/user'
@@ -124,7 +127,7 @@ const config = useRuntimeConfig()
 
 const accessToken = useCookie(config.COOKIE_NAME).value
 
-// const { i18n, $toast } = useContext()
+// const { i18n, toast } = useContext()
 
 // metaSetting !: MetaSetting;
 // clickManager: ClickManager = new ClickManager();
@@ -335,6 +338,7 @@ svg {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  height: 150px;
 
   .title {
     font-size: 2.25rem;

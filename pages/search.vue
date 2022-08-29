@@ -4,8 +4,6 @@
       <div class="visual-title">
         <h2>'{{ keyword }}' <span>{{ $t('search.result') }}</span></h2>
       </div>
-
-
       <dl class="area-title" v-if="results.users?.length" style="margin-top:12.5px">
         <dt>Users <span>{{ results.users?.length }}</span></dt>
       </dl>
@@ -52,16 +50,43 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 
+const { t, locale } = useI18n()
+const route = useRoute();
+const config = useRuntimeConfig()
 const $route = useRoute();
 
-const keyword = ref($route.query.q)
 
+const keyword = ref($route.query.q)
 const userList = ref([])
 const gameList = ref([])
 const communityList = ref([])
 const postList = ref([])
-const config = useRuntimeConfig()
+
+
+// useHead({
+//   title: `${t('seo.search.title')} | Zempie`,
+//   meta: [
+//     {
+//       name: 'description',
+//       content: `${t('seo.search.desc')}`
+//     },
+//     {
+//       name: 'og:title',
+//       content: `${t('seo.search.title')}`
+//     },
+//     {
+//       name: 'og:description',
+//       content: `${t('seo.search.description')}`
+//     },
+//     {
+//       name: 'og:url',
+//       content: `${config.ZEMPIE_URL}${route.path}`
+//     },
+//   ]
+// })
+
 
 const { data: results, error, pending, refresh } = await useFetch<any>(() => `/search?q=${keyword.value}`, getComFetchOptions('get', true));
 

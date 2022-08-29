@@ -151,13 +151,35 @@ import { useI18n } from 'vue-i18n';
 import { createUserWithEmailAndPassword, type UserCredential } from 'firebase/auth'
 import { useLocalePath } from "vue-i18n-routing";
 
-
-
-const { $firebaseAuth, $cookies } = useNuxtApp()
-const config = useRuntimeConfig()
 const { t, locale } = useI18n()
+const route = useRoute();
+const config = useRuntimeConfig()
+const { $firebaseAuth, $cookies } = useNuxtApp()
 const localePath = useLocalePath();
 const router = useRouter();
+
+// useHead({
+//   title: `${t('seo.join.title')} | Zempie`,
+//   meta: [
+//     {
+//       name: 'description',
+//       content: `${t('seo.join.desc')}`
+//     },
+//     {
+//       name: 'og:title',
+//       content: `${t('seo.join.title')}`
+//     },
+//     {
+//       name: 'og:description',
+//       content: `${t('seo.join.description')}`
+//     },
+//     {
+//       name: 'og:url',
+//       content: `${config.ZEMPIE_URL}${route.path}`
+//     },
+//   ]
+// })
+
 
 const form = reactive({
   email: "",

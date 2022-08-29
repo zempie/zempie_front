@@ -73,9 +73,34 @@ import { ElMessage } from "element-plus";
 import { useLocalePath } from 'vue-i18n-routing';
 import { useI18n } from 'vue-i18n';
 
-const MAX_FILE_SIZE = 3;
 const localePath = useLocalePath();
 const { t, locale } = useI18n()
+const route = useRoute();
+const config = useRuntimeConfig()
+
+// useHead({
+//   title: `${t('seo.profile.info.title')} | Zempie`,
+//   meta: [
+//     {
+//       name: 'description',
+//       content: `${t('seo.profile.info.desc')}`
+//     },
+//     {
+//       name: 'og:title',
+//       content: `${t('seo.profile.info.title')}`
+//     },
+//     {
+//       name: 'og:description',
+//       content: `${t('seo.profile.info.description')}`
+//     },
+//     {
+//       name: 'og:url',
+//       content: `${config.ZEMPIE_URL}${route.path}`
+//     },
+//   ]
+// })
+
+const MAX_FILE_SIZE = 3;
 
 const profileImg = ref<HTMLElement>()
 const fileName = ref("");
