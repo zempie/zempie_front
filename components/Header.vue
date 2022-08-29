@@ -43,7 +43,7 @@
               <i class="uil uil-search"></i>
               <div>
                 <el-dropdown ref="searchDropdown" trigger="click" @command="movePage">
-                  <input type="text" name="" title="keywords" :placeholder="$t('needSearchInput')" v-model="searchInput"
+                  <input type="text" name="" title="keywords" :placeholder="t('needSearchInput')" v-model="searchInput"
                     @input="search" @keyup.enter="moveSearchPage" />
                   <template #dropdown>
                     <el-dropdown-menu class="header-search-list" style="min-width:260px;">
@@ -116,7 +116,7 @@
 
           <!-- FIXME: popper-class: css수정 -->
           <div class="header-language">
-            <el-select class="hl-select-box" v-model="selectedLang" :placeholder="$t('korean')">
+            <el-select class="hl-select-box" v-model="selectedLang" :placeholder="t('korean')">
               <el-option v-for="item in options" :key="item.code" :label="item.label" :value="item.code"
                 @click="switchLangauge" />
             </el-select>
@@ -139,34 +139,34 @@
                     </dd>
                   </dl>
                   <div>
-                    <h2>{{ $t('myProfile') }} </h2>
+                    <h2>{{ t('myProfile') }} </h2>
                     <div>
                       <NuxtLink :to="localePath(`/channel/${user.channel_id}`)"><i class="uil uil-user"></i>
-                        {{ $t('myChannel') }}
+                        {{ t('myChannel') }}
                       </NuxtLink>
                       <NuxtLink :to="localePath('/project/list')"><i class="uil uil-robot"></i>
-                        {{ $t('gameStudio') }}
+                        {{ t('gameStudio') }}
                       </NuxtLink>
 
                     </div>
                   </div>
                   <div>
-                    <h2>{{ $t('group') }}</h2>
+                    <h2>{{ t('group') }}</h2>
                     <div>
                       <NuxtLink :to="localePath(`/profile/${user.id}/communities`)"><i class="uil uil-users-alt"></i>
-                        {{ $t('joined.group') }}
+                        {{ t('joined.group') }}
                       </NuxtLink>
                     </div>
                   </div>
                   <div>
-                    <h2>{{ $t('account') }}</h2>
+                    <h2>{{ t('account') }}</h2>
                     <div>
                       <NuxtLink :to="localePath(`/profile/${user.id}`)"><i class="uil uil-setting"></i>
-                        {{ $t('my.account') }}
+                        {{ t('my.account') }}
                       </NuxtLink>
                     </div>
                   </div>
-                  <p><a class="btn-default w100p" @click="logout">{{ $t('logout') }}</a></p>
+                  <p><a class="btn-default w100p" @click="logout">{{ t('logout') }}</a></p>
                 </div>
               </template>
             </el-dropdown>
@@ -237,7 +237,7 @@
 
           <NuxtLink to="/login">
             <button flat class="btn-default">
-              <i class="uil uil-user"></i>{{ $t('login') }}
+              <i class="uil uil-user"></i>{{ t('login') }}
             </button>
           </NuxtLink>
         </div> -->
@@ -377,17 +377,17 @@
       <el-dialog v-model="isOpen" append-to-body custom-class="modal-area-type" :show-close="false">
         <div class="modal-alert">
           <dl class="ma-header">
-            <dt>{{ $t('information') }}</dt>
+            <dt>{{ t('information') }}</dt>
             <dd>
               <button @click="useModal().closeLoginModal()"><i class="uil uil-times"></i></button>
             </dd>
           </dl>
 
           <div class="ma-content">
-            <h2>{{ $t('needLogin.text1') }}<br />{{ $t('needLogin.text2') }}</h2>
+            <h2>{{ t('needLogin.text1') }}<br />{{ t('needLogin.text2') }}</h2>
             <div>
               <button class="btn-default" style="width: 100%" @click="$router.push(localePath('/login'))">
-                {{ $t('login') }}</button>
+                {{ t('login') }}</button>
             </div>
           </div>
 

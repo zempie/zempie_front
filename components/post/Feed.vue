@@ -17,7 +17,7 @@
           </dd>
           <dd v-else>
 
-            <h2>{{ $t('feed.noUser.post') }}</h2>
+            <h2>{{ t('feed.noUser.post') }}</h2>
             <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{ dateFormat(feed.created_at) }}</p>
 
           </dd>
@@ -29,16 +29,16 @@
           <template #dropdown>
             <div slot="body" class="more-list fixed" style="min-width:150px; ">
               <template v-if="user && (user.id === (feed.user && feed.user.id))">
-                <a @click="openEdit">{{ $t('feed.edit') }}</a>
-                <a @click="showDeletePostModal = true; feedId = feed.id">{{ $t('feed.delete') }}</a>
+                <a @click="openEdit">{{ t('feed.edit') }}</a>
+                <a @click="showDeletePostModal = true; feedId = feed.id">{{ t('feed.delete') }}</a>
 
               </template>
               <template v-else>
                 <NuxtLink :to="localePath(`/channel/${feed.user && feed.user.channel_id}`)">
-                  {{ $t('visit.userChannel') }}
+                  {{ t('visit.userChannel') }}
                 </NuxtLink>
-                <!-- <a v-if="user" @click="report">{{ $t('post.report') }}</a>
-              <a v-if="user" @click="userReportModalOpen">{{ $t('post.report') }}유저 신고하기</a> -->
+                <!-- <a v-if="user" @click="report">{{ t('post.report') }}</a>
+              <a v-if="user" @click="userReportModalOpen">{{ t('post.report') }}유저 신고하기</a> -->
               </template>
             </div>
           </template>
@@ -50,16 +50,16 @@
               class="uil uil-ellipsis-h font25"></i></a>
           <div slot="body" class="more-list fixed">
             <template v-if="user && (user.id === (feed.user && feed.user.id))">
-              <a @click="openEdit">{{ $t('feed.edit') }}</a>
-              <a @click="deletePost">{{ $t('feed.delete') }}</a>
+              <a @click="openEdit">{{ t('feed.edit') }}</a>
+              <a @click="deletePost">{{ t('feed.delete') }}</a>
 
             </template>
             <template v-else>
               <router-link :to="`/${$i18n.locale}/channel/${feed.user && feed.user.channel_id}/timeline`">
-                {{ $t('visit.userChannel') }}
+                {{ t('visit.userChannel') }}
               </router-link>
-              <a v-if="user" @click="report">{{ $t('post.report') }}</a>
-              <a v-if="user" @click="userReportModalOpen">{{ $t('post.report') }}유저 신고하기</a>
+              <a v-if="user" @click="report">{{ t('post.report') }}</a>
+              <a v-if="user" @click="userReportModalOpen">{{ t('post.report') }}유저 신고하기</a>
             </template>
           </div>
         </dropdown-menu> -->
@@ -77,7 +77,7 @@
         <span>
           <hr class="dot-line" />
         </span><a @click="moreView">
-          {{ $t('moreView') }} </a><span>
+          {{ t('moreView') }} </a><span>
           <hr class="dot-line" />
         </span>
       </div>
@@ -85,12 +85,12 @@
       <div v-else class="more-container">
         <span>
           <hr class="dot-line" />
-        </span><a @click="closeView">{{ $t('closeView') }} </a><span>
+        </span><a @click="closeView">{{ t('closeView') }} </a><span>
           <hr class="dot-line" />
         </span>
       </div>
     </template>
-    <template v-if="initFiles.length && feed.post_type === 'SNS'">
+    <template v-if="initFiles?.length && feed.post_type === 'SNS'">
 
       <div class="video" v-if="initFiles[0].type === 'video'">
         <video style="width:100%; height: auto;" controls :src="initFiles[0].url"></video>
@@ -131,7 +131,7 @@
         <li v-for="comment in comments" :key="comment.id">
           <Comment :comment="comment" :isEdit="isCommentEdit" @refresh="commentRefresh">
             <!-- <template #commentEdit>
-              <a @click="isCommentEdit = !isCommentEdit">{{ $t('comment.edit') }}</a>
+              <a @click="isCommentEdit = !isCommentEdit">{{ t('comment.edit') }}</a>
             </template> -->
           </Comment>
 
@@ -147,17 +147,17 @@
       <el-dialog v-model="showDeletePostModal" append-to-body custom-class="modal-area-type">
         <div class="modal-alert">
           <dl class="ma-header">
-            <dt> {{ $t('information') }}</dt>
+            <dt> {{ t('information') }}</dt>
             <dd>
               <button @click="showDeletePostModal = false"><i class="uil uil-times"></i></button>
             </dd>
           </dl>
           <div class="ma-content">
-            <h2>{{ $t('post.delete.modal.text1') }} <br />{{ $t('post.delete.modal.text2') }}
+            <h2>{{ t('post.delete.modal.text1') }} <br />{{ t('post.delete.modal.text2') }}
             </h2>
             <div>
-              <button class="btn-default w48p" @click="deletePost">{{ $t('delete') }}</button>
-              <button class="btn-gray w48p " @click="showDeletePostModal = false">{{ $t('no')
+              <button class="btn-default w48p" @click="deletePost">{{ t('delete') }}</button>
+              <button class="btn-gray w48p " @click="showDeletePostModal = false">{{ t('no')
               }}</button>
             </div>
           </div>
@@ -590,6 +590,8 @@ function closeView() {
   max-height: 500px;
   overflow-y: auto;
   overflow-x: hidden;
+
+
 }
 
 .like-icon:hover,

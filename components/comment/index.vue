@@ -1,16 +1,13 @@
 <template>
   <dl v-if="comment && !isCommentEdit">
     <dt>
-
-
       <dl>
         <dt>
           <UserAvatar :user="comment.user" :tag="'span'"></UserAvatar>
         </dt>
-
         <dd>
           <h2>{{ comment.user.name }} <span>{{ }}</span></h2>
-          <div>
+          <div style="color:#000">
             {{ commentContent }}
           </div>
           <p>

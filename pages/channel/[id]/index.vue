@@ -103,6 +103,8 @@
  <script setup lang="ts">
 import { useLocalePath } from 'vue-i18n-routing';
 
+
+const { t, locale } = useI18n()
 const localePath = useLocalePath();
 const route = useRoute();
 const isPending = ref(true)
@@ -110,13 +112,13 @@ const channelInfo = computed(() => useChannel().userChannel.value.info)
 const games = computed(() => channelInfo.value.games)
 const channelId = computed(() => route.params.id as string)
 
-useHead({
-  title: 'Zempie | Project version ',
-  meta: [{
-    name: 'description',
-    content: 'project list'
-  }]
-})
+// useHead({
+//   title: 'Zempie | Project version ',
+//   meta: [{
+//     name: 'description',
+//     content: 'project list'
+//   }]
+// })
 
 definePageMeta({
   title: 'user-channel',

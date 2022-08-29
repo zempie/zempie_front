@@ -7,7 +7,7 @@
         </p>
         <dl>
           <dt>
-            <input v-if="isSubscribed" type="text" :placeholder="$t('postModalInput')" readonly
+            <input v-if="isSubscribed" type="text" :placeholder="t('postModalInput')" readonly
               @click="isLogin ? isTextEditorOpen = true : useModal().openLoginModal()" />
             <slot v-else name="inputBox" />
           </dt>
@@ -36,7 +36,7 @@
 
       <!-- <div class="ta-message-block" v-else-if="ableToPost() === 'block'">
                 <i class="uil uil-exclamation-triangle"></i>
-                {{ $t('post.modal.block.text') }}
+                {{ t('post.modal.block.text') }}
             </div> -->
       <ul class="ta-post">
 
@@ -49,7 +49,7 @@
         <div v-else class="ta-post-none">
 
           <p><span><i class="uil uil-layers-slash"></i></span></p>
-          <h2> {{ $t('timeline.noPost') }}</h2>
+          <h2> {{ t('timeline.noPost') }}</h2>
         </div>
 
         <!-- <Feed
@@ -76,7 +76,7 @@
                  class="ta-post-none"
                  :style="ableToPost() === false ? 'margin-top: 0px' : ''">
                 <p><span><i class="uil uil-layers-slash"></i></span></p>
-                <h2> {{ $t('timeline.noPost') }}</h2>
+                <h2> {{ t('timeline.noPost') }}</h2>
             </div> -->
 
     </dd>
@@ -101,17 +101,17 @@
                :scrollable="true">
             <div class="modal-alert">
                 <dl class="ma-header">
-                    <dt> {{ $t('information') }}</dt>
+                    <dt> {{ t('information') }}</dt>
                     <dd>
                         <button @click="$modal.hide('deleteModal')"><i class="uil uil-times"></i></button>
                     </dd>
                 </dl>
                 <div class="ma-content">
-                    <h2>{{ $t('post.delete.modal.text1') }} <br/>{{ $t('post.delete.modal.text2') }}
+                    <h2>{{ t('post.delete.modal.text1') }} <br/>{{ t('post.delete.modal.text2') }}
                     </h2>
                     <div>
-                        <button class="btn-default w48p" @click="yesDeletePost">{{ $t('yes') }}</button>
-                        <button class="btn-gray w48p" @click="closeModal">{{ $t('no') }}</button>
+                        <button class="btn-default w48p" @click="yesDeletePost">{{ t('yes') }}</button>
+                        <button class="btn-gray w48p" @click="closeModal">{{ t('no') }}</button>
                     </div>
                 </div>
             </div>
@@ -127,7 +127,7 @@
                :scrollable="true">
             <div class="modal-report">
                 <dl class="mr-header">
-                    <dt>{{ $t('post.report.text') }}</dt>
+                    <dt>{{ t('post.report.text') }}</dt>
                     <dd>
                         <button @click="$modal.hide('modalReport')"><i class="uil uil-times"></i></button>
                     </dd>
@@ -137,21 +137,21 @@
                         <li>
                             <input type="radio" v-model="pickedReason" value="1" id="report1"/> <label
                             for="report1"><i class="uil uil-check"></i></label>&nbsp;
-                            <span><label for="report1">{{ $t('post.report.reason1') }} </label></span>
+                            <span><label for="report1">{{ t('post.report.reason1') }} </label></span>
                         </li>
                         <li>
                             <input type="radio" v-model="pickedReason" value="2" id="report2"/> <label
                             for="report2"><i class="uil uil-check"></i></label>&nbsp; <span><label
-                            for="report2"> {{ $t('post.report.reason2') }}</label></span>
+                            for="report2"> {{ t('post.report.reason2') }}</label></span>
                         </li>
                         <li>
                             <input type="radio" v-model="pickedReason" value="3" id="report3"/> <label
                             for="report3"><i class="uil uil-check"></i></label>&nbsp; <span><label
-                            for="report3"> {{ $t('post.report.reason3') }}</label></span>
+                            for="report3"> {{ t('post.report.reason3') }}</label></span>
                         </li>
                     </ul>
                     <div @click="sendReport">
-                        <button class="btn-default" style="width: 100% !important;">{{ $t('post.report.btn') }}</button>
+                        <button class="btn-default" style="width: 100% !important;">{{ t('post.report.btn') }}</button>
                     </div>
                 </div>
             </div>
@@ -161,7 +161,7 @@
                :scrollable="true">
             <div class="modal-report">
                 <dl class="mr-header">
-                    <dt>{{ $t('post.report.text') }}</dt>
+                    <dt>{{ t('post.report.text') }}</dt>
                     <dd>
                         <button @click="$modal.hide('modalUserReport')"><i class="uil uil-times"></i></button>
                     </dd>
@@ -171,12 +171,12 @@
                         <li>
                             <input type="radio" v-model="pickedUserReason" value="1" id="reportUser1"/> <label
                             for="reportUser1"><i class="uil uil-check"></i></label>&nbsp;
-                            <span><label for="reportUser1">{{ $t('해킹 당한 계정입니다.') }} </label></span>
+                            <span><label for="reportUser1">{{ t('해킹 당한 계정입니다.') }} </label></span>
                         </li>
                         <li>
                             <input type="radio" v-model="pickedUserReason" value="2" id="reportUser2"/> <label
                             for="reportUser2"><i class="uil uil-check"></i></label>&nbsp; <span><label
-                            for="reportUser2"> {{ $t('사칭하는 계정인 것 같습니다.') }}</label></span>
+                            for="reportUser2"> {{ t('사칭하는 계정인 것 같습니다.') }}</label></span>
                         </li>
                         <li style="display: flex;">
                             <div>
@@ -184,13 +184,13 @@
                             <label for="reportUser3"><i class="uil uil-check"></i></label>&nbsp;
                             </div>
                             <div> <span>
-                            <label for="reportUser3"> {{ $t('프로필 정보 또는 이미지가 혐오스러운 내용을 포함하고 있습니다.') }}</label></span>
+                            <label for="reportUser3"> {{ t('프로필 정보 또는 이미지가 혐오스러운 내용을 포함하고 있습니다.') }}</label></span>
                             </div>
                         </li>
                         
                     </ul>
                     <div @click="sendUserReport">
-                        <button class="btn-default" style="width: 100% !important;">{{ $t('post.report.btn') }}</button>
+                        <button class="btn-default" style="width: 100% !important;">{{ t('post.report.btn') }}</button>
                     </div>
                 </div>
             </div>
@@ -203,16 +203,16 @@
                @before-open="beforeOpen">
             <div class="modal-alert">
                 <dl class="ma-header">
-                    <dt>{{ $t('information') }}</dt>
+                    <dt>{{ t('information') }}</dt>
                     <dd>
                         <button @click="$modal.hide('deleteComment')"><i class="uil uil-times"></i></button>
                     </dd>
                 </dl>
                 <div class="ma-content">
-                    <h2>{{ $t('comment.delete.text') }} </h2>
+                    <h2>{{ t('comment.delete.text') }} </h2>
                     <div>
-                        <button class="btn-default w48p" @click="deleteComment">{{ $t('yes') }}</button>
-                        <button class="btn-gray w48p" @click="$modal.hide('deleteComment')">{{ $t('no') }}</button>
+                        <button class="btn-default w48p" @click="deleteComment">{{ t('yes') }}</button>
+                        <button class="btn-gray w48p" @click="$modal.hide('deleteComment')">{{ t('no') }}</button>
                     </div>
                 </div>
             </div>
@@ -224,16 +224,16 @@
                :scrollable="true">
             <div class="modal-alert">
                 <dl class="ma-header">
-                    <dt>{{ $t('information') }}</dt>
+                    <dt>{{ t('information') }}</dt>
                     <dd>
                         <button @click="$modal.hide('needSubscribe')"><i class="uil uil-times"></i></button>
                     </dd>
                 </dl>
                 <div class="ma-content">
-                    <h2>{{ $t('community.subscribe.text1') }} <br/>{{ $t('community.subscribe.text2') }} </h2>
+                    <h2>{{ t('community.subscribe.text1') }} <br/>{{ t('community.subscribe.text2') }} </h2>
                     <div>
-                        <button class="btn-default w48p" @click="needSubscribe">{{ $t('yes') }}</button>
-                        <button class="btn-gray w48p" @click="$modal.hide('needSubscribe')">{{ $t('no') }}</button>
+                        <button class="btn-default w48p" @click="needSubscribe">{{ t('yes') }}</button>
+                        <button class="btn-gray w48p" @click="$modal.hide('needSubscribe')">{{ t('no') }}</button>
                     </div>
                 </div>
             </div>
@@ -251,7 +251,7 @@ import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElSelect, ElOption, ElMessa
 
 import { useLocalePath } from 'vue-i18n-routing';
 import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
-import { channel } from 'diagnostics_channel';
+const { t, locale } = useI18n()
 
 const LIMIT_SIZE = 3
 
@@ -271,7 +271,7 @@ const observer = ref<IntersectionObserver>(null)
 const triggerDiv = ref()
 const limit = ref(LIMIT_SIZE);
 const offset = ref(0);
-const media = ref()
+const media = ref(route.query?.media || null)
 const isAddData = ref(false);
 
 
@@ -317,7 +317,6 @@ onBeforeRouteLeave((to, from) => {
 
 onMounted(async () => {
 
-  console.log('mounted', feeds.value);
   observer.value = new IntersectionObserver((entries) => {
     handleIntersection(entries[0])
   }, { root: null, threshold: 1 })
@@ -361,79 +360,20 @@ async function fetch() {
           dataPaging(data.value)
         }
       }
-      // if (data.value) {
-      //   dataPaging(data.value)
-      // const { result, totalCount } = data.value
-      // if (result.length > LIMIT_SIZE) {
-      //   isAddData.value = true
-      // }
-      // if (isAddData.value) {
-      //   if (result.length > 0) {
-      //     feeds.value = [...feeds.value, ...result]
-      //   } else {
-      //     isAddData.value = false
-      //     observer.value.unobserve(triggerDiv.value)
-      //   }
-
-      // }
-      // else {
-      //   feeds.value = result;
-      //   isAddData.value = true
-      // }
-
-      // }
 
       break;
     case 'user':
       const { data: userPostData } = await useFetch<{ result: IFeed[], totalCount: number }>(createQueryUrl(`/timeline/channel/${channelId.value}`, query), getComFetchOptions('get', true))
 
       if (userPostData.value) {
-        // let { result, totalCount } = userPostData.value
-
-        // result = result.filter(feed => feed.id !== null)
-
-        // if (isAddData.value) {
-        //   if (result?.length > 0) {
-        //     feeds.value = [...feeds.value, ...result];
-        //   } else {
-        //     isAddData.value = false
-        //     observer.value.unobserve(triggerDiv.value)
-        //   }
-
-        // } else {
-        //   feeds.value = result;
-
-        //   isAddData.value = true;
-
-        // }
         dataPaging(userPostData.value)
-
       }
-
       break;
     case 'game':
       const { data: gamePostData, error: gameError, } = await useFetch<{ result: [], totalCount: number }>(createQueryUrl(`/timeline/game/${gameId.value}`, query),
         getComFetchOptions('get', true))
-      // post.getCommunityPosts(channelId.value, payload)
       if (gamePostData.value) {
-        const { result, totalCount } = gamePostData.value
-        if (result.length > LIMIT_SIZE) {
-          isAddData.value = true
-        }
-        if (isAddData.value) {
-          if (result.length > 0) {
-            feeds.value = [...feeds.value, ...result]
-          } else {
-            isAddData.value = false
-            observer.value.unobserve(triggerDiv.value)
-          }
-
-        }
-        else {
-          feeds.value = result;
-          isAddData.value = true
-        }
-
+        dataPaging(gamePostData.value)
       }
 
       break;
@@ -903,8 +843,8 @@ function closeEditor() {
     //     this.$api.deletePost(this.feedId)
     //         .then((res: any) => {
     //             if (res.success) {
-    //                 this.$toasted.clear();
-    //                 this.toast.successToast(`${this.$t('posting.deleted')}`)
+    //                 this.toasted.clear();
+    //                 this.toast.successToast(`${this.t('posting.deleted')}`)
     //             }
     //             this.timeline = []
     //             this.initData();
@@ -1079,6 +1019,10 @@ input[type="radio"] {
 }
 
 @media all and (max-width: 479px) {
+  .ta-message-send {
+    margin-top: 20px;
+  }
+
   .tab-search-swiper {
     &.mobile {
       display: block;
@@ -1087,6 +1031,10 @@ input[type="radio"] {
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
+  .ta-message-send {
+    margin-top: 20px;
+  }
+
   .tab-search-swiper {
     &.mobile {
       display: block;
@@ -1095,6 +1043,10 @@ input[type="radio"] {
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
+  .ta-message-send {
+    margin-top: 20px;
+  }
+
   .tab-search-swiper {
     &.mobile {
       display: block;

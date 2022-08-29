@@ -46,7 +46,6 @@ const charCount = ref(0)
 
 const limit = computed(() => props.postType === 'SNS' ? SNS_LIMIT : BLOG_LIMIT)
 
-
 const editor = useEditor({
   content: content.value,
   extensions: [
@@ -67,14 +66,12 @@ const editor = useEditor({
   onUpdate: () => {
     charCount.value = editor.value.storage.characterCount.characters()
     emit('editorContent', editor.value)
-    //TODO: 블로그 이미지 스토어에 저장 하고 업로드 하기 전에 등록하기 
-
   },
-
 
 })
 
 onMounted(() => {
+
   emit('editorContent', editor.value)
 })
 

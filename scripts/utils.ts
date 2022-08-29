@@ -10,7 +10,27 @@ export const execCommandCopy = (text: string) => {
     document.body.removeChild(input);
 }
 
+export const htmlToDomElem = (html: string) => {
+    let div = document.createElement('div');
+    div.innerHTML = html.trim();
 
+    return div
+}
+
+export const blobToFile = (blob: Blob, fileName?: string, fileType?: string) => {
+    console.log(fileType)
+
+    return new File([blob], fileName ?? 'no_file_name' + new Date().getTime(), {
+        lastModified: new Date().getTime(),
+        type: fileType ?? blob.type
+    })
+}
+
+const urlToBlob = async (url: string) => {
+    const result = await fetch(url)
+    const blob = await result.blob()
+    blobUrl = URL.createObjectURL(blob)
+}
 
 // export default class StringHelper {
 //   static msToMinuteSecond(ms: number): string {

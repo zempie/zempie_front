@@ -1,17 +1,18 @@
 <template>
   <div class="modal-post">
     <ul class="mp-header">
-      <li :class="activeTab === 'SNS' ? 'active' : ''" @click="activeTab = 'SNS'"><i class="uil uil-file-landscape"></i>
+      <li :class="activeTab === 'SNS' ? 'active' : ''" @click="postingType('SNS')"><i
+          class="uil uil-file-landscape"></i>
         SNS
       </li>
-      <li :class="activeTab === 'BLOG' ? 'active' : ''" @click="activeTab = 'BLOG'"><i
+      <li :class="activeTab === 'BLOG' ? 'active' : ''" @click="postingType('BLOG')"><i
           class="uil uil-files-landscapes"></i> Blog
       </li>
     </ul>
     <div>
       <!-- <PostBySns v-if="activeTab === 'SNS'" /> -->
       <!-- <PostEdit v-if="isEdit" @editorContent="getEditorContent" :postType='activeTab' :feed="feed" /> -->
-      <PostByBlog @editorContent="getEditorContent" :postType='activeTab' :feed="feed" />
+      <Tiptap @editorContent="getEditorContent" :postType='activeTab' :feed="feed" :key="activeTab" />
 
       <template v-if="activeTab === 'SNS'">
         <div v-if="attachFiles.img?.length" class="mp-image" style="padding-bottom: 0px">
@@ -48,7 +49,7 @@
       <ClientOnly>
         <div class="mp-category"
           :style="attachFiles.img?.length ? 'border-top: #e9e9e9 1px solid; margin-top:10px; padding-top:10px;' : ''">
-          <el-popover name="category" trigger="click">
+          <el-popover name="category" trigger="click" v-model:visible="isCommunityListVisible">
             <template #reference>
               <button class="btn-line-small" style="width:30%;" @click="communityFetch"><i class="uil uil-plus"></i>
                 <span v-if="postingChannels.length >= 2">Add</span>
@@ -74,7 +75,7 @@
               </div>
             </div>
             <div v-else>
-              {{ $t('noJoined.community') }}
+              {{ t('noJoined.community') }}
             </div>
           </el-popover>
           <swiper v-if="postingChannels.length" class="swiper-area" style="margin-left: 10px;" :space-between="10">
@@ -131,9 +132,11 @@ import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 
 import { Editor } from "@tiptap/vue-3";
-import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElSelect, ElPopover, ElMessage, ElDialog } from "element-plus";
+import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElLoading, ElPopover, ElMessage, ElDialog } from "element-plus";
 
 import { useI18n } from 'vue-i18n';
+import { htmlToDomElem, blobToFile } from '~~/scripts/utils'
+
 const { t, locale } = useI18n()
 
 const route = useRoute()
@@ -160,9 +163,15 @@ const attachFileArr = computed(() => {
     return []
   }
 })
-const hasFeedImg = computed(() => {
-  return attachFileArr.value[0]?.type === 'image'
+
+
+const attachFiles = ref({
+  img: attachFileArr.value[0]?.type === 'image' ? attachFileArr.value : [],
+  video: attachFileArr.value[0]?.type === 'video' ? attachFileArr.value[0] : null,
+  audio: attachFileArr.value[0]?.type === 'sound' ? attachFileArr.value : []
 })
+
+
 const activeTab = ref(props.feed?.post_type || "SNS")
 const video = ref<HTMLElement>()
 const image = ref<HTMLElement>()
@@ -179,15 +188,7 @@ const isChannelListOpen = ref(false)
 const selectedGroup = ref()
 const channels = ref()
 const postingChannels = ref([])
-
-
-
-const attachFiles = ref({
-  img: hasFeedImg ? (attachFileArr.value ?? []) : [],
-  video: null,
-  audio: []
-})
-
+const isCommunityListVisible = ref(false)
 
 
 
@@ -215,7 +216,17 @@ onMounted(() => {
 
 })
 
+function postingType(type: string) {
+  activeTab.value = type
+  usePost().setType(type)
+
+
+}
+
 async function onSubmit() {
+
+
+
   const payload = {
     post_contents: form.post_contents,
     post_state: activeTab.value,
@@ -225,7 +236,6 @@ async function onSubmit() {
 
   if (postingChannels.value.length) {
 
-    // payload['community'] = []
     for (const element of postingChannels.value) {
 
       payload.community.push({
@@ -236,27 +246,59 @@ async function onSubmit() {
       })
     }
   }
+  const loading = ElLoading.service({
+    lock: true,
+    text: 'Loading',
+    customClass: 'loading-spinner',
+    background: 'rgba(0, 0, 0, 0.7)',
+  })
 
-  if (attachFiles.value.img.length || attachFiles.value.audio.length || attachFiles.value.video) {
-    const formData = new FormData();
+  const dom = htmlToDomElem(form.post_contents)
 
-    for (const img of attachFiles.value.img) {
-      formData.append(img.name, img.file)
+  const imgArr: any = dom.getElementsByClassName('attr-img')
+
+  if (activeTab.value.toLocaleUpperCase() === 'BLOG') {
+    for (const img of imgArr) {
+
+      if (img.src.substring(0, 4) === 'blob' || img.src.substring(0, 4) === 'data') {
+        const formData = new FormData();
+
+
+
+        await fetch(img.src)
+          .then(async (result) => {
+            formData.append(img.title, await result.blob())
+          })
+
+        const { data, error, pending } = await useFetch<{ result: [] }>('/community/att', getZempieFetchOptions('post', true, formData))
+        if (data.value) {
+          form.post_contents = form.post_contents.replace(img.src, data.value.result[0].url)
+        }
+      }
+      payload.post_contents = form.post_contents
     }
+  } else {
 
-    for (const audio of attachFiles.value.audio) {
-      formData.append(audio.name, audio.file)
+
+    if (attachFiles.value.img.length || attachFiles.value.audio.length || attachFiles.value.video) {
+      const formData = new FormData();
+
+      for (const img of attachFiles.value.img) {
+        formData.append(img.name, img.file)
+      }
+
+      for (const audio of attachFiles.value.audio) {
+        formData.append(audio.name, audio.file)
+      }
+      if (attachFiles.value.video) {
+        formData.append(attachFiles.value.video.name, attachFiles.value.video.file)
+      }
+
+      const { data, error, pending } = await useFetch<{ result: [] }>('/community/att', getZempieFetchOptions('post', true, formData))
+
+      payload['attatchment_files'] = data.value.result;
     }
-    if (attachFiles.value.video) {
-      formData.append(attachFiles.value.video.name, attachFiles.value.video.file)
-    }
-
-    const { data, error, pending } = await useFetch<{ result: [] }>('/community/att', getZempieFetchOptions('post', true, formData))
-
-
-    payload['attatchment_files'] = data.value.result;
   }
-
   // const imgContent = contentJson.content.filter((tag) => {
   //     if (tag.content?.length > 0) {
   //       return tag.content.filter(elem => elem.type === 'image')
@@ -286,20 +328,8 @@ async function onSubmit() {
       type: 'success'
     })
   }
+  loading.close()
 
-  // this.$api.uploadPost(obj)
-  //                 .then((res: AxiosResponse) => {
-  //                     this.$emit('reFetch')
-  //                     this.toast.successToast(`${this.$t('posting.done')}`)
-  //                 })
-  //                 .catch((err: AxiosError) => {
-  //                     this.toast.failToast(`${this.$t('posting.fail')}`)
-  //                 })
-  //                 .finally(() => {
-  //                     this.$modal.hide("modalPost");
-  //                     this.init();
-  //                     this.$store.commit('postContents', '')
-  //                 })
 }
 
 function getEditorContent(content: Editor) {
@@ -338,11 +368,14 @@ function onSelectImageFile(event: any) {
       attachFiles.value.img.push({
         file: file,
         name: file.name,
-        url: url
+        url: url,
       })
 
       if (activeTab.value.toUpperCase() === 'BLOG') {
-        editor.value.chain().focus(null).setImage({ src: blobUrl }).run();
+        editor.value.chain().focus(null).setImage({ src: blobUrl, alt: file.name, title: file.name }).run();
+        editor.value.commands.setHardBreak();
+        editor.value.commands.setHardBreak();
+
       }
     };
 
@@ -461,30 +494,64 @@ function deleteAudio(idx: number) {
 }
 
 async function onUpdatePost() {
-  console.log(attachFiles.value)
+  let attatchment_files = []
+  let newImgArr = [];
+  let newSoundArr = [];
+  let newVideo = null;
+  const formData = new FormData();
 
-  // for (const file of attachFiles.value.img.length) {
-  //   if (file)
 
-  // }
-
-  const newImgArr = attachFiles.value.img.filter(img => {
+  if (attachFileArr.value[0]?.type === 'image') {
+    attatchment_files = attachFiles.value.img
+  }
+  newImgArr = attachFiles.value.img.filter(img => {
     return !img.size
   })
 
-  if (newImgArr.length) {
-    const formData = new FormData();
+  if (attachFileArr.value[0]?.type === 'sound') {
+    attatchment_files = attachFiles.value.audio
+  }
+  newSoundArr = attachFiles.value.audio.filter(audio => {
+    return !audio.size
+  })
 
+  if (attachFileArr.value[0]?.type === 'video') {
+
+    attatchment_files = attachFiles.value.video !== null ? attachFiles.value.video : []
+  }
+
+  newVideo = attachFiles.value.video;
+
+
+  if (newImgArr.length) {
     for (const img of newImgArr) {
       formData.append(img.name, img.file)
     }
-
     const { data, error, pending } = await useFetch<{ result: { priority: number, url: string, type: string, name: string, size: number }[] }>('/community/att', getZempieFetchOptions('post', true, formData))
 
     if (data.value) {
       const { result } = data.value
       for (const data of result) {
-        attachFiles.value.img.push({
+        attatchment_files.push({
+          priority: data.priority,
+          url: data.url,
+          type: data.type,
+          name: data.name,
+          size: data.size
+        })
+      }
+
+    }
+  } else if (newSoundArr.length) {
+    for (const sound of newSoundArr) {
+      formData.append(sound.name, sound.file)
+    }
+    const { data, error, pending } = await useFetch<{ result: { priority: number, url: string, type: string, name: string, size: number }[] }>('/community/att', getZempieFetchOptions('post', true, formData))
+
+    if (data.value) {
+      const { result } = data.value
+      for (const data of result) {
+        attatchment_files.push({
           priority: data.priority,
           url: data.url,
           type: data.type,
@@ -493,21 +560,30 @@ async function onUpdatePost() {
         })
       }
     }
+  } else if (newVideo) {
+    formData.append(newVideo.name, newVideo.file)
+    const { data, error, pending } = await useFetch<{ result: { priority: number, url: string, type: string, name: string, size: number }[] }>('/community/att', getZempieFetchOptions('post', true, formData))
+
+    if (data.value) {
+      const { result } = data.value
+      for (const data of result) {
+        attatchment_files = [{
+          priority: data.priority,
+          url: data.url,
+          type: data.type,
+          name: data.name,
+          size: data.size
+        }]
+      }
+    }
+
   }
-
-
-  // payload['attatchment_files'] = data.value.result;
-
-
-
-
-
 
 
   const payload = {
     post_id: props.feed.id,
     post_state: activeTab.value,
-    attatchment_files: hasFeedImg.value ? attachFiles.value.img : attachFiles.value,
+    attatchment_files: attatchment_files,
     post_contents: form.post_contents,
     // visibility: this.isPrivate ? "PRIVATE" : "PUBLIC",
     hashtags: [],
@@ -548,7 +624,9 @@ async function communityFetch() {
 
   if (data.value) {
     communityList.value = data.value
+
   }
+  isCommunityListVisible.value = true;
 
 }
 
@@ -571,6 +649,7 @@ function selectChannel(channel: any) {
     channel: channel
   }], 'channel.id')
 
+  isCommunityListVisible.value = false;
 }
 
 function deletePostingChannel(idx: number) {
@@ -834,11 +913,11 @@ function deletePostingChannel(idx: number) {
 }
 
 .community-slide {
-  width: 200px !important;
+  width: 200px;
 
 
   .category-select-finish {
-    width: 200px;
+    max-width: 200px;
     height: 30px;
     justify-content: space-around;
 
@@ -847,7 +926,7 @@ function deletePostingChannel(idx: number) {
 
       span {
         text-overflow: ellipsis;
-        width: 70px;
+        max-width: 70px;
         overflow: hidden;
         white-space: nowrap;
         display: inline-block;

@@ -16,14 +16,14 @@
             <PostTimeline type="community" :isSubscribed="communityInfo?.is_subscribed" :channelInfo="channelInfo"
               :key="channelInfo?.id">
               <template #inputBox>
-                <input type="text" :placeholder="$t('postModalInput')" readonly
+                <input type="text" :placeholder="t('postModalInput')" readonly
                   @click="isLogin ? (communityInfo?.is_subscribed ? '' : needSubscribe = true) : useModal().openLoginModal()" />
               </template>
             </PostTimeline>
           </dd>
           <dt>
             <div class="ta-about">
-              <h2>{{ $t('about.us') }}</h2>
+              <h2>About us</h2>
               <div>
                 {{ communityInfo?.description }}
               </div>
@@ -33,7 +33,7 @@
               </dl>
             </div>
             <div class="ta-groups">
-              <h2>{{ $t('other.communities') }}</h2>
+              <h2>Other communities</h2>
               <CommunityList :communities="communities" />
             </div>
           </dt>
@@ -43,16 +43,16 @@
       <el-dialog v-model="needSubscribe" append-to-body custom-class="modal-area-type" width="380px">
         <div class="modal-alert">
           <dl class="ma-header">
-            <dt>{{ $t('information') }}</dt>
+            <dt>{{ t('information') }}</dt>
             <dd>
               <button @click="needSubscribe = false"><i class="uil uil-times"></i></button>
             </dd>
           </dl>
           <div class="ma-content">
-            <h2>{{ $t('community.subscribe.text1') }} <br />{{ $t('community.subscribe.text2') }} </h2>
+            <h2>{{ t('community.subscribe.text1') }} <br />{{ t('community.subscribe.text2') }} </h2>
             <div>
-              <button class="btn-default w48p" @click="subscribe">{{ $t('yes') }}</button>
-              <button class="btn-gray w48p" @click="needSubscribe = false">{{ $t('no') }}</button>
+              <button class="btn-default w48p" @click="subscribe">{{ t('yes') }}</button>
+              <button class="btn-gray w48p" @click="needSubscribe = false">{{ t('no') }}</button>
             </div>
           </div>
         </div>
@@ -65,7 +65,10 @@
 import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElSelect, ElOption, ElMessage, ElDialog } from "element-plus";
 import { dateFormat } from '~/scripts/utils'
 import { IComChannel } from "~~/types";
+import { useI18n } from 'vue-i18n';
+const { t, locale } = useI18n()
 
+const MAX_LIST_SIZE = 5;
 const route = useRoute()
 const router = useRouter()
 const $nuxt = useNuxtApp()
@@ -85,13 +88,20 @@ const communityId = computed(() => route.params.id as string)
 
 const channelInfo = ref()
 
+const limit = ref(MAX_LIST_SIZE)
+const offset = ref(0)
+
 onMounted(async () => {
   await fetch()
 })
 
 async function fetch() {
-  //TODO: query 수정 
-  const { data, pending } = await useFetch<any>(() => `/community/list?limit=6&offset=0`, { method: 'get', baseURL: config.COMMUNITY_API, headers: accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {} })
+  const query = {
+    limit: limit.value,
+    offset: offset.value
+  }
+
+  const { data, pending } = await useFetch<any>(() => createQueryUrl(`/community/list`, query), { method: 'get', baseURL: config.COMMUNITY_API, headers: accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {} })
 
   if (data.value.length) {
     communities.value = data.value?.filter((elem) => {

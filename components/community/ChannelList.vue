@@ -1,6 +1,7 @@
 <template>
   <dt>
     <div class="ta-channel-list">
+      <!-- TODO: mobile fix -->
       <h2>Channel</h2>
       <ul>
         <li :class="['channel', { active: currentIndex === ALLPOSTINDEX }]"
@@ -23,6 +24,9 @@
 import { PropType } from 'vue';
 import { ICommunity } from '~~/types';
 
+import { useI18n } from 'vue-i18n';
+
+const { t, locale } = useI18n()
 const ALLPOSTINDEX = -1
 const currentIndex = ref(ALLPOSTINDEX)
 

@@ -22,91 +22,44 @@ const likeCnt = ref(props.feed.like_cnt)
 
 const isLogin = computed(() => useUser().user.value.isLogin)
 
-const setLike = _.debounce(async () => {
+let likeAcceessableCount = 2;
+let unlikeAcceessableCount = 2;
+
+
+
+async function setLike() {
   if (!isLogin.value) {
     useModal().openLoginModal();
     return;
   }
-  const { data, error } = await post.like(props.feed.id)
-  if (!error.value) {
-    isLiked.value = true
-    likeCnt.value++;
+  likeAcceessableCount = likeAcceessableCount - 1;
+  if (likeAcceessableCount > 0) {
+    const { data, error } = await post.like(props.feed.id)
+    if (!error.value) {
+      isLiked.value = true
+      likeCnt.value++;
+    }
   }
+  likeAcceessableCount = likeAcceessableCount + 1;
+}
 
-}, 300)
-
-const unsetLike = _.debounce(async () => {
+async function unsetLike() {
   if (!isLogin.value) {
     useModal().openLoginModal();
     return;
   }
-  const { data, error } = await post.unlike(props.feed.id)
-  if (!error.value) {
-    isLiked.value = false
-    likeCnt.value--;
+  unlikeAcceessableCount = unlikeAcceessableCount - 1;
+  if (unlikeAcceessableCount > 0) {
+    const { data, error } = await post.unlike(props.feed.id)
+    if (!error.value) {
+      isLiked.value = false
+      likeCnt.value--;
+    }
   }
-}, 300)
+  unlikeAcceessableCount = unlikeAcceessableCount + 1;
 
+}
 
-
-// @Component({
-//     components: {},
-//     computed: {...mapGetters(["user"])},
-// })
-// export default class LikeBtn extends Vue {
-//     @Prop() feed!: any;
-//     user!: User;
-//     clickManager: ClickManager = new ClickManager();
-//     isLiked: boolean = this.feed.liked;
-//     likeCnt = this.feed.like_cnt;
-
-//     //todo: 하트 상태 변화
-//     sendLike(state: boolean) {
-//         // ClickManager.
-
-//         if (this.user) {
-//             if (state) {
-//                 if (!this.clickManager.doubleClickCheck()) {
-//                     this.$api.unlike(this.feed.id)
-//                         .then((res: any) => {
-//                             if (res.success) {
-//                                 this.isLiked = false;
-//                                 this.likeCnt--;
-//                             }
-//                         })
-//                         .catch((err: any) => {
-//                         })
-//                         .finally(() => {
-
-//                         })
-//                 }
-
-//             }
-//             else {
-//                 if (!this.clickManager.doubleClickCheck()) {
-//                     this.$api.like(this.feed.id)
-//                         .then((res: any) => {
-//                             if (res.is_liked) {
-//                                 this.isLiked = true;
-//                                 this.likeCnt++;
-
-//                                 this.$gtag.event('like_feed', {
-//                                     'feedId': this.feed.id,
-//                                 });
-
-//                             }
-//                         })
-//                         .catch((err: any) => {
-//                         })
-//                 }
-
-//             }
-//         }
-//         else {
-//             this.$modal.show('needLogin')
-//         }
-//     }
-// }
 </script>
 
 <style scoped lang="scss">
