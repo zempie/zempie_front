@@ -10,12 +10,12 @@
                   <UserAvatar :user="feed.user" :tag="'span'" />
                 </dt>
                 <dd v-if="feed.user">
-                  <h2>{{ feed.user.name }}</h2>
-                  <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{ dateFormat(feed.created_at) }}</p>
+                  <h2>{{  feed.user.name  }}</h2>
+                  <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{  dateFormat(feed.created_at)  }}</p>
                 </dd>
                 <dd v-else>
-                  <h2>{{ $t('feed.noUser.post') }}</h2>
-                  <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{ dateFormat(feed.created_at) }}</p>
+                  <h2>{{  $t('feed.noUser.post')  }}</h2>
+                  <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{  dateFormat(feed.created_at)  }}</p>
                 </dd>
               </dl>
             </dt>
@@ -55,7 +55,7 @@
                 <audio v-else-if="file.type === 'sound'" controls :src="file.url"></audio>
                 <div class="audio" v-else-if="file.type === 'sound'">
                   <audio controls :src="file.url"></audio>
-                  <p>{{ file.name }}</p>
+                  <p>{{  file.name  }}</p>
                 </div>
               </div>
             </div>
@@ -65,7 +65,7 @@
               <ul>
                 <LikeBtn :feed="feed" />
                 <li><i class="uil uil-comment-alt-dots" style="font-size:22px;"></i>&nbsp;
-                  {{ feed.comment_cnt }}
+                  {{  feed.comment_cnt  }}
                 </li>
 
                 <li @click="copyUrl">
@@ -96,7 +96,7 @@
             </li> -->
           </ul>
           <div class="tapl-comment">
-            <h2>{{ $t('comment') }} {{ feed.comment_cnt }}{{ $t('comment.count.unit') }} </h2>
+            <h2>{{  $t('comment')  }} {{  feed.comment_cnt  }}{{  $t('comment.count.unit')  }} </h2>
             <CommentInput :postId="feed.id" @refresh="commentRefresh" />
             <ul>
               <li v-for="comment in comments" :key="comment.id">
@@ -206,46 +206,13 @@ import { useI18n } from 'vue-i18n';
 
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { dateFormat, execCommandCopy } from '~~/scripts/utils';
+import { IFeed } from '~~/types';
 
-// import { Component, Prop, Vue } from "vue-property-decorator";
-
-// import { dateFormat } from "@/script/moment";
-// import { AxiosError, AxiosResponse } from "axios";
-// import FollowBtn from "@/components/user/_followBtn.vue";
-// import { mapGetters } from "vuex";
-// import { User } from "@/types";
-// import LikeBtn from "@/components/timeline/_likeBtn.vue";
-// import UserAvatar from "@/components/user/_userAvatar.vue";
-// import { execCommandCopy } from "@/script/util";
-// import Toast from "@/script/message";
-// import CommentInput from "@/components/comment/_commentInput.vue";
-// import Comment from "@/components/timeline/Comment.vue";
-// import { scrollDone } from "@/script/scrollManager";
-// import { Swiper, SwiperSlide } from "vue-awesome-swiper";
-// import Post from "@/components/timeline/_post.vue";
-
-// @Component({
-//     components: {
-//         FollowBtn,
-//         LikeBtn,
-//         UserAvatar,
-//         CommentInput,
-//         Comment,
-//         Swiper,
-//         SwiperSlide,
-//         Post
-
-//     },
-//     computed: { ...mapGetters(["user"]) },
-// })
-// export default class FeedDetail extends Vue {
-//     toast = new Toast();
-//     feedId = this.$route.params.feedId;
 const COMMENT_LIMIT = 10;
 const route = useRoute();
 const { t, locale } = useI18n()
-
-const feed = ref();
+const config = useRuntimeConfig()
+const feed = ref<IFeed>();
 const createdDate = ref('');
 //     commentId: string = '';
 
@@ -268,11 +235,43 @@ const swiperOption = ref({
 const feedId = computed(() => route.params.id as string)
 
 
+
+watch(
+  () => feed.value,
+  (feed) => {
+
+    useHead({
+      title: `${feed.user.name}${t('seo.feed.title')} | Zempie`,
+      meta: [
+        {
+          name: 'description',
+          content: `${feed.user.name}${t('seo.feed.desc')}`
+        },
+        {
+          name: 'og:title',
+          content: `${feed.user.name}${t('seo.feed.title')}`
+        },
+        {
+          name: 'og:description',
+          content: `${feed.user.name}${t('seo.feed.desc')}`
+        },
+        {
+          name: 'og:url',
+          content: `${config.ZEMPIE_URL}${route.path}`
+        },
+      ]
+    })
+  }
+)
+
+
 await fetch()
 await commentFetch()
 
 
 onMounted(async () => {
+
+
 })
 
 function editDone() {
@@ -320,13 +319,13 @@ function editDone() {
 async function fetch() {
   // return communityFetch('ge', `/post/${postId}`, undefined, false)
 
-  const { data, error, pending } = await useFetch(`/post/${feedId.value}`, getComFetchOptions('get', true))
+  const { data, error, pending } = await useFetch<any>(`/post/${feedId.value}`, getComFetchOptions('get', true))
 
   // const { data, error, pending } = await post.getInfo(feedId.value);
 
   if (data.value) {
     feed.value = data.value;
-    console.log(feed.value)
+
   }
   //   this.$api.feed(this.feedId)
   // .then((res: AxiosResponse) => {
@@ -528,6 +527,7 @@ function copyUrl() {
 
 .tapl-content {
   word-break: break-all;
+
 
 }
 

@@ -57,28 +57,6 @@ const route = useRoute();
 const config = useRuntimeConfig()
 const $route = useRoute();
 
-useHead({
-  title: `${t('seo.search.title')} | Zempie`,
-  meta: [
-    {
-      name: 'description',
-      content: `${t('seo.search.desc')}`
-    },
-    {
-      name: 'og:title',
-      content: `${t('seo.search.title')}`
-    },
-    {
-      name: 'og:description',
-      content: `${t('seo.search.description')}`
-    },
-    {
-      name: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`
-    },
-  ]
-})
-
 const keyword = ref($route.query.q)
 const userList = ref([])
 const gameList = ref([])
@@ -95,6 +73,29 @@ watch(
   () => $route.query.q,
   (newKeyword: string) => {
     keyword.value = newKeyword;
+
+    useHead({
+      title: `${t('seo.search.title')} | Zempie`,
+      meta: [
+        {
+          name: 'description',
+          content: `${t('seo.search.desc1')}${keyword.value}${t('seo.search.desc2')}`
+        },
+        {
+          name: 'og:title',
+          content: `${t('seo.search.title')}`
+        },
+        {
+          name: 'og:description',
+          content: `${t('seo.search.desc1')}${keyword.value}${t('seo.search.desc2')}`
+        },
+        {
+          name: 'og:url',
+          content: `${config.ZEMPIE_URL}${route.path}`
+        },
+      ]
+    })
+
     refresh()
   }
 )

@@ -19,7 +19,7 @@ const route = useRoute();
 const config = useRuntimeConfig()
 
 useHead({
-  title: `${t('seo.project.upload.title')} | Zempie`,
+  title: `${t('seo.project.upload.title')} | Zempie Studio`,
   meta: [
     {
       name: 'description',

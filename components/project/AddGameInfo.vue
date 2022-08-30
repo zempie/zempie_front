@@ -2,7 +2,7 @@
   <ProjectStepMenu>
     <template #uploadGameBtn>
       <li class="publish-btn">
-        <h4 :class="uploadStage === eGameStage.DEV ? 'active' : ''" @click="uploadGame">{{ $t('publishing') }}</h4>
+        <h4 :class="uploadStage === eGameStage.DEV ? 'active' : ''" @click="uploadGame">{{  $t('publishing')  }}</h4>
       </li>
     </template>
   </ProjectStepMenu>
@@ -10,10 +10,10 @@
     <div class="studio-upload-input">
       <template v-if="!isFormDone">
         <div class="sui-input">
-          <div class="suii-title">{{ $t("addGameInfo.title") }}</div>
+          <div class="suii-title">{{  $t("addGameInfo.title")  }}</div>
           <dl class="suii-content">
             <dt>
-              {{ $t("addGameInfo.game.title") }}
+              {{  $t("addGameInfo.game.title")  }}
               <span style="color: red">*</span>
             </dt>
             <dd>
@@ -22,7 +22,7 @@
               <TransitionGroup name="fade">
 
                 <p class="input-errors" v-for="error of v$.name.$errors" :key="error.$uid">
-                  <i class="uil uil-check"></i>{{ error.$message }}
+                  <i class="uil uil-check"></i>{{  error.$message  }}
                 </p>
               </TransitionGroup>
             </dd>
@@ -30,24 +30,24 @@
 
           <dl class="suii-content">
             <dt>
-              {{ $t("addGameInfo.game.desc") }}<span style="color: red">*</span>
+              {{  $t("addGameInfo.game.desc")  }}<span style="color: red">*</span>
             </dt>
             <dd>
               <textarea v-model="v$.description.$model" name="" title="" :placeholder="$t('addGameInfo.game.desc')"
                 class="w100p h100"></textarea>
               <TransitionGroup name="fade">
                 <p class="input-errors" v-for="error of v$.description.$errors" :key="error.$uid">
-                  <i class="uil uil-check"></i>{{ error.$message }}
+                  <i class="uil uil-check"></i>{{  error.$message  }}
                 </p>
               </TransitionGroup>
             </dd>
           </dl>
           <dl class="suii-content">
-            <dt>{{ $t('addGameInfo.game.tags') }}<span style="color: red;">*</span></dt>
+            <dt>{{  $t('addGameInfo.game.tags')  }}<span style="color: red;">*</span></dt>
             <dd>
               <div class="chip-container">
                 <div class="chip" v-for="(chip, i) of hashtagsArr" :key="chip.id">
-                  {{ chip }}
+                  {{  chip  }}
                   <i class="uil uil-times" @click="deleteChip(i)"></i>
                 </div>
 
@@ -56,11 +56,11 @@
               </div>
               <TransitionGroup name="fade">
                 <p class="input-errors" v-for="error of v$.hashtags.$errors" :key="error.$uid">
-                  <i class="uil uil-check"></i>{{ error.$message }}
+                  <i class="uil uil-check"></i>{{  error.$message  }}
                 </p>
               </TransitionGroup>
               <h2>
-                {{ $t('addGameInfo.game.tags.info') }}
+                {{  $t('addGameInfo.game.tags.info')  }}
 
               </h2>
             </dd>
@@ -71,7 +71,7 @@
 
           <dl class="suii-content">
             <dt>
-              {{ $t('addGameInfo.game.thumbnail') }}
+              {{  $t('addGameInfo.game.thumbnail')  }}
               <span style="color: red;">*</span>
             </dt>
             <dd>
@@ -86,20 +86,20 @@
                     </div>
                     <p><i class="uil uil-image-v"></i></p>
                     <h2>
-                      {{ $t('addGameInfo.game.thumbnail.size') }} 512* 512<br />
+                      {{  $t('addGameInfo.game.thumbnail.size')  }} 512* 512<br />
                       (up to 4MB)
                     </h2>
                   </div>
 
                   <transition name="component-fade" mode="out-in">
                     <p class="valid-err" :class="isThumbErr ? 'active' : ''">
-                      {{ $t('addGameInfo.game.thumbnail.err') }}
+                      {{  $t('addGameInfo.game.thumbnail.err')  }}
                     </p>
                   </transition>
                   <p>
 
                     <button class="btn-gray" @click="uploadThumbnail"><i class="uil uil-upload"></i>&nbsp;
-                      {{ $t('addGameInfo.game.thumbnail') }}
+                      {{  $t('addGameInfo.game.thumbnail')  }}
                     </button>
 
                   </p>
@@ -116,7 +116,7 @@
 
                   <p style="width:130%;">
                     <button class="btn-gray" @click="uploadThumbnail"><i class="uil uil-upload"></i>&nbsp;
-                      {{ $t('addGameInfo.game.thumbnail') }}
+                      {{  $t('addGameInfo.game.thumbnail')  }}
 
                     </button>
                     &nbsp; &nbsp;
@@ -128,7 +128,7 @@
             </dd>
           </dl>
           <dl class="suii-content">
-            <dt> {{ $t('previewImage.title') }}</dt>
+            <dt> {{  $t('previewImage.title')  }}</dt>
             <dd>
               <ul class="image-upload">
                 <li v-if="!prevGif">
@@ -138,13 +138,13 @@
                     </div>
                     <p><i class="uil uil-image-v"></i></p>
                     <h2>
-                      {{ $t('addGameInfo.game.thumbnail.size') }} 512* 512<br />
+                      {{  $t('addGameInfo.game.thumbnail.size')  }} 512* 512<br />
                       (up to 4MB)
                     </h2>
                   </div>
                   <p>
                     <button class="btn-gray" @click="uploadGif"><i class="uil uil-upload"></i>&nbsp;
-                      {{ $t('addGameInfo.game.thumbnail') }}
+                      {{  $t('addGameInfo.game.thumbnail')  }}
                     </button>
 
                   </p>
@@ -159,7 +159,7 @@
                   </div>
                   <p style="width:130%;">
                     <button class="btn-gray" @click="uploadGif"><i class="uil uil-upload"></i>&nbsp;
-                      {{ $t('addGameInfo.game.thumbnail') }}
+                      {{  $t('addGameInfo.game.thumbnail')  }}
                     </button>
                     <button class="btn-circle-icon" @click="deleteGif"><i class="uil uil-trash-alt"></i>
                     </button>
@@ -172,7 +172,7 @@
 
 
           <dl class="suii-content">
-            <dt style="padding-top: 5px">{{ $t("auto.game.id.generator") }}</dt>
+            <dt style="padding-top: 5px">{{  $t("auto.game.id.generator")  }}</dt>
             <dd>
               <label class="switch-button">
                 <input type="checkbox" name="" v-model="isAuthGamePath" />
@@ -183,7 +183,7 @@
           <transition name="component-fade" mode="out-in">
             <dl class="suii-content" v-if="!isAuthGamePath">
               <dt>
-                {{ $t("addGameInfo.game.id") }}
+                {{  $t("addGameInfo.game.id")  }}
               </dt>
               <dd>
                 <input v-model="v$.pathname.$model" type="text" name="" class="game-id-input w90p" title=""
@@ -195,7 +195,7 @@
               </dd>
               <ClipLoader v-if="waitGamePath" :color="'#ff6e17'" :size="'20px'"></ClipLoader>
               <a @click="checkPathName" class="btn-default w150">
-                {{ $t("addGameInfo.game.id.check") }}
+                {{  $t("addGameInfo.game.id.check")  }}
               </a>
             </dl>
           </transition>
@@ -203,15 +203,15 @@
         <ul class="sui-btn">
           <li>
             <a @click="prevPage" class="btn-line w150"><i class="uil uil-angle-left-b"></i>
-              {{ $t('previous') }}
+              {{  $t('previous')  }}
             </a>
           </li>
           <li>
             <a v-if="uploadProject.form.stage === eGameStage.DEV" @click="uploadGame" class="btn-default w150">
-              {{ $t("upload") }}
+              {{  $t("upload")  }}
             </a>
             <a v-else @click="save" class="btn-default w150">
-              {{ $t('next') }}
+              {{  $t('next')  }}
               <i class="uil uil-angle-right-b"></i></a>
           </li>
         </ul>
@@ -374,7 +374,7 @@ onBeforeRouteLeave((to, from, next) => {
   if (form.name || form.pathname || form.description || form.hashtags || form.project_picture || form.project_picture2) {
 
     ElMessageBox.confirm(
-      "작성하신 글은 저장되지않고 지워집니다. 이 페이지를 나가시겠습니까?",
+      `${'leave.router.warning'}`,//작성하신 글은 저장되지않고 지워집니다. 이 페이지를 나가시겠습니까?
       'Warning',
       {
         confirmButtonText: 'Cancel',

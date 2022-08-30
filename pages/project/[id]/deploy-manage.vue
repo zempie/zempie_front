@@ -128,7 +128,7 @@ definePageMeta({
   name: 'deployManage'
 })
 useHead({
-  title: `${t('seo.project.deploy.manage.title')} | Zempie`,
+  title: `${t('seo.project.deploy.manage.title')} | Zempie Studio`,
   meta: [
     {
       name: 'description',

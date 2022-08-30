@@ -2,7 +2,7 @@
   <NuxtLayout name="my-channel-header">
     <div v-if="games">
       <dl class="area-title" style="margin-top:12.5px">
-        <dt>Games <span>{{ games.length }}</span></dt>
+        <dt>Games <span>{{  games.length  }}</span></dt>
         <dd>
           <NuxtLink :to="localePath(`/project/upload`)" v-if="isMine" class="btn-default-samll">
             Add Game <i class="uil uil-plus"></i></NuxtLink>
@@ -15,7 +15,7 @@
         </ul>
       </transition>
       <div class="no-result" v-else>
-        <h1>{{ $t('no.game') }}</h1>
+        <h1>{{  $t('no.game')  }}</h1>
         <img src="/images/not-found.png" width="100px" height="100px" />
       </div>
     </div>
@@ -23,22 +23,50 @@
 </template>
 
 <script setup lang="ts">
-import { IUserChannel } from "~~/types"
 
 import { useI18n } from 'vue-i18n';
 import { useLocalePath } from 'vue-i18n-routing';
+
+const localePath = useLocalePath();
+const config = useRuntimeConfig()
+
+const { t, locale } = useI18n()
+const route = useRoute()
+
+const userInfo = computed(() => useChannel().userChannel.value.info)
 
 definePageMeta({
   title: 'user-game',
   name: 'userGame'
 })
-const localePath = useLocalePath();
-const userInfo = ref<IUserChannel>()
 
-const { t, locale } = useI18n()
-const route = useRoute()
+
+watch(userInfo.value, async () => {
+  useHead({
+    title: `${userInfo.value.name}${t('seo.channel.games.title')} | Zempie`,
+    meta: [
+      {
+        name: 'description',
+        content: `${userInfo.value.name}${t('seo.channel.games.desc')}`
+      },
+      {
+        name: 'og:title',
+        content: `${userInfo.value.name}${t('seo.channel.games.title')}`
+      },
+      {
+        name: 'og:description',
+        content: `${userInfo.value.name}${t('seo.channel.games.description')}`
+      },
+      {
+        name: 'og:url',
+        content: `${config.ZEMPIE_URL}${route.path}`
+      },
+    ]
+  })
+})
 
 const games = computed(() => useChannel().userChannel.value.info?.games)
+
 const isLoadDone = computed(() => useRender().state.value.isDone)
 
 const channelId = computed(() => route.params.id as string)

@@ -1,6 +1,7 @@
-import {mergeAttributes, Node} from '@tiptap/core'
+import { mergeAttributes, Node } from '@tiptap/core'
 
 export interface AudioOptions {
+    inline: boolean,
     HTMLAttributes: {
         [key: string]: any
     },
@@ -9,29 +10,34 @@ export interface AudioOptions {
 declare module '@tiptap/core' {
     interface Commands<ReturnType> {
         audio: {
-            setAudio: (options: { src: string, name?:string, type?: string, controls?: boolean }) => ReturnType,
+            setAudio: (options: { src: string, title?: string, type?: string, controls?: boolean }) => ReturnType,
         }
     }
 }
-
+let renderCount = 2;
 
 export default Node.create({
     name: 'audio',
-    group: 'block',
-    atom: true,
+    inline() {
+        return this.options.inline
+    },
+    group() {
+        return this.options.inline ? 'inline' : 'block'
+    },
 
     defaultOptions: <AudioOptions>{
+        inline: true,
         HTMLAttributes: {
             class: 'audio-wrapper',
-
         },
+
     },
 
     draggable: true,
 
     addAttributes() {
         return {
-            name:{
+            title: {
                 default: null,
             },
             src: {
@@ -54,14 +60,15 @@ export default Node.create({
 
 
     renderHTML({ HTMLAttributes }) {
-        return ['div', this.options.HTMLAttributes, ['audio', HTMLAttributes]
-            // , ['p',HTMLAttributes.name]
+        return ['div', this.options.HTMLAttributes, ['audio', mergeAttributes({ 'controls': true }, HTMLAttributes)]
+            // FIXME: content호출시 p 두번 출력..; 왜? 
+            // , ['p', HTMLAttributes.title]
         ]
     },
 
     addCommands() {
         return {
-            setAudio: (options: { src: string, type?: string }) => ({ tr, dispatch }) => {
+            setAudio: (options: { src: string, title?: string, type?: string }) => ({ tr, dispatch }) => {
                 const { selection } = tr
                 const node = this.type.create(options)
                 if (dispatch) {

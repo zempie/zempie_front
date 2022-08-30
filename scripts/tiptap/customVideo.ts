@@ -1,9 +1,9 @@
 import {
-
     Node,
 } from '@tiptap/core'
 
 export interface VideoOptions {
+    inline: boolean,
     HTMLAttributes: {
         [key: string]: any
     },
@@ -23,13 +23,18 @@ declare module '@tiptap/core' {
 
 export default Node.create({
     name: 'video',
+    inline() {
+        return this.options.inline
+    },
+    group() {
+        return this.options.inline ? 'inline' : 'block'
+    },
 
-    group: 'block',
-    
 
     atom: true,
 
     defaultOptions: <VideoOptions>{
+        inline: true,
         HTMLAttributes: {
             class: 'video-wrapper',
 
@@ -66,8 +71,6 @@ export default Node.create({
 
 
     renderHTML({ HTMLAttributes }) {
-
-
         return ['div', this.options.HTMLAttributes, ['video', HTMLAttributes]]
     },
 

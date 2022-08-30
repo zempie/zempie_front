@@ -135,7 +135,7 @@ async function leave() {
 
     setTimeout(() => {
       ElMessage({
-        message: t('탈퇴처리가 완료되었습니다.'),
+        message: t('leave.done'),
         type: 'success'
       })
       useUser().logout();

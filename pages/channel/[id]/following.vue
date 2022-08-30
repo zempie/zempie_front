@@ -3,11 +3,11 @@
 
     <div>
       <dl class="area-title">
-        <dt>following <span>{{ totalCount }}</span></dt>
+        <dt>following <span>{{  totalCount  }}</span></dt>
       </dl>
       <UserList :users="users" :isPending="isPending" />
       <div v-if="!isPending && !users.length" class="no-result">
-        <h1>{{ $t('no.following') }}</h1>
+        <h1>{{  $t('no.following')  }}</h1>
         <img src="/images/not-found.png" />
       </div>
     </div>
@@ -15,7 +15,13 @@
 </template>
 
 <script setup lang="ts">
-const userId = computed(() => useChannel().userChannel.value.info.id)
+import { useI18n } from 'vue-i18n';
+
+const { t, locale } = useI18n()
+const config = useRuntimeConfig()
+
+const userInfo = computed(() => useChannel().userChannel.value.info)
+
 
 const route = useRoute()
 const isPending = ref(true)
@@ -28,17 +34,42 @@ definePageMeta({
   name: 'userFollwoing'
 })
 
+
+
+
 const isMine = computed(() => {
   return route.params.id === useUser().user.value.info?.channel_id
 })
 
-watch(userId, async () => {
+watch(userInfo.value, async () => {
   await fetch()
+
+  useHead({
+    title: `${userInfo.value.name}${t('seo.channel.following.title')} | Zempie`,
+    meta: [
+      {
+        name: 'description',
+        content: `${userInfo.value.name}${t('seo.channel.following.desc')}`
+      },
+      {
+        name: 'og:title',
+        content: `${userInfo.value.name}${t('seo.channel.following.title')}`
+      },
+      {
+        name: 'og:description',
+        content: `${userInfo.value.name}${t('seo.channel.following.description')}`
+      },
+      {
+        name: 'og:url',
+        content: `${config.ZEMPIE_URL}${route.path}`
+      },
+    ]
+  })
 })
 
 
 onMounted(async () => {
-  if (userId.value) {
+  if (userInfo.value.id) {
     await fetch()
   }
 })
@@ -46,7 +77,7 @@ onMounted(async () => {
 async function fetch() {
 
   const { data, error, pending } = await useFetch<{ totalCount: number, result: [], pageInfo: {} }>
-    (`/user/${userId.value}/list/following`, getComFetchOptions('get', true))
+    (`/user/${userInfo.value.id}/list/following`, getComFetchOptions('get', true))
   console.log(data)
   if (!error.value) {
     totalCount.value = data.value.totalCount;

@@ -15,18 +15,18 @@
                 game?.url_thumb ||
                 '/images/default.png'
                 }) center; background-size:cover;`"></p>
-                <h2 style="text-overflow: ellipsis; overflow: hidden">{{ game?.title }}</h2>
+                <h2 style="text-overflow: ellipsis; overflow: hidden">{{  game?.title  }}</h2>
               </li>
             </ul>
 
             <div v-if="games.length > 5">
               <NuxtLink :to="localePath(`/channel/${game.user.channel_id}/games`)" class="btn-default-samll w100p">
-                {{ $t('moreView') }}
+                {{  $t('moreView')  }}
               </NuxtLink>
             </div>
           </template>
           <ul v-else class="no-game">
-            <li>{{ $t('no.game') }}</li>
+            <li>{{  $t('no.game')  }}</li>
           </ul>
         </div>
       </dt>
@@ -41,11 +41,11 @@
         <div class="ta-about">
           <h2>About Us</h2>
           <div class="desc">
-            {{ game?.description }}
+            {{  game?.description  }}
           </div>
           <dl>
             <dt>Version</dt>
-            <dd> {{ game?.version }}</dd>
+            <dd> {{  game?.version  }}</dd>
           </dl>
         </div>
         <div class="ta-copy-link">
@@ -69,6 +69,7 @@ import { useI18n } from 'vue-i18n';
 
 const localePath = useLocalePath();
 const config = useRuntimeConfig();
+const route = useRoute();
 const { t, locale } = useI18n()
 
 const userInfo = ref({} as IUserChannel)
@@ -79,6 +80,34 @@ const game = computed(() => useGame().game.value.info)
 
 const isMine = computed(() => useGame().game.value.info?.user.id === useUser().user.value.info?.id)
 
+
+
+watch(
+  () => game.value,
+  (info) => {
+    useHead({
+      title: `${info.title} | Zempie game`,
+      meta: [
+        {
+          name: 'description',
+          content: `${info.description}`
+        },
+        {
+          name: 'og:title',
+          content: `${info.title}`
+        },
+        {
+          name: 'og:description',
+          content: `${info.description}`
+        },
+        {
+          name: 'og:url',
+          content: `${config.ZEMPIE_URL}${route.path}`
+        },
+      ]
+    })
+  }
+)
 
 
 
@@ -197,6 +226,13 @@ function copyUrl() {
 </script>
 
 <style scoped lang="scss">
+.ta-game-list {
+  width: 100%;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.1);
+}
+
 .ta-screenshot .swiper-button-next {
   --swiper-navigation-color: #fff;
   --swiper-navigation-size: 10px;

@@ -10,20 +10,11 @@ export default function () {
     post.value.type = type;
   }
 
-  const setImg = (img) => {
-    post.value.img = _.uniqBy([...post.value.img, img],
-      'src')
-  }
-  const resetImg = () => {
-
-  }
-
 
 
 
   return {
     post,
-    setImg,
     setType
   }
 }

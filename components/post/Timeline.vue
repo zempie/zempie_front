@@ -52,21 +52,8 @@
           <h2> {{  t('timeline.noPost')  }}</h2>
         </div>
 
-        <!-- <Feed
-                    class="mt-3"
-                    data-aos-once="true"
-                    data-aos="fade"
-                    v-for="feed in filterDupTl"
-                    :key="feed.id"
-                    :feed="feed"
-                    @reFetch="reFetch"
-                    @deleteFeed="deleteFeed"
-                    @reportPost="reportPost"
-                    @reportUser="reportUser"
-                    @originImg="(val)=>originImg = val"
-                ></Feed> -->
       </ul>
-      <div ref="triggerDiv"></div>
+      <div ref="triggerDiv" style="margin-top:100px"></div>
       <!-- <div v-else-if="this.$store.getters.LoadingStatus || isFirstLoading"
                  style="opacity: 0.5;"
                  class="ta-post-none">
@@ -304,34 +291,30 @@ const props = defineProps({
 let watcher = watch(
   () => route.query,
   (query) => {
-    if (query.media) {
-      media.value = query.media as string;
-      refresh()
-    }
+    media.value = query.media as string;
+    refresh()
   }
 )
-
-onBeforeRouteLeave((to, from) => {
-  watcher()
-})
 
 
 onMounted(async () => {
 
-  observer.value = new IntersectionObserver((entries) => {
-    handleIntersection(entries[0])
-  }, { root: null, threshold: 1 })
+  if (channelId.value) {
+    observer.value = new IntersectionObserver((entries) => {
+      handleIntersection(entries[0])
+    }, { root: null, threshold: 1 })
 
-  observer.value.observe(triggerDiv.value)
+    observer.value.observe(triggerDiv.value)
 
-  await fetch()
+    await fetch()
+  }
 })
 
 function handleIntersection(target) {
+  console.log(target)
   if (target.isIntersecting) {
     if (isAddData.value) {
       offset.value += limit.value;
-      console.log('intersection fetch')
       fetch()
     }
   }
@@ -339,6 +322,10 @@ function handleIntersection(target) {
 
 onBeforeUnmount(() => {
   initPaging();
+})
+
+onBeforeRouteLeave((to, from) => {
+  watcher()
 })
 
 async function fetch() {
@@ -364,6 +351,7 @@ async function fetch() {
 
       break;
     case 'user':
+      console.log('user')
       const { data: userPostData } = await useFetch<{ result: IFeed[], totalCount: number }>(createQueryUrl(`/timeline/channel/${channelId.value}`, query), getComFetchOptions('get', true))
 
       if (userPostData.value) {
@@ -416,6 +404,7 @@ function initPaging() {
 }
 
 async function refresh() {
+  console.log('refresh')
   initPaging();
   await fetch();
 

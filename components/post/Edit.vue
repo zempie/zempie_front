@@ -2,7 +2,7 @@
   <div style='min-height:200px'>
     <EditorContent :editor="editor" :class="['editor-container', postType === 'SNS' ? 'sns' : 'blog']" />
     <div class="character-count">
-      <p>{{ charCount }}/{{ limit }}</p>
+      <p>{{  charCount  }}/{{  limit  }}</p>
     </div>
   </div>
 

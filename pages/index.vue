@@ -44,8 +44,18 @@
     <div class="main-visual">
       <h2><span style="font: 36px/46px 'Jalnan'">Recent posts</span></h2>
 
-      <ul style="margin-top: 40px" class="post-container">
-        <li class="thumbmail" v-for="post in POST_COUNT"></li>
+      <ul v-if="postPending" style="margin-top: 40px" class="post-container">
+        <li class="thumbmail skeleton" v-for="post in POST_COUNT"></li>
+      </ul>
+
+      <ul v-else style="margin-top: 40px" class="post-container">
+        <li
+          class="thumbmail"
+          v-for="post in postData.result"
+          @click="$router.push(localePath(`/feed/${post.id}`))"
+        >
+          <img :src="post.attatchment_files[0]?.url" />
+        </li>
       </ul>
     </div>
   </div>
@@ -53,25 +63,27 @@
 
 <script lang="ts" setup>
 import { useI18n } from 'vue-i18n'
+import { useLocalePath } from 'vue-i18n-routing'
 
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
 const route = useRoute()
+const localePath = useLocalePath()
 
 useHead({
-  title: `${t('seo.login.title')} | Zempie`,
+  title: `${t('seo.landing.title')} | Zempie`,
   meta: [
     {
       name: 'description',
-      content: `${t('seo.login.desc')}`,
+      content: `${t('seo.landing.desc')}`,
     },
     {
       name: 'og:title',
-      content: `${t('seo.login.title')}`,
+      content: `${t('seo.landing.title')}`,
     },
     {
       name: 'og:description',
-      content: `${t('seo.login.description')}`,
+      content: `${t('seo.landing.description')}`,
     },
     {
       name: 'og:url',
@@ -79,13 +91,32 @@ useHead({
     },
     {
       name: 'og:image',
-      content: 'image/sns-thumbnail.png',
+      content: '/image/sns-thumbnail.png',
     },
   ],
 })
 const GAME_COUNT = 8
 const COMMUNITY_COUNT = 4
 const POST_COUNT = 8
+
+const { data, pending, error } = await game.list({
+  limit: GAME_COUNT,
+  offset: 0,
+})
+const {
+  data: communities,
+  pending: cPending,
+  error: cError,
+} = await community.list({ limit: COMMUNITY_COUNT })
+
+const {
+  data: postData,
+  pending: postPending,
+  error: postError,
+} = await useFetch<any>(
+  createQueryUrl('/timeline/posts/img', { limit: 12 }),
+  getComFetchOptions('get', false)
+)
 
 const { data, pending, error } = await game.list({
   limit: GAME_COUNT,
@@ -135,11 +166,21 @@ const {
   margin: auto;
   justify-content: center;
   .thumbmail {
-    background-color: #ededed;
+    &.skeleton {
+      background-color: #ededed;
+    }
+
     height: 240px;
     margin: 3px;
     width: 24%;
     transition: all 0.4s ease-in-out;
+
+    img {
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      border-radius: 10px;
+    }
   }
 }
 
@@ -162,8 +203,8 @@ const {
     margin: 0 auto;
 
     .thumbmail {
-      width: 100%;
-      margin: 2% 0 2% 0;
+      width: 48%;
+      margin: 1%;
     }
   }
 }

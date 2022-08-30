@@ -38,7 +38,7 @@ const localePath = useLocalePath();
 
 
 useHead({
-  title: `${t('seo.project.version.manage.title')} | Zempie`,
+  title: `${t('seo.project.version.manage.title')} | Zempie Studio`,
   meta: [
     {
       name: 'description',

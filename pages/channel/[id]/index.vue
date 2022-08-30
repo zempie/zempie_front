@@ -104,6 +104,7 @@
 import { useLocalePath } from 'vue-i18n-routing';
 import { useI18n } from 'vue-i18n';
 
+const config = useRuntimeConfig();
 
 const { t, locale } = useI18n()
 const localePath = useLocalePath();
@@ -112,94 +113,52 @@ const isPending = ref(true)
 const channelInfo = computed(() => useChannel().userChannel.value.info)
 const games = computed(() => channelInfo.value.games)
 const channelId = computed(() => route.params.id as string)
+const isMine = computed(() => {
+  return channelId.value === useUser().user.value.info?.channel_id
+})
 
-// useHead({
-//   title: 'Zempie | Project version ',
-//   meta: [{
-//     name: 'description',
-//     content: 'project list'
-//   }]
-// })
+watch(
+  () => channelInfo.value,
+  (info) => {
+    useHead({
+      title: `${info.name}${t('seo.channel.title')} | Zempie`,
+      meta: [
+        {
+          name: 'description',
+          content: `${info.name}${t('seo.channel.desc')}`
+        },
+        {
+          name: 'og:title',
+          content: `${info.name}${t('seo.channel.title')}`
+        },
+        {
+          name: 'og:description',
+          content: `${info.name}${t('seo.channel.desc')}`
+
+        },
+        {
+          name: 'og:url',
+          content: `${config.ZEMPIE_URL}${route.path}`
+        },
+        {
+          name: 'og:image',
+          content: `${info.picture}`
+        },
+      ]
+    })
+  }
+)
 
 definePageMeta({
   title: 'user-channel',
   name: 'userChannel'
 })
 
-const isMine = computed(() => {
-  return channelId.value === useUser().user.value.info?.channel_id
-})
 
 
 onMounted(() => {
   isPending.value = false
 })
-
-
-//  channel_id = this.$route.params.channel_id;
-//     games: any[] = [];
-//     totalGameCnt = 0;
-//     user!: any;
-//     communityList: {
-//         id: number;
-//         name: string;
-//         profile_img: string;
-//         state: string;
-//         member_cnt: number;
-//     }[] = [];
-//     userId = 0;
-
-//     async mounted() {
-//         await this.$store.dispatch("loginState");
-//         this.gameListFetch();
-
-//     }
-
-//     gameListFetch() {
-//         this.$api.userChannel(this.channel_id)
-//             .then((res: any) => {
-//                 const {target} = res;
-//                 const {games} = target;
-//                 this.userId = target.id
-//                 this.$store.commit('gameList', games)
-//                 if (games.length > 0) {
-//                     this.totalGameCnt = games.length;
-//                 }
-
-//                 this.games = games.slice(0, 5)
-//                 this.communityFetch();
-//             })
-//             .catch((err: AxiosError) => {
-//                 // this.$router.push(`/${this.$i18n.locale}`)
-//                 // console.log('err', err)
-//             })
-
-
-//     }
-//     communityFetch() {
-//         this.$api.joinedCommunityList(this.userId)
-//             .then((res: any) => {
-//                 this.communityList = res;
-//             })
-//             .catch((err: AxiosError) => {
-//                 this.$router.push(`/${this.$i18n.locale}`)
-//             })
-
-
-//     }
-
-//     moveGameChannel(gamePath: string) {
-//         this.$router.push(`/${this.$i18n.locale}/timeline/game/${gamePath}`);
-//     }
-
-//     moveGroupPage(id: any) {
-//         this.$router.push(`/${this.$i18n.locale}/community/${id}/timeline`);
-//     }
-
-//     playGame(pathname: string) {
-//         window.open(
-//             `/play/${pathname}`, "_blank");
-//     }
 
 
 </script>

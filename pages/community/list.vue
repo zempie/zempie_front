@@ -17,44 +17,26 @@
     <!-- 비주얼영역 끝 -->
 
 
-    <!-- 검색/구분 -->
     <dl class="area-search-sort">
       <dt>
-        <!--              커뮤니티 검색용 -->
-        <!--                -->
-        <!-- <div class="input-search-default">-->
-        <!--                    <p><i class="uil uil-search"></i>-->
-        <!--                    </p>-->
-        <!--                    <div>-->
-        <!--                        <input-->
-        <!--                            v-model="searchInput"-->
-        <!--                            @keyup.enter="searchCommunity" type="text" name="" title="keywords"-->
-        <!--                            placeholder="검색어를 입력하세요."/>-->
-        <!--                    </div>-->
-        <!--                </div> -->
       </dt>
       <dd>
         <div class="sort-default">
           <a @click="sortGroups(0)" :class="filter === 0 ? 'active' : ''"><i class="uis uis-check"></i>
-            {{ t('filter.recent') }}
+            {{  t('filter.recent')  }}
           </a>
           <span>·</span>
           <a @click="sortGroups(1)" :class="filter === 1 ? 'active' : ''"><i class="uis uis-check"></i>
-            {{ t('filter.subscribe') }}
+            {{  t('filter.subscribe')  }}
           </a>
           <span>·</span>
           <a @click="sortGroups(2)" :class="filter === 2 ? 'active' : ''"><i class="uis uis-check"></i>
-            {{ t('filter.alphabet') }}
+            {{  t('filter.alphabet')  }}
           </a>
         </div>
       </dd>
     </dl>
-    <!-- 검색/구분 끝 -->
     <div class="result-container">
-
-      <!-- <transition-group name="list-complete" > -->
-
-
       <div class="card-timeline">
         <TransitionGroup name="fade">
           <CommunityCardSk v-show="isPending" v-for="com in 4" :key="com" />
@@ -66,68 +48,49 @@
           </CommunityCard>
         </TransitionGroup>
       </div>
-
-
-
-
-
-      <!--                <h1>검색 결과가 없습니다.</h1>-->
-      <!--                <img src="../../assets/images/not-found.png" width="100px" height="100px"/>-->
-      <!--            </div>-->
-      <!-- 
-                <template v-if="isFirstLoading">
-                    <li :key="Date.now()" style="list-style-type: none; opacity: 0.5;">
-                        <div>
-                        </div>
-                    </li>
-                </template>
-                <template v-else>
-                    <community-card @reFetch="reFetch" v-for="community in communityList" :key="community.id"
-                        :community="community">
-                        <template v-slot:subBtn>
-                            <SubscribeBtn @reFetch="reFetch" class="sub-btn" :community="community"
-                                @unsubscribe="unsubscribe" />
-                        </template>
-                    </community-card>
-                </template>-->
     </div>
 
-    <!-- <modal :clickToClose="false" class="modal-area-type" name="deleteConfirm" width="90%" height="auto"
-            :maxWidth="380" :scrollable="true" :adaptive="true">
-            <div class="modal-alert">
-                <dl class="ma-header">
-                    <dt>{{ i18n.t('information') }}</dt>
-                    <dd>
-                        <button><i class="uil uil-times"></i></button>
-                    </dd>
-                </dl>
-                <div class="ma-content">
-                    <h2>{{ i18n.t('leave.community.text1') }} <br />※ {{ i18n.t('leave.community.text2') }}</h2>
-                    <div>
-                        <button class="btn-default w48p">{{ i18n.t('yes') }}</button>
-                        <button class="btn-gray w48p">{{ i18n.t('no') }}</button>
-                    </div>
-                </div>
-            </div>
-        </modal> -->
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts" >
 import _ from 'lodash'
 import { ICommunityPayload } from '~~/types';
 import { useI18n } from 'vue-i18n';
 
 const { t, locale } = useI18n()
-// import * as Api from '~/api'
-// import firebase from '~/scripts/firebase'
-// import { useUserStore } from '~/store/user'
+const route = useRoute();
 
 const config = useRuntimeConfig()
 
 const accessToken = useCookie(config.COOKIE_NAME).value
 
-// const { i18n, toast } = useContext()
+
+useHead({
+  title: `${t('communityList')} | Zempie`,
+  meta: [
+    {
+      name: 'description',
+      content: `${t('communityList.desc')}`
+    },
+    {
+      name: 'og:title',
+      content: `${t('communityList')}`
+    },
+    {
+      name: 'og:description',
+      content: `${t('communityList.desc')}`
+    },
+    {
+      name: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.path}`
+    },
+    {
+      name: 'og:image',
+      content: 'image/sns-thumbnail.png'
+    },
+  ]
+})
 
 // metaSetting !: MetaSetting;
 // clickManager: ClickManager = new ClickManager();
@@ -166,14 +129,12 @@ const obj: ICommunityPayload = {
 
 await fetch()
 
+
 async function fetch() {
-
-
 
   const { data, pending } = await useFetch<any>(() => `/community/list?limit=${obj.limit}&offset=${obj.offset}&sort=${obj.sort}`, { method: 'get', initialCache: false, baseURL: config.COMMUNITY_API, headers: accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {} })
 
   if (data.value) {
-    console.log(data.value)
     communities.value = data.value
   }
   isPending.value = pending.value
@@ -207,12 +168,6 @@ async function fetch() {
   //     })
 }
 
-// scrollCheck() {
-//     if (scrollDone(document.documentElement)) {
-//         this.offset += this.limit;
-//         this.fetch();
-//     }
-// }
 
 // createMetaSetting() {
 //     this.metaSetting = new MetaSetting({

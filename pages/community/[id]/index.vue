@@ -25,11 +25,11 @@
             <div class="ta-about">
               <h2>About us</h2>
               <div>
-                {{ communityInfo?.description }}
+                {{  communityInfo?.description  }}
               </div>
               <dl>
                 <dt>Created</dt>
-                <dd> {{ createdDate }}</dd>
+                <dd> {{  createdDate  }}</dd>
               </dl>
             </div>
             <div class="ta-groups">
@@ -43,16 +43,16 @@
       <el-dialog v-model="needSubscribe" append-to-body custom-class="modal-area-type" width="380px">
         <div class="modal-alert">
           <dl class="ma-header">
-            <dt>{{ t('information') }}</dt>
+            <dt>{{  t('information')  }}</dt>
             <dd>
               <button @click="needSubscribe = false"><i class="uil uil-times"></i></button>
             </dd>
           </dl>
           <div class="ma-content">
-            <h2>{{ t('community.subscribe.text1') }} <br />{{ t('community.subscribe.text2') }} </h2>
+            <h2>{{  t('community.subscribe.text1')  }} <br />{{  t('community.subscribe.text2')  }} </h2>
             <div>
-              <button class="btn-default w48p" @click="subscribe">{{ t('yes') }}</button>
-              <button class="btn-gray w48p" @click="needSubscribe = false">{{ t('no') }}</button>
+              <button class="btn-default w48p" @click="subscribe">{{  t('yes')  }}</button>
+              <button class="btn-gray w48p" @click="needSubscribe = false">{{  t('no')  }}</button>
             </div>
           </div>
         </div>
@@ -91,11 +91,42 @@ const channelInfo = ref()
 const limit = ref(MAX_LIST_SIZE)
 const offset = ref(0)
 
+watch(
+  () => communityInfo.value,
+  (info) => {
+    useHead({
+      title: `${info.name} | Zempie community`,
+      meta: [
+        {
+          name: 'description',
+          content: `${info.description}`
+        },
+        {
+          name: 'og:title',
+          content: `${info.name}`
+        },
+        {
+          name: 'og:description',
+          content: `${info.description}`
+        },
+        {
+          name: 'og:url',
+          content: `${config.ZEMPIE_URL}${route.path}`
+        },
+      ]
+    })
+  }
+)
+
 onMounted(async () => {
   await fetch()
+  console.log(communityInfo.value)
+
+
 })
 
 async function fetch() {
+
   const query = {
     limit: limit.value,
     offset: offset.value

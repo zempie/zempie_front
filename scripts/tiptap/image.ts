@@ -20,9 +20,6 @@ declare module '@tiptap/core' {
 
 export const inputRegex: InputRuleFinder = /!\[(.+|:?)]\((\S+)(?:(?:\s+)["'](\S+)["'])?\)/
 
-let blobUrl = null
-
-
 
 export default Node.create<ImageOptions>({
     name: 'image',
@@ -33,7 +30,6 @@ export default Node.create<ImageOptions>({
     },
 
     inline() {
-
         return this.options.inline
     },
 
@@ -69,15 +65,9 @@ export default Node.create<ImageOptions>({
     },
 
     renderHTML({ HTMLAttributes }) {
-        if (usePost().post.value.type.toUpperCase() == 'BLOG') {
-            return ['img', mergeAttributes({ 'class': 'attr-img' }, this.options.HTMLAttributes, HTMLAttributes)]
-        }
-
-
-
+        return ['img', mergeAttributes({ 'class': 'attr-img' }, this.options.HTMLAttributes, HTMLAttributes)]
     },
     addCommands() {
-
         return {
             setImage: options => ({ commands }) => {
                 return commands.insertContent({
@@ -102,7 +92,6 @@ export default Node.create<ImageOptions>({
 
             }),
         ]
-    },
+    }
 
-}
-)
+})

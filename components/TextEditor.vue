@@ -10,16 +10,14 @@
       </li>
     </ul>
     <div>
-      <!-- <PostBySns v-if="activeTab === 'SNS'" /> -->
-      <!-- <PostEdit v-if="isEdit" @editorContent="getEditorContent" :postType='activeTab' :feed="feed" /> -->
       <Tiptap @editorContent="getEditorContent" :postType='activeTab' :feed="feed" :key="activeTab" />
 
       <template v-if="activeTab === 'SNS'">
-        <div v-if="attachFiles.img?.length" class="mp-image" style="padding-bottom: 0px">
+        <div v-if="snsAttachFiles.img?.length" class="mp-image" style="padding-bottom: 0px">
           <dd style="width: 100%;">
             <swiper :modules="[Pagination]" class="swiper-area" :slides-per-view="3" :space-between="10"
               :pagination="{ clickable: true }">
-              <swiper-slide v-for="(img, idx) in attachFiles.img" :key="idx"
+              <swiper-slide v-for="(img, idx) in snsAttachFiles.img" :key="idx"
                 :style="`padding-bottom: 43px; background: url(${img.url}) center center / cover no-repeat; background-size:cover;`">
                 <span @click="deleteImg(idx)"><i class="uil uil-times-circle"></i></span>
               </swiper-slide>
@@ -28,27 +26,26 @@
           </dd>
         </div>
 
-        <div v-if="attachFiles.video?.url" class="mp-midi">
+        <div v-if="snsAttachFiles.video?.url" class="mp-midi">
           <span @click="deleteVideo" class="delete-video-btn"><i class="uis uis-times-circle"></i></span>
-          <video style="width:100%;" :src="attachFiles.video?.url" title="YouTube video player" frameborder="0"
+          <video style="width:100%;" :src="snsAttachFiles.video?.url" title="YouTube video player" frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen></video>
         </div>
 
-        <div v-if="attachFiles.audio?.length" class="mp-midi">
-          <ul v-for="(audio, idx) in attachFiles.audio" class="audio-wrapper">
+        <div v-if="snsAttachFiles.audio?.length" class="mp-midi">
+          <ul v-for="(audio, idx) in snsAttachFiles.audio" class="audio-wrapper">
             <div class="btn-container">
-
               <audio controls :src="audio.url"></audio>
               <span class="delete-audio-btn" @click="deleteAudio(idx)"><i class="uis uis-times-circle"></i></span>
             </div>
-            <p> {{ audio.name || audio.file.name }}</p>
+            <p> {{  audio.name || audio.file.name  }}</p>
           </ul>
         </div>
       </template>
       <ClientOnly>
         <div class="mp-category"
-          :style="attachFiles.img?.length ? 'border-top: #e9e9e9 1px solid; margin-top:10px; padding-top:10px;' : ''">
+          :style="snsAttachFiles.img?.length ? 'border-top: #e9e9e9 1px solid; margin-top:10px; padding-top:10px;' : ''">
           <el-popover name="category" trigger="click" v-model:visible="isCommunityListVisible">
             <template #reference>
               <button class="btn-line-small" style="width:30%;" @click="communityFetch"><i class="uil uil-plus"></i>
@@ -60,30 +57,30 @@
             <div v-if="communityList.length" class="mpc-more-dropdown">
               <button class="category-group group-btn" @click="openChannel(com)"
                 :class="isCommunityListOpen ? 'on' : 'off'" v-for="com in communityList">
-                <p style="margin: 0 auto;"> {{ com.name }}</p>
+                <p style="margin: 0 auto;"> {{  com.name  }}</p>
               </button>
               <div :class="['channel-btn', isChannelListOpen ? 'on' : 'off']">
                 <div class="back-group-btn" @click="backToCommunityList">
                   <button class="category-group">
                     <i class="uil uil-arrow-circle-left"></i>
-                    {{ selectedGroup?.name }}
+                    {{  selectedGroup?.name  }}
                   </button>
                 </div>
                 <button class="category-group" v-for="channel in channels" @click="selectChannel(channel)">
-                  {{ channel.title }}
+                  {{  channel.title  }}
                 </button>
               </div>
             </div>
             <div v-else>
-              {{ t('noJoined.community') }}
+              {{  t('noJoined.community')  }}
             </div>
           </el-popover>
           <swiper v-if="postingChannels.length" class="swiper-area" style="margin-left: 10px;" :space-between="10">
             <swiper-slide class="community-slide" v-for="(postedAt, index) in postingChannels" :key="index">
               <div class="category-select-finish">
                 <div>
-                  <span>{{ postedAt.group.name }}</span> /
-                  <em>{{ postedAt.channel.title }}</em>
+                  <span>{{  postedAt.group.name  }}</span> /
+                  <em>{{  postedAt.channel.title  }}</em>
                 </div>
                 <div class="cross-btn" @click="deletePostingChannel(index)"><i class="uil uil-times"></i></div>
               </div>
@@ -125,14 +122,14 @@
 </template>
 
 <script setup lang="ts">
-import _ from 'lodash'
+import _, { result } from 'lodash'
 import { PropType } from 'vue';
 import { IFeed } from '~~/types';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 
 import { Editor } from "@tiptap/vue-3";
-import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElLoading, ElPopover, ElMessage, ElDialog } from "element-plus";
+import { ElDropdown, ElMessageBox, ElDropdownItem, ElLoading, ElPopover, ElMessage, ElDialog } from "element-plus";
 
 import { useI18n } from 'vue-i18n';
 import { htmlToDomElem, blobToFile } from '~~/scripts/utils'
@@ -164,11 +161,10 @@ const attachFileArr = computed(() => {
   }
 })
 
-
-const attachFiles = ref({
-  img: attachFileArr.value[0]?.type === 'image' ? attachFileArr.value : [],
-  video: attachFileArr.value[0]?.type === 'video' ? attachFileArr.value[0] : null,
-  audio: attachFileArr.value[0]?.type === 'sound' ? attachFileArr.value : []
+const snsAttachFiles = ref({
+  img: null,
+  video: null,
+  audio: null
 })
 
 
@@ -181,7 +177,6 @@ const audio = ref<HTMLElement>()
 const editor = ref<Editor>()
 
 
-
 const communityList = ref([])
 const isCommunityListOpen = ref(true)
 const isChannelListOpen = ref(false)
@@ -189,6 +184,11 @@ const selectedGroup = ref()
 const channels = ref()
 const postingChannels = ref([])
 const isCommunityListVisible = ref(false)
+
+
+const imgArr = ref([])
+const videoArr = ref([])
+const audioArr = ref([])
 
 
 
@@ -200,6 +200,15 @@ const form = reactive({
 })
 
 onMounted(() => {
+  if (activeTab.value === 'SNS') {
+
+    snsAttachFiles.value = {
+      img: attachFileArr.value[0]?.type === 'image' ? attachFileArr.value : [],
+      video: attachFileArr.value[0]?.type === 'video' ? attachFileArr.value[0] : null,
+      audio: attachFileArr.value[0]?.type === 'sound' ? attachFileArr.value : []
+    }
+  }
+
   if (props.type === 'community') {
     if (props.channelInfo) {
       postingChannels.value = [{
@@ -217,15 +226,41 @@ onMounted(() => {
 })
 
 function postingType(type: string) {
-  activeTab.value = type
-  usePost().setType(type)
+  // console.log(snsAttachFiles.value.img.length || snsAttachFiles.value.audio.length || snsAttachFiles.value.video)
+  // console.log(attachFileArr.value.length)
+  console.log(form.post_contents)
+  if (snsAttachFiles.value.img.length || snsAttachFiles.value.audio.length || snsAttachFiles.value.video ||
+    form.post_contents.length > 7
 
+  ) {
+
+    ElMessageBox.confirm(
+      `${t('post.noSave.text1')}${t('post.noSave.text2')}`,
+      'Warning',
+      {
+        confirmButtonText: 'Cancel',
+        cancelButtonText: 'Yes',
+        type: 'warning',
+      }
+    )
+      .catch(() => {
+        snsAttachFiles.value.img = null
+        snsAttachFiles.value.audio = null
+        snsAttachFiles.value.video = null
+        form.post_contents = ''
+        activeTab.value = type
+        usePost().setType(type)
+
+      })
+
+  } else {
+    activeTab.value = type
+    usePost().setType(type)
+  }
 
 }
 
 async function onSubmit() {
-
-
 
   const payload = {
     post_contents: form.post_contents,
@@ -246,24 +281,30 @@ async function onSubmit() {
       })
     }
   }
+
   const loading = ElLoading.service({
     lock: true,
-    text: 'Loading',
+    text: 'uploading...',
     customClass: 'loading-spinner',
     background: 'rgba(0, 0, 0, 0.7)',
   })
 
   const dom = htmlToDomElem(form.post_contents)
 
-  const imgArr: any = dom.getElementsByClassName('attr-img')
+  imgArr.value = [...dom.getElementsByClassName('attr-img')]
+  videoArr.value = [...dom.getElementsByTagName('video')]
+  audioArr.value = [...dom.getElementsByTagName('audio')]
+
 
   if (activeTab.value.toLocaleUpperCase() === 'BLOG') {
-    for (const img of imgArr) {
+    const imgFiles = []
+    const videoFiles = []
+    const audioFiles = []
+    let payloadFiles = []
 
+    for (const img of imgArr.value) {
       if (img.src.substring(0, 4) === 'blob' || img.src.substring(0, 4) === 'data') {
         const formData = new FormData();
-
-
 
         await fetch(img.src)
           .then(async (result) => {
@@ -273,25 +314,76 @@ async function onSubmit() {
         const { data, error, pending } = await useFetch<{ result: [] }>('/community/att', getZempieFetchOptions('post', true, formData))
         if (data.value) {
           form.post_contents = form.post_contents.replace(img.src, data.value.result[0].url)
+          imgFiles.push(...data.value.result)
+
         }
       }
       payload.post_contents = form.post_contents
+      payloadFiles = [...payloadFiles, ...imgFiles];
+
     }
+
+
+    for (const video of videoArr.value) {
+      if (video.src.substring(0, 4) === 'blob' || video.src.substring(0, 4) === 'data') {
+        const formData = new FormData();
+
+        await fetch(video.src)
+          .then(async (result) => {
+            formData.append(video.title, await result.blob())
+          })
+
+        const { data, error, pending } = await useFetch<{ result: [] }>('/community/att', getZempieFetchOptions('post', true, formData))
+        if (data.value) {
+          form.post_contents = form.post_contents.replace(video.src, data.value.result[0].url)
+          videoFiles.push(...data.value.result)
+
+
+        }
+      }
+      payload.post_contents = form.post_contents
+      payloadFiles = [...payloadFiles, ...videoFiles];
+
+
+    }
+
+    for (const audio of audioArr.value) {
+      if (audio.src.substring(0, 4) === 'blob' || audio.src.substring(0, 4) === 'data') {
+        const formData = new FormData();
+
+        await fetch(audio.src)
+          .then(async (result) => {
+            formData.append(audio.title, await result.blob())
+          })
+
+        const { data, error, pending } = await useFetch<{ result: [] }>('/community/att', getZempieFetchOptions('post', true, formData))
+        if (data.value) {
+          form.post_contents = form.post_contents.replace(audio.src, data.value.result[0].url)
+          audioFiles.push(...data.value.result)
+
+        }
+      }
+      payload.post_contents = form.post_contents
+      payloadFiles = [...payloadFiles, ...audioFiles];
+    }
+
+    payload['attatchment_files'] = payloadFiles
+
   } else {
 
 
-    if (attachFiles.value.img.length || attachFiles.value.audio.length || attachFiles.value.video) {
+    if (snsAttachFiles.value.img.length || snsAttachFiles.value.audio.length || snsAttachFiles.value.video) {
       const formData = new FormData();
 
-      for (const img of attachFiles.value.img) {
+      for (const img of snsAttachFiles.value.img) {
         formData.append(img.name, img.file)
       }
 
-      for (const audio of attachFiles.value.audio) {
+      for (const audio of snsAttachFiles.value.audio) {
         formData.append(audio.name, audio.file)
       }
-      if (attachFiles.value.video) {
-        formData.append(attachFiles.value.video.name, attachFiles.value.video.file)
+      if (snsAttachFiles.value.video) {
+        formData.append(snsAttachFiles.value.video.name, snsAttachFiles.value.video.file)
       }
 
       const { data, error, pending } = await useFetch<{ result: [] }>('/community/att', getZempieFetchOptions('post', true, formData))
@@ -299,16 +391,8 @@ async function onSubmit() {
       payload['attatchment_files'] = data.value.result;
     }
   }
-  // const imgContent = contentJson.content.filter((tag) => {
-  //     if (tag.content?.length > 0) {
-  //       return tag.content.filter(elem => elem.type === 'image')
-  //     }
-  //   }
-  // )
   switch (props.type) {
     case 'community':
-
-
       break;
     case 'game':
       payload['game_id'] = useGame().game.value.info.id
@@ -344,7 +428,7 @@ function uploadImageFile() {
 
 function onSelectImageFile(event: any) {
   if (activeTab.value.toUpperCase() === 'SNS') {
-    if (attachFiles.value.video || attachFiles.value.audio.length) {
+    if (snsAttachFiles.value.video || snsAttachFiles.value.audio.length) {
       ElMessage({
         message: t('post.fileType.err.text1'),
         type: 'warning'
@@ -365,17 +449,16 @@ function onSelectImageFile(event: any) {
       const blob = await result.blob()
       const blobUrl = URL.createObjectURL(blob)
 
-      attachFiles.value.img.push({
-        file: file,
-        name: file.name,
-        url: url,
-      })
+
 
       if (activeTab.value.toUpperCase() === 'BLOG') {
-        editor.value.chain().focus(null).setImage({ src: blobUrl, alt: file.name, title: file.name }).run();
-        editor.value.commands.setHardBreak();
-        editor.value.commands.setHardBreak();
-
+        editor.value.chain().focus(null).setImage({ src: blobUrl, alt: file.name, title: file.name }).setHardBreak().setHardBreak().run();
+      } else {
+        snsAttachFiles.value.img.push({
+          file: file,
+          name: file.name,
+          url: url,
+        })
       }
     };
 
@@ -386,7 +469,7 @@ function onSelectImageFile(event: any) {
 }
 
 function deleteImg(idx: number) {
-  attachFiles.value.img.splice(idx, 1)
+  snsAttachFiles.value.img.splice(idx, 1)
 }
 
 function uploaVideoFile() {
@@ -395,7 +478,7 @@ function uploaVideoFile() {
 
 function onSelectVideoFile(event: any) {
   if (activeTab.value.toUpperCase() === 'SNS') {
-    if (attachFiles.value.img.length || attachFiles.value.audio.length) {
+    if (snsAttachFiles.value.img.length || snsAttachFiles.value.audio.length) {
       ElMessage({
         message: t('post.fileType.err.text1'),
         type: 'warning'
@@ -416,14 +499,17 @@ function onSelectVideoFile(event: any) {
       const blob = await result.blob()
       const blobUrl = URL.createObjectURL(blob)
 
-      attachFiles.value.video = {
-        file: file,
-        name: file.name,
-        url: url
-      }
+
 
       if (activeTab.value === 'BLOG') {
+
         editor.value.chain().focus(null).setVideo({ src: blobUrl }).run();
+      } else {
+        snsAttachFiles.value.video = {
+          file: file,
+          name: file.name,
+          url: url
+        }
       }
     };
 
@@ -437,13 +523,13 @@ function onSelectVideoFile(event: any) {
 
 
 function deleteVideo() {
-  attachFiles.value.video = null;
+  snsAttachFiles.value.video = null;
 }
 
 
 function uploadAudioFile() {
   if (activeTab.value.toUpperCase() === 'SNS') {
-    if (attachFiles.value.video || attachFiles.value.img.length) {
+    if (snsAttachFiles.value.video || snsAttachFiles.value.img.length) {
       ElMessage({
         message: t('post.fileType.err.text1'),
         type: 'warning'
@@ -455,8 +541,6 @@ function uploadAudioFile() {
 }
 
 function onSelectAudioFile(event: any) {
-
-
 
   const files = event.target.files;
 
@@ -470,14 +554,14 @@ function onSelectAudioFile(event: any) {
       const blob = await result.blob()
       const blobUrl = URL.createObjectURL(blob)
 
-      attachFiles.value.audio.push({
-        file: file,
-        name: file.name,
-        url: url
-      })
-
       if (activeTab.value === 'BLOG') {
-        editor.value.chain().focus(null).setAudio({ src: blobUrl }).run();
+        editor.value.chain().focus(null).setAudio({ src: blobUrl, title: file.name }).run();
+      } else {
+        snsAttachFiles.value.audio.push({
+          file: file,
+          name: file.name,
+          url: url
+        })
       }
     };
 
@@ -489,96 +573,16 @@ function onSelectAudioFile(event: any) {
 }
 
 function deleteAudio(idx: number) {
-  attachFiles.value.audio.splice(idx, 1)
+  snsAttachFiles.value.audio.splice(idx, 1)
 
 }
 
 async function onUpdatePost() {
-  let attatchment_files = []
+
+  let attatchment_files: any = props.feed.attatchment_files
   let newImgArr = [];
   let newSoundArr = [];
   let newVideo = null;
-  const formData = new FormData();
-
-
-  if (attachFileArr.value[0]?.type === 'image') {
-    attatchment_files = attachFiles.value.img
-  }
-  newImgArr = attachFiles.value.img.filter(img => {
-    return !img.size
-  })
-
-  if (attachFileArr.value[0]?.type === 'sound') {
-    attatchment_files = attachFiles.value.audio
-  }
-  newSoundArr = attachFiles.value.audio.filter(audio => {
-    return !audio.size
-  })
-
-  if (attachFileArr.value[0]?.type === 'video') {
-
-    attatchment_files = attachFiles.value.video !== null ? attachFiles.value.video : []
-  }
-
-  newVideo = attachFiles.value.video;
-
-
-  if (newImgArr.length) {
-    for (const img of newImgArr) {
-      formData.append(img.name, img.file)
-    }
-    const { data, error, pending } = await useFetch<{ result: { priority: number, url: string, type: string, name: string, size: number }[] }>('/community/att', getZempieFetchOptions('post', true, formData))
-
-    if (data.value) {
-      const { result } = data.value
-      for (const data of result) {
-        attatchment_files.push({
-          priority: data.priority,
-          url: data.url,
-          type: data.type,
-          name: data.name,
-          size: data.size
-        })
-      }
-
-    }
-  } else if (newSoundArr.length) {
-    for (const sound of newSoundArr) {
-      formData.append(sound.name, sound.file)
-    }
-    const { data, error, pending } = await useFetch<{ result: { priority: number, url: string, type: string, name: string, size: number }[] }>('/community/att', getZempieFetchOptions('post', true, formData))
-
-    if (data.value) {
-      const { result } = data.value
-      for (const data of result) {
-        attatchment_files.push({
-          priority: data.priority,
-          url: data.url,
-          type: data.type,
-          name: data.name,
-          size: data.size
-        })
-      }
-    }
-  } else if (newVideo) {
-    formData.append(newVideo.name, newVideo.file)
-    const { data, error, pending } = await useFetch<{ result: { priority: number, url: string, type: string, name: string, size: number }[] }>('/community/att', getZempieFetchOptions('post', true, formData))
-
-    if (data.value) {
-      const { result } = data.value
-      for (const data of result) {
-        attatchment_files = [{
-          priority: data.priority,
-          url: data.url,
-          type: data.type,
-          name: data.name,
-          size: data.size
-        }]
-      }
-    }
-
-  }
-
 
   const payload = {
     post_id: props.feed.id,
@@ -593,6 +597,174 @@ async function onUpdatePost() {
     // portfolio_ids: [""],
     // scheduled_for: null
   }
+
+  const formData = new FormData();
+
+  const loading = ElLoading.service({
+    lock: true,
+    text: 'updating...',
+    customClass: 'loading-spinner',
+    background: 'rgba(0, 0, 0, 0.7)',
+  })
+
+  const dom = htmlToDomElem(form.post_contents)
+
+  imgArr.value = [...dom.getElementsByClassName('attr-img')]
+  videoArr.value = [...dom.getElementsByTagName('video')]
+  audioArr.value = [...dom.getElementsByTagName('audio')]
+
+  if (activeTab.value.toLocaleUpperCase() === 'BLOG') {
+    const imgFiles = []
+    const videoFiles = []
+    const audioFiles = []
+
+
+    for (const img of imgArr.value) {
+
+      if (img.src.substring(0, 4) === 'blob' || img.src.substring(0, 4) === 'data') {
+        const formData = new FormData();
+
+        await fetch(img.src)
+          .then(async (result) => {
+            formData.append(img.title, await result.blob())
+          })
+
+        const { data, error, pending } = await useFetch<{ result: [] }>('/community/att', getZempieFetchOptions('post', true, formData))
+        if (data.value) {
+          form.post_contents = form.post_contents.replace(img.src, data.value.result[0].url)
+          imgFiles.push(...data.value.result)
+
+        }
+      }
+      payload.post_contents = form.post_contents
+      attatchment_files = [...payload.attatchment_files, ...imgFiles]
+
+    }
+
+
+    for (const video of videoArr.value) {
+      if (video.src.substring(0, 4) === 'blob' || video.src.substring(0, 4) === 'data') {
+        const formData = new FormData();
+
+        await fetch(video.src)
+          .then(async (result) => {
+            formData.append(video.title, await result.blob())
+          })
+
+        const { data, error, pending } = await useFetch<{ result: [] }>('/community/att', getZempieFetchOptions('post', true, formData))
+        if (data.value) {
+          form.post_contents = form.post_contents.replace(video.src, data.value.result[0].url)
+          videoFiles.push(...data.value.result)
+
+        }
+      }
+      payload.post_contents = form.post_contents
+      payload['attatchment_files'] = videoFiles;
+
+    }
+
+    for (const audio of audioArr.value) {
+      if (audio.src.substring(0, 4) === 'blob' || audio.src.substring(0, 4) === 'data') {
+        const formData = new FormData();
+
+        await fetch(audio.src)
+          .then(async (result) => {
+            formData.append(audio.title, await result.blob())
+          })
+
+        const { data, error, pending } = await useFetch<{ result: [] }>('/community/att', getZempieFetchOptions('post', true, formData))
+        if (data.value) {
+          form.post_contents = form.post_contents.replace(audio.src, data.value.result[0].url)
+          audioFiles.push(...data.value.result)
+
+        }
+      }
+      payload.post_contents = form.post_contents
+      payload['attatchment_files'] = audioFiles;
+
+    }
+  } else {
+    if (attachFileArr.value[0]?.type === 'image') {
+      attatchment_files = snsAttachFiles.value.img
+    }
+    newImgArr = snsAttachFiles.value.img?.filter(img => {
+      return !img.size
+    })
+
+    if (attachFileArr.value[0]?.type === 'sound') {
+      attatchment_files = snsAttachFiles.value.audio
+    }
+    newSoundArr = snsAttachFiles.value.audio?.filter(audio => {
+      return !audio.size
+    })
+
+    if (attachFileArr.value[0]?.type === 'video') {
+
+      attatchment_files = snsAttachFiles.value.video !== null ? snsAttachFiles.value.video : []
+    }
+
+    newVideo = snsAttachFiles.value.video;
+
+
+    if (newImgArr.length) {
+      for (const img of newImgArr) {
+        formData.append(img.name, img.file)
+      }
+      const { data, error, pending } = await useFetch<{ result: { priority: number, url: string, type: string, name: string, size: number }[] }>('/community/att', getZempieFetchOptions('post', true, formData))
+
+      if (data.value) {
+        const { result } = data.value
+        for (const data of result) {
+          attatchment_files.push({
+            priority: data.priority,
+            url: data.url,
+            type: data.type,
+            name: data.name,
+            size: data.size
+          })
+        }
+
+      }
+    } else if (newSoundArr.length) {
+      for (const sound of newSoundArr) {
+        formData.append(sound.name, sound.file)
+      }
+      const { data, error, pending } = await useFetch<{ result: { priority: number, url: string, type: string, name: string, size: number }[] }>('/community/att', getZempieFetchOptions('post', true, formData))
+
+      if (data.value) {
+        const { result } = data.value
+        for (const data of result) {
+          attatchment_files.push({
+            priority: data.priority,
+            url: data.url,
+            type: data.type,
+            name: data.name,
+            size: data.size
+          })
+        }
+      }
+    } else if (newVideo) {
+      formData.append(newVideo.name, newVideo.file)
+      const { data, error, pending } = await useFetch<{ result: { priority: number, url: string, type: string, name: string, size: number }[] }>('/community/att', getZempieFetchOptions('post', true, formData))
+
+      if (data.value) {
+        const { result } = data.value
+        for (const data of result) {
+          attatchment_files = [{
+            priority: data.priority,
+            url: data.url,
+            type: data.type,
+            name: data.name,
+            size: data.size
+          }]
+        }
+      }
+
+    }
+
+  }
+
+  payload.attatchment_files = attatchment_files
   const { data, error, pending } = await useFetch(`/post/${props.feed.id}`, getComFetchOptions('put', true, payload))
 
   if (!error.value) {
@@ -606,14 +778,15 @@ async function onUpdatePost() {
   } else {
     ElMessage.error(t('posting.edit.fail'))
   }
-  // return await this.request('put', `${communityApi}post/${obj.post_id}`, obj, false);
 
+  loading.close()
 
 
 }
 
 function closeTextEditor() {
-  attachFiles.value.img = _.cloneDeep(initFiles)
+  snsAttachFiles.value.img = _.cloneDeep(initFiles)
+
   emit('closeModal')
 }
 
@@ -758,15 +931,20 @@ function deletePostingChannel(idx: number) {
   min-height: 200px;
   text-align: left;
   padding: 15px;
+  max-height: 80vh;
 
 
   .ProseMirror {
-
-    height: 100%;
+    min-height: 200px;
+    max-height: 75vh;
     overflow: auto;
 
     >*+* {
       margin-top: 0.75em;
+    }
+
+    &:focus-visible {
+      outline-color: transparent;
     }
 
     a {
@@ -805,7 +983,7 @@ function deletePostingChannel(idx: number) {
 
 
     img {
-      max-width: 100%;
+      max-width: 98%;
       height: auto;
 
 
@@ -825,31 +1003,36 @@ function deletePostingChannel(idx: number) {
     }
   }
 
-  .ProseMirror:focus-visible {
-    outline-color: transparent;
-  }
 
 
-  .iframe-wrapper {
+  .video-wrapper {
     position: relative;
     padding-bottom: math.div(100, 16) * 9%;
     overflow: hidden;
+    margin: 0 auto;
+    width: 95%;
+    height: 100%;
+
 
     &.ProseMirror-selectednode {
-      outline: 3px solid #F97316;
+      video {
+        outline: 3px solid #F97316;
+      }
+
     }
 
-    iframe {
+    video {
+      margin: 1%;
       position: absolute;
       top: 0;
       left: 0;
-      width: 100% !important;
-      height: 100% !important;
+      width: 98%;
+      height: 93%;
     }
   }
 
   .audio-wrapper {
-    margin: 20px 20px 0 20px;
+    margin: 20px;
     display: flex;
     align-items: center;
     border-radius: 5px;

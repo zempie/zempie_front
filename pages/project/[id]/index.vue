@@ -14,7 +14,7 @@ const router = useRouter();
 const config = useRuntimeConfig()
 
 useHead({
-  title: `${t('seo.project.title')} | Zempie`,
+  title: `${t('seo.project.title')} | Zempie Studio`,
   meta: [
     {
       name: 'description',

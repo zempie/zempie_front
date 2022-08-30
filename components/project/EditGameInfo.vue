@@ -3,18 +3,18 @@
     <ul class="studio-upload-step">
       <li :class="[editProject.step === 1 ? 'active' : '', 'step']">
         <p>STEP 01</p>
-        <h3> {{ $t('uploadGame.selectStage.text') }}</h3>
+        <h3> {{  $t('uploadGame.selectStage.text')  }}</h3>
       </li>
       <li :class="[editProject.step === 2 ? 'active' : '', 'step']">
         <p>STEP 02</p>
-        <h3>{{ $t('game.info') }}</h3>
+        <h3>{{  $t('game.info')  }}</h3>
       </li>
       <li :class="[editProject.step === 3 ? 'active' : '', 'step']">
         <p>STEP 03</p>
-        <h3>{{ $t('file.upload') }}</h3>
+        <h3>{{  $t('file.upload')  }}</h3>
       </li>
       <li class="publish-btn">
-        <h4 class="active" @click="updateProject">{{ $t('update') }}</h4>
+        <h4 class="active" @click="updateProject">{{  $t('update')  }}</h4>
       </li>
 
     </ul>
@@ -23,48 +23,48 @@
     <div class="studio-upload-input">
 
       <div class="sui-input">
-        <div class="suii-title">{{ $t('addGameInfo.title') }}</div>
+        <div class="suii-title">{{  $t('addGameInfo.title')  }}</div>
         <dl class="suii-content">
-          <dt>{{ $t('addGameInfo.game.title') }}
+          <dt>{{  $t('addGameInfo.game.title')  }}
             <span style="color: red;">*</span>
           </dt>
           <dd>
             <input v-model="v$.name.$model" type="text" name="" title="" :placeholder="$t('addGameInfo.game.title')"
               class="w100p" />
             <p class="input-errors" v-for="error of v$.name.$errors" :key="error.$uid">
-              <i class="uil uil-check"></i>{{ error.$message }}
+              <i class="uil uil-check"></i>{{  error.$message  }}
             </p>
           </dd>
         </dl>
         <dl class="suii-content">
           <dt>
-            {{ $t("addGameInfo.game.desc") }}<span style="color: red">*</span>
+            {{  $t("addGameInfo.game.desc")  }}<span style="color: red">*</span>
           </dt>
           <dd>
             <textarea v-model="v$.description.$model" name="" title="" :placeholder="$t('addGameInfo.game.desc')"
               class="w100p h100"></textarea>
             <p class="input-errors" v-for="error of v$.description.$errors" :key="error.$uid">
-              <i class="uil uil-check"></i>{{ error.$message }}
+              <i class="uil uil-check"></i>{{  error.$message  }}
             </p>
           </dd>
         </dl>
         <dl class="suii-content">
-          <dt>{{ $t('addGameInfo.game.tags') }}<span style="color: red;">*</span></dt>
+          <dt>{{  $t('addGameInfo.game.tags')  }}<span style="color: red;">*</span></dt>
           <dd>
             <div class="chip-container">
               <div class="chip" v-for="(chip, i) of hashtagsArr" :key="chip.id">
-                {{ chip }}
+                {{  chip  }}
                 <i class="uil uil-times" @click="deleteChip(i)"></i>
               </div>
               <input v-model="chipInput" @blur="saveChip" @keyup.enter="saveChip" @keydown.delete="backspaceDelete">
             </div>
             <TransitionGroup name="fade">
               <p class="input-errors" v-for="error of v$.hashtags.$errors" :key="error.$uid">
-                <i class="uil uil-check"></i>{{ error.$message }}
+                <i class="uil uil-check"></i>{{  error.$message  }}
               </p>
             </TransitionGroup>
             <h2>
-              {{ $t('addGameInfo.game.tags.info') }}
+              {{  $t('addGameInfo.game.tags.info')  }}
             </h2>
           </dd>
         </dl>
@@ -72,7 +72,7 @@
 
         <dl class="suii-content">
           <dt>
-            {{ $t('addGameInfo.game.thumbnail') }}
+            {{  $t('addGameInfo.game.thumbnail')  }}
             <span style="color: red;">*</span>
           </dt>
           <dd>
@@ -86,20 +86,20 @@
                   </div>
                   <p><i class="uil uil-image-v"></i></p>
                   <h2>
-                    {{ $t('addGameInfo.game.thumbnail.size') }} 512* 512<br />
+                    {{  $t('addGameInfo.game.thumbnail.size')  }} 512* 512<br />
                     (up to 4MB)
                   </h2>
                 </div>
 
                 <transition name="component-fade" mode="out-in">
                   <p class="valid-err" :key="isThumbErr" :class="isThumbErr ? 'active' : ''">
-                    {{ $t('addGameInfo.game.thumbnail.err') }}
+                    {{  $t('addGameInfo.game.thumbnail.err')  }}
                   </p>
                 </transition>
                 <p>
 
                   <button class="btn-gray" @click="uploadFile"><i class="uil uil-upload"></i>&nbsp;
-                    {{ $t('addGameInfo.game.thumbnail') }}
+                    {{  $t('addGameInfo.game.thumbnail')  }}
                   </button>
 
                 </p>
@@ -116,7 +116,7 @@
 
                 <p style="width:130%; text-align: left;">
                   <button class="btn-gray" @click="uploadFile"><i class="uil uil-upload"></i>&nbsp;
-                    {{ $t('addGameInfo.game.thumbnail') }}
+                    {{  $t('addGameInfo.game.thumbnail')  }}
                   </button>
                   &nbsp; &nbsp;
                   <button class="btn-circle-icon" @click="deleteThumbnail"><i class="uil uil-trash-alt"></i>
@@ -127,7 +127,7 @@
           </dd>
         </dl>
         <dl class="suii-content">
-          <dt> {{ $t('previewImage.title') }}</dt>
+          <dt> {{  $t('previewImage.title')  }}</dt>
           <dd>
             <ul class="image-upload">
               <li v-if="!prevGif">
@@ -137,13 +137,13 @@
                   </div>
                   <p><i class="uil uil-image-v"></i></p>
                   <h2>
-                    {{ $t('addGameInfo.game.thumbnail.size') }} 512* 512<br />
+                    {{  $t('addGameInfo.game.thumbnail.size')  }} 512* 512<br />
                     (up to 4MB)
                   </h2>
                 </div>
                 <p>
                   <button class="btn-gray" @click="uploadGif"><i class="uil uil-upload"></i>&nbsp;
-                    {{ $t('addGameInfo.game.thumbnail') }}
+                    {{  $t('addGameInfo.game.thumbnail')  }}
                   </button>
                 </p>
               </li>
@@ -157,7 +157,7 @@
                 </div>
                 <p style="width:130%; text-align: left;">
                   <button class="btn-gray" @click="uploadGif"><i class="uil uil-upload"></i>&nbsp;
-                    {{ $t('addGameInfo.game.thumbnail') }}
+                    {{  $t('addGameInfo.game.thumbnail')  }}
                   </button>&nbsp; &nbsp;
                   <button class="btn-circle-icon" @click="deleteThumbGif"><i class="uil uil-trash-alt"></i>
                   </button>
@@ -167,21 +167,10 @@
           </dd>
         </dl>
 
-
-
-        <!-- <dl class="suii-content">
-        <dt style="padding-top:5px;">{{ $t('게임 ID 자동 작성') }}</dt>
-        <dd>
-          <label class="switch-button">
-            <input type="checkbox" name="" v-model="isAuthGamePath" readonly />
-            <span class="onoff-switch"></span>
-          </label>
-        </dd>
-      </dl> -->
         <Transition name="component-fade" mode="out-in">
           <dl class="suii-content">
             <dt>
-              {{ $t('addGameInfo.game.id') }}
+              {{  $t('addGameInfo.game.id')  }}
             </dt>
             <dd>
               <input v-model="v$.pathname.$model" type="text" name="" class="game-id-input w100p" title=""
@@ -201,7 +190,7 @@
       <ul class="sui-btn">
         <li>
           <a @click="prevPage" class="btn-line w150"><i class="uil uil-angle-left-b"></i>
-            {{ $t('previous') }}
+            {{  $t('previous')  }}
           </a>
         </li>
         <li>
@@ -211,7 +200,7 @@
                     <i class="uil uil-angle-right-b"></i></a> -->
 
           <a @click="updateProject" class="btn-default w150">
-            {{ $t('update') }}
+            {{  $t('update')  }}
           </a>
         </li>
 
@@ -222,10 +211,10 @@
       <div class="sui-input" style="margin-top:100px;">
         <dl class="suii-content delete-area">
           <dt>
-            {{ $t('addGameInfo.delete.game') }}
+            {{  $t('addGameInfo.delete.game')  }}
           </dt>
           <dd class="game-delete-btn"><a @click="isDeleteModalOpen = true" class="btn-default w150">
-              {{ $t('addGameInfo.delete') }}
+              {{  $t('addGameInfo.delete')  }}
             </a>
           </dd>
         </dl>

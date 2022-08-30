@@ -154,7 +154,7 @@ const localePath = useLocalePath();
 const $router = useRouter();
 
 useHead({
-  title: `${t('seo.project.list.title')} | Zempie`,
+  title: `${t('seo.project.list.title')} | Zempie Studio`,
   meta: [
     {
       name: 'description',

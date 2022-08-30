@@ -38,6 +38,33 @@
 <script setup lang="ts" >
 import _ from 'lodash'
 
+import { useI18n } from 'vue-i18n';
+const { t, locale } = useI18n()
+const route = useRoute()
+const config = useRuntimeConfig()
+
+useHead({
+  title: `${t('seo.game.list.title')} | Zempie community`,
+  meta: [
+    {
+      name: 'description',
+      content: `${t('seo.game.list.desc')}`
+    },
+    {
+      name: 'og:title',
+      content: `${t('seo.game.list.title')}`
+    },
+    {
+      name: 'og:description',
+      content: `${t('seo.game.list.desc')}`
+    },
+    {
+      name: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.path}`
+    },
+  ]
+})
+
 const LIMIT_SIZE = 20
 const el = ref<HTMLElement>(null)
 const category = ref(0);

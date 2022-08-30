@@ -11,14 +11,14 @@
           </dt>
 
           <dd v-if="feed.user?.name">
-            <h2>{{ feed.user?.name }} uploaded a {{ feed.post_type }} post</h2>
-            <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{ dateFormat(feed.created_at) }}</p>
+            <h2>{{  feed.user?.name  }} uploaded a {{  feed.post_type  }} post</h2>
+            <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{  dateFormat(feed.created_at)  }}</p>
 
           </dd>
           <dd v-else>
 
-            <h2>{{ t('feed.noUser.post') }}</h2>
-            <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{ dateFormat(feed.created_at) }}</p>
+            <h2>{{  t('feed.noUser.post')  }}</h2>
+            <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{  dateFormat(feed.created_at)  }}</p>
 
           </dd>
         </dl>
@@ -29,13 +29,13 @@
           <template #dropdown>
             <div slot="body" class="more-list fixed" style="min-width:150px; ">
               <template v-if="user && (user.id === (feed.user && feed.user.id))">
-                <a @click="openEdit">{{ t('feed.edit') }}</a>
-                <a @click="showDeletePostModal = true; feedId = feed.id">{{ t('feed.delete') }}</a>
+                <a @click="openEdit">{{  t('feed.edit')  }}</a>
+                <a @click="showDeletePostModal = true; feedId = feed.id">{{  t('feed.delete')  }}</a>
 
               </template>
               <template v-else>
                 <NuxtLink :to="localePath(`/channel/${feed.user && feed.user.channel_id}`)">
-                  {{ t('visit.userChannel') }}
+                  {{  t('visit.userChannel')  }}
                 </NuxtLink>
                 <!-- <a v-if="user" @click="report">{{ t('post.report') }}</a>
               <a v-if="user" @click="userReportModalOpen">{{ t('post.report') }}유저 신고하기</a> -->
@@ -77,7 +77,7 @@
         <span>
           <hr class="dot-line" />
         </span><a @click="moreView">
-          {{ t('moreView') }} </a><span>
+          {{  t('moreView')  }} </a><span>
           <hr class="dot-line" />
         </span>
       </div>
@@ -85,7 +85,7 @@
       <div v-else class="more-container">
         <span>
           <hr class="dot-line" />
-        </span><a @click="closeView">{{ t('closeView') }} </a><span>
+        </span><a @click="closeView">{{  t('closeView')  }} </a><span>
           <hr class="dot-line" />
         </span>
       </div>
@@ -97,7 +97,7 @@
       </div>
       <div v-else-if="initFiles[0].type === 'sound'" v-for="file in initFiles" class="audio">
         <audio controls :src="file.url"></audio>
-        <p>{{ file.name }}</p>
+        <p>{{  file.name  }}</p>
       </div>
       <img v-else-if="initFiles?.length === 1" style="height: 88%;margin: 0 auto; display: flex;"
         :src="initFiles[0].url" class="feed-img mt-3" />
@@ -119,7 +119,7 @@
         <ul>
           <LikeBtn :feed="feed" />
           <li @click="openComments"><i class="uil uil-comment-alt-dots comment-icon" style="font-size:22px;"></i>
-            {{ feed.comment_cnt }}
+            {{  feed.comment_cnt  }}
           </li>
           <li><a @click="copyUrl"><i class="uil uil-share-alt" style="font-size:20px;"></i></a></li>
         </ul>
@@ -147,25 +147,24 @@
       <el-dialog v-model="showDeletePostModal" append-to-body custom-class="modal-area-type">
         <div class="modal-alert">
           <dl class="ma-header">
-            <dt> {{ t('information') }}</dt>
+            <dt> {{  t('information')  }}</dt>
             <dd>
               <button @click="showDeletePostModal = false"><i class="uil uil-times"></i></button>
             </dd>
           </dl>
           <div class="ma-content">
-            <h2>{{ t('post.delete.modal.text1') }} <br />{{ t('post.delete.modal.text2') }}
+            <h2>{{  t('post.delete.modal.text1')  }} <br />{{  t('post.delete.modal.text2')  }}
             </h2>
             <div>
-              <button class="btn-default w48p" @click="deletePost">{{ t('delete') }}</button>
-              <button class="btn-gray w48p " @click="showDeletePostModal = false">{{ t('no')
-              }}</button>
+              <button class="btn-default w48p" @click="deletePost">{{  t('delete')  }}</button>
+              <button class="btn-gray w48p " @click="showDeletePostModal = false">{{  t('no') 
+                }}</button>
             </div>
           </div>
         </div>
       </el-dialog>
       <el-dialog v-model="showEditModal" append-to-body custom-class="modal-area-type">
-        <TextEditor @closeModal="showEditModal = false" :isEdit="true" :feed="feed" @refresh="emit('refresh')" />
-        <!-- <TextEditor @closeModal="showEditModal = false" :type="type" @refresh="refresh" :key="editorKey" /> -->
+        <TextEditor @closeModal="closeEditor" :isEdit="true" :feed="feed" @refresh="emit('refresh')" :key="editorKey" />
       </el-dialog>
     </ClientOnly>
 
@@ -217,9 +216,7 @@ const isAddData = ref(false)
 
 
 const isCommentEdit = ref(false)
-const commentCnt = ref(0)
-
-
+const editorKey = ref(0)
 
 
 useInfiniteScroll(
@@ -301,6 +298,13 @@ async function openComments() {
   if (isOpenedComments.value && props.feed.comment_cnt > 0) {
     await commentFetch()
   }
+
+}
+
+
+async function closeEditor() {
+  showEditModal.value = false
+  editorKey.value = Date.now()
 
 }
 

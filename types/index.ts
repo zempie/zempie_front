@@ -136,6 +136,13 @@ export interface IUserChannel {
   games: IGame[]
 }
 
+export interface IFile {
+  size: number,
+  url: string,
+  priority: number,
+  type: string
+}
+
 export interface IFeed {
   liked: boolean,
   is_pinned: boolean,
@@ -147,7 +154,7 @@ export interface IFeed {
   user_id: number,
   post_type: string,
   funtion_type: string,
-  attatchment_files: JSON | string,
+  attatchment_files: any
   visibility: string,
   content: string,
   hashtags: [],
