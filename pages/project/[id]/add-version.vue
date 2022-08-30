@@ -81,7 +81,7 @@ const localePath = useLocalePath();
 const config = useRuntimeConfig()
 
 useHead({
-  title: `${t('seo.project.add.verison.title')} | Zempie`,
+  title: `${t('seo.project.add.verison.title')} | Zempie Studio`,
   meta: [
     {
       name: 'description',
