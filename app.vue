@@ -5,11 +5,46 @@
 </template>
 <script setup lang="ts">
 import { ID_INJECTION_KEY } from 'element-plus'
-import { useI18n } from 'vue-i18n';
 import { useSwitchLocalePath } from 'vue-i18n-routing';
 
-const { locale } = useI18n();
+import { useI18n } from 'vue-i18n';
+
+const { t, locale } = useI18n()
+const config = useRuntimeConfig()
 const switchLocalePath = useSwitchLocalePath();
+const route = useRoute()
+
+
+
+useHead({
+  title: `${t('seo.landing.title')} | Zempie`,
+  meta: [
+    {
+      name: 'description',
+      content: `${t('seo.landing.desc')}`
+    },
+    {
+      name: 'og:title',
+      content: `${t('seo.landing.title')}`
+    },
+    {
+      name: 'og:description',
+      content: `${t('seo.landing.description')}`
+    },
+    {
+      name: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.path}`
+    },
+    {
+      name: 'og:image',
+      content: '/images/sns-thumbnail.png'
+    },
+    {
+      name: 'og:type',
+      content: 'website'
+    },
+  ]
+})
 
 provide(ID_INJECTION_KEY, {
   prefix: 100,

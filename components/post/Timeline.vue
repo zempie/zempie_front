@@ -53,7 +53,7 @@
         </div>
 
       </ul>
-      <div ref="triggerDiv" style="margin-top:100px"></div>
+      <div ref="triggerDiv"></div>
       <!-- <div v-else-if="this.$store.getters.LoadingStatus || isFirstLoading"
                  style="opacity: 0.5;"
                  class="ta-post-none">
@@ -65,7 +65,6 @@
                 <p><span><i class="uil uil-layers-slash"></i></span></p>
                 <h2> {{ t('timeline.noPost') }}</h2>
             </div> -->
-
     </dd>
 
 
@@ -234,14 +233,14 @@ import _ from 'lodash'
 import { PropType } from 'vue';
 import { IComChannel, IFeed } from '~~/types';
 import { useI18n } from 'vue-i18n';
-
 import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElSelect, ElOption, ElMessage, ElDialog } from "element-plus";
 
 import { useLocalePath } from 'vue-i18n-routing';
 import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
 const { t, locale } = useI18n()
 
-const LIMIT_SIZE = 3
+
+const LIMIT_SIZE = 10
 
 const route = useRoute();
 const localePath = useLocalePath();
@@ -301,6 +300,7 @@ onMounted(async () => {
 
   if (channelId.value) {
     observer.value = new IntersectionObserver((entries) => {
+
       handleIntersection(entries[0])
     }, { root: null, threshold: 1 })
 
@@ -311,7 +311,6 @@ onMounted(async () => {
 })
 
 function handleIntersection(target) {
-  console.log(target)
   if (target.isIntersecting) {
     if (isAddData.value) {
       offset.value += limit.value;

@@ -13,7 +13,6 @@ import { IUserChannel } from "~~/types"
 import { useLocalePath } from 'vue-i18n-routing';
 
 
-
 const localePath = useLocalePath();
 const route = useRoute();
 

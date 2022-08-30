@@ -91,7 +91,11 @@ useHead({
     },
     {
       name: 'og:image',
-      content: '/image/sns-thumbnail.png',
+      content: '/images/sns-thumbnail.png',
+    },
+    {
+      name: 'og:type',
+      content: 'website',
     },
   ],
 })
@@ -166,6 +170,10 @@ const {
   margin: auto;
   justify-content: center;
   .thumbmail {
+    box-shadow: 0px 10px 50px rgb(0 0 0 / 10%);
+    padding: 20px;
+    border-radius: 10px;
+
     &.skeleton {
       background-color: #ededed;
     }
