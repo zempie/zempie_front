@@ -1,5 +1,4 @@
 import { defineNuxtConfig } from 'nuxt'
-import routerOption from './app/router.option'
 
 import { i18n } from './modules/i18n'
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
@@ -22,7 +21,6 @@ export default defineNuxtConfig({
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
     ],
-
   },
 
   router: {

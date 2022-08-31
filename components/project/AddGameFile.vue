@@ -1,13 +1,13 @@
 <template>
     <div>
         <div class="sui-input">
-            <div class="suii-title">{{ $t('addGameFile.title') }}</div>
+            <div class="suii-title">{{  $t('addGameFile.title')  }}</div>
             <dl class="suii-content">
-                <dt>{{ $t('gameUpload') }}</dt>
+                <dt>{{  $t('gameUpload')  }}</dt>
                 <dd>
                     <p class="upload-file-container">
                         <label for="game-file"><i class="uil uil-file-plus" style="font-size:18px;"></i> &nbsp;
-                            {{ $t('fileUpload') }}</label>
+                            {{  $t('fileUpload')  }}</label>
                         <input @change="onFileChange" type="file" ref="gameFile" id="game-file" accept=".zip">
 
                         <ClipLoader v-if="isLoadingFile" :color="'#ff6e17'" :size="'20px'"></ClipLoader>
@@ -17,42 +17,41 @@
                     </p>
                     <Transition name="component-fade" mode="out-in">
                         <div v-if="fileName">
-                            <p class="file-size">{{ $t('file.size') }} : {{
-                                    totalSize < 1 ? `${totalSize * 1000} KB` : `${totalSize} MB`
-                            }}</p>
-                                    <p class="file-name">{{ $t('file.name') }} : {{ fileName }}</p>
+                            <p class="file-size">{{  $t('file.size')  }} : {{
+                                 totalSize < 1 ? `${totalSize * 1000} KB` : `${totalSize} MB`  }}</p>
+                                    <p class="file-name">{{  $t('file.name')  }} : {{  fileName  }}</p>
                         </div>
                     </Transition>
                     <Transition name="component-fade" mode="out-in">
                         <h2 :class="isFileEmpty ? 'file-err on' : 'file-err off'">
-                            {{ $t('addGameFile.selectFile.text1') }}
+                            {{  $t('addGameFile.selectFile.text1')  }}
                         </h2>
                     </Transition>
                     <h2>
-                        {{ $t('addGameFile.selectFile.text2') }} <br /> {{ $t('addGameFile.selectFile.text3') }}
+                        {{  $t('addGameFile.selectFile.text2')  }} <br /> {{  $t('addGameFile.selectFile.text3')  }}
 
                     </h2>
                 </dd>
             </dl>
             <div class="suii-open" @click="isAdvancedOpen = !isAdvancedOpen">
-                <span>{{ $t('advanced.setting') }}</span> &nbsp;<i class="uil uil-sliders-v-alt"></i>
+                <span>{{  $t('advanced.setting')  }}</span> &nbsp;<i class="uil uil-sliders-v-alt"></i>
             </div>
             <Transition name="component-fade" mode="out-in">
                 <div v-if="isAdvancedOpen">
                     <dl class="suii-content">
-                        <dt>{{ $t('addGameFile.select.startFile.text1') }}</dt>
+                        <dt>{{  $t('addGameFile.select.startFile.text1')  }}</dt>
                         <dd>
                             <select name="" title="" class="w100p">
                                 <option value='' selected disabled v-if="startFileOptions.length === 0">
-                                    {{ $t('addGameFile.select.startFile.text2') }}
+                                    {{  $t('addGameFile.select.startFile.text2')  }}
                                 </option>
-                                <option v-for="file in startFileOptions" :value="file">{{ file }}</option>
+                                <option v-for="file in startFileOptions" :value="file">{{  file  }}</option>
                             </select>
                         </dd>
                     </dl>
 
                     <dl class="suii-content" v-if="(uploadProject.form.stage !== eGameStage.DEV)">
-                        <dt>{{ $t('addGameFile.selectMode') }}</dt>
+                        <dt>{{  $t('addGameFile.selectMode')  }}</dt>
                         <dd>
                             <ul>
                                 <li>
@@ -64,16 +63,16 @@
                                 <li>Auto-deployment mode</li>
                             </ul>
                             <h2>
-                                {{ $t('addGameFile.selectMode.text1') }}
+                                {{  $t('addGameFile.selectMode.text1')  }}
                                 <br />
-                                {{ $t('addGameFile.selectMode.text2') }}
+                                {{  $t('addGameFile.selectMode.text2')  }}
 
                             </h2>
                         </dd>
                     </dl>
 
                     <div class="suii-close">
-                        <button class="btn-line" @click="isAdvancedOpen = !isAdvancedOpen">{{ $t('close') }}
+                        <button class="btn-line" @click="isAdvancedOpen = !isAdvancedOpen">{{  $t('close')  }}
                             &nbsp;&nbsp;<i class="uil uil-angle-up"></i></button>
                     </div>
                 </div>
@@ -82,7 +81,7 @@
         <ul class="sui-btn">
 
             <li>
-                <a @click="prevPage" class="btn-line w150"><i class="uil uil-angle-left-b"></i> {{ $t('previous') }}
+                <a @click="prevPage" class="btn-line w150"><i class="uil uil-angle-left-b"></i> {{  $t('previous')  }}
                 </a>
             </li>
             <li>
@@ -93,7 +92,7 @@
                 </a> -->
                 <a @click="upload" class="btn-default w150">
                     <!-- <ClipLoader v-if="isLoadingUpload" :color="'#fff'" :size="'20px'" style="height: 20px"></ClipLoader> -->
-                    <span> {{ $t('upload') }}</span>
+                    <span> {{  $t('upload')  }}</span>
                 </a>
             </li>
         </ul>
@@ -438,7 +437,7 @@ function prevPage() {
 //Transition
 .component-fade-enter-active,
 .component-fade-leave-active {
-    Transition: opacity .3s ease;
+    transition: opacity .3s ease;
 }
 
 .component-fade-enter,

@@ -10,12 +10,14 @@
 <script setup lang="ts">
 import { getIdToken } from 'firebase/auth'
 import { useI18n } from 'vue-i18n';
+import { useLocalePath } from 'vue-i18n-routing';
 
 const { t, locale } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const config = useRuntimeConfig();
 const { $firebaseAuth } = useNuxtApp()
+const localePath = useLocalePath();
 
 
 const url = ref('');
@@ -24,6 +26,7 @@ const game = ref<HTMLIFrameElement>()
 const gameData = ref()
 const initLauncher = ref(false)
 const gamePath = computed(() => route.params.id)
+const userInfo = computed(() => useUser().user.value.info)
 
 
 definePageMeta({
@@ -71,6 +74,11 @@ onMounted(async () => {
     window.addEventListener("resize", onResize);
     onResize();
   }
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener("message", onMessage);
+  window.removeEventListener("resize", onResize);
 })
 
 function onResize() {
@@ -130,18 +138,17 @@ function onResize() {
 //     // this.tagEvent();
 //   }
 
-//   beforeDestroy() {
-//     window.removeEventListener("message", this.onMessage);
-//     window.removeEventListener("resize", this.onResize);
-
-//     // if (this.metaSetting) {
-//     //     this.metaSetting.reset();
-//     //     this.metaSetting = null;
-//     // }
-//   }
-
 
 //   @Watch("$store.getters.idToken")
+watch(
+  () => userInfo.value,
+  (info) => {
+    if (info) {
+      onChangedToken()
+    }
+  }
+)
+
 function onChangedToken() {
   toMessage({
     type: "@updateToken",
@@ -162,21 +169,20 @@ async function onMessage(msg: MessageEvent) {
     case "@refreshToken": {
       if (useCookie(config.COOKIE_NAME).value) {
         const idToken = await getIdToken($firebaseAuth);
-        console.log(idToken)
       }
       break;
     }
     case "@requestLogin": {
-      this.$store.commit("redirectRouter", route.fullPath);
+      // this.$store.commit("redirectRouter", route.fullPath);
       await router.replace("/login");
       break;
     }
     case "@exit": {
-      this.exit();
+      exit();
       break;
     }
     case "@moveChannel": {
-      await router.push(`/${this.$i18n.locale}/channel/${channel_id}`);
+      await router.push(localePath(`/channel/${channel_id}`));
       break;
     }
   }
@@ -190,14 +196,8 @@ function toMessage(message: any) {
 }
 
 function exit() {
-  if (this.$store.getters.fromRouterName) {
-    router.back();
-  } else {
-    router.push(`/${this.$i18n.locale}`);
-  }
+  router.push(localePath('/'));
 }
-
-// }
 </script>
 <style lang="scss" scoped>
 .iframe {

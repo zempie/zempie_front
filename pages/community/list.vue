@@ -42,7 +42,7 @@
             <CommunityCardSk v-if="isPending" v-for="com in 4" :key="com" />
             <CommunityCard v-else v-for="community in communities" :community="community" :key="community.id">
               <template v-slot:subBtn>
-                <CommunitySubscribeBtn :community="community" @refresh="fetch" />
+                <CommunitySubscribeBtn :community="community" @refresh="refresh" />
               </template>
             </CommunityCard>
           </TransitionGroup>
@@ -54,25 +54,28 @@
 
 <script setup lang="ts" >
 import _ from 'lodash'
-import { ICommunityPayload } from '~~/types';
 import { useI18n } from 'vue-i18n';
 
 const { t, locale } = useI18n()
 const route = useRoute();
 const config = useRuntimeConfig()
 
-const communities: any = ref([]);
+// const communities: any = ref([]);
 const filter = ref(0);
 const isPending = ref(true)
 
-const obj: ICommunityPayload = {
+const query = ref({
   limit: 20,
   offset: 0,
   community: '',
   sort: '',
   show: ''
-}
-await fetch()
+})
+// await fetch()
+
+
+const { data: communities, pending, refresh } = await useFetch(() => createQueryUrl('/community/list', query.value), getComFetchOptions('get', true))
+
 
 useHead({
   title: `${t('communityList')} | Zempie`,
@@ -101,22 +104,26 @@ useHead({
 
 })
 
+onMounted(() => {
+  isPending.value = pending.value;
+})
+
 
 // TODO: 많아지면,, 무한 스크롤 적용
 
-async function fetch() {
-  const query = {
-    limit: obj.limit,
-    offset: obj.offset,
-    sort: obj.sort
-  }
-  const { data, pending } = await useFetch(() => createQueryUrl('/community/list', query), getComFetchOptions('get', true))
-  if (data.value) {
-    communities.value = data.value
-    console.log(communities.value)
-  }
-  isPending.value = false;
-}
+// async function fetch() {
+//   const query = {
+//     limit: obj.limit,
+//     offset: obj.offset,
+//     sort: obj.sort
+//   }
+//   const { data, pending } = await useFetch(() => createQueryUrl('/community/list', query), getComFetchOptions('get', true))
+//   if (data.value) {
+//     communities.value = data.value
+//     console.log(communities.value)
+//   }
+//   isPending.value = false;
+// }
 
 
 
@@ -124,16 +131,16 @@ const sortGroups = _.debounce(async (sorted: number) => {
   filter.value = sorted;
 
   if (filter.value === 0) {
-    obj.sort = '';
-    await fetch()
+    query.value.sort = '';
+    await refresh()
   }
   else if (filter.value === 1) {
-    obj.sort = 'SUBSCRIBE'
-    await fetch()
+    query.value.sort = 'SUBSCRIBE'
+    await refresh()
   }
   else if (filter.value === 2) {
-    obj.sort = 'ALPAHBETIC'
-    await fetch()
+    query.value.sort = 'ALPAHBETIC'
+    await refresh()
   }
 
 }, 300)
