@@ -7,7 +7,7 @@
   <template v-else>
     <p class="btn-default uppercase my-channel"
       @click.stop="$router.push(localePath(`/channel/${loginUser.channel_id}`))"> {{
-          $t('myChannel')
+       $t('myChannel') 
       }}</p>
   </template>
 </template>
@@ -28,7 +28,7 @@ const loginUser = computed(() => useUser().user.value.info)
 
 const emit = defineEmits(['refresh'])
 const props = defineProps({
-  user: Object as PropType<IUser>
+  user: Object as PropType<IUser | any>
 })
 
 

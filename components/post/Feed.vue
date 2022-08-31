@@ -144,7 +144,7 @@
     </div>
 
     <ClientOnly>
-      <el-dialog v-model="showDeletePostModal" append-to-body custom-class="modal-area-type">
+      <el-dialog v-model="showDeletePostModal" append-to-body custom-class="modal-area-type" width="380px">
         <div class="modal-alert">
           <dl class="ma-header">
             <dt> {{  t('information')  }}</dt>

@@ -20,8 +20,7 @@
               </dl>
             </dt>
             <dd>
-
-              <!-- <FollowBtn :member="feed.user"></FollowBtn> -->
+              <UserFollowBtn :user="feed.user" />
 
             </dd>
 
@@ -100,7 +99,7 @@
             <CommentInput :postId="feed.id" @refresh="commentRefresh" />
             <ul>
               <li v-for="comment in comments" :key="comment.id">
-                <Comment :comment="comment" :postId="feed.id" />
+                <Comment :comment="comment" />
               </li>
             </ul>
 
@@ -278,60 +277,16 @@ function editDone() {
 
 }
 
-//     isOpenReportModal = false;
-//     pickedReason: any = '';
-//     mounted() {
-//         this.$store.dispatch("loginState")
-//             .then(() => {
-//                 this.fetch();
-//                 this.commentFetch();
-//             })
-
-//         window.addEventListener("scroll", this.scrollCheck);
-//     }
-
-//     beforeDestroy() {
-//         window.removeEventListener("scroll", this.scrollCheck);
-//     }
-
-//     sendReport() {
-//         const obj = {
-//             post_id: this.feedId,
-//             user_id: this.user.id,
-//             targetType: 'POST',
-//             report_reason: this.pickedReason
-//         }
-//         this.$api.reportPost(obj)
-//             .then((res: AxiosResponse) => {
-
-//             })
-//             .catch((err: AxiosError) => {
-
-//                 this.toast.failToast(err.message)
-//             })
-//             .finally(() => {
-//                 this.$modal.hide('modalReport')
-//                 this.pickedReason = ''
-//             })
-//     }
-
 
 async function fetch() {
-  // return communityFetch('ge', `/post/${postId}`, undefined, false)
 
   const { data, error, pending } = await useFetch<any>(`/post/${feedId.value}`, getComFetchOptions('get', true))
 
-  // const { data, error, pending } = await post.getInfo(feedId.value);
 
   if (data.value) {
     feed.value = data.value;
 
   }
-  //   this.$api.feed(this.feedId)
-  // .then((res: AxiosResponse) => {
-  //     this.feed = res;
-  //     this.createdDate = dateFormat(this.feed.created_at)!;
-  // })
 }
 
 
@@ -352,15 +307,6 @@ async function commentFetch() {
 
 }
 
-//     reFetch() {
-//         this.$store.dispatch("loginState")
-//             .then(() => {
-//                 this.fetch();
-//                 this.generateKey();
-//                 this.$store.dispatch('reloadUserInfo')
-
-//             })
-//     }
 
 function copyUrl() {
   execCommandCopy(window.location.href)
@@ -525,11 +471,6 @@ function copyUrl() {
   }
 }
 
-.tapl-content {
-  word-break: break-all;
-
-
-}
 
 .feed-img {
   max-width: 100%;
@@ -541,13 +482,6 @@ function copyUrl() {
 
 .sns-img {
   width: 100%
-}
-
-.dropdown {
-  display: flex;
-  justify-content: flex-end;
-  margin-right: 28px;
-  align-items: center;
 }
 
 .post-open-content-body {

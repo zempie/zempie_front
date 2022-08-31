@@ -6,6 +6,8 @@
 
 </template>
 <script lang='ts' setup>
+import { useLocalePath } from 'vue-i18n-routing';
+const localePath = useLocalePath();
 
 const props = defineProps({
     path: {

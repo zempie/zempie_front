@@ -374,12 +374,16 @@ async function onSubmit() {
     if (snsAttachFiles.value.img?.length || snsAttachFiles.value.audio?.length || snsAttachFiles.value?.video) {
       const formData = new FormData();
 
-      for (const img of snsAttachFiles.value.img) {
-        formData.append(img.name, img.file)
+      if (snsAttachFiles.value.img) {
+        for (const img of snsAttachFiles.value.img) {
+          formData.append(img.name, img.file)
+        }
       }
 
-      for (const audio of snsAttachFiles.value.audio) {
-        formData.append(audio.name, audio.file)
+      if (snsAttachFiles.value.audio) {
+        for (const audio of snsAttachFiles.value.audio) {
+          formData.append(audio.name, audio.file)
+        }
       }
       if (snsAttachFiles.value.video) {
         formData.append(snsAttachFiles.value.video.name, snsAttachFiles.value.video.file)
@@ -952,134 +956,6 @@ function deletePostingChannel(idx: number) {
     background: rgba(220, 53, 69, 0.27);
   }
 
-}
-
-.editor-container {
-  min-height: 200px;
-  text-align: left;
-  padding: 15px;
-  max-height: 80vh;
-
-
-  .ProseMirror {
-    min-height: 200px;
-    max-height: 75vh;
-    overflow: auto;
-
-    >*+* {
-      margin-top: 0.75em;
-    }
-
-    &:focus-visible {
-      outline-color: transparent;
-    }
-
-    a {
-      color: #68cef8
-    }
-
-
-    p.is-editor-empty:first-child::before {
-      content: attr(data-placeholder);
-      float: left;
-      color: #adb5bd;
-      pointer-events: none;
-      height: 0;
-    }
-
-
-    ul {
-      padding: 0 1.5rem;
-      list-style-type: disc;
-    }
-
-    ol {
-      padding: 0 1.5rem;
-      list-style-type: decimal;
-    }
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      line-height: 1.1;
-    }
-
-
-
-    img {
-      max-width: 98%;
-      height: auto;
-
-
-      &.ProseMirror-selectednode {
-        margin: 3px;
-        outline: 3px solid #F97316;
-      }
-    }
-
-    hr {
-      margin: 1rem 0;
-    }
-
-    blockquote {
-      padding-left: 1rem;
-      border-left: 2px solid rgba(#0D0D0D, 0.1);
-    }
-  }
-
-
-
-  .video-wrapper {
-    position: relative;
-    padding-bottom: math.div(100, 16) * 9%;
-    overflow: hidden;
-    margin: 0 auto;
-    width: 95%;
-    height: 100%;
-
-
-    &.ProseMirror-selectednode {
-      video {
-        outline: 3px solid #F97316;
-      }
-
-    }
-
-    video {
-      margin: 1%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 98%;
-      height: 93%;
-    }
-  }
-
-  .audio-wrapper {
-    margin: 20px;
-    display: flex;
-    align-items: center;
-    border-radius: 5px;
-    background: #f5f5f5;
-    flex-direction: column;
-
-    audio {
-      width: 100%;
-    }
-
-    p {
-      width: 100%;
-      height: 30px;
-      padding-left: 20px;
-    }
-
-    &.ProseMirror-selectednode {
-      outline: 3px solid #F97316;
-    }
-  }
 }
 
 .category-group {

@@ -59,10 +59,4 @@
   height: 16px;
   border-radius: 10px;
 }
-
-.tapl-content {
-  overflow: hidden;
-  min-height: 100px;
-  max-height: 500px;
-}
 </style>

@@ -54,6 +54,7 @@ provide(ID_INJECTION_KEY, {
 
 onBeforeMount(() => {
   const lang = navigator.language.split('-')[0]
+  console.log(lang)
   if (lang === 'ko') {
     locale.value = 'ko'
     switchLocalePath('ko')

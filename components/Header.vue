@@ -6,7 +6,7 @@
         <dt>
           <div class="header-logo-menu">
             <p>
-              <NuxtLink to="/">
+              <NuxtLink :to="localePath('/')">
                 <img class="logo" src="/images/zempie-logo-black.png" />
                 <img class="mobile-logo" src="/images/zempie_logo_154_155.png" />
               </NuxtLink>
