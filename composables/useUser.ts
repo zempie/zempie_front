@@ -61,7 +61,7 @@ export default function () {
 
         alert('회원가입이 완료되지않았습니다. 회원가입을 진행해주세요')
 
-        router.push('/join')
+        router.push(`/${useCommon().setting.value.lang}/join`)
       }
     }
 
@@ -75,7 +75,8 @@ export default function () {
           path: '/',
           domain: config.COOKIE_DOMAIN
         })
-        router.replace('/')
+
+        router.replace(`/${useCommon().setting.value.lang}`)
       })
       .catch((error: any) => {
         ElMessage({
@@ -113,6 +114,8 @@ async function routerToHome() {
   const route = useRoute();
   const router = useRouter();
   if (route.name.toString().includes('login')) {
-    router.push('/')
+    router.push(`/${useCommon().setting.value.lang}`)
+
+
   }
 }

@@ -7,20 +7,35 @@
 
         <div class="swiper-area uppercase">
           <NuxtLink class="swiper-slide" :to="localePath(`/myaccount`)">
-            <a :class="$route.meta.name === 'myAccount' ? 'active' : ''">{{  $t('account')  }}</a>
+            <a :class="$route.meta.name === 'myAccount' ? 'active' : ''">
+              <i class="uil uil-setting"></i>
+              <span> {{  $t('account')  }}</span>
+            </a>
           </NuxtLink>
           <NuxtLink class="swiper-slide" :to="localePath(`/myaccount/followers`)">
-            <a :class="$route.meta.name === 'myFollowers' ? 'active' : ''">{{  $t('follower')  }}</a>
+            <a :class="$route.meta.name === 'myFollowers' ? 'active' : ''">
+
+              <i class="uil uil-users-alt"></i>
+
+              <span>{{  $t('follower')  }}
+              </span></a>
           </NuxtLink>
 
           <NuxtLink :to="localePath(`/myaccount/following`)" class="swiper-slide">
-            <a :class="$route.meta.name === 'myFollowing' ? 'active' : ''">{{  $t('following')  }}</a>
+            <a :class="$route.meta.name === 'myFollowing' ? 'active' : ''">
+              <i class="uil uil-users-alt"></i>
+              <span style="border:0"> {{  $t('following')  }}</span>
+
+            </a>
           </NuxtLink>
 
           <NuxtLink :to="localePath(`/myaccount/communities`)" class="swiper-slide">
-            <a :class="$route.meta.name === 'myCommunities' ? 'active' : ''"> {{
-               $t('community') 
-              }}</a>
+            <a :class="$route.meta.name === 'myCommunities' ? 'active' : ''">
+              <i class="uil uil-comments"></i><span style="border:0">
+                {{
+                 $t('community') 
+                }}
+              </span></a>
           </NuxtLink>
         </div>
       </div>
@@ -49,4 +64,45 @@ const userInfo = computed(() => useUser().user.value.info)
   font-size: 2.25rem;
   font-weight: 700;
 }
+
+.swiper-area {
+
+  justify-content: center;
+
+  a {
+    i {
+      font-size: 20px;
+      margin-right: 10px;
+    }
+  }
+}
+
+@media all and (max-width: 479px) {
+  .swiper-area {
+    a {
+      span {
+        display: none;
+      }
+    }
+  }
+
+}
+
+@media all and (min-width: 480px) and (max-width: 767px) {
+  .swiper-area {
+    a {
+      span {
+        display: none;
+      }
+    }
+  }
+
+
+}
+
+@media all and (min-width: 768px) and (max-width: 991px) {}
+
+@media all and (min-width: 992px) and (max-width: 1199px) {}
+
+@media all and (min-width: 1200px) {}
 </style>

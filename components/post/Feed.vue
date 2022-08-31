@@ -43,26 +43,6 @@
             </div>
           </template>
         </el-dropdown>
-
-        <!-- <dropdown-menu :overlay="false" class="tapl-more-dropdown" :isOpen="isOpenReportModal"
-          @closed="isOpenReportModal = false;">
-          <a class="btn-circle-none pt6" slot="trigger" @click="isOpenReportModal = !isOpenReportModal"><i
-              class="uil uil-ellipsis-h font25"></i></a>
-          <div slot="body" class="more-list fixed">
-            <template v-if="user && (user.id === (feed.user && feed.user.id))">
-              <a @click="openEdit">{{ t('feed.edit') }}</a>
-              <a @click="deletePost">{{ t('feed.delete') }}</a>
-
-            </template>
-            <template v-else>
-              <router-link :to="`/${$i18n.locale}/channel/${feed.user && feed.user.channel_id}/timeline`">
-                {{ t('visit.userChannel') }}
-              </router-link>
-              <a v-if="user" @click="report">{{ t('post.report') }}</a>
-              <a v-if="user" @click="userReportModalOpen">{{ t('post.report') }}유저 신고하기</a>
-            </template>
-          </div>
-        </dropdown-menu> -->
       </dd>
     </dl>
 
@@ -187,8 +167,6 @@ import { useLocalePath } from 'vue-i18n-routing';
 import hljs from 'highlight.js';
 import { useWindowScroll, useInfiniteScroll } from '@vueuse/core'
 
-// import getMetaData from 'metadata-scraper'
-
 
 const { x, y } = useWindowScroll()
 const localePath = useLocalePath();
@@ -243,6 +221,7 @@ const props = defineProps({
   feed: Object as PropType<IFeed>
 })
 
+const emit = defineEmits(['refresh'])
 
 
 const attatchment_files = computed(() => {
@@ -257,7 +236,6 @@ const initFiles = _.cloneDeep(attatchment_files.value)
 
 
 
-const emit = defineEmits(['refresh'])
 
 onMounted(() => {
 
@@ -451,11 +429,6 @@ function openEdit() {
   showEditModal.value = true;
 
 }
-//     openEdit() {
-//         this.$modal.show('modalPost')
-//         this.$store.commit('feed', this.feed)
-//     }
-
 //     pinPost() {
 //         console.log("pinned");
 //     }

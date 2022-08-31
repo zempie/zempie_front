@@ -49,7 +49,9 @@
                         {{  t('zemjam.info3')  }}
                     </h3>
                     <div>
-                        <p data-scroll data-scroll-speed="1.6"><img src="/images/zemjamis_img.png" alt="" title="" />
+                        <p data-scroll data-scroll-speed="1.6">
+                            <img class="picnic-pic" src="/images/illust_zampie_picnic.png" alt="zemjam_picnic_picture"
+                                title="" />
                         </p>
                         <div data-scroll data-scroll-direction="horizontal" data-scroll-speed="-0.5"><img
                                 src="/images/zemjam_logo_1.png" alt="" title="" width="450" height="400" /></div>
@@ -282,15 +284,20 @@ definePageMeta({
 // }
 </script>
 <style lang="scss" scoped>
-@import "../assets/css/animate.css";
-@import "../assets/css/fonts-jam.css";
-@import "../assets/css/jquery-ui.css";
-@import "../assets/css/locomotive-scroll.css";
-@import "../assets/css/niceselect.css";
-@import "../assets/css/style-jam.css";
+@import "/assets/css/animate.css";
+@import "/assets/css/fonts-jam.css";
+@import "/assets/css/jquery-ui.css";
+@import "/assets/css/locomotive-scroll.css";
+@import "/assets/css/niceselect.css";
+@import "/assets/css/style-jam.css";
 
 
-
+.picnic-pic {
+    border-radius: 20px;
+    // height: 580px;
+    width: 900px !important;
+    object-fit: contain;
+}
 
 /* 기본 레이아웃[틀]  /////////////////////////////////////////////////////////////////////////*/
 .wrap {

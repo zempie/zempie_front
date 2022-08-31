@@ -1320,7 +1320,7 @@
   }
 
   .login-area .la-bottom>ul>li img {
-    width: 40px;
+    /* width: 40px; */
   }
 
   .login-area .la-bottom>p {
@@ -1375,7 +1375,7 @@
   }
 
   .login-area .la-bottom>ul>li img {
-    width: 40px;
+    /* width: 40px; */
   }
 
   .login-area .la-bottom>p {
@@ -5832,7 +5832,7 @@
 
 @media all and (max-width: 479px) {
   .delete-account {
-    width: 90%;
+    width: 100%;
     margin: 20px auto;
     padding: 30px 20px;
   }

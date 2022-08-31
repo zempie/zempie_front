@@ -371,7 +371,7 @@
         </dd>
       </dl>
 
-      <el-dialog v-model="isOpen" append-to-body custom-class="modal-area-type" :show-close="false">
+      <el-dialog v-model="isOpen" append-to-body custom-class="modal-area-type" :show-close="false" width="380px">
         <div class="modal-alert">
           <dl class="ma-header">
             <dt>{{  t('information')  }}</dt>

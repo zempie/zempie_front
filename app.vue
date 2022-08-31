@@ -5,15 +5,16 @@
 </template>
 <script setup lang="ts">
 import { ID_INJECTION_KEY } from 'element-plus'
-import { useSwitchLocalePath } from 'vue-i18n-routing';
+import { useLocalePath, useSwitchLocalePath } from 'vue-i18n-routing';
 
 import { useI18n } from 'vue-i18n';
 
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
 const switchLocalePath = useSwitchLocalePath();
-const route = useRoute()
-
+const route = useRoute();
+const router = useRouter();
+const localePath = useLocalePath();
 
 
 
@@ -54,16 +55,16 @@ provide(ID_INJECTION_KEY, {
 
 onBeforeMount(() => {
   const lang = navigator.language.split('-')[0]
-  console.log(lang)
+
   if (lang === 'ko') {
     locale.value = 'ko'
     switchLocalePath('ko')
-
   } else {
     locale.value = 'en'
     switchLocalePath('en')
-
   }
+  useCommon().setLang(locale.value)
+  router.replace(localePath(route.path))
 
 
 })

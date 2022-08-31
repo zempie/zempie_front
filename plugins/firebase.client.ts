@@ -34,7 +34,6 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         path: '/',
         domain: config.COOKIE_DOMAIN
       });
-      console.log(config.COOKIE_DOMAIN)
       useUser().setFirebaseUser(user);
 
       if (!useUser().user.value.isSignUp) {
@@ -46,10 +45,6 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   nuxtApp.provide('firebaseAuth', auth);
 })
 
-async function setAuthCookie(accessToken: string) {
-  const { data } = await useFetch('/api/setAuthCookie', { method: 'post', body: { accessToken: accessToken }, initialCache: false })
-  return data;
-}
 
 async function setUserInfo() {
   const config = useRuntimeConfig();
@@ -76,7 +71,8 @@ async function setUserInfo() {
       // })
       // useUser().removeUserState()
       // alert('회원가입이 완료되지않았습니다. 회원가입을 진행해주세요')
-      router.push('/join')
+      router.push(`/${useCommon().setting.value.lang}/join`)
+
     }
   }
 }
@@ -85,7 +81,8 @@ async function routerToHome() {
   const route = useRoute();
   const router = useRouter();
   if (route.name.toString().includes('login')) {
-    router.push('/')
+    router.push(`/${useCommon().setting.value.lang}`)
+
   }
 }
 

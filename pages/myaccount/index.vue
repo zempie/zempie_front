@@ -41,7 +41,10 @@
     </div>
 
     <div class="area-btn">
-      <a @click="onSubmit" class="btn-default w250">{{  $t('save')  }}</a>
+      <a v-if="isUpdating" class="btn-default w250">
+        <ClipLoader :color="'#fff'" :size="'20px'"></ClipLoader>
+      </a>
+      <a v-else @click="onSubmit" class="btn-default w250">{{  $t('save')  }}</a>
     </div>
     <div class="delete-account" v-if="signUpType === 'password'">
       <h2>{{  $t('userSetting.pwd.change')  }}</h2>
@@ -68,6 +71,7 @@
 </template>
 
 <script setup lang="ts">
+import ClipLoader from 'vue-spinner/src/ClipLoader.vue';
 import { ElMessage } from "element-plus";
 
 import { useLocalePath } from 'vue-i18n-routing';
@@ -77,6 +81,7 @@ const localePath = useLocalePath();
 const { t, locale } = useI18n()
 const route = useRoute();
 const config = useRuntimeConfig()
+
 
 
 definePageMeta({
@@ -108,6 +113,9 @@ useHead({
 })
 
 const MAX_FILE_SIZE = 3;
+let submitAcceessableCount = 2;
+
+const isUpdating = ref(false)
 
 const profileImg = ref<HTMLElement>()
 const fileName = ref("");
@@ -142,7 +150,7 @@ function onFileChange(event: any) {
   }
   else {
     ElMessage({
-      message: t(`${'maxFile.size.text1'}${MAX_FILE_SIZE}mb${'maxFile.size.text2'}.`),
+      message: t(`${t('maxFile.size.text1')}${MAX_FILE_SIZE}mb${t('maxFile.size.text2')}.`),
       type: 'warning'
     })
   }
@@ -157,50 +165,78 @@ function deleteImg(e: any) {
 }
 
 async function onSubmit() {
-  const formData = new FormData();
+  submitAcceessableCount = submitAcceessableCount - 1;
 
-  if (updateFile.value) {
-    formData.append('file', updateFile.value);
-    formData.append('name', userInfo.value.name)
+  console.log(submitAcceessableCount)
 
-    const { data, error, refresh, pending } = await user.updateInfo(formData)
+  if (submitAcceessableCount > 0) {
+    isUpdating.value = true
+    const formData = new FormData();
 
-    if (!error.value) {
-      ElMessage({
-        message: t('userSetting.done'),
-        type: 'success'
-      })
-      useUser().setProfileImg(data.value.result.user.picture + `?_=${Date.now()}`)
-      updateFile.value = null;
+    if (updateFile.value) {
+      formData.append('file', updateFile.value);
+      formData.append('name', userInfo.value.name)
 
-    } else {
-      ElMessage({
-        message: error.error.message,
-        type: 'error'
-      })
-    }
+      const { data, error, refresh, pending } = await user.updateInfo(formData)
 
-  } else {
-    formData.append('rm_picture', 'true');
-    const { data, error, refresh, pending } = await user.updateInfo(formData)
+      if (!error.value) {
+        ElMessage({
+          message: t('userSetting.done'),
+          type: 'success'
+        })
+        useUser().setProfileImg(data.value.result.user.picture + `?_=${Date.now()}`)
+        updateFile.value = null;
 
-    if (!error.value) {
-      ElMessage({
-        message: t('userSetting.done'),
-        type: 'success'
-      })
-      useUser().setProfileImg(null)
+      } else {
+        ElMessage({
+          message: error.error.message,
+          type: 'error'
+        })
+      }
 
     } else {
-      ElMessage({
-        message: error.error.message,
-        type: 'error'
-      })
+      formData.append('rm_picture', 'true');
+      const { data, error, refresh, pending } = await user.updateInfo(formData)
+
+      if (!error.value) {
+        ElMessage({
+          message: t('userSetting.done'),
+          type: 'success'
+        })
+        useUser().setProfileImg(null)
+
+      } else {
+        ElMessage({
+          message: error.error.message,
+          type: 'error'
+        })
+      }
     }
   }
+  isUpdating.value = false;
+  submitAcceessableCount = submitAcceessableCount + 1;
 }
 
 </script>
 
 <style lang="scss" scoped>
+@media all and (max-width: 479px) {
+
+  .ii-card {
+    dd:last-child {
+      width: 100%;
+    }
+  }
+
+}
+
+@media all and (min-width: 480px) and (max-width: 767px) {
+  .ii-card {
+    dd:last-child {
+      width: 100%;
+    }
+  }
+
+
+}
 </style>

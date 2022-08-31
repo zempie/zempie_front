@@ -196,6 +196,7 @@ async function deleteComment() {
     emit('refresh')
 
   }
+  showDeleteModal.value = false;
 }
 
 //     sendLike(state: boolean) {

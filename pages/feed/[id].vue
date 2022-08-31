@@ -20,8 +20,7 @@
               </dl>
             </dt>
             <dd>
-              <UserFollowBtn :user="feed.user" />
-
+              <!-- <UserFollowBtn :user="feed.user" /> -->
             </dd>
 
           </dl>
@@ -73,84 +72,30 @@
                 </li>
               </ul>
             </li>
-            <!-- <li>
-              <dropdown-menu :overlay="false" class="tapl-more-dropdown" :isOpen="isOpenReportModal"
-                @closed="isOpenReportModal = false;">
-                <a class="btn-circle-none pt6" slot="trigger" @click="isOpenReportModal = !isOpenReportModal"><i
-                    class="uil uil-ellipsis-h font25"></i></a>
-                <div slot="body" class="more-list fixed">
-                  <template v-if="user && (user.id === (feed.user && feed.user.id))">
-                    <a @click="openEdit">{{ $t('feed.edit') }}</a>
-                    <a @click="deletePost">{{ $t('feed.delete') }}</a>
 
-                  </template>
-                  <template v-else>
-                    <router-link :to="`/${$i18n.locale}/channel/${feed.user && feed.user.channel_id}/timeline`">
-                      {{ $t('visit.userChannel') }}
-                    </router-link>
-                    <a v-if="user" @click="report">{{ $t('post.report') }}</a>
-                  </template>
-                </div>
-              </dropdown-menu>
-            </li> -->
+            <li>
+              <PostDropdown :feed="feed" @deletePost="$router.back()" @refresh="fetch" />
+            </li>
+
           </ul>
-          <div class="tapl-comment">
-            <h2>{{  $t('comment')  }} {{  feed.comment_cnt  }}{{  $t('comment.count.unit')  }} </h2>
-            <CommentInput :postId="feed.id" @refresh="commentRefresh" />
-            <ul>
-              <li v-for="comment in comments" :key="comment.id">
-                <Comment :comment="comment" />
-              </li>
-            </ul>
+          <ClientOnly>
+            <div class="tapl-comment">
+              <p>{{  $t('comment')  }} {{  feed.comment_cnt  }}{{  $t('comment.count.unit')  }} </p>
+              <CommentInput :postId="feed.id" @refresh="commentRefresh" />
+              <ul>
+                <li v-for="comment in comments" :key="comment.id">
+                  <Comment :comment="comment" @refresh="commentRefresh" />
+                </li>
+              </ul>
 
-          </div>
+            </div>
+          </ClientOnly>
         </li>
       </ul>
     </div>
 
-    <!-- <modal name="deleteComment" :clickToClose="false" class="modal-area-type" width="90%" height="auto" :maxWidth="380"
-      :adaptive="true" :scrollable="true" @before-open="beforeOpen">
-      <div class="modal-alert">
-        <dl class="ma-header">
-          <dt>{{ $t('information') }}</dt>
-          <dd>
-            <button @click="$modal.hide('deleteComment')"><i class="uil uil-times"></i></button>
-          </dd>
-        </dl>
-        <div class="ma-content">
-          <h2>{{ $t('comment.delete.text') }}</h2>
-          <div>
-            <button class="btn-default w48p" @click="deleteComment">{{ $t('yes') }}</button>
-            <button class="btn-gray w48p" @click="$modal.hide('deleteComment')">{{ $t('no') }}</button>
-          </div>
-        </div>
-      </div>
-    </modal>
-
-    <modal :clickToClose="false" class="modal-area-type" name="deleteModal" width="90%" height="auto" :maxWidth="380"
-      :adaptive="true" :scrollable="true">
-      <div class="modal-alert">
-        <dl class="ma-header">
-          <dt>{{ $t('information') }}</dt>
-          <dd>
-            <button @click="$modal.hide('deleteModal')"><i class="uil uil-times"></i></button>
-          </dd>
-        </dl>
-        <div class="ma-content">
-          <h2>{{ $t('post.delete.modal.text1') }}<br />{{ $t('post.delete.modal.text2') }}</h2>
-          <div>
-            <button class="btn-default w48p" @click="yesDeletePost">{{ $t('yes') }}</button>
-            <button class="btn-gray w48p" @@click="$modal.hide('deleteModal')">{{ $t('no') }}</button>
-          </div>
-        </div>
-      </div>
-    </modal>
-
-    <modal :clickToClose="false" class="modal-area-type" name="modalPost" width="90%" height="auto" :maxWidth="550"
-      :adaptive="true" :scrollable="true">
-      <Post @reFetch="reFetch"></Post>
-    </modal>
-
+    <!-- 
+      
     <modal class="modal-area-type" name="modalReport" width="90%" height="auto" :maxWidth="375" :adaptive="true"
       :scrollable="true">
       <div class="modal-report">
@@ -200,38 +145,38 @@
 </template>
 
 <script setup lang="ts">
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElDropdown, ElDialog } from 'element-plus';
 import { useI18n } from 'vue-i18n';
+import { useLocalePath } from 'vue-i18n-routing';
 
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { dateFormat, execCommandCopy } from '~~/scripts/utils';
 import { IFeed } from '~~/types';
 
+const localePath = useLocalePath();
+
+
 const COMMENT_LIMIT = 10;
 const route = useRoute();
+const router = useRouter();
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
 const feed = ref<IFeed>();
 const createdDate = ref('');
-//     commentId: string = '';
-
-//     originImg: string = "";
-//     needLogin = false;
-//     user!: User;
 const comments = ref([]);
 
 const limit = ref(COMMENT_LIMIT);
 const offset = ref(0);
 const sort = ref(null)
 
-//     isAddData: boolean = false;
 const swiperOption = ref({
   pagination: {
     el: '.swiper-pagination'
   }
 })
-
+const userInfo = computed(() => useUser().user.value.info)
 const feedId = computed(() => route.params.id as string)
+
 
 
 
@@ -267,15 +212,6 @@ watch(
 await fetch()
 await commentFetch()
 
-
-onMounted(async () => {
-
-
-})
-
-function editDone() {
-
-}
 
 
 async function fetch() {
@@ -315,7 +251,6 @@ function copyUrl() {
     type: 'success'
   })
 }
-
 //     scrollCheck() {
 //         if (scrollDone(document.documentElement)) {
 //             this.offset += this.limit;

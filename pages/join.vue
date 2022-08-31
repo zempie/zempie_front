@@ -121,21 +121,8 @@
         <p>
         <p @click="register" class="btn-default-big w100p">{{  $t('join')  }}</p>
         </p>
-        <!--                <dl>
-                                    <dt></dt>
-                                    <dd>또는 다른 서비스 계정으로 로그인</dd>
-                                    <dt></dt>
-                                </dl>-->
       </form>
-      <!--            <div class="lj-bottom">-->
-      <!--                <dl @click="google">-->
-      <!--                    <dt><img src="../../assets/images/google_icon.svg" alt=""></dt>-->
-      <!--                    <dd>구글 계정으로 가입</dd>-->
-      <!--                    <dt></dt>-->
-      <!--                </dl>-->
-      <!--                <p><i class="uil uil-info-circle" style="font-size:16px; line-height:24px;"></i> &nbsp;SNS계정으로 간편하게 가입하여-->
-      <!--                    서비스를 이용하실 수 있습니다.</p>-->
-      <!--            </div>-->
+
     </div>
 
 
