@@ -2,7 +2,7 @@
   <div id="gamePage">
     <ClientOnly>
       <iframe ref="game" class="iframe" :style="`height:${iframeHeight};`"
-        :src="`${config.LAUNCHER_URL}/game/${gamePath}`"></iframe>
+        :src="`${config.LAUNCHER_URL}/#/game/${gamePath}`"></iframe>
     </ClientOnly>
   </div>
 </template>
@@ -37,7 +37,6 @@ onMounted(async () => {
     const { game, my_emotions, my_heart } = data.value.result
     gameData.value = game
 
-    console.log('game', gameData.value)
     // url.value = `/${config.LAUNCHER_URL}/game/${gamePath.value}`;
 
 

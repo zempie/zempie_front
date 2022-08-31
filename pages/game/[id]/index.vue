@@ -10,7 +10,7 @@
           </dl>
           <template v-if="games?.length > 0">
             <ul>
-              <li v-for="game in games.slice(0, 5)">
+              <li v-for="game in games.slice(0, 5)" @click="$router.push(localePath(`/game/${game.pathname}`))">
                 <p :style="`background:url(${game?.url_thumb_webp ||
                 game?.url_thumb ||
                 '/images/default.png'
@@ -32,8 +32,6 @@
       </dt>
       <dd>
         <PostTimeline type="game" :isMine="isMine" />
-        <!-- <Timeline v-if='user' :currPage="'game'" :id="game.id" :game="game" :key="this.$route.query.media"
-            ></Timeline> -->
       </dd>
 
 

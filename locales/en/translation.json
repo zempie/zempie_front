@@ -259,7 +259,10 @@
   "maxFile.count.text1": "Maximum number of files is ",
   "maxFile.count.text2": "[ number ]",
   "maxFile.count.ten.text": "Maximum number of files is 10",
+  "maxFile.size.text1": "Maximum file size is ",
+  "maxFile.size.text2": "",
   "maxFile.size.ten.text": "Maximum file size is 10mb",
+  "maxFile.size.three.text": "Maximum file size is 3mb",
   "delete": "Delete",
   "userSetting.title": "Profile picture is displayed in Zempie community",
   "userSetting.name": "User Name",
@@ -726,7 +729,7 @@
   "password": "Password",
   "no.search.result": "here is no search result",
   "account": "account",
-  "my.account": "My account",
+  "my.account": "Settings",
   "auto.game.id.generator": "Generate game ID",
   "monetize.alert": "We will provide Zempie partner service for game monetization in the future.",
   "file.upload.info": "Upload file information",
@@ -811,5 +814,6 @@
   "seo.feed.title": "'s feed",
   "seo.feed.desc": "'s feed'",
   "seo.game.list.title": "All Games of Zempie",
-  "seo.game.list.desc": "Where every game on Zempie assemble."
+  "seo.game.list.desc": "Where every game on Zempie assemble.",
+  "agreement.leave.text":"If you want to delete your account, then please agree on the related terms & conditions."
 }

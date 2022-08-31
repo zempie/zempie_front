@@ -104,6 +104,7 @@ async function handleIntersection(target) {
 
 
 async function fetch() {
+  console.log('fetch')
   const payload = {
     limit: limit.value,
     offset: offset.value,

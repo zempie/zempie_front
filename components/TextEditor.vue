@@ -226,9 +226,6 @@ onMounted(() => {
 })
 
 function postingType(type: string) {
-  // console.log(snsAttachFiles.value.img.length || snsAttachFiles.value.audio.length || snsAttachFiles.value.video)
-  // console.log(attachFileArr.value.length)
-  console.log(form.post_contents)
   if (snsAttachFiles.value.img.length || snsAttachFiles.value.audio.length || snsAttachFiles.value.video ||
     form.post_contents.length > 7
 

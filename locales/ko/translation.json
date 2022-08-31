@@ -259,6 +259,8 @@
   "maxFile.count.text1": "최대 파일 개수는",
   "maxFile.count.text2": "개입니다.",
   "maxFile.count.ten.text": "최대 파일 개수는 10개입니다.",
+  "maxFile.size.text1": "최대 파일 크기는",
+  "maxFile.size.text2": "입니다",
   "maxFile.size.ten.text": "최대 파일 크기는 10mb입니다.",
   "delete": "삭제",
   "userSetting.title": "프로필 사진을 ZEMPIE가 제공하는 커뮤니티를 나타내는 위치에 표시됩니다.",
@@ -812,5 +814,6 @@
   "seo.feed.title": "님의 피드",
   "seo.feed.desc": "님의 피드",
   "seo.game.list.title": "젬파이 게임 리스트",
-  "seo.game.list.desc": "젬파이에 등록된 모든 게임들을 확인할 수 있습니다."
+  "seo.game.list.desc": "젬파이에 등록된 모든 게임들을 확인할 수 있습니다.",
+  "agreement.leave.text":"회원 탈퇴를 원하시면 동의해주세요"
 }

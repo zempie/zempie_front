@@ -36,8 +36,9 @@ useHead({
 })
 
 definePageMeta({
-  title: '게임 정보 수정',
-  name: 'projectId'
+  title: 'Edit game information',
+  name: 'projectId',
+  middleware: 'auth'
 })
 
 const projectId = computed(() => parseInt(route.params.id as string))

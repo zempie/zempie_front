@@ -153,6 +153,9 @@ const config = useRuntimeConfig()
 const localePath = useLocalePath();
 const $router = useRouter();
 
+definePageMeta({
+  middleware: 'auth'
+})
 useHead({
   title: `${t('seo.project.list.title')} | Zempie Studio`,
   meta: [

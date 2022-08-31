@@ -18,6 +18,11 @@ const { t, locale } = useI18n()
 const route = useRoute();
 const config = useRuntimeConfig()
 
+
+definePageMeta({
+  middleware: 'auth'
+})
+
 useHead({
   title: `${t('seo.project.upload.title')} | Zempie Studio`,
   meta: [

@@ -19,27 +19,6 @@
         </p>
       </dl>
     </div>
-
-    <!-- <modal :clickToClose="false" class="modal-area-type" name="checkMailModal" width="90%" height="auto" :maxWidth="380"
-      :adaptive="true" :scrollable="true">
-      <div class="modal-alert">
-        <dl class="ma-header">
-          <dt>{{ t('information') }}</dt>
-          <dd>
-            <button @click="$modal.hide('checkMailModal')"><i class="uil uil-times"></i></button>
-          </dd>
-        </dl>
-        <div class="ma-content">
-          <h2>{{ t('send.email.info1') }}<br />
-            {{ t('send.email.info2') }}</h2>
-          <div>
-            <button class="btn-default" style="width: 100%" @click="$modal.hide('checkMailModal')">{{ t('confirm') }}
-            </button>
-          </div>
-        </div>
-      </div>
-    </modal> -->
-
     <el-dialog v-model="openModal" append-to-body custom-class="modal-area-type" :show-close="false">
       <div class="modal-alert">
         <dl class="ma-header">
@@ -70,6 +49,13 @@ import { useI18n } from 'vue-i18n';
 const { t, locale } = useI18n()
 const route = useRoute();
 const config = useRuntimeConfig()
+
+
+definePageMeta({
+  title: 'change-pwd',
+  name: 'changePwd',
+  middleware: 'auth'
+})
 
 useHead({
   title: `${t('seo.profile.change.pwd.title')} | Zempie`,
@@ -128,38 +114,6 @@ async function sendEmail() {
   }
 
 }
-// import {Component, Prop, Vue} from "vue-property-decorator";
-// import firebase from "firebase";
-// import {mapGetters} from "vuex";
-
-// @Component({
-//     components: {},
-//     computed: {...mapGetters(["user"])},
-// })
-// export default class ChangePwd extends Vue {
-//     user!: any;
-//     email = '';
-//     isEmailErr = false;
-
-//     async sendEmail() {
-
-//         if (this.email === this.user.email) {
-//             try {
-//                 const result = await firebase
-//                     .auth()
-//                     .sendPasswordResetEmail(this.email);
-//                 this.$modal.show('checkMailModal')
-//             }
-//             catch {
-//                 // this.submitError = true;
-//             }
-//         }
-//         else {
-//             this.isEmailErr = true;
-//         }
-//     }
-
-// }
 </script>
 
 <style scoped lang="scss">

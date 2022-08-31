@@ -34,6 +34,14 @@ const { t, locale } = useI18n()
 const route = useRoute();
 const config = useRuntimeConfig()
 
+
+definePageMeta({
+  title: 'my-communities',
+  name: 'myCommunities',
+  middleware: 'auth'
+
+})
+
 useHead({
   title: `${t('seo.profile.communities.title')} | Zempie`,
   meta: [
@@ -59,17 +67,26 @@ useHead({
 const communities = ref<ICommunity[]>([])
 const isPending = ref(true)
 
-const userId = computed(() => route.params.id as number | string)
+const userInfo = computed(() => useUser().user.value.info)
 
+watch(
+  () => userInfo.value,
+  (user) => {
+    if (user) {
+      fetch();
+    }
+  }
+)
 
 onMounted(async () => {
-
-
-  await fetch();
+  if (userInfo.value?.id) {
+    await fetch();
+  }
 })
 
+
 async function fetch() {
-  const { data } = await user.joinedCommunity(userId.value as number)
+  const { data } = await user.joinedCommunity(Number(userInfo.value.id))
 
   communities.value = data.value.map((community: ICommunity) => {
     return community = { ...community, is_subscribed: true };

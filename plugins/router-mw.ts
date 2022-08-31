@@ -1,14 +1,11 @@
+import routerOption from '../app/router.option'
 
-// export default defineNuxtPlugin(() => {
-//   addRouteMiddleware('global-middleware', (to, from) => {
-//     scrollBe
+export default defineNuxtPlugin(() => {
 
-//   },
-//     { global: true }
-//   )
-// })
+  addRouteMiddleware('global-middleware', (to, from) => {
+    routerOption.scrollBehavior(to, from, null)
+  },
+    { global: true }
+  )
+})
 
-
-export default function (to, from, savedPosition) {
-  return { x: 0, y: 0 }
-}

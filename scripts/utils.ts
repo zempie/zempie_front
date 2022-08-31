@@ -26,11 +26,6 @@ export const blobToFile = (blob: Blob, fileName?: string, fileType?: string) => 
     })
 }
 
-const urlToBlob = async (url: string) => {
-    const result = await fetch(url)
-    const blob = await result.blob()
-    blobUrl = URL.createObjectURL(blob)
-}
 
 // export default class StringHelper {
 //   static msToMinuteSecond(ms: number): string {
@@ -97,6 +92,7 @@ const urlToBlob = async (url: string) => {
 //   return str.substr( 0, count );
 // }
 
+// TODO: localization
 export const dateFormat = (sec: number | string) => {
 
     if (dayjs().diff(dayjs(sec), 'm') < 1) {
@@ -108,7 +104,7 @@ export const dateFormat = (sec: number | string) => {
     } else if (dayjs().diff(dayjs(sec), 'd') <= 7) {
         return dayjs().diff(dayjs(sec), 'd') + '일 전'
     } else {
-        return dayjs(sec).locale('ko').format('YYYY/MM/DD')
+        return dayjs(sec).locale('ko').format('YYYY년 MM월 DD일 ')
     }
 }
 

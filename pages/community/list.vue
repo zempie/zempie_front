@@ -14,7 +14,6 @@
         Browse all the groups of the community!
       </p>
     </div>
-    <!-- 비주얼영역 끝 -->
 
 
     <dl class="area-search-sort">
@@ -36,20 +35,20 @@
         </div>
       </dd>
     </dl>
-    <div class="result-container">
-      <div class="card-timeline">
-        <TransitionGroup name="fade">
-          <CommunityCardSk v-show="isPending" v-for="com in 4" :key="com" />
-          <CommunityCard v-show="!isPending" v-for="community in communities" :community="community"
-            :key="community.id">
-            <template v-slot:subBtn>
-              <CommunitySubscribeBtn :community="community" @refresh="fetch" />
-            </template>
-          </CommunityCard>
-        </TransitionGroup>
+    <ClientOnly>
+      <div class="result-container">
+        <div class="card-timeline">
+          <TransitionGroup name="fade">
+            <CommunityCardSk v-if="isPending" v-for="com in 4" :key="com" />
+            <CommunityCard v-else v-for="community in communities" :community="community" :key="community.id">
+              <template v-slot:subBtn>
+                <CommunitySubscribeBtn :community="community" @refresh="fetch" />
+              </template>
+            </CommunityCard>
+          </TransitionGroup>
+        </div>
       </div>
-    </div>
-
+    </ClientOnly>
   </div>
 </template>
 
@@ -60,11 +59,20 @@ import { useI18n } from 'vue-i18n';
 
 const { t, locale } = useI18n()
 const route = useRoute();
-
 const config = useRuntimeConfig()
 
-const accessToken = useCookie(config.COOKIE_NAME).value
+const communities: any = ref([]);
+const filter = ref(0);
+const isPending = ref(true)
 
+const obj: ICommunityPayload = {
+  limit: 20,
+  offset: 0,
+  community: '',
+  sort: '',
+  show: ''
+}
+await fetch()
 
 useHead({
   title: `${t('communityList')} | Zempie`,
@@ -87,120 +95,30 @@ useHead({
     },
     {
       name: 'og:image',
-      content: 'image/sns-thumbnail.png'
+      content: '/images/sns-thumbnail.png'
     },
   ]
+
 })
 
-// metaSetting !: MetaSetting;
-// clickManager: ClickManager = new ClickManager();
-const communities: any = ref([]);
-const filter = ref(0);
-// private isSearched: boolean = false;
 
-//fetch data object
-const limit = ref(20);
-const offset = ref(0);
-// const community = ref('');
-const sort = ref('');
-const show = ref('')
-const searchInput = ref('');
-// isAddData: boolean = false;
-// unCommunityId: string = ''
-// user !: any;
-const isPending = ref(true)
-
-const obj: ICommunityPayload = {
-  limit: 20,
-  offset: 0,
-  community: '',
-  sort: '',
-  show: ''
-}
-// TODO: 무한 스크롤 적용
-
-// isFirstLoading: boolean = true;
-
-
-
-// beforeDestroy() {
-//     window.removeEventListener("scroll", this.scrollCheck);
-// }
-
-await fetch()
-
+// TODO: 많아지면,, 무한 스크롤 적용
 
 async function fetch() {
-
-  const { data, pending } = await useFetch<any>(() => `/community/list?limit=${obj.limit}&offset=${obj.offset}&sort=${obj.sort}`, { method: 'get', initialCache: false, baseURL: config.COMMUNITY_API, headers: accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {} })
-
+  const query = {
+    limit: obj.limit,
+    offset: obj.offset,
+    sort: obj.sort
+  }
+  const { data, pending } = await useFetch(() => createQueryUrl('/community/list', query), getComFetchOptions('get', true))
   if (data.value) {
     communities.value = data.value
+    console.log(communities.value)
   }
-  isPending.value = pending.value
-
-
-
-
-
-  // Api.community.getList(obj)
-  //     .then((res: any) => {
-  //         communityList.value = res;
-  //         // if (this.isAddData) {
-  //         //     if (res.length > 0) {
-  //         //         this.communityList = [...this.communityList, ...res]
-  //         //     }
-  //         //     else {
-  //         //         window.removeEventListener("scroll", this.scrollCheck);
-  //         //     }
-  //         // }
-  //         // else {
-  //         //     this.communityList = res;
-  //         //     this.isAddData = true
-  //         // }
-  //     })
-  //     .catch((err: AxiosError) => {
-  //         console.log(err)
-  //     })
-  //     .finally(() => {
-  //         // this.isFirstLoading = false;
-  //         // this.createMetaSetting();
-  //     })
+  isPending.value = false;
 }
 
 
-// createMetaSetting() {
-//     this.metaSetting = new MetaSetting({
-//         title: `${this.i18n.t('communityList')} | Zempie.com`, //커뮤니티 리스트
-//         meta: [
-//             { name: 'description', content: `${this.i18n.t('communityList.desc')}` },
-//             { property: 'og:url', content: `${this.$store.getters.homeUrl}/${this.$i18n.locale}/communityList` },
-//             { property: 'og:title', content: `${this.i18n.t('communityList')} | Zempie.com` },
-//             { property: 'og:description', content: `${this.i18n.t('communityList.desc')}` },
-//         ]
-//     });
-// }
-
-// unsubscribe(communityId: string) {
-//     this.$modal.show('deleteConfirm')
-//     this.unCommunityId = communityId;
-// }
-
-// yesUnsubscribe() {
-//     this.initData()
-//     this.$api.unsubscribe({ user_id: this.user.id, community_id: this.unCommunityId })
-//         .then((res: any) => {
-//             this.fetch();
-//         })
-//         .catch((err: any) => {
-//             if (err.message) {
-//                 alert(err.message)
-//             }
-//         })
-//         .finally(() => {
-//             this.$modal.hide('deleteConfirm')
-//         })
-// }
 
 const sortGroups = _.debounce(async (sorted: number) => {
   filter.value = sorted;
@@ -219,36 +137,6 @@ const sortGroups = _.debounce(async (sorted: number) => {
   }
 
 }, 300)
-
-    // searchCommunity(e: Event) {
-    //     e.preventDefault();
-    //     this.isSearched = true;
-    //     this.isAddData = false;
-    //     this.fetch()
-    // }
-
-    // searchReset(e: Event) {
-    //     e.preventDefault();
-    //     this.initData();
-    //     this.fetch()
-
-    // }
-
-    // initData() {
-    //     this.isSearched = false;
-    //     this.isAddData = false
-    //     this.limit = 20;
-    //     this.offset = 0;
-    //     this.community = '';
-    //     this.sort = '';
-    //     this.show = '';
-    //     this.searchInput = '';
-    // }
-
-    // reFetch() {
-    //     this.initData();
-    //     this.fetch();
-    // }
 
 </script>
 

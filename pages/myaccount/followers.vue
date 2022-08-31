@@ -22,6 +22,14 @@ const { t, locale } = useI18n()
 const route = useRoute();
 const config = useRuntimeConfig()
 
+
+definePageMeta({
+  title: 'my-follower',
+  name: 'myFollowers',
+  middleware: 'auth'
+
+})
+
 useHead({
   title: `${t('seo.profile.followers.title')} | Zempie`,
   meta: [
@@ -46,7 +54,6 @@ useHead({
 
 const MAX_PAGE_SIZE = 20
 
-const userId = computed(() => route.params.id as number | string)
 
 const payload = reactive({
   limit: MAX_PAGE_SIZE,
@@ -58,12 +65,25 @@ const totalCount = ref(0)
 const isPending = ref(true)
 const users = ref<IUser[]>([])
 
+const userInfo = computed(() => useUser().user.value.info)
+
+watch(
+  () => userInfo.value,
+  (user) => {
+    if (user) {
+      fetch();
+    }
+  }
+)
+
 onMounted(async () => {
-  await fetch();
+  if (userInfo.value?.id) {
+    await fetch();
+  }
 })
 
 async function fetch() {
-  const { data, pending, refresh, error } = await user.followerList(payload, userId.value as number)
+  const { data, pending, refresh, error } = await user.followerList(payload, Number(userInfo.value.id))
   if (!error.value) {
     totalCount.value = data.value.totalCount
     users.value = data.value.result.map((user) => {

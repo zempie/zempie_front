@@ -124,9 +124,11 @@ const route = useRoute();
 const config = useRuntimeConfig()
 
 definePageMeta({
-  title: '배포 관리',
-  name: 'deployManage'
+  title: 'Distribution Mgmt.',
+  name: 'deployManage',
+  middleware: 'auth'
 })
+
 useHead({
   title: `${t('seo.project.deploy.manage.title')} | Zempie Studio`,
   meta: [

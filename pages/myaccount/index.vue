@@ -47,7 +47,7 @@
       <h2>{{  $t('userSetting.pwd.change')  }}</h2>
       <div>
         <p>{{  $t('userSetting.pwd.change.info1')  }} <span>
-            <NuxtLink :to="localePath(`/profile/${userInfo?.id}/change-password`)">
+            <NuxtLink :to="localePath(`/myaccount/change-password`)">
               {{  $t('click')  }}</NuxtLink>
           </span> {{  $t('userSetting.pwd.change.info2')  }}
         </p>
@@ -57,7 +57,7 @@
       <h2>{{  $t('userSetting.account.leave')  }}</h2>
       <div>
         <p>{{  $t('userSetting.account.leave.info1')  }} <span>
-            <NuxtLink :to="localePath(`/profile/${userInfo?.id}/leave`)">{{  $t('click')  }}
+            <NuxtLink :to="localePath(`/myaccount/leave`)">{{  $t('click')  }}
             </NuxtLink>
           </span>
           {{  $t('userSetting.pwd.change.info2')  }}
@@ -77,6 +77,13 @@ const localePath = useLocalePath();
 const { t, locale } = useI18n()
 const route = useRoute();
 const config = useRuntimeConfig()
+
+
+definePageMeta({
+  title: 'my-account',
+  name: 'myAccount',
+  middleware: 'auth'
+})
 
 useHead({
   title: `${t('seo.profile.info.title')} | Zempie`,
@@ -134,7 +141,10 @@ function onFileChange(event: any) {
     event.target.value = '';
   }
   else {
-    alert(t(`최대 파일 크기는 ${MAX_FILE_SIZE}mb입니다. `))
+    ElMessage({
+      message: t(`${'maxFile.size.text1'}${MAX_FILE_SIZE}mb${'maxFile.size.text2'}.`),
+      type: 'warning'
+    })
   }
 
 }

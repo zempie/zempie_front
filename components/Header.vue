@@ -49,14 +49,14 @@
                     <el-dropdown-menu class="header-search-list" style="min-width:260px;">
                       <div :class="hasResearchResult ? '' : 'no-result'">
                         <template v-if="userList?.length">
-                          <h2>{{ t('user.name') }}</h2>
+                          <h2>{{  t('user.name')  }}</h2>
                           <el-dropdown-item v-for="user in userList" :key="user.id"
                             :command="[user['isUser'] = true, user]">
                             <div @click="moveUserPage(user.channel_id)">
                               <dl>
                                 <dt>
                                   <UserAvatar :user="user" :tag="'span'"></UserAvatar>
-                                  {{ user.name }}
+                                  {{  user.name  }}
                                 </dt>
                                 <dd><i class="uil uil-user"></i></dd>
                               </dl>
@@ -64,7 +64,7 @@
                           </el-dropdown-item>
                         </template>
                         <template v-if="gameList?.length">
-                          <h2>{{ t('game.name') }}</h2>
+                          <h2>{{  t('game.name')  }}</h2>
                           <el-dropdown-item v-for="game in gameList" :key="game.id"
                             :command="[game['isGame'] = true, game]">
                             <div @click="moveGamePage(game.pathname)">
@@ -72,7 +72,7 @@
                                 <dt>
                                   <span
                                     :style="`background:url(${game.profile_img || game.url_thumb}) center center / cover no-repeat; background-size:cover;`"></span>
-                                  {{ game.title }}
+                                  {{  game.title  }}
                                 </dt>
                                 <dd><i class="uil uil-robot"></i></dd>
                               </dl>
@@ -80,7 +80,7 @@
                           </el-dropdown-item>
                         </template>
                         <template v-if="communityList?.length">
-                          <h2>{{ t('community.name') }}</h2>
+                          <h2>{{  t('community.name')  }}</h2>
                           <el-dropdown-item v-for="community in communityList" :key="community.id"
                             :command="[community['isCommunity'] = true, community]">
                             <div @click="moveCommunityPage(community.id)">
@@ -88,7 +88,7 @@
                                 <dt>
                                   <span
                                     :style="`background:url(${community.profile_img}) center center / cover no-repeat; background-size:cover;`"></span>
-                                  {{ community.name }}
+                                  {{  community.name  }}
                                 </dt>
                                 <dd><i class="uil uil-comments"></i></dd>
 
@@ -97,7 +97,7 @@
                           </el-dropdown-item>
                         </template>
                         <template v-if="!hasResearchResult">
-                          <h2>{{ t('no.search.result') }}</h2>
+                          <h2>{{  t('no.search.result')  }}</h2>
 
                         </template>
 
@@ -134,39 +134,39 @@
                     <UserAvatar style="width:30px; height:30px;" :user="user" :key="user?.picture" />
                     <dd>
                       <NuxtLink :to="localePath(`/channel/${user?.channel_id}`)">
-                        <h2>{{ user.name }}</h2>
+                        <h2>{{  user.name  }}</h2>
                       </NuxtLink>
                     </dd>
                   </dl>
                   <div>
-                    <h2>{{ t('myProfile') }} </h2>
+                    <h2>{{  t('myProfile')  }} </h2>
                     <div>
                       <NuxtLink :to="localePath(`/channel/${user.channel_id}`)"><i class="uil uil-user"></i>
-                        {{ t('myChannel') }}
+                        {{  t('myChannel')  }}
                       </NuxtLink>
                       <NuxtLink :to="localePath('/project/list')"><i class="uil uil-robot"></i>
-                        {{ t('gameStudio') }}
+                        {{  t('gameStudio')  }}
                       </NuxtLink>
 
                     </div>
                   </div>
                   <div>
-                    <h2>{{ t('group') }}</h2>
+                    <h2>{{  t('group')  }}</h2>
                     <div>
-                      <NuxtLink :to="localePath(`/profile/${user.id}/communities`)"><i class="uil uil-users-alt"></i>
-                        {{ t('joined.group') }}
+                      <NuxtLink :to="localePath(`/myaccount/communities`)"><i class="uil uil-users-alt"></i>
+                        {{  t('joined.group')  }}
                       </NuxtLink>
                     </div>
                   </div>
                   <div>
-                    <h2>{{ t('account') }}</h2>
+                    <h2>{{  t('account')  }}</h2>
                     <div>
-                      <NuxtLink :to="localePath(`/profile/${user.id}`)"><i class="uil uil-setting"></i>
-                        {{ t('my.account') }}
+                      <NuxtLink :to="localePath(`/myaccount`)"><i class="uil uil-setting"></i>
+                        {{  t('my.account')  }}
                       </NuxtLink>
                     </div>
                   </div>
-                  <p><a class="btn-default w100p" @click="logout">{{ t('logout') }}</a></p>
+                  <p><a class="btn-default w100p" @click="logout">{{  t('logout')  }}</a></p>
                 </div>
               </template>
             </el-dropdown>
@@ -175,7 +175,7 @@
 
           <div class="header-login" v-else-if="!useCookie(config.COOKIE_NAME).value">
             <NuxtLink :to="localePath('/login')">
-              <button class="btn-default"><i class="uil uil-user"></i>{{ t('login') }}</button>
+              <button class="btn-default"><i class="uil uil-user"></i>{{  t('login')  }}</button>
             </NuxtLink>
           </div>
           <div v-else style="min-width:80px">
@@ -377,17 +377,17 @@
       <el-dialog v-model="isOpen" append-to-body custom-class="modal-area-type" :show-close="false">
         <div class="modal-alert">
           <dl class="ma-header">
-            <dt>{{ t('information') }}</dt>
+            <dt>{{  t('information')  }}</dt>
             <dd>
               <button @click="useModal().closeLoginModal()"><i class="uil uil-times"></i></button>
             </dd>
           </dl>
 
           <div class="ma-content">
-            <h2>{{ t('needLogin.text1') }}<br />{{ t('needLogin.text2') }}</h2>
+            <h2>{{  t('needLogin.text1')  }}<br />{{  t('needLogin.text2')  }}</h2>
             <div>
               <button class="btn-default" style="width: 100%" @click="$router.push(localePath('/login'))">
-                {{ t('login') }}</button>
+                {{  t('login')  }}</button>
             </div>
           </div>
 

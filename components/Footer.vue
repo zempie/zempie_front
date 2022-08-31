@@ -4,19 +4,19 @@
             <dl>
                 <dt>
                     <p>
-                        <a :href="config.FTR_PAGE_URL" target="_blank">{{ $t('company.info.title') }}</a>
-                        <NuxtLink to="/terms">{{ $t('terms') }}</NuxtLink>
+                        <a :href="config.FTR_PAGE_URL" target="_blank">{{  $t('company.info.title')  }}</a>
+                        <NuxtLink :to="localePath('/terms')">{{  $t('terms')  }}</NuxtLink>
                     </p>
                     <div>
-                        {{ $t('fromthered') }} &nbsp; | &nbsp; {{ $t('company.owner') }} : {{ $t('company.owner.name')
+                        {{  $t('fromthered')  }} &nbsp; | &nbsp; {{  $t('company.owner')  }} : {{  $t('company.owner.name') 
                         }}
                         &nbsp; |
-                        &nbsp;{{ $t('company.id') }} : 178-88-00617
+                        &nbsp;{{  $t('company.id')  }} : 178-88-00617
                         <br /><br />
 
                         <!-- {{ $t('company.address') }} &nbsp; | &nbsp; {{ $t('email') }} :  -->
                         <a :href="'mailto:' + config.SUPPORT_EMAIL" style="color: #30a6d8">
-                            {{ config.SUPPORT_EMAIL }}</a><br />
+                            {{  config.SUPPORT_EMAIL  }}</a><br />
                         Copyright ⓒ FROMtheRED Inc. All rights reserved.
                     </div>
                 </dt>
@@ -37,6 +37,9 @@
 </template>
 
 <script setup lang="ts">
+import { useLocalePath } from 'vue-i18n-routing';
+
+const localePath = useLocalePath();
 const config = useRuntimeConfig();
 
 </script>

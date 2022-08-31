@@ -181,11 +181,14 @@ import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElSelect, ElOption, ElMessage, ElDialog } from "element-plus";
 
-import { dateFormat, execCommandCopy } from '~/scripts/utils'
+import { dateFormat, execCommandCopy, htmlToDomElem } from '~/scripts/utils'
 import { useI18n } from 'vue-i18n';
 import { useLocalePath } from 'vue-i18n-routing';
 import hljs from 'highlight.js';
 import { useWindowScroll, useInfiniteScroll } from '@vueuse/core'
+
+// import getMetaData from 'metadata-scraper'
+
 
 const { x, y } = useWindowScroll()
 const localePath = useLocalePath();
@@ -258,6 +261,7 @@ const emit = defineEmits(['refresh'])
 
 onMounted(() => {
 
+
   hljs.configure({
     ignoreUnescapedHTML: true
   });
@@ -265,6 +269,16 @@ onMounted(() => {
     .forEach((block) => {
       hljs.highlightElement(block)
     })
+  const dom = htmlToDomElem(props.feed.content)
+
+
+  const linkTag = dom.getElementsByTagName('a')
+  // for (const link of linkTag) {
+  //   const url = link.href;
+  //   getMetaData(url).then((res) => {
+  //     console.log(res)
+  //   })
+  // }
 
 })
 

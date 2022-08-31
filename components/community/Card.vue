@@ -1,36 +1,31 @@
 <template>
-
   <li @click="$router.push(localePath(`/community/${community.id}`))">
-    <!-- <li> -->
     <div :style="{
       'background': 'url(' + bannerImg + ') center center / cover no-repeat', 'background-size': 'cover', 'height': '120px'
     }">
     </div>
     <p :style="{ 'background': 'url(' + profileImg + ') center center / cover no-repeat', 'background-size': 'cover' }">
     </p>
-    <!--                <div class="ct-setup">-->
-    <!--                    <i class="uil uil-ellipsis-h font20"></i>-->
-    <!--                </div>-->
     <div class="ct-info">
-      <h3 class="title"> {{ community.name }}</h3>
-      <p class="desc" style="min-height: 50px;"> {{ community.description }}</p>
+      <h3 class="title"> {{  community.name  }}</h3>
+      <p class="desc" style="min-height: 50px;"> {{  community.description  }}</p>
       <dl>
         <dd @click.stop="$router.push(localePath(`/community/${props.community.id}/members`))">
-          <h4>{{ community.member_cnt }}</h4>
+          <h4>{{  community.member_cnt  }}</h4>
           <p>멤버수</p>
         </dd>
         <dt>
           <p></p>
         </dt>
         <dd>
-          <h4> {{ community.posts_cnt }}</h4>
+          <h4> {{  community.posts_cnt  }}</h4>
           <p>포스팅</p>
         </dd>
         <dt>
           <p></p>
         </dt>
         <dd>
-          <h4> {{ visitCount }}</h4>
+          <h4> {{  visitCount  }}</h4>
           <p>방문</p>
         </dd>
       </dl>

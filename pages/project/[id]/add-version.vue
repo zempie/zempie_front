@@ -104,8 +104,9 @@ useHead({
 
 
 definePageMeta({
-  title: '버전 추가',
-  name: 'addVersion'
+  title: 'Add version',
+  name: 'addVersion',
+  middleware: 'auth'
 })
 
 

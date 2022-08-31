@@ -199,9 +199,13 @@ const {
 @media all and (max-width: 479px) {
   .main-visual {
     width: 100%;
-    .card-game,
+
     .card-timeline {
+      width: 40px auto;
       width: 100%;
+    }
+
+    .card-game {
       margin: 0 auto;
     }
   }

@@ -37,6 +37,12 @@ const config = useRuntimeConfig()
 const localePath = useLocalePath();
 
 
+definePageMeta({
+  title: 'Version Mgmt.',
+  name: 'versionManage',
+  middleware: 'auth'
+
+})
 useHead({
   title: `${t('seo.project.version.manage.title')} | Zempie Studio`,
   meta: [
@@ -59,10 +65,6 @@ useHead({
   ]
 })
 
-definePageMeta({
-  title: '버전 관리',
-  name: 'versionManage'
-})
 
 
 const { data, error, pending, refresh } = await useFetch<{ result: { projectVersions: IVersion[] } }>(`/community/project/${route.params.id}`, getZempieFetchOptions('get', true))
