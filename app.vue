@@ -16,6 +16,7 @@ const route = useRoute()
 
 
 
+
 useHead({
   title: `${t('seo.landing.title')} | Zempie`,
   meta: [

@@ -64,7 +64,7 @@
                           </el-dropdown-item>
                         </template>
                         <template v-if="gameList?.length">
-                          <h2>{{  t('game.name')  }}</h2>
+                          <h2>{{  t('addGameInfo.game.name')  }}</h2>
                           <el-dropdown-item v-for="game in gameList" :key="game.id"
                             :command="[game['isGame'] = true, game]">
                             <div @click="moveGamePage(game.pathname)">
@@ -107,9 +107,6 @@
 
                   </template>
                 </el-dropdown>
-                <!-- @keyup.enter="moveSearchPage"
-                                   v-debounce:150ms="searchType" 
-                                   -->
               </div>
             </div>
           </div>
@@ -518,7 +515,8 @@ function moveSearchPage() {
   isHeaderSideMobile.value = false;
 
   $router.push(localePath(`/search`) + `?q=${searchInput.value}`)
-  // initSearchData()
+  searchDropdown.value.handleClose()
+
 }
 
 

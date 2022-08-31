@@ -22,7 +22,18 @@ export default defineNuxtConfig({
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
     ],
   },
-
+  build: {
+    terser: {
+      terserOptions: {
+        compress: {
+          drop_console: true
+        }
+      }
+    }
+  },
+  generate: {
+    fallback: '404.html'
+  },
   router: {
     middleware: ['auth']
   },
@@ -41,8 +52,6 @@ export default defineNuxtConfig({
     'swiper/css',
     'swiper/css/pagination'
     // '@/assets/css/prism.css'
-
-
   ],
 
 

@@ -6,9 +6,9 @@
           <UserAvatar :user="comment.user" :tag="'span'"></UserAvatar>
         </dt>
         <dd>
-          <h2>{{ comment.user.name }} <span>{{ }}</span></h2>
+          <h2>{{  comment.user.name  }} <span>{{ }}</span></h2>
           <div style="color:#000">
-            {{ commentContent }}
+            {{  commentContent  }}
           </div>
           <p>
             <a v-if="isLiked" @click="unsetLike()">
@@ -17,7 +17,7 @@
             <a v-else @click="setLike()">
               <i class="uil uil-heart-sign"></i>
             </a>
-            {{ $t('like') }} {{ likeCnt }}{{ $t('like.unit') }}
+            {{  $t('like')  }} {{  likeCnt  }}{{  $t('like.unit')  }}
           </p>
         </dd>
       </dl>
@@ -31,13 +31,13 @@
         <template #dropdown>
 
           <div slot="body" class="more-list">
-            <a @click="isCommentEdit = !isCommentEdit">{{ $t('comment.edit') }}</a>
+            <a @click="isCommentEdit = !isCommentEdit">{{  $t('comment.edit')  }}</a>
             <!-- <slot name="commentEdit"></slot> -->
 
             <!-- <a @click="$modal.show('deleteComment', { commentId: comment.id, postId: postId })">{{ $t('comment.delete')
           }}</a> -->
             <a @click="showDeleteModal = true">
-              {{ $t('comment.delete')
+              {{  $t('comment.delete') 
               }}
             </a>
           </div>
@@ -46,21 +46,21 @@
     </dd>
 
     <ClientOnly>
-      <el-dialog v-model="showDeleteModal" append-to-body custom-class="modal-area-type">
+      <el-dialog v-model="showDeleteModal" append-to-body custom-class="modal-area-type" width="380px">
         <div class="modal-alert">
           <dl class="ma-header">
-            <dt> {{ $t('information') }}</dt>
+            <dt> {{  $t('information')  }}</dt>
             <dd>
               <button @click="showDeleteModal = false"><i class="uil uil-times"></i></button>
             </dd>
           </dl>
           <div class="ma-content">
-            <h2>{{ $t('comment.delete.text') }}
+            <h2>{{  $t('comment.delete.text')  }}
             </h2>
             <div>
-              <button class="btn-default w48p" @click="deleteComment">{{ $t('delete') }}</button>
-              <button class="btn-gray w48p " @click="showDeleteModal = false">{{ $t('no')
-              }}</button>
+              <button class="btn-default w48p" @click="deleteComment">{{  $t('delete')  }}</button>
+              <button class="btn-gray w48p " @click="showDeleteModal = false">{{  $t('no') 
+                }}</button>
             </div>
           </div>
         </div>

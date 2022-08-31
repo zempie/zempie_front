@@ -202,10 +202,12 @@ const form = reactive({
 onMounted(() => {
   if (activeTab.value === 'SNS') {
 
-    snsAttachFiles.value = {
-      img: attachFileArr.value[0]?.type === 'image' ? attachFileArr.value : [],
-      video: attachFileArr.value[0]?.type === 'video' ? attachFileArr.value[0] : null,
-      audio: attachFileArr.value[0]?.type === 'sound' ? attachFileArr.value : []
+    if (attachFileArr.value?.length) {
+      snsAttachFiles.value = {
+        img: attachFileArr.value[0]?.type === 'image' ? attachFileArr.value : [],
+        video: attachFileArr.value[0]?.type === 'video' ? attachFileArr.value[0] : null,
+        audio: attachFileArr.value[0]?.type === 'sound' ? attachFileArr.value : []
+      }
     }
   }
 
@@ -226,8 +228,8 @@ onMounted(() => {
 })
 
 function postingType(type: string) {
-  if (snsAttachFiles.value.img.length || snsAttachFiles.value.audio.length || snsAttachFiles.value.video ||
-    form.post_contents.length > 7
+  if (snsAttachFiles.value.img?.length || snsAttachFiles.value.audio?.length || snsAttachFiles.value.video ||
+    form.post_contents?.length > 7
 
   ) {
 
@@ -369,7 +371,7 @@ async function onSubmit() {
   } else {
 
 
-    if (snsAttachFiles.value.img.length || snsAttachFiles.value.audio.length || snsAttachFiles.value.video) {
+    if (snsAttachFiles.value.img?.length || snsAttachFiles.value.audio?.length || snsAttachFiles.value?.video) {
       const formData = new FormData();
 
       for (const img of snsAttachFiles.value.img) {
@@ -425,7 +427,7 @@ function uploadImageFile() {
 
 function onSelectImageFile(event: any) {
   if (activeTab.value.toUpperCase() === 'SNS') {
-    if (snsAttachFiles.value.video || snsAttachFiles.value.audio.length) {
+    if (snsAttachFiles.value.video || snsAttachFiles.value.audio?.length) {
       ElMessage({
         message: t('post.fileType.err.text1'),
         type: 'warning'
@@ -451,11 +453,19 @@ function onSelectImageFile(event: any) {
       if (activeTab.value.toUpperCase() === 'BLOG') {
         editor.value.chain().focus(null).setImage({ src: blobUrl, alt: file.name, title: file.name }).setHardBreak().setHardBreak().run();
       } else {
-        snsAttachFiles.value.img.push({
-          file: file,
-          name: file.name,
-          url: url,
-        })
+        if (snsAttachFiles.value.img) {
+          snsAttachFiles.value.img.push({
+            file: file,
+            name: file.name,
+            url: url,
+          })
+        } else {
+          snsAttachFiles.value.img = [{
+            file: file,
+            name: file.name,
+            url: url,
+          }]
+        }
       }
     };
 
@@ -475,7 +485,7 @@ function uploaVideoFile() {
 
 function onSelectVideoFile(event: any) {
   if (activeTab.value.toUpperCase() === 'SNS') {
-    if (snsAttachFiles.value.img.length || snsAttachFiles.value.audio.length) {
+    if (snsAttachFiles.value.img?.length || snsAttachFiles.value.audio?.length) {
       ElMessage({
         message: t('post.fileType.err.text1'),
         type: 'warning'
@@ -502,10 +512,19 @@ function onSelectVideoFile(event: any) {
 
         editor.value.chain().focus(null).setVideo({ src: blobUrl }).run();
       } else {
-        snsAttachFiles.value.video = {
-          file: file,
-          name: file.name,
-          url: url
+        if (snsAttachFiles.value.video) {
+
+          snsAttachFiles.value.video = {
+            file: file,
+            name: file.name,
+            url: url
+          }
+        } else {
+          snsAttachFiles.value.video = [{
+            file: file,
+            name: file.name,
+            url: url,
+          }]
         }
       }
     };
@@ -526,7 +545,7 @@ function deleteVideo() {
 
 function uploadAudioFile() {
   if (activeTab.value.toUpperCase() === 'SNS') {
-    if (snsAttachFiles.value.video || snsAttachFiles.value.img.length) {
+    if (snsAttachFiles.value.video || snsAttachFiles.value.img?.length) {
       ElMessage({
         message: t('post.fileType.err.text1'),
         type: 'warning'
@@ -554,11 +573,22 @@ function onSelectAudioFile(event: any) {
       if (activeTab.value === 'BLOG') {
         editor.value.chain().focus(null).setAudio({ src: blobUrl, title: file.name }).run();
       } else {
-        snsAttachFiles.value.audio.push({
-          file: file,
-          name: file.name,
-          url: url
-        })
+
+
+        if (snsAttachFiles.value.audio) {
+
+          snsAttachFiles.value.audio.push({
+            file: file,
+            name: file.name,
+            url: url
+          })
+        } else {
+          snsAttachFiles.value.audio = [{
+            file: file,
+            name: file.name,
+            url: url,
+          }]
+        }
       }
     };
 
@@ -576,7 +606,7 @@ function deleteAudio(idx: number) {
 
 async function onUpdatePost() {
 
-  let attatchment_files: any = props.feed.attatchment_files
+  let attatchment_files: any = props.feed.attatchment_files ?? []
   let newImgArr = [];
   let newSoundArr = [];
   let newVideo = null;
@@ -681,21 +711,21 @@ async function onUpdatePost() {
 
     }
   } else {
-    if (attachFileArr.value[0]?.type === 'image') {
+    if (attachFileArr.value && attachFileArr.value[0]?.type === 'image') {
       attatchment_files = snsAttachFiles.value.img
     }
     newImgArr = snsAttachFiles.value.img?.filter(img => {
       return !img.size
     })
 
-    if (attachFileArr.value[0]?.type === 'sound') {
+    if (attachFileArr.value && attachFileArr.value[0]?.type === 'sound') {
       attatchment_files = snsAttachFiles.value.audio
     }
     newSoundArr = snsAttachFiles.value.audio?.filter(audio => {
       return !audio.size
     })
 
-    if (attachFileArr.value[0]?.type === 'video') {
+    if (attachFileArr.value && attachFileArr.value[0]?.type === 'video') {
 
       attatchment_files = snsAttachFiles.value.video !== null ? snsAttachFiles.value.video : []
     }
@@ -703,7 +733,7 @@ async function onUpdatePost() {
     newVideo = snsAttachFiles.value.video;
 
 
-    if (newImgArr.length) {
+    if (newImgArr?.length) {
       for (const img of newImgArr) {
         formData.append(img.name, img.file)
       }
@@ -722,7 +752,7 @@ async function onUpdatePost() {
         }
 
       }
-    } else if (newSoundArr.length) {
+    } else if (newSoundArr?.length) {
       for (const sound of newSoundArr) {
         formData.append(sound.name, sound.file)
       }

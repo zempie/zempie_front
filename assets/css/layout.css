@@ -371,7 +371,7 @@
 }
 
 .header-search-list>div {
-  height: 500px;
+  /* height: 500px; */
   padding: 10px;
   overflow: auto;
 }

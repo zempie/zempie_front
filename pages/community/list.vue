@@ -39,7 +39,7 @@
       <div class="result-container">
         <div class="card-timeline">
           <TransitionGroup name="fade">
-            <CommunityCardSk v-show="pending" v-for="com in 4" :key="com" />
+            <!-- <CommunityCardSk v-show="pending" v-for="com in 4" :key="com" /> -->
             <CommunityCard v-for="community in communities" :community="community" :key="community.id">
               <template v-slot:subBtn>
                 <CommunitySubscribeBtn :community="community" @refresh="refresh" />
