@@ -734,13 +734,13 @@ async function onUpdatePost() {
 
   } else {
 
-    if (snsAttachFiles.value.img.length > 0) {
+    if (snsAttachFiles.value.img?.length > 0) {
       attatchment_files = snsAttachFiles.value.img
     }
-    else if (snsAttachFiles.value.audio.length > 0) {
+    else if (snsAttachFiles.value.audio?.length > 0) {
       attatchment_files = snsAttachFiles.value.audio
     }
-    else if (!snsAttachFiles.value) {
+    else if (!snsAttachFiles.value.video) {
 
       attatchment_files = snsAttachFiles.value.video !== null ? snsAttachFiles.value.video : []
     }
@@ -813,18 +813,17 @@ async function onUpdatePost() {
 
   }
 
-  console.log('attatchment_files 3: ', attatchment_files)
+  console.log('attatchment_files 3: ', Array.isArray(attatchment_files))
 
 
 
-  Array.isArray(attatchment_files) ? payload.attatchment_files = attatchment_files :
-    payload.attatchment_files = JSON.parse(attatchment_files)
+  Array.isArray(attatchment_files) ? attatchment_files : JSON.parse(attatchment_files)
 
   attatchment_files = attatchment_files?.filter((file) => {
     return file.size
   })
-  console.log('attatchment_files 4: ', attatchment_files)
 
+  payload.attatchment_files = attatchment_files
 
   const { data, error, pending } = await useFetch(`/post/${props.feed.id}`, getComFetchOptions('put', true, payload))
 
@@ -836,12 +835,14 @@ async function onUpdatePost() {
       message: t('posting.edit.done'),
       type: 'success'
     })
+
+
   } else {
     ElMessage.error(t('posting.edit.fail'))
+
   }
 
   loading.close()
-
 
 }
 
