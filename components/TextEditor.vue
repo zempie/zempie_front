@@ -536,7 +536,6 @@ function onSelectVideoFile(event: any) {
 
     reader.readAsDataURL(file);
   }
-  console.log(snsAttachFiles.value)
   event.target.value = ''
 
 }
@@ -740,7 +739,6 @@ async function onUpdatePost() {
       attatchment_files = snsAttachFiles.value.img
     }
 
-    console.log(attatchment_files)
     newImgArr = attatchment_files?.filter((img, idx) => {
       // if (!img.size) {
       //   attatchment_files.splice(0, idx)
@@ -828,12 +826,17 @@ async function onUpdatePost() {
 
   }
 
+  console.log('attatchment_files: ', attatchment_files)
+
+
+
+  Array.isArray(attatchment_files) ? payload.attatchment_files = attatchment_files :
+    payload.attatchment_files = JSON.parse(attatchment_files)
+
   attatchment_files = attatchment_files?.filter((file) => {
     return file.size
   })
 
-  Array.isArray(attatchment_files) ? payload.attatchment_files = attatchment_files :
-    payload.attatchment_files = JSON.parse(attatchment_files)
 
   const { data, error, pending } = await useFetch(`/post/${props.feed.id}`, getComFetchOptions('put', true, payload))
 

@@ -77,8 +77,8 @@
         <audio controls :src="file.url"></audio>
         <p>{{  file.name  }}</p>
       </div>
-      <img v-else-if="initFiles?.length === 1" style="height: 88%;margin: 0 auto; display: flex;"
-        :src="initFiles[0].url" class="feed-img mt-3" />
+      <img v-else-if="initFiles?.length === 1" style="width:100%;margin: 0 auto; display: flex;" :src="initFiles[0].url"
+        class="feed-img mt-3" />
 
       <swiper v-else class="swiper" :modules="[Pagination]" style="height: 350px;" :pagination="{ clickable: true }">
         <swiper-slide v-for="file in initFiles">
