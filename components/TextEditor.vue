@@ -738,32 +738,34 @@ async function onUpdatePost() {
     if (snsAttachFiles.value && snsAttachFiles.value[0]?.type === 'image') {
       attatchment_files = snsAttachFiles.value.img
     }
+    console.log('attatchment_files 1: ', attatchment_files)
 
-    newImgArr = attatchment_files?.filter((img, idx) => {
-      // if (!img.size) {
-      //   attatchment_files.splice(0, idx)
-      // }
-      return !img.size
-    })
+    // newImgArr = attatchment_files?.filter((img, idx) => {
+    //   // if (!img.size) {
+    //   //   attatchment_files.splice(0, idx)
+    //   // }
+    //   return !img.size
+    // })
 
     if (snsAttachFiles.value && snsAttachFiles.value[0]?.type === 'sound') {
       attatchment_files = snsAttachFiles.value.audio
     }
-    newSoundArr = attatchment_files?.filter((audio, idx) => {
-      // if (!audio.size) {
-      //   attatchment_files.splice(0, idx)
-      // }
-      return !audio.size
-    })
+    // newSoundArr = attatchment_files?.filter((audio, idx) => {
+    //   // if (!audio.size) {
+    //   //   attatchment_files.splice(0, idx)
+    //   // }
+    //   return !audio.size
+    // })
 
     if (snsAttachFiles.value && snsAttachFiles.value[0]?.type === 'video') {
 
       attatchment_files = snsAttachFiles.value.video !== null ? snsAttachFiles.value.video : []
     }
 
-    newVideo = snsAttachFiles.value.video;
+    // newVideo = snsAttachFiles.value.video;
 
     if (snsAttachFiles.value.img?.length) {
+
       for (const img of snsAttachFiles.value.img) {
         formData.append(img.name, img.file)
       }
@@ -786,6 +788,7 @@ async function onUpdatePost() {
         }
 
       }
+      console.log('attatchment_files 2: ', attatchment_files)
 
     } else if (snsAttachFiles.value.audio?.length) {
       for (const sound of snsAttachFiles.value.audio) {
@@ -806,7 +809,7 @@ async function onUpdatePost() {
         }
       }
     } else if (snsAttachFiles.value.video) {
-      formData.append(newVideo.name, newVideo.file)
+      formData.append(snsAttachFiles.value.video.name, snsAttachFiles.value.video.file)
       const { data, error, pending } = await useFetch<{ result: { priority: number, url: string, type: string, name: string, size: number }[] }>('/community/att', getZempieFetchOptions('post', true, formData))
 
       if (data.value) {
@@ -826,7 +829,7 @@ async function onUpdatePost() {
 
   }
 
-  console.log('attatchment_files: ', attatchment_files)
+  console.log('attatchment_files 3: ', attatchment_files)
 
 
 
@@ -836,6 +839,7 @@ async function onUpdatePost() {
   attatchment_files = attatchment_files?.filter((file) => {
     return file.size
   })
+  console.log('attatchment_files 4: ', attatchment_files)
 
 
   const { data, error, pending } = await useFetch(`/post/${props.feed.id}`, getComFetchOptions('put', true, payload))
