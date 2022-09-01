@@ -823,7 +823,7 @@ async function onUpdatePost() {
 
   }
 
-  attatchment_files = attatchment_files.filter((file) => {
+  attatchment_files = attatchment_files?.filter((file) => {
     return file.size
   })
 
