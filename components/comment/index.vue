@@ -6,7 +6,7 @@
           <UserAvatar :user="comment.user" :tag="'span'"></UserAvatar>
         </dt>
         <dd>
-          <h2>{{  comment.user.name  }} <span>{{ }}</span></h2>
+          <h2>{{  comment.user?.name  }} <span>{{ }}</span></h2>
           <div style="color:#000">
             {{  commentContent  }}
           </div>
@@ -24,7 +24,7 @@
 
     </dt>
 
-    <dd v-if="comment.user.uid === user?.uid">
+    <dd v-if="comment.user?.uid === user?.uid">
       <el-dropdown trigger="click" ref="feedMenu" popper-class="tapl-more-dropdown">
 
         <a slot="trigger"><i class="uil uil-ellipsis-h font25"></i></a>

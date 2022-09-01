@@ -1,8 +1,8 @@
 <template>
-  <div class="content">
-    <div class="area-view" v-if="feed">
-      <ClientOnly>
-        <ul class="ta-post">
+  <ClientOnly>
+    <div class="content">
+      <div class="area-view">
+        <ul class="ta-post" v-if="feed">
           <li class="tap-list">
             <dl class="tapl-title">
               <dt>
@@ -11,7 +11,7 @@
                     <UserAvatar :user="feed?.user" :tag="'span'" />
                   </dt>
                   <dd v-if="feed?.user">
-                    <h2>{{  feed?.user.name  }}</h2>
+                    <h2>{{  feed?.user?.name  }}</h2>
                     <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{  dateFormat(feed?.created_at)  }}</p>
                   </dd>
                   <dd v-else>
@@ -56,7 +56,7 @@
                   <audio v-else-if="file.type === 'sound'" controls :src="file.url"></audio>
                   <div class="audio" v-else-if="file.type === 'sound'">
                     <audio controls :src="file.url"></audio>
-                    <p>{{  file.name  }}</p>
+                    <p>{{  file?.name  }}</p>
                   </div>
                 </div>
               </div>
@@ -83,11 +83,11 @@
               </li>
 
             </ul>
-            <div class="tapl-comment">
+            <div class="tapl-comment" v-if="comments?.result">
               <p>{{  $t('comment')  }} {{  feed?.comment_cnt  }}{{  $t('comment.count.unit')  }} </p>
               <CommentInput :postId="feed?.id" @refresh="commentRefresh" />
               <ul>
-                <li v-for="comment in comments" :key="comment.id">
+                <li v-for="comment in comments.result" :key="comment.id">
                   <Comment :comment="comment" @refresh="commentRefresh" />
                 </li>
               </ul>
@@ -95,11 +95,10 @@
             </div>
           </li>
         </ul>
-      </ClientOnly>
 
+      </div>
     </div>
-  </div>
-
+  </ClientOnly>
 </template>
 
 <script setup lang="ts">
@@ -121,7 +120,7 @@ const { t, locale } = useI18n()
 const config = useRuntimeConfig()
 // const feed = ref<IFeed>();
 const createdDate = ref('');
-const comments = ref([]);
+// const comments = ref([]);
 
 const limit = ref(COMMENT_LIMIT);
 const offset = ref(0);
@@ -137,40 +136,59 @@ const feedId = computed(() => route.params.id as string)
 
 
 const { data: feed, error, pending, refresh } = await useFetch<any>(`/post/${feedId.value}`, getComFetchOptions('get', true))
+const { data: comments, pending: commentPending, error: commentError, refresh: commentRefresh } = await useFetch<{ result: [] }>(`/post/${feedId.value}/comment/list?limit=${limit.value}&offset=${offset.value}${sort.value ? '&sort=' + sort.value : ''}`, getComFetchOptions('get', true))
 
 
-watch(
-  () => feed.value,
-  async (feed) => {
-
-    useHead({
-      title: `${feed.user.name}${t('seo.feed.title')} | Zempie`,
-      meta: [
-        {
-          name: 'description',
-          content: `${feed.content.slice(0, 20)}${t('seo.feed.desc')}`
-        },
-        {
-          name: 'og:title',
-          content: `${feed.user.name}${t('seo.feed.title')}`
-        },
-        {
-          name: 'og:description',
-          content: `${feed.content.slice(0, 20)}${t('seo.feed.desc')}`
-        },
-        {
-          name: 'og:url',
-          content: `${config.ZEMPIE_URL}${route.path}`
-        },
-      ]
-    })
-  }
-)
-
-
-onBeforeMount(async () => {
-  // await commentFetch()
+useHead({
+  title: `${feed.value.user.name}${t('seo.feed.title')} | Zempie`,
+  meta: [
+    {
+      name: 'description',
+      content: `${feed.value.content.slice(0, 20)}${t('seo.feed.desc')}`
+    },
+    {
+      name: 'og:title',
+      content: `${feed.value.user.name}${t('seo.feed.title')}`
+    },
+    {
+      name: 'og:description',
+      content: `${feed.value.content.slice(0, 20)}${t('seo.feed.desc')}`
+    },
+    {
+      name: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.path}`
+    },
+  ]
 })
+
+// watch(
+//   () => feed.value,
+//   async (feed) => {
+//     console.log(feed)
+//     useHead({
+//       title: `${feed.user.name}${t('seo.feed.title')} | Zempie`,
+//       meta: [
+//         {
+//           name: 'description',
+//           content: `${feed.content.slice(0, 20)}${t('seo.feed.desc')}`
+//         },
+//         {
+//           name: 'og:title',
+//           content: `${feed.user.name}${t('seo.feed.title')}`
+//         },
+//         {
+//           name: 'og:description',
+//           content: `${feed.content.slice(0, 20)}${t('seo.feed.desc')}`
+//         },
+//         {
+//           name: 'og:url',
+//           content: `${config.ZEMPIE_URL}${route.path}`
+//         },
+//       ]
+//     })
+//   }
+// )
+
 
 
 
@@ -188,22 +206,22 @@ onBeforeMount(async () => {
 // }
 
 
-async function commentRefresh() {
-  comments.value = [];
-  await commentFetch();
+// async function commentRefresh() {
+//   comments.value = [];
+//   await commentFetch();
 
-}
+// }
 
-async function commentFetch() {
+// async function commentFetch() {
 
-  const { data, pending, error } = await useFetch<{ result: [] }>(`/post/${feedId.value}/comment/list?limit=${limit.value}&offset=${offset.value}${sort.value ? '&sort=' + sort.value : ''}`, getComFetchOptions('get', true))
-  if (!error.value) {
-    if (data.value) {
-      comments.value = data.value.result
-    }
-  }
+//   const { data, pending, error } = await useFetch<{ result: [] }>(`/post/${feedId.value}/comment/list?limit=${limit.value}&offset=${offset.value}${sort.value ? '&sort=' + sort.value : ''}`, getComFetchOptions('get', true))
+//   if (!error.value) {
+//     if (data.value) {
+//       comments.value = data.value.result
+//     }
+//   }
 
-}
+// }
 
 
 function copyUrl() {

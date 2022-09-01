@@ -229,10 +229,6 @@ onMounted(() => {
 const v$ = useVuelidate(rules, form)
 
 
-
-// isEmailReadOnly = false;
-// isNameReadOnly = false;
-
 const errorAgree = ref(false);
 
 onBeforeMount(() => {
@@ -340,7 +336,6 @@ async function register() {
 async function joinZempie() {
   const payload = {
     name: form.username,
-    // nickname:form.nickname,
   }
 
   try {

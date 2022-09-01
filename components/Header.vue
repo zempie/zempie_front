@@ -740,6 +740,9 @@ function initSearchData() {
   .header-login {
     display: block !important;
 
+    i {
+      display: none;
+    }
   }
 
   //.header-info {display:none;}

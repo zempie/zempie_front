@@ -735,7 +735,7 @@ async function onUpdatePost() {
       attatchment_files = snsAttachFiles.value.img
     }
 
-
+    console.log(attatchment_files)
     newImgArr = attatchment_files?.filter((img, idx) => {
       // if (!img.size) {
       //   attatchment_files.splice(0, idx)
