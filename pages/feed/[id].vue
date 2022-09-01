@@ -141,19 +141,19 @@ const { data: comments, pending: commentPending, error: commentError, refresh: c
 
 
 useHead({
-  title: `${feed.value.user.name}${t('seo.feed.title')} | Zempie`,
+  title: `${feed.value?.user.name}${t('seo.feed.title')} | Zempie`,
   meta: [
     {
       name: 'description',
-      content: `${feed.value.content.slice(0, 20)}${t('seo.feed.desc')}`
+      content: `${feed.value?.content.slice(0, 20)}${t('seo.feed.desc')}`
     },
     {
       name: 'og:title',
-      content: `${feed.value.user.name}${t('seo.feed.title')}`
+      content: `${feed.value?.user.name}${t('seo.feed.title')}`
     },
     {
       name: 'og:description',
-      content: `${feed.value.content.slice(0, 20)}${t('seo.feed.desc')}`
+      content: `${feed.value?.content.slice(0, 20)}${t('seo.feed.desc')}`
     },
     {
       name: 'og:url',

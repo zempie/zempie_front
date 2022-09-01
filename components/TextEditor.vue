@@ -611,7 +611,11 @@ function deleteAudio(idx: number) {
 
 async function onUpdatePost() {
 
-  let attatchment_files: any = props.feed.attatchment_files ?? []
+  let attatchment_files: any = props.feed.attatchment_files ? Array.isArray(props.feed.attatchment_files) ? props.feed.attatchment_files :
+    JSON.parse(props.feed.attatchment_files) : []
+
+
+  // let attatchment_files: any = props.feed.attatchment_files ?? []
   let newImgArr = [];
   let newSoundArr = [];
   let newVideo = null;
