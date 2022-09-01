@@ -169,7 +169,7 @@ watch(
 
 
 onBeforeMount(async () => {
-  await commentFetch()
+  // await commentFetch()
 })
 
 
