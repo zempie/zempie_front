@@ -794,8 +794,10 @@ async function onUpdatePost() {
     }
 
   }
+  Array.isArray(payload.attatchment_files) ? payload.attatchment_files :
+    payload.attatchment_files = JSON.parse(attatchment_files)
+  console.log(' Array.isArray(payload.attatchment_files)', Array.isArray(payload.attatchment_files))
 
-  payload.attatchment_files = attatchment_files
   const { data, error, pending } = await useFetch(`/post/${props.feed.id}`, getComFetchOptions('put', true, payload))
 
   if (!error.value) {

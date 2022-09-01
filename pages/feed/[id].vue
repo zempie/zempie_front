@@ -1,71 +1,74 @@
 <template>
 
   <div class="content">
+
+
     <div class="area-view">
-      <ul class="ta-post">
-        <li class="tap-list">
-          <dl class="tapl-title">
-            <dt>
-              <dl>
-                <dt>
-                  <UserAvatar :user="feed?.user" :tag="'span'" />
-                </dt>
-                <dd v-if="feed?.user">
-                  <h2>{{  feed?.user.name  }}</h2>
-                  <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{  dateFormat(feed?.created_at)  }}</p>
-                </dd>
-                <dd v-else>
-                  <h2>{{  $t('feed.noUser.post')  }}</h2>
-                  <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{  dateFormat(feed?.created_at)  }}</p>
-                </dd>
-              </dl>
-            </dt>
-            <dd>
-              <!-- <UserFollowBtn :user="feed.user" /> -->
-            </dd>
+      <ClientOnly>
+        <ul class="ta-post">
+          <li class="tap-list">
+            <dl class="tapl-title">
+              <dt>
+                <dl>
+                  <dt>
+                    <UserAvatar :user="feed?.user" :tag="'span'" />
+                  </dt>
+                  <dd v-if="feed?.user">
+                    <h2>{{  feed?.user.name  }}</h2>
+                    <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{  dateFormat(feed?.created_at)  }}</p>
+                  </dd>
+                  <dd v-else>
+                    <h2>{{  $t('feed.noUser.post')  }}</h2>
+                    <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{  dateFormat(feed?.created_at)  }}</p>
+                  </dd>
+                </dl>
+              </dt>
+              <dd>
+                <!-- TODO: is_following 백엔드 확인-->
+                <!-- <UserFollowBtn :user="feed.user" @refresh="fetch" /> -->
+              </dd>
 
-          </dl>
+            </dl>
 
-          <div class="tapl-content" v-html="feed?.content"></div>
-          <template
-            v-if="feed?.post_type === 'SNS' && feed?.attatchment_files?.length === 1 && feed?.attatchment_files[0].type === 'image'">
-            <img style="height: 88%;
+            <div class="tapl-content" v-html="feed?.content"></div>
+            <template
+              v-if="feed?.post_type === 'SNS' && feed?.attatchment_files?.length === 1 && feed?.attatchment_files[0].type === 'image'">
+              <img style="height: 88%;
                              margin: 0 auto;
                              display: flex;" :src="feed?.attatchment_files[0].url" class="feed-img mt-3" />
-          </template>
-          <template
-            v-else-if="feed?.post_type === 'SNS' && feed?.attatchment_files && feed?.attatchment_files.length > 0">
-            <div class="tapl-movie-img" v-if="feed?.attatchment_files[0].type === 'image'">
-              <swiper class="swiper" :options="swiperOption" style="height: 350px;">
-                <template v-for="file in feed?.attatchment_files">
-                  <swiper-slide>
-                    <img style="height: 88%;
+            </template>
+            <template
+              v-else-if="feed?.post_type === 'SNS' && feed?.attatchment_files && feed?.attatchment_files.length > 0">
+              <div class="tapl-movie-img" v-if="feed?.attatchment_files[0].type === 'image'">
+                <swiper class="swiper" :options="swiperOption" style="height: 350px;">
+                  <template v-for="file in feed?.attatchment_files">
+                    <swiper-slide>
+                      <img style="height: 88%;
                              margin: 0 auto;
                              display: flex;" v-if="file.type === 'image'" :src="file.url" class="feed-img mt-3" />
-                  </swiper-slide>
+                    </swiper-slide>
 
-                </template>
-                <div class="swiper-pagination" slot="pagination"></div>
-              </swiper>
-            </div>
-            <div class="tapl-movie-img" v-else>
-              <div v-for="file in feed?.attatchment_files" :key="file.id">
-                <video class="sns-img" v-if="file.type === 'video'" width="320" height="240" controls
-                  :src="file.url"></video>
-                <audio v-else-if="file.type === 'sound'" controls :src="file.url"></audio>
-                <div class="audio" v-else-if="file.type === 'sound'">
-                  <audio controls :src="file.url"></audio>
-                  <p>{{  file.name  }}</p>
+                  </template>
+                  <div class="swiper-pagination" slot="pagination"></div>
+                </swiper>
+              </div>
+              <div class="tapl-movie-img" v-else>
+                <div v-for="file in feed?.attatchment_files" :key="file.id">
+                  <video class="sns-img" v-if="file.type === 'video'" width="320" height="240" controls
+                    :src="file.url"></video>
+                  <audio v-else-if="file.type === 'sound'" controls :src="file.url"></audio>
+                  <div class="audio" v-else-if="file.type === 'sound'">
+                    <audio controls :src="file.url"></audio>
+                    <p>{{  file.name  }}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          </template>
-          <ClientOnly>
+            </template>
 
             <ul class="tapl-option">
               <li>
                 <ul>
-                  <LikeBtn :feed="feed" />
+                  <LikeBtn v-if="feed" :feed="feed" />
                   <li><i class="uil uil-comment-alt-dots" style="font-size:22px;"></i>&nbsp;
                     {{  feed?.comment_cnt  }}
                   </li>
@@ -79,7 +82,7 @@
               </li>
 
               <li>
-                <PostDropdown :feed="feed" @deletePost="$router.back()" @refresh="fetch" />
+                <PostDropdown v-if="feed" :feed="feed" @deletePost="$router.back()" @refresh="fetch" />
               </li>
 
             </ul>
@@ -93,9 +96,10 @@
               </ul>
 
             </div>
-          </ClientOnly>
-        </li>
-      </ul>
+          </li>
+        </ul>
+      </ClientOnly>
+
     </div>
   </div>
 
@@ -118,7 +122,7 @@ const route = useRoute();
 const router = useRouter();
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
-const feed = ref<IFeed>();
+// const feed = ref<IFeed>();
 const createdDate = ref('');
 const comments = ref([]);
 
@@ -131,22 +135,23 @@ const swiperOption = ref({
     el: '.swiper-pagination'
   }
 })
-const userInfo = computed(() => useUser().user.value.info)
+const userInfo = ref(computed(() => useUser().user.value.info))
 const feedId = computed(() => route.params.id as string)
 
 
+const { data: feed, error, pending } = await useFetch<any>(`/post/${feedId.value}`, getComFetchOptions('get', true))
 
 
 watch(
   () => feed.value,
-  (feed) => {
+  async (feed) => {
 
     useHead({
       title: `${feed.user.name}${t('seo.feed.title')} | Zempie`,
       meta: [
         {
           name: 'description',
-          content: `${feed.user.name}${t('seo.feed.desc')}`
+          content: `${feed.content.slice(0, 20)}${t('seo.feed.desc')}`
         },
         {
           name: 'og:title',
@@ -154,7 +159,7 @@ watch(
         },
         {
           name: 'og:description',
-          content: `${feed.user.name}${t('seo.feed.desc')}`
+          content: `${feed.content.slice(0, 20)}${t('seo.feed.desc')}`
         },
         {
           name: 'og:url',
@@ -166,21 +171,24 @@ watch(
 )
 
 
-await fetch()
-await commentFetch()
+onBeforeMount(async () => {
+  await commentFetch()
+})
 
 
 
-async function fetch() {
 
-  const { data, error, pending } = await useFetch<any>(`/post/${feedId.value}`, getComFetchOptions('get', true))
+// async function fetch() {
 
+//   const { data, error, pending } = await useFetch<any>(`/post/${feedId.value}`, getComFetchOptions('get', true))
 
-  if (data.value) {
-    feed.value = data.value;
+//   console.log(data.value)
+//   if (data.value) {
+//     feed.value = data.value;
+//     console.log(data.value)
 
-  }
-}
+//   }
+// }
 
 
 async function commentRefresh() {
