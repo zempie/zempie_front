@@ -121,26 +121,6 @@ const {
   createQueryUrl('/timeline/posts/img', { limit: 12 }),
   getComFetchOptions('get', false)
 )
-
-const { data, pending, error } = await game.list({
-  limit: GAME_COUNT,
-  offset: 0,
-})
-const {
-  data: communities,
-  pending: cPending,
-  error: cError,
-} = await community.list({ limit: COMMUNITY_COUNT })
-
-const { data, pending, error } = await game.list({
-  limit: GAME_COUNT,
-  offset: 0,
-})
-const {
-  data: communities,
-  pending: cPending,
-  error: cError,
-} = await community.list({ limit: COMMUNITY_COUNT })
 </script>
 
 <style scoped lang="scss">
@@ -169,6 +149,7 @@ const {
   width: 1225px;
   margin: auto;
   justify-content: center;
+
   .thumbmail {
     box-shadow: 0px 10px 50px rgb(0 0 0 / 10%);
     padding: 20px;
