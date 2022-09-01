@@ -505,6 +505,7 @@ function onSelectVideoFile(event: any) {
 
     reader.onload = async (e) => {
 
+
       const url = e.target!.result as any
       const result = await fetch(url)
       const blob = await result.blob()
@@ -517,25 +518,25 @@ function onSelectVideoFile(event: any) {
         editor.value.chain().focus(null).setVideo({ src: blobUrl }).run();
       } else {
         if (snsAttachFiles.value.video) {
-
           snsAttachFiles.value.video = {
             file: file,
             name: file.name,
             url: url
           }
         } else {
-          snsAttachFiles.value.video = [{
+          snsAttachFiles.value.video = {
             file: file,
             name: file.name,
             url: url,
-          }]
+          }
+          console.log(snsAttachFiles.value)
         }
       }
     };
 
     reader.readAsDataURL(file);
   }
-
+  console.log(snsAttachFiles.value)
   event.target.value = ''
 
 }
@@ -640,6 +641,7 @@ async function onUpdatePost() {
 
   const dom = htmlToDomElem(form.post_contents)
 
+
   imgArr.value = [...dom.getElementsByClassName('attr-img')]
   videoArr.value = [...dom.getElementsByTagName('video')]
   audioArr.value = [...dom.getElementsByTagName('audio')]
@@ -649,71 +651,84 @@ async function onUpdatePost() {
     const videoFiles = []
     const audioFiles = []
 
+    if (imgArr.value.length) {
+      for (const img of imgArr.value) {
+        if (img.src.substring(0, 4) === 'blob' || img.src.substring(0, 4) === 'data') {
+          const formData = new FormData();
 
-    for (const img of imgArr.value) {
+          await fetch(img.src)
+            .then(async (result) => {
+              formData.append(img.title, await result.blob())
+            })
 
-      if (img.src.substring(0, 4) === 'blob' || img.src.substring(0, 4) === 'data') {
-        const formData = new FormData();
+          const { data, error, pending } = await useFetch<{ result: [] }>('/community/att', getZempieFetchOptions('post', true, formData))
+          if (data.value) {
+            form.post_contents = form.post_contents.replace(img.src, data.value.result[0].url)
+            imgFiles.push(...data.value.result)
 
-        await fetch(img.src)
-          .then(async (result) => {
-            formData.append(img.title, await result.blob())
-          })
-
-        const { data, error, pending } = await useFetch<{ result: [] }>('/community/att', getZempieFetchOptions('post', true, formData))
-        if (data.value) {
-          form.post_contents = form.post_contents.replace(img.src, data.value.result[0].url)
-          imgFiles.push(...data.value.result)
-
+          }
         }
-      }
-      payload.post_contents = form.post_contents
-      attatchment_files = [...payload.attatchment_files, ...imgFiles]
+        payload.post_contents = form.post_contents
+        attatchment_files = [...payload.attatchment_files, ...imgFiles]
 
+      }
+    } else {
+      payload.post_contents = form.post_contents
+      attatchment_files = []
     }
 
 
-    for (const video of videoArr.value) {
-      if (video.src.substring(0, 4) === 'blob' || video.src.substring(0, 4) === 'data') {
-        const formData = new FormData();
 
-        await fetch(video.src)
-          .then(async (result) => {
-            formData.append(video.title, await result.blob())
-          })
+    if (videoArr.value.length) {
 
-        const { data, error, pending } = await useFetch<{ result: [] }>('/community/att', getZempieFetchOptions('post', true, formData))
-        if (data.value) {
-          form.post_contents = form.post_contents.replace(video.src, data.value.result[0].url)
-          videoFiles.push(...data.value.result)
+      for (const video of videoArr.value) {
+        if (video.src.substring(0, 4) === 'blob' || video.src.substring(0, 4) === 'data') {
+          const formData = new FormData();
 
+          await fetch(video.src)
+            .then(async (result) => {
+              formData.append(video.title, await result.blob())
+            })
+
+          const { data, error, pending } = await useFetch<{ result: [] }>('/community/att', getZempieFetchOptions('post', true, formData))
+          if (data.value) {
+            form.post_contents = form.post_contents.replace(video.src, data.value.result[0].url)
+            videoFiles.push(...data.value.result)
+
+          }
         }
+        payload.post_contents = form.post_contents
+        attatchment_files = [...attatchment_files, ...videoFiles]
       }
+    } else {
       payload.post_contents = form.post_contents
-      payload['attatchment_files'] = videoFiles;
+      attatchment_files = [...attatchment_files]
+    }
+    if (audioArr.value.length) {
+      for (const audio of audioArr.value) {
+        if (audio.src.substring(0, 4) === 'blob' || audio.src.substring(0, 4) === 'data') {
+          const formData = new FormData();
 
+          await fetch(audio.src)
+            .then(async (result) => {
+              formData.append(audio.title, await result.blob())
+            })
+
+          const { data, error, pending } = await useFetch<{ result: [] }>('/community/att', getZempieFetchOptions('post', true, formData))
+          if (data.value) {
+            form.post_contents = form.post_contents.replace(audio.src, data.value.result[0].url)
+            audioFiles.push(...data.value.result)
+
+          }
+        }
+        payload.post_contents = form.post_contents
+        attatchment_files = [...attatchment_files, ...audioFiles]
+      }
+    } else {
+      payload.post_contents = form.post_contents
+      attatchment_files = [...attatchment_files]
     }
 
-    for (const audio of audioArr.value) {
-      if (audio.src.substring(0, 4) === 'blob' || audio.src.substring(0, 4) === 'data') {
-        const formData = new FormData();
-
-        await fetch(audio.src)
-          .then(async (result) => {
-            formData.append(audio.title, await result.blob())
-          })
-
-        const { data, error, pending } = await useFetch<{ result: [] }>('/community/att', getZempieFetchOptions('post', true, formData))
-        if (data.value) {
-          form.post_contents = form.post_contents.replace(audio.src, data.value.result[0].url)
-          audioFiles.push(...data.value.result)
-
-        }
-      }
-      payload.post_contents = form.post_contents
-      payload['attatchment_files'] = audioFiles;
-
-    }
   } else {
     if (attachFileArr.value && attachFileArr.value[0]?.type === 'image') {
       attatchment_files = snsAttachFiles.value.img
@@ -794,9 +809,9 @@ async function onUpdatePost() {
     }
 
   }
-  Array.isArray(payload.attatchment_files) ? payload.attatchment_files :
+  console.log('attatchment_files', attatchment_files)
+  Array.isArray(attatchment_files) ? payload.attatchment_files = attatchment_files :
     payload.attatchment_files = JSON.parse(attatchment_files)
-  console.log(' Array.isArray(payload.attatchment_files)', Array.isArray(payload.attatchment_files))
 
   const { data, error, pending } = await useFetch(`/post/${props.feed.id}`, getComFetchOptions('put', true, payload))
 
