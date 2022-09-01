@@ -734,6 +734,7 @@ async function onUpdatePost() {
     }
 
   } else {
+    console.log(snsAttachFiles.value)
 
     if (snsAttachFiles.value && snsAttachFiles.value[0]?.type === 'image') {
       attatchment_files = snsAttachFiles.value.img
@@ -764,8 +765,8 @@ async function onUpdatePost() {
 
     newVideo = snsAttachFiles.value.video;
 
-    if (newImgArr?.length) {
-      for (const img of newImgArr) {
+    if (snsAttachFiles.value.img?.length) {
+      for (const img of snsAttachFiles.value.img) {
         formData.append(img.name, img.file)
       }
 
@@ -788,8 +789,8 @@ async function onUpdatePost() {
 
       }
 
-    } else if (newSoundArr?.length) {
-      for (const sound of newSoundArr) {
+    } else if (snsAttachFiles.value.audio?.length) {
+      for (const sound of snsAttachFiles.value.audio) {
         formData.append(sound.name, sound.file)
       }
       const { data, error, pending } = await useFetch<{ result: { priority: number, url: string, type: string, name: string, size: number }[] }>('/community/att', getZempieFetchOptions('post', true, formData))
@@ -806,7 +807,7 @@ async function onUpdatePost() {
           })
         }
       }
-    } else if (newVideo) {
+    } else if (snsAttachFiles.value.video) {
       formData.append(newVideo.name, newVideo.file)
       const { data, error, pending } = await useFetch<{ result: { priority: number, url: string, type: string, name: string, size: number }[] }>('/community/att', getZempieFetchOptions('post', true, formData))
 
