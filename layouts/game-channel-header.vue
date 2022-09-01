@@ -9,7 +9,7 @@
           <NuxtLink :class="['swiper-slide', !routeQuery ? 'active' : '']
           " :to="localePath(`/game/${gamePath}`)">
             <p><i class="uil uil-clock-three"></i></p>
-            <h2>{{ $t('timeline') }}(ALL)</h2>
+            <h2>{{  $t('timeline')  }}(ALL)</h2>
           </NuxtLink>
           <NuxtLink :class="[routeQuery === 'sns' ? 'active' : '', 'swiper-slide']"
             :to="localePath(`/game/${gamePath}`) + '?media=sns'">
@@ -19,25 +19,25 @@
           <NuxtLink :class="[routeQuery === 'blog' ? 'active' : '', 'swiper-slide']"
             :to="localePath(`/game/${gamePath}`) + '?media=blog'">
             <p><i class="uil uil-edit"></i></p>
-            <h2>{{ $t('blog') }}</h2>
+            <h2>{{  $t('blog')  }}</h2>
           </NuxtLink>
 
           <NuxtLink :class="[routeQuery === 'img' ? 'active' : '', 'swiper-slide']"
             :to="localePath(`/game/${gamePath}`) + '?media=image'">
             <p><i class="uil uil-image-edit"></i></p>
-            <h2>{{ $t('image') }}</h2>
+            <h2>{{  $t('image')  }}</h2>
           </NuxtLink>
 
           <NuxtLink :class="[routeQuery === 'video' ? 'active' : '', 'swiper-slide']"
             :to="localePath(`/game/${gamePath}`) + '?media=video'">
             <p><i class="uil uil-play-circle"></i></p>
-            <h2>{{ $t('video') }}</h2>
+            <h2>{{  $t('video')  }}</h2>
           </NuxtLink>
 
           <NuxtLink :class="[routeQuery === 'sound' ? 'active' : '', 'swiper-slide']"
             :to="localePath(`/game/${gamePath}`) + '?media=sound'">
             <p><i class="uil uil-music"></i></p>
-            <h2>{{ $t('audio') }}</h2>
+            <h2>{{  $t('audio')  }}</h2>
           </NuxtLink>
         </div>
       </div>
@@ -97,4 +97,30 @@ async function getUserInfo() {
 .swiper-slide {
   display: inline-block
 }
+
+
+@media all and (max-width: 479px) {
+  .tab-menu-swiper {
+
+
+    h2 {
+      display: none;
+    }
+  }
+
+}
+
+@media all and (min-width: 480px) and (max-width: 767px) {
+  .tab-menu-swiper {
+    width: 100%;
+  }
+
+
+}
+
+@media all and (min-width: 768px) and (max-width: 991px) {}
+
+@media all and (min-width: 992px) and (max-width: 1199px) {}
+
+@media all and (min-width: 1200px) {}
 </style>

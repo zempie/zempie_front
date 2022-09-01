@@ -11,13 +11,13 @@
             </div>
           </dt>
           <dd>
-            <h2> {{ gameInfo.title }}<span></span></h2>
+            <h2> {{  gameInfo.title  }}<span></span></h2>
             <h3 @click="moveUserPage" style="cursor:pointer">By
 
-              {{ gameInfo.user?.name }}
+              {{  gameInfo.user?.name  }}
             </h3>
 
-            <div class="tag-item secondary" v-for="hashtag in hashtags" :key="hashtag"><a>{{ hashtag }}</a>
+            <div class="tag-item secondary" v-for="hashtag in hashtags" :key="hashtag"><a>{{  hashtag  }}</a>
             </div>
           </dd>
         </dl>
@@ -32,7 +32,7 @@
           <i v-else class="xi-heart like-icon" style="font-size:22px; color:#ff6e17; cursor: pointer;"
             @click="unsetLike">
           </i>
-          <p style="color:#fff">{{ likeCnt }}</p>
+          <p style="color:#fff">{{  likeCnt  }}</p>
         </div>
 
         <a v-if="gameInfo.stage !== eGameStage.DEV" @click="playGame" class="btn-default w150"
@@ -105,4 +105,25 @@ function moveUserPage() {
   justify-content: center;
   align-items: center;
 }
+
+@media all and (max-width: 479px) {
+  .visual-info-left {
+    width: 100%;
+  }
+
+}
+
+@media all and (min-width: 480px) and (max-width: 767px) {
+  .visual-info-left {
+    width: 100%;
+  }
+
+
+}
+
+@media all and (min-width: 768px) and (max-width: 991px) {}
+
+@media all and (min-width: 992px) and (max-width: 1199px) {}
+
+@media all and (min-width: 1200px) {}
 </style>

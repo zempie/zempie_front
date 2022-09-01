@@ -1,21 +1,21 @@
 <template>
   <div class="content">
-    <div class="area-view" v-if="feed">
+    <div class="area-view">
       <ul class="ta-post">
         <li class="tap-list">
           <dl class="tapl-title">
             <dt>
               <dl>
                 <dt>
-                  <UserAvatar :user="feed.user" :tag="'span'" />
+                  <UserAvatar :user="feed?.user" :tag="'span'" />
                 </dt>
-                <dd v-if="feed.user">
-                  <h2>{{  feed.user.name  }}</h2>
-                  <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{  dateFormat(feed.created_at)  }}</p>
+                <dd v-if="feed?.user">
+                  <h2>{{  feed?.user.name  }}</h2>
+                  <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{  dateFormat(feed?.created_at)  }}</p>
                 </dd>
                 <dd v-else>
                   <h2>{{  $t('feed.noUser.post')  }}</h2>
-                  <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{  dateFormat(feed.created_at)  }}</p>
+                  <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{  dateFormat(feed?.created_at)  }}</p>
                 </dd>
               </dl>
             </dt>
@@ -25,17 +25,18 @@
 
           </dl>
 
-          <div class="tapl-content" v-html="feed.content"></div>
+          <div class="tapl-content" v-html="feed?.content"></div>
           <template
-            v-if="feed.post_type === 'SNS' && feed.attatchment_files?.length === 1 && feed.attatchment_files[0].type === 'image'">
+            v-if="feed?.post_type === 'SNS' && feed?.attatchment_files?.length === 1 && feed?.attatchment_files[0].type === 'image'">
             <img style="height: 88%;
                              margin: 0 auto;
-                             display: flex;" :src="feed.attatchment_files[0].url" class="feed-img mt-3" />
+                             display: flex;" :src="feed?.attatchment_files[0].url" class="feed-img mt-3" />
           </template>
-          <template v-else-if="feed.post_type === 'SNS' && feed.attatchment_files && feed.attatchment_files.length > 0">
-            <div class="tapl-movie-img" v-if="feed.attatchment_files[0].type === 'image'">
+          <template
+            v-else-if="feed?.post_type === 'SNS' && feed?.attatchment_files && feed?.attatchment_files.length > 0">
+            <div class="tapl-movie-img" v-if="feed?.attatchment_files[0].type === 'image'">
               <swiper class="swiper" :options="swiperOption" style="height: 350px;">
-                <template v-for="file in feed.attatchment_files">
+                <template v-for="file in feed?.attatchment_files">
                   <swiper-slide>
                     <img style="height: 88%;
                              margin: 0 auto;
@@ -47,7 +48,7 @@
               </swiper>
             </div>
             <div class="tapl-movie-img" v-else>
-              <div v-for="file in feed.attatchment_files" :key="file.id">
+              <div v-for="file in feed?.attatchment_files" :key="file.id">
                 <video class="sns-img" v-if="file.type === 'video'" width="320" height="240" controls
                   :src="file.url"></video>
                 <audio v-else-if="file.type === 'sound'" controls :src="file.url"></audio>
@@ -63,7 +64,7 @@
               <ul>
                 <LikeBtn :feed="feed" />
                 <li><i class="uil uil-comment-alt-dots" style="font-size:22px;"></i>&nbsp;
-                  {{  feed.comment_cnt  }}
+                  {{  feed?.comment_cnt  }}
                 </li>
 
                 <li @click="copyUrl">
@@ -80,8 +81,8 @@
           </ul>
           <ClientOnly>
             <div class="tapl-comment">
-              <p>{{  $t('comment')  }} {{  feed.comment_cnt  }}{{  $t('comment.count.unit')  }} </p>
-              <CommentInput :postId="feed.id" @refresh="commentRefresh" />
+              <p>{{  $t('comment')  }} {{  feed?.comment_cnt  }}{{  $t('comment.count.unit')  }} </p>
+              <CommentInput :postId="feed?.id" @refresh="commentRefresh" />
               <ul>
                 <li v-for="comment in comments" :key="comment.id">
                   <Comment :comment="comment" @refresh="commentRefresh" />

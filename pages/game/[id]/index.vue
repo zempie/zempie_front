@@ -283,6 +283,7 @@ function copyUrl() {
 
 .no-game {
   padding: 20px 20px 0 20px;
+  margin-bottom: 20px;
 
   li {
     display: flex;
