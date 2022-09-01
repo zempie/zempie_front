@@ -1,6 +1,6 @@
 <template>
-  <div class="content" v-if="feed">
-    <div class="area-view">
+  <div class="content">
+    <div class="area-view" v-if="feed">
       <ul class="ta-post">
         <li class="tap-list">
           <dl class="tapl-title">
@@ -93,54 +93,6 @@
         </li>
       </ul>
     </div>
-
-    <!-- 
-      
-    <modal class="modal-area-type" name="modalReport" width="90%" height="auto" :maxWidth="375" :adaptive="true"
-      :scrollable="true">
-      <div class="modal-report">
-        <dl class="mr-header">
-          <dt>{{ $t('post.report.text') }}</dt>
-          <dd>
-            <button @click="$modal.hide('modalReport')"><i class="uil uil-times"></i></button>
-          </dd>
-        </dl>
-        <div class="mr-content">
-          <ul>
-            <li>
-              <input type="radio" v-model="pickedReason" value="1" id="report1" /> <label for="report1"><i
-                  class="uil uil-check"></i></label>&nbsp;
-              <span><label for="report1">{{ $t('post.report.reason1') }} </label></span>
-            </li>
-            <li>
-              <input type="radio" v-model="pickedReason" value="2" id="report2" /> <label for="report2"><i
-                  class="uil uil-check"></i></label>&nbsp; <span><label for="report2"> {{
-                      $t('post.report.reason2')
-                  }}</label></span>
-            </li>
-            <li>
-              <input type="radio" v-model="pickedReason" value="3" id="report3" /> <label for="report3"><i
-                  class="uil uil-check"></i></label>&nbsp; <span><label for="report3"> {{
-                      $t('post.report.reason3')
-                  }}</label></span>
-            </li>
-            <li>
-              <input type="radio" v-model="pickedReason" value="4" id="report4" />
-              <label for="report4"><i class="uil uil-check"></i></label>&nbsp; <span><label for="report4">
-                  기타</label></span>
-              <transition name="component-fade" mode="out-in">
-                <div v-if="pickedReason === '4'"><textarea name=""></textarea></div>
-              </transition>
-            </li>
-          </ul>
-          <div @click="sendReport">
-            <button class="btn-default" style="width: 100% !important;">{{ $t('post.report.btn') }}</button>
-          </div>
-        </div>
-      </div>
-    </modal> -->
-
-
   </div>
 </template>
 
@@ -251,134 +203,6 @@ function copyUrl() {
     type: 'success'
   })
 }
-//     scrollCheck() {
-//         if (scrollDone(document.documentElement)) {
-//             this.offset += this.limit;
-//             this.commentFetch();
-//         }
-
-//     }
-
-
-//     openEdit() {
-//         this.$modal.show('modalPost')
-//         this.$store.commit('feed', this.feed)
-//     }
-
-//     commentInit() {
-//         this.comments = [];
-//         this.limit = 10;
-//         this.offset = 0;
-//         this.sort = '';
-//         window.addEventListener("scroll", this.scrollCheck);
-//     }
-
-
-
-//     commentFetch() {
-//         const obj = {
-//             limit: this.limit,
-//             offset: this.offset,
-//             sort: this.sort
-//         }
-//         this.$api.comments(this.feedId, obj)
-//             .then((res: any) => {
-//                 if (this.isAddData) {
-//                     if (res.result.length > 0) {
-//                         this.comments = [...this.comments, ...res.result]
-//                     }
-//                     else {
-//                         window.removeEventListener("scroll", this.scrollCheck);
-//                     }
-//                 }
-//                 else {
-//                     this.comments = res.result;
-//                     this.isAddData = true
-//                 }
-//             })
-//             .catch((err: AxiosError) => {
-
-//             })
-//             .finally(() => {
-
-//             })
-//     }
-
-//     beforeOpen(event) {
-//         this.commentId = event.params.commentId;
-
-//     }
-
-//     deleteComment() {
-//         this.commentInit();
-//         this.$api.deleteComment(this.feedId, this.commentId)
-//             .then((res: AxiosResponse) => {
-//                 this.$modal.hide('deleteComment')
-//                 this.commentFetch()
-//                 this.fetch();
-
-//             })
-//             .catch((err: AxiosError) => {
-
-//             })
-//     }
-
-//     editDone() {
-//         this.fetch();
-//         this.commentInit();
-//         this.commentFetch()
-//     }
-
-//     contentClicked(e: any) {
-//         if (e.target.matches("img")) {
-//             this.originImg = e.target.src;
-//             (this.$refs.originImgModal as any).show();
-//         }
-//         else if (e.target.matches(".hashtag")) {
-//             this.$router.push(`/${this.$i18n.locale}/search?hashtag=${e.target.attributes["data-id"].nodeValue}`);
-//         }
-//         else if (e.target.matches(".mention")) {
-//             this.$router.push(`/${this.$i18n.locale}/channel/${e.target.attributes["channel-id"].nodeValue}/timeline`);
-//         }
-//     }
-
-//     closeImgModal() {
-//         (this.$refs.originImgModal as any).hide();
-//     }
-
-//     generateKey() {
-//         return Date.now();
-//     }
-
-//     deletePost() {
-//         this.$emit('deleteFeed', this.feed.id)
-//         this.$modal.show('deleteModal')
-//     }
-
-//     yesDeletePost() {
-//         this.$modal.hide('deleteModal')
-
-
-//         this.$api.deletePost(this.feedId)
-//             .then((res: any) => {
-//                 if (res.success) {
-//                     this.$toasted.clear();
-//                     this.toast.successToast(`${this.$t('posting.deleted')}`)
-//                 }
-//                 this.$router.push(`/${this.$i18n.locale}`)
-//             })
-//             .catch((err: any) => {
-
-//             })
-//     }
-
-//     report() {
-//         this.$emit('reportPost', this.feed.id)
-//         this.isOpenReportModal = !this.isOpenReportModal
-//         this.$modal.show('modalReport')
-//     }
-
-// }
 </script>
 
 <style lang="scss" scoped>
