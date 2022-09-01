@@ -1,39 +1,43 @@
 <template>
   <div id="gamePage">
     <ClientOnly>
-      <iframe ref="game" class="iframe" :style="`height:${iframeHeight};`"
-        :src="`${config.LAUNCHER_URL}/#/game/${gamePath}`"></iframe>
+      <iframe
+        ref="game"
+        class="iframe"
+        :style="`height:${iframeHeight};`"
+        :src="`${config.LAUNCHER_URL}/game/${gamePath}`"
+      ></iframe>
     </ClientOnly>
   </div>
 </template>
 
 <script setup lang="ts">
 import { getIdToken } from 'firebase/auth'
-import { useI18n } from 'vue-i18n';
-import { useLocalePath } from 'vue-i18n-routing';
+import { useI18n } from 'vue-i18n'
+import { useLocalePath } from 'vue-i18n-routing'
 
 const { t, locale } = useI18n()
 const route = useRoute()
 const router = useRouter()
-const config = useRuntimeConfig();
+const config = useRuntimeConfig()
 const { $firebaseAuth } = useNuxtApp()
-const localePath = useLocalePath();
+const localePath = useLocalePath()
 
-
-const url = ref('');
-const iframeHeight = ref('');
+const url = ref('')
+const iframeHeight = ref('')
 const game = ref<HTMLIFrameElement>()
 const gameData = ref()
 const initLauncher = ref(false)
 const gamePath = computed(() => route.params.id)
 const userInfo = computed(() => useUser().user.value.info)
 
-
 definePageMeta({
   layout: 'layout-none',
-});
+})
 
-const { data, error, pending } = await useFetch<{ result: { game: {}, my_emotions: {}, my_heart: boolean } }>(`/game/${gamePath.value}`, getZempieFetchOptions('get', false))
+const { data, error, pending } = await useFetch<{
+  result: { game: {}; my_emotions: {}; my_heart: boolean }
+}>(`/game/${gamePath.value}`, getZempieFetchOptions('get', false))
 
 onMounted(async () => {
   if (data.value) {
@@ -42,49 +46,46 @@ onMounted(async () => {
 
     // url.value = `/${config.LAUNCHER_URL}/game/${gamePath.value}`;
 
-
     useHead({
       title: `${gameData.value.title} | Zempie`,
       meta: [
         {
           name: 'description',
-          content: `${gameData.value.title}`
+          content: `${gameData.value.title}`,
         },
         {
           name: 'og:title',
-          content: `${gameData.value.description}`
+          content: `${gameData.value.description}`,
         },
         {
           name: 'og:description',
-          content: `${gameData.value.description}`
+          content: `${gameData.value.description}`,
         },
         {
           name: 'og:url',
-          content: `${config.ZEMPIE_URL}${route.path}`
+          content: `${config.ZEMPIE_URL}${route.path}`,
         },
         {
           name: 'og:image',
-          content: `${gameData.value.url_thumb}`
+          content: `${gameData.value.url_thumb}`,
         },
-      ]
+      ],
     })
 
-
-    window.addEventListener("message", onMessage);
-    window.addEventListener("resize", onResize);
-    onResize();
+    window.addEventListener('message', onMessage)
+    window.addEventListener('resize', onResize)
+    onResize()
   }
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener("message", onMessage);
-  window.removeEventListener("resize", onResize);
+  window.removeEventListener('message', onMessage)
+  window.removeEventListener('resize', onResize)
 })
 
 function onResize() {
-  iframeHeight.value = `${window.innerHeight}px`;
+  iframeHeight.value = `${window.innerHeight}px`
 }
-
 
 // import { Vue, Component, Watch, Prop } from "vue-property-decorator";
 // import firebase from "firebase/app";
@@ -138,7 +139,6 @@ function onResize() {
 //     // this.tagEvent();
 //   }
 
-
 //   @Watch("$store.getters.idToken")
 watch(
   () => userInfo.value,
@@ -151,39 +151,39 @@ watch(
 
 function onChangedToken() {
   toMessage({
-    type: "@updateToken",
-    token: useCookie(config.COOKIE_NAME).value
-  });
+    type: '@updateToken',
+    token: useCookie(config.COOKIE_NAME).value,
+  })
 }
 
 async function onMessage(msg: MessageEvent) {
-  const { type, channel_id } = msg.data;
+  const { type, channel_id } = msg.data
 
   switch (type) {
-    case "@initLauncher": {
-      initLauncher.value = true;
-      toMessage({ type: "@initParent" });
-      onChangedToken();
-      break;
+    case '@initLauncher': {
+      initLauncher.value = true
+      toMessage({ type: '@initParent' })
+      onChangedToken()
+      break
     }
-    case "@refreshToken": {
+    case '@refreshToken': {
       if (useCookie(config.COOKIE_NAME).value) {
-        const idToken = await getIdToken($firebaseAuth);
+        const idToken = await getIdToken($firebaseAuth)
       }
-      break;
+      break
     }
-    case "@requestLogin": {
+    case '@requestLogin': {
       // this.$store.commit("redirectRouter", route.fullPath);
-      await router.replace("/login");
-      break;
+      await router.replace('/login')
+      break
     }
-    case "@exit": {
-      exit();
-      break;
+    case '@exit': {
+      exit()
+      break
     }
-    case "@moveChannel": {
-      await router.push(localePath(`/channel/${channel_id}`));
-      break;
+    case '@moveChannel': {
+      await router.push(localePath(`/channel/${channel_id}`))
+      break
     }
   }
 }
@@ -191,12 +191,12 @@ async function onMessage(msg: MessageEvent) {
 function toMessage(message: any) {
   const iframe = game.value
   if (iframe.contentWindow) {
-    iframe.contentWindow.postMessage(message, "*");
+    iframe.contentWindow.postMessage(message, '*')
   }
 }
 
 function exit() {
-  router.push(localePath('/'));
+  router.push(localePath('/'))
 }
 </script>
 <style lang="scss" scoped>
