@@ -1,6 +1,7 @@
 <template>
-  <ClientOnly>
-    <div class="content">
+  <div class="content">
+    <ClientOnly>
+
       <div class="area-view">
         <ul class="ta-post" v-if="feed">
           <li class="tap-list">
@@ -97,8 +98,8 @@
         </ul>
 
       </div>
-    </div>
-  </ClientOnly>
+    </ClientOnly>
+  </div>
 </template>
 
 <script setup lang="ts">

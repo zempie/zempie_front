@@ -11,7 +11,7 @@
             </dl>
 
             <template v-if="games?.length">
-              <ul>
+              <ul style="margin-bottom:20px">
                 <li v-for="game in games.slice(0, 5)" @click="$router.push(localePath(`/game/${game.pathname}`))">
                   <p :style="`background:url(${game?.url_thumb_webp ||
                   game?.url_thumb ||
