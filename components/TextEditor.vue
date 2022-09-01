@@ -610,11 +610,13 @@ function deleteAudio(idx: number) {
 
 async function onUpdatePost() {
 
-  let attatchment_files: any = props.feed.attatchment_files ? Array.isArray(props.feed.attatchment_files) ? props.feed.attatchment_files :
-    JSON.parse(props.feed.attatchment_files) : []
+  // let attatchment_files: any = props.feed.attatchment_files ? Array.isArray(props.feed.attatchment_files) ? props.feed.attatchment_files :
+  //   JSON.parse(props.feed.attatchment_files) : []
 
 
-  // let attatchment_files: any = props.feed.attatchment_files ?? []
+
+
+  let attatchment_files: any = []
   let newImgArr = [];
   let newSoundArr = [];
   let newVideo = null;
@@ -734,6 +736,7 @@ async function onUpdatePost() {
 
   } else {
     console.log(snsAttachFiles.value)
+
 
     if (snsAttachFiles.value && snsAttachFiles.value[0]?.type === 'image') {
       attatchment_files = snsAttachFiles.value.img
