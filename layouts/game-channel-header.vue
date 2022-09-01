@@ -49,7 +49,6 @@
 <script setup lang="ts">
 import { IGame } from '~~/types'
 import { useLocalePath } from 'vue-i18n-routing';
-import { truncate } from 'fs/promises';
 
 const localePath = useLocalePath();
 const route = useRoute();

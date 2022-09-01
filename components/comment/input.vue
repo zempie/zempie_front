@@ -27,7 +27,9 @@ const props = defineProps({
 
 const content = ref(props.comment?.content || null)
 
-const { info: user, isLogin } = useUser().user.value
+const user = computed(() => useUser().user.value.info)
+
+const isLogin = computed(() => useUser().user.value.isLogin)
 
 const emit = defineEmits(['refresh'])
 

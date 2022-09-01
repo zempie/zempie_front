@@ -4,31 +4,34 @@
 
     <dl class="three-area">
       <dt>
-        <div class="ta-game-list">
-          <dl>
-            <dt>Games</dt>
-          </dl>
-          <template v-if="games?.length > 0">
-            <ul>
-              <li v-for="game in games.slice(0, 5)" @click="$router.push(localePath(`/game/${game.pathname}`))">
-                <p :style="`background:url(${game?.url_thumb_webp ||
-                game?.url_thumb ||
-                '/images/default.png'
-                }) center; background-size:cover;`"></p>
-                <h2 style="text-overflow: ellipsis; overflow: hidden">{{  game?.title  }}</h2>
-              </li>
-            </ul>
+        <ClientOnly>
+          <div class="ta-game-list">
+            <dl>
+              <dt>Games</dt>
+            </dl>
 
-            <div v-if="games.length > 5">
-              <NuxtLink :to="localePath(`/channel/${game.user.channel_id}/games`)" class="btn-default-samll w100p">
-                {{  $t('moreView')  }}
-              </NuxtLink>
-            </div>
-          </template>
-          <ul v-else class="no-game">
-            <li>{{  $t('no.game')  }}</li>
-          </ul>
-        </div>
+            <template v-if="games?.length">
+              <ul>
+                <li v-for="game in games.slice(0, 5)" @click="$router.push(localePath(`/game/${game.pathname}`))">
+                  <p :style="`background:url(${game?.url_thumb_webp ||
+                  game?.url_thumb ||
+                  '/images/default.png'
+                  }) center; background-size:cover;`"></p>
+                  <h2 style="text-overflow: ellipsis; overflow: hidden">{{  game?.title  }}</h2>
+                </li>
+              </ul>
+
+              <div v-if="games.length > 5">
+                <NuxtLink :to="localePath(`/channel/${game.user.channel_id}/games`)" class="btn-default-samll w100p">
+                  {{  $t('moreView')  }}
+                </NuxtLink>
+              </div>
+            </template>
+            <ul v-else class="no-game">
+              <li>{{  $t('no.game')  }}</li>
+            </ul>
+          </div>
+        </ClientOnly>
       </dt>
       <dd>
         <PostTimeline type="game" :isMine="isMine" />
@@ -70,19 +73,18 @@ const config = useRuntimeConfig();
 const route = useRoute();
 const { t, locale } = useI18n()
 
-const userInfo = ref({} as IUserChannel)
 
-const games = computed(() => useChannel().userChannel.value.info?.games)
+const games = ref()
 
 const game = computed(() => useGame().game.value.info)
 
 const isMine = computed(() => useGame().game.value.info?.user.id === useUser().user.value.info?.id)
 
 
-
 watch(
   () => game.value,
-  (info) => {
+  async (info) => {
+    await gameListFetch()
     useHead({
       title: `${info.title} | Zempie game`,
       meta: [
@@ -110,65 +112,31 @@ watch(
 
 
 onMounted(async () => {
+  if (game.value)
+    await gameListFetch()
 
-  // const { data, pending } = await user.getUserInfo(game.value.user.id)
-  // const { result } = data.value;
-  // userInfo.value = result.target
+
+
 })
 
-// toast = new Toast();
-// games: any[] = [];
-// totalGameCnt = 0;
 
-// TASswiperOption = {
-//     slidesPerView: 1,
-//     spaceBetween: 20,
-//     navigation: {
-//         nextEl: '.ta-screenshot .swiper-button-next',
-//         prevEl: '.ta-screenshot .swiper-button-prev'
-//     },
-// }
-// gamePath = this.$route.params.gamePath;
-// user: any = '';
-// game: any = this.$store.getters.gameInfo;
-// imgSrc = '';
-// hashtags = [];
+async function gameListFetch() {
+
+  const { data, error, pending, refresh } = await useFetch<{ result: any }>(`/channel/${useGame().game.value.info.user.channel_id}`, getZempieFetchOptions('get', false))
+
+  if (data.value) {
+    const { target } = data.value.result;
+    const { games: gameList } = target;
+    const list = gameList.filter((gm) => {
+      return gm.id !== game.value.id
+    })
+    games.value = list
 
 
-// async mounted() {
-//     await this.$store.dispatch("loginState");
-//     this.fetch();
-
-// }
-
-// fetch() {
-
-//     this.$api.gameInfo(this.gamePath)
-//         .then((res: any) => {
-//             const {result} = res;
-//             const {game} = result;
-//             this.$store.commit('gameInfo', game)
-//             this.game = game;
-//             this.user = game.user
-//             this.hashtags = (game.hashtags.length > 0) ? game.hashtags.split(",") : undefined;
-
-//             this.$store.commit('currPage', {
-//                 game_id: game.id
-//             })
-
-//             this.$gtag.event('visit_game_page', {
-//                 'gameId': game.id,
-//             });
-//             this.gameListFetch();
+  }
 
 
-//         })
-//         .catch((err: any) => {
-
-
-//         })
-// }
-
+}
 
 // gameListFetch() {
 //     this.$api.userChannel(this.user.channel_id)

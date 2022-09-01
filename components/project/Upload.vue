@@ -13,12 +13,12 @@ const readyToUpload = ref(false)
 
 const uploadStage = computed(() => uploadProject.value.form.stage)
 
-watch(
-  () => uploadStage.value,
-  (newVal) => {
-    console.log(newVal)
-  }
-)
+// watch(
+//   () => uploadStage.value,
+//   (newVal) => {
+//     console.log(newVal)
+//   }
+// )
 
 //     toast = new Toast();
 

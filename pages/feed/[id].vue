@@ -1,4 +1,5 @@
 <template>
+
   <div class="content">
     <div class="area-view">
       <ul class="ta-post">
@@ -59,27 +60,29 @@
               </div>
             </div>
           </template>
-          <ul class="tapl-option">
-            <li>
-              <ul>
-                <LikeBtn :feed="feed" />
-                <li><i class="uil uil-comment-alt-dots" style="font-size:22px;"></i>&nbsp;
-                  {{  feed?.comment_cnt  }}
-                </li>
-
-                <li @click="copyUrl">
-                  <a><i class="uil uil-share-alt" style="font-size:20px;"></i>
-                  </a>
-                </li>
-              </ul>
-            </li>
-
-            <li>
-              <PostDropdown :feed="feed" @deletePost="$router.back()" @refresh="fetch" />
-            </li>
-
-          </ul>
           <ClientOnly>
+
+            <ul class="tapl-option">
+              <li>
+                <ul>
+                  <LikeBtn :feed="feed" />
+                  <li><i class="uil uil-comment-alt-dots" style="font-size:22px;"></i>&nbsp;
+                    {{  feed?.comment_cnt  }}
+                  </li>
+
+                  <li @click="copyUrl">
+                    <a><i class="uil uil-share-alt" style="font-size:20px;"></i>
+                    </a>
+                  </li>
+                </ul>
+
+              </li>
+
+              <li>
+                <PostDropdown :feed="feed" @deletePost="$router.back()" @refresh="fetch" />
+              </li>
+
+            </ul>
             <div class="tapl-comment">
               <p>{{  $t('comment')  }} {{  feed?.comment_cnt  }}{{  $t('comment.count.unit')  }} </p>
               <CommentInput :postId="feed?.id" @refresh="commentRefresh" />
@@ -95,6 +98,7 @@
       </ul>
     </div>
   </div>
+
 </template>
 
 <script setup lang="ts">

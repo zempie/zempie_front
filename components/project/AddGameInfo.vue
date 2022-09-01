@@ -216,8 +216,6 @@
           </li>
         </ul>
         <!-- 
-
-
         <div class="sui-input" style="margin-top:100px;" v-if="projectInfo">
             <dl class="suii-content delete-area">
                 <dt>
