@@ -1,9 +1,6 @@
 <template>
-
   <div class="content">
-
-
-    <div class="area-view">
+    <div class="area-view" v-if="feed">
       <ClientOnly>
         <ul class="ta-post">
           <li class="tap-list">
@@ -82,7 +79,7 @@
               </li>
 
               <li>
-                <PostDropdown v-if="feed" :feed="feed" @deletePost="$router.back()" @refresh="fetch" />
+                <PostDropdown :feed="feed" @deletePost="$router.back()" @refresh="refresh" />
               </li>
 
             </ul>
@@ -139,7 +136,7 @@ const userInfo = ref(computed(() => useUser().user.value.info))
 const feedId = computed(() => route.params.id as string)
 
 
-const { data: feed, error, pending } = await useFetch<any>(`/post/${feedId.value}`, getComFetchOptions('get', true))
+const { data: feed, error, pending, refresh } = await useFetch<any>(`/post/${feedId.value}`, getComFetchOptions('get', true))
 
 
 watch(

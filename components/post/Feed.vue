@@ -16,10 +16,8 @@
 
           </dd>
           <dd v-else>
-
             <h2>{{  t('feed.noUser.post')  }}</h2>
             <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{  dateFormat(feed.created_at)  }}</p>
-
           </dd>
         </dl>
       </dt>

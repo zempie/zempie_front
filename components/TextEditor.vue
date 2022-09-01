@@ -730,36 +730,48 @@ async function onUpdatePost() {
     }
 
   } else {
-    if (attachFileArr.value && attachFileArr.value[0]?.type === 'image') {
+
+    if (snsAttachFiles.value && snsAttachFiles.value[0]?.type === 'image') {
       attatchment_files = snsAttachFiles.value.img
     }
-    newImgArr = snsAttachFiles.value.img?.filter(img => {
+
+
+    newImgArr = attatchment_files?.filter((img, idx) => {
+      // if (!img.size) {
+      //   attatchment_files.splice(0, idx)
+      // }
       return !img.size
     })
 
-    if (attachFileArr.value && attachFileArr.value[0]?.type === 'sound') {
+    if (snsAttachFiles.value && snsAttachFiles.value[0]?.type === 'sound') {
       attatchment_files = snsAttachFiles.value.audio
     }
-    newSoundArr = snsAttachFiles.value.audio?.filter(audio => {
+    newSoundArr = attatchment_files?.filter((audio, idx) => {
+      // if (!audio.size) {
+      //   attatchment_files.splice(0, idx)
+      // }
       return !audio.size
     })
 
-    if (attachFileArr.value && attachFileArr.value[0]?.type === 'video') {
+    if (snsAttachFiles.value && snsAttachFiles.value[0]?.type === 'video') {
 
       attatchment_files = snsAttachFiles.value.video !== null ? snsAttachFiles.value.video : []
     }
 
     newVideo = snsAttachFiles.value.video;
 
-
     if (newImgArr?.length) {
       for (const img of newImgArr) {
         formData.append(img.name, img.file)
       }
+
+
+
       const { data, error, pending } = await useFetch<{ result: { priority: number, url: string, type: string, name: string, size: number }[] }>('/community/att', getZempieFetchOptions('post', true, formData))
 
       if (data.value) {
-        const { result } = data.value
+        const { result } = data.value;
+
         for (const data of result) {
           attatchment_files.push({
             priority: data.priority,
@@ -771,6 +783,7 @@ async function onUpdatePost() {
         }
 
       }
+
     } else if (newSoundArr?.length) {
       for (const sound of newSoundArr) {
         formData.append(sound.name, sound.file)
@@ -809,7 +822,11 @@ async function onUpdatePost() {
     }
 
   }
-  console.log('attatchment_files', attatchment_files)
+
+  attatchment_files = attatchment_files.filter((file) => {
+    return file.size
+  })
+
   Array.isArray(attatchment_files) ? payload.attatchment_files = attatchment_files :
     payload.attatchment_files = JSON.parse(attatchment_files)
 
