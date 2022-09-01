@@ -610,13 +610,11 @@ function deleteAudio(idx: number) {
 
 async function onUpdatePost() {
 
-  // let attatchment_files: any = props.feed.attatchment_files ? Array.isArray(props.feed.attatchment_files) ? props.feed.attatchment_files :
-  //   JSON.parse(props.feed.attatchment_files) : []
+  let attatchment_files: any = props.feed.attatchment_files ? Array.isArray(props.feed.attatchment_files) ? props.feed.attatchment_files :
+    JSON.parse(props.feed.attatchment_files) : []
 
 
 
-
-  let attatchment_files: any = []
   let newImgArr = [];
   let newSoundArr = [];
   let newVideo = null;
@@ -735,37 +733,20 @@ async function onUpdatePost() {
     }
 
   } else {
-    console.log(snsAttachFiles.value)
 
-
-    if (snsAttachFiles.value && snsAttachFiles.value[0]?.type === 'image') {
+    if (snsAttachFiles.value.img.length > 0) {
       attatchment_files = snsAttachFiles.value.img
     }
-    console.log('attatchment_files 1: ', attatchment_files)
-
-    // newImgArr = attatchment_files?.filter((img, idx) => {
-    //   // if (!img.size) {
-    //   //   attatchment_files.splice(0, idx)
-    //   // }
-    //   return !img.size
-    // })
-
-    if (snsAttachFiles.value && snsAttachFiles.value[0]?.type === 'sound') {
+    else if (snsAttachFiles.value.audio.length > 0) {
       attatchment_files = snsAttachFiles.value.audio
     }
-    // newSoundArr = attatchment_files?.filter((audio, idx) => {
-    //   // if (!audio.size) {
-    //   //   attatchment_files.splice(0, idx)
-    //   // }
-    //   return !audio.size
-    // })
-
-    if (snsAttachFiles.value && snsAttachFiles.value[0]?.type === 'video') {
+    else if (!snsAttachFiles.value) {
 
       attatchment_files = snsAttachFiles.value.video !== null ? snsAttachFiles.value.video : []
     }
-
-    // newVideo = snsAttachFiles.value.video;
+    else {
+      attatchment_files = []
+    }
 
     if (snsAttachFiles.value.img?.length) {
 
