@@ -225,6 +225,19 @@ onMounted(() => {
     }
   }
 
+  if (props.feed?.posted_at) {
+    console.log('props.feed.posted_at', props.feed.posted_at)
+
+    for (const community of props.feed.posted_at.community) {
+      postingChannels.value.push({
+        group: community.community,
+        channel: community.channel
+      })
+    }
+
+
+  }
+
 })
 
 function postingType(type: string) {
@@ -627,10 +640,23 @@ async function onUpdatePost() {
     // visibility: this.isPrivate ? "PRIVATE" : "PUBLIC",
     hashtags: [],
     // game_id:  this.$store.getters.currPage?.game_id,
-    // channel_id: this.user.channel_id,
-    // ...this.$store.getters.currPage,
+    channel_id: useUser().user.value.info.channel_id,
+    community: [],
     // portfolio_ids: [""],
     // scheduled_for: null
+  }
+
+  if (postingChannels.value.length) {
+
+    for (const element of postingChannels.value) {
+
+      payload.community.push({
+        id: element.group.id,
+        community: element.group,
+        channel_id: element.channel.id,
+        channel: element.channel
+      })
+    }
   }
 
   const formData = new FormData();
