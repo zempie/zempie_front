@@ -46,6 +46,10 @@ const { t, locale } = useI18n()
 const route = useRoute()
 const config = useRuntimeConfig()
 
+definePageMeta({
+  layout: 'default',
+})
+
 useHead({
   title: `${t('seo.game.list.title')} | Zempie community`,
   meta: [

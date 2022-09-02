@@ -13,9 +13,8 @@
 
       <ul style="margin: 40px 0px">
         <span class="card-game">
-          <GameCardSk v-if="pending" v-for="game in GAME_COUNT" :key="game" />
+          <!-- <GameCardSk v-if="pending" v-for="game in GAME_COUNT" :key="game" /> -->
           <GameCard
-            v-else
             v-for="game in data.result?.games"
             :gameInfo="game"
             :key="game.id"
@@ -30,10 +29,9 @@
     <div class="main-visual">
       <h2><span style="font: 36px/46px 'Jalnan'">Communities</span></h2>
 
-      <div class="card-timeline">
-        <CommunityCardSk v-show="cPending" v-for="commi in COMMUNITY_COUNT" />
+      <div class="card-timeline" v-if="communities.length">
+        <!-- <CommunityCardSk v-show="cPending" v-for="commi in COMMUNITY_COUNT" /> -->
         <CommunityCard
-          v-show="!cPending"
           v-for="community in communities"
           :community="community"
           :key="community.id"
@@ -44,14 +42,14 @@
     <div class="main-visual">
       <h2><span style="font: 36px/46px 'Jalnan'">Recent posts</span></h2>
 
-      <ul v-if="postPending" style="margin-top: 40px" class="post-container">
+      <!-- <ul v-if="postPending" style="margin-top: 40px" class="post-container">
         <li class="thumbmail skeleton" v-for="post in POST_COUNT"></li>
-      </ul>
+      </ul> -->
 
-      <ul v-else style="margin-top: 40px" class="post-container">
+      <ul style="margin-top: 40px" class="post-container">
         <li
           class="thumbmail"
-          v-for="post in postData.result"
+          v-for="post in postData?.result"
           @click="$router.push(localePath(`/feed/${post.id}`))"
         >
           <img :src="post.attatchment_files[0]?.url" />
@@ -69,6 +67,10 @@ const { t, locale } = useI18n()
 const config = useRuntimeConfig()
 const route = useRoute()
 const localePath = useLocalePath()
+
+definePageMeta({
+  layout: 'default',
+})
 
 useHead({
   title: `${t('seo.landing.title')} | Zempie`,
