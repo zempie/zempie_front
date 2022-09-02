@@ -19,7 +19,7 @@ export default defineNuxtConfig({
       },
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '~/static/favicon.ico' },
+      { hid: 'icon', rel: 'icon', type: 'image/x-icon', href: '~/static/favicon.ico' },
     ],
   },
   build: {
