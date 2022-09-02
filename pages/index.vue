@@ -29,7 +29,7 @@
     <div class="main-visual">
       <h2><span style="font: 36px/46px 'Jalnan'">Communities</span></h2>
 
-      <div class="card-timeline">
+      <div class="card-timeline" v-if="communities.length">
         <!-- <CommunityCardSk v-show="cPending" v-for="commi in COMMUNITY_COUNT" /> -->
         <CommunityCard
           v-for="community in communities"
@@ -49,7 +49,7 @@
       <ul style="margin-top: 40px" class="post-container">
         <li
           class="thumbmail"
-          v-for="post in postData.result"
+          v-for="post in postData?.result"
           @click="$router.push(localePath(`/feed/${post.id}`))"
         >
           <img :src="post.attatchment_files[0]?.url" />
