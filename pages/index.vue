@@ -68,6 +68,10 @@ const config = useRuntimeConfig()
 const route = useRoute()
 const localePath = useLocalePath()
 
+definePageMeta({
+  layout: 'default',
+})
+
 useHead({
   title: `${t('seo.landing.title')} | Zempie`,
   meta: [

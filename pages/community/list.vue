@@ -83,6 +83,10 @@ const query = ref({
 })
 // await fetch()
 
+definePageMeta({
+  layout: 'default',
+})
+
 const {
   data: communities,
   pending,
