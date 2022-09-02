@@ -263,7 +263,6 @@ async function register() {
   } catch (error: any) {
     
     const { message } = error
-    console.log('error', message)
     if (message.includes('auth/email-already-in-use')) {
       const { result } = await auth.hasEmail({ email: form.email })
 

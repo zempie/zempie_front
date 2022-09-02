@@ -566,7 +566,6 @@ watch(
 watch(
   () => locale,
   (val) => {
-    console.log(val.value)
     if (val.value === 'ko') {
       selectedLang.value = 'ko'
     } else {

@@ -311,7 +311,6 @@ function dataPaging(data: { result: IFeed[]; totalCount: number }) {
   } else {
     feeds.value = uniqueResult
     isAddData.value = true
-    console.log(feeds.value)
   }
 }
 
@@ -320,7 +319,6 @@ function initPaging() {
   offset.value = 0
   isAddData.value = false
   feeds.value = []
-  console.log('init pagikng')
 }
 
 async function refresh() {

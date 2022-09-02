@@ -18,7 +18,6 @@ export const htmlToDomElem = (html: string) => {
 }
 
 export const blobToFile = (blob: Blob, fileName?: string, fileType?: string) => {
-    console.log(fileType)
 
     return new File([blob], fileName ?? 'no_file_name' + new Date().getTime(), {
         lastModified: new Date().getTime(),

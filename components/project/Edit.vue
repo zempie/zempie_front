@@ -1,6 +1,5 @@
 <template>
   <dl class="studio-upload-area">
-
     <!-- 게임단계 -->
     <ProjectEditSelectStage v-if="editProject.step === 1" />
     <ProjectEditGameInfo v-else-if="editProject.step === 2" />
@@ -31,23 +30,11 @@
 </template>
 
 <script setup lang="ts">
-
-const { editProject, resetProjectInfo } = useProject();
-
+const { editProject, resetProjectInfo } = useProject()
 
 const stage = ref(computed(() => useProject().editProject.value.info?.stage))
 
-watch(
-  () => stage.value,
-  (newVal) => {
-    console.log(newVal)
-  }
-)
-
-
-onMounted(() => {
-
-})
+onMounted(() => {})
 
 //     toast = new Toast();
 
@@ -62,7 +49,6 @@ onMounted(() => {
 //     isEditProject: boolean = false;
 //     isUpdateProject: boolean = false;
 //     projectInfo: any = null;
-
 
 //     mounted() {
 //         //프로젝트 업데이트 경우
@@ -104,7 +90,6 @@ onMounted(() => {
 
 //             })
 //     }
-
 
 //     updateProject() {
 //         this.isUpdateProject = true;
@@ -163,23 +148,20 @@ onMounted(() => {
   min-height: 700px;
 }
 
-
 //transition
 .component-fade-enter-active,
 .component-fade-leave-active {
-  transition: opacity .3s ease;
+  transition: opacity 0.3s ease;
 }
 
 .component-fade-enter,
 .component-fade-leave-to
 
-/* .component-fade-leave-active below version 2.1.8 */
-  {
+/* .component-fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
 
 // /transition
-
 
 .step {
   opacity: 0.5;
@@ -226,9 +208,7 @@ onMounted(() => {
       border-radius: 90px;
     }
   }
-
 }
-
 
 .publish-btn:hover {
   background-color: #fff;
@@ -244,17 +224,17 @@ onMounted(() => {
   }
 }
 
-input[type="radio"] {
+input[type='radio'] {
   display: none;
 }
 
-input[type="radio"]:checked+label {
+input[type='radio']:checked + label {
   color: #fff;
-  background: #FF6E17;
-  border-color: #FF6E17;
+  background: #ff6e17;
+  border-color: #ff6e17;
 }
 
-input[type="radio"]+label {
+input[type='radio'] + label {
   display: inline-block;
   width: 22px;
   height: 22px;

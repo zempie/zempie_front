@@ -87,7 +87,6 @@ export default function () {
   }
 
   const joinUser = async (payload: { name: string, nickname?: string }) => {
-    console.log(payload)
     const { data } = await auth.signUp(payload)
   }
 

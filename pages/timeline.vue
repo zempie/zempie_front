@@ -1,6 +1,8 @@
 <template>
   <NuxtLayout name="my-timeline">
     <dl class="three-area">
+      {{}}
+
       <dt v-if="isPending">
         <div class="ta-game-list">
           <dl>
@@ -24,17 +26,19 @@
       </dt>
       <dt v-else>
         <ClientOnly>
-          <div class="ta-myinfo" style="margin-bottom: 20px" :key="userInfo.id">
+          <div
+            class="ta-myinfo"
+            style="margin-bottom: 20px"
+            :key="userInfo?.id"
+          >
             <UserAvatar :user="userInfo" :tag="'p'"></UserAvatar>
-            <h2>{{ useChannel().userChannel.value.info?.name }}</h2>
+            <h2>{{ useUser().user.value.info?.name }}</h2>
             <ul>
               <li>
                 <NuxtLink
                   :to="
                     localePath(
-                      `/channel/${
-                        useChannel().userChannel.value.info?.channel_id
-                      }`
+                      `/channel/${useUser().user.value.info?.channel_id}`
                     )
                   "
                 >
@@ -81,7 +85,7 @@
               </li>
             </ul>
           </div>
-          <div class="ta-game-list" :key="userInfo.id">
+          <div class="ta-game-list" :key="userInfo?.id">
             <dl>
               <dt>Games</dt>
             </dl>

@@ -6,7 +6,6 @@
 
 <script setup lang="ts">
 import { IUserChannel } from '~~/types'
-import { useLocalePath } from 'vue-i18n-routing'
 
 const route = useRoute()
 
@@ -18,7 +17,6 @@ const channelId = computed(() => route.params.id as string)
 watch(
   () => useUser().user.value.info,
   async (userInfo) => {
-    console.log('?')
     await getChannelHeaderInfo()
   }
 )
@@ -28,8 +26,10 @@ onMounted(async () => {
 })
 
 async function getChannelHeaderInfo() {
-  if (channelId.value) {
-    const { data, pending } = await user.getUserInfo(channelId.value)
+  if (useUser().user.value.info?.channel_id) {
+    const { data, pending } = await user.getUserInfo(
+      useUser().user.value.info.channel_id
+    )
 
     if (data.value) {
       const { result } = data.value
