@@ -24,7 +24,7 @@
       </dt>
       <dt v-else>
         <ClientOnly>
-          <div class="ta-myinfo" style="margin-bottom: 20px">
+          <div class="ta-myinfo" style="margin-bottom: 20px" :key="userInfo.id">
             <UserAvatar :user="userInfo" :tag="'p'"></UserAvatar>
             <h2>{{ useChannel().userChannel.value.info?.name }}</h2>
             <ul>
@@ -81,7 +81,7 @@
               </li>
             </ul>
           </div>
-          <div class="ta-game-list">
+          <div class="ta-game-list" :key="userInfo.id">
             <dl>
               <dt>Games</dt>
             </dl>
