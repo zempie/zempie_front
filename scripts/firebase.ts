@@ -72,6 +72,7 @@ async function signUpEmail(email: string, passwd: string) {
       const errorCode = err.code
       const errorMessage = err.message
       let message = errorCode ? errorCode : errorMessage
+
       switch (errorCode) {
         case 'auth/weak-password':
           message = 'Please enter a 6-20 digit password including English letter and at least 1 number or special character'

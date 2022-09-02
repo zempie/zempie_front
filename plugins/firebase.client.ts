@@ -81,7 +81,7 @@ async function routerToHome() {
   const route = useRoute();
   const router = useRouter();
   if (route.name.toString().includes('login')) {
-    router.push(`/${useCommon().setting.value.lang}`)
+    router.push(`/${useCommon().setting.value.lang}/timeline`)
 
   }
 }

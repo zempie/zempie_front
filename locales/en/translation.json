@@ -815,5 +815,7 @@
   "seo.feed.desc": "'s feed'",
   "seo.game.list.title": "All Games of Zempie",
   "seo.game.list.desc": "Where every game on Zempie assemble.",
-  "agreement.leave.text":"If you want to delete your account, then please agree on the related terms & conditions."
+  "agreement.leave.text": "If you want to delete your account, then please agree on the related terms & conditions.",
+  "fb.wrong.info": "Wrong information. Please type in again.",
+  "fb.using.email": "This email is already in the Zempie"
 }

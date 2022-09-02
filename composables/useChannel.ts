@@ -2,7 +2,7 @@ import { IUserChannel } from "~~/types"
 
 export default function () {
   const userChannel = useState('userChannel', () => ({
-    info: {} as IUserChannel
+    info: null as IUserChannel
   }))
 
   const setUserChannel = async (info: IUserChannel) => {

@@ -1,6 +1,5 @@
 <template>
   <li class="tap-list" v-if="feed">
-
     <dl class="tapl-title">
       <dt>
         <dl>
@@ -11,29 +10,43 @@
           </dt>
 
           <dd v-if="feed.user?.name">
-            <h2>{{  feed.user?.name  }} uploaded a {{  feed.post_type  }} post</h2>
-            <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{  dateFormat(feed.created_at)  }}</p>
-
+            <h2>{{ feed.user?.name }} uploaded a {{ feed.post_type }} post</h2>
+            <p>
+              <i class="uis uis-clock" style="color: #c1c1c1"></i>
+              {{ dateFormat(feed.created_at) }}
+            </p>
           </dd>
           <dd v-else>
-            <h2>{{  t('feed.noUser.post')  }}</h2>
-            <p><i class="uis uis-clock" style="color:#c1c1c1;"></i> {{  dateFormat(feed.created_at)  }}</p>
+            <h2>{{ t('feed.noUser.post') }}</h2>
+            <p>
+              <i class="uis uis-clock" style="color: #c1c1c1"></i>
+              {{ dateFormat(feed.created_at) }}
+            </p>
           </dd>
+          <UserFollowBtn :user="feed.user" class="follow-btn-feed" />
+          <!-- @refresh="emit('refresh')" -->
         </dl>
+
+        <!-- <UserFollowBtn :user="feed.user" /> -->
       </dt>
       <dd v-if="feed.user?.name">
         <el-dropdown trigger="click" ref="feedMenu" popper-class="feed-menu">
-          <a class="btn-circle-none pt6" slot="trigger"><i class="uil uil-ellipsis-h font25"></i></a>
+          <a class="btn-circle-none pt6" slot="trigger"
+            ><i class="uil uil-ellipsis-h font25"></i
+          ></a>
           <template #dropdown>
-            <div slot="body" class="more-list fixed" style="min-width:150px; ">
-              <template v-if="user && (user.id === (feed.user && feed.user.id))">
-                <a @click="openEdit">{{  t('feed.edit')  }}</a>
-                <a @click="showDeletePostModal = true; feedId = feed.id">{{  t('feed.delete')  }}</a>
-
+            <div slot="body" class="more-list fixed" style="min-width: 150px">
+              <template v-if="user && user.id === (feed.user && feed.user.id)">
+                <a @click="openEdit">{{ t('feed.edit') }}</a>
+                <a @click="openDeleteModal">{{ t('feed.delete') }}</a>
               </template>
               <template v-else>
-                <NuxtLink :to="localePath(`/channel/${feed.user && feed.user.channel_id}`)">
-                  {{  t('visit.userChannel')  }}
+                <NuxtLink
+                  :to="
+                    localePath(`/channel/${feed.user && feed.user.channel_id}`)
+                  "
+                >
+                  {{ t('visit.userChannel') }}
                 </NuxtLink>
                 <!-- <a v-if="user" @click="report">{{ t('post.report') }}</a>
               <a v-if="user" @click="userReportModalOpen">{{ t('post.report') }}유저 신고하기</a> -->
@@ -45,135 +58,197 @@
     </dl>
 
     <div>
-
-      <div class="tapl-content" v-html="feed.content" ref="feedDiv"
-        @click="$router.push(localePath(`/feed/${feed.id}`))"></div>
-      <div v-if="isOverflow" class='gradient'></div>
+      <div
+        class="tapl-content"
+        v-html="feed.content"
+        ref="feedDiv"
+        @click="$router.push(localePath(`/feed/${feed.id}`))"
+      ></div>
+      <div v-if="isOverflow" class="gradient"></div>
     </div>
     <template v-if="isOverflow">
       <div v-if="!isMoreView" class="more-container">
-        <span>
-          <hr class="dot-line" />
-        </span><a @click="moreView">
-          {{  t('moreView')  }} </a><span>
+        <span> <hr class="dot-line" /> </span
+        ><a @click="moreView"> {{ t('moreView') }} </a
+        ><span>
           <hr class="dot-line" />
         </span>
       </div>
 
       <div v-else class="more-container">
-        <span>
-          <hr class="dot-line" />
-        </span><a @click="closeView">{{  t('closeView')  }} </a><span>
+        <span> <hr class="dot-line" /> </span
+        ><a @click="closeView">{{ t('closeView') }} </a
+        ><span>
           <hr class="dot-line" />
         </span>
       </div>
     </template>
     <template v-if="initFiles?.length && feed.post_type === 'SNS'">
-
       <div class="video" v-if="initFiles[0].type === 'video'">
-        <video style="width:100%; height: auto;" controls :src="initFiles[0].url"></video>
+        <video
+          style="width: 100%; height: auto"
+          controls
+          :src="initFiles[0].url"
+        ></video>
       </div>
-      <div v-else-if="initFiles[0].type === 'sound'" v-for="file in initFiles" class="audio">
+      <div
+        v-else-if="initFiles[0].type === 'sound'"
+        v-for="file in initFiles"
+        class="audio"
+      >
         <audio controls :src="file.url"></audio>
-        <p>{{  file.name  }}</p>
+        <p>{{ file.name }}</p>
       </div>
-      <img v-else-if="initFiles?.length === 1" style="width:100%;margin: 0 auto; display: flex;" :src="initFiles[0].url"
-        class="feed-img mt-3" />
+      <img
+        v-else-if="initFiles?.length === 1"
+        style="width: 100%; margin: 0 auto; display: flex"
+        :src="initFiles[0].url"
+        class="feed-img mt-3"
+      />
 
-      <swiper v-else class="swiper" :modules="[Pagination]" style="height: 350px;" :pagination="{ clickable: true }">
+      <swiper
+        v-else
+        class="swiper"
+        :modules="[Pagination]"
+        style="height: 350px"
+        :pagination="{ clickable: true }"
+      >
         <swiper-slide v-for="file in initFiles">
-          <img v-if="file.type === 'image'" style="height: 88%;margin: 0 auto;display: flex;" :src="file.url"
-            class="feed-img mt-3" />
+          <img
+            v-if="file.type === 'image'"
+            style="height: 88%; margin: 0 auto; display: flex"
+            :src="file.url"
+            class="feed-img mt-3"
+          />
         </swiper-slide>
         <div class="swiper-pagination" slot="pagination"></div>
       </swiper>
-
     </template>
-
-
 
     <ul class="tapl-option">
       <li>
         <ul>
           <LikeBtn :feed="feed" />
-          <li @click="openComments"><i class="uil uil-comment-alt-dots comment-icon" style="font-size:22px;"></i>
-            {{  feed.comment_cnt  }}
+          <li @click="openComments">
+            <i
+              class="uil uil-comment-alt-dots comment-icon"
+              style="font-size: 22px"
+            ></i>
+            {{ feed.comment_cnt }}
           </li>
-          <li><a @click="copyUrl"><i class="uil uil-share-alt" style="font-size:20px;"></i></a></li>
+          <li>
+            <a @click="copyUrl"
+              ><i class="uil uil-share-alt" style="font-size: 20px"></i
+            ></a>
+          </li>
         </ul>
       </li>
     </ul>
 
-    <div v-show="isOpenedComments" :class="['tapl-comment', isOpenedComments ? 'open' : 'close']">
+    <div
+      v-show="isOpenedComments"
+      :class="['tapl-comment', isOpenedComments ? 'open' : 'close']"
+    >
       <ul ref="commentEl">
         <li v-for="comment in comments" :key="comment.id">
-          <Comment :comment="comment" :isEdit="isCommentEdit" @refresh="commentRefresh">
+          <Comment
+            :comment="comment"
+            :isEdit="isCommentEdit"
+            @refresh="commentRefresh"
+          >
             <!-- <template #commentEdit>
               <a @click="isCommentEdit = !isCommentEdit">{{ t('comment.edit') }}</a>
             </template> -->
           </Comment>
-
         </li>
       </ul>
       <!-- <CommentInput :postId="feed.id" @sendComment="editDone" @updateComment="updateDone" /> -->
-
 
       <CommentInput :postId="feed.id" @refresh="commentRefresh" />
     </div>
 
     <ClientOnly>
-      <el-dialog v-model="showDeletePostModal" append-to-body custom-class="modal-area-type" width="380px">
+      <el-dialog
+        v-model="showDeletePostModal"
+        append-to-body
+        custom-class="modal-area-type"
+        width="380px"
+      >
         <div class="modal-alert">
           <dl class="ma-header">
-            <dt> {{  t('information')  }}</dt>
+            <dt>{{ t('information') }}</dt>
             <dd>
-              <button @click="showDeletePostModal = false"><i class="uil uil-times"></i></button>
+              <button @click="showDeletePostModal = false">
+                <i class="uil uil-times"></i>
+              </button>
             </dd>
           </dl>
           <div class="ma-content">
-            <h2>{{  t('post.delete.modal.text1')  }} <br />{{  t('post.delete.modal.text2')  }}
+            <h2>
+              {{ t('post.delete.modal.text1') }} <br />{{
+                t('post.delete.modal.text2')
+              }}
             </h2>
             <div>
-              <button class="btn-default w48p" @click="deletePost">{{  t('delete')  }}</button>
-              <button class="btn-gray w48p " @click="showDeletePostModal = false">{{  t('no') 
-                }}</button>
+              <button class="btn-default w48p" @click="deletePost">
+                {{ t('delete') }}
+              </button>
+              <button
+                class="btn-gray w48p"
+                @click="showDeletePostModal = false"
+              >
+                {{ t('no') }}
+              </button>
             </div>
           </div>
         </div>
       </el-dialog>
-      <el-dialog v-model="showEditModal" append-to-body custom-class="modal-area-type">
-        <TextEditor @closeModal="closeEditor" :isEdit="true" :feed="feed" @refresh="emit('refresh')" :key="editorKey" />
+      <el-dialog
+        v-model="showEditModal"
+        append-to-body
+        custom-class="modal-area-type"
+      >
+        <TextEditor
+          @closeModal="closeEditor"
+          :isEdit="true"
+          :feed="feed"
+          @refresh="emit('refresh')"
+          :key="editorKey"
+        />
       </el-dialog>
     </ClientOnly>
-
-
   </li>
-
 </template>
 
 <script setup lang="ts">
 import _ from 'lodash'
-import { PropType } from 'vue';
-import { IFeed } from '~~/types';
-import { Pagination } from 'swiper';
-import { Swiper, SwiperSlide } from 'swiper/vue';
-import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElSelect, ElOption, ElMessage, ElDialog } from "element-plus";
+import { PropType } from 'vue'
+import { IFeed } from '~~/types'
+import { Pagination } from 'swiper'
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import {
+  ElDropdown,
+  ElDropdownMenu,
+  ElDropdownItem,
+  ElSelect,
+  ElOption,
+  ElMessage,
+  ElDialog,
+} from 'element-plus'
 
 import { dateFormat, execCommandCopy, htmlToDomElem } from '~/scripts/utils'
-import { useI18n } from 'vue-i18n';
-import { useLocalePath } from 'vue-i18n-routing';
-import hljs from 'highlight.js';
+import { useI18n } from 'vue-i18n'
+import { useLocalePath } from 'vue-i18n-routing'
+import hljs from 'highlight.js'
 import { useWindowScroll, useInfiniteScroll } from '@vueuse/core'
 
-
 const { x, y } = useWindowScroll()
-const localePath = useLocalePath();
-const config = useRuntimeConfig();
+const localePath = useLocalePath()
+const config = useRuntimeConfig()
 const { t, locale } = useI18n()
 
-
-const COMMENT_LIMIT = 5;
-const MAX_FEED_HEIGHT = 450;
+const COMMENT_LIMIT = 5
+const MAX_FEED_HEIGHT = 450
 
 const feedMenu = ref()
 const showDeletePostModal = ref(false)
@@ -184,7 +259,6 @@ const feedDiv = ref<HTMLElement>()
 const isMoreView = ref(false)
 const currScroll = ref(0)
 
-
 const limit = ref(COMMENT_LIMIT)
 const offset = ref(0)
 const sort = ref(null)
@@ -193,60 +267,48 @@ const isOpenedComments = ref(false)
 const commentEl = ref<HTMLElement | null>(null)
 const isAddData = ref(false)
 
-
 const isCommentEdit = ref(false)
 const editorKey = ref(0)
-
 
 useInfiniteScroll(
   commentEl,
   async () => {
-
-
     if (isAddData.value) {
-      offset.value += limit.value;
+      offset.value += limit.value
       await commentFetch()
     }
-
   },
   { distance: 10 }
 )
 
-
 const user = computed(() => useUser().user.value.info)
 
 const props = defineProps({
-  feed: Object as PropType<IFeed>
+  feed: Object as PropType<IFeed>,
 })
 
 const emit = defineEmits(['refresh'])
 
-
 const attatchment_files = computed(() => {
-  return Array.isArray(props.feed.attatchment_files) ? props.feed.attatchment_files : JSON.parse(props.feed.attatchment_files as string)
+  return Array.isArray(props.feed.attatchment_files)
+    ? props.feed.attatchment_files
+    : JSON.parse(props.feed.attatchment_files as string)
 })
 
 const isOverflow = computed(() => {
-  return feedDiv.value?.clientHeight > MAX_FEED_HEIGHT ? true : false;
+  return feedDiv.value?.clientHeight > MAX_FEED_HEIGHT ? true : false
 })
 
 const initFiles = _.cloneDeep(attatchment_files.value)
 
-
-
-
 onMounted(() => {
-
-
   hljs.configure({
-    ignoreUnescapedHTML: true
-  });
-  document.querySelectorAll('pre')
-    .forEach((block) => {
-      hljs.highlightElement(block)
-    })
+    ignoreUnescapedHTML: true,
+  })
+  document.querySelectorAll('pre').forEach((block) => {
+    hljs.highlightElement(block)
+  })
   const dom = htmlToDomElem(props.feed.content)
-
 
   const linkTag = dom.getElementsByTagName('a')
   // for (const link of linkTag) {
@@ -255,10 +317,7 @@ onMounted(() => {
   //     console.log(res)
   //   })
   // }
-
 })
-
-
 
 //     mounted() {
 //         this.attachedFile = Array.isArray(this.feed.attatchment_files) ? this.feed.attatchment_files : JSON.parse(this.feed.attatchment_files)
@@ -268,56 +327,49 @@ onMounted(() => {
 //         // this.likeListFetch();
 //     }
 
-
-
 //     dateFormat(date: number) {
 //         return dateFormat(date);
 //     }
-
 
 async function commentRefresh() {
   commentInit()
   isCommentEdit.value = !isCommentEdit.value
   await commentFetch()
-
 }
 async function openComments() {
-  commentInit();
-  isOpenedComments.value = !isOpenedComments.value;
+  commentInit()
+  isOpenedComments.value = !isOpenedComments.value
 
   if (isOpenedComments.value && props.feed.comment_cnt > 0) {
     await commentFetch()
   }
-
 }
-
 
 async function closeEditor() {
   showEditModal.value = false
   editorKey.value = Date.now()
-
 }
 
-
 function commentInit() {
-  comments.value = [];
+  comments.value = []
   limit.value = COMMENT_LIMIT
   offset.value = 0
   sort.value = null
 }
 
-
 async function commentFetch() {
-
   const query = {
     offset: offset.value,
     limit: limit.value,
-    sort: sort.value
+    sort: sort.value,
   }
 
   createQueryUrl(`/post/${props.feed.id}/comment/list`, query)
 
-  const { data, pending, error } = await useFetch<{ result: [] }>(createQueryUrl(`/post/${props.feed.id}/comment/list`, query), getComFetchOptions('get', true))
+  const { data, pending, error } = await useFetch<{ result: [] }>(
+    createQueryUrl(`/post/${props.feed.id}/comment/list`, query),
+    getComFetchOptions('get', true)
+  )
 
   if (data.value) {
     if (isAddData.value) {
@@ -326,21 +378,16 @@ async function commentFetch() {
       } else {
         isAddData.value = false
       }
-    }
-    else {
+    } else {
       comments.value = data.value.result
 
       isAddData.value = true
     }
-
   }
-
 
   // async comments(post_id: string, obj: any) {
   //     return await this.request('get', `${communityApi}post/${post_id}/comment/list`, obj, false)
   // }
-
-
 
   // this.$api.comments(this.feed.id, obj)
   //     .then((res: any) => {
@@ -365,7 +412,6 @@ async function commentFetch() {
   //     })
 }
 
-
 //     likeListFetch() {
 //         const obj = {
 //             post_id: this.feed.id,
@@ -380,21 +426,17 @@ async function commentFetch() {
 
 //             })
 
-
 //     }
 
-
 function copyUrl() {
-
   execCommandCopy(`${config.ZEMPIE_URL}/feed/${props.feed.id}`)
 
   ElMessage.closeAll()
   ElMessage({
     message: t('copied.clipboard'),
-    type: 'success'
+    type: 'success',
   })
 }
-
 
 //     //post
 //     contentClicked(e: any) {
@@ -422,10 +464,8 @@ function copyUrl() {
 //         this.$router.push(`/${this.$i18n.locale}/search?hashtag=${hashtag}`)
 //     }
 
-
 function openEdit() {
-  showEditModal.value = true;
-
+  showEditModal.value = true
 }
 //     pinPost() {
 //         console.log("pinned");
@@ -442,11 +482,11 @@ async function deletePost() {
   if (!error.value) {
     ElMessage({
       message: t('posting.deleted'),
-      type: 'success'
+      type: 'success',
     })
     emit('refresh')
   }
-  showDeletePostModal.value = false;
+  showDeletePostModal.value = false
 }
 
 //     report() {
@@ -456,17 +496,16 @@ async function deletePost() {
 //     }
 
 function moreView() {
-  feedDiv.value.style.maxHeight = '100%';
+  feedDiv.value.style.maxHeight = '100%'
 
-  isMoreView.value = true;
-  currScroll.value = y.value;
-
+  isMoreView.value = true
+  currScroll.value = y.value
 }
 
 function closeView() {
-  feedDiv.value.style.maxHeight = '500px';
-  isMoreView.value = false;
-  window.scrollTo(0, currScroll.value);
+  feedDiv.value.style.maxHeight = '500px'
+  isMoreView.value = false
+  window.scrollTo(0, currScroll.value)
 }
 
 //     /**
@@ -511,9 +550,28 @@ function closeView() {
 //     userReport(){
 //         console.log("?")
 //     }
+
+function openDeleteModal() {
+  showDeletePostModal.value = true
+  feedId.value = props.feed.id
+}
 </script>
 
 <style lang="scss" scoped>
+.tapl-title {
+  dt {
+    width: 100%;
+
+    dl {
+      dt {
+        width: 15%;
+      }
+      dd {
+        width: 80%;
+      }
+    }
+  }
+}
 // transition
 
 .component-fade-enter-active,
@@ -534,8 +592,7 @@ function closeView() {
 .fade-enter,
 .fade-leave-to
 
-/* .fade-leave-active below version 2.1.8 */
-  {
+/* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
 
@@ -574,13 +631,10 @@ function closeView() {
 
 // /더보기
 
-
-.tapl-comment>ul {
+.tapl-comment > ul {
   max-height: 500px;
   overflow-y: auto;
   overflow-x: hidden;
-
-
 }
 
 .like-icon:hover,
@@ -616,8 +670,8 @@ function closeView() {
   z-index: 999999;
 }
 
-.checkbox-wrap input[type="checkbox"]:checked+.checkbox-box .icon-check,
-.checkbox-wrap input[type="radio"]:checked+.checkbox-box .icon-check {
+.checkbox-wrap input[type='checkbox']:checked + .checkbox-box .icon-check,
+.checkbox-wrap input[type='radio']:checked + .checkbox-box .icon-check {
   fill: #ffffff;
 }
 
@@ -693,11 +747,9 @@ function closeView() {
   --swiper-navigation-size: 20px;
 
   &:hover {
-    --swiper-navigation-color: #FF6216;
+    --swiper-navigation-color: #ff6216;
   }
 }
-
-
 
 .tapl-comment.close {
   animation: fade-out 1s;
@@ -722,7 +774,6 @@ function closeView() {
 @keyframes fade-out {
   from {
     opacity: 1;
-
   }
 
   to {
