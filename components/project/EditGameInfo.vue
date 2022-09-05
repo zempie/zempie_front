@@ -579,7 +579,6 @@ async function updateProject() {
   form.file2 = thumbFileGif.value ?? null
 
   const isValid = await v$.value.$validate()
-  console.log('isValid', isThumbErr.value)
   if (!isValid || isThumbErr.value) return
 
   const formData = new FormData()

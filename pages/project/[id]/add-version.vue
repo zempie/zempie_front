@@ -392,7 +392,7 @@ export default class AddVersion extends Vue {
 
     }
 
-  
+
 
     async onFileChange(e) {
 
@@ -479,7 +479,7 @@ export default class AddVersion extends Vue {
         (this.$refs.gameFile as any).value = '';
     }
 
-  
+
 
     updateProject() {
 
