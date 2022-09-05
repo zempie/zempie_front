@@ -87,7 +87,6 @@ export default function () {
   }
 
   const joinUser = async (payload: { name: string, nickname?: string }) => {
-    console.log(payload)
     const { data } = await auth.signUp(payload)
   }
 
@@ -114,7 +113,7 @@ async function routerToHome() {
   const route = useRoute();
   const router = useRouter();
   if (route.name.toString().includes('login')) {
-    router.push(`/${useCommon().setting.value.lang}`)
+    router.push(`/${useCommon().setting.value.lang}/timeline`)
 
 
   }

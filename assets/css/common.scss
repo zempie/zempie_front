@@ -8,94 +8,106 @@
   width: 100%;
 }
 
-.bg-grey-1{
+.bg-grey-1 {
   background-color: #ededed;
 }
-.bg-grey-3{
+.bg-grey-3 {
   background-color: #e4e6ef;
 }
 
-.grey-text{
+.grey-text {
   background-color: #ededed;
   border-radius: 10px;
-  min-height:16px;
+  min-height: 16px;
 }
-
 
 .el-popper {
-  .el-popper__arrow{
-    display:none;
+  .el-popper__arrow {
+    display: none;
   }
-&.feed-menu{
-  border-radius: 8px;
-}
+  &.feed-menu {
+    border-radius: 8px;
+  }
 }
 
-.el-select-dropdown__item{
-  margin:7px !important;
+.el-select-dropdown__item {
+  margin: 7px !important;
 }
-.el-select-dropdown__item.selected{
-  color:#f97316 !important
+.el-select-dropdown__item.selected {
+  color: #f97316 !important;
 }
-.el-select-dropdown__item.hover{
-  color:#fff !important;
+.el-select-dropdown__item.hover {
+  color: #fff !important;
   background-color: #f97316 !important;
   border-radius: 4px;
-  
 }
 
 .modal-area-type {
   max-width: 100% !important;
   min-width: 380px !important;
-  border-radius: 10px !important;  
+  border-radius: 10px !important;
   position: absolute !important;
   left: 50%;
   top: 50%;
   margin: 0px !important;
   transform: translate(-50%, -50%);
-  .modal-alert{
-
+  .modal-alert {
     border-radius: 10px;
   }
   .el-dialog__header {
     display: none !important;
   }
-  .el-dialog__body{
-    padding:0px;
-    
+  .el-dialog__body {
+    padding: 0px;
   }
 }
 
 .el-dropdown-menu__item:focus {
   border-radius: 10px;
   background-color: #ededed !important;
-  color:#f97316 !important
-
+  color: #f97316 !important;
 }
 
 // swiper-css
 
-
-.swiper-pagination-bullet-active{
-
-  background-color:#f97316 !important;
+.swiper-pagination-bullet-active {
+  background-color: #f97316 !important;
 }
 
-.mp-image{
+.mp-image {
   .swiper-wrapper {
-    display: flex
+    display: flex;
   }
-  .swiper-pagination-bullet{
-    background-color:#fff !important;
+  .swiper-pagination-bullet {
+    background-color: #fff !important;
     opacity: 1 !important;
   }
 }
 
-.loading-spinner{
+.loading-spinner {
   .el-loading-spinner .path {
-    stroke:#f97316 !important;
+    stroke: #f97316 !important;
   }
-  .el-loading-text{
-    color:#f97316 !important;
+  .el-loading-text {
+    color: #f97316 !important;
+  }
+}
+
+.follow-btn-feed {
+  .btn-default {
+    margin-right: 10px;
+    // margin: 0px 10px 15px 0px !important;
+    font-size: 12px;
+    background-color: transparent;
+    color: #f97316 !important;
+    font-weight: bold;
+
+    padding: 0px !important;
+    &.unfollow {
+      background-color: transparent !important;
+    }
+    &.my-channel {
+      display: none;
+    }
   }
 }

@@ -2,7 +2,7 @@ import { IUserChannel } from "~~/types"
 
 export default function () {
   const userChannel = useState('userChannel', () => ({
-    info: {} as IUserChannel
+    info: null as IUserChannel
   }))
 
   const setUserChannel = async (info: IUserChannel) => {
@@ -25,7 +25,6 @@ export default function () {
   const getChannelInfo = async (channelId: string) => {
     const { data, error } = await useFetch<{ result: { target: IUserChannel } }>(`/channel/${channelId}`, getZempieFetchOptions('get', true))
     if (data.value) {
-      console.log(data.value)
       const { target } = data.value.result;
       setUserChannel(target)
     }

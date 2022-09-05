@@ -9,46 +9,52 @@
             </dl>
             <ul v-for="game in 4">
               <li>
-                <p style="background-color: #d5d5d5;">
-                </p>
-                <h2 class="grey-text" style="text-overflow: ellipsis; overflow: hidden; margin: 15px 0 10px 0;"> </h2>
+                <p style="background-color: #d5d5d5"></p>
+                <h2
+                  class="grey-text"
+                  style="
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    margin: 15px 0 10px 0;
+                  "
+                ></h2>
               </li>
             </ul>
-            <div>
-            </div>
+            <div></div>
           </div>
         </dt>
-        <dt v-else>
-          <div class="ta-myinfo" style="margin-bottom:20px">
+        <dt v-else-if="channelInfo">
+          <div class="ta-myinfo" style="margin-bottom: 20px">
             <UserAvatar :user="channelInfo" :tag="'p'"></UserAvatar>
-            <h2>{{  channelInfo.name  }}</h2>
+            <h2>{{ channelInfo.name }}</h2>
             <ul>
               <li>
                 <NuxtLink :to="localePath(`/channel/${channelId}`)">
-                  <p style="background:#FEB100; cursor: pointer"><i class="uil uil-comment-chart-line"></i>
+                  <p style="background: #feb100; cursor: pointer">
+                    <i class="uil uil-comment-chart-line"></i>
                   </p>
-                  <h2>{{  channelInfo.post_cnt  }}</h2>
+                  <h2>{{ channelInfo.post_cnt }}</h2>
                   <h3>Posts</h3>
                 </NuxtLink>
               </li>
               <li>
                 <NuxtLink :to="localePath(`/channel/${channelId}/followers`)">
-
-                  <p style="background:#33E4CE;cursor: pointer"><i class="uil uil-users-alt"></i></p>
-                  <h2>{{  channelInfo.follower_cnt  }}</h2>
+                  <p style="background: #33e4ce; cursor: pointer">
+                    <i class="uil uil-users-alt"></i>
+                  </p>
+                  <h2>{{ channelInfo.follower_cnt }}</h2>
                   <h3>Followers</h3>
                 </NuxtLink>
-
               </li>
               <li>
                 <NuxtLink :to="localePath(`/channel/${channelId}/following`)">
-                  <p style="background:#5D5FFE;cursor: pointer"><i class="uil uil-user-plus"></i></p>
-                  <h2>{{  channelInfo.following_cnt  }}</h2>
+                  <p style="background: #5d5ffe; cursor: pointer">
+                    <i class="uil uil-user-plus"></i>
+                  </p>
+                  <h2>{{ channelInfo.following_cnt }}</h2>
                   <h3>following</h3>
                 </NuxtLink>
-
               </li>
-
             </ul>
           </div>
           <div class="ta-game-list">
@@ -57,24 +63,31 @@
             </dl>
             <template v-if="games?.length">
               <ul>
-                <li v-for="game in games?.slice(0, 5)" @click="$router.push(localePath(`/game/${game.pathname}`))">
-                  <p :style="`background:url(${game.url_thumb_webp ||
-                  '/images/default.png'
-                  }) center; background-size:cover;`"></p>
-                  <h2 style="text-overflow: ellipsis; overflow: hidden">{{  game.title  }}</h2>
+                <li
+                  v-for="game in games?.slice(0, 5)"
+                  @click="$router.push(localePath(`/game/${game.pathname}`))"
+                >
+                  <p
+                    :style="`background:url(${
+                      game.url_thumb_webp || '/images/default.png'
+                    }) center; background-size:cover;`"
+                  ></p>
+                  <h2 style="text-overflow: ellipsis; overflow: hidden">
+                    {{ game.title }}
+                  </h2>
                 </li>
-
               </ul>
 
               <div v-if="games?.length > 5">
-                <NuxtLink :to="localePath(`/channel/${channelId}/games`)" class="btn-default-samll w100p">{{
-                   $t('moreView') 
-                  }}
+                <NuxtLink
+                  :to="localePath(`/channel/${channelId}/games`)"
+                  class="btn-default-samll w100p"
+                  >{{ $t('moreView') }}
                 </NuxtLink>
               </div>
             </template>
             <ul v-else class="no-game">
-              <li>{{  $t('no.game')  }}</li>
+              <li>{{ $t('no.game') }}</li>
             </ul>
           </div>
         </dt>
@@ -84,31 +97,30 @@
           <PostTimeline v-else type="user" :isMine="isMine" :key="channelId" />
         </dd>
         <dt>
-          <div class="ta-groups" style="margin-top:0px">
+          <div class="ta-groups" style="margin-top: 0px">
             <h2>Community</h2>
             <div v-if="isPending">
               <dl v-for="group in 4">
                 <CommunityListItemSk />
               </dl>
             </div>
-            <CommunityList v-else :communities="channelInfo.communities" />
+            <CommunityList v-else :communities="channelInfo?.communities" />
           </div>
         </dt>
-
       </dl>
     </ClientOnly>
   </NuxtLayout>
 </template>
 
- <script setup lang="ts">
-import { useLocalePath } from 'vue-i18n-routing';
-import { useI18n } from 'vue-i18n';
+<script setup lang="ts">
+import { useLocalePath } from 'vue-i18n-routing'
+import { useI18n } from 'vue-i18n'
 
-const config = useRuntimeConfig();
+const config = useRuntimeConfig()
 
 const { t, locale } = useI18n()
-const localePath = useLocalePath();
-const route = useRoute();
+const localePath = useLocalePath()
+const route = useRoute()
 const isPending = ref(true)
 const channelInfo = computed(() => useChannel().userChannel.value.info)
 const games = computed(() => channelInfo.value.games)
@@ -125,48 +137,42 @@ watch(
       meta: [
         {
           name: 'description',
-          content: `${info.name}${t('seo.channel.desc')}`
+          content: `${info.name}${t('seo.channel.desc')}`,
         },
         {
           name: 'og:title',
-          content: `${info.name}${t('seo.channel.title')}`
+          content: `${info.name}${t('seo.channel.title')}`,
         },
         {
           name: 'og:description',
-          content: `${info.name}${t('seo.channel.desc')}`
-
+          content: `${info.name}${t('seo.channel.desc')}`,
         },
         {
           name: 'og:url',
-          content: `${config.ZEMPIE_URL}${route.path}`
+          content: `${config.ZEMPIE_URL}${route.path}`,
         },
         {
           name: 'og:image',
-          content: `${info.picture}`
+          content: `${info.picture}`,
         },
-      ]
+      ],
     })
   }
 )
 
 definePageMeta({
   title: 'user-channel',
-  name: 'userChannel'
+  name: 'userChannel',
 })
-
-
 
 onMounted(() => {
   isPending.value = false
 })
-
-
 </script>
-
 
 <style lang="scss" scoped>
 .swiper-slide {
-  display: inline-block
+  display: inline-block;
 }
 
 .no-game {
@@ -187,15 +193,12 @@ onMounted(() => {
 }
 
 @media all and (max-width: 479px) {
-
   .ta-game-list {
     display: none;
   }
-
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
-
   .ta-game-list {
     display: none;
   }
@@ -204,8 +207,6 @@ onMounted(() => {
   .card-game {
     width: 100%;
   }
-
-
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
@@ -214,7 +215,9 @@ onMounted(() => {
   }
 }
 
-@media all and (min-width: 992px) and (max-width: 1199px) {}
+@media all and (min-width: 992px) and (max-width: 1199px) {
+}
 
-@media all and (min-width: 1200px) {}
+@media all and (min-width: 1200px) {
+}
 </style>

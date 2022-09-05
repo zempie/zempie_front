@@ -16,6 +16,25 @@ export interface IUser {
 }
 
 
+export interface IFollowUser {
+  block_you: boolean,
+  channel_id: string,
+  community: any[]
+  created_at: string,
+  email: string,
+  follow_you: boolean,
+  followers_cnt: number,
+  followings_cnt: string,
+  id: string,
+  is_blocked: boolean,
+  is_following: boolean,
+  is_muted: boolean,
+  mutes_you: boolean,
+  name: string,
+  profile_img: string,
+  type: string,
+  uid: string,
+}
 
 
 export enum eGameStage {

@@ -11,6 +11,7 @@
         <h3>{{  $t('join')  }}</h3>
         <p>{{  $t('join.text1')  }}</p>
       </div>
+      <ClientOnly>
       <form class="lj-content">
         <ul>
           <li>
@@ -48,52 +49,13 @@
             </h3>
           </li>
           <!--                    todo:백엔드에 닉네임 추가후 입력 -->
-          <!--                    <li>-->
-          <!--                        <b-form-group>-->
-          <!--                            <b-form-input type="text" name="register-nickname"-->
-          <!--                                          v-model="$v.form.nickname.$model"-->
-          <!--                                          :state="-->
-          <!--                                    register-->
-          <!--                                        ? validateState('nickname')-->
-          <!--                                        : undefined"-->
-          <!--                                          @focusout="checkNickname"-->
-          <!--                                          @input="watchNickname"-->
-          <!--                                          placeholder="닉네임"-->
-          <!--                                          :readonly="isNameReadOnly"-->
-          <!--                                          class="w100p h60"></b-form-input>-->
-          <!--                            <span></span>-->
-          <!--                            <h3>-->
-          <!--                                <b-form-invalid-feedback-->
-          <!--                                    v-if="!$v.form.nickname.required"-->
-          <!--                                ><i class="uil uil-check"></i>닉네임은 최소 두글자 이상입력해주세요-->
-          <!--                                </b-form-invalid-feedback>-->
-          <!--                                <b-form-invalid-feedback-->
-          <!--                                    v-if="!$v.form.nickname.maxLength"-->
-          <!--                                ><i class="uil uil-check"></i>닉네임은 20글자 이내로 작성해주세요.-->
-          <!--                                </b-form-invalid-feedback>-->
-          <!--                            </h3>-->
-          <!--                            <h3 :style="isDuplicatedNickname ? 'display:block;' : 'display:none;'">-->
-          <!--                                <i class="uil uil-check"></i>중복된 닉네임입니다.-->
-          <!--                            </h3>-->
-          <!--                        </b-form-group>-->
-          <!--                    </li>-->
+         
         </ul>
         <div class="login-agreement-container">
 
           <div class="lam-content">
             <ul>
-              <!--                            <li>-->
-              <!--                                <dl>-->
-              <!--                                    <dt>-->
-              <!--                                        <input @click="allAgree" type="checkbox" name="" title="" id="agree1"-->
-              <!--                                               v-model="allAgreement"/>-->
-              <!--                                        <label for="agree1"><i class="uil uil-check"></i></label>&nbsp;-->
-              <!--                                        <span><label for="agree1">네 모두 동의합니다.</label></span>-->
-              <!--                                    </dt>-->
-              <!--                                    <dd></dd>-->
-
-              <!--                                </dl>-->
-              <!--                            </li>-->
+          
 
 
               <li>
@@ -122,7 +84,7 @@
         <p @click="register" class="btn-default-big w100p">{{  $t('join')  }}</p>
         </p>
       </form>
-
+    </ClientOnly>
     </div>
 
 
@@ -299,10 +261,13 @@ async function register() {
     // useUser().setFirebaseUser(user);
 
   } catch (error: any) {
-
+    
     const { message } = error
     if (message.includes('auth/email-already-in-use')) {
       const { result } = await auth.hasEmail({ email: form.email })
+
+      ElMessage.error(`${t('fb.using.email')}`)
+
       // if (data.value) {
 
       //   const { data: res } = data.value.result
@@ -320,7 +285,7 @@ async function register() {
     } else if (message.includes('auth/weak-password')) {
 
     } else if (message.includes('EMAIL_EXISTS')) {
-      ElMessage.error(t('joined.email'))
+      ElMessage.error(`${t('fb.using.email')}`)
 
     }
 
@@ -574,7 +539,7 @@ async function joinZempie() {
     top: 0;
     left: 0;
     width: 100%;
-    padding: 40px 20px;
+    // padding: 40px 20px;
     background: #fff;
     transform: translate(0, 0);
   }

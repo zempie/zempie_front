@@ -1,7 +1,5 @@
-
 <template>
   <NuxtLayout name="game-channel-header">
-
     <dl class="three-area">
       <dt>
         <ClientOnly>
@@ -11,24 +9,35 @@
             </dl>
 
             <template v-if="games?.length">
-              <ul style="margin-bottom:20px">
-                <li v-for="game in games.slice(0, 5)" @click="$router.push(localePath(`/game/${game.pathname}`))">
-                  <p :style="`background:url(${game?.url_thumb_webp ||
-                  game?.url_thumb ||
-                  '/images/default.png'
-                  }) center; background-size:cover;`"></p>
-                  <h2 style="text-overflow: ellipsis; overflow: hidden">{{  game?.title  }}</h2>
+              <ul style="margin-bottom: 20px">
+                <li
+                  v-for="game in games.slice(0, 5)"
+                  @click="$router.push(localePath(`/game/${game.pathname}`))"
+                >
+                  <p
+                    :style="`background:url(${
+                      game?.url_thumb_webp ||
+                      game?.url_thumb ||
+                      '/images/default.png'
+                    }) center; background-size:cover;`"
+                  ></p>
+                  <h2 style="text-overflow: ellipsis; overflow: hidden">
+                    {{ game?.title }}
+                  </h2>
                 </li>
               </ul>
 
               <div v-if="games.length > 5">
-                <NuxtLink :to="localePath(`/channel/${game.user.channel_id}/games`)" class="btn-default-samll w100p">
-                  {{  $t('moreView')  }}
+                <NuxtLink
+                  :to="localePath(`/channel/${game.user.channel_id}/games`)"
+                  class="btn-default-samll w100p"
+                >
+                  {{ $t('moreView') }}
                 </NuxtLink>
               </div>
             </template>
             <ul v-else class="no-game">
-              <li>{{  $t('no.game')  }}</li>
+              <li>{{ $t('no.game') }}</li>
             </ul>
           </div>
         </ClientOnly>
@@ -37,49 +46,46 @@
         <PostTimeline type="game" :isMine="isMine" />
       </dd>
 
-
       <dt>
         <div class="ta-about">
           <h2>About Us</h2>
           <div class="desc">
-            {{  game?.description  }}
+            {{ game?.description }}
           </div>
           <dl>
             <dt>Version</dt>
-            <dd> {{  game?.version  }}</dd>
+            <dd>{{ game?.version }}</dd>
           </dl>
         </div>
         <div class="ta-copy-link">
-          <a @click="copyUrl"><em>Copy Game Link</em> <span><i class="uil uil-link"></i></span></a>
+          <a @click="copyUrl"
+            ><em>Copy Game Link</em> <span><i class="uil uil-link"></i></span
+          ></a>
         </div>
       </dt>
-
-
     </dl>
   </NuxtLayout>
-
 </template>
 
 <script setup lang="ts">
-import { IUserChannel } from '~~/types';
+import { IUserChannel } from '~~/types'
 import { execCommandCopy } from '~/scripts/utils'
-import { useLocalePath } from 'vue-i18n-routing';
-import { ElMessage } from 'element-plus';
-import { useI18n } from 'vue-i18n';
+import { useLocalePath } from 'vue-i18n-routing'
+import { ElMessage } from 'element-plus'
+import { useI18n } from 'vue-i18n'
 
-
-const localePath = useLocalePath();
-const config = useRuntimeConfig();
-const route = useRoute();
+const localePath = useLocalePath()
+const config = useRuntimeConfig()
+const route = useRoute()
 const { t, locale } = useI18n()
-
 
 const games = ref()
 
 const game = computed(() => useGame().game.value.info)
 
-const isMine = computed(() => useGame().game.value.info?.user.id === useUser().user.value.info?.id)
-
+const isMine = computed(
+  () => useGame().game.value.info?.user?.id === useUser().user.value.info?.id
+)
 
 watch(
   () => game.value,
@@ -90,52 +96,43 @@ watch(
       meta: [
         {
           name: 'description',
-          content: `${info.description}`
+          content: `${info.description}`,
         },
         {
           name: 'og:title',
-          content: `${info.title}`
+          content: `${info.title}`,
         },
         {
           name: 'og:description',
-          content: `${info.description}`
+          content: `${info.description}`,
         },
         {
           name: 'og:url',
-          content: `${config.ZEMPIE_URL}${route.path}`
+          content: `${config.ZEMPIE_URL}${route.path}`,
         },
-      ]
+      ],
     })
   }
 )
 
-
-
 onMounted(async () => {
-  if (game.value)
-    await gameListFetch()
-
-
-
+  if (game.value) await gameListFetch()
 })
 
-
 async function gameListFetch() {
-
-  const { data, error, pending, refresh } = await useFetch<{ result: any }>(`/channel/${useGame().game.value.info.user.channel_id}`, getZempieFetchOptions('get', false))
+  const { data, error, pending, refresh } = await useFetch<{ result: any }>(
+    `/channel/${useGame().game.value.info.user.channel_id}`,
+    getZempieFetchOptions('get', false)
+  )
 
   if (data.value) {
-    const { target } = data.value.result;
-    const { games: gameList } = target;
+    const { target } = data.value.result
+    const { games: gameList } = target
     const list = gameList.filter((gm) => {
       return gm.id !== game.value.id
     })
     games.value = list
-
-
   }
-
-
 }
 
 // gameListFetch() {
@@ -154,7 +151,6 @@ async function gameListFetch() {
 //             // console.log('err', err)
 //         })
 
-
 // }
 
 // beforeDestroy() {
@@ -171,24 +167,20 @@ async function gameListFetch() {
 // }
 
 function copyUrl() {
-
-  const url = `${config.BASE_API}/game/${game.value.pathname}`;
+  const url = `${config.BASE_API}/game/${game.value.pathname}`
   execCommandCopy(url)
   ElMessage.closeAll()
   ElMessage({
     message: t('copied.clipboard'),
-    type: 'success'
+    type: 'success',
   })
-
 }
 
-
-    // @Watch('$route.params.gamePath')
-    // watchParams() {
-    //     this.gamePath = this.$route.params.gamePath
-    //     this.fetch();
-    // }
-
+// @Watch('$route.params.gamePath')
+// watchParams() {
+//     this.gamePath = this.$route.params.gamePath
+//     this.fetch();
+// }
 </script>
 
 <style scoped lang="scss">
@@ -218,7 +210,7 @@ function copyUrl() {
 
   &:hover {
     --swiper-navigation-color: #fff;
-    background: #FF6216;
+    background: #ff6216;
   }
 }
 
@@ -240,14 +232,13 @@ function copyUrl() {
 
   &:hover {
     --swiper-navigation-color: #fff;
-    background: #FF6216;
+    background: #ff6216;
   }
 }
 
 .ta-copy-link a {
   cursor: pointer;
 }
-
 
 .no-game {
   padding: 20px 20px 0 20px;
@@ -260,7 +251,7 @@ function copyUrl() {
     cursor: pointer;
     height: 40px;
     margin-top: 0px;
-    padding-bottom: 20px
+    padding-bottom: 20px;
   }
 }
 

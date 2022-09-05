@@ -25,7 +25,6 @@ async function onSelectFile(files, maxFileNum, maxFileSize) {
     const limitSize = maxFileSize;
     let result = [];
     if (files && files[0]) {
-        console.log(files)
         if (files.length > maxFileNum) {
             alert(`최대 파일 개수는 ${maxFileNum}개입니다.`)
             return;
