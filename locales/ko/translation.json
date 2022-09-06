@@ -817,5 +817,12 @@
   "seo.game.list.desc": "젬파이에 등록된 모든 게임들을 확인할 수 있습니다.",
   "agreement.leave.text": "회원 탈퇴를 원하시면 동의해주세요",
   "fb.wrong.info": "이메일 혹은 비밀번호가 일치하지 않습니다. 다시 시도해주세요",
-  "fb.using.email": "이미 사용중인 이메일입니다."
+  "fb.using.email": "이미 사용중인 이메일입니다.",
+  "projectAddVersion.error.notFoundHtml": "__STRING_NOT_TRANSLATED__",
+  "see.original": "원문 보기",
+  "see.translation": "번역 보기",
+  "join.joinNicknameError": "__STRING_NOT_TRANSLATED__",
+  "login.joinError": "__STRING_NOT_TRANSLATED__",
+  "login.firebaseError.userNotFound": "__STRING_NOT_TRANSLATED__",
+  "projectAddVersion.error.lowVersion": "__STRING_NOT_TRANSLATED__"
 }

@@ -156,11 +156,11 @@
 </template>
 
 <script setup lang="ts">
+import hljs from 'highlight.js'
 import _ from 'lodash'
 import { ElMessage, ElDropdown, ElDialog } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import { useLocalePath } from 'vue-i18n-routing'
-import { htmlToDomElem } from '~~/scripts/utils'
 
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { dateFormat, execCommandCopy } from '~~/scripts/utils'
@@ -224,7 +224,12 @@ useHead({
 })
 
 onMounted(async () => {
-  console.log(isAddData.value)
+  hljs.configure({
+    ignoreUnescapedHTML: true,
+  })
+  document.querySelectorAll('pre').forEach((block) => {
+    hljs.highlightElement(block)
+  })
   observer.value = new IntersectionObserver(
     (entries) => {
       handleIntersection(entries[0])

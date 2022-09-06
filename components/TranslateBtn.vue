@@ -1,12 +1,16 @@
 <template>
-  <span v-if="isTranslated" class="trans-btn" @click="undoTranslate"
-    >원문보기</span
-  >
-  <span v-else class="trans-btn" @click="translate">번역보기</span>
+  <span v-if="isTranslated" class="trans-btn" @click="undoTranslate">{{
+    $t('see.original')
+  }}</span>
+  <span v-else class="trans-btn" @click="translate">{{
+    $t('see.translation')
+  }}</span>
 </template>
 <script setup lang="ts">
 import _ from 'lodash'
 import { useI18n } from 'vue-i18n'
+import { htmlToDomElem } from '~~/scripts/utils'
+
 const { t, locale } = useI18n()
 
 const isTranslated = ref(false)
@@ -16,8 +20,10 @@ const props = defineProps({
   text: String,
 })
 const emit = defineEmits(['translatedText', 'untranslatedText'])
+
 async function translate() {
   originFeedContent.value = _.cloneDeep(props.text)
+
   const payload = {
     text: props.text,
     source: locale.value,
@@ -38,6 +44,7 @@ async function translate() {
 
   if (data.value) {
     const { result } = data.value
+
     emit('translatedText', result.translations[0].translatedText)
 
     isTranslated.value = true
