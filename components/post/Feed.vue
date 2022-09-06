@@ -61,12 +61,13 @@
 
     <div>
       <div
+        ref="feedDiv"
         class="tapl-content"
         v-html="feedContent"
-        ref="feedDiv"
         @click="$router.push(localePath(`/feed/${feed.id}`))"
       ></div>
-      <div v-if="isOverflow" class="gradient"></div>
+
+      <div v-if="isOverflow" :class="isMoreView ? '' : 'gradient'"></div>
     </div>
     <template v-if="isOverflow">
       <div v-if="!isMoreView" class="more-container">
@@ -640,7 +641,9 @@ function openDeleteModal() {
     border-top: 1px dashed;
   }
 }
-
+.tapl-content {
+  max-height: 500px;
+}
 // /더보기
 
 .tapl-comment {

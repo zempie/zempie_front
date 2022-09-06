@@ -879,13 +879,13 @@ async function onUpdatePost() {
       attatchment_files = snsAttachFiles.value.img
     } else if (snsAttachFiles.value.audio?.length > 0) {
       attatchment_files = snsAttachFiles.value.audio
-    } else if (!snsAttachFiles.value.video) {
+    } else if (snsAttachFiles.value.video) {
       attatchment_files =
-        snsAttachFiles.value.video !== null ? snsAttachFiles.value.video : []
+        snsAttachFiles.value.video !== null ? [snsAttachFiles.value.video] : []
     } else {
       attatchment_files = []
     }
-
+    console.log('snsAttachFiles.value.', snsAttachFiles.value)
     if (snsAttachFiles.value.img?.length) {
       for (const img of snsAttachFiles.value.img) {
         formData.append(img.name, img.file)

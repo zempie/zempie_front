@@ -1,31 +1,30 @@
 <template>
-  <div style='min-height:200px'>
-    <EditorContent :editor="editor" :class="['editor-container', postType === 'SNS' ? 'sns' : 'blog']" />
+  <div style="min-height: 200px">
+    <EditorContent
+      :editor="editor"
+      :class="['editor-container', postType === 'SNS' ? 'sns' : 'blog']"
+    />
     <div class="character-count">
-      <p>{{  charCount  }}/{{  limit  }}</p>
+      <p>{{ charCount }}/{{ limit }}</p>
     </div>
   </div>
-
 </template>
 
-
 <script setup lang="ts">
-
-import { PropType } from 'vue';
-import { IFeed } from '~~/types';
-import { useI18n } from 'vue-i18n';
+import { PropType } from 'vue'
+import { IFeed } from '~~/types'
+import { useI18n } from 'vue-i18n'
 
 import { useEditor, EditorContent, VueNodeViewRenderer } from '@tiptap/vue-3'
-import Link from "@tiptap/extension-link";
+import Link from '@tiptap/extension-link'
 import StarterKit from '@tiptap/starter-kit'
-import CharacterCount from "@tiptap/extension-character-count";
-import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight"
+import CharacterCount from '@tiptap/extension-character-count'
+import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 
 import Typography from '@tiptap/extension-typography'
 import Highlight from '@tiptap/extension-highlight'
 
-import Image from '~/scripts/tiptap/image'
-
+import Image from '~/scripts/tiptap/customImage'
 
 import { lowlight } from 'lowlight/lib/core.js'
 
@@ -33,21 +32,19 @@ const BLOG_LIMIT = 5000
 const SNS_LIMIT = 300
 const emit = defineEmits(['editorContent'])
 
-
 const { t, locale } = useI18n()
-
 
 const charCount = ref(0)
 
-
 const props = defineProps({
   postType: String,
-  feed: Object as PropType<IFeed>
+  feed: Object as PropType<IFeed>,
 })
 
 const content = ref(props.feed.content)
-const limit = computed(() => props.postType === 'SNS' ? SNS_LIMIT : BLOG_LIMIT)
-
+const limit = computed(() =>
+  props.postType === 'SNS' ? SNS_LIMIT : BLOG_LIMIT
+)
 
 const editor = useEditor({
   content: content.value,
@@ -60,22 +57,17 @@ const editor = useEditor({
     Link,
     Typography,
     Highlight,
-    Image
+    Image,
   ],
   onUpdate: () => {
     charCount.value = editor.value.storage.characterCount.characters()
     emit('editorContent', editor.value)
   },
-
-
 })
 
 onMounted(() => {
   emit('editorContent', editor.value)
 })
-
-
-
 
 // //custom tiptap
 // import Video from "@/script/tiptap/customVideo";
@@ -98,7 +90,6 @@ onMounted(() => {
 //   private user!: any;
 //   private limit: number = 5000;
 //   private charCnt: number = 0;
-
 
 //   // 해시태그 멘션
 //   private hasTagSuggestion: boolean = false;
@@ -354,7 +345,6 @@ onMounted(() => {
 //       this.prefill();
 //     }
 //   }
-
 
 //   beforeDestroy() {
 //     this.editor!.destroy()

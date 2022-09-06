@@ -94,7 +94,9 @@
 
         <dd>
           <TimelineSk v-if="isPending" />
-          <PostTimeline v-else type="user" :isMine="isMine" :key="channelId" />
+          <ClientOnly v-else>
+            <PostTimeline type="user" :isMine="isMine" :key="channelId" />
+          </ClientOnly>
         </dd>
         <dt>
           <div class="ta-groups" style="margin-top: 0px">
@@ -117,6 +119,7 @@ import { useLocalePath } from 'vue-i18n-routing'
 import { useI18n } from 'vue-i18n'
 
 const config = useRuntimeConfig()
+const nuxt = useNuxtApp()
 
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
@@ -129,6 +132,9 @@ const isMine = computed(() => {
   return channelId.value === useUser().user.value.info?.channel_id
 })
 
+nuxt.hook('page:finish', () => {
+  isPending.value = false
+})
 watch(
   () => channelInfo.value,
   (info) => {
@@ -163,10 +169,6 @@ watch(
 definePageMeta({
   title: 'user-channel',
   name: 'userChannel',
-})
-
-onMounted(() => {
-  isPending.value = false
 })
 </script>
 

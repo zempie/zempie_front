@@ -73,6 +73,7 @@
         </div>
       </ul>
       <div ref="triggerDiv"></div>
+      <!-- style="width: 10px; height: 10px; background-color: red" -->
     </dd>
 
     <ClientOnly>
@@ -181,24 +182,27 @@ let userWatcher = watch(
 
 onMounted(async () => {
   if (channelId.value || route.meta.name === 'myTimeline') {
-    observer.value = new IntersectionObserver(
-      (entries) => {
-        handleIntersection(entries[0])
-      },
-      { root: null, threshold: 1 }
-    )
+    const result = await fetch()
+    console.log(result)
+    if (result) {
+      observer.value = new IntersectionObserver(
+        async (entries) => {
+          await handleIntersection(entries[0])
+        },
+        { root: null, threshold: 1 }
+      )
 
-    observer.value.observe(triggerDiv.value)
-
-    await fetch()
+      observer.value.observe(triggerDiv.value)
+    }
   }
 })
 
-function handleIntersection(target) {
+async function handleIntersection(target) {
+  console.log('inter', target.isIntersecting, isAddData.value)
   if (target.isIntersecting) {
     if (isAddData.value) {
       offset.value += limit.value
-      fetch()
+      await fetch()
     }
   }
 }
@@ -234,6 +238,8 @@ async function fetch() {
         if (data.value) {
           dataPaging(data.value)
         }
+        isPending.value = false
+        return isAddData.value
       } else {
         const { data, error, refresh } = await useFetch<{
           result: []
@@ -245,9 +251,10 @@ async function fetch() {
         if (data.value) {
           dataPaging(data.value)
         }
+        isPending.value = false
+        return isAddData.value
       }
 
-      break
     case 'user':
       const { data: userPostData } = await useFetch<{
         result: IFeed[]
@@ -260,22 +267,25 @@ async function fetch() {
       if (userPostData.value) {
         dataPaging(userPostData.value)
       }
-      break
+      isPending.value = false
+      return isAddData.value
     case 'userAll':
-      if (user.value) {
-        const { data: userAllPostData } = await useFetch<{
-          result: IFeed[]
-          totalCount: number
-        }>(
-          createQueryUrl(`/timeline/mine`, query),
-          getComFetchOptions('get', true)
-        )
+      const { data: userAllPostData } = await useFetch<{
+        result: IFeed[]
+        totalCount: number
+      }>(
+        createQueryUrl(`/timeline/mine`, query),
+        getComFetchOptions('get', true)
+      )
 
-        if (userAllPostData.value) {
-          dataPaging(userAllPostData.value)
-        }
+      if (userAllPostData.value) {
+        dataPaging(userAllPostData.value)
       }
-      break
+      isPending.value = false
+      return isAddData.value
+
+    // return isAddData.value
+
     case 'game':
       const { data: gamePostData, error: gameError } = await useFetch<{
         result: []
@@ -287,11 +297,9 @@ async function fetch() {
       if (gamePostData.value) {
         dataPaging(gamePostData.value)
       }
-
-      break
+      isPending.value = false
+      return isAddData.value
   }
-
-  isPending.value = false
 }
 
 function dataPaging(data: { result: IFeed[]; totalCount: number }) {

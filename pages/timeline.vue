@@ -89,7 +89,8 @@
             <dl>
               <dt>Games</dt>
             </dl>
-            <ul v-if="useChannel().userChannel.value.info?.games">
+
+            <ul v-if="useChannel().userChannel.value.info?.games?.length">
               <li
                 v-for="game in useChannel().userChannel.value.info?.games?.slice(
                   0,
