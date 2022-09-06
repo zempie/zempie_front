@@ -186,7 +186,6 @@ let userWatcher = watch(
 onMounted(async () => {
   if (paramId.value || route.meta.name === 'myTimeline') {
     const result = await fetch()
-    console.log(result)
     if (result) {
       observer.value = new IntersectionObserver(
         async (entries) => {
@@ -201,7 +200,6 @@ onMounted(async () => {
 })
 
 async function handleIntersection(target) {
-  console.log('inter', target.isIntersecting, isAddData.value)
   if (target.isIntersecting) {
     if (isAddData.value) {
       offset.value += limit.value
@@ -272,7 +270,6 @@ async function fetch() {
       if (userPostData.value) {
         dataPaging(userPostData.value)
       }
-      console.log(feeds.value)
       isPending.value = false
       return isAddData.value
     case 'userAll':

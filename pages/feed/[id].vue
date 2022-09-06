@@ -272,7 +272,6 @@ async function commentFetch() {
       }
     } else {
       comments.value = result
-      console.log('commtnet', comments.value)
       isAddData.value = true
     }
   }

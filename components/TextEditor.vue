@@ -892,7 +892,6 @@ async function onUpdatePost() {
     } else {
       attatchment_files = []
     }
-    console.log('snsAttachFiles.value.', snsAttachFiles.value)
     if (snsAttachFiles.value.img?.length) {
       for (const img of snsAttachFiles.value.img) {
         formData.append(img.name, img.file)

@@ -140,7 +140,6 @@ async function fetch() {
   )
   if (data.value) {
     communities.value = data.value
-    console.log(communities.value)
   }
   isPending.value = false
 }
