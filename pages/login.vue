@@ -188,6 +188,7 @@ async function onSubmit() {
   const isValid = await v$.value.$validate()
 
   if (!isValid) return
+  
   signInWithEmailAndPassword($firebaseAuth, form.email, form.password)
     .then(async (result) => {
       const { user } = result

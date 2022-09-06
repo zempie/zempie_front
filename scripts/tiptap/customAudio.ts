@@ -25,13 +25,13 @@ export default Node.create({
         return this.options.inline ? 'inline' : 'block'
     },
 
-    defaultOptions: <AudioOptions>{
-        inline: true,
-        HTMLAttributes: {
-            class: 'audio-wrapper',
-        },
+    // defaultOptions: <AudioOptions>{
+    //     inline: true,
+    //     HTMLAttributes: {
+    //         class: 'audio-wrapper',
+    //     },
 
-    },
+    // },
 
     draggable: true,
 

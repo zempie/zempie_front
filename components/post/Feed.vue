@@ -14,6 +14,11 @@
             <p>
               <i class="uis uis-clock" style="color: #c1c1c1"></i>
               {{ dateFormat(feed.created_at) }}
+              <TranslateBtn
+                :text="feedContent"
+                @translatedText="translate"
+                @untranslatedText="untranslatedText"
+              />
             </p>
           </dd>
           <dd v-else>
@@ -24,47 +29,26 @@
             </p>
           </dd>
           <UserFollowBtn :user="feed.user" class="follow-btn-feed" />
-          <!-- @refresh="emit('refresh')" -->
         </dl>
-
-        <!-- <UserFollowBtn :user="feed.user" /> -->
       </dt>
       <dd v-if="feed.user?.name">
-        <el-dropdown trigger="click" ref="feedMenu" popper-class="feed-menu">
-          <a class="btn-circle-none pt6" slot="trigger"
-            ><i class="uil uil-ellipsis-h font25"></i
-          ></a>
-          <template #dropdown>
-            <div slot="body" class="more-list fixed" style="min-width: 150px">
-              <template v-if="user && user.id === (feed.user && feed.user.id)">
-                <a @click="openEdit">{{ t('feed.edit') }}</a>
-                <a @click="openDeleteModal">{{ t('feed.delete') }}</a>
-              </template>
-              <template v-else>
-                <NuxtLink
-                  :to="
-                    localePath(`/channel/${feed.user && feed.user.channel_id}`)
-                  "
-                >
-                  {{ t('visit.userChannel') }}
-                </NuxtLink>
-                <!-- <a v-if="user" @click="report">{{ t('post.report') }}</a>
-              <a v-if="user" @click="userReportModalOpen">{{ t('post.report') }}유저 신고하기</a> -->
-              </template>
-            </div>
-          </template>
-        </el-dropdown>
+        <PostDropdown
+          :feed="feed"
+          @deletePost="$router.back()"
+          @refresh="emit('refresh')"
+        />
       </dd>
     </dl>
 
     <div>
       <div
-        class="tapl-content"
-        v-html="feed.content"
         ref="feedDiv"
+        class="tapl-content"
+        v-html="feedContent"
         @click="$router.push(localePath(`/feed/${feed.id}`))"
       ></div>
-      <div v-if="isOverflow" class="gradient"></div>
+
+      <div v-if="isOverflow" :class="isMoreView ? '' : 'gradient'"></div>
     </div>
     <template v-if="isOverflow">
       <div v-if="!isMoreView" class="more-container">
@@ -207,6 +191,7 @@
         v-model="showEditModal"
         append-to-body
         custom-class="modal-area-type"
+        width="700px"
       >
         <TextEditor
           @closeModal="closeEditor"
@@ -287,6 +272,8 @@ const props = defineProps({
   feed: Object as PropType<IFeed>,
 })
 
+const feedContent = ref(props.feed?.content || '')
+
 const emit = defineEmits(['refresh'])
 
 const attatchment_files = computed(() => {
@@ -364,8 +351,6 @@ async function commentFetch() {
     sort: sort.value,
   }
 
-  createQueryUrl(`/post/${props.feed.id}/comment/list`, query)
-
   const { data, pending, error } = await useFetch<{ result: [] }>(
     createQueryUrl(`/post/${props.feed.id}/comment/list`, query),
     getComFetchOptions('get', true)
@@ -438,35 +423,10 @@ function copyUrl() {
   })
 }
 
-//     //post
-//     contentClicked(e: any) {
-//         // if (e.target.matches("img")) {
-//         //     this.originImg = e.target.src;
-//         //     // this.$modal.show('originImgModal')
-//         //     this.$emit('originImg', this.originImg)
-//         // }
-//         // else if (e.target.matches(".hashtag")) {
-//         //     this.$router.push(
-//         //         `/search?hashtag=${e.target.attributes["data-id"].nodeValue}`
-//         //     );
-//         // }
-//         // else if (e.target.matches(".mention")) {
-//         //     this.$router.push(
-//         //         `/channel/${e.target.attributes["channel-id"].nodeValue}/timeline`
-//         //     );
-//         // }
-//         // else {
-//         this.$router.push(`/${this.$i18n.locale}/feed/${this.feed.id}`);
-//         // }
-//     }
-
 //     moveHashtag(hashtag: string) {
 //         this.$router.push(`/${this.$i18n.locale}/search?hashtag=${hashtag}`)
 //     }
 
-function openEdit() {
-  showEditModal.value = true
-}
 //     pinPost() {
 //         console.log("pinned");
 //     }
@@ -508,6 +468,13 @@ function closeView() {
   window.scrollTo(0, currScroll.value)
 }
 
+async function translate(text: string) {
+  feedContent.value = text
+}
+
+function untranslatedText(originText: string) {
+  feedContent.value = originText
+}
 //     /**
 //      * 댓글
 //      * */
@@ -628,13 +595,18 @@ function openDeleteModal() {
     border-top: 1px dashed;
   }
 }
-
+.tapl-content {
+  max-height: 500px;
+}
 // /더보기
 
-.tapl-comment > ul {
-  max-height: 500px;
-  overflow-y: auto;
-  overflow-x: hidden;
+.tapl-comment {
+  ul {
+    li:nth-child(1) {
+      border-top: none;
+      margin-top: 0px;
+    }
+  }
 }
 
 .like-icon:hover,

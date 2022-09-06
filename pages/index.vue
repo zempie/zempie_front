@@ -46,7 +46,11 @@
         <li class="thumbmail skeleton" v-for="post in POST_COUNT"></li>
       </ul> -->
 
-      <ul style="margin-top: 40px" class="post-container">
+      <ul
+        style="margin-top: 40px"
+        class="post-container"
+        v-if="postData?.result.length"
+      >
         <li
           class="thumbmail"
           v-for="post in postData?.result"
@@ -109,6 +113,10 @@ const { data, pending, error } = await game.list({
   limit: GAME_COUNT,
   offset: 0,
 })
+
+if (!data.value) {
+  throw createError({ statusCode: 404, statusMessage: 'Page Not Found' })
+}
 const {
   data: communities,
   pending: cPending,

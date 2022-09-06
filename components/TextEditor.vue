@@ -136,10 +136,11 @@
             </div>
           </el-popover>
           <swiper
+            style="width: 100%; margin-left: 10px"
             v-if="postingChannels.length"
             class="swiper-area"
-            style="margin-left: 10px"
             :space-between="10"
+            :slides-per-view="3"
           >
             <swiper-slide
               class="community-slide"
@@ -212,7 +213,7 @@
 </template>
 
 <script setup lang="ts">
-import _, { result } from 'lodash'
+import _ from 'lodash'
 import { PropType } from 'vue'
 import { IFeed } from '~~/types'
 import { Pagination } from 'swiper'
@@ -222,7 +223,6 @@ import { Editor } from '@tiptap/vue-3'
 import {
   ElDropdown,
   ElMessageBox,
-  ElDropdownItem,
   ElLoading,
   ElPopover,
   ElMessage,
@@ -230,7 +230,7 @@ import {
 } from 'element-plus'
 
 import { useI18n } from 'vue-i18n'
-import { htmlToDomElem, blobToFile } from '~~/scripts/utils'
+import { htmlToDomElem } from '~~/scripts/utils'
 
 const { t, locale } = useI18n()
 
@@ -283,7 +283,6 @@ const isCommunityListVisible = ref(false)
 const imgArr = ref([])
 const videoArr = ref([])
 const audioArr = ref([])
-
 const emit = defineEmits(['closeModal', 'refresh'])
 
 const form = reactive({
@@ -291,19 +290,37 @@ const form = reactive({
 })
 
 onMounted(() => {
-  if (activeTab.value === 'SNS') {
-    if (attachFileArr.value?.length) {
-      snsAttachFiles.value = {
-        img:
-          attachFileArr.value[0]?.type === 'image' ? attachFileArr.value : [],
-        video:
-          attachFileArr.value[0]?.type === 'video'
-            ? attachFileArr.value[0]
-            : null,
-        audio:
-          attachFileArr.value[0]?.type === 'sound' ? attachFileArr.value : [],
+  if (props.isEdit) {
+    // const loading = ElLoading.service({
+    //   lock: true,
+    //   text: 'Loading',
+    //   customClass: 'loading-spinner',
+    //   background: 'rgba(0, 0, 0, 0.7)',
+    // })
+
+    if (props.feed?.posted_at?.community) {
+      for (const community of props.feed.posted_at.community) {
+        postingChannels.value.push({
+          group: community.community,
+          channel: community.channel,
+        })
       }
     }
+    if (activeTab.value === 'SNS') {
+      if (attachFileArr.value?.length) {
+        snsAttachFiles.value = {
+          img:
+            attachFileArr.value[0]?.type === 'image' ? attachFileArr.value : [],
+          video:
+            attachFileArr.value[0]?.type === 'video'
+              ? attachFileArr.value[0]
+              : null,
+          audio:
+            attachFileArr.value[0]?.type === 'sound' ? attachFileArr.value : [],
+        }
+      }
+    }
+    // loading.close()
   }
 
   if (props.type === 'community') {
@@ -321,15 +338,6 @@ onMounted(() => {
           channel: useCommunity().community.value.info.channels[0],
         },
       ]
-    }
-  }
-
-  if (props.feed?.posted_at) {
-    for (const community of props.feed.posted_at.community) {
-      postingChannels.value.push({
-        group: community.community,
-        channel: community.channel,
-      })
     }
   }
 })
@@ -878,13 +886,13 @@ async function onUpdatePost() {
       attatchment_files = snsAttachFiles.value.img
     } else if (snsAttachFiles.value.audio?.length > 0) {
       attatchment_files = snsAttachFiles.value.audio
-    } else if (!snsAttachFiles.value.video) {
+    } else if (snsAttachFiles.value.video) {
       attatchment_files =
-        snsAttachFiles.value.video !== null ? snsAttachFiles.value.video : []
+        snsAttachFiles.value.video !== null ? [snsAttachFiles.value.video] : []
     } else {
       attatchment_files = []
     }
-
+    console.log('snsAttachFiles.value.', snsAttachFiles.value)
     if (snsAttachFiles.value.img?.length) {
       for (const img of snsAttachFiles.value.img) {
         formData.append(img.name, img.file)
@@ -1030,7 +1038,7 @@ function backToCommunityList() {
   isChannelListOpen.value = !isChannelListOpen.value
 }
 
-function selectChannel(channel: any) {
+async function selectChannel(channel: any) {
   postingChannels.value = _.uniqBy(
     [
       ...postingChannels.value,
@@ -1043,6 +1051,8 @@ function selectChannel(channel: any) {
   )
 
   isCommunityListVisible.value = false
+  isCommunityListOpen.value = !isCommunityListOpen.value
+  isChannelListOpen.value = !isChannelListOpen.value
 }
 
 function deletePostingChannel(idx: number) {
@@ -1170,7 +1180,7 @@ function deletePostingChannel(idx: number) {
 }
 
 .community-slide {
-  width: 200px;
+  max-width: 200px;
 
   .category-select-finish {
     max-width: 200px;

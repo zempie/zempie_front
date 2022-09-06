@@ -817,5 +817,12 @@
   "seo.game.list.desc": "Where every game on Zempie assemble.",
   "agreement.leave.text": "If you want to delete your account, then please agree on the related terms & conditions.",
   "fb.wrong.info": "Wrong information. Please type in again.",
-  "fb.using.email": "This email is already in the Zempie"
+  "fb.using.email": "This email is already in the Zempie",
+  "projectAddVersion.error.notFoundHtml": "__STRING_NOT_TRANSLATED__",
+  "see.original": "See original",
+  "see.translation": "See translate",
+  "join.joinNicknameError": "__STRING_NOT_TRANSLATED__",
+  "login.joinError": "__STRING_NOT_TRANSLATED__",
+  "login.firebaseError.userNotFound": "__STRING_NOT_TRANSLATED__",
+  "projectAddVersion.error.lowVersion": "__STRING_NOT_TRANSLATED__"
 }

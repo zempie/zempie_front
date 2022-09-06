@@ -1,7 +1,5 @@
 <template>
   <div class="content">
-    <!-- 비주얼영역 -->
-
     <div
       class="visual-img"
       style="
@@ -38,27 +36,23 @@
         </div>
       </dd>
     </dl>
-    <ClientOnly>
-      <div class="result-container">
-        <div class="card-timeline">
-          <TransitionGroup name="fade">
-            <!-- <CommunityCardSk v-show="pending" v-for="com in 4" :key="com" /> -->
-            <CommunityCard
-              v-for="community in communities"
-              :community="community"
-              :key="community.id"
-            >
-              <template v-slot:subBtn>
-                <CommunitySubscribeBtn
-                  :community="community"
-                  @refresh="refresh"
-                />
-              </template>
-            </CommunityCard>
-          </TransitionGroup>
-        </div>
+    <div class="result-container">
+      <div class="card-timeline">
+        <CommunityCardSk v-if="isPending" v-for="com in 4" />
+        <TransitionGroup v-else name="fade">
+          <CommunityCard
+            v-for="community in communities"
+            :community="community"
+            :key="community.id"
+          >
+            <template v-slot:subBtn>
+              <CommunitySubscribeBtn :community="community" @refresh="fetch" />
+            </template>
+          </CommunityCard>
+        </TransitionGroup>
+        <div ref="triggerDiv"></div>
       </div>
-    </ClientOnly>
+    </div>
   </div>
 </template>
 
@@ -70,31 +64,21 @@ const { t, locale } = useI18n()
 const route = useRoute()
 const config = useRuntimeConfig()
 
-// const communities: any = ref([]);
+const communities: any = ref([])
 const filter = ref(0)
 const isPending = ref(true)
 
-const query = ref({
-  limit: 20,
-  offset: 0,
-  community: '',
-  sort: '',
-  show: '',
-})
-// await fetch()
+const limit = ref(20)
+const offset = ref(0)
+const community = ref('')
+const sort = ref('')
+const observer = ref<IntersectionObserver>(null)
+const isAddData = ref(false)
 
+const triggerDiv = ref()
 definePageMeta({
   layout: 'default',
 })
-
-const {
-  data: communities,
-  pending,
-  refresh,
-} = await useFetch<any>(
-  () => createQueryUrl('/community/list', query.value),
-  getComFetchOptions('get', true)
-)
 
 useHead({
   title: `${t('communityList')} | Zempie`,
@@ -122,38 +106,57 @@ useHead({
   ],
 })
 
-onMounted(() => {
-  isPending.value = pending.value
+onMounted(async () => {
+  observer.value = new IntersectionObserver(
+    (entries) => {
+      handleIntersection(entries[0])
+    },
+    { root: null, threshold: 1 }
+  )
+  observer.value.observe(triggerDiv.value)
+  await fetch()
 })
 
-// TODO: 많아지면,, 무한 스크롤 적용
+async function handleIntersection(target) {
+  if (target.isIntersecting) {
+    if (isAddData.value) {
+      offset.value += limit.value
+      await fetch()
+    } else {
+      await fetch()
+    }
+  }
+}
 
-// async function fetch() {
-//   const query = {
-//     limit: obj.limit,
-//     offset: obj.offset,
-//     sort: obj.sort
-//   }
-//   const { data, pending } = await useFetch(() => createQueryUrl('/community/list', query), getComFetchOptions('get', true))
-//   if (data.value) {
-//     communities.value = data.value
-//     console.log(communities.value)
-//   }
-//   isPending.value = false;
-// }
+async function fetch() {
+  const query = {
+    limit: limit.value,
+    offset: offset.value,
+    sort: sort.value,
+  }
+  const { data, pending } = await useFetch(
+    () => createQueryUrl('/community/list', query),
+    getComFetchOptions('get', true)
+  )
+  if (data.value) {
+    communities.value = data.value
+    console.log(communities.value)
+  }
+  isPending.value = false
+}
 
 const sortGroups = _.debounce(async (sorted: number) => {
   filter.value = sorted
 
   if (filter.value === 0) {
-    query.value.sort = ''
-    await refresh()
+    sort.value = ''
+    await fetch()
   } else if (filter.value === 1) {
-    query.value.sort = 'SUBSCRIBE'
-    await refresh()
+    sort.value = 'SUBSCRIBE'
+    await fetch()
   } else if (filter.value === 2) {
-    query.value.sort = 'ALPAHBETIC'
-    await refresh()
+    sort.value = 'ALPAHBETIC'
+    await fetch()
   }
 }, 300)
 </script>

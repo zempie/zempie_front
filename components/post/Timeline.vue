@@ -39,7 +39,7 @@
           </div>
           <div class="swiper-slide" style="width: 50%; cursor: pointer">
             <NuxtLink
-              :to="localePath(`/channel/${channelId}/games`)"
+              :to="localePath(`/channel/${paramId}/games`)"
               @click.native="timelineFilter('game')"
               :class="media === 'game' ? 'active' : ''"
             >
@@ -73,6 +73,7 @@
         </div>
       </ul>
       <div ref="triggerDiv"></div>
+      <!-- style="width: 10px; height: 10px; background-color: red" -->
     </dd>
 
     <ClientOnly>
@@ -141,8 +142,8 @@ const user = computed(() => useUser().user.value.info)
 const isLogin = computed(() => useUser().user.value.isLogin)
 const gameInfo = computed(() => useGame().game.value.info)
 
-const channelId = computed(() => route.params.id as string)
-const gameId = computed(() => route.params.id as string)
+const paramId = computed(() => route.params.id as string)
+// const gameId = computed(() => route.params.id as string)
 
 const props = defineProps({
   type: String,
@@ -164,9 +165,12 @@ const props = defineProps({
 let watcher = watch(
   () => route.query,
   (query) => {
-    media.value = query.media as string
-
-    refresh()
+    if (query.media) {
+      media.value = query.media as string
+      refresh()
+    } else if (route.meta.name === 'communityChannel') {
+      refresh()
+    }
   }
 )
 
@@ -180,31 +184,36 @@ let userWatcher = watch(
 )
 
 onMounted(async () => {
-  if (channelId.value || route.meta.name === 'myTimeline') {
-    observer.value = new IntersectionObserver(
-      (entries) => {
-        handleIntersection(entries[0])
-      },
-      { root: null, threshold: 1 }
-    )
+  if (paramId.value || route.meta.name === 'myTimeline') {
+    const result = await fetch()
+    console.log(result)
+    if (result) {
+      observer.value = new IntersectionObserver(
+        async (entries) => {
+          await handleIntersection(entries[0])
+        },
+        { root: null, threshold: 1 }
+      )
 
-    observer.value.observe(triggerDiv.value)
-
-    await fetch()
+      observer.value.observe(triggerDiv.value)
+    }
   }
 })
 
-function handleIntersection(target) {
+async function handleIntersection(target) {
+  console.log('inter', target.isIntersecting, isAddData.value)
   if (target.isIntersecting) {
     if (isAddData.value) {
       offset.value += limit.value
-      fetch()
+      await fetch()
     }
   }
 }
 
 onBeforeUnmount(() => {
   initPaging()
+  watcher()
+  userWatcher()
 })
 
 onBeforeRouteLeave((to, from) => {
@@ -226,7 +235,7 @@ async function fetch() {
           totalCount: number
         }>(
           createQueryUrl(
-            `/timeline/${channelId.value}/channel/${props.channelInfo.id}`,
+            `/timeline/${paramId.value}/channel/${props.channelInfo.id}`,
             query
           ),
           getComFetchOptions('get', true)
@@ -234,64 +243,69 @@ async function fetch() {
         if (data.value) {
           dataPaging(data.value)
         }
+        isPending.value = false
+        return isAddData.value
       } else {
         const { data, error, refresh } = await useFetch<{
           result: []
           totalCount: number
         }>(
-          createQueryUrl(`/timeline/${channelId.value}/post`, query),
+          createQueryUrl(`/timeline/${paramId.value}/post`, query),
           getComFetchOptions('get', true)
         )
         if (data.value) {
           dataPaging(data.value)
         }
+        isPending.value = false
+        return isAddData.value
       }
 
-      break
     case 'user':
       const { data: userPostData } = await useFetch<{
         result: IFeed[]
         totalCount: number
       }>(
-        createQueryUrl(`/timeline/channel/${channelId.value}`, query),
+        createQueryUrl(`/timeline/channel/${paramId.value}`, query),
         getComFetchOptions('get', true)
       )
 
       if (userPostData.value) {
         dataPaging(userPostData.value)
       }
-      break
+      console.log(feeds.value)
+      isPending.value = false
+      return isAddData.value
     case 'userAll':
-      if (user.value) {
-        const { data: userAllPostData } = await useFetch<{
-          result: IFeed[]
-          totalCount: number
-        }>(
-          createQueryUrl(`/timeline/mine`, query),
-          getComFetchOptions('get', true)
-        )
+      const { data: userAllPostData } = await useFetch<{
+        result: IFeed[]
+        totalCount: number
+      }>(
+        createQueryUrl(`/timeline/mine`, query),
+        getComFetchOptions('get', true)
+      )
 
-        if (userAllPostData.value) {
-          dataPaging(userAllPostData.value)
-        }
+      if (userAllPostData.value) {
+        dataPaging(userAllPostData.value)
       }
-      break
+      isPending.value = false
+      return isAddData.value
+
+    // return isAddData.value
+
     case 'game':
       const { data: gamePostData, error: gameError } = await useFetch<{
         result: []
         totalCount: number
       }>(
-        createQueryUrl(`/timeline/game/${gameId.value}`, query),
+        createQueryUrl(`/timeline/game/${paramId.value}`, query),
         getComFetchOptions('get', true)
       )
       if (gamePostData.value) {
         dataPaging(gamePostData.value)
       }
-
-      break
+      isPending.value = false
+      return isAddData.value
   }
-
-  isPending.value = false
 }
 
 function dataPaging(data: { result: IFeed[]; totalCount: number }) {

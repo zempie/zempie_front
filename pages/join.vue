@@ -252,7 +252,6 @@ async function register() {
   } else {
     if (!result) return;
   }
-
   try {
     useUser().setSignup()
     const result = await createUserWithEmailAndPassword($firebaseAuth, form.email, form.password)

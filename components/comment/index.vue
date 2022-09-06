@@ -6,39 +6,46 @@
           <UserAvatar :user="comment.user" :tag="'span'"></UserAvatar>
         </dt>
         <dd>
-          <h2>{{  comment.user?.name  }} <span>{{ }}</span></h2>
-          <div style="color:#000">
-            {{  commentContent  }}
+          <h2>{{ comment.user?.name }} <span>{{}}</span></h2>
+          <div style="color: #000">
+            {{ commentContent }}
           </div>
-          <p>
+          <p style="display: inline-block">
             <a v-if="isLiked" @click="unsetLike()">
-              <i class="xi-heart like-icon" style="color:red"></i>
+              <i class="xi-heart like-icon" style="color: red"></i>
             </a>
             <a v-else @click="setLike()">
               <i class="uil uil-heart-sign"></i>
             </a>
-            {{  $t('like')  }} {{  likeCnt  }}{{  $t('like.unit')  }}
+            {{ $t('like') }} {{ likeCnt }}{{ $t('like.unit') }}
           </p>
+          <TranslateBtn
+            :text="commentContent"
+            @translatedText="translate"
+            @untranslatedText="untranslatedText"
+          />
         </dd>
       </dl>
-
     </dt>
 
     <dd v-if="comment.user?.uid === user?.uid">
-      <el-dropdown trigger="click" ref="feedMenu" popper-class="tapl-more-dropdown">
-
+      <el-dropdown
+        trigger="click"
+        ref="feedMenu"
+        popper-class="tapl-more-dropdown"
+      >
         <a slot="trigger"><i class="uil uil-ellipsis-h font25"></i></a>
         <template #dropdown>
-
           <div slot="body" class="more-list">
-            <a @click="isCommentEdit = !isCommentEdit">{{  $t('comment.edit')  }}</a>
+            <a @click="isCommentEdit = !isCommentEdit">{{
+              $t('comment.edit')
+            }}</a>
             <!-- <slot name="commentEdit"></slot> -->
 
             <!-- <a @click="$modal.show('deleteComment', { commentId: comment.id, postId: postId })">{{ $t('comment.delete')
           }}</a> -->
             <a @click="showDeleteModal = true">
-              {{  $t('comment.delete') 
-              }}
+              {{ $t('comment.delete') }}
             </a>
           </div>
         </template>
@@ -46,34 +53,56 @@
     </dd>
 
     <ClientOnly>
-      <el-dialog v-model="showDeleteModal" append-to-body custom-class="modal-area-type" width="380px">
+      <el-dialog
+        v-model="showDeleteModal"
+        append-to-body
+        custom-class="modal-area-type"
+        width="380px"
+      >
         <div class="modal-alert">
           <dl class="ma-header">
-            <dt> {{  $t('information')  }}</dt>
+            <dt>{{ $t('information') }}</dt>
             <dd>
-              <button @click="showDeleteModal = false"><i class="uil uil-times"></i></button>
+              <button @click="showDeleteModal = false">
+                <i class="uil uil-times"></i>
+              </button>
             </dd>
           </dl>
           <div class="ma-content">
-            <h2>{{  $t('comment.delete.text')  }}
-            </h2>
+            <h2>{{ $t('comment.delete.text') }}</h2>
             <div>
-              <button class="btn-default w48p" @click="deleteComment">{{  $t('delete')  }}</button>
-              <button class="btn-gray w48p " @click="showDeleteModal = false">{{  $t('no') 
-                }}</button>
+              <button class="btn-default w48p" @click="deleteComment">
+                {{ $t('delete') }}
+              </button>
+              <button class="btn-gray w48p" @click="showDeleteModal = false">
+                {{ $t('no') }}
+              </button>
             </div>
           </div>
         </div>
       </el-dialog>
     </ClientOnly>
-
   </dl>
-  <CommentInput v-if="isCommentEdit" @refresh="refresh" :postId="comment.post_id" :comment="comment" :isEdit="true" />
+  <CommentInput
+    v-if="isCommentEdit"
+    @refresh="refresh"
+    :postId="comment.post_id"
+    :comment="comment"
+    :isEdit="true"
+  />
 </template>
 
 <script setup lang="ts">
 import _ from 'lodash'
-import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElSelect, ElOption, ElMessage, ElDialog } from "element-plus";
+import {
+  ElDropdown,
+  ElDropdownMenu,
+  ElDropdownItem,
+  ElSelect,
+  ElOption,
+  ElMessage,
+  ElDialog,
+} from 'element-plus'
 
 const showDeleteModal = ref(false)
 const isCommentEdit = ref(false)
@@ -82,10 +111,10 @@ const props = defineProps({
   isEdit: {
     type: Boolean,
     default: false,
-  }
+  },
 })
 
-const commentContent = ref(props.comment?.content || '');
+const commentContent = ref(props.comment?.content || '')
 
 const emit = defineEmits(['refresh'])
 const isLiked = ref(props.comment.is_liked)
@@ -95,12 +124,11 @@ const { info: user, isLogin } = useUser().user.value
 
 function refresh(content: string) {
   isCommentEdit.value = !isCommentEdit.value
-  commentContent.value = content;
+  commentContent.value = content
 
   emit('refresh', content)
 }
 // import {Component, Prop, Vue} from "vue-property-decorator";
-
 
 // import {dateFormat} from "@/script/moment";
 // import {AxiosError, AxiosResponse} from "axios";
@@ -124,7 +152,6 @@ function refresh(content: string) {
 //     modalTitle: string = "Report Comment";
 //     createdDate: string = "";
 //     updatedContent: string = '';
-
 
 //     showModal: boolean = false;
 //     user!: User;
@@ -163,40 +190,49 @@ function refresh(content: string) {
 //     }
 
 const setLike = _.debounce(async () => {
-
-  const { data, pending, error } = await useFetch(`/post/${props.comment.post_id}/comment/${props.comment.id}/like`, getComFetchOptions('post', true))
+  const { data, pending, error } = await useFetch(
+    `/post/${props.comment.post_id}/comment/${props.comment.id}/like`,
+    getComFetchOptions('post', true)
+  )
 
   if (!error.value) {
-    likeCnt.value++;
-    isLiked.value = true;
+    likeCnt.value++
+    isLiked.value = true
   }
-
 }, 300)
 
 const unsetLike = _.debounce(async () => {
-  const { data, pending, error } = await useFetch(`/post/${props.comment.post_id}/comment/${props.comment.id}/unlike`, getComFetchOptions('post', true))
+  const { data, pending, error } = await useFetch(
+    `/post/${props.comment.post_id}/comment/${props.comment.id}/unlike`,
+    getComFetchOptions('post', true)
+  )
 
   if (!error.value) {
-    likeCnt.value--;
-    isLiked.value = false;
+    likeCnt.value--
+    isLiked.value = false
   }
-
 }, 300)
 
-function editComment() {
-
-}
+function editComment() {}
 
 async function deleteComment() {
-
-
-  const { data, pending, error } = await useFetch(`/post/${props.comment.post_id}/comment/${props.comment.id}`, getComFetchOptions('delete', true))
+  const { data, pending, error } = await useFetch(
+    `/post/${props.comment.post_id}/comment/${props.comment.id}`,
+    getComFetchOptions('delete', true)
+  )
 
   if (!error.value) {
     emit('refresh')
-
   }
-  showDeleteModal.value = false;
+  showDeleteModal.value = false
+}
+
+async function translate(text: string) {
+  commentContent.value = text
+}
+
+function untranslatedText(originText: string) {
+  commentContent.value = originText
 }
 
 //     sendLike(state: boolean) {
@@ -242,9 +278,8 @@ async function deleteComment() {
 // }
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .post-comment-text {
-
   position: absolute;
   width: 520px;
   height: 98px;
@@ -252,7 +287,10 @@ async function deleteComment() {
   top: 55.5px;
 }
 
-.post-comment-text-author {}
+.xi-heart {
+  transform-origin: center;
+  animation: animateHeartOut 0.3s linear forwards;
+}
 
 .post-comment-text {
   text-align: left;
@@ -277,5 +315,14 @@ async function deleteComment() {
   width: 100px;
   position: fixed;
   right: 10px;
+}
+
+@keyframes animateHeartOut {
+  0% {
+    transform: scale(1.4);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 </style>

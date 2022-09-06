@@ -112,7 +112,7 @@ export default function () {
 async function routerToHome() {
   const route = useRoute();
   const router = useRouter();
-  if (route.name.toString().includes('login')) {
+  if (route.name?.toString().includes('login')) {
     router.push(`/${useCommon().setting.value.lang}/timeline`)
 
 

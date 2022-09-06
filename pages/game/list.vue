@@ -139,23 +139,7 @@ async function fetch() {
       games.value = gameList
       isAddData.value = true
     }
-    // if (isAddData.value) {
-    //   if (result.games.length > 0) {
-    //     games.value = [...games.value, ...result.games]
-    //   }
-    //   else {
-    //     isAddData.value = false
-    //   }
-    // }
-    // else {
-    //   games.value = result.games;
-    //   if (result.games.length < LIMIT_SIZE) {
-    //     isAddData.value = false;
-    //   } else {
-    //     isAddData.value = true
-    //   }
-
-    // }
+  
   }
   isPending.value = false
 }
