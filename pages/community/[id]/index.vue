@@ -130,6 +130,10 @@ const channelInfo = ref()
 const limit = ref(MAX_LIST_SIZE)
 const offset = ref(0)
 
+definePageMeta({
+  title: 'community-channel',
+  name: 'communityChannel',
+})
 watch(
   () => communityInfo.value,
   (info) => {

@@ -39,7 +39,7 @@
           </div>
           <div class="swiper-slide" style="width: 50%; cursor: pointer">
             <NuxtLink
-              :to="localePath(`/channel/${channelId}/games`)"
+              :to="localePath(`/channel/${paramId}/games`)"
               @click.native="timelineFilter('game')"
               :class="media === 'game' ? 'active' : ''"
             >
@@ -142,8 +142,8 @@ const user = computed(() => useUser().user.value.info)
 const isLogin = computed(() => useUser().user.value.isLogin)
 const gameInfo = computed(() => useGame().game.value.info)
 
-const channelId = computed(() => route.params.id as string)
-const gameId = computed(() => route.params.id as string)
+const paramId = computed(() => route.params.id as string)
+// const gameId = computed(() => route.params.id as string)
 
 const props = defineProps({
   type: String,
@@ -165,9 +165,12 @@ const props = defineProps({
 let watcher = watch(
   () => route.query,
   (query) => {
-    media.value = query.media as string
-
-    refresh()
+    if (query.media) {
+      media.value = query.media as string
+      refresh()
+    } else if (route.meta.name === 'communityChannel') {
+      refresh()
+    }
   }
 )
 
@@ -181,7 +184,7 @@ let userWatcher = watch(
 )
 
 onMounted(async () => {
-  if (channelId.value || route.meta.name === 'myTimeline') {
+  if (paramId.value || route.meta.name === 'myTimeline') {
     const result = await fetch()
     console.log(result)
     if (result) {
@@ -209,6 +212,8 @@ async function handleIntersection(target) {
 
 onBeforeUnmount(() => {
   initPaging()
+  watcher()
+  userWatcher()
 })
 
 onBeforeRouteLeave((to, from) => {
@@ -230,7 +235,7 @@ async function fetch() {
           totalCount: number
         }>(
           createQueryUrl(
-            `/timeline/${channelId.value}/channel/${props.channelInfo.id}`,
+            `/timeline/${paramId.value}/channel/${props.channelInfo.id}`,
             query
           ),
           getComFetchOptions('get', true)
@@ -245,7 +250,7 @@ async function fetch() {
           result: []
           totalCount: number
         }>(
-          createQueryUrl(`/timeline/${channelId.value}/post`, query),
+          createQueryUrl(`/timeline/${paramId.value}/post`, query),
           getComFetchOptions('get', true)
         )
         if (data.value) {
@@ -260,13 +265,14 @@ async function fetch() {
         result: IFeed[]
         totalCount: number
       }>(
-        createQueryUrl(`/timeline/channel/${channelId.value}`, query),
+        createQueryUrl(`/timeline/channel/${paramId.value}`, query),
         getComFetchOptions('get', true)
       )
 
       if (userPostData.value) {
         dataPaging(userPostData.value)
       }
+      console.log(feeds.value)
       isPending.value = false
       return isAddData.value
     case 'userAll':
@@ -291,7 +297,7 @@ async function fetch() {
         result: []
         totalCount: number
       }>(
-        createQueryUrl(`/timeline/game/${gameId.value}`, query),
+        createQueryUrl(`/timeline/game/${paramId.value}`, query),
         getComFetchOptions('get', true)
       )
       if (gamePostData.value) {
