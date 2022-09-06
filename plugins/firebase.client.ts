@@ -1,7 +1,7 @@
 import { defineNuxtPlugin } from '#app'
 import * as firebase from 'firebase/app'
 import { getAuth, onIdTokenChanged, signOut } from 'firebase/auth'
-import * as Api from '~/composables/useFetchData'
+
 
 const DAYSTOSEC_30 = 60 * 60 * 24 * 30;
 
@@ -80,7 +80,7 @@ async function setUserInfo() {
 async function routerToHome() {
   const route = useRoute();
   const router = useRouter();
-  if (route.name.toString().includes('login')) {
+  if (route.name?.toString().includes('login')) {
     router.push(`/${useCommon().setting.value.lang}/timeline`)
 
   }

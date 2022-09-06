@@ -136,10 +136,11 @@
             </div>
           </el-popover>
           <swiper
+            style="width: 100%; margin-left: 10px"
             v-if="postingChannels.length"
             class="swiper-area"
-            style="margin-left: 10px"
             :space-between="10"
+            :slides-per-view="3"
           >
             <swiper-slide
               class="community-slide"
@@ -212,7 +213,7 @@
 </template>
 
 <script setup lang="ts">
-import _, { result } from 'lodash'
+import _ from 'lodash'
 import { PropType } from 'vue'
 import { IFeed } from '~~/types'
 import { Pagination } from 'swiper'
@@ -324,7 +325,7 @@ onMounted(() => {
     }
   }
 
-  if (props.feed?.posted_at) {
+  if (props.feed?.posted_at?.community) {
     for (const community of props.feed.posted_at.community) {
       postingChannels.value.push({
         group: community.community,
@@ -1030,7 +1031,7 @@ function backToCommunityList() {
   isChannelListOpen.value = !isChannelListOpen.value
 }
 
-function selectChannel(channel: any) {
+async function selectChannel(channel: any) {
   postingChannels.value = _.uniqBy(
     [
       ...postingChannels.value,
@@ -1043,6 +1044,8 @@ function selectChannel(channel: any) {
   )
 
   isCommunityListVisible.value = false
+  isCommunityListOpen.value = !isCommunityListOpen.value
+  isChannelListOpen.value = !isChannelListOpen.value
 }
 
 function deletePostingChannel(idx: number) {
@@ -1170,7 +1173,7 @@ function deletePostingChannel(idx: number) {
 }
 
 .community-slide {
-  width: 200px;
+  max-width: 200px;
 
   .category-select-finish {
     max-width: 200px;

@@ -22,6 +22,7 @@
   "dependencies": {
     "@firebase/app": "^0.7.29",
     "@firebase/auth": "^0.20.5",
+    "@google-cloud/translate": "^7.0.1",
     "@nuxt/typescript-build": "^2.1.0",
     "@nuxtjs/composition-api": "^0.33.1",
     "@nuxtjs/i18n": "npm:@nuxtjs/i18n-edge",

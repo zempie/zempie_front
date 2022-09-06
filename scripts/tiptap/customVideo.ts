@@ -33,13 +33,13 @@ export default Node.create({
 
     atom: true,
 
-    defaultOptions: <VideoOptions>{
-        inline: true,
-        HTMLAttributes: {
-            class: 'video-wrapper',
+    // defaultOptions: <VideoOptions>{
+    //     inline: true,
+    //     HTMLAttributes: {
+    //         class: 'video-wrapper',
 
-        },
-    },
+    //     },
+    // },
 
     draggable: true,
 

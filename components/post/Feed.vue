@@ -14,6 +14,11 @@
             <p>
               <i class="uis uis-clock" style="color: #c1c1c1"></i>
               {{ dateFormat(feed.created_at) }}
+              <TranslateBtn
+                :text="feedContent"
+                @translatedText="translate"
+                @untranslatedText="untranslatedText"
+              />
             </p>
           </dd>
           <dd v-else>
@@ -24,10 +29,7 @@
             </p>
           </dd>
           <UserFollowBtn :user="feed.user" class="follow-btn-feed" />
-          <!-- @refresh="emit('refresh')" -->
         </dl>
-
-        <!-- <UserFollowBtn :user="feed.user" /> -->
       </dt>
       <dd v-if="feed.user?.name">
         <el-dropdown trigger="click" ref="feedMenu" popper-class="feed-menu">
@@ -60,7 +62,7 @@
     <div>
       <div
         class="tapl-content"
-        v-html="feed.content"
+        v-html="feedContent"
         ref="feedDiv"
         @click="$router.push(localePath(`/feed/${feed.id}`))"
       ></div>
@@ -207,6 +209,7 @@
         v-model="showEditModal"
         append-to-body
         custom-class="modal-area-type"
+        width="700px"
       >
         <TextEditor
           @closeModal="closeEditor"
@@ -286,6 +289,8 @@ const user = computed(() => useUser().user.value.info)
 const props = defineProps({
   feed: Object as PropType<IFeed>,
 })
+
+const feedContent = ref(props.feed?.content || '')
 
 const emit = defineEmits(['refresh'])
 
@@ -508,6 +513,13 @@ function closeView() {
   window.scrollTo(0, currScroll.value)
 }
 
+async function translate(text: string) {
+  feedContent.value = text
+}
+
+function untranslatedText(originText: string) {
+  feedContent.value = originText
+}
 //     /**
 //      * 댓글
 //      * */
@@ -631,10 +643,13 @@ function openDeleteModal() {
 
 // /더보기
 
-.tapl-comment > ul {
-  max-height: 500px;
-  overflow-y: auto;
-  overflow-x: hidden;
+.tapl-comment {
+  ul {
+    li:nth-child(1) {
+      border-top: none;
+      margin-top: 0px;
+    }
+  }
 }
 
 .like-icon:hover,

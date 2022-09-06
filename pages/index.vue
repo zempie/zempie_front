@@ -109,6 +109,10 @@ const { data, pending, error } = await game.list({
   limit: GAME_COUNT,
   offset: 0,
 })
+
+if (!data.value) {
+  throw createError({ statusCode: 404, statusMessage: 'Page Not Found' })
+}
 const {
   data: communities,
   pending: cPending,
