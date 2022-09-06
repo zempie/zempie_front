@@ -223,7 +223,6 @@ import { Editor } from '@tiptap/vue-3'
 import {
   ElDropdown,
   ElMessageBox,
-  ElDropdownItem,
   ElLoading,
   ElPopover,
   ElMessage,
@@ -231,7 +230,7 @@ import {
 } from 'element-plus'
 
 import { useI18n } from 'vue-i18n'
-import { htmlToDomElem, blobToFile } from '~~/scripts/utils'
+import { htmlToDomElem } from '~~/scripts/utils'
 
 const { t, locale } = useI18n()
 
@@ -284,7 +283,6 @@ const isCommunityListVisible = ref(false)
 const imgArr = ref([])
 const videoArr = ref([])
 const audioArr = ref([])
-
 const emit = defineEmits(['closeModal', 'refresh'])
 
 const form = reactive({
@@ -292,19 +290,37 @@ const form = reactive({
 })
 
 onMounted(() => {
-  if (activeTab.value === 'SNS') {
-    if (attachFileArr.value?.length) {
-      snsAttachFiles.value = {
-        img:
-          attachFileArr.value[0]?.type === 'image' ? attachFileArr.value : [],
-        video:
-          attachFileArr.value[0]?.type === 'video'
-            ? attachFileArr.value[0]
-            : null,
-        audio:
-          attachFileArr.value[0]?.type === 'sound' ? attachFileArr.value : [],
+  if (props.isEdit) {
+    // const loading = ElLoading.service({
+    //   lock: true,
+    //   text: 'Loading',
+    //   customClass: 'loading-spinner',
+    //   background: 'rgba(0, 0, 0, 0.7)',
+    // })
+
+    if (props.feed?.posted_at?.community) {
+      for (const community of props.feed.posted_at.community) {
+        postingChannels.value.push({
+          group: community.community,
+          channel: community.channel,
+        })
       }
     }
+    if (activeTab.value === 'SNS') {
+      if (attachFileArr.value?.length) {
+        snsAttachFiles.value = {
+          img:
+            attachFileArr.value[0]?.type === 'image' ? attachFileArr.value : [],
+          video:
+            attachFileArr.value[0]?.type === 'video'
+              ? attachFileArr.value[0]
+              : null,
+          audio:
+            attachFileArr.value[0]?.type === 'sound' ? attachFileArr.value : [],
+        }
+      }
+    }
+    // loading.close()
   }
 
   if (props.type === 'community') {
@@ -322,15 +338,6 @@ onMounted(() => {
           channel: useCommunity().community.value.info.channels[0],
         },
       ]
-    }
-  }
-
-  if (props.feed?.posted_at?.community) {
-    for (const community of props.feed.posted_at.community) {
-      postingChannels.value.push({
-        group: community.community,
-        channel: community.channel,
-      })
     }
   }
 })

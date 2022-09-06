@@ -32,30 +32,11 @@
         </dl>
       </dt>
       <dd v-if="feed.user?.name">
-        <el-dropdown trigger="click" ref="feedMenu" popper-class="feed-menu">
-          <a class="btn-circle-none pt6" slot="trigger"
-            ><i class="uil uil-ellipsis-h font25"></i
-          ></a>
-          <template #dropdown>
-            <div slot="body" class="more-list fixed" style="min-width: 150px">
-              <template v-if="user && user.id === (feed.user && feed.user.id)">
-                <a @click="openEdit">{{ t('feed.edit') }}</a>
-                <a @click="openDeleteModal">{{ t('feed.delete') }}</a>
-              </template>
-              <template v-else>
-                <NuxtLink
-                  :to="
-                    localePath(`/channel/${feed.user && feed.user.channel_id}`)
-                  "
-                >
-                  {{ t('visit.userChannel') }}
-                </NuxtLink>
-                <!-- <a v-if="user" @click="report">{{ t('post.report') }}</a>
-              <a v-if="user" @click="userReportModalOpen">{{ t('post.report') }}유저 신고하기</a> -->
-              </template>
-            </div>
-          </template>
-        </el-dropdown>
+        <PostDropdown
+          :feed="feed"
+          @deletePost="$router.back()"
+          @refresh="emit('refresh')"
+        />
       </dd>
     </dl>
 
@@ -370,8 +351,6 @@ async function commentFetch() {
     sort: sort.value,
   }
 
-  createQueryUrl(`/post/${props.feed.id}/comment/list`, query)
-
   const { data, pending, error } = await useFetch<{ result: [] }>(
     createQueryUrl(`/post/${props.feed.id}/comment/list`, query),
     getComFetchOptions('get', true)
@@ -444,35 +423,10 @@ function copyUrl() {
   })
 }
 
-//     //post
-//     contentClicked(e: any) {
-//         // if (e.target.matches("img")) {
-//         //     this.originImg = e.target.src;
-//         //     // this.$modal.show('originImgModal')
-//         //     this.$emit('originImg', this.originImg)
-//         // }
-//         // else if (e.target.matches(".hashtag")) {
-//         //     this.$router.push(
-//         //         `/search?hashtag=${e.target.attributes["data-id"].nodeValue}`
-//         //     );
-//         // }
-//         // else if (e.target.matches(".mention")) {
-//         //     this.$router.push(
-//         //         `/channel/${e.target.attributes["channel-id"].nodeValue}/timeline`
-//         //     );
-//         // }
-//         // else {
-//         this.$router.push(`/${this.$i18n.locale}/feed/${this.feed.id}`);
-//         // }
-//     }
-
 //     moveHashtag(hashtag: string) {
 //         this.$router.push(`/${this.$i18n.locale}/search?hashtag=${hashtag}`)
 //     }
 
-function openEdit() {
-  showEditModal.value = true
-}
 //     pinPost() {
 //         console.log("pinned");
 //     }

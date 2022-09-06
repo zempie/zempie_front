@@ -46,7 +46,11 @@
         <li class="thumbmail skeleton" v-for="post in POST_COUNT"></li>
       </ul> -->
 
-      <ul style="margin-top: 40px" class="post-container">
+      <ul
+        style="margin-top: 40px"
+        class="post-container"
+        v-if="postData?.result.length"
+      >
         <li
           class="thumbmail"
           v-for="post in postData?.result"
