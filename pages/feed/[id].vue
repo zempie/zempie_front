@@ -147,8 +147,8 @@
                 </li>
               </TransitionGroup>
             </ul>
-            <div ref="triggerDiv"></div>
           </div>
+          <div ref="triggerDiv"></div>
         </li>
       </ul>
     </div>

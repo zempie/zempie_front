@@ -39,7 +39,7 @@
       </div>
     </div>
 
-    <div class="main-visual" v-if="postData">
+    <div class="main-visual" v-if="postData" :key="postData?.result">
       <h2><span style="font: 36px/46px 'Jalnan'">Recent posts</span></h2>
 
       <!-- <ul v-if="postPending" style="margin-top: 40px" class="post-container">
@@ -105,6 +105,7 @@ useHead({
     },
   ],
 })
+
 const GAME_COUNT = 8
 const COMMUNITY_COUNT = 4
 const POST_COUNT = 8
