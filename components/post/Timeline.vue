@@ -117,7 +117,7 @@ import { useLocalePath } from 'vue-i18n-routing'
 import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router'
 const { t, locale } = useI18n()
 
-const LIMIT_SIZE = 10
+const LIMIT_SIZE = 30
 
 const route = useRoute()
 const localePath = useLocalePath()
