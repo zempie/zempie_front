@@ -39,7 +39,7 @@
       </div>
     </div>
 
-    <div class="main-visual">
+    <div class="main-visual" v-if="postData">
       <h2><span style="font: 36px/46px 'Jalnan'">Recent posts</span></h2>
 
       <!-- <ul v-if="postPending" style="margin-top: 40px" class="post-container">
@@ -49,11 +49,11 @@
       <ul
         style="margin-top: 40px"
         class="post-container"
-        v-if="postData?.result.length"
+        v-if="postData.result?.length"
       >
         <li
           class="thumbmail"
-          v-for="post in postData?.result"
+          v-for="post in postData.result"
           @click="$router.push(localePath(`/feed/${post.id}`))"
         >
           <img :src="post.attatchment_files[0]?.url" />
