@@ -117,7 +117,7 @@ import { useLocalePath } from 'vue-i18n-routing'
 import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router'
 const { t, locale } = useI18n()
 
-const LIMIT_SIZE = 10
+const LIMIT_SIZE = 30
 
 const route = useRoute()
 const localePath = useLocalePath()
@@ -200,7 +200,6 @@ onMounted(async () => {
 })
 
 async function handleIntersection(target) {
-  console.log('inter', target.isIntersecting, isAddData.value)
   if (target.isIntersecting) {
     if (isAddData.value) {
       offset.value += limit.value
@@ -271,7 +270,7 @@ async function fetch() {
       if (userPostData.value) {
         dataPaging(userPostData.value)
       }
-      console.log(feeds.value)
+
       isPending.value = false
       return isAddData.value
     case 'userAll':
