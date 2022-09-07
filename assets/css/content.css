@@ -187,14 +187,14 @@
   width: 177px;
   height: 177px;
   margin: 729px 0 0 634px;
-  background: url('../images/main_visual_play.png') no-repeat;
+  background: url('/images/main_visual_play.png') no-repeat;
   z-index: 99;
   cursor: pointer;
 }
 
 .main-visual .mv-play:hover {
   margin: 733.5px 0 0 638.5px;
-  background: url('../images/main_visual_play_over.png') no-repeat;
+  background: url('/images/main_visual_play_over.png') no-repeat;
   cursor: pointer;
 }
 

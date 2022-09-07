@@ -230,13 +230,15 @@ onMounted(async () => {
   document.querySelectorAll('pre').forEach((block) => {
     hljs.highlightElement(block)
   })
-  observer.value = new IntersectionObserver(
-    (entries) => {
-      handleIntersection(entries[0])
-    },
-    { root: null, threshold: 1 }
-  )
-  observer.value.observe(triggerDiv.value)
+  if (feed.value) {
+    observer.value = new IntersectionObserver(
+      (entries) => {
+        handleIntersection(entries[0])
+      },
+      { root: null, threshold: 1 }
+    )
+    observer.value.observe(triggerDiv.value)
+  }
   await commentFetch()
 })
 

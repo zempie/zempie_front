@@ -39,21 +39,24 @@
       </div>
     </div>
 
-    <div class="main-visual" v-if="postData" :key="postData?.result">
+    <div v-if="postPending">
+      <ul style="margin-top: 40px" class="post-container">
+        <li class="thumbmail skeleton" v-for="post in POST_COUNT"></li>
+      </ul>
+    </div>
+    <div class="main-visual" v-else>
       <h2><span style="font: 36px/46px 'Jalnan'">Recent posts</span></h2>
 
-      <!-- <ul v-if="postPending" style="margin-top: 40px" class="post-container">
-        <li class="thumbmail skeleton" v-for="post in POST_COUNT"></li>
-      </ul> -->
+      <!-- -->
 
       <ul
         style="margin-top: 40px"
         class="post-container"
-        v-if="postData.result?.length"
+        v-if="postData?.result?.length"
       >
         <li
           class="thumbmail"
-          v-for="post in postData.result"
+          v-for="post in postData?.result"
           @click="$router.push(localePath(`/feed/${post.id}`))"
         >
           <img :src="post.attatchment_files[0]?.url" />
@@ -108,7 +111,7 @@ useHead({
 
 const GAME_COUNT = 8
 const COMMUNITY_COUNT = 4
-const POST_COUNT = 8
+const POST_COUNT = 12
 
 const { data, pending, error } = await game.list({
   limit: GAME_COUNT,
