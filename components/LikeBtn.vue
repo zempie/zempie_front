@@ -64,18 +64,4 @@ async function unsetLike() {
 }
 </script>
 
-<style scoped lang="scss">
-.xi-heart {
-  transform-origin: center;
-  animation: animateHeartOut 0.3s linear forwards;
-}
-
-@keyframes animateHeartOut {
-  0% {
-    transform: scale(1.4);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-</style>
+<style scoped lang="scss"></style>

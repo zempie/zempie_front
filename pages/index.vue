@@ -29,7 +29,7 @@
     <div class="main-visual">
       <h2><span style="font: 36px/46px 'Jalnan'">Communities</span></h2>
 
-      <div class="card-timeline" v-if="communities.length">
+      <div class="card-timeline" v-if="communities?.length">
         <!-- <CommunityCardSk v-show="cPending" v-for="commi in COMMUNITY_COUNT" /> -->
         <CommunityCard
           v-for="community in communities"
@@ -39,17 +39,20 @@
       </div>
     </div>
 
-    <div class="main-visual">
+    <div v-if="postPending">
+      <ul style="margin-top: 40px" class="post-container">
+        <li class="thumbmail skeleton" v-for="post in POST_COUNT"></li>
+      </ul>
+    </div>
+    <div v-else class="main-visual">
       <h2><span style="font: 36px/46px 'Jalnan'">Recent posts</span></h2>
 
-      <!-- <ul v-if="postPending" style="margin-top: 40px" class="post-container">
-        <li class="thumbmail skeleton" v-for="post in POST_COUNT"></li>
-      </ul> -->
+      <!-- -->
 
       <ul
         style="margin-top: 40px"
         class="post-container"
-        v-if="postData?.result.length"
+        v-if="postData?.result?.length"
       >
         <li
           class="thumbmail"
@@ -105,9 +108,10 @@ useHead({
     },
   ],
 })
+
 const GAME_COUNT = 8
 const COMMUNITY_COUNT = 4
-const POST_COUNT = 8
+const POST_COUNT = 12
 
 const { data, pending, error } = await game.list({
   limit: GAME_COUNT,
@@ -121,14 +125,17 @@ const {
   data: communities,
   pending: cPending,
   error: cError,
-} = await community.list({ limit: COMMUNITY_COUNT })
+} = await useFetch<any>(
+  createQueryUrl('/community/list', { limit: COMMUNITY_COUNT }),
+  getComFetchOptions('get', false)
+)
 
 const {
   data: postData,
   pending: postPending,
   error: postError,
 } = await useFetch<any>(
-  createQueryUrl('/timeline/posts/img', { limit: 12 }),
+  createQueryUrl('/timeline/posts/img', { limit: POST_COUNT }),
   getComFetchOptions('get', false)
 )
 </script>

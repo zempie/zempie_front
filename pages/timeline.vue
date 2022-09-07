@@ -1,9 +1,8 @@
 <template>
   <NuxtLayout name="my-timeline">
     <dl class="three-area">
-      {{}}
-
       <dt v-if="isPending">
+        <UserInfoCard />
         <div class="ta-game-list">
           <dl>
             <dt>Games</dt>
@@ -21,110 +20,105 @@
               ></h2>
             </li>
           </ul>
+          <TimelineSk v-if="isPending" />
           <div></div>
         </div>
       </dt>
-      <dt v-else>
-        <ClientOnly>
-          <div
-            class="ta-myinfo"
-            style="margin-bottom: 20px"
-            :key="userInfo?.id"
-          >
-            <UserAvatar :user="userInfo" :tag="'p'"></UserAvatar>
-            <h2>{{ useUser().user.value.info?.name }}</h2>
-            <ul>
-              <li>
-                <NuxtLink
-                  :to="
-                    localePath(
-                      `/channel/${useUser().user.value.info?.channel_id}`
-                    )
-                  "
-                >
-                  <p style="background: #feb100; cursor: pointer">
-                    <i class="uil uil-comment-chart-line"></i>
-                  </p>
-                  <h2>{{ useChannel().userChannel.value.info?.post_cnt }}</h2>
-                  <h3>Posts</h3>
-                </NuxtLink>
-              </li>
-              <li>
-                <NuxtLink
-                  :to="
-                    localePath(
-                      `/channel/${
-                        useChannel().userChannel.value.info?.channel_id
-                      }/followers`
-                    )
-                  "
-                >
-                  <p style="background: #33e4ce; cursor: pointer">
-                    <i class="uil uil-users-alt"></i>
-                  </p>
-                  <h2>{{ userInfo?.follower_cnt }}</h2>
-                  <h3>Followers</h3>
-                </NuxtLink>
-              </li>
-              <li>
-                <NuxtLink
-                  :to="
-                    localePath(
-                      `/channel/${
-                        useChannel().userChannel.value.info?.channel_id
-                      }/following`
-                    )
-                  "
-                >
-                  <p style="background: #5d5ffe; cursor: pointer">
-                    <i class="uil uil-user-plus"></i>
-                  </p>
-                  <h2>{{ userInfo?.following_cnt }}</h2>
-                  <h3>following</h3>
-                </NuxtLink>
-              </li>
-            </ul>
-          </div>
-          <div class="ta-game-list" :key="userInfo?.id">
-            <dl>
-              <dt>Games</dt>
-            </dl>
 
-            <ul v-if="useChannel().userChannel.value.info?.games?.length">
-              <li
-                v-for="game in useChannel().userChannel.value.info?.games?.slice(
-                  0,
-                  5
-                )"
-                @click="$router.push(localePath(`/game/${game.pathname}`))"
-              >
-                <p
-                  :style="`background:url(${
-                    game.url_thumb_webp || '/images/default.png'
-                  }) center; background-size:cover;`"
-                ></p>
-                <h2 style="text-overflow: ellipsis; overflow: hidden">
-                  {{ game.title }}
-                </h2>
-              </li>
-            </ul>
-            <ul v-else class="no-game">
-              <li>{{ $t('no.game') }}</li>
-            </ul>
-            <div v-if="useChannel().userChannel.value.info?.games?.length > 5">
+      <dt v-else>
+        <div class="ta-myinfo" :key="userInfo?.id">
+          <UserAvatar :user="userInfo" :tag="'p'"></UserAvatar>
+          <h2>{{ useUser().user.value.info?.name }}</h2>
+          <ul>
+            <li>
               <NuxtLink
-                :to="localePath(`/channel/${userInfo?.channel_id}/games`)"
-                class="btn-default-samll w100p"
-                >{{ $t('moreView') }}
+                :to="
+                  localePath(
+                    `/channel/${useUser().user.value.info?.channel_id}`
+                  )
+                "
+              >
+                <p style="background: #feb100; cursor: pointer">
+                  <i class="uil uil-comment-chart-line"></i>
+                </p>
+                <h2>{{ useChannel().userChannel.value.info?.post_cnt }}</h2>
+                <h3>Posts</h3>
               </NuxtLink>
-            </div>
+            </li>
+            <li>
+              <NuxtLink
+                :to="
+                  localePath(
+                    `/channel/${
+                      useChannel().userChannel.value.info?.channel_id
+                    }/followers`
+                  )
+                "
+              >
+                <p style="background: #33e4ce; cursor: pointer">
+                  <i class="uil uil-users-alt"></i>
+                </p>
+                <h2>{{ userInfo?.follower_cnt }}</h2>
+                <h3>Followers</h3>
+              </NuxtLink>
+            </li>
+            <li>
+              <NuxtLink
+                :to="
+                  localePath(
+                    `/channel/${
+                      useChannel().userChannel.value.info?.channel_id
+                    }/following`
+                  )
+                "
+              >
+                <p style="background: #5d5ffe; cursor: pointer">
+                  <i class="uil uil-user-plus"></i>
+                </p>
+                <h2>{{ userInfo?.following_cnt }}</h2>
+                <h3>following</h3>
+              </NuxtLink>
+            </li>
+          </ul>
+        </div>
+        <div class="ta-game-list" :key="userInfo?.id">
+          <dl>
+            <dt>Games</dt>
+          </dl>
+
+          <ul v-if="useChannel().userChannel.value.info?.games?.length">
+            <li
+              v-for="game in useChannel().userChannel.value.info?.games?.slice(
+                0,
+                5
+              )"
+              @click="$router.push(localePath(`/game/${game.pathname}`))"
+            >
+              <p
+                :style="`background:url(${
+                  game.url_thumb_webp || '/images/default.png'
+                }) center; background-size:cover;`"
+              ></p>
+              <h2 style="text-overflow: ellipsis; overflow: hidden">
+                {{ game.title }}
+              </h2>
+            </li>
+          </ul>
+          <ul v-else class="no-game">
+            <li>{{ $t('no.game') }}</li>
+          </ul>
+          <div v-if="useChannel().userChannel.value.info?.games?.length > 5">
+            <NuxtLink
+              :to="localePath(`/channel/${userInfo?.channel_id}/games`)"
+              class="btn-default-samll w100p"
+              >{{ $t('moreView') }}
+            </NuxtLink>
           </div>
-        </ClientOnly>
+        </div>
       </dt>
 
       <dd>
-        <TimelineSk v-if="isPending" />
-        <PostTimeline v-else type="userAll" :isMine="true" />
+        <PostTimeline type="userAll" :isMine="true" />
       </dd>
       <dt>
         <div class="ta-groups" style="margin-top: 0px">
@@ -151,6 +145,7 @@ const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const route = useRoute()
 const isPending = ref(true)
+const isUserPending = ref(true)
 
 const userInfo = computed(() => useUser().user.value.info as any)
 
@@ -193,6 +188,7 @@ watch(
         },
       ],
     })
+    isUserPending.value = false
   }
 )
 
@@ -209,6 +205,9 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+.ta-myinfo {
+  margin-bottom: 20px;
+}
 .swiper-slide {
   display: inline-block;
 }
@@ -231,12 +230,18 @@ onMounted(() => {
 }
 
 @media all and (max-width: 479px) {
+  .ta-myinfo {
+    margin-bottom: 0px;
+  }
   .ta-game-list {
     display: none;
   }
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
+  .ta-myinfo {
+    margin-bottom: 0px;
+  }
   .ta-game-list {
     display: none;
   }
@@ -248,6 +253,9 @@ onMounted(() => {
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
+  .ta-myinfo {
+    margin-bottom: 0px;
+  }
   .ta-game-list {
     display: none;
   }

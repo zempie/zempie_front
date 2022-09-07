@@ -15,7 +15,7 @@
     ></p>
     <div class="ct-info">
       <h3 class="title">{{ community.name }}</h3>
-      <p class="desc" style="min-height: 50px">{{ community.description }}</p>
+      <p class="desc">{{ community.description }}</p>
       <dl>
         <dd
           @click.stop="
@@ -23,21 +23,21 @@
           "
         >
           <h4>{{ community.member_cnt }}</h4>
-          <p>멤버수</p>
+          <p>Members</p>
         </dd>
         <dt>
           <p></p>
         </dt>
         <dd>
           <h4>{{ community.posts_cnt }}</h4>
-          <p>포스팅</p>
+          <p>Posts</p>
         </dd>
         <dt>
           <p></p>
         </dt>
         <dd>
           <h4>{{ visitCount }}</h4>
-          <p>방문</p>
+          <p>Visits</p>
         </dd>
       </dl>
 
@@ -64,35 +64,6 @@ const profileImg = computed(
   () => props.community.profile_img ?? '/images/100_100_com_profile_default.png'
 )
 const visitCount = computed(() => numToKMB(props.community.visit_cnt))
-
-//     mounted() {
-//         if (this.community.banner_img) this.bannerImg = this.community.banner_img;
-//         if (this.community.profile_img) this.profileImg = this.community.profile_img;
-
-//     }
-
-// //    퍼블리싱 이미지 처리
-//     imgClass() {
-//         let result = '';
-//         if (this.$route.meta?.title === 'ManageJoinedGroup') {
-//             result = 'cmg-img'
-//         }
-//         else if (this.$route.meta?.title === 'CommunityList') {
-//             result = 'ct-img'
-//         }
-//         return result;
-//     }
-
-//     infoClass() {
-//         let result = '';
-//         if (this.$route.meta?.title === 'ManageJoinedGroup') {
-//             result = 'cmg-info'
-//         }
-//         else if (this.$route.meta?.title === 'CommunityList') {
-//             result = 'ct-info'
-//         }
-//         return result;
-//     }
 </script>
 
 <style lang="scss" scoped>

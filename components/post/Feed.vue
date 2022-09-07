@@ -34,7 +34,7 @@
       <dd v-if="feed.user?.name">
         <PostDropdown
           :feed="feed"
-          @deletePost="$router.back()"
+          @deletePost="emit('refresh')"
           @refresh="emit('refresh')"
         />
       </dd>

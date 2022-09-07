@@ -179,7 +179,12 @@
             </el-select>
           </div>
 
-          <div class="header-info ml10" v-if="isLogin" style="display: flex">
+          <div
+            class="header-info ml10"
+            v-if="isLogin"
+            style="display: flex"
+            id="userMenu"
+          >
             <el-dropdown trigger="click" ref="userMenu">
               <UserAvatar
                 style="width: 30px; height: 30px"
