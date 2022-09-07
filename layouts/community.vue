@@ -14,18 +14,6 @@
           <h2>{{ $t('timeline') }}(ALL)</h2>
         </NuxtLink>
 
-        <!-- <NuxtLink :class="['swiper-slide', routeQuery === 'sns' ? 'active' : '',]"
-          :to="localePath(`/community/${communityInfo?.id}`) + '?media=sns'">
-          <p><i class="uil uil-comment-dots"></i></p>
-          <h2>SNS</h2>
-        </NuxtLink>
-
-        <NuxtLink :class="['swiper-slide', routeQuery === 'blog' ? 'active' : '',]"
-          :to="localePath(`/community/${communityInfo?.id}`) + '?media=blog'">
-          <p><i class="uil uil-edit"></i></p>
-          <h2>BLOG</h2>
-        </NuxtLink> -->
-
         <NuxtLink
           :class="['swiper-slide', routeQuery === 'image' ? 'active' : '']"
           :to="localePath(`/community/${communityInfo?.id}`) + '?media=image'"
@@ -73,13 +61,10 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
-.swiper-slide {
-  display: inline-block;
-}
-
 .tab-menu-swiper {
   .swiper-slide {
     width: 25%;
+    display: inline-block;
   }
 }
 
@@ -88,12 +73,29 @@ onMounted(async () => {
     h2 {
       display: none;
     }
+
+    &:hover {
+      background: #fff;
+      p {
+        color: #888;
+      }
+    }
   }
 }
-
 @media all and (min-width: 480px) and (max-width: 767px) {
   .tab-menu-swiper {
     width: 100%;
+    .swiper-slide {
+      &:hover {
+        background: #fff;
+        p {
+          color: #888;
+        }
+        h2 {
+          color: #888;
+        }
+      }
+    }
   }
 }
 

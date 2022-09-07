@@ -29,7 +29,6 @@
       <div
         v-if="$route.meta.name === 'userChannel'"
         class="tab-search-swiper mobile"
-        style="width: 100%; margin: 0px 0px 20px 0px"
       >
         <div class="swiper-area uppercase">
           <div class="swiper-slide" style="width: 50%; cursor: pointer">
@@ -458,6 +457,8 @@ input[type='radio'] {
   .tab-search-swiper {
     &.mobile {
       display: block;
+      width: 100%;
+      margin: 20px 0px 20px 0px;
     }
   }
 }
@@ -470,6 +471,8 @@ input[type='radio'] {
   .tab-search-swiper {
     &.mobile {
       display: block;
+      width: 100%;
+      margin: 20px 0px 20px 0px;
     }
   }
 }
@@ -482,6 +485,8 @@ input[type='radio'] {
   .tab-search-swiper {
     &.mobile {
       display: block;
+      width: 100%;
+      margin: 20px 0px 20px 0px;
     }
   }
 }

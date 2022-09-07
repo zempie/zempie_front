@@ -171,7 +171,17 @@
             </dd>
           </dl>
           <dl class="suii-content">
-            <dt>{{ $t('previewImage.title') }}</dt>
+            <dt>
+              {{ $t('previewImage.title') }}
+              <el-tooltip
+                effect="customized"
+                :content="$t('studio.preview.info')"
+                placement="bottom"
+              >
+                <i class="uil uil-question-circle" style="color: #999"></i>
+              </el-tooltip>
+            </dt>
+
             <dd>
               <ul class="image-upload">
                 <li v-if="!prevGif">
@@ -220,6 +230,19 @@
               </ul>
             </dd>
           </dl>
+
+          <!-- <dl class="suii-content">
+            <dt>
+              {{ $t('previewImage.title') }}
+              <el-tooltip
+                effect="customized"
+                :content="$t('studio.preview.info')"
+                placement="bottom"
+              >
+                <i class="uil uil-question-circle" style="color: #999"></i>
+              </el-tooltip>
+            </dt>
+          </dl> -->
 
           <dl class="suii-content">
             <dt style="padding-top: 5px">{{ $t('auto.game.id.generator') }}</dt>
@@ -336,7 +359,7 @@
 </template>
 
 <script setup lang="ts">
-import { ElMessage, ElMessageBox, ElLoading } from 'element-plus'
+import { ElMessage, ElMessageBox, ElLoading, ElTooltip } from 'element-plus'
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
 import { eGameStage } from '~~/types'
 import useVuelidate from '@vuelidate/core'
@@ -1048,8 +1071,6 @@ function backspaceDelete({ which }) {
     padding: 4px;
   }
 }
-
-// /chips
 
 .publish-btn {
   .active {

@@ -24,7 +24,7 @@
           </div>
         </dt>
         <dt v-else-if="channelInfo">
-          <div class="ta-myinfo" style="margin-bottom: 20px">
+          <div class="ta-myinfo">
             <UserAvatar :user="channelInfo" :tag="'p'"></UserAvatar>
             <h2>{{ channelInfo.name }}</h2>
             <ul>
@@ -173,6 +173,9 @@ definePageMeta({
 </script>
 
 <style lang="scss" scoped>
+.ta-myinfo {
+  margin-bottom: 20px;
+}
 .swiper-slide {
   display: inline-block;
 }
@@ -195,12 +198,18 @@ definePageMeta({
 }
 
 @media all and (max-width: 479px) {
+  .ta-myinfo {
+    margin-bottom: 0px;
+  }
   .ta-game-list {
     display: none;
   }
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
+  .ta-myinfo {
+    margin-bottom: 0px;
+  }
   .ta-game-list {
     display: none;
   }
@@ -212,6 +221,9 @@ definePageMeta({
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
+  .ta-myinfo {
+    margin-bottom: 0px;
+  }
   .ta-game-list {
     display: none;
   }

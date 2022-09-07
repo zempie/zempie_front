@@ -110,10 +110,6 @@ async function getChannelHeaderInfo() {
   display: inline-block;
 }
 
-.tab-menu-swiper .swiper-area .swiper-slide {
-  width: 14%;
-}
-
 .content {
   padding-top: 70px;
 
