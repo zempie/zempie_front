@@ -164,7 +164,6 @@ import { useLocalePath } from 'vue-i18n-routing'
 
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { dateFormat, execCommandCopy } from '~~/scripts/utils'
-
 const localePath = useLocalePath()
 
 const COMMENT_LIMIT = 10
@@ -200,28 +199,6 @@ const {
   `/post/${feedId.value}`,
   getComFetchOptions('get', true)
 )
-
-useHead({
-  title: `${feed.value?.user.name}${t('seo.feed.title')} | Zempie`,
-  meta: [
-    {
-      name: 'description',
-      content: `${feed.value?.content.slice(0, 20)}${t('seo.feed.desc')}`,
-    },
-    {
-      name: 'og:title',
-      content: `${feed.value?.user.name}${t('seo.feed.title')}`,
-    },
-    {
-      name: 'og:description',
-      content: `${feed.value?.content.slice(0, 20)}${t('seo.feed.desc')}`,
-    },
-    {
-      name: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`,
-    },
-  ],
-})
 
 onMounted(async () => {
   hljs.configure({
@@ -277,6 +254,31 @@ async function commentFetch() {
       isAddData.value = true
     }
   }
+  setHead()
+}
+
+function setHead() {
+  useHead({
+    title: `${feed.value?.user.name}${t('seo.feed.title')} | Zempie`,
+    meta: [
+      {
+        name: 'description',
+        content: `${feed.value?.content.slice(0, 20)}${t('seo.feed.desc')}`,
+      },
+      {
+        name: 'og:title',
+        content: `${feed.value?.user.name}${t('seo.feed.title')}`,
+      },
+      {
+        name: 'og:description',
+        content: `${feed.value?.content.slice(0, 20)}${t('seo.feed.desc')}`,
+      },
+      {
+        name: 'og:url',
+        content: `${config.ZEMPIE_URL}${route.path}`,
+      },
+    ],
+  })
 }
 
 async function translate(text: string) {
