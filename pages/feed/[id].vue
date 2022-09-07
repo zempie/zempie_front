@@ -239,7 +239,6 @@ onMounted(async () => {
     )
     observer.value.observe(triggerDiv.value)
   }
-
   await commentFetch()
 })
 
@@ -260,7 +259,7 @@ async function commentFetch() {
   }
 
   const { data, pending, refresh } = await useFetch<{ result: [] }>(
-    createQueryUrl(`/post/${feed.value?.id}/comment/list`, query),
+    createQueryUrl(`/post/${feedId.value}/comment/list`, query),
     getComFetchOptions('get', true)
   )
 
