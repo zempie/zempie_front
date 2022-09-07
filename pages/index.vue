@@ -29,7 +29,7 @@
     <div class="main-visual">
       <h2><span style="font: 36px/46px 'Jalnan'">Communities</span></h2>
 
-      <div class="card-timeline" v-if="communities.length">
+      <div class="card-timeline" v-if="communities?.length">
         <!-- <CommunityCardSk v-show="cPending" v-for="commi in COMMUNITY_COUNT" /> -->
         <CommunityCard
           v-for="community in communities"
