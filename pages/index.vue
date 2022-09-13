@@ -13,10 +13,9 @@
 
       <ul style="margin: 40px 0px">
         <span class="card-game">
-          <GameCardSk v-if="isPending" v-for="game in GAME_COUNT" :key="game" />
+          <GameCardSk v-if="isPending" v-for="game in GAME_COUNT" />
           <GameCard
-            v-else
-            v-for="game in games?.result?.games"
+            v-for="game in data.result.games"
             :gameInfo="game"
             :key="game.id"
           />
@@ -27,13 +26,13 @@
         <p></p>
       </div> -->
 
-    <CommunityCardSk v-if="isPending" v-for="commi in COMMUNITY_COUNT" />
-
-    <div v-else class="main-visual">
+    <div class="main-visual">
       <h2><span style="font: 36px/46px 'Jalnan'">Communities</span></h2>
 
       <div class="card-timeline">
+        <CommunityCardSk v-if="isPending" v-for="commi in COMMUNITY_COUNT" />
         <CommunityCard
+          v-else
           v-for="community in communities"
           :community="community"
           :key="community.id"
@@ -52,8 +51,8 @@
       <ul style="margin-top: 40px" class="post-container">
         <li
           class="thumbmail"
-          v-for="post in postData?.result"
-          @click="$router.push(localePath(`/feed/${post.id}`))"
+          v-for="post in posts.result"
+          @click="$router.push(localePath(`/feed/${post?.id}`))"
         >
           <img :src="post.attatchment_files[0]?.url" />
         </li>
@@ -71,6 +70,10 @@ const { t, locale } = useI18n()
 const config = useRuntimeConfig()
 const route = useRoute()
 const localePath = useLocalePath()
+
+const games = ref()
+// const communities = ref()
+// const posts = ref()
 const isPending = ref(true)
 
 nuxt.hook('page:finish', () => {
@@ -129,25 +132,63 @@ const POST_COUNT = 12
 //   getZempieFetchOptions('get', false)
 // )
 
-const [
-  { data: games, pending, error },
-  { data: communities, pending: cPending, error: cError },
-  { data: postData, pending: pPending, error: pError },
-] = await Promise.all([
-  useFetch<any>(
-    createQueryUrl('/games', { limit: GAME_COUNT }),
-    getZempieFetchOptions('get', false)
-  ),
+// const { data, pending, error } = await useAsyncData('games', () =>
+//   $fetch(
+//     createQueryUrl('/games', { limit: GAME_COUNT }),
+//     getZempieFetchOptions('get', false)
+//   )
+// )
 
-  useFetch<any>(
-    createQueryUrl('/community/list', { limit: COMMUNITY_COUNT }),
-    getComFetchOptions('get', false)
+onMounted(async () => {
+  // await gameFetch()
+})
+
+const [
+  { data, pending, error },
+  { data: communities, pending: cPending, error: cError },
+  { data: posts, pending: pPending, error: pError },
+] = await Promise.all([
+  useAsyncData('games', () =>
+    $fetch(
+      createQueryUrl('/games', { limit: GAME_COUNT }),
+      getZempieFetchOptions('get', false)
+    )
   ),
-  useFetch<any>(
-    createQueryUrl('/timeline/posts/img', { limit: POST_COUNT }),
-    getComFetchOptions('get', false)
+  useAsyncData('community', () =>
+    $fetch(
+      createQueryUrl('/community/list', { limit: COMMUNITY_COUNT }),
+      getComFetchOptions('get', false)
+    )
+  ),
+  useAsyncData('posts', () =>
+    $fetch(
+      createQueryUrl('/timeline/posts/img', { limit: POST_COUNT }),
+      getComFetchOptions('get', false)
+    )
   ),
 ])
+
+async function gameFetch() {
+  // const { data, pending, error } = await useFetch<any>(
+  //   () => createQueryUrl('/games', { limit: GAME_COUNT }),
+  //   getZempieFetchOptions('get', false)
+  // )
+
+  const result = await useAsyncData('games', () =>
+    $fetch(
+      createQueryUrl('/games', { limit: GAME_COUNT }),
+      getZempieFetchOptions('get', false)
+    )
+  )
+  console.log(result)
+
+  if (result.data.value) {
+    const { result: res } = result.data.value
+    games.value = res.games
+  }
+
+  isPending.value = false
+}
 // const {
 //   data: communities,
 //   pending: cPending,
