@@ -1,0 +1,12 @@
+User-agent: grapeshot
+Disallow: /profile
+Disallow: /channel/*/editing
+Disallow: /*/login
+Disallow: /*/join
+Disallow: /*/password-search
+Disallow: /*/myaccount/*/
+Disallow: /*/project/*/
+
+Sitemap: https://zempie.com/sitemap.xml
+
+

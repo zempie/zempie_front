@@ -64,39 +64,6 @@ const profileImg = computed(
   () => props.community.profile_img ?? '/images/100_100_com_profile_default.png'
 )
 const visitCount = computed(() => numToKMB(props.community.visit_cnt))
-
-function subscribe() {
-  console.log('subscribe')
-}
-
-//     mounted() {
-//         if (this.community.banner_img) this.bannerImg = this.community.banner_img;
-//         if (this.community.profile_img) this.profileImg = this.community.profile_img;
-
-//     }
-
-// //    퍼블리싱 이미지 처리
-//     imgClass() {
-//         let result = '';
-//         if (this.$route.meta?.title === 'ManageJoinedGroup') {
-//             result = 'cmg-img'
-//         }
-//         else if (this.$route.meta?.title === 'CommunityList') {
-//             result = 'ct-img'
-//         }
-//         return result;
-//     }
-
-//     infoClass() {
-//         let result = '';
-//         if (this.$route.meta?.title === 'ManageJoinedGroup') {
-//             result = 'cmg-info'
-//         }
-//         else if (this.$route.meta?.title === 'CommunityList') {
-//             result = 'ct-info'
-//         }
-//         return result;
-//     }
 </script>
 
 <style lang="scss" scoped>

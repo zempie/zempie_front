@@ -164,7 +164,6 @@ import { useLocalePath } from 'vue-i18n-routing'
 
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { dateFormat, execCommandCopy } from '~~/scripts/utils'
-
 const localePath = useLocalePath()
 
 const COMMENT_LIMIT = 10
@@ -201,28 +200,6 @@ const {
   getComFetchOptions('get', true)
 )
 
-useHead({
-  title: `${feed.value?.user.name}${t('seo.feed.title')} | Zempie`,
-  meta: [
-    {
-      name: 'description',
-      content: `${feed.value?.content.slice(0, 20)}${t('seo.feed.desc')}`,
-    },
-    {
-      name: 'og:title',
-      content: `${feed.value?.user.name}${t('seo.feed.title')}`,
-    },
-    {
-      name: 'og:description',
-      content: `${feed.value?.content.slice(0, 20)}${t('seo.feed.desc')}`,
-    },
-    {
-      name: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`,
-    },
-  ],
-})
-
 onMounted(async () => {
   hljs.configure({
     ignoreUnescapedHTML: true,
@@ -239,7 +216,6 @@ onMounted(async () => {
     )
     observer.value.observe(triggerDiv.value)
   }
-
   await commentFetch()
 })
 
@@ -260,7 +236,7 @@ async function commentFetch() {
   }
 
   const { data, pending, refresh } = await useFetch<{ result: [] }>(
-    createQueryUrl(`/post/${feed.value?.id}/comment/list`, query),
+    createQueryUrl(`/post/${feedId.value}/comment/list`, query),
     getComFetchOptions('get', true)
   )
 
@@ -275,10 +251,34 @@ async function commentFetch() {
       }
     } else {
       comments.value = result
-      console.log('commtnet', comments.value)
       isAddData.value = true
     }
   }
+  setHead()
+}
+
+function setHead() {
+  useHead({
+    title: `${feed.value?.user.name}${t('seo.feed.title')} | Zempie`,
+    meta: [
+      {
+        name: 'description',
+        content: `${feed.value?.content.slice(0, 20)}${t('seo.feed.desc')}`,
+      },
+      {
+        name: 'og:title',
+        content: `${feed.value?.user.name}${t('seo.feed.title')}`,
+      },
+      {
+        name: 'og:description',
+        content: `${feed.value?.content.slice(0, 20)}${t('seo.feed.desc')}`,
+      },
+      {
+        name: 'og:url',
+        content: `${config.ZEMPIE_URL}${route.path}`,
+      },
+    ],
+  })
 }
 
 async function translate(text: string) {

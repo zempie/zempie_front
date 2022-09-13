@@ -26,11 +26,13 @@
         <p></p>
       </div> -->
 
-    <div class="main-visual">
+    <CommunityCardSk v-if="isPending" v-for="commi in COMMUNITY_COUNT" />
+
+    <div v-else class="main-visual">
       <h2><span style="font: 36px/46px 'Jalnan'">Communities</span></h2>
 
       <div class="card-timeline" v-if="communities?.length">
-        <!-- <CommunityCardSk v-show="cPending" v-for="commi in COMMUNITY_COUNT" /> -->
+        <!--  -->
         <CommunityCard
           v-for="community in communities"
           :community="community"
@@ -39,7 +41,7 @@
       </div>
     </div>
 
-    <div v-if="postPending">
+    <div v-if="isPending">
       <ul style="margin-top: 40px" class="post-container">
         <li class="thumbmail skeleton" v-for="post in POST_COUNT"></li>
       </ul>
@@ -69,12 +71,17 @@
 <script lang="ts" setup>
 import { useI18n } from 'vue-i18n'
 import { useLocalePath } from 'vue-i18n-routing'
+const nuxt = useNuxtApp()
 
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
 const route = useRoute()
 const localePath = useLocalePath()
+const isPending = ref(true)
 
+nuxt.hook('page:finish', () => {
+  isPending.value = false
+})
 definePageMeta({
   layout: 'default',
 })
@@ -83,28 +90,53 @@ useHead({
   title: `${t('seo.landing.title')} | Zempie`,
   meta: [
     {
+      hid: 'description',
       name: 'description',
       content: `${t('seo.landing.desc')}`,
     },
     {
-      name: 'og:title',
+      hid: 'og:title',
+      property: 'og:title',
       content: `${t('seo.landing.title')}`,
     },
     {
-      name: 'og:description',
+      hid: 'og:description',
+      property: 'og:description',
       content: `${t('seo.landing.description')}`,
     },
     {
-      name: 'og:url',
+      hid: 'og:url',
+      napropertyme: 'og:url',
       content: `${config.ZEMPIE_URL}${route.path}`,
     },
     {
-      name: 'og:image',
+      hid: 'og:image',
+      property: 'og:image',
       content: '/images/sns-thumbnail.png',
     },
     {
-      name: 'og:type',
+      property: 'og:type',
       content: 'website',
+    },
+    {
+      hid: 'twitter:title',
+      name: 'twitter:title',
+      content: `${t('seo.landing.desc')}`,
+    },
+    {
+      hid: 'twitter:url',
+      name: 'twitter:url',
+      content: `${config.ZEMPIE_URL}${route.path}`,
+    },
+    {
+      hid: 'twitter:description',
+      name: 'twitter:description',
+      content: `${t('seo.landing.description')}`,
+    },
+    {
+      hid: 'twitter:image',
+      name: 'twitter:image',
+      content: '/images/sns-thumbnail.png',
     },
   ],
 })
@@ -113,10 +145,10 @@ const GAME_COUNT = 8
 const COMMUNITY_COUNT = 4
 const POST_COUNT = 12
 
-const { data, pending, error } = await game.list({
-  limit: GAME_COUNT,
-  offset: 0,
-})
+const { data, pending, error } = await useFetch<any>(
+  createQueryUrl('/games', { limit: GAME_COUNT }),
+  getZempieFetchOptions('get', false)
+)
 
 if (!data.value) {
   throw createError({ statusCode: 404, statusMessage: 'Page Not Found' })
