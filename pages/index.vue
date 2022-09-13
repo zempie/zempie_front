@@ -90,28 +90,53 @@ useHead({
   title: `${t('seo.landing.title')} | Zempie`,
   meta: [
     {
+      hid: 'description',
       name: 'description',
       content: `${t('seo.landing.desc')}`,
     },
     {
-      name: 'og:title',
+      hid: 'og:title',
+      property: 'og:title',
       content: `${t('seo.landing.title')}`,
     },
     {
-      name: 'og:description',
+      hid: 'og:description',
+      property: 'og:description',
       content: `${t('seo.landing.description')}`,
     },
     {
-      name: 'og:url',
+      hid: 'og:url',
+      napropertyme: 'og:url',
       content: `${config.ZEMPIE_URL}${route.path}`,
     },
     {
-      name: 'og:image',
+      hid: 'og:image',
+      property: 'og:image',
       content: '/images/sns-thumbnail.png',
     },
     {
-      name: 'og:type',
+      property: 'og:type',
       content: 'website',
+    },
+    {
+      hid: 'twitter:title',
+      name: 'twitter:title',
+      content: `${t('seo.landing.desc')}`,
+    },
+    {
+      hid: 'twitter:url',
+      name: 'twitter:url',
+      content: `${config.ZEMPIE_URL}${route.path}`,
+    },
+    {
+      hid: 'twitter:description',
+      name: 'twitter:description',
+      content: `${t('seo.landing.description')}`,
+    },
+    {
+      hid: 'twitter:image',
+      name: 'twitter:image',
+      content: '/images/sns-thumbnail.png',
     },
   ],
 })
@@ -120,10 +145,10 @@ const GAME_COUNT = 8
 const COMMUNITY_COUNT = 4
 const POST_COUNT = 12
 
-const { data, pending, error } = await game.list({
-  limit: GAME_COUNT,
-  offset: 0,
-})
+const { data, pending, error } = await useFetch<any>(
+  createQueryUrl('/games', { limit: GAME_COUNT }),
+  getZempieFetchOptions('get', false)
+)
 
 if (!data.value) {
   throw createError({ statusCode: 404, statusMessage: 'Page Not Found' })
