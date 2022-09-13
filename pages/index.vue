@@ -16,7 +16,7 @@
           <GameCardSk v-if="isPending" v-for="game in GAME_COUNT" :key="game" />
           <GameCard
             v-else
-            v-for="game in data.result?.games"
+            v-for="game in games?.result?.games"
             :gameInfo="game"
             :key="game.id"
           />
@@ -84,21 +84,6 @@ useHead({
   title: `${t('seo.landing.title')} | Zempie`,
   meta: [
     {
-      hid: 'description',
-      name: 'description',
-      content: `${t('seo.landing.desc')}`,
-    },
-    {
-      hid: 'og:title',
-      property: 'og:title',
-      content: `${t('seo.landing.title')}`,
-    },
-    {
-      hid: 'og:description',
-      property: 'og:description',
-      content: `${t('seo.landing.description')}`,
-    },
-    {
       hid: 'og:url',
       napropertyme: 'og:url',
       content: `${config.ZEMPIE_URL}${route.path}`,
@@ -139,28 +124,47 @@ const GAME_COUNT = 8
 const COMMUNITY_COUNT = 4
 const POST_COUNT = 12
 
-const { data, pending, error } = await useFetch<any>(
-  createQueryUrl('/games', { limit: GAME_COUNT }),
-  getZempieFetchOptions('get', false)
-)
+// const { data, pending, error } = await useFetch<any>(
+//   createQueryUrl('/games', { limit: GAME_COUNT }),
+//   getZempieFetchOptions('get', false)
+// )
 
-const {
-  data: communities,
-  pending: cPending,
-  error: cError,
-} = await useFetch<any>(
-  createQueryUrl('/community/list', { limit: COMMUNITY_COUNT }),
-  getComFetchOptions('get', false)
-)
+const [
+  { data: games, pending, error },
+  { data: communities, pending: cPending, error: cError },
+  { data: postData, pending: pPending, error: pError },
+] = await Promise.all([
+  useFetch<any>(
+    createQueryUrl('/games', { limit: GAME_COUNT }),
+    getZempieFetchOptions('get', false)
+  ),
 
-const {
-  data: postData,
-  pending: postPending,
-  error: postError,
-} = await useFetch<any>(
-  createQueryUrl('/timeline/posts/img', { limit: POST_COUNT }),
-  getComFetchOptions('get', false)
-)
+  useFetch<any>(
+    createQueryUrl('/community/list', { limit: COMMUNITY_COUNT }),
+    getComFetchOptions('get', false)
+  ),
+  useFetch<any>(
+    createQueryUrl('/timeline/posts/img', { limit: POST_COUNT }),
+    getComFetchOptions('get', false)
+  ),
+])
+// const {
+//   data: communities,
+//   pending: cPending,
+//   error: cError,
+// } = await useFetch<any>(
+//   createQueryUrl('/community/list', { limit: COMMUNITY_COUNT }),
+//   getComFetchOptions('get', false)
+// )
+
+// const {
+//   data: postData,
+//   pending: pPending,
+//   error: pError,
+// } = await useFetch<any>(
+//   createQueryUrl('/timeline/posts/img', { limit: POST_COUNT }),
+//   getComFetchOptions('get', false)
+// )
 </script>
 
 <style scoped lang="scss">
