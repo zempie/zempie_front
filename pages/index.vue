@@ -13,9 +13,9 @@
 
       <ul style="margin: 40px 0px">
         <span class="card-game">
-          <!-- <GameCardSk v-if="pending" v-for="game in GAME_COUNT" :key="game" /> -->
+          <GameCardSk v-if="isPending" v-for="game in GAME_COUNT" />
           <GameCard
-            v-for="game in data.result?.games"
+            v-for="game in data.result.games"
             :gameInfo="game"
             :key="game.id"
           />
@@ -26,14 +26,13 @@
         <p></p>
       </div> -->
 
-    <CommunityCardSk v-if="isPending" v-for="commi in COMMUNITY_COUNT" />
-
-    <div v-else class="main-visual">
+    <div class="main-visual">
       <h2><span style="font: 36px/46px 'Jalnan'">Communities</span></h2>
 
-      <div class="card-timeline" v-if="communities?.length">
-        <!--  -->
+      <div class="card-timeline">
+        <CommunityCardSk v-if="isPending" v-for="commi in COMMUNITY_COUNT" />
         <CommunityCard
+          v-else
           v-for="community in communities"
           :community="community"
           :key="community.id"
@@ -49,17 +48,11 @@
     <div v-else class="main-visual">
       <h2><span style="font: 36px/46px 'Jalnan'">Recent posts</span></h2>
 
-      <!-- -->
-
-      <ul
-        style="margin-top: 40px"
-        class="post-container"
-        v-if="postData?.result?.length"
-      >
+      <ul style="margin-top: 40px" class="post-container">
         <li
           class="thumbmail"
-          v-for="post in postData?.result"
-          @click="$router.push(localePath(`/feed/${post.id}`))"
+          v-for="post in posts.result"
+          @click="$router.push(localePath(`/feed/${post?.id}`))"
         >
           <img :src="post.attatchment_files[0]?.url" />
         </li>
@@ -77,6 +70,10 @@ const { t, locale } = useI18n()
 const config = useRuntimeConfig()
 const route = useRoute()
 const localePath = useLocalePath()
+
+const games = ref()
+// const communities = ref()
+// const posts = ref()
 const isPending = ref(true)
 
 nuxt.hook('page:finish', () => {
@@ -89,21 +86,6 @@ definePageMeta({
 useHead({
   title: `${t('seo.landing.title')} | Zempie`,
   meta: [
-    {
-      hid: 'description',
-      name: 'description',
-      content: `${t('seo.landing.desc')}`,
-    },
-    {
-      hid: 'og:title',
-      property: 'og:title',
-      content: `${t('seo.landing.title')}`,
-    },
-    {
-      hid: 'og:description',
-      property: 'og:description',
-      content: `${t('seo.landing.description')}`,
-    },
     {
       hid: 'og:url',
       napropertyme: 'og:url',
@@ -145,28 +127,85 @@ const GAME_COUNT = 8
 const COMMUNITY_COUNT = 4
 const POST_COUNT = 12
 
-const { data, pending, error } = await useFetch<any>(
-  createQueryUrl('/games', { limit: GAME_COUNT }),
-  getZempieFetchOptions('get', false)
-)
+// const { data, pending, error } = await useFetch<any>(
+//   createQueryUrl('/games', { limit: GAME_COUNT }),
+//   getZempieFetchOptions('get', false)
+// )
 
-const {
-  data: communities,
-  pending: cPending,
-  error: cError,
-} = await useFetch<any>(
-  createQueryUrl('/community/list', { limit: COMMUNITY_COUNT }),
-  getComFetchOptions('get', false)
-)
+// const { data, pending, error } = await useAsyncData('games', () =>
+//   $fetch(
+//     createQueryUrl('/games', { limit: GAME_COUNT }),
+//     getZempieFetchOptions('get', false)
+//   )
+// )
 
-const {
-  data: postData,
-  pending: postPending,
-  error: postError,
-} = await useFetch<any>(
-  createQueryUrl('/timeline/posts/img', { limit: POST_COUNT }),
-  getComFetchOptions('get', false)
-)
+onMounted(async () => {
+  // await gameFetch()
+})
+
+const [
+  { data, pending, error },
+  { data: communities, pending: cPending, error: cError },
+  { data: posts, pending: pPending, error: pError },
+] = await Promise.all([
+  useAsyncData('games', () =>
+    $fetch(
+      createQueryUrl('/games', { limit: GAME_COUNT }),
+      getZempieFetchOptions('get', false)
+    )
+  ),
+  useAsyncData('community', () =>
+    $fetch(
+      createQueryUrl('/community/list', { limit: COMMUNITY_COUNT }),
+      getComFetchOptions('get', false)
+    )
+  ),
+  useAsyncData('posts', () =>
+    $fetch(
+      createQueryUrl('/timeline/posts/img', { limit: POST_COUNT }),
+      getComFetchOptions('get', false)
+    )
+  ),
+])
+
+async function gameFetch() {
+  // const { data, pending, error } = await useFetch<any>(
+  //   () => createQueryUrl('/games', { limit: GAME_COUNT }),
+  //   getZempieFetchOptions('get', false)
+  // )
+
+  const result = await useAsyncData('games', () =>
+    $fetch(
+      createQueryUrl('/games', { limit: GAME_COUNT }),
+      getZempieFetchOptions('get', false)
+    )
+  )
+  console.log(result)
+
+  if (result.data.value) {
+    const { result: res } = result.data.value
+    games.value = res.games
+  }
+
+  isPending.value = false
+}
+// const {
+//   data: communities,
+//   pending: cPending,
+//   error: cError,
+// } = await useFetch<any>(
+//   createQueryUrl('/community/list', { limit: COMMUNITY_COUNT }),
+//   getComFetchOptions('get', false)
+// )
+
+// const {
+//   data: postData,
+//   pending: pPending,
+//   error: pError,
+// } = await useFetch<any>(
+//   createQueryUrl('/timeline/posts/img', { limit: POST_COUNT }),
+//   getComFetchOptions('get', false)
+// )
 </script>
 
 <style scoped lang="scss">

@@ -9,7 +9,6 @@
 <script setup lang="ts">
 import _ from 'lodash'
 import { useI18n } from 'vue-i18n'
-import { htmlToDomElem } from '~~/scripts/utils'
 
 const { t, locale } = useI18n()
 
