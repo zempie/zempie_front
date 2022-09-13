@@ -17,6 +17,16 @@ export default defineNuxtConfig({
         name: 'og:title',
         content: `Zempie`
       },
+      {
+        hid: 'og:description',
+        property: 'og:description',
+        content: "Worldwide Community Platform for Game Creators.",
+      },
+      {
+        hid: 'og:image',
+        property: 'og:image',
+        content: '/images/sns-thumbnail.png',
+      },
     ],
     link: [
       { hid: 'icon', rel: 'icon', type: 'image/x-icon', href: '~/static/favicon.ico' },
@@ -59,7 +69,15 @@ export default defineNuxtConfig({
     'cookie-universal-nuxt',
     ['@nuxtjs/i18n', i18n],
     '@vueuse/nuxt',
+    '@nuxtjs/sitemap',
+
   ],
+
+  sitemap: {
+
+  },
+
+
 
 
   publicRuntimeConfig: {
