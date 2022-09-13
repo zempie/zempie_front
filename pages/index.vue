@@ -13,8 +13,9 @@
 
       <ul style="margin: 40px 0px">
         <span class="card-game">
-          <!-- <GameCardSk v-if="pending" v-for="game in GAME_COUNT" :key="game" /> -->
+          <GameCardSk v-if="isPending" v-for="game in GAME_COUNT" :key="game" />
           <GameCard
+            v-else
             v-for="game in data.result?.games"
             :gameInfo="game"
             :key="game.id"
@@ -31,8 +32,7 @@
     <div v-else class="main-visual">
       <h2><span style="font: 36px/46px 'Jalnan'">Communities</span></h2>
 
-      <div class="card-timeline" v-if="communities?.length">
-        <!--  -->
+      <div class="card-timeline">
         <CommunityCard
           v-for="community in communities"
           :community="community"
@@ -49,13 +49,7 @@
     <div v-else class="main-visual">
       <h2><span style="font: 36px/46px 'Jalnan'">Recent posts</span></h2>
 
-      <!-- -->
-
-      <ul
-        style="margin-top: 40px"
-        class="post-container"
-        v-if="postData?.result?.length"
-      >
+      <ul style="margin-top: 40px" class="post-container">
         <li
           class="thumbmail"
           v-for="post in postData?.result"
