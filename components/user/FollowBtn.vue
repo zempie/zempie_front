@@ -73,7 +73,11 @@ async function unfollow() {
   width: 100%;
   cursor: pointer;
   color: #fff;
-  margin-top: 20px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+
+  // margin-top: 20px;
   &.unfollow {
     background: #feb100;
   }

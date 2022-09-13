@@ -92,6 +92,8 @@
   </NuxtLayout>
 </template>
 <script setup lang="ts">
+import dayjs from 'dayjs'
+
 import {
   ElDropdown,
   ElDropdownMenu,
@@ -115,7 +117,9 @@ const accessToken = useCookie(config.COOKIE_NAME).value
 
 const communityInfo = computed(() => useCommunity().community.value.info)
 const createdDate = computed(() =>
-  dateFormat(useCommunity().community.value.info?.created_at)
+  dayjs(useCommunity().community.value.info?.created_at).format(
+    'YYYY / MM / DD'
+  )
 )
 
 const communities = ref([])

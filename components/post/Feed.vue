@@ -10,10 +10,16 @@
           </dt>
 
           <dd v-if="feed.user?.name">
-            <h2>{{ feed.user?.name }} uploaded a {{ feed.post_type }} post</h2>
+            <h2 class="user-name">
+              {{ feed.user?.name
+              }}<span> uploaded a {{ feed.post_type }} post </span>
+            </h2>
             <p>
               <i class="uis uis-clock" style="color: #c1c1c1"></i>
-              {{ dateFormat(feed.created_at) }}
+              <span v-if="locale === 'ko'">
+                {{ dateFormat(feed.created_at) }}</span
+              >
+              <span v-else> {{ enDateFormat(feed.created_at) }}</span>
               <TranslateBtn
                 :text="feedContent"
                 @translatedText="translate"
@@ -221,7 +227,12 @@ import {
   ElDialog,
 } from 'element-plus'
 
-import { dateFormat, execCommandCopy, htmlToDomElem } from '~/scripts/utils'
+import {
+  dateFormat,
+  execCommandCopy,
+  htmlToDomElem,
+  enDateFormat,
+} from '~/scripts/utils'
 import { useI18n } from 'vue-i18n'
 import { useLocalePath } from 'vue-i18n-routing'
 import hljs from 'highlight.js'
@@ -750,6 +761,16 @@ function openDeleteModal() {
 
   to {
     opacity: 0;
+  }
+}
+
+@media all and (max-width: 479px) {
+  .tapl-title {
+    .user-name {
+      span {
+        display: none;
+      }
+    }
   }
 }
 </style>

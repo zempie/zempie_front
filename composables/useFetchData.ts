@@ -13,6 +13,7 @@ function baseOption(method: string, withCredentials: boolean, body?: object) {
   const accessToken = useCookie(config.COOKIE_NAME).value
 
   const options = {
+    key: `${Date.now()}`,
     method: method,
     headers: accessToken && withCredentials ? { 'Authorization': `Bearer ${accessToken}` } : {},
     initialCache: false,

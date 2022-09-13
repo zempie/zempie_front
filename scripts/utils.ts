@@ -103,7 +103,22 @@ export const dateFormat = (sec: number | string) => {
     } else if (dayjs().diff(dayjs(sec), 'd') <= 7) {
         return dayjs().diff(dayjs(sec), 'd') + '일 전'
     } else {
-        return dayjs(sec).locale('ko').format('YYYY년 MM월 DD일 ')
+        return dayjs(sec).locale('ko').format('MM월 DD일 ')
+    }
+}
+
+export const enDateFormat = (sec: number | string) => {
+
+    if (dayjs().diff(dayjs(sec), 'm') < 1) {
+        return dayjs().diff(dayjs(sec), 's') + 'SECONDS AGO'
+    } else if (dayjs().diff(dayjs(sec), 'h') < 1) {
+        return dayjs().diff(dayjs(sec), 'm') + 'MINUTES AGO'
+    } else if (dayjs().diff(dayjs(sec), 'd') < 1) {
+        return dayjs().diff(dayjs(sec), 'h') + 'HOUR AGO'
+    } else if (dayjs().diff(dayjs(sec), 'd') <= 7) {
+        return dayjs().diff(dayjs(sec), 'd') + 'DAYS AGO'
+    } else {
+        return dayjs(sec).locale('en').format('MMMM DD ')
     }
 }
 

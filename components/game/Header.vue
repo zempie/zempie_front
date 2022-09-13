@@ -8,7 +8,7 @@
         : 'background-color: #f973165c'
     "
   >
-    <div
+    <!-- <div
       v-if="isMine"
       style="display: flex; justify-content: flex-end; margin: 20px"
     >
@@ -45,7 +45,7 @@
         class="uil uil-check-circle"
         style="font-size: 20px; color: forestgreen"
       ></i>
-    </div>
+    </div> -->
     <dl>
       <dt>
         <dl>
