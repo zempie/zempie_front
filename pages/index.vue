@@ -150,9 +150,6 @@ const { data, pending, error } = await useFetch<any>(
   getZempieFetchOptions('get', false)
 )
 
-if (!data.value) {
-  throw createError({ statusCode: 404, statusMessage: 'Page Not Found' })
-}
 const {
   data: communities,
   pending: cPending,
