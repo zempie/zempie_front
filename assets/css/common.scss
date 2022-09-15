@@ -69,7 +69,6 @@
 }
 
 // swiper-css
-
 .swiper-pagination-bullet-active {
   background-color: #f97316 !important;
 }
@@ -112,6 +111,7 @@
   }
 }
 
+// like
 .xi-heart {
   transform-origin: center;
   animation: animateHeartOut 0.3s linear forwards;
@@ -125,3 +125,13 @@
     transform: scale(1);
   }
 }
+
+// //edit banner
+// .cropper-container {
+//   max-height: 500px;
+
+//   .cropper-crop-box {
+//     max-height: 500px;
+//     transform: none !important;
+//   }
+// }

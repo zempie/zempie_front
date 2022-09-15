@@ -4,6 +4,7 @@
   word-break: break-all;
   color: #000;
   overflow-y: hidden;
+  overflow-x: hidden;
   // min-height: 200px;
   // max-height: 500px;
   width: 100%;
@@ -258,7 +259,7 @@ pre {
       height: auto;
 
       &.ProseMirror-selectednode {
-        margin: 3px;
+        margin: 20px;
         outline: 3px solid #f97316;
       }
     }

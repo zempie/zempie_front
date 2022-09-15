@@ -824,5 +824,9 @@
   "join.joinNicknameError": "__STRING_NOT_TRANSLATED__",
   "login.joinError": "__STRING_NOT_TRANSLATED__",
   "login.firebaseError.userNotFound": "__STRING_NOT_TRANSLATED__",
-  "projectAddVersion.error.lowVersion": "__STRING_NOT_TRANSLATED__"
+  "projectAddVersion.error.lowVersion": "__STRING_NOT_TRANSLATED__",
+  "banner.photo": "배너 이미지",
+  "delete.banner": "배너 이미지를 삭제하시겠습니까?",
+  "delete.banner.text": "삭제하신 이미지는 복구 할 수 없습니다.",
+  "studio.preview.info": "__STRING_NOT_TRANSLATED__"
 }
