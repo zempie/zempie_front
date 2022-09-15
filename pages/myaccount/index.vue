@@ -9,10 +9,11 @@
       <dl class="ii-card">
         <dt>
           <div
-            :style="{
-              'background-color': 'orange',
-              'background-size': 'cover',
-            }"
+            :style="
+              prevBanner
+                ? `background: url(${prevBanner}) center center / cover no-repeat; background-size: cover;`
+                : `background-color:orange; background-size:cover`
+            "
           ></div>
           <p
             :style="
@@ -22,15 +23,27 @@
             "
           ></p>
         </dt>
-        <dd @click="uploadFile">
+        <dd @click="uploadProfileFile">
           <div style="height: 0px; overflow: hidden">
-            <input type="file" @change="onFileChange" accept=image/*
+            <input type="file" @change="onProfileFileChange" accept=image/*
             ref="profileImg" name="fileInput" />
           </div>
           <p><i class="uil uil-image-plus"></i></p>
           <h2>Change Profile</h2>
-          <h3>{{ fileName }}</h3>
-          <div @click.stop="deleteImg">
+          <h3>{{ profileFileName }}</h3>
+          <div @click.stop="deleteProfileImg">
+            <a><i class="uil uil-trash-alt"></i></a>
+          </div>
+        </dd>
+        <dd @click="uploadBannerFile">
+          <div style="height: 0px; overflow: hidden">
+            <input type="file" @change="onBannerFileChange" accept=image/*
+            ref="bannerImg" name="fileInput" />
+          </div>
+          <p><i class="uil uil-image-plus"></i></p>
+          <h2>Change Banner</h2>
+          <h3>{{ bannerFileName }}</h3>
+          <div @click.stop="deleteBannerImg">
             <a><i class="uil uil-trash-alt"></i></a>
           </div>
         </dd>
@@ -106,7 +119,7 @@
 
 <script setup lang="ts">
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElLoading } from 'element-plus'
 
 import { useLocalePath } from 'vue-i18n-routing'
 import { useI18n } from 'vue-i18n'
@@ -145,36 +158,45 @@ useHead({
 })
 
 const MAX_FILE_SIZE = 3
-let submitAcceessableCount = 2
 
 const isUpdating = ref(false)
 
 const profileImg = ref<HTMLElement>()
-const fileName = ref('')
-const prevProfile = ref<string | ArrayBuffer>('')
-const updateFile = ref<File | null>()
+const profileFileName = ref('')
+const updateProfileFile = ref<File | null>()
+
+const bannerImg = ref<HTMLElement>()
+const bannerFileName = ref('')
+const updateBannerFile = ref<File | null>()
 
 const signUpType = computed(
   () => useUser().user.value.fUser?.providerData[0].providerId
 )
 const userInfo = computed(() => useUser().user.value.info)
 
+const prevProfile = ref<string | ArrayBuffer>(userInfo.value?.picture ?? '')
+const prevBanner = ref<string | ArrayBuffer>(userInfo.value?.url_banner ?? '')
 watch(
   () => userInfo.value,
   (val) => {
     prevProfile.value = val.picture
+    prevBanner.value = val.url_banner
   }
 )
 
-function uploadFile() {
+function uploadProfileFile() {
   profileImg.value.click()
 }
 
-function onFileChange(event: any) {
+function uploadBannerFile() {
+  bannerImg.value.click()
+}
+
+function onProfileFileChange(event: any) {
   const file = event.target.files[0]
   if (file.size < 1024 * 1024 * MAX_FILE_SIZE) {
-    fileName.value = file.name
-    updateFile.value = file
+    profileFileName.value = file.name
+    updateProfileFile.value = file
     const reader = new FileReader()
     reader.onload = (e) => {
       prevProfile.value = e.target!.result
@@ -193,60 +215,82 @@ function onFileChange(event: any) {
   }
 }
 
-function deleteImg(e: any) {
+function deleteProfileImg(e: any) {
   prevProfile.value = ''
-  fileName.value = ''
-  updateFile.value = null
+  profileFileName.value = ''
+  updateProfileFile.value = null
+}
+function onBannerFileChange(event: any) {
+  const file = event.target.files[0]
+  if (file.size < 1024 * 1024 * MAX_FILE_SIZE) {
+    bannerFileName.value = file.name
+    updateBannerFile.value = file
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      prevBanner.value = e.target!.result
+    }
+    reader.readAsDataURL(file)
+    event.target.value = ''
+  } else {
+    ElMessage({
+      message: t(
+        `${t('maxFile.size.text1')}${MAX_FILE_SIZE}mb${t(
+          'maxFile.size.text2'
+        )}.`
+      ),
+      type: 'warning',
+    })
+  }
+}
+function deleteBannerImg(e: any) {
+  prevBanner.value = ''
+  bannerFileName.value = ''
+  updateBannerFile.value = null
 }
 
 async function onSubmit() {
-  submitAcceessableCount = submitAcceessableCount - 1
+  isUpdating.value = true
+  const formData = new FormData()
 
-  if (submitAcceessableCount > 0) {
-    isUpdating.value = true
-    const formData = new FormData()
-
-    if (updateFile.value) {
-      formData.append('file', updateFile.value)
-      formData.append('name', userInfo.value.name)
-
-      const { data, error, refresh, pending } = await user.updateInfo(formData)
-
-      if (!error.value) {
-        ElMessage({
-          message: t('userSetting.done'),
-          type: 'success',
-        })
-        useUser().setProfileImg(
-          data.value.result.user.picture + `?_=${Date.now()}`
-        )
-        updateFile.value = null
-      } else {
-        ElMessage({
-          message: error.error.message,
-          type: 'error',
-        })
-      }
-    } else {
-      formData.append('rm_picture', 'true')
-      const { data, error, refresh, pending } = await user.updateInfo(formData)
-
-      if (!error.value) {
-        ElMessage({
-          message: t('userSetting.done'),
-          type: 'success',
-        })
-        useUser().setProfileImg(null)
-      } else {
-        ElMessage({
-          message: error.error.message,
-          type: 'error',
-        })
-      }
-    }
+  if (updateBannerFile.value) {
+    formData.append('banner_file', updateBannerFile.value)
   }
+  if (updateProfileFile.value) {
+    formData.append('file', updateProfileFile.value)
+    formData.append('name', userInfo.value.name)
+  }
+  if (prevProfile.value === '') {
+    formData.append('rm_picture', 'true')
+  }
+  if (prevBanner.value === '') {
+    formData.append('rm_banner', 'true')
+  }
+
+  const { data, error, refresh, pending } = await user.updateInfo(formData)
+
+  if (data.value) {
+    const { result } = data.value
+    const { user } = result
+    ElMessage({
+      message: t('userSetting.done'),
+      type: 'success',
+    })
+    if (user.picture) {
+      useUser().setProfileImg(user.picture + `?_=${Date.now()}`)
+    } else {
+      useUser().setProfileImg(null)
+    }
+
+    updateBannerFile.value = null
+    updateProfileFile.value = null
+  } else {
+    ElMessage({
+      message: error.error.message,
+      type: 'error',
+    })
+  }
+
   isUpdating.value = false
-  submitAcceessableCount = submitAcceessableCount + 1
 }
 </script>
 

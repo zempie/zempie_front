@@ -2,14 +2,20 @@
   <NuxtLayout name="community">
     <div>
       <dl class="area-title">
-        <dt>Members <span> {{  data.totalCount  }}</span></dt>
+        <dt>
+          Members <span> {{ communities?.totalCount }}</span>
+        </dt>
       </dl>
 
-      <ul class="card-member" v-if="pending">
+      <ul class="card-member" v-if="isPending">
         <UserCardSk v-for="user in 4" />
       </ul>
       <ul class="card-follow" v-else>
-        <UserCard v-for="member in data.result" :key="member.id" :user="member">
+        <UserCard
+          v-for="member in communities?.result"
+          :key="member.id"
+          :user="member"
+        >
           <template #followBtn>
             <UserFollowBtn :user="member" class="mt20" @refresh="refresh" />
           </template>
@@ -19,18 +25,20 @@
   </NuxtLayout>
 </template>
 
- <script setup lang="ts">
-import { IUser } from '~~/types';
+<script setup lang="ts">
+import { IUser } from '~~/types'
 
 const config = useRuntimeConfig()
 const route = useRoute()
 const isPending = ref(true)
+const nuxt = useNuxtApp()
 
 const communityId = computed(() => route.params.id as string)
 const communityInfo = computed(() => useCommunity().community.value.info)
 
-
-
+nuxt.hook('page:finish', () => {
+  isPending.value = false
+})
 watch(
   () => communityInfo.value,
   (info) => {
@@ -39,28 +47,33 @@ watch(
       meta: [
         {
           name: 'description',
-          content: `${info.description}`
+          content: `${info.description}`,
         },
         {
           name: 'og:title',
-          content: `Members of ${info.name}`
+          content: `Members of ${info.name}`,
         },
         {
           name: 'og:description',
-          content: `${info.description}`
+          content: `${info.description}`,
         },
         {
           name: 'og:url',
-          content: `${config.ZEMPIE_URL}${route.path}`
+          content: `${config.ZEMPIE_URL}${route.path}`,
         },
-      ]
+      ],
     })
   }
 )
 //TODO:커뮤니티 많아지면 수정해야됨 : 페이징
-const { data, pending, refresh } = await useFetch<{ result: IUser[], totalCount: number }>(`/community/${communityId.value}/members`, getComFetchOptions('get', true))
-
-
+const {
+  data: communities,
+  pending,
+  refresh,
+} = await useFetch<{
+  result: IUser[]
+  totalCount: number
+}>(`/community/${communityId.value}/members`, getComFetchOptions('get', true))
 
 //     metaSetting !: MetaSetting;
 //     communityId = this.$route.params.community_id;
@@ -88,10 +101,7 @@ const { data, pending, refresh } = await useFetch<{ result: IUser[], totalCount:
 
 //             })
 
-
 //     }
-
-
 
 //     reFetch(){
 //         this.limit = 10;
@@ -101,9 +111,6 @@ const { data, pending, refresh } = await useFetch<{ result: IUser[], totalCount:
 //         this.fetch();
 
 //     }
-
 </script>
 
-
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

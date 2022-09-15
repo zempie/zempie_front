@@ -77,6 +77,7 @@ async function unfollow() {
   display: flex;
   align-items: center;
 
+  justify-content: center;
   // margin-top: 20px;
   &.unfollow {
     background: #feb100;
