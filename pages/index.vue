@@ -64,8 +64,8 @@
 <script lang="ts" setup>
 import { useI18n } from 'vue-i18n'
 import { useLocalePath } from 'vue-i18n-routing'
-const nuxt = useNuxtApp()
 
+const nuxt = useNuxtApp()
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
 const route = useRoute()
@@ -138,10 +138,6 @@ const POST_COUNT = 12
 //     getZempieFetchOptions('get', false)
 //   )
 // )
-
-onMounted(async () => {
-  // await gameFetch()
-})
 
 const [
   { data, pending, error },
