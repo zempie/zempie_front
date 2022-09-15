@@ -125,7 +125,7 @@
             </button>
           </div>
           <div>
-            <button class="btn-line mr10 uppercase" @click="uploadBanner">
+            <button class="btn-line mr10 uppercase" @click="bannerImg.click()">
               change banner
             </button>
 
@@ -292,6 +292,7 @@ function openCropper() {
       movable: true,
       preview: '.preview',
       checkCrossOrigin: false,
+      checkOrientation: false,
     })
 
     cropper.value.setData({
