@@ -39,11 +39,15 @@ const props = defineProps({
   user: Object as PropType<IUser>,
 })
 
-const bannerImg = computed(() => props.user.url_banner ?? null)
+const bannerImg = computed(() =>
+  props.user.url_banner ? props.user.url_banner + `?_=${Date.now()}` : null
+)
 const userObj = computed(() => {
   return {
     name: props.user.name,
-    picture: props.user.profile_img,
+    picture: props.user.profile_img
+      ? props.user.profile_img
+      : props.user.picture,
     id: props.user.id,
     channel_id: props.user.channel_id,
     email: props.user.email,

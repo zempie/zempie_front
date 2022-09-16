@@ -11,23 +11,8 @@ export default defineNuxtConfig({
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
-      { name: 'format-detection', content: 'telephone=no' },
-      {
-        name: 'og:title',
-        content: `Zempie`
-      },
-      {
-        hid: 'og:description',
-        property: 'og:description',
-        content: "Worldwide Community Platform for Game Creators.",
-      },
-      {
-        hid: 'og:image',
-        property: 'og:image',
-        content: '/images/sns-thumbnail.png',
-      },
-
+      { hid: 'description', name: 'description', content: "Worldwide Community Platform for Game Creators." },
+      { name: 'format-detection', content: 'telephone=no' }
     ],
     link: [
       { hid: 'icon', rel: 'icon', type: 'image/x-icon', href: '~/static/favicon.ico' },
@@ -72,8 +57,6 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
 
   ],
-
-
 
   publicRuntimeConfig: {
     ENV: process.env.ENV,

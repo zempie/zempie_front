@@ -6,7 +6,7 @@ Disallow: /*/join
 Disallow: /*/password-search
 Disallow: /*/myaccount/*/
 Disallow: /*/project/*/
+Disallow: /landing
+
 
 Sitemap: https://zempie.com/sitemap.xml
-
-

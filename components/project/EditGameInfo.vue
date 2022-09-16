@@ -31,8 +31,7 @@
             <input
               v-model="v$.name.$model"
               type="text"
-              name=""
-              title=""
+              title="game-title"
               :placeholder="$t('addGameInfo.game.title')"
               class="w100p"
             />
@@ -360,6 +359,10 @@ watch(
 const rules = computed(() => {
   const formRule = {
     name: {
+      maxLength: helpers.withMessage(
+        t('addGameInfo.game.max.err'),
+        maxLength(50)
+      ),
       required: helpers.withMessage(t('addGameInfo.game.title.err'), required),
     },
     pathname: { required },
@@ -388,64 +391,6 @@ onMounted(() => {
     form.stage = stage
   }
 })
-// @Prop({default: false}) set!: boolean;
-// @Prop() projectInfo !: any;
-// @Prop() isEditProject !: any;
-// @Prop() isUpdateProject !: any;
-// toast = new Toast();
-// gameStage = eGameStage;
-
-// title: string = '';
-// description: string = '';
-// hashtagsArr: string[] = [];
-// currentInput = ''
-// // chips: string[] = [];
-// prevImg: any = '';
-// prevGif: any = '';
-// thumbFile: any = null;
-// gamePath: string = ""
-// autoGamePath: boolean = true;
-
-// confirmedGamePath: boolean | null = null;
-
-// isTitleErr: boolean = false;
-// isDescErr: boolean = false;
-// isHashtagErr: boolean = false;
-// isThumbErr: boolean = false;
-
-// thumbFile2: any = null;
-
-// gamePathError: string = "";
-// waitGamePath: boolean = false;
-
-// beforeRouteLeave(to, from, next) {
-//     if (to.name == "AddGameFile") {
-//         next();
-//     }
-//     else if (
-//         this.title ||
-//         this.description ||
-//         this.hashtagsArr.length > 0
-//         // ||  this.thumbFileUrl ||
-//         // this.thumbFile2Url
-//     ) {
-//         if (
-//             confirm(
-//                 "작성하신 글은 저장되지않고 지워집니다. 이 페이지를 나가시겠습니까?"
-//             )
-//         ) {
-//             this.resetLocalStorage();
-//             next();
-
-//         }
-//         else {
-//         }
-//     }
-//     else {
-//         this.resetLocalStorage();
-//         next();
-//     }
-// }
 
 async function createGamePath() {
   let count = 0

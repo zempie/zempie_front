@@ -297,16 +297,39 @@ async function onSubmit() {
 <style lang="scss" scoped>
 @media all and (max-width: 479px) {
   .ii-card {
-    dd:last-child {
+    dd {
       width: 100%;
+      margin-right: 0px;
     }
   }
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
   .ii-card {
-    dd:last-child {
+    dd {
       width: 100%;
+      margin-right: 0px;
+    }
+  }
+}
+
+@media all and (min-width: 768px) and (max-width: 991px) {
+  .ii-card {
+    dt {
+      width: 30%;
+    }
+    dd {
+      width: 30%;
+    }
+  }
+}
+@media all and (min-width: 992px) and (max-width: 1199px) {
+  .ii-card {
+    dt {
+      width: 30%;
+    }
+    dd {
+      width: 30%;
     }
   }
 }

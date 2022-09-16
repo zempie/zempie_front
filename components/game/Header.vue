@@ -101,7 +101,7 @@
         >
       </dd>
     </dl>
-    <el-dialog v-model="showChangeBanner" custom-class="modal-area-type">
+    <el-dialog v-model="showChangeBanner" custom-class="modal-area-game-banner">
       <div class="modal-alert">
         <dl class="ma-header">
           <dt>{{ t('banner.photo') }}</dt>
@@ -111,8 +111,8 @@
             </button>
           </dd>
         </dl>
-        <div style="height: 500px">
-          <img ref="editBanner" :src="editBannerUrl" style="max-width: 100%" />
+        <div class="banner-container">
+          <img ref="editBanner" :src="editBannerUrl" />
         </div>
         <div class="btn-container">
           <div>
@@ -121,12 +121,12 @@
               class="btn-gray uppercase"
               @click="showDeleteBanner = true"
             >
-              delete banner
+              delete <span>banner</span>
             </button>
           </div>
           <div>
             <button class="btn-line mr10 uppercase" @click="bannerImg.click()">
-              change banner
+              change <span>banner </span>
             </button>
 
             <button
@@ -376,6 +376,12 @@ function moveUserPage() {
 }
 
 .modal-alert {
+  .banner-container {
+    height: 500px;
+    img {
+      max-width: 100%;
+    }
+  }
   .btn-container {
     display: flex;
     padding: 20px;
@@ -383,9 +389,6 @@ function moveUserPage() {
     justify-content: space-between;
     button {
       width: 180px;
-    }
-
-    div {
     }
   }
 }
@@ -400,6 +403,20 @@ function moveUserPage() {
       margin-top: 0px;
     }
   }
+
+  .modal-alert {
+    .ma-header {
+      padding: 20px;
+    }
+    .btn-container {
+      button {
+        width: 110px;
+        span {
+          display: none;
+        }
+      }
+    }
+  }
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
@@ -409,12 +426,46 @@ function moveUserPage() {
       padding: 0px;
     }
   }
+
+  .modal-alert {
+    .ma-header {
+      padding: 20px;
+    }
+    .btn-container {
+      button {
+        width: 110px;
+        span {
+          display: none;
+        }
+      }
+    }
+  }
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
+  .modal-alert {
+    .btn-container {
+      button {
+        width: 110px;
+        span {
+          display: none;
+        }
+      }
+    }
+  }
 }
 
 @media all and (min-width: 992px) and (max-width: 1199px) {
+  .modal-alert {
+    .btn-container {
+      button {
+        width: 110px;
+        span {
+          display: none;
+        }
+      }
+    }
+  }
 }
 
 @media all and (min-width: 1200px) {
