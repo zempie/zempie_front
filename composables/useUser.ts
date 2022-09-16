@@ -38,6 +38,10 @@ export default function () {
   const setProfileImg = (url: string) => {
     user.value.info.picture = url;
   }
+
+  const setBannerImg = (url: string) => {
+    user.value.info.url_banner = url;
+  }
   const removeUserState = () => {
     user.value.fUser = null;
     user.value.info = {} as IUser;
@@ -104,7 +108,8 @@ export default function () {
     logout,
     login,
     setSignup,
-    unsetSignup
+    unsetSignup,
+    setBannerImg
   }
 }
 

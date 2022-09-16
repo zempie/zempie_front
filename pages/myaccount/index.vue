@@ -174,8 +174,14 @@ const signUpType = computed(
 )
 const userInfo = computed(() => useUser().user.value.info)
 
-const prevProfile = ref<string | ArrayBuffer>(userInfo.value?.picture ?? '')
-const prevBanner = ref<string | ArrayBuffer>(userInfo.value?.url_banner ?? '')
+const prevProfile = ref<string | ArrayBuffer>(
+  userInfo.value?.picture ? userInfo.value.picture + `?_=${Date.now()}` : ''
+)
+const prevBanner = ref<string | ArrayBuffer>(
+  userInfo.value?.url_banner
+    ? userInfo.value.url_banner + `?_=${Date.now()}`
+    : ''
+)
 watch(
   () => userInfo.value,
   (val) => {
@@ -279,6 +285,12 @@ async function onSubmit() {
       useUser().setProfileImg(user.picture + `?_=${Date.now()}`)
     } else {
       useUser().setProfileImg(null)
+    }
+
+    if (user.url_banner) {
+      useUser().setBannerImg(user.url_banner + `?_=${Date.now()}`)
+    } else {
+      useUser().setBannerImg(null)
     }
 
     updateBannerFile.value = null
