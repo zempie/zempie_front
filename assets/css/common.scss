@@ -125,12 +125,30 @@
   }
 }
 
-// //edit banner
-// .cropper-container {
-//   max-height: 500px;
+//edit banner
 
-//   .cropper-crop-box {
-//     max-height: 500px;
-//     transform: none !important;
-//   }
-// }
+.modal-area-game-banner {
+  max-width: 100% !important;
+  min-width: 500px !important;
+  border-radius: 10px !important;
+  position: absolute !important;
+  left: 50%;
+  top: 50%;
+  margin: 0px !important;
+  transform: translate(-50%, -50%);
+  .modal-alert {
+    border-radius: 10px;
+  }
+  .el-dialog__header {
+    display: none !important;
+  }
+  .el-dialog__body {
+    padding: 0px;
+  }
+}
+
+@media all and (max-width: 479px) {
+  .modal-area-game-banner {
+    min-width: 100% !important;
+  }
+}
