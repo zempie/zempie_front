@@ -1,9 +1,14 @@
 <template>
   <div class="main-bg">
     <div class="main-copy">
-      <p>
-        <img src="/images/main_copy.svg" width="500" alt="" title="" />
-      </p>
+      <h1>
+        <img
+          src="/images/main_copy.svg"
+          width="500"
+          alt="zempie"
+          title="zempie"
+        />
+      </h1>
     </div>
 
     <div class="main-visual">
@@ -64,8 +69,8 @@
 <script lang="ts" setup>
 import { useI18n } from 'vue-i18n'
 import { useLocalePath } from 'vue-i18n-routing'
-const nuxt = useNuxtApp()
 
+const nuxt = useNuxtApp()
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
 const route = useRoute()
@@ -88,7 +93,7 @@ useHead({
   meta: [
     {
       hid: 'og:url',
-      napropertyme: 'og:url',
+      property: 'og:url',
       content: `${config.ZEMPIE_URL}${route.path}`,
     },
     {
@@ -103,7 +108,7 @@ useHead({
     {
       hid: 'twitter:title',
       name: 'twitter:title',
-      content: `${t('seo.landing.desc')}`,
+      content: `${t('seo.landing.title')}`,
     },
     {
       hid: 'twitter:url',
@@ -127,46 +132,59 @@ const GAME_COUNT = 8
 const COMMUNITY_COUNT = 4
 const POST_COUNT = 12
 
-// const { data, pending, error } = await useFetch<any>(
-//   createQueryUrl('/games', { limit: GAME_COUNT }),
-//   getZempieFetchOptions('get', false)
-// )
+const { data, pending, error } = await useAsyncData('games', () =>
+  $fetch(
+    createQueryUrl('/games', { limit: GAME_COUNT }),
+    getZempieFetchOptions('get', false)
+  )
+)
 
-// const { data, pending, error } = await useAsyncData('games', () =>
+const {
+  data: communities,
+  pending: cPending,
+  error: cError,
+} = await useAsyncData('community', () =>
+  $fetch(
+    createQueryUrl('/community/list', { limit: COMMUNITY_COUNT }),
+    getComFetchOptions('get', false)
+  )
+)
+
+const {
+  data: posts,
+  pending: pPending,
+  error: pError,
+} = await useAsyncData('posts', () =>
+  $fetch(
+    createQueryUrl('/timeline/posts/img', { limit: POST_COUNT }),
+    getComFetchOptions('get', false)
+  )
+)
+
+// const [
+// { data, pending, error },
+// { data: communities, pending: cPending, error: cError },
+// { data: posts, pending: pPending, error: pError },
+// ] = await Promise.all([
+// useAsyncData('games', () =>
 //   $fetch(
 //     createQueryUrl('/games', { limit: GAME_COUNT }),
 //     getZempieFetchOptions('get', false)
 //   )
-// )
-
-onMounted(async () => {
-  // await gameFetch()
-})
-
-const [
-  { data, pending, error },
-  { data: communities, pending: cPending, error: cError },
-  { data: posts, pending: pPending, error: pError },
-] = await Promise.all([
-  useAsyncData('games', () =>
-    $fetch(
-      createQueryUrl('/games', { limit: GAME_COUNT }),
-      getZempieFetchOptions('get', false)
-    )
-  ),
-  useAsyncData('community', () =>
-    $fetch(
-      createQueryUrl('/community/list', { limit: COMMUNITY_COUNT }),
-      getComFetchOptions('get', false)
-    )
-  ),
-  useAsyncData('posts', () =>
-    $fetch(
-      createQueryUrl('/timeline/posts/img', { limit: POST_COUNT }),
-      getComFetchOptions('get', false)
-    )
-  ),
-])
+// ),
+// useAsyncData('community', () =>
+//   $fetch(
+//     createQueryUrl('/community/list', { limit: COMMUNITY_COUNT }),
+//     getComFetchOptions('get', false)
+//   )
+// ),
+// useAsyncData('posts', () =>
+//   $fetch(
+//     createQueryUrl('/timeline/posts/img', { limit: POST_COUNT }),
+//     getComFetchOptions('get', false)
+//   )
+// ),
+// ])
 
 async function gameFetch() {
   // const { data, pending, error } = await useFetch<any>(
@@ -180,7 +198,6 @@ async function gameFetch() {
       getZempieFetchOptions('get', false)
     )
   )
-  console.log(result)
 
   if (result.data.value) {
     const { result: res } = result.data.value

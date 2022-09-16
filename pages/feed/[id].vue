@@ -195,10 +195,11 @@ const {
   error,
   pending,
   refresh,
-} = await useFetch<any>(
-  `/post/${feedId.value}`,
-  getComFetchOptions('get', true)
+} = await useAsyncData('feed', () =>
+  $fetch(`/post/${feedId.value}`, getComFetchOptions('get', true))
 )
+
+setHead()
 
 onMounted(async () => {
   hljs.configure({
@@ -254,31 +255,33 @@ async function commentFetch() {
       isAddData.value = true
     }
   }
-  setHead()
+  return
 }
 
-function setHead() {
-  useHead({
-    title: `${feed.value?.user.name}${t('seo.feed.title')} | Zempie`,
-    meta: [
-      {
-        name: 'description',
-        content: `${feed.value?.content.slice(0, 20)}${t('seo.feed.desc')}`,
-      },
-      {
-        name: 'og:title',
-        content: `${feed.value?.user.name}${t('seo.feed.title')}`,
-      },
-      {
-        name: 'og:description',
-        content: `${feed.value?.content.slice(0, 20)}${t('seo.feed.desc')}`,
-      },
-      {
-        name: 'og:url',
-        content: `${config.ZEMPIE_URL}${route.path}`,
-      },
-    ],
-  })
+async function setHead() {
+  if (feed.value) {
+    useHead({
+      title: `${feed.value?.user.name}${t('seo.feed.title')} | Zempie`,
+      meta: [
+        {
+          name: 'description',
+          content: `${feed.value?.content.slice(0, 20)}${t('seo.feed.desc')}`,
+        },
+        {
+          name: 'og:title',
+          content: `${feed.value?.user.name}${t('seo.feed.title')}`,
+        },
+        {
+          name: 'og:description',
+          content: `${feed.value?.content.slice(0, 20)}${t('seo.feed.desc')}`,
+        },
+        {
+          name: 'og:url',
+          content: `${config.ZEMPIE_URL}${route.path}`,
+        },
+      ],
+    })
+  }
 }
 
 async function translate(text: string) {

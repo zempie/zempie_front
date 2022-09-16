@@ -13,6 +13,8 @@ export interface IUser {
   picture?: string,
   profile?: any,
   setting?: any,
+  url_banner?: string,
+  profile_img?: string,
 }
 
 

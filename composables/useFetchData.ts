@@ -18,7 +18,7 @@ function baseOption(method: string, withCredentials: boolean, body?: object) {
     headers: accessToken && withCredentials ? { 'Authorization': `Bearer ${accessToken}` } : {},
     initialCache: false,
   }
-  if (method === 'post' || method === 'put') {
+  if (method === 'post' || method === 'put' || method === 'delete') {
     options['body'] = body;
   }
   return options

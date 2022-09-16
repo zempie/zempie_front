@@ -1381,7 +1381,7 @@
 
 .info-input .ii-card dt {
   position: relative;
-  width: 23%;
+  width: 25%;
   height: 230px;
   margin-right: 2%;
   border: #e5e5e5 1px solid;
@@ -1409,7 +1409,7 @@
   justify-content: center;
   flex-direction: column;
   position: relative;
-  width: 23%;
+  width: 25%;
   height: 230px;
   margin-right: 2%;
   text-align: center;
