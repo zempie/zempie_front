@@ -24,12 +24,6 @@ export const inputRegex: InputRuleFinder = /!\[(.+|:?)]\((\S+)(?:(?:\s+)["'](\S+
 export default Node.create<ImageOptions>({
     name: 'image',
 
-    // defaultOptions: {
-    //     inline: true,
-    //     HTMLAttributes: {},
-    // },
-
-
     inline() {
         return this.options.inline
     },
@@ -66,7 +60,7 @@ export default Node.create<ImageOptions>({
     },
 
     renderHTML({ HTMLAttributes }) {
-        return ['img', mergeAttributes({ 'class': 'attr-img' }, this.options.HTMLAttributes, HTMLAttributes)]
+        return ['div', this.options.HTMLAttributes, ['img', HTMLAttributes]]
     },
     addCommands() {
         return {

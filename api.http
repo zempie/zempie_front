@@ -5,3 +5,16 @@ GET {{zempieApi}}/games
 
 ###
 GET {{communityApi}}/timeline/posts/img?limit=15
+
+
+###
+POST {{zempieApi}}/game/banner
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+title
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="1.png"
+Content-Type: image/png
+
+< ./1.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
