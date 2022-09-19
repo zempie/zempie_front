@@ -15,7 +15,7 @@ import { PropType } from 'vue'
 import { IFeed } from '~~/types'
 import { useI18n } from 'vue-i18n'
 
-import { useEditor, EditorContent } from '@tiptap/vue-3'
+import { useEditor, EditorContent, VueNodeViewRenderer } from '@tiptap/vue-3'
 import Link from '@tiptap/extension-link'
 import StarterKit from '@tiptap/starter-kit'
 import CharacterCount from '@tiptap/extension-character-count'
@@ -30,6 +30,7 @@ import CustomImage from '~/scripts/tiptap/customImage'
 import CustomAudio from '~~/scripts/tiptap/customAudio'
 import CustomVideo from '~~/scripts/tiptap/customVideo'
 
+import ResizableImage from './ResizableImage.vue'
 const emit = defineEmits(['editorContent'])
 const { t, locale } = useI18n()
 
@@ -79,10 +80,47 @@ const editor = useEditor({
           Typography,
           Highlight,
           CustomImage.extend({
+            name: 'CustomResizeImage',
+
+            addAttributes() {
+              return {
+                src: {
+                  default: '',
+
+                  renderHTML: (attributes) => {
+                    return {
+                      src: attributes.src,
+                    }
+                  },
+                },
+
+                width: {
+                  renderHTML: ({ width }) => ({ width }),
+                },
+
+                height: {
+                  renderHTML: ({ height }) => ({ height }),
+                },
+
+                isDraggable: {
+                  default: true,
+
+                  renderHTML: (attributes) => {
+                    return {}
+                  },
+                },
+              }
+            },
+
+            addNodeView() {
+              return VueNodeViewRenderer(ResizableImage)
+            },
             addOptions() {
               return {
                 inline: true,
-                HTMLAttributes: {},
+                HTMLAttributes: {
+                  class: 'image-wrapper',
+                },
               }
             },
           }),

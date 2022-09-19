@@ -399,7 +399,7 @@ async function onSubmit() {
 
   const dom = htmlToDomElem(form.post_contents)
 
-  imgArr.value = [...dom.getElementsByClassName('attr-img')]
+  imgArr.value = [...dom.getElementsByTagName('img')]
   videoArr.value = [...dom.getElementsByTagName('video')]
   audioArr.value = [...dom.getElementsByTagName('audio')]
 
@@ -432,10 +432,9 @@ async function onSubmit() {
           imgFiles.push(...data.value.result)
         }
       }
-      payload.post_contents = form.post_contents
-      payloadFiles = [...payloadFiles, ...imgFiles]
     }
-
+    payload.post_contents = form.post_contents
+    payloadFiles = [...payloadFiles, ...imgFiles]
     for (const video of videoArr.value) {
       if (
         video.src.substring(0, 4) === 'blob' ||
@@ -459,10 +458,9 @@ async function onSubmit() {
           videoFiles.push(...data.value.result)
         }
       }
-      payload.post_contents = form.post_contents
-      payloadFiles = [...payloadFiles, ...videoFiles]
     }
-
+    payload.post_contents = form.post_contents
+    payloadFiles = [...payloadFiles, ...videoFiles]
     for (const audio of audioArr.value) {
       if (
         audio.src.substring(0, 4) === 'blob' ||
@@ -486,10 +484,9 @@ async function onSubmit() {
           audioFiles.push(...data.value.result)
         }
       }
-      payload.post_contents = form.post_contents
-      payloadFiles = [...payloadFiles, ...audioFiles]
     }
-
+    payload.post_contents = form.post_contents
+    payloadFiles = [...payloadFiles, ...audioFiles]
     payload['attatchment_files'] = payloadFiles
   } else {
     if (

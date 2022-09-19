@@ -3,8 +3,8 @@
     <div class="content-studio" style="min-height: calc(100vh - 200px)">
       <!-- 상단배너 -->
       <div class="studio-banner bg03">
-        <h2>{{  $t("projectList.banner.text")  }}</h2>
-        <p>{{  $t("projectList.banner.info")  }}</p>
+        <h2>{{ $t('projectList.banner.text') }}</h2>
+        <p>{{ $t('projectList.banner.info') }}</p>
       </div>
       <!-- 상단배너 끝 -->
 
@@ -15,98 +15,178 @@
             <div class="input-search-default">
               <p><i class="uil uil-search"></i></p>
               <div>
-                <input type="text" name="" title="keywords" :placeholder="$t('needSearchInput')" @input="searchProject"
-                  v-model="searchKeyword" />
+                <input
+                  type="text"
+                  name=""
+                  title="keywords"
+                  :placeholder="$t('needSearchInput')"
+                  @input="searchProject"
+                  v-model="searchKeyword"
+                />
               </div>
             </div>
           </dt>
           <dd>
-            <NuxtLink :to="localePath('/project/upload')" class="btn-default ml20"><i class="uil uil-plus"></i>{{
-               $t("gameUpload") 
-              }}</NuxtLink>
+            <NuxtLink
+              :to="localePath('/project/upload')"
+              class="btn-default ml20"
+              ><i class="uil uil-plus"></i>{{ $t('gameUpload') }}</NuxtLink
+            >
           </dd>
         </dl>
 
         <ul class="ag-title">
-          <li>{{  $t("game.thumbnail")  }}</li>
+          <li>{{ $t('game.thumbnail') }}</li>
           <li class="game-title">
-            {{  $t("game.title")  }}
-            <i v-if="isTitleSortAsc" class="uil uil-angle-up" style="font-size:20px; cursor: pointer;"
-              @click="sortAscList('name'); isTitleSortAsc = !isTitleSortAsc "></i>
-            <i v-else class="uil uil-angle-down" style="font-size:20px; cursor: pointer;"
-              @click="sortDescList('name'); isTitleSortAsc = !isTitleSortAsc"></i>
+            {{ $t('game.title') }}
+            <i
+              v-if="isTitleSortAsc"
+              class="uil uil-angle-up"
+              style="font-size: 20px; cursor: pointer"
+              @click="sortAscList('name'), (isTitleSortAsc = !isTitleSortAsc)"
+            ></i>
+            <i
+              v-else
+              class="uil uil-angle-down"
+              style="font-size: 20px; cursor: pointer"
+              @click="sortDescList('name'), (isTitleSortAsc = !isTitleSortAsc)"
+            ></i>
           </li>
           <li>
-            {{  $t("game.uploadDate")  }}
-            <i v-if="isDateSortAsc" class="uil uil-angle-up" style="font-size:20px; cursor: pointer;"
-              @click="sortAscList('created_at'); isDateSortAsc = !isDateSortAsc"></i>
-            <i v-else class="uil uil-angle-down" style="font-size:20px; cursor: pointer;"
-              @click="sortDescList('created_at'); isDateSortAsc = !isDateSortAsc"></i>
+            {{ $t('game.uploadDate') }}
+            <i
+              v-if="isDateSortAsc"
+              class="uil uil-angle-up"
+              style="font-size: 20px; cursor: pointer"
+              @click="
+                sortAscList('created_at'), (isDateSortAsc = !isDateSortAsc)
+              "
+            ></i>
+            <i
+              v-else
+              class="uil uil-angle-down"
+              style="font-size: 20px; cursor: pointer"
+              @click="
+                sortDescList('created_at'), (isDateSortAsc = !isDateSortAsc)
+              "
+            ></i>
           </li>
           <li>
-            {{  $t("game.status")  }}
-            <i v-if="isStageSortAsc" class="uil uil-angle-up" style="font-size:20px; cursor: pointer;"
-              @click="sortAscList('stage'); isStageSortAsc = !isStageSortAsc"></i>
-            <i v-else class="uil uil-angle-down" style="font-size:20px; cursor: pointer;"
-              @click="sortDescList('stage'); isStageSortAsc = !isStageSortAsc"></i>
+            {{ $t('game.status') }}
+            <i
+              v-if="isStageSortAsc"
+              class="uil uil-angle-up"
+              style="font-size: 20px; cursor: pointer"
+              @click="sortAscList('stage'), (isStageSortAsc = !isStageSortAsc)"
+            ></i>
+            <i
+              v-else
+              class="uil uil-angle-down"
+              style="font-size: 20px; cursor: pointer"
+              @click="sortDescList('stage'), (isStageSortAsc = !isStageSortAsc)"
+            ></i>
           </li>
           <li>
-            {{  $t("game.playCnt")  }}
-            <i v-if="isPlayCountSortAsc" class="uil uil-angle-up" style="font-size:20px; cursor: pointer;"
-              @click="sortAscListByGame('count_start'); isPlayCountSortAsc = !isPlayCountSortAsc"></i>
-            <i v-else class="uil uil-angle-down" style="font-size:20px; cursor: pointer;"
-              @click="sortDescListByGame('count_start'); isPlayCountSortAsc = !isPlayCountSortAsc"></i>
+            {{ $t('game.playCnt') }}
+            <i
+              v-if="isPlayCountSortAsc"
+              class="uil uil-angle-up"
+              style="font-size: 20px; cursor: pointer"
+              @click="
+                sortAscListByGame('count_start'),
+                  (isPlayCountSortAsc = !isPlayCountSortAsc)
+              "
+            ></i>
+            <i
+              v-else
+              class="uil uil-angle-down"
+              style="font-size: 20px; cursor: pointer"
+              @click="
+                sortDescListByGame('count_start'),
+                  (isPlayCountSortAsc = !isPlayCountSortAsc)
+              "
+            ></i>
           </li>
           <li>
-            {{  $t("game.likeCnt")  }}
-            <i v-if="isLikeCountSortAsc" class="uil uil-angle-up" style="font-size:20px; cursor: pointer;"
-              @click="sortAscListByGame('count_heart'); isLikeCountSortAsc = !isLikeCountSortAsc"></i>
-            <i v-else class="uil uil-angle-down" style="font-size:20px; cursor: pointer;"
-              @click="sortDescListByGame('count_heart'); isLikeCountSortAsc = !isLikeCountSortAsc"></i>
+            {{ $t('game.likeCnt') }}
+            <i
+              v-if="isLikeCountSortAsc"
+              class="uil uil-angle-up"
+              style="font-size: 20px; cursor: pointer"
+              @click="
+                sortAscListByGame('count_heart'),
+                  (isLikeCountSortAsc = !isLikeCountSortAsc)
+              "
+            ></i>
+            <i
+              v-else
+              class="uil uil-angle-down"
+              style="font-size: 20px; cursor: pointer"
+              @click="
+                sortDescListByGame('count_heart'),
+                  (isLikeCountSortAsc = !isLikeCountSortAsc)
+              "
+            ></i>
           </li>
         </ul>
 
         <div v-if="isPending">
           <ul>
-            <ClipLoader :color="'#ff6e17'" :size="'30px'" style=" margin: 0 auto; border-radius: 10px; height:100px; display: flex;align-items: center;
-    justify-content: center;" />
+            <ClipLoader
+              :color="'#ff6e17'"
+              :size="'30px'"
+              style="
+                margin: 0 auto;
+                border-radius: 10px;
+                height: 100px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            />
           </ul>
         </div>
 
         <template v-else-if="projects.length">
           <TransitionGroup name="list-complete" tag="div">
-            <ul v-for="project in projects" :key="project.id" @click="goToProjectPage(project.id)">
+            <ul
+              v-for="project in projects"
+              :key="project.id"
+              @click="goToProjectPage(project.id)"
+            >
               <li>
-                <span> {{  $t("game.thumbnail")  }}: </span>
-                <p :style="`background: url(${project.picture_web ||
-                project.picture ||
-                project.url_thumb ||
-                '/images/default.png'
-                }?t=${Date.now()}) center center / cover no-repeat; background-size: cover;`"></p>
+                <span> {{ $t('game.thumbnail') }}: </span>
+                <p
+                  :style="`background: url(${
+                    project.picture_web ||
+                    project.picture ||
+                    project.url_thumb ||
+                    '/images/default.png'
+                  }?t=${Date.now()}) center center / cover no-repeat; background-size: cover;`"
+                ></p>
               </li>
               <li>
-                <span> {{  $t("game.title")  }}: </span> &nbsp;&nbsp;{{
-                 project.name 
+                <span> {{ $t('game.title') }}: </span> &nbsp;&nbsp;{{
+                  project.name
                 }}
               </li>
 
               <li>
-                <span> {{  $t("game.uploadDate")  }}: </span> &nbsp;&nbsp;
-                {{  dayjs(project.created_at).format("YYYY-MM-DD")  }}
+                <span> {{ $t('game.uploadDate') }}: </span> &nbsp;&nbsp;
+                {{ dayjs(project.created_at).format('YYYY-MM-DD') }}
               </li>
               <li>
-                <span> {{  $t("game.status")  }}: </span> &nbsp;&nbsp;
-                {{  eGameStage[project.stage]  }}
-
+                <span> {{ $t('game.status') }}: </span> &nbsp;&nbsp;
+                {{ eGameStage[project.stage] }}
               </li>
               <li>
-                <span> {{  $t("game.playCnt")  }}: </span> &nbsp;&nbsp;{{
-                 project.game?.count_start 
+                <span> {{ $t('game.playCnt') }}: </span> &nbsp;&nbsp;{{
+                  project.game?.count_start
                 }}
               </li>
               <li>
-                <span> {{  $t("game.likeCnt")  }}:</span> &nbsp;&nbsp;{{
-                 project.game.count_heart 
+                <span> {{ $t('game.likeCnt') }}:</span> &nbsp;&nbsp;{{
+                  project.game.count_heart
                 }}
               </li>
             </ul>
@@ -114,24 +194,30 @@
 
           <div class="studio-pagination">
             <dl>
-              <dd>{{  currPage  }}-{{  totalPage  }} of {{  totalCount  }}</dd>
+              <dd>{{ currPage }}-{{ totalPage }} of {{ totalCount }}</dd>
               <dd>
-                <span @click="prevPage()" :class="[currPage !== 1 ? '' : 'disabled', 'prev-btn']"><i
-                    class="uil uil-angle-left-b"></i></span>&nbsp;&nbsp;
-                <span @click="nextPage()" :class="[
-                  currPage === totalPage ? 'disabled' : '',
-                  'next-btn',
-                ]">
-                  <i class="uil uil-angle-right-b"></i></span>
+                <span
+                  @click="prevPage()"
+                  :class="[currPage !== 1 ? '' : 'disabled', 'prev-btn']"
+                  ><i class="uil uil-angle-left-b"></i></span
+                >&nbsp;&nbsp;
+                <span
+                  @click="nextPage()"
+                  :class="[
+                    currPage === totalPage ? 'disabled' : '',
+                    'next-btn',
+                  ]"
+                >
+                  <i class="uil uil-angle-right-b"></i
+                ></span>
               </dd>
             </dl>
           </div>
-
         </template>
 
         <div v-else>
           <ul>
-            <li style="width: 100%">{{  $t("no.game")  }}</li>
+            <li style="width: 100%">{{ $t('no.game') }}</li>
           </ul>
         </div>
       </div>
@@ -140,46 +226,46 @@
 </template>
 
 <script setup lang="ts">
-import ClipLoader from 'vue-spinner/src/ClipLoader.vue';
-import _ from 'lodash';
-import dayjs from "dayjs";
-import { useLocalePath } from "vue-i18n-routing";
-import { IProject, eGameStage } from "~~/types"
-import { useI18n } from 'vue-i18n';
+import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
+import _ from 'lodash'
+import dayjs from 'dayjs'
+import { useLocalePath } from 'vue-i18n-routing'
+import { IProject, eGameStage } from '~~/types'
+import { useI18n } from 'vue-i18n'
 
 const { t, locale } = useI18n()
-const route = useRoute();
+const route = useRoute()
 const config = useRuntimeConfig()
-const localePath = useLocalePath();
-const $router = useRouter();
+const localePath = useLocalePath()
+const $router = useRouter()
 
 definePageMeta({
-  middleware: 'auth'
+  middleware: 'auth',
 })
 useHead({
   title: `${t('seo.project.list.title')} | Zempie Studio`,
   meta: [
     {
       name: 'description',
-      content: `${t('seo.project.list.desc')}`
+      content: `${t('seo.project.list.desc')}`,
     },
     {
       name: 'og:title',
-      content: `${t('seo.project.list.title')}`
+      content: `${t('seo.project.list.title')}`,
     },
     {
       name: 'og:description',
-      content: `${t('seo.project.list.description')}`
+      content: `${t('seo.project.list.description')}`,
     },
     {
       name: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`
+      content: `${config.ZEMPIE_URL}${route.path}`,
     },
-  ]
+  ],
 })
 
-const projects = ref([]);
-const isPending = ref(true);
+const projects = ref([])
+const isPending = ref(true)
 
 const searchKeyword = ref('')
 
@@ -189,57 +275,56 @@ const isStageSortAsc = ref(true)
 const isPlayCountSortAsc = ref(true)
 const isLikeCountSortAsc = ref(true)
 
-const pageSize = ref(10);
-const currPage = ref(1);
-const totalCount = ref(0);
+const pageSize = ref(10)
+const currPage = ref(1)
+const totalCount = ref(0)
 const totalPage = computed(() => Math.ceil(totalCount.value / pageSize.value))
 
-const { data, pending } = await useFetch('/studio/project', getStudioFetchOptions('get', true))
-
+const { data, pending } = await useFetch(
+  '/studio/project',
+  getStudioFetchOptions('get', true)
+)
 
 onMounted(async () => {
   if (data.value) {
     projects.value = (data.value as any).result
     pagingByClient()
   }
-  isPending.value = pending.value;
-});
+  isPending.value = pending.value
+})
 
 const searchProject = _.debounce(() => {
-  const { result } = data.value as any;
+  const { result } = data.value as any
 
   if (searchKeyword.value.length) {
-    const project = result.filter((project: IProject) => { return project.name?.includes(searchKeyword.value) })
+    const project = result.filter((project: IProject) => {
+      return project.name?.includes(searchKeyword.value)
+    })
     projects.value = project
     totalCount.value = project.length
   } else {
     projects.value = (data.value as any).result
     pagingByClient()
   }
-
 }, 300)
 
-
-
 function nextPage() {
-  document.documentElement.scrollTop = 0;
-  currPage.value += 1;
+  document.documentElement.scrollTop = 0
+  currPage.value += 1
   pagingByClient()
 }
 function prevPage() {
-  document.documentElement.scrollTop = 0;
-  currPage.value -= 1;
+  document.documentElement.scrollTop = 0
+  currPage.value -= 1
   pagingByClient()
 }
 
 function pagingByClient() {
-  const start = (currPage.value - 1) * pageSize.value;
+  const start = (currPage.value - 1) * pageSize.value
   const end = start + pageSize.value
 
   totalCount.value = projects.value.length
   projects.value = projects.value.slice(start, end)
-
-
 }
 
 function goToProjectPage(id: number) {
@@ -249,7 +334,7 @@ function goToProjectPage(id: number) {
 }
 
 function setProjectInfo(id: number) {
-  const { result } = data.value as any;
+  const { result } = data.value as any
 
   const project = result.find((project: IProject) => project.id === id)
   useProject().setProjectInfo(project)
@@ -278,7 +363,6 @@ function sortDescListByGame(key: string) {
     return a.game[key] > b.game[key] ? -1 : a.game[key] < b.game[key] ? 1 : 0
   })
 }
-
 </script>
 
 <style scoped lang="scss">
@@ -292,8 +376,7 @@ function sortDescListByGame(key: string) {
 .list-complete-enter,
 .list-complete-leave-to
 
-/* .list-complete-leave-active below version 2.1.8 */
-  {
+/* .list-complete-leave-active below version 2.1.8 */ {
   opacity: 0;
   transform: translateY(30px);
 }
@@ -324,7 +407,6 @@ function sortDescListByGame(key: string) {
     padding: 30px 30px;
   }
 
-
   ul {
     display: flex;
     width: 100%;
@@ -339,6 +421,9 @@ function sortDescListByGame(key: string) {
       font-size: 16px;
       line-height: 16px;
       color: #333;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
 
       &:nth-child(1) {
         width: 15%;
@@ -369,24 +454,20 @@ function sortDescListByGame(key: string) {
       li {
         font-weight: 500;
         font-size: 14px;
-
-
       }
     }
   }
-
 }
 
-.studio-all-game>div>ul>li>p {
+.studio-all-game > div > ul > li > p {
   width: 70px;
   height: 70px;
   border-radius: 5px;
   margin: auto;
 }
 
-.studio-all-game>div>ul:hover {
+.studio-all-game > div > ul:hover {
   background-color: #f9f9f9;
-
 }
 
 .studio-all-game .ag-empty {
@@ -394,7 +475,7 @@ function sortDescListByGame(key: string) {
   text-align: center;
 }
 
-.studio-all-game .ag-empty>p {
+.studio-all-game .ag-empty > p {
   width: 60px;
   height: 60px;
   margin: auto;
@@ -406,19 +487,18 @@ function sortDescListByGame(key: string) {
   background-color: #f1f1f1;
 }
 
-.studio-all-game .ag-empty>h4 {
+.studio-all-game .ag-empty > h4 {
   margin-top: 25px;
   font-weight: 500;
   font-size: 16px;
   line-height: 16px;
 }
 
-
-.studio-all-game>div>ul>li:nth-child(5) {
+.studio-all-game > div > ul > li:nth-child(5) {
   width: 10%;
 }
 
-.studio-all-game>div>ul>li:nth-child(6) {
+.studio-all-game > div > ul > li:nth-child(6) {
   width: 10%;
 }
 
@@ -429,29 +509,29 @@ function sortDescListByGame(key: string) {
     padding: 0 15px;
   }
 
-  .studio-all-game>dl {
+  .studio-all-game > dl {
     flex-wrap: wrap;
     padding: 20px;
   }
 
-  .studio-all-game>dl dt {
+  .studio-all-game > dl dt {
     width: 100%;
   }
 
-  .studio-all-game>dl dd {
+  .studio-all-game > dl dd {
     width: 100%;
     margin-top: 10px;
   }
 
-  .studio-all-game>dl dd a {
+  .studio-all-game > dl dd a {
     width: 100%;
   }
 
-  .studio-all-game>ul.ag-title {
+  .studio-all-game > ul.ag-title {
     display: none;
   }
 
-  .studio-all-game>div>ul {
+  .studio-all-game > div > ul {
     display: block;
     margin-top: 10px;
     padding: 15px 30px;
@@ -461,7 +541,7 @@ function sortDescListByGame(key: string) {
     box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.05);
   }
 
-  .studio-all-game>div>ul>li {
+  .studio-all-game > div > ul > li {
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -469,15 +549,15 @@ function sortDescListByGame(key: string) {
     font-size: 13px;
   }
 
-  .studio-all-game>div>ul>li {
+  .studio-all-game > div > ul > li {
     width: 100% !important;
   }
 
-  .studio-all-game>div>ul>li>p {
+  .studio-all-game > div > ul > li > p {
     margin: 0 0 0 15px;
   }
 
-  .studio-all-game>div>ul>li>span {
+  .studio-all-game > div > ul > li > span {
     display: block;
     font-size: 14px;
   }
@@ -494,29 +574,29 @@ function sortDescListByGame(key: string) {
     }
   }
 
-  .studio-all-game>dl {
+  .studio-all-game > dl {
     flex-wrap: wrap;
     padding: 20px;
   }
 
-  .studio-all-game>dl dt {
+  .studio-all-game > dl dt {
     width: 100%;
   }
 
-  .studio-all-game>dl dd {
+  .studio-all-game > dl dd {
     width: 100%;
     margin-top: 10px;
   }
 
-  .studio-all-game>dl dd a {
+  .studio-all-game > dl dd a {
     width: 100%;
   }
 
-  .studio-all-game>ul.ag-title {
+  .studio-all-game > ul.ag-title {
     display: none;
   }
 
-  .studio-all-game>div>ul {
+  .studio-all-game > div > ul {
     display: block;
     margin-top: 15px;
     padding: 15px 30px;
@@ -526,7 +606,7 @@ function sortDescListByGame(key: string) {
     box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.05);
   }
 
-  .studio-all-game>div>ul>li {
+  .studio-all-game > div > ul > li {
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -534,22 +614,21 @@ function sortDescListByGame(key: string) {
     font-size: 14px;
   }
 
-  .studio-all-game>div>ul>li {
+  .studio-all-game > div > ul > li {
     width: 100% !important;
   }
 
-  .studio-all-game>div>ul>li>p {
+  .studio-all-game > div > ul > li > p {
     margin: 0 0 0 15px;
   }
 
-  .studio-all-game>div>ul>li>span {
+  .studio-all-game > div > ul > li > span {
     display: block;
     font-size: 15px;
   }
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
-
   .studio-all-game {
     width: 750px;
 
@@ -557,19 +636,15 @@ function sortDescListByGame(key: string) {
       li {
         font-size: 12px !important;
       }
-
     }
   }
 
-
-
-  .studio-all-game>div>ul>li {
-
+  .studio-all-game > div > ul > li {
     padding: 20px 0px;
     font-size: 15px;
   }
 
-  .studio-all-game>div>ul>li>p {
+  .studio-all-game > div > ul > li > p {
     width: 60px;
     height: 60px;
   }
@@ -581,5 +656,6 @@ function sortDescListByGame(key: string) {
   }
 }
 
-@media all and (min-width: 1200px) {}
+@media all and (min-width: 1200px) {
+}
 </style>

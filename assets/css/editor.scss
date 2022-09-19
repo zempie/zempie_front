@@ -49,8 +49,11 @@
     }
   }
 
-  .attr-img {
-    max-width: 100%;
+  .image-wrapper {
+    margin: 10px auto;
+    img {
+      max-width: 100%;
+    }
   }
 
   a {
@@ -213,6 +216,7 @@ pre {
     min-height: 200px;
     max-height: 75vh;
     overflow: auto;
+    overflow-x: hidden;
 
     > * + * {
       margin-top: 0.75em;
@@ -253,13 +257,15 @@ pre {
       line-height: 1.1;
     }
 
-    img {
-      margin: 20px;
-      max-width: 98%;
+    .image-wrapper {
+      width: 95%;
       height: auto;
+      margin: 10px auto;
+      img {
+        width: 100%;
+      }
 
       &.ProseMirror-selectednode {
-        margin: 20px;
         outline: 3px solid #f97316;
       }
     }
@@ -341,4 +347,22 @@ pre {
       height: 93%;
     }
   }
+}
+
+.image-container:hover {
+  .hidden {
+    visibility: visible !important;
+  }
+}
+
+.image-container {
+  overflow: hidden;
+
+  position: relative;
+}
+
+.resize-icon {
+  position: absolute;
+
+  bottom: 0;
 }
