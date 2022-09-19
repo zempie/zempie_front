@@ -26,6 +26,8 @@ import Typography from '@tiptap/extension-typography'
 import Highlight from '@tiptap/extension-highlight'
 import { lowlight } from 'lowlight/lib/core.js'
 
+import Image from '@tiptap/extension-image'
+
 import CustomImage from '~/scripts/tiptap/customImage'
 import CustomAudio from '~~/scripts/tiptap/customAudio'
 import CustomVideo from '~~/scripts/tiptap/customVideo'
@@ -79,11 +81,11 @@ const editor = useEditor({
           Link,
           Typography,
           Highlight,
-          CustomImage.extend({
-            name: 'CustomResizeImage',
-
+          Image.extend({
             addAttributes() {
               return {
+                ...this.parent?.(),
+
                 src: {
                   default: '',
 
@@ -93,8 +95,9 @@ const editor = useEditor({
                     }
                   },
                 },
-
                 width: {
+                  default: 300,
+
                   renderHTML: ({ width }) => ({ width }),
                 },
 
@@ -109,6 +112,32 @@ const editor = useEditor({
                     return {}
                   },
                 },
+              }
+            },
+            addCommands() {
+              return {
+                // Inherit all the commands of the Image extension.
+                // This way we can add images as always:
+                // this.editor.chain().focus()
+                //      .setImage({
+                //          src: 'https://source.unsplash.com/8xznAGy4HcY/800x400',
+                //          width: '80',
+                //          height: '40'
+                //      })
+                //      .run();
+                ...this.parent?.(),
+
+                // New command that is going to be called like:
+                // this.editor.chain().focus().toggleResizable().run();
+                toggleResizable:
+                  () =>
+                  ({ tr }) => {
+                    const { node } = tr?.selection
+
+                    if (node?.type?.name === 'ResizableImage') {
+                      node.attrs.isDraggable = !node.attrs.isDraggable
+                    }
+                  },
               }
             },
 

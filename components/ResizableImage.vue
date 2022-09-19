@@ -1,13 +1,14 @@
 <template>
-  <node-view-wrapper as="div" class="image-container">
+  <node-view-wrapper class="image-container">
     <img
+      class="drag-handle"
       v-bind="node.attrs"
       ref="resizableImg"
       :draggable="isDraggable"
       :data-drag-handle="isDraggable"
     />
     <i
-      class="uil uil-arrow-resize-diagonal"
+      class="uil uil-arrow-resize-diagonal resize-icon"
       ref="icon"
       @mousedown="onMouseDown"
     ></i>
@@ -15,7 +16,7 @@
 </template>
 
 <script setup>
-import { NodeViewWrapper, nodeViewProps } from '@tiptap/vue-3'
+import { NodeViewWrapper, NodeViewContent, nodeViewProps } from '@tiptap/vue-3'
 const isResizing = ref(false)
 const lastMovement = ref({})
 const resizableImg = ref()
@@ -105,21 +106,15 @@ function onMouseMove(e) {
 </script>
 
 <style lang="scss" scoped>
-.image-container:hover {
+.image-container {
+  overflow: hidden;
+  position: relative;
+
   .hidden {
     visibility: visible !important;
   }
-}
-
-.image-container {
-  overflow: hidden;
-
-  position: relative;
-}
-
-.resize-icon {
-  position: absolute;
-
-  bottom: 0;
+  img {
+    margin: 10px;
+  }
 }
 </style>
