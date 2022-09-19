@@ -1,17 +1,23 @@
 <template>
   <div class="content">
-    <div :class="category === 0 ? 'visual-title' : 'jam-visual-title'">
+    <div :class="category === '0,1' ? 'visual-title' : 'jam-visual-title'">
       <h2><span>Games</span></h2>
     </div>
     <div class="tab-search-swiper">
       <div class="swiper-area uppercase">
         <div class="swiper-slide">
-          <a @click="clickCategory(0)" :class="category === 0 ? 'active' : ''">
+          <a
+            @click="clickCategory('0,1')"
+            :class="category === '0,1' ? 'active' : ''"
+          >
             game
           </a>
         </div>
         <div class="swiper-slide">
-          <a @click="clickCategory(3)" :class="category === 3 ? 'active' : ''">
+          <a
+            @click="clickCategory('3')"
+            :class="category === '3' ? 'active' : ''"
+          >
             zem
           </a>
         </div>
@@ -74,7 +80,7 @@ useHead({
 
 const LIMIT_SIZE = 20
 const el = ref<HTMLElement>(null)
-const category = ref(0)
+const category = ref('0,1')
 const limit = ref(LIMIT_SIZE)
 const offset = ref(0)
 // sort: string = 'c';
@@ -139,7 +145,6 @@ async function fetch() {
       games.value = gameList
       isAddData.value = true
     }
-  
   }
   isPending.value = false
 }
@@ -178,7 +183,7 @@ async function fetch() {
 
 // }
 
-const clickCategory = _.debounce((selected: number) => {
+const clickCategory = _.debounce((selected: string) => {
   category.value = selected
   initData()
   fetch()
