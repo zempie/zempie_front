@@ -1,14 +1,18 @@
 <template>
   <div class="content">
-    <div :class="category === '0,1' ? 'visual-title' : 'jam-visual-title'">
+    <div
+      :class="
+        category === AllGameCategory ? 'visual-title' : 'jam-visual-title'
+      "
+    >
       <h2><span>Games</span></h2>
     </div>
     <div class="tab-search-swiper">
       <div class="swiper-area uppercase">
         <div class="swiper-slide">
           <a
-            @click="clickCategory('0,1')"
-            :class="category === '0,1' ? 'active' : ''"
+            @click="clickCategory(AllGameCategory)"
+            :class="category === AllGameCategory ? 'active' : ''"
           >
             game
           </a>
@@ -16,7 +20,7 @@
         <div class="swiper-slide">
           <a
             @click="clickCategory('3')"
-            :class="category === '3' ? 'active' : ''"
+            :class="category === `${eGameCategory.ZemJam}` ? 'active' : ''"
           >
             zem
           </a>
@@ -46,8 +50,9 @@
 
 <script setup lang="ts">
 import _ from 'lodash'
-
+import { eGameCategory } from '~~/types'
 import { useI18n } from 'vue-i18n'
+
 const { t, locale } = useI18n()
 const route = useRoute()
 const config = useRuntimeConfig()
@@ -80,7 +85,10 @@ useHead({
 
 const LIMIT_SIZE = 20
 const el = ref<HTMLElement>(null)
-const category = ref('0,1')
+
+//기존 카테고리가 0 : 공식게임 1 : 도전 게임 으로 나뉘어져있던걸 합쳐서 0,1 둘다 호출 해야함
+const AllGameCategory = `${eGameCategory.Challenge}, ${eGameCategory.Certified}`
+const category = ref(AllGameCategory)
 const limit = ref(LIMIT_SIZE)
 const offset = ref(0)
 // sort: string = 'c';
@@ -94,6 +102,11 @@ const games = ref<any[]>([])
 const isPending = ref(true)
 
 onMounted(async () => {
+  createObserver()
+  await fetch()
+})
+
+function createObserver() {
   observer.value = new IntersectionObserver(
     (entries) => {
       handleIntersection(entries[0])
@@ -101,8 +114,7 @@ onMounted(async () => {
     { root: null, threshold: 1 }
   )
   observer.value.observe(triggerDiv.value)
-  await fetch()
-})
+}
 
 async function handleIntersection(target) {
   if (target.isIntersecting) {
@@ -148,45 +160,12 @@ async function fetch() {
   }
   isPending.value = false
 }
-// beforeDestroy() {
-//     this.$store.dispatch('resetResearchData')
-//     this.initData();
-//     window.removeEventListener("scroll", this.scrollCheck);
-// }
-
-// fetch() {
-//     const obj = {
-//         limit: this.limit,
-//         offset: this.offset,
-//         category: this.category,
-//         sort: this.sort,
-//         dir: this.dir
-//     };
-
-//     this.$api.gameList(obj)
-//         .then((res: any) => {
-//             if (this.isAddData) {
-//                 if (res.result.games.length > 0) {
-//                     this.games = [...this.games, ...res.result.games]
-//                 }
-//                 else {
-//                     this.hasData = false
-//                     window.removeEventListener("scroll", this.scrollCheck);
-//                 }
-//             }
-//             else {
-//                 this.games = res.result.games;
-//                 this.isAddData = true
-//             }
-
-//         })
-
-// }
 
 const clickCategory = _.debounce((selected: string) => {
   category.value = selected
+  observer.value.unobserve(triggerDiv.value)
+  createObserver()
   initData()
-  fetch()
 }, 300)
 
 function initData() {

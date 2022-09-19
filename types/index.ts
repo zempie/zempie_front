@@ -39,14 +39,6 @@ export interface IFollowUser {
 }
 
 
-export enum eGameStage {
-  NONE = -1,
-  DEV = 1,
-  EARLY,
-  COMPLETE,
-  MONETIZATION
-}
-
 export interface IGame {
   activated: boolean,
   category: number,
@@ -261,3 +253,20 @@ export interface IComChannel {
   user_id: number,
 }
 
+
+
+
+export enum eGameStage {
+  NONE = -1,
+  DEV = 1,
+  EARLY,
+  COMPLETE,
+  MONETIZATION
+}
+
+export enum eGameCategory {
+  Challenge,
+  Certified,
+  Affiliated,
+  ZemJam
+}
