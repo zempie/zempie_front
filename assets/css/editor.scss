@@ -59,7 +59,22 @@
   }
 
   .image-wrapper {
-    margin: 10px auto;
+    max-width: 100%;
+    &.left {
+      margin: 10px;
+      display: block;
+      text-align: left;
+    }
+    &.center {
+      display: block;
+      text-align: center;
+      margin: 10px auto;
+    }
+
+    &.right {
+      float: right;
+    }
+
     img {
       max-width: 100%;
     }

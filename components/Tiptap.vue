@@ -25,7 +25,7 @@ import Placeholder from '@tiptap/extension-placeholder'
 import Typography from '@tiptap/extension-typography'
 import Highlight from '@tiptap/extension-highlight'
 import { lowlight } from 'lowlight/lib/core.js'
-
+import BubbleMenu from '@tiptap/extension-bubble-menu'
 import Image from '@tiptap/extension-image'
 
 import CustomImage from '~/scripts/tiptap/customImage'
@@ -79,6 +79,7 @@ const editor = useEditor({
             limit: limit.value,
           }),
           Link,
+
           Typography,
           Highlight,
           Image.extend({
@@ -97,12 +98,18 @@ const editor = useEditor({
                 },
                 width: {
                   default: 300,
-
                   renderHTML: ({ width }) => ({ width }),
                 },
-
                 height: {
                   renderHTML: ({ height }) => ({ height }),
+                },
+                class: {
+                  default: 'center',
+                  renderHTML: (attributes) => {
+                    return {
+                      class: attributes.class,
+                    }
+                  },
                 },
 
                 isDraggable: {
