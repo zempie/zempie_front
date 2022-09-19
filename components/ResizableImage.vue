@@ -1,10 +1,6 @@
 <template>
   <node-view-wrapper class="image-container">
-    <div
-      ref="imgContainer"
-      style="text-align: center"
-      v-on-click-outside="clickOutside"
-    >
+    <div ref="imgContainer" v-on-click-outside="clickOutside">
       <div v-if="showIcon" class="bubble-menu">
         <button :class="isLeftAlign ? 'active' : ''" @click="leftAlign">
           <i class="uil uil-align-left"></i>
@@ -22,16 +18,15 @@
         ref="resizableImg"
         :draggable="isDraggable"
         :data-drag-handle="isDraggable"
-        @click="onImageMouseOver"
+        @click="onImageMouseClick"
       />
-
-      <i
-        v-if="showIcon"
-        class="uil uil-expand-arrows resize-icon"
-        ref="icon"
-        @mousedown="onMouseDown"
-      ></i>
     </div>
+    <i
+      v-if="showIcon"
+      :class="['uil uil-expand-arrows resize-icon', align]"
+      ref="icon"
+      @mousedown="onMouseDown"
+    ></i>
   </node-view-wrapper>
 </template>
 
@@ -45,10 +40,14 @@ const resizableImg = ref()
 const icon = ref()
 const showIcon = ref(false)
 
+const nextX = ref(0)
+const nextY = ref(0)
+
 const isLeftAlign = ref(false)
 const isCenterAlign = ref(true)
 const isRigthAlign = ref(false)
 const imgContainer = ref()
+const align = ref('center')
 
 const props = defineProps(nodeViewProps)
 
@@ -58,7 +57,7 @@ const isDraggable = computed(() => {
 
 function clickOutside() {
   showIcon.value = false
-  resizableImg.value.style.outline = 'none'
+  if (resizableImg.value) resizableImg.value.style.outline = 'none'
 }
 
 function leftAlign() {
@@ -66,8 +65,8 @@ function leftAlign() {
   isCenterAlign.value = false
   isRigthAlign.value = false
   imgContainer.value.style.textAlign = 'left'
-  const align = 'left'
-  props.updateAttributes({ class: align })
+  align.value = 'left'
+  props.updateAttributes({ class: align.value })
 }
 
 function centerAlign() {
@@ -75,9 +74,9 @@ function centerAlign() {
   isCenterAlign.value = true
   isRigthAlign.value = false
   imgContainer.value.style.textAlign = 'center'
-  const align = 'center'
+  align.value = 'center'
 
-  props.updateAttributes({ class: align })
+  props.updateAttributes({ class: align.value })
 }
 
 function rightAlign() {
@@ -85,20 +84,18 @@ function rightAlign() {
   isCenterAlign.value = false
   isRigthAlign.value = true
   imgContainer.value.style.textAlign = 'right'
-  const align = 'right'
-  props.updateAttributes({ class: align })
+  align.value = 'right'
+  props.updateAttributes({ class: align.value })
 }
 
-function onImageMouseOver() {
-  resizableImg.value.style.outline = '2px dashed #f97316'
+function onImageMouseClick() {
   showIcon.value = true
+  resizableImg.value.style.outline = '2px dashed #f97316'
 }
 
 function onMouseDown(e) {
   e.preventDefault()
-
   isResizing.value = true
-
   window.addEventListener('mousemove', throttle(onMouseMove))
 
   window.addEventListener('mouseup', onMouseUp)
@@ -110,7 +107,6 @@ function onMouseUp(e) {
   lastMovement.value = {}
 
   window.removeEventListener('mousemove', throttle(onMouseMove))
-
   window.removeEventListener('mouseup', onMouseUp)
   window.removeEventListener('mouseover', onMouseOver)
 
@@ -161,13 +157,11 @@ function onMouseMove(e) {
     return
   }
 
-  let nextX = e.x - lastMovement.value.x
+  nextX.value = e.x - lastMovement.value.x
 
-  let nextY = e.y - lastMovement.value.y
+  nextY.value = e.y - lastMovement.value.y
 
-  let width = resizableImg.value.width + nextX
-
-  console.log(window.innerWidth)
+  let width = resizableImg.value.width + nextX.value
 
   if (window.innerWidth > 730) {
     if (width > 650) width = 650
@@ -177,7 +171,7 @@ function onMouseMove(e) {
     if (width > window.innerWidth) width = window.innerWidth - 20
   }
 
-  const height = resizableImg.value.height + nextY
+  const height = resizableImg.value.height + nextY.value
 
   lastMovement.value = { x: e.x, y: e.y }
   resizableImg.value.style.outline = '2px dashed #f97316'
@@ -199,7 +193,7 @@ function onMouseOver() {
   .drag-handle {
     &.center {
       display: block;
-      text-align: center;
+      margin: 10px auto;
     }
     &.left {
       display: block;
@@ -236,8 +230,21 @@ function onMouseOver() {
   }
   .resize-icon {
     font-size: 16px;
-    margin-left: -18px;
     color: #f97316;
+    bottom: 0px;
+    position: absolute;
+    right: 177px;
+    // &.center {
+    //   display: block;
+    //   margin: 10px auto;
+    // }
+    // &.left {
+    //   display: block;
+    //   text-align: left;
+    // }
+    // &.right {
+    //   float: right;
+    // }
   }
 }
 </style>

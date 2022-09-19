@@ -376,21 +376,3 @@ pre {
     }
   }
 }
-
-.image-container:hover {
-  .hidden {
-    visibility: visible !important;
-  }
-}
-
-.image-container {
-  overflow: hidden;
-
-  position: relative;
-}
-
-.resize-icon {
-  position: absolute;
-
-  bottom: 0;
-}

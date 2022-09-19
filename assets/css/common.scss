@@ -69,6 +69,7 @@
 }
 
 // swiper-css
+
 .swiper-pagination-bullet-active {
   background-color: #f97316 !important;
 }
@@ -95,6 +96,7 @@
 .follow-btn-feed {
   .btn-default {
     margin-right: 10px;
+    // margin: 0px 10px 15px 0px !important;
     font-size: 12px;
     background-color: transparent;
     color: #f97316 !important;
@@ -110,7 +112,6 @@
   }
 }
 
-// like
 .xi-heart {
   transform-origin: center;
   animation: animateHeartOut 0.3s linear forwards;
@@ -122,33 +123,5 @@
   }
   100% {
     transform: scale(1);
-  }
-}
-
-//edit banner
-
-.modal-area-game-banner {
-  max-width: 100% !important;
-  min-width: 500px !important;
-  border-radius: 10px !important;
-  position: absolute !important;
-  left: 50%;
-  top: 50%;
-  margin: 0px !important;
-  transform: translate(-50%, -50%);
-  .modal-alert {
-    border-radius: 10px;
-  }
-  .el-dialog__header {
-    display: none !important;
-  }
-  .el-dialog__body {
-    padding: 0px;
-  }
-}
-
-@media all and (max-width: 479px) {
-  .modal-area-game-banner {
-    min-width: 100% !important;
   }
 }
