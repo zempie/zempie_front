@@ -196,6 +196,17 @@ function onMouseOver() {
   overflow: hidden;
   position: relative;
 
+  .drag-handle {
+    &.center {
+      text-align: center;
+    }
+    &.left {
+      text-align: left;
+    }
+    &.right {
+      text-align: right;
+    }
+  }
   .bubble-menu {
     text-align: center;
     button {
