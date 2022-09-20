@@ -70,11 +70,11 @@
       text-align: center;
       margin: 10px auto;
     }
-
     &.right {
-      float: right;
+      display: block;
+      text-align: right;
+      margin: 10px 10px 10px auto;
     }
-
     img {
       max-width: 100%;
     }
@@ -286,11 +286,11 @@ pre {
     }
 
     .image-wrapper {
-      width: 95%;
+      // width: 95%;
       height: auto;
-      margin: 10px auto;
+      // margin: 10px auto;
       img {
-        width: 100%;
+        // width: 100%;
       }
 
       &.ProseMirror-selectednode {

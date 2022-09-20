@@ -161,11 +161,12 @@ const props = defineProps({
   channelInfo: Object as PropType<IComChannel>,
 })
 
-let watcher = watch(
+const watcher = watch(
   () => route.query,
   (query) => {
     if (query.media) {
       media.value = query.media as string
+
       refresh()
     } else if (route.meta.name === 'communityChannel') {
       refresh()
@@ -173,10 +174,11 @@ let watcher = watch(
   }
 )
 
-let userWatcher = watch(
+const userWatcher = watch(
   () => user.value,
   (userInfo) => {
-    if (route.meta.name === 'myTimeline' && userInfo) {
+    if (route.meta.name === 'myTimeline' && userInfo?.id) {
+
       refresh()
     }
   }
@@ -209,11 +211,6 @@ async function handleIntersection(target) {
 
 onBeforeUnmount(() => {
   initPaging()
-  watcher()
-  userWatcher()
-})
-
-onBeforeRouteLeave((to, from) => {
   watcher()
   userWatcher()
 })
