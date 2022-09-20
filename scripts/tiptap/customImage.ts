@@ -40,10 +40,10 @@ export default Node.create<ImageOptions>({
                 default: null,
             },
             height: {
-                default: 0,
+                default: 100,
             },
             width: {
-                default: 0,
+                default: 1000,
             },
             alt: {
                 default: null,
@@ -54,9 +54,9 @@ export default Node.create<ImageOptions>({
             type: {
                 default: 'image/jpg',
             }
-
         }
     },
+
     parseHTML() {
         return [
             {
@@ -85,9 +85,9 @@ export default Node.create<ImageOptions>({
                 find: inputRegex,
                 type: this.type,
                 getAttributes: match => {
-                    const [, , alt, src, title, type, width, height] = match
+                    const [, , alt, src, title, type] = match
 
-                    return { src, alt, title, type, width, height }
+                    return { src, alt, title, type }
                 },
 
 

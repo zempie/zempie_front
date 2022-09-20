@@ -12,7 +12,25 @@
           <i class="uil uil-align-right"></i>
         </button>
       </div>
+      <div
+        v-if="showIcon"
+        :class="['resize-container', align]"
+        ref="resiezeContainer"
+      >
+        <img
+          v-bind="node.attrs"
+          ref="resizableImg"
+          :draggable="isDraggable"
+          :data-drag-handle="isDraggable"
+        />
+
+        <div
+          class="uil uil-expand-arrows resize-icon"
+          @mousedown="onMouseDown"
+        ></div>
+      </div>
       <img
+        v-else
         class="drag-handle"
         v-bind="node.attrs"
         ref="resizableImg"
@@ -21,12 +39,6 @@
         @click="onImageMouseClick"
       />
     </div>
-    <i
-      v-if="showIcon"
-      :class="['uil uil-expand-arrows resize-icon', align]"
-      ref="icon"
-      @mousedown="onMouseDown"
-    ></i>
   </node-view-wrapper>
 </template>
 
@@ -48,10 +60,14 @@ const isCenterAlign = ref(true)
 const isRigthAlign = ref(false)
 const imgContainer = ref()
 const align = ref('center')
+const resiezeContainer = ref()
 
 const props = defineProps(nodeViewProps)
 
 const isDraggable = computed(() => {
+  if (resiezeContainer.value) {
+    resiezeContainer.value.style.width = props.node?.attrs.width + 'px'
+  }
   return props.node?.attrs?.isDraggable
 })
 
@@ -73,6 +89,7 @@ function centerAlign() {
   isLeftAlign.value = false
   isCenterAlign.value = true
   isRigthAlign.value = false
+
   imgContainer.value.style.textAlign = 'center'
   align.value = 'center'
 
@@ -89,8 +106,14 @@ function rightAlign() {
 }
 
 function onImageMouseClick() {
+  if (resizableImg.value.getAttribute('class').includes('right')) {
+    align.value = 'right'
+  } else if (resizableImg.value.getAttribute('class').includes('left')) {
+    align.value = 'left'
+  } else if (resizableImg.value.getAttribute('class').includes('center')) {
+    align.value = 'center'
+  }
   showIcon.value = true
-  resizableImg.value.style.outline = '2px dashed #f97316'
 }
 
 function onMouseDown(e) {
@@ -140,6 +163,45 @@ function throttle(fn, wait = 60, leading = true) {
   }
 }
 
+function onMouseMoveLeft(e) {
+  e.preventDefault()
+
+  if (!isResizing.value) {
+    return
+  }
+
+  if (!Object.keys(lastMovement.value).length) {
+    lastMovement.value = { x: e.x, y: e.y }
+
+    return
+  }
+
+  if (e.x === lastMovement.value.x && e.y === lastMovement.value.y) {
+    return
+  }
+
+  nextX.value = e.x + lastMovement.value.x
+
+  nextY.value = e.y - lastMovement.value.y
+
+  let width = resizableImg.value.width + nextX.value
+
+  if (window.innerWidth > 730) {
+    if (width > 650) width = 650
+  } else if (window.innerWidth > 479) {
+    if (width > 450) width = 450
+  } else {
+    if (width > window.innerWidth) width = window.innerWidth - 20
+  }
+
+  const height = resizableImg.value.height + nextY.value
+
+  lastMovement.value = { x: e.x, y: e.y }
+  // resizableImg.value.style.outline = '2px dashed #f97316'
+
+  props.updateAttributes({ width, height })
+}
+
 function onMouseMove(e) {
   e.preventDefault()
 
@@ -174,14 +236,14 @@ function onMouseMove(e) {
   const height = resizableImg.value.height + nextY.value
 
   lastMovement.value = { x: e.x, y: e.y }
-  resizableImg.value.style.outline = '2px dashed #f97316'
+  // resizableImg.value.style.outline = '2px dashed #f97316'
 
   props.updateAttributes({ width, height })
 }
 
 function onMouseOver() {
   showIcon.value = true
-  resizableImg.value.style.outline = '2px dashed #f97316'
+  // resizableImg.value.style.outline = '2px dashed #f97316'
 }
 </script>
 
@@ -189,6 +251,29 @@ function onMouseOver() {
 .image-container {
   overflow: hidden;
   position: relative;
+  padding-bottom: 10px;
+  .resize-container {
+    border: 2px dashed #f97316;
+    position: relative;
+    img {
+      width: 100%;
+    }
+    .resize-icon {
+      position: absolute;
+      right: -9px;
+      bottom: -10px;
+    }
+    &.center {
+      margin: 0px auto;
+    }
+    &.left {
+      text-align: left;
+    }
+    &.right {
+      margin-right: 10px;
+      float: right;
+    }
+  }
 
   .drag-handle {
     &.center {
@@ -226,14 +311,14 @@ function onMouseOver() {
     &:hover {
       // outline: 2px dashed #f97316;
     }
-    margin: 10px;
+    // margin: 10px;
   }
   .resize-icon {
     font-size: 16px;
     color: #f97316;
-    bottom: 0px;
-    position: absolute;
-    right: 177px;
+    // bottom: 0px;
+    // position: absolute;
+    // right: 177px;
     // &.center {
     //   display: block;
     //   margin: 10px auto;

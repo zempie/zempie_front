@@ -160,35 +160,13 @@ const isMine = computed(() => {
 watch(
   () => userInfo.value,
   async (info) => {
-    await useChannel().getChannelInfo(info.channel_id)
-    games.value = info.games
+    if (info?.id) {
+      await useChannel().getChannelInfo(info.channel_id)
+      games.value = info.games
+      createHead(info)
 
-    useHead({
-      title: `${info.name}${t('seo.channel.title')} | Zempie`,
-      meta: [
-        {
-          name: 'description',
-          content: `${info.name}${t('seo.channel.desc')}`,
-        },
-        {
-          name: 'og:title',
-          content: `${info.name}${t('seo.channel.title')}`,
-        },
-        {
-          name: 'og:description',
-          content: `${info.name}${t('seo.channel.desc')}`,
-        },
-        {
-          name: 'og:url',
-          content: `${config.ZEMPIE_URL}${route.path}`,
-        },
-        {
-          name: 'og:image',
-          content: `${info.picture}`,
-        },
-      ],
-    })
-    isUserPending.value = false
+      isUserPending.value = false
+    }
   }
 )
 
@@ -198,9 +176,38 @@ definePageMeta({
   middleware: 'auth',
 })
 
+function createHead(info) {
+  useHead({
+    title: `${info.name}${t('seo.channel.title')} | Zempie`,
+    meta: [
+      {
+        name: 'description',
+        content: `${info.name}${t('seo.channel.desc')}`,
+      },
+      {
+        name: 'og:title',
+        content: `${info.name}${t('seo.channel.title')}`,
+      },
+      {
+        name: 'og:description',
+        content: `${info.name}${t('seo.channel.desc')}`,
+      },
+      {
+        name: 'og:url',
+        content: `${config.ZEMPIE_URL}${route.path}`,
+      },
+      {
+        name: 'og:image',
+        content: `${info.picture}`,
+      },
+    ],
+  })
+}
+
 onMounted(() => {
   games.value = channelInfo.value?.games
   isPending.value = false
+  if (userInfo.value) createHead(userInfo.value)
 })
 </script>
 
