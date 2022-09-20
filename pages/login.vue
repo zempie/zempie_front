@@ -122,7 +122,11 @@ import {
   FacebookAuthProvider,
   GoogleAuthProvider,
   signInWithPopup,
+  linkWithCredential,
+  OAuthProvider,
+  signInWithCredential,
   type UserCredential,
+  AuthProvider,
 } from 'firebase/auth'
 import { useLocalePath } from 'vue-i18n-routing'
 
@@ -336,13 +340,33 @@ async function onSubmit() {
 
 async function googleLogin() {
   const provider = new GoogleAuthProvider()
-  await signInWithPopup($firebaseAuth, provider)
+  return socialLogin(provider)
+  // await signInWithPopup($firebaseAuth, provider)
 }
 
 async function facebookLogin() {
   const provider = new FacebookAuthProvider()
-  await signInWithPopup($firebaseAuth, provider)
+  provider.addScope('email')
+  return socialLogin(provider)
+
+  // await signInWithPopup($firebaseAuth, provider)
 }
+
+async function socialLogin(provider: AuthProvider) {
+  try {
+    const res = await signInWithPopup($firebaseAuth, provider)
+    useUser().setFirebaseUser(res.user)
+  } catch (err) {
+    console.error('socialLogin err', err)
+
+    const errorCode = err.code
+
+    if (err.message.includes('auth/account-exists-with-different-credential')) {
+      ElMessage.error(`${t('exist.wt.diff.email')}`)
+    }
+  }
+}
+
 //     async google() {
 //         await this.$store.dispatch("loginState");
 
