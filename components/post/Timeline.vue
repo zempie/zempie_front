@@ -48,6 +48,7 @@
         </div>
       </div>
 
+      <!-- TODO: 차단 기능 추가시 적용 -->
       <!-- <div class="ta-message-block" v-else-if="ableToPost() === 'block'">
                 <i class="uil uil-exclamation-triangle"></i>
                 {{ t('post.modal.block.text') }}
@@ -72,19 +73,16 @@
         </div>
       </ul>
       <div ref="triggerDiv"></div>
-      <!-- style="width: 10px; height: 10px; background-color: red" -->
     </dd>
 
     <ClientOnly>
       <el-dialog
         v-model="isTextEditorOpen"
-        append-to-body
-        custom-class="modal-area-type"
+        custom-class="post-modal"
         :show-close="false"
         :close-on-click-modal="false"
         :close-on-press-escape="false"
         @close="closeEditor"
-        width="700px"
       >
         <TextEditor
           @closeModal="isTextEditorOpen = false"
@@ -178,7 +176,6 @@ const userWatcher = watch(
   () => user.value,
   (userInfo) => {
     if (route.meta.name === 'myTimeline' && userInfo?.id) {
-
       refresh()
     }
   }

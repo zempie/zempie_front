@@ -62,6 +62,26 @@
   }
 }
 
+.post-modal {
+  max-width: 700px;
+  min-width: 380px !important;
+  border-radius: 10px !important;
+  position: absolute !important;
+  left: 50%;
+  top: 50%;
+  margin: 0px !important;
+  transform: translate(-50%, -50%);
+  .modal-alert {
+    border-radius: 10px;
+  }
+  .el-dialog__header {
+    display: none !important;
+  }
+  .el-dialog__body {
+    padding: 0px;
+  }
+}
+
 .el-dropdown-menu__item:focus {
   border-radius: 10px;
   background-color: #ededed !important;
