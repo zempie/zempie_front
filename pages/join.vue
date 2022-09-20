@@ -55,13 +55,9 @@
 
           <div class="lam-content">
             <ul>
-          
-
-
               <li>
                 <dl>
                   <dt>
-
                     <input type="checkbox" name="policyAgreement" v-model="form.policyAgreement" title="" id="agree"
                       @click="form.policyAgreement ? errorAgree = true : errorAgree = false" />
 
