@@ -77,9 +77,12 @@
             <dt></dt>
           </dl>
           <ul>
-            <li @click="google">
+            <li @click="googleLogin">
+              <img src="/images/google_login.png" alt="google-login" title="" />
+            </li>
+            <li @click="facebookLogin" class="mt10">
               <img
-                src="/images/google_login_btn_small.png"
+                src="/images/facebook_login.png"
                 alt="google-login"
                 title=""
               />
@@ -116,6 +119,7 @@ import { useI18n } from 'vue-i18n'
 import { emailRegex, passwordRegex } from '~/scripts/utils'
 import {
   signInWithEmailAndPassword,
+  FacebookAuthProvider,
   GoogleAuthProvider,
   signInWithPopup,
   type UserCredential,
@@ -188,7 +192,7 @@ async function onSubmit() {
   const isValid = await v$.value.$validate()
 
   if (!isValid) return
-  
+
   signInWithEmailAndPassword($firebaseAuth, form.email, form.password)
     .then(async (result) => {
       const { user } = result
@@ -330,15 +334,14 @@ async function onSubmit() {
 //         }
 //     }
 
-async function google() {
+async function googleLogin() {
   const provider = new GoogleAuthProvider()
-
   await signInWithPopup($firebaseAuth, provider)
+}
 
-  // if (user) {
-  //   useUser().setFirebaseUser(user);
-  //   //  const token = await firebase.auth().currentUser?.getIdToken();
-  // }
+async function facebookLogin() {
+  const provider = new FacebookAuthProvider()
+  await signInWithPopup($firebaseAuth, provider)
 }
 //     async google() {
 //         await this.$store.dispatch("loginState");
@@ -414,5 +417,18 @@ definePageMeta({
 
 .input-errors:not(:last-child) {
   padding-bottom: 10px;
+}
+
+.login-area {
+  .la-bottom {
+    ul {
+      flex-direction: column;
+      li {
+        img {
+          width: 300px;
+        }
+      }
+    }
+  }
 }
 </style>
