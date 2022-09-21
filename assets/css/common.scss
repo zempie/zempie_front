@@ -175,6 +175,16 @@
 }
 
 @media all and (max-width: 479px) {
+  .ta-message-send {
+    input {
+      font-size: 14px;
+    }
+  }
+  .modal-post {
+    .editor-container {
+      font-size: 16px;
+    }
+  }
   input,
   select,
   textarea {
