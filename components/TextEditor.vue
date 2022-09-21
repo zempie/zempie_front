@@ -102,7 +102,7 @@
               >
                 <i class="uil uil-plus"></i>
                 <span v-if="postingChannels.length >= 2">Add</span>
-                <span v-else>Add community</span>
+                <span>Add </span><span>community</span>
               </button>
             </template>
 
@@ -1208,14 +1208,13 @@ function deletePostingChannel(idx: number) {
 }
 
 @media all and (max-width: 479px) {
-  // .mp-category {
-  //   .btn-line-small {
-  //     span:nth-child(2) {
-  //       display: none;
-  //     }
-  //   }
-
-  // }
+  .mp-category {
+    .btn-line-small {
+      span:nth-child(3) {
+        display: none;
+      }
+    }
+  }
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {

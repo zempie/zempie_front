@@ -34,7 +34,13 @@
               {{ dateFormat(feed.created_at) }}
             </p>
           </dd>
-          <UserFollowBtn :user="feed.user" class="follow-btn-feed" />
+
+          <slot name="followBtn"></slot>
+          <!-- <UserFollowBtn
+            :user="user"
+            class="follow-btn-feed"
+            @refresh="refreshFollow"
+          /> -->
         </dl>
       </dt>
       <dd v-if="feed.user?.name">
@@ -277,11 +283,11 @@ useInfiniteScroll(
   { distance: 10 }
 )
 
-const user = computed(() => useUser().user.value.info)
-
 const props = defineProps({
   feed: Object as PropType<IFeed>,
 })
+
+const user = ref(props.feed?.user)
 
 const feedContent = ref(props.feed?.content || '')
 
@@ -529,10 +535,7 @@ function untranslatedText(originText: string) {
 //         console.log("?")
 //     }
 
-function openDeleteModal() {
-  showDeletePostModal.value = true
-  feedId.value = props.feed.id
-}
+function refreshFollow() {}
 </script>
 
 <style lang="scss" scoped>

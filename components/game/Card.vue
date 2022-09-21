@@ -17,22 +17,17 @@
       class="thumbnail"
       :style="`background: url( ${thumbnail} ) center center / cover no-repeat; background-size: cover;`"
     ></div>
-    <dl>
-      <dt @click="moveUserPage">
-        <UserAvatar :user="gameInfo.user" :tag="'p'"></UserAvatar>
-      </dt>
-      <dd class="game-title">
+    <div class="game-info">
+      <div class="game-title">
         <h2 @click="playGame">
           {{ gameInfo.title }}
         </h2>
+      </div>
+      <div class="user-container" @click="moveUserPage">
+        <UserAvatar :user="gameInfo.user" :tag="'p'"></UserAvatar>
         <p @click="moveUserPage">{{ gameInfo.user?.name }}</p>
-        <ul>
-          <li>
-            <img src="/images/zempie_game_icon.svg" alt="game-icon" />
-          </li>
-        </ul>
-      </dd>
-    </dl>
+      </div>
+    </div>
   </li>
 </template>
 
@@ -81,14 +76,88 @@ function moveUserPage() {
 </script>
 
 <style scoped lang="scss">
+.game-info {
+  padding: 10px 20px 10px 20px;
+  height: auto;
+  .game-title {
+    min-height: 30px;
+    h2 {
+      text-align: left;
+      font-weight: bold;
+      font-size: 14px;
+      word-break: break-all;
+    }
+  }
+  .user-container {
+    display: flex;
+    align-items: center;
+    p:nth-child(1) {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      box-shadow: 0px 4px 9px rgba(0, 0, 0, 0.06);
+      margin-right: 16px;
+    }
+  }
+}
 .thumbnail:hover,
 .thumbnail {
   transition: 0.5s;
 }
 
 .game-title {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
+}
+
+@media all and (max-width: 479px) {
+  li {
+    padding-bottom: 0px;
+    .game-info {
+      padding: 10px;
+      height: auto;
+      .game-title {
+        min-height: 30px;
+        h2 {
+          text-align: left;
+          font-weight: bold;
+          font-size: 12px;
+          word-break: unset;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          display: -webkit-box;
+        }
+      }
+      .user-container {
+        display: flex;
+        align-items: center;
+        p:nth-child(1) {
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          margin-right: 16px;
+          border: 2px solid #fff;
+          box-shadow: 0px 4px 9px rgba(0, 0, 0, 0.06);
+        }
+      }
+    }
+  }
+}
+@media all and (min-width: 480px) and (max-width: 767px) {
+  li {
+    padding-bottom: 0px;
+    .game-info {
+      .game-title {
+        h2 {
+          text-align: left;
+          font-weight: bold;
+          font-size: 12px;
+          word-break: unset;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          display: -webkit-box;
+        }
+      }
+    }
+  }
 }
 </style>

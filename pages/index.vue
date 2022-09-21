@@ -254,7 +254,6 @@ async function gameFetch() {
 
   .thumbmail {
     box-shadow: 0px 10px 50px rgb(0 0 0 / 10%);
-    padding: 20px;
     border-radius: 10px;
 
     &.skeleton {
@@ -271,6 +270,7 @@ async function gameFetch() {
       height: 100%;
       cursor: pointer;
       border-radius: 10px;
+      object-fit: cover;
     }
   }
 }

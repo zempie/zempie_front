@@ -538,7 +538,7 @@ const isPending = ref(true)
 const userMenu = ref()
 const searchDropdown = ref()
 
-const searchInput = ref('')
+const searchInput = ref()
 const userList = ref([])
 const gameList = ref([])
 const communityList = ref([])
@@ -632,7 +632,7 @@ const search = _.debounce(async () => {
 function moveSearchPage() {
   isHeaderSideMobile.value = false
 
-  $router.push(localePath(`/search`) + `?q=${searchInput.value}`)
+  $router.push({ path: localePath(`/search`), query: { q: searchInput.value } })
   searchDropdown.value.handleClose()
 }
 
