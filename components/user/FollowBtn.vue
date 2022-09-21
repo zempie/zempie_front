@@ -33,6 +33,7 @@ const isLogin = computed(() => useUser().user.value.isLogin)
 const loginUser = computed(() => useUser().user.value.info)
 
 const emit = defineEmits(['refresh'])
+
 const props = defineProps({
   user: Object as PropType<IUser | any>,
 })
@@ -49,8 +50,8 @@ async function follow() {
 
   if (!error.value) {
     isFollowing.value = !isFollowing.value
-    emit('refresh')
-    useChannel().setFollowing()
+    emit('refresh', props.user.id)
+    // useChannel().setFollowing()
   } else {
     ElMessage.error(t('try.later'))
   }
@@ -60,8 +61,9 @@ async function unfollow() {
   const { data, error } = await user.unfollow(props.user.id)
   if (!error.value) {
     isFollowing.value = !isFollowing.value
-    emit('refresh')
-    useChannel().setUnfollowing()
+    emit('refresh', props.user.id)
+
+    // useChannel().setUnfollowing()
   } else {
     ElMessage.error(t('try.later'))
   }

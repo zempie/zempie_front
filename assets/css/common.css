@@ -2931,13 +2931,13 @@
   margin-left: 20px;
 }
 
-.card-game>li>dl>dd>h2 {
+/* .card-game>li>dl>dd>h2 {
   width: 100%;
   font-weight: 700;
   font-size: 14px;
   line-height: 14px;
   color: #333;
-}
+} */
 
 .card-game>li>dl>dd>p {
   margin-top: 5px;

@@ -175,6 +175,11 @@
 }
 
 @media all and (max-width: 479px) {
+  .header-language {
+    .el-input__inner {
+      font-size: 16px !important;
+    }
+  }
   .ta-message-send {
     input {
       font-size: 14px;

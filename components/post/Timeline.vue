@@ -63,7 +63,16 @@
             :feed="feed"
             :key="feed.id"
             @refresh="refresh"
-          />
+          >
+            <template #followBtn>
+              <UserFollowBtn
+                :user="feed.user"
+                :key="`${feed.user.is_following}`"
+                class="follow-btn-feed"
+                @refresh="refreshFollow"
+              />
+            </template>
+          </PostFeed>
         </TransitionGroup>
         <div v-else class="ta-post-none">
           <p>
@@ -337,6 +346,17 @@ function timelineFilter(selected?: string) {
 function closeEditor() {
   isEditorDestroy.value = true
   editorKey.value = Date.now()
+}
+
+function refreshFollow(user_id: number) {
+  feeds.value
+    .filter((feed) => {
+      return feed.user_id === user_id
+    })
+    .map((feed) => {
+      feed.user.is_following = !feed.user.is_following
+      return feed
+    })
 }
 </script>
 
