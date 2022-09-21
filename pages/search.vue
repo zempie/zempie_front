@@ -1,12 +1,14 @@
 <template>
   <div class="content">
-    <ClientOnly>
-      <div class="visual-title">
-        <h2>
-          '{{ keyword }}'
-          <span style="font-size: 30px">{{ $t('search.result') }}</span>
-        </h2>
-      </div>
+    <!-- <ClientOnly> -->
+    <div class="visual-title">
+      {{ $route.query }}
+      <h2>
+        '{{ keyword }}'
+        <span style="font-size: 30px">{{ $t('search.result') }}</span>
+      </h2>
+    </div>
+    <template v-if="results">
       <dl
         class="area-title"
         v-if="results.users?.length"
@@ -60,16 +62,27 @@
       >
         <ul class="ta-post">
           <div v-for="feed in results.posts" :key="feed.id">
-            <PostFeed :feed="feed" />
+            <PostFeed :feed="feed">
+              <!-- <template #followBtn>
+                <UserFollowBtn
+                  :user="feed.user"
+                  :key="`${feed.user.is_following}`"
+                  class="follow-btn-feed"
+                  @refresh="refreshFollow"
+                />
+              </template> -->
+            </PostFeed>
           </div>
         </ul>
       </div>
-    </ClientOnly>
+    </template>
+    <!-- </ClientOnly> -->
   </div>
 </template>
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import { onBeforeRouteLeave } from 'vue-router'
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -126,6 +139,17 @@ watch(
     refresh()
   }
 )
+
+function refreshFollow(user_id: number) {
+  feeds.value
+    .filter((feed) => {
+      return feed.user_id === user_id
+    })
+    .map((feed) => {
+      feed.user.is_following = !feed.user.is_following
+      return feed
+    })
+}
 
 // import Feed from "@/components/timeline/_feed.vue";
 // import MemberCard from "@/components/community/_memberCard.vue";

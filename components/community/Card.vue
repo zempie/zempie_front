@@ -41,9 +41,7 @@
         </dd>
       </dl>
 
-      <div>
-        <slot name="subBtn"></slot>
-      </div>
+      <slot name="subBtn"></slot>
     </div>
   </li>
 </template>

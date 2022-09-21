@@ -538,7 +538,7 @@ const isPending = ref(true)
 const userMenu = ref()
 const searchDropdown = ref()
 
-const searchInput = ref('')
+const searchInput = ref()
 const userList = ref([])
 const gameList = ref([])
 const communityList = ref([])

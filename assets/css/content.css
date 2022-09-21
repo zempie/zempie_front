@@ -2400,12 +2400,12 @@
 }
 
 .ta-channel-list>h2 {
-  padding: 20px;
+  /* padding: 20px;
   font-weight: 600;
   font-size: 18px;
   line-height: 18px;
   color: #333;
-  border-bottom: #e9e9e9 1px solid;
+  border-bottom: #e9e9e9 1px solid; */
 }
 
 .ta-channel-list>ul {
