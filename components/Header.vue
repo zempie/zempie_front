@@ -476,7 +476,8 @@
 
       <el-dialog
         v-model="isOpen"
-        class="modal-area-type"
+        append-to-body
+        custom-class="modal-area-type"
         :show-close="false"
         width="380px"
       >

@@ -30,7 +30,7 @@
     <el-dialog
       v-model="openModal"
       append-to-body
-      class="modal-area-type"
+      custom-class="modal-area-type"
       :show-close="false"
     >
       <div class="modal-alert">
@@ -113,15 +113,15 @@ useHead({
       content: `${t('seo.profile.change.pwd.desc')}`,
     },
     {
-      name: 'og:title',
+      property: 'og:title',
       content: `${t('seo.profile.change.pwd.title')}`,
     },
     {
-      name: 'og:description',
+      property: 'og:description',
       content: `${t('seo.profile.change.pwd.description')}`,
     },
     {
-      name: 'og:url',
+      property: 'og:url',
       content: `${config.ZEMPIE_URL}${route.path}`,
     },
   ],

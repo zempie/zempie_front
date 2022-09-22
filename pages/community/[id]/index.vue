@@ -56,7 +56,12 @@
         </dl>
       </div>
 
-      <el-dialog v-model="needSubscribe" class="modal-area-type" width="380px">
+      <el-dialog
+        v-model="needSubscribe"
+        append-to-body
+        custom-class="modal-area-type"
+        width="380px"
+      >
         <div class="modal-alert">
           <dl class="ma-header">
             <dt>{{ t('information') }}</dt>
@@ -138,44 +143,21 @@ watch(
   (info) => {
     useHead({
       title: `${info.name} | Zempie community`,
-      link: [
-        {
-          rel: 'alternate',
-          href: `${config.ZEMPIE_URL}${route.fullPath}`,
-          hreflang: locale,
-        },
-        {
-          rel: 'canonical',
-          href: `${config.ZEMPIE_URL}${route.fullPath}`,
-        },
-      ],
       meta: [
-        {
-          property: 'og:url',
-          content: `${config.ZEMPIE_URL}${route.fullPath}`,
-        },
-        {
-          property: 'og:site_name',
-          content: 'Zempie',
-        },
-        {
-          name: 'og:type',
-          content: 'website',
-        },
         {
           name: 'description',
           content: `${info.description}`,
         },
         {
-          property: 'og:title',
+          name: 'og:title',
           content: `${info.name}`,
         },
         {
-          property: 'og:description',
+          name: 'og:description',
           content: `${info.description}`,
         },
         {
-          property: 'og:url',
+          name: 'og:url',
           content: `${config.ZEMPIE_URL}${route.path}`,
         },
       ],

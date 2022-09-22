@@ -44,7 +44,7 @@
     <el-dialog
       v-model="openModal"
       append-to-body
-      class="modal-area-type"
+      custom-class="modal-area-type"
       :show-close="false"
     >
       <div class="modal-alert">
@@ -89,48 +89,21 @@ const isEmailErr = ref(false)
 
 useHead({
   title: `${t('seo.reset.pwd.title')} | Zempie`,
-  link: [
-    {
-      rel: 'alternate',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-      hreflang: locale,
-    },
-    {
-      rel: 'canonical',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-  ],
   meta: [
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-    {
-      property: 'og:site_name',
-      content: 'Zempie',
-    },
-    {
-      name: 'og:type',
-      content: 'website',
-    },
-    {
-      name: 'robots',
-      content: 'noindex, nofollow',
-    },
     {
       name: 'description',
       content: `${t('seo.reset.pwd.desc')}`,
     },
     {
-      property: 'og:title',
+      name: 'og:title',
       content: `${t('seo.reset.pwd.title')}`,
     },
     {
-      property: 'og:description',
+      name: 'og:description',
       content: `${t('seo.reset.pwd.description')}`,
     },
     {
-      property: 'og:url',
+      name: 'og:url',
       content: `${config.ZEMPIE_URL}${route.path}`,
     },
   ],
