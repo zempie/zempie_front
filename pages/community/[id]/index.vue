@@ -56,12 +56,7 @@
         </dl>
       </div>
 
-      <el-dialog
-        v-model="needSubscribe"
-        append-to-body
-        class="modal-area-type"
-        width="380px"
-      >
+      <el-dialog v-model="needSubscribe" class="modal-area-type" width="380px">
         <div class="modal-alert">
           <dl class="ma-header">
             <dt>{{ t('information') }}</dt>

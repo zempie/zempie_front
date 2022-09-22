@@ -13,8 +13,7 @@
   <ClientOnly>
     <el-dialog
       v-model="modalIsOpen"
-      append-to-body
-      class="modal-area-type"
+      :class="'modal-area-type'"
       :show-close="false"
       width="380px"
     >
