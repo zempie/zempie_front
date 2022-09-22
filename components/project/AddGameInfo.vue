@@ -1,7 +1,10 @@
 <template>
   <ProjectStepMenu>
     <template #uploadGameBtn>
-      <li class="publish-btn">
+      <li v-if="isEditInfo" class="publish-btn">
+        <h4 class="active" @click="updateGame">{{ $t('update') }}</h4>
+      </li>
+      <li v-else class="publish-btn">
         <h4
           :class="uploadStage === eGameStage.DEV ? 'active' : ''"
           @click="uploadGame"
@@ -54,6 +57,7 @@
                 :placeholder="$t('addGameInfo.game.desc')"
                 class="w100p h100"
               ></textarea>
+
               <TransitionGroup name="fade">
                 <p
                   class="input-errors"
@@ -96,9 +100,9 @@
                   <i class="uil uil-check"></i>{{ error.$message }}
                 </p>
               </TransitionGroup>
-              <h2>
+              <p class="mt10">
                 {{ $t('addGameInfo.game.tags.info') }}
-              </h2>
+              </p>
             </dd>
           </dl>
 
@@ -109,8 +113,19 @@
             </dt>
             <dd>
               <ul class="image-upload">
-                <li v-if="!prevThumbnail">
-                  <div>
+                <li>
+                  <div
+                    :style="
+                      prevThumbnail && {
+                        background:
+                          'url(' +
+                          prevThumbnail +
+                          ') center center / cover no-repeat',
+                        'background-size': 'cover',
+                        border: '#e9e9e9 2px solid',
+                      }
+                    "
+                  >
                     <div style="height: 0px; overflow: hidden">
                       <input
                         type="file"
@@ -120,11 +135,13 @@
                         name="fileInput"
                       />
                     </div>
-                    <p><i class="uil uil-image-v"></i></p>
-                    <h2>
-                      {{ $t('addGameInfo.game.thumbnail.size') }} 512* 512<br />
-                      (up to 4MB)
-                    </h2>
+                    <template v-if="!prevThumbnail">
+                      <p><i class="uil uil-image-v"></i></p>
+                      <h2>
+                        {{ $t('addGameInfo.game.thumbnail.size') }} 512* 512<br />
+                        (up to 4MB)
+                      </h2>
+                    </template>
                   </div>
 
                   <transition name="component-fade" mode="out-in">
@@ -132,37 +149,22 @@
                       {{ $t('addGameInfo.game.thumbnail.err') }}
                     </p>
                   </transition>
-                  <p>
-                    <button class="btn-gray" @click="uploadThumbnail">
-                      <i class="uil uil-upload"></i>&nbsp;
-                      {{ $t('addGameInfo.game.thumbnail') }}
-                    </button>
-                  </p>
-                </li>
-                <li v-else>
-                  <div
-                    :style="{
-                      background:
-                        'url(' +
-                        prevThumbnail +
-                        ') center center / cover no-repeat',
-                      'background-size': 'cover',
-                    }"
-                    style="border: #e9e9e9 2px solid"
+                  <p
+                    style="
+                      width: 100%;
+                      display: flex;
+                      justify-content: space-around;
+                    "
                   >
-                    <div style="height: 0px; overflow: hidden">
-                      <input type="file" @change="onImgChange" accept=image/*
-                      ref="thumbnail" name="fileInput" />
-                    </div>
-                  </div>
-
-                  <p style="width: 130%">
                     <button class="btn-gray" @click="uploadThumbnail">
                       <i class="uil uil-upload"></i>&nbsp;
                       {{ $t('addGameInfo.game.thumbnail') }}
                     </button>
-                    &nbsp; &nbsp;
-                    <button class="btn-circle-icon" @click="deleteThumbnail">
+                    <button
+                      v-if="prevThumbnail"
+                      class="btn-circle-icon"
+                      @click="deleteThumbnail"
+                    >
                       <i class="uil uil-trash-alt"></i>
                     </button>
                   </p>
@@ -184,45 +186,47 @@
 
             <dd>
               <ul class="image-upload">
-                <li v-if="!prevGif">
-                  <div>
+                <li>
+                  <div
+                    :style="
+                      prevGif && {
+                        background:
+                          'url(' +
+                          prevGif +
+                          ') center center / cover no-repeat',
+                        'background-size': 'cover',
+                        border: '#e9e9e9 2px solid',
+                      }
+                    "
+                  >
                     <div style="height: 0px; overflow: hidden">
                       <input type="file" @change="onGifChange" accept=image/gif
                       ref="gifThumbnail" name="fileInput" />
                     </div>
-                    <p><i class="uil uil-image-v"></i></p>
-                    <h2>
-                      {{ $t('addGameInfo.game.thumbnail.size') }} 512* 512<br />
-                      (up to 4MB)
-                    </h2>
+                    <template v-if="!prevGif">
+                      <p><i class="uil uil-image-v"></i></p>
+                      <h2>
+                        {{ $t('addGameInfo.game.thumbnail.size') }} 512* 512<br />
+                        (up to 4MB)
+                      </h2>
+                    </template>
                   </div>
-                  <p>
-                    <button class="btn-gray" @click="uploadGif">
-                      <i class="uil uil-upload"></i>&nbsp;
-                      {{ $t('addGameInfo.game.thumbnail') }}
-                    </button>
-                  </p>
-                </li>
-                <li v-else>
-                  <div
-                    :style="{
-                      background:
-                        'url(' + prevGif + ') center center / cover no-repeat',
-                      'background-size': 'cover',
-                    }"
-                    style="border: #e9e9e9 2px solid"
+                  <p
+                    style="
+                      width: 100%;
+                      display: flex;
+                      justify-content: space-around;
+                    "
                   >
-                    <div style="height: 0px; overflow: hidden">
-                      <input type="file" @change="onGifChange" accept=image/*
-                      ref="gifThumbnail" name="fileInput" />
-                    </div>
-                  </div>
-                  <p style="width: 130%">
                     <button class="btn-gray" @click="uploadGif">
-                      <i class="uil uil-upload"></i>&nbsp;
+                      <i class="uil uil-upload"></i>
                       {{ $t('addGameInfo.game.thumbnail') }}
                     </button>
-                    <button class="btn-circle-icon" @click="deleteGif">
+                    <button
+                      v-if="prevGif"
+                      class="btn-circle-icon"
+                      @click="deleteGif"
+                    >
                       <i class="uil uil-trash-alt"></i>
                     </button>
                   </p>
@@ -230,19 +234,6 @@
               </ul>
             </dd>
           </dl>
-
-          <!-- <dl class="suii-content">
-            <dt>
-              {{ $t('previewImage.title') }}
-              <el-tooltip
-                effect="customized"
-                :content="$t('studio.preview.info')"
-                placement="bottom"
-              >
-                <i class="uil uil-question-circle" style="color: #999"></i>
-              </el-tooltip>
-            </dt>
-          </dl> -->
 
           <dl class="suii-content">
             <dt style="padding-top: 5px">{{ $t('auto.game.id.generator') }}</dt>
@@ -267,10 +258,6 @@
                   title=""
                   :placeholder="$t('addGameInfo.game.id')"
                 />
-                <!-- <p style="color: #C5292A; margin-top:10px">{{ gamePathError }}</p>
-            <p v-if="confirmedGamePath" style="color: #1fc944; margin-top:10px">
-              {{ $t('addGameInfo.game.id.passed') }}
-            </p> -->
               </dd>
               <ClipLoader
                 v-if="waitGamePath"
@@ -291,8 +278,11 @@
             </a>
           </li>
           <li>
+            <a v-if="isEditInfo" @click="updateGame" class="btn-default w150">
+              {{ $t('update') }}
+            </a>
             <a
-              v-if="uploadProject.form.stage === eGameStage.DEV"
+              v-else-if="uploadProject.form.stage === eGameStage.DEV"
               @click="uploadGame"
               class="btn-default w150"
             >
@@ -304,50 +294,6 @@
             ></a>
           </li>
         </ul>
-        <!--
-        <div class="sui-input" style="margin-top:100px;" v-if="projectInfo">
-            <dl class="suii-content delete-area">
-                <dt>
-                    {{ $t('addGameInfo.delete.game') }}
-                </dt>
-                <dd class="game-delete-btn"><a @click="$modal.show('deleteProject')" class="btn-default w150">
-                    {{ $t('addGameInfo.delete') }}
-                </a>
-                </dd>
-            </dl>
-
-        </div> -->
-
-        <!-- <modal :clickToClose="false"
-               class="modal-area-type" name="deleteProject" width="90%" height="auto" :maxWidth="380"
-               :adaptive="true"
-               :scrollable="true">
-            <div class="modal-alert">
-                <dl class="ma-header">
-                    <dt>
-                        {{ $t('addGameInfo.info') }}
-                    </dt>
-                    <dd>
-                        <button @click="$modal.hide('deleteProject')"><i class="uil uil-times"></i></button>
-                    </dd>
-                </dl>
-                <div class="ma-content">
-                    <h2>
-                        {{ $t('addGameInfo.delete.modal') }}
-                        <br/>
-                        {{ $t('addGameInfo.delete.modal.confirm') }}
-                    </h2>
-                    <div>
-                        <button class="btn-default w48p" @click="deleteProject()">
-                            {{ $t('yes') }}
-                        </button>
-                        <button class="btn-gray w48p" @click="$modal.hide('deleteProject')">
-                            {{ $t('no') }}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </modal> -->
       </template>
       <ProjectAddGameFile
         v-else
@@ -360,6 +306,7 @@
 
 <script setup lang="ts">
 import { ElMessage, ElMessageBox, ElLoading, ElTooltip } from 'element-plus'
+import type { Action } from 'element-plus'
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
 import { eGameStage } from '~~/types'
 import useVuelidate from '@vuelidate/core'
@@ -373,7 +320,15 @@ const IMAGE_MAX_SIZE = 4
 const localePath = useLocalePath()
 const { t, locale } = useI18n()
 const router = useRouter()
-const { uploadProject, resetStage, setForm, setStepOne } = useProject()
+const {
+  uploadProject,
+  editProject,
+  resetStage,
+  setForm,
+  setStepOne,
+  setStepTwo,
+  resetProjectInfo,
+} = useProject()
 const isAuthGamePath = ref(true)
 const confirmedGamePath = ref()
 
@@ -392,6 +347,9 @@ const gifThumFile = ref<File>()
 const prevGif = ref<String | ArrayBuffer>('')
 
 const uploadStage = computed(() => uploadProject.value.form.stage)
+
+//게임 정보 수정
+const isEditInfo = ref(false)
 
 let form = reactive({
   name: '',
@@ -422,33 +380,6 @@ const rules = computed(() => {
 
 const v$ = useVuelidate(rules, form)
 
-// @Prop({default: false}) set!: boolean;
-// @Prop() projectInfo !: any;
-// @Prop() isEditProject !: any;
-// @Prop() isUpdateProject !: any;
-// toast = new Toast();
-// gameStage = eGameStage;
-
-// title: string = '';
-// description: string = '';
-// hashtagsArr: string[] = [];
-// currentInput = ''
-// // chips: string[] = [];
-// prevGif: any = '';
-// thumbFile: any = null;
-// gamePath: string = ""
-// autoGamePath: boolean = true;
-
-// confirmedGamePath: boolean | null = null;
-
-// isTitleErr: boolean = false;
-// isDescErr: boolean = false;
-// isHashtagErr: boolean = false;
-// isThumbErr: boolean = false;
-
-// thumbFile2: any = null;
-
-// gamePathError: string = "";
 const waitGamePath = ref(false)
 
 onBeforeRouteLeave((to, from, next) => {
@@ -466,78 +397,73 @@ onBeforeRouteLeave((to, from, next) => {
     form.project_picture2
   ) {
     ElMessageBox.confirm(
-      `${'leave.router.warning'}`, //작성하신 글은 저장되지않고 지워집니다. 이 페이지를 나가시겠습니까?
+      `${t('leave.router.warning')}`, //작성하신 글은 저장되지않고 지워집니다. 이 페이지를 나가시겠습니까?
       'Warning',
       {
         confirmButtonText: 'Cancel',
         cancelButtonText: 'Leave',
         type: 'warning',
+        showClose: false,
       }
-    ).catch(() => {
-      useProject().resetForm()
+    ).catch((action: Action) => {
       next()
     })
   } else {
-    useProject().resetForm()
     next()
   }
 })
 
 onMounted(() => {
-  if (useProject().uploadProject.value.form.stage !== eGameStage.NONE) {
-    const {
-      stage,
-      name,
-      pathname,
-      description,
-      hashtags,
-      project_picture,
-      project_picture2,
-    } = useProject().uploadProject.value.form
+  window.addEventListener('beforeunload', refreshPage)
+  //게임 정보 수정
+  if (editProject.value.info?.id) {
+    isEditInfo.value = true
+    setStepTwo()
+    const { stage, name, description, hashtags, game, picture, picture2 } =
+      editProject.value.info
+    form.pathname = game.pathname
     form.description = description
     hashtagsArr.value = hashtags ? hashtags.split(',') : []
     form.hashtags = hashtags
     form.name = name
-    form.pathname = pathname
-    form.project_picture = project_picture
-    form.project_picture2 = project_picture2
     form.stage = stage
+    prevThumbnail.value = picture
+    prevGif.value = picture2
+  } else {
+    //게임 정보 입력
+    if (useProject().uploadProject.value.form.stage !== eGameStage.NONE) {
+      const {
+        stage,
+        name,
+        pathname,
+        description,
+        hashtags,
+        project_picture,
+        project_picture2,
+      } = useProject().uploadProject.value.form
+      form.description = description
+      hashtagsArr.value = hashtags ? hashtags.split(',') : []
+      form.hashtags = hashtags
+      form.name = name
+      form.pathname = pathname
+      form.project_picture = project_picture
+      form.project_picture2 = project_picture2
+      form.stage = stage
+    }
   }
 })
 
-// callLocalStorageData() {
-//     this.title = localStorage.getItem('title')!
-//     this.description = localStorage.getItem('description')!
-//     this.hashtagsArr = localStorage.getItem('hashtagsArr')!.split(',')
-// }
+onBeforeUnmount(() => {
+  window.removeEventListener('beforeunload', refreshPage)
+  useProject().resetForm()
+  useProject().resetProjectInfo()
+})
 
-// @Watch('projectInfo')
-// callUpdateProjectData() {
-//     const {name, description, picture, picture2, hashtags, game, stage, picture_webp} = this.projectInfo;
-//     const {pathname} = game;
+function refreshPage(event) {
+  event.preventDefault()
 
-//     this.title = name;
-//     this.description = description;
-//     this.prevThumbnail = (picture_webp || picture) + '?_=' + Date.now();
-//     this.prevGif = picture2;
-//     this.gamePath = pathname;
-//     this.hashtagsArr = hashtags ? hashtags.split(',') : []
-//     this.$store.commit("gameStage", stage);
-// }
-
-// init() {
-//     this.isTitleErr = false;
-//     this.isDescErr = false;
-//     this.isHashtagErr = false;
-//     this.isThumbErr = false;
-// }
-
-// resetLocalStorage() {
-//     localStorage.removeItem('title')
-//     localStorage.removeItem('description')
-//     localStorage.removeItem('hashtagsArr')
-//     localStorage.removeItem('thumbnail')
-// }
+  event.returnValue = `${t('leave.router.warning')}`
+}
 
 function prevPage() {
   form.hashtags = hashtagsArr?.value.toString()
@@ -547,52 +473,7 @@ function prevPage() {
 
   resetStage()
   setStepOne()
-
-  //     this.resetLocalStorage();
-  //     // this.$store.commit("gameStage", null);
-  //     this.$emit('stage', null)
-  //     this.$emit('isActivePublish', false)
 }
-
-// validityCheck() {
-//     let isError: boolean = false;
-
-//     if (!this.title) {
-//         this.isTitleErr = true;
-//         isError = true;
-//     }
-
-//     if (!this.description) {
-//         this.isDescErr = true;
-//         isError = true;
-//     }
-
-//     if (this.hashtagsArr.length === 0) {
-//         this.isHashtagErr = true;
-//         isError = true;
-//     }
-//     if (!this.thumbFile && !this.prevThumbnail) {
-//         this.isThumbErr = true;
-//         isError = true;
-//     }
-//     return isError ? false : true;
-
-// }
-
-// async checkGamePath() {
-//     this.waitGamePath = true;
-//     if (this.gamePath) {
-//         const result = await this.$api.confirmGamePath(this.gamePath);
-//         if (result && result.success) {
-//             this.confirmedGamePath = true;
-//             this.gamePathError = "";
-//         }
-//         else {
-//             this.gamePathError = `${this.$t('usedId')}`;// '사용중인 아이디 입니다. 다른 아이디를 입력하세요.';
-//         }
-//     }
-//     this.waitGamePath = false;
-// }
 
 async function checkPathName() {
   waitGamePath.value = true
@@ -684,102 +565,6 @@ async function createGamePath() {
   }
 }
 
-//     await this.commitGameInfo();
-//     if (this.isEditProject) {
-//         // 개발 단계를 변경하면 업로드한 게임 파일이 삭제됩니다. 개발 단계를 변경하시겠습니까?
-//         if (this.$store.getters.gameStage === this.gameStage.Dev) {
-//             if (this.projectInfo.projectVersions.length === 0) {
-//                 this.$emit('gameInfoDone', true)
-//             }else{
-//                 this.updateProject();
-//                 return;
-//             }
-//         }
-//         else {
-//             if (this.projectInfo.projectVersions.length === 0) {
-//                 this.$emit('gameInfoDone', true)
-//             }else{
-//                 this.updateProject();
-//                 return;
-//             }
-//             this.$emit('gameInfoDone', true)
-//         }
-
-//     }
-//     else {
-//         // if (this.$store.getters.gameStage === this.gameStage.Dev) {
-//         //     this.uploadGame()
-
-//         // }
-//         this.$emit('gameInfoDone', true)
-//     }
-
-// }
-
-// @Watch('isUpdateProject')
-// updateProject() {
-//     // if (!this.isUpdateProject ) {
-//     //     return;
-//     // }
-//     if (!this.validityCheck()) {
-//         this.$emit('gameInfoDone', false)
-//         return;
-//     }
-
-//     const option: any = {
-//         id: this.projectInfo.id,
-//         name: localStorage.getItem('title'),
-//         description: localStorage.getItem('description'),
-//         hashtags: localStorage.getItem('hashtagsArr'),
-//         stage: this.$store.getters.gameStage
-//     };
-
-//     console.log('this.thumbFile2', this.thumbFile2)
-
-//     this.$api.updateProject(option, this.thumbFile, this.thumbFile2)
-//         .then((res) => {
-
-//             this.$store.dispatch('project', this.projectInfo.id)
-//             this.toast.clear();
-//             this.toast.successToast(`${this.$t('update.done')}`);
-//             this.$router.push(`/${this.$i18n.locale}/projectList`)
-//         })
-//         .catch((err) => {
-//         })
-// }
-
-// async commitGameInfo() {
-
-//     if (!this.isEditProject) {
-//         if (!this.confirmedGamePath) {
-//             if (!this.autoGamePath) {
-//                 alert(`${this.$t('check.gameId')}`)
-
-//             }
-//             else {
-//                 await this.createGamePath();
-//                 if (!this.confirmedGamePath) {
-//                     return;
-//                 }
-//             }
-//         }
-//     }
-
-//     const gameInfo = {
-//         name: this.title,
-//         description: this.description,
-//         pathname: this.gamePath,
-//         project_picture: this.thumbFile,
-//         project_picture2: this.thumbFile2,
-//         hashtags: this.hashtagsArr.toString(),
-//         stage: this.$store.getters.gameStage,
-//     };
-
-//     // this.$store.commit("uploadGameFiles", []);
-//     this.$store.commit("gameFileInfoObj", {});
-//     this.$store.commit("gameInfoObj", gameInfo);
-// }
-
 function uploadThumbnail() {
   thumbnail.value.click()
 }
@@ -788,32 +573,23 @@ function onImgChange(event: any) {
   const file = event.target.files[0]
 
   if (file.size < 1024 * 1024 * IMAGE_MAX_SIZE) {
-    // this.fileName = event.target.files[0].name
     thumbFile.value = file
-    // this.checkActivePublish();
     const reader = new FileReader()
     reader.onload = (e) => {
       prevThumbnail.value = e.target!.result
-      // this.$store.commit('thumbFile', this.thumbFile)
-
-      // localStorage.setItem('thumbnail', this.prevThumbnail);
       isThumbErr.value = false
     }
     reader.readAsDataURL(file)
   } else {
     ElMessage.error(t('maxFile.size.4mb'))
   }
+
+  event.target.value = ''
 }
 
 function deleteThumbnail() {
-  // this.prevThumbnail = '';
-  // localStorage.removeItem('thumbnail')
+  prevThumbnail.value = ''
 }
-
-// deleteThumbnail2() {
-//     this.prevGif = '';
-//     this.thumbFile2 = 'rm_file2';
-// }
 
 function uploadGif() {
   gifThumbnail.value.click()
@@ -823,8 +599,6 @@ function onGifChange(event: any) {
 
   if (gifFile.size < 1024 * 1024 * IMAGE_MAX_SIZE) {
     gifThumFile.value = gifFile
-    // this.fileName = gifFile.name
-    // this.updateFile = gifFile
     const reader = new FileReader()
     reader.onload = (e) => {
       prevGif.value = e.target!.result
@@ -833,81 +607,12 @@ function onGifChange(event: any) {
   } else {
     ElMessage.error(t('maxFile.size.4mb'))
   }
+  event.target.value = ''
 }
 
 function deleteGif() {
   prevGif.value = ''
 }
-
-// checkActivePublish() {
-//     if (this.$store.getters.gameStage === this.gameStage.Dev) {
-//         if (this.title && this.description && this.hashtagsArr.length !== 0 && (this.thumbFile || (this.projectInfo && this.projectInfo.picture))) {
-//             this.commitGameInfo();
-//             this.$emit('isActivePublish', true)
-//         }
-//         else {
-//             this.$emit('isActivePublish', false)
-//         }
-
-//     }
-
-// }
-
-// @Watch('$store.getters.gameStage')
-// watchGameStage() {
-//     this.checkActivePublish()
-// }
-
-// deleteProject() {
-//     this.$api.deleteProject(this.projectInfo.id)
-//         .then((res) => {
-//             this.$store.getters.projects[this.projectInfo.id] = null;
-//             this.toast.clear();
-//             this.toast.successToast(`${this.$t('deleted.game.success.msg')}`)
-//         })
-//         .catch(() => {
-//             this.toast.clear();
-//             this.toast.failToast(`${this.$t('deleted.game.fail.msg')}`)
-
-//         })
-//         .finally(() => {
-//             this.$modal.hide('deleteProject')
-//             this.$router.replace(`/${this.$i18n.locale}/projectList`);
-//         })
-// }
-
-// uploadGame() {
-//     const {gameInfoObj, gameFileInfoObj, uploadGameFiles} = this.$store.getters;
-
-//     this.$api.createProject(
-//         gameInfoObj,
-//         gameFileInfoObj,
-//         uploadGameFiles
-//     )
-//         .then((res) => {
-
-//             this.toast.successToast(`${this.$t('devLog.upload.done')}`);
-//             this.$router.push(`/${this.$i18n.locale}/projectList`)
-//         })
-//         .catch((err) => {
-
-//         })
-// }
-
-// ableFileUpload() {
-//     // if (this.$store.getters.gameStage === eGameStage.Dev) {
-//     //     console.log('dev 상태')
-//     //     return false;
-//     // }
-//     // else
-//     if (this.projectInfo && this.projectInfo.projectVersions.length !== 0) {
-//         return false;
-//     }
-//     else {
-//         return true;
-//     }
-// }
-
 function saveChip() {
   if (
     !hashtagsArr.value.includes(chipInput.value.trim()) &&
@@ -930,39 +635,49 @@ function backspaceDelete({ which }) {
     hashtagsArr.value.splice(hashtagsArr.value.length - 1)
 }
 
-// /**
-//  * 게임 정보 local storage 저장
-//  */
-// autoSave() {
+async function updateGame() {
+  isUploadDone.value = true
+  form.hashtags = hashtagsArr.value.toString()
 
-//     if (this.title) {
-//         localStorage.setItem('title', this.title)
-//         this.isTitleErr = false;
-//     }
-//     else {
-//         localStorage.removeItem('title')
-//     }
+  form['file'] = form.project_picture
+  form.file = thumbFile.value ?? null
+  delete form.project_picture
 
-//     if (this.description) {
-//         localStorage.setItem('description', this.description)
-//         this.isDescErr = false;
-//     }
-//     else {
-//         localStorage.removeItem('description')
-//     }
+  form['file2'] = form.project_picture2
+  form.file2 = gifThumFile.value ?? null
+  delete form.project_picture2
 
-//     if (this.currentInput) {
-//         this.saveChip();
-//     }
-//     if (this.hashtagsArr.length > 0) {
-//         this.isHashtagErr = false;
-//         localStorage.setItem('hashtagsArr', this.hashtagsArr.toString())
-//     }
-//     else {
-//         localStorage.removeItem('hashtagsArr')
-//     }
-//     this.checkActivePublish();
-// }
+  if (prevThumbnail.value) isThumbErr.value = false
+
+  const isValid = await v$.value.$validate()
+  if (!isValid || isThumbErr.value) return
+
+  const formData = new FormData()
+
+  for (let k in form) {
+    formData.append(k, form[k])
+  }
+
+  const loading = ElLoading.service({
+    lock: true,
+    text: 'Loading',
+    customClass: 'loading-spinner',
+    background: 'rgba(0, 0, 0, 0.7)',
+  })
+
+  const { data, error } = await useFetch(
+    `/studio/project/${editProject.value.info.id}`,
+    getStudioFetchOptions('post', true, formData)
+  )
+
+  setTimeout(() => {
+    loading.close()
+    useProject().resetProjectInfo()
+    if (!error.value) {
+      router.push(localePath('/project/list'))
+    }
+  }, 1000)
+}
 </script>
 
 <style scoped lang="scss">

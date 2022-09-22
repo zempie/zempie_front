@@ -3,7 +3,7 @@
     <ul class="studio-upload-step">
       <li :class="[uploadProject.step === 1 ? 'active' : '', 'step']">
         <p>STEP 01</p>
-        <h3> {{ $t('uploadGame.selectStage.text') }}</h3>
+        <h3>{{ $t('uploadGame.selectStage.text') }}</h3>
       </li>
       <li :class="[uploadProject.step === 2 ? 'active' : '', 'step']">
         <p>STEP 02</p>
@@ -18,10 +18,8 @@
   </dt>
 </template>
 <script setup lang="ts">
-import { eGameStage } from "~~/types"
+import { eGameStage } from '~~/types'
 
-const { uploadProject } = useProject();
-
-const uploadStage = computed(() => uploadProject.value.form.stage)
+const { uploadProject } = useProject()
 
 </script>

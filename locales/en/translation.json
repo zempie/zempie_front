@@ -830,5 +830,8 @@
   "delete.banner.text": "You won't be able to recover the banner image you have deleted",
   "studio.preview.info": "__STRING_NOT_TRANSLATED__",
   "addGameInfo.game.max.err": "Game title has to be within 50 letters",
-  "exist.wt.diff.email": "The email address associated with this social account is already in use. Try logging in."
+  "exist.wt.diff.email": "The email address associated with this social account is already in use. Try logging in.",
+  "banner.image.title": "Banner image",
+  "studio.preview.banner.info": "__STRING_NOT_TRANSLATED__",
+  "leave.router.warning": "The content you are writing is not saved. Are you sure you want to finish to writing?"
 }
