@@ -28,7 +28,7 @@
       <dt v-else>
         <div class="ta-myinfo" :key="userInfo?.id">
           <UserAvatar :user="userInfo" :tag="'p'"></UserAvatar>
-          <h2>{{ useUser().user.value.info?.name }}</h2>
+          <h1>{{ useUser().user.value.info?.name }}</h1>
           <ul>
             <li>
               <NuxtLink
@@ -179,21 +179,45 @@ definePageMeta({
 function createHead(info) {
   useHead({
     title: `${info.name}${t('seo.channel.title')} | Zempie`,
+
+    link: [
+      {
+        rel: 'alternate',
+        href: `${config.ZEMPIE_URL}${route.fullPath}`,
+        hreflang: locale,
+      },
+    ],
     meta: [
+      {
+        property: 'og:url',
+        content: `${config.ZEMPIE_URL}${route.fullPath}`,
+      },
+      {
+        property: 'og:site_name',
+        content: 'Zempie',
+      },
+      {
+        name: 'og:type',
+        content: 'website',
+      },
+      {
+        name: 'robots',
+        content: 'index, follow',
+      },
       {
         name: 'description',
         content: `${info.name}${t('seo.channel.desc')}`,
       },
       {
-        name: 'og:title',
+        property: 'og:title',
         content: `${info.name}${t('seo.channel.title')}`,
       },
       {
-        name: 'og:description',
+        property: 'og:description',
         content: `${info.name}${t('seo.channel.desc')}`,
       },
       {
-        name: 'og:url',
+        property: 'og:url',
         content: `${config.ZEMPIE_URL}${route.path}`,
       },
       {

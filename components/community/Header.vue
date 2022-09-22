@@ -35,12 +35,12 @@
         <div
           :style="`background:url(${communityInfo?.profile_img}); background-size:cover;`"
         ></div>
-        <h2>
+        <h1>
           <span><i class="uil uil-unlock-alt"></i></span>
           <!-- <em><i class="uil uil-unlock-alt"></i></em> -->
           {{ communityInfo?.name }}
           <p style="width: 50px"></p>
-        </h2>
+        </h1>
         <h3>{{ communityInfo?.description }}</h3>
       </dd>
       <dt>

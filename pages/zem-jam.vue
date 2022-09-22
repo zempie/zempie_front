@@ -233,21 +233,50 @@ const config = useRuntimeConfig()
 
 useHead({
   title: `${t('seo.zemjam.title')} | Zempie`,
+  link: [
+    {
+      rel: 'alternate',
+      href: `${config.ZEMPIE_URL}${route.fullPath}`,
+      hreflang: locale,
+    },
+    {
+      rel: 'canonical',
+      href: `${config.ZEMPIE_URL}${route.fullPath}`,
+    },
+  ],
   meta: [
+    {
+      property: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.fullPath}`,
+    },
+    {
+      property: 'og:site_name',
+      content: 'Zempie',
+    },
+
+    {
+      name: 'og:type',
+      content: 'website',
+    },
+    {
+      name: 'robots',
+      content: 'index, follow',
+    },
     {
       name: 'description',
       content: `${t('seo.zemjam.desc')}`,
     },
+
     {
-      name: 'og:title',
+      property: 'og:title',
       content: `${t('seo.zemjam.title')}`,
     },
     {
-      name: 'og:description',
+      property: 'og:description',
       content: `${t('seo.zemjam.description')}`,
     },
     {
-      name: 'og:url',
+      property: 'og:url',
       content: `${config.ZEMPIE_URL}${route.path}`,
     },
   ],
@@ -278,23 +307,6 @@ definePageMeta({
 
 //     mounted() {
 
-//         this.metaSetting = new MetaSetting({
-//             title: `ZEM JAM | Zempie.com`, //게임 리스트
-//             meta: [
-//                 {
-//                     name: 'description',
-//                     content: `Make your awesome clicker game within 10 days and get a chance to win great prizes all skill levels participants are welcomed to join`
-//                 },
-//                 {property: 'og:url', content: `${this.$store.getters.homeUrl}/${this.$i18n.locale}/zem-jam`},
-//                 {property: 'og:title', content: `ZEM JAM  | Zempie.com`},
-//                 {
-//                     property: 'og:description',
-//                     content: `Make your awesome clicker game within 10 days and get a chance to win great prizes all skill levels participants are welcomed to join`
-//                 },
-//                 {property: 'og:image', content: '/images/zemjam_logo.png'},
-//                 {property: 'og:type', content: 'website'},
-
-//             ]
 //         });
 
 //         this.$nextTick(() => {

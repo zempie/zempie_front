@@ -5,7 +5,7 @@
         category === AllGameCategory ? 'visual-title' : 'jam-visual-title'
       "
     >
-      <h2><span>Games</span></h2>
+      <h1><span>Games</span></h1>
     </div>
     <div class="tab-search-swiper">
       <div class="swiper-area uppercase">
@@ -63,21 +63,48 @@ definePageMeta({
 
 useHead({
   title: `${t('seo.game.list.title')} | Zempie community`,
+  link: [
+    {
+      rel: 'alternate',
+      href: `${config.ZEMPIE_URL}${route.fullPath}`,
+      hreflang: locale,
+    },
+    {
+      rel: 'canonical',
+      href: `${config.ZEMPIE_URL}${route.fullPath}`,
+    },
+  ],
   meta: [
+    {
+      property: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.fullPath}`,
+    },
+    {
+      property: 'og:site_name',
+      content: 'Zempie',
+    },
+    {
+      name: 'og:type',
+      content: 'website',
+    },
+    {
+      name: 'robots',
+      content: 'index, follow',
+    },
     {
       name: 'description',
       content: `${t('seo.game.list.desc')}`,
     },
     {
-      name: 'og:title',
+      property: 'og:title',
       content: `${t('seo.game.list.title')}`,
     },
     {
-      name: 'og:description',
+      property: 'og:description',
       content: `${t('seo.game.list.desc')}`,
     },
     {
-      name: 'og:url',
+      property: 'og:url',
       content: `${config.ZEMPIE_URL}${route.path}`,
     },
   ],
@@ -177,11 +204,23 @@ function initData() {
 </script>
 
 <style scoped lang="scss">
+.visual-title {
+  h1 {
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 30px;
+    color: #fff;
+    span {
+      font-size: 30px;
+      font-weight: 700;
+    }
+  }
+}
 .jam-visual-title {
   background-position: center;
 
-  h2 {
-    display: none;
+  h1 {
+    visibility: hidden;
   }
 }
 
@@ -204,5 +243,31 @@ function initData() {
 
 .fade-leave-active {
   position: absolute;
+}
+
+@media all and (max-width: 479px) {
+  .visual-title {
+    h1 {
+      font-size: 30px;
+      line-height: 30px;
+      span {
+        font-size: 30px;
+        line-height: 30px;
+      }
+    }
+  }
+}
+
+@media all and (min-width: 480px) and (max-width: 767px) {
+  .visual-title {
+    h1 {
+      font-size: 30px;
+      line-height: 30px;
+      span {
+        font-size: 30px;
+        line-height: 30px;
+      }
+    }
+  }
 }
 </style>

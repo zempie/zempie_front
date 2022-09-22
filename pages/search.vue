@@ -2,11 +2,10 @@
   <div class="content">
     <!-- <ClientOnly> -->
     <div class="visual-title">
-      {{ $route.query }}
-      <h2>
+      <h1>
         '{{ keyword }}'
-        <span style="font-size: 30px">{{ $t('search.result') }}</span>
-      </h2>
+        <span>{{ $t('search.result') }}</span>
+      </h1>
     </div>
     <template v-if="results">
       <dl
@@ -112,7 +111,30 @@ watch(
 
     useHead({
       title: `${t('seo.search.title')} | Zempie`,
+      link: [
+        {
+          rel: 'alternate',
+          href: `${config.ZEMPIE_URL}${route.fullPath}`,
+          hreflang: locale,
+        },
+      ],
       meta: [
+        {
+          property: 'og:url',
+          content: `${config.ZEMPIE_URL}${route.fullPath}`,
+        },
+        {
+          property: 'og:site_name',
+          content: 'Zempie',
+        },
+        {
+          property: 'og:type',
+          content: 'website',
+        },
+        {
+          name: 'robots',
+          content: 'noindex, nofollow',
+        },
         {
           name: 'description',
           content: `${t('seo.search.desc1')}${keyword.value}${t(
@@ -120,17 +142,17 @@ watch(
           )}`,
         },
         {
-          name: 'og:title',
+          property: 'og:title',
           content: `${t('seo.search.title')}`,
         },
         {
-          name: 'og:description',
+          property: 'og:description',
           content: `${t('seo.search.desc1')}${keyword.value}${t(
             'seo.search.desc2'
           )}`,
         },
         {
-          name: 'og:url',
+          property: 'og:url',
           content: `${config.ZEMPIE_URL}${route.path}`,
         },
       ],
@@ -139,17 +161,6 @@ watch(
     refresh()
   }
 )
-
-function refreshFollow(user_id: number) {
-  feeds.value
-    .filter((feed) => {
-      return feed.user_id === user_id
-    })
-    .map((feed) => {
-      feed.user.is_following = !feed.user.is_following
-      return feed
-    })
-}
 
 // import Feed from "@/components/timeline/_feed.vue";
 // import MemberCard from "@/components/community/_memberCard.vue";
@@ -263,6 +274,19 @@ function refreshFollow(user_id: number) {
 </script>
 
 <style scoped lang="scss">
+.visual-title {
+  h1 {
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 30px;
+    color: #fff;
+    span {
+      font-size: 30px;
+      font-weight: 700;
+    }
+  }
+}
+
 .toasted,
 .toast-success {
   color: #f97316 !important;
@@ -313,6 +337,17 @@ function refreshFollow(user_id: number) {
 }
 
 @media all and (max-width: 479px) {
+  .visual-title {
+    h1 {
+      font-size: 30px;
+      line-height: 30px;
+      span {
+        font-size: 30px;
+        line-height: 30px;
+      }
+    }
+  }
+
   .card-follow,
   .ta-search-post {
     width: 100%;
@@ -320,6 +355,17 @@ function refreshFollow(user_id: number) {
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
+  .visual-title {
+    h1 {
+      font-size: 30px;
+      line-height: 30px;
+      span {
+        font-size: 30px;
+        line-height: 30px;
+      }
+    }
+  }
+
   .visual-title,
   .area-title,
   .card-game,

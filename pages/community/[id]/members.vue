@@ -27,6 +27,8 @@
 
 <script setup lang="ts">
 import { IUser } from '~~/types'
+import { useI18n } from 'vue-i18n'
+const { t, locale } = useI18n()
 
 const config = useRuntimeConfig()
 const route = useRoute()
@@ -44,21 +46,44 @@ watch(
   (info) => {
     useHead({
       title: `Members of ${info.name} | Zempie community`,
+      link: [
+        {
+          rel: 'alternate',
+          href: `${config.ZEMPIE_URL}${route.fullPath}`,
+          hreflang: locale,
+        },
+        {
+          rel: 'canonical',
+          href: `${config.ZEMPIE_URL}${route.fullPath}`,
+        },
+      ],
       meta: [
+        {
+          property: 'og:url',
+          content: `${config.ZEMPIE_URL}${route.fullPath}`,
+        },
+        {
+          property: 'og:site_name',
+          content: 'Zempie',
+        },
+        {
+          name: 'og:type',
+          content: 'website',
+        },
         {
           name: 'description',
           content: `${info.description}`,
         },
         {
-          name: 'og:title',
+          property: 'og:title',
           content: `Members of ${info.name}`,
         },
         {
-          name: 'og:description',
+          property: 'og:description',
           content: `${info.description}`,
         },
         {
-          name: 'og:url',
+          property: 'og:url',
           content: `${config.ZEMPIE_URL}${route.path}`,
         },
       ],

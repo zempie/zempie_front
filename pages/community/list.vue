@@ -8,11 +8,11 @@
       "
     >
       <div class="title">
-        Communities
+        <h1>Communities</h1>
         <!-- TODO: 커뮤니티 전체 개수 -->
         <!-- <span v-if="communityList && communityList.length > 0">({{ communityList.length }})</span> -->
       </div>
-      <p>Browse all the groups of the community!</p>
+      <h2>Browse all the groups of the community!</h2>
     </div>
 
     <dl class="area-search-sort">
@@ -82,21 +82,48 @@ definePageMeta({
 
 useHead({
   title: `${t('communityList')} | Zempie`,
+  link: [
+    {
+      rel: 'alternate',
+      href: `${config.ZEMPIE_URL}${route.fullPath}`,
+      hreflang: locale,
+    },
+    {
+      rel: 'canonical',
+      href: `${config.ZEMPIE_URL}${route.fullPath}`,
+    },
+  ],
   meta: [
+    {
+      property: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.fullPath}`,
+    },
+    {
+      property: 'og:site_name',
+      content: 'Zempie',
+    },
+    {
+      name: 'og:type',
+      content: 'website',
+    },
+    {
+      name: 'robots',
+      content: 'index, follow',
+    },
     {
       name: 'description',
       content: `${t('communityList.desc')}`,
     },
     {
-      name: 'og:title',
+      property: 'og:title',
       content: `${t('communityList')}`,
     },
     {
-      name: 'og:description',
+      property: 'og:description',
       content: `${t('communityList.desc')}`,
     },
     {
-      name: 'og:url',
+      property: 'og:url',
       content: `${config.ZEMPIE_URL}${route.path}`,
     },
     {
@@ -202,11 +229,13 @@ svg {
   height: 150px;
 
   .title {
-    font-size: 2.25rem;
-    font-weight: 700;
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 700;
+    }
   }
 
-  p {
+  h2 {
     margin-top: 10px;
     font-size: 1rem;
     font-weight: 500;

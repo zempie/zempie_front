@@ -93,21 +93,48 @@ watch(
     await gameListFetch()
     useHead({
       title: `${info.title} | Zempie game`,
+      link: [
+        {
+          rel: 'alternate',
+          href: `${config.ZEMPIE_URL}${route.fullPath}`,
+          hreflang: locale,
+        },
+        {
+          rel: 'canonical',
+          href: `${config.ZEMPIE_URL}${route.fullPath}`,
+        },
+      ],
       meta: [
+        {
+          property: 'og:url',
+          content: `${config.ZEMPIE_URL}${route.fullPath}`,
+        },
+        {
+          property: 'og:site_name',
+          content: 'Zempie',
+        },
+        {
+          name: 'og:type',
+          content: 'website',
+        },
+        {
+          name: 'robots',
+          content: 'index, follow',
+        },
         {
           name: 'description',
           content: `${info.description}`,
         },
         {
-          name: 'og:title',
+          property: 'og:title',
           content: `${info.title}`,
         },
         {
-          name: 'og:description',
+          property: 'og:description',
           content: `${info.description}`,
         },
         {
-          name: 'og:url',
+          property: 'og:url',
           content: `${config.ZEMPIE_URL}${route.path}`,
         },
       ],
