@@ -87,7 +87,7 @@
     <ClientOnly>
       <el-dialog
         v-model="isTextEditorOpen"
-        class="post-modal"
+        custom-class="post-modal"
         :show-close="false"
         :close-on-click-modal="false"
         :close-on-press-escape="false"

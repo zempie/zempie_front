@@ -26,7 +26,7 @@
     <el-dialog
       v-model="showDeletePostModal"
       append-to-body
-      class="modal-area-type"
+      custom-class="modal-area-type"
       width="380px"
     >
       <div class="modal-alert">
@@ -55,7 +55,11 @@
         </div>
       </div>
     </el-dialog>
-    <el-dialog v-model="showEditModal" append-to-body class="modal-area-type">
+    <el-dialog
+      v-model="showEditModal"
+      append-to-body
+      custom-class="modal-area-type"
+    >
       <TextEditor
         @closeModal="closeEditor"
         :isEdit="true"

@@ -14,7 +14,7 @@
     <el-dialog
       v-model="modalIsOpen"
       append-to-body
-      class="modal-area-type"
+      custom-class="modal-area-type"
       :show-close="false"
       width="380px"
     >
@@ -65,7 +65,7 @@ const emit = defineEmits(['refresh'])
 const isLogin = computed(() => useUser().user.value.isLogin)
 
 async function subscribe() {
-  if (isLogin.value) {
+  if (isLogin) {
     const { data, error } = await community.subscribe(props.community.id)
     if (!error.value) {
       emit('refresh')

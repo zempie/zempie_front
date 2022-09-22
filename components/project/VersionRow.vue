@@ -56,7 +56,7 @@
       <el-dialog
         v-model="showDeleteModal"
         append-to-body
-        class="modal-area-type"
+        custom-class="modal-area-type"
       >
         <div class="modal-alert">
           <dl class="ma-header">
