@@ -47,23 +47,42 @@ watch(
       title: `${userInfo.value.name}${t(
         'seo.channel.followers.title'
       )} | Zempie`,
+      link: [
+        {
+          rel: 'alternate',
+          href: `${config.ZEMPIE_URL}${route.fullPath}`,
+          hreflang: locale,
+        },
+      ],
       meta: [
+        {
+          property: 'og:url',
+          content: `${config.ZEMPIE_URL}${route.fullPath}`,
+        },
+        {
+          property: 'og:site_name',
+          content: 'Zempie',
+        },
+        {
+          name: 'og:type',
+          content: 'website',
+        },
         {
           name: 'description',
           content: `${userInfo.value.name}${t('seo.channel.followers.desc')}`,
         },
         {
-          name: 'og:title',
+          property: 'og:title',
           content: `${userInfo.value.name}${t('seo.channel.followers.title')}`,
         },
         {
-          name: 'og:description',
+          property: 'og:description',
           content: `${userInfo.value.name}${t(
             'seo.channel.followers.description'
           )}`,
         },
         {
-          name: 'og:url',
+          property: 'og:url',
           content: `${config.ZEMPIE_URL}${route.path}`,
         },
       ],

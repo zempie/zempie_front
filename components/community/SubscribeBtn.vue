@@ -65,7 +65,7 @@ const emit = defineEmits(['refresh'])
 const isLogin = computed(() => useUser().user.value.isLogin)
 
 async function subscribe() {
-  if (isLogin) {
+  if (isLogin.value) {
     const { data, error } = await community.subscribe(props.community.id)
     if (!error.value) {
       emit('refresh')

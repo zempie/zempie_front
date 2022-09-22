@@ -5,47 +5,68 @@
 </template>
 <script setup lang="ts">
 import { ID_INJECTION_KEY } from 'element-plus'
-import { useLocalePath, useSwitchLocalePath } from 'vue-i18n-routing';
+import { useLocalePath, useSwitchLocalePath } from 'vue-i18n-routing'
 
-import { useI18n } from 'vue-i18n';
+import { useI18n } from 'vue-i18n'
 
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
-const switchLocalePath = useSwitchLocalePath();
-const route = useRoute();
-const router = useRouter();
-const localePath = useLocalePath();
-
-
+const switchLocalePath = useSwitchLocalePath()
+const route = useRoute()
+const router = useRouter()
+const localePath = useLocalePath()
 
 useHead({
   title: `${t('seo.landing.title')} | Zempie`,
+  link: [
+    {
+      rel: 'alternate',
+      href: `${config.ZEMPIE_URL}${route.fullPath}`,
+      hreflang: locale,
+    },
+    {
+      rel: 'canonical',
+      href: `${config.ZEMPIE_URL}${route.fullPath}`,
+    },
+  ],
   meta: [
     {
-      name: 'description',
-      content: `${t('seo.landing.desc')}`
+      property: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.fullPath}`,
     },
     {
-      name: 'og:title',
-      content: `${t('seo.landing.title')}`
-    },
-    {
-      name: 'og:description',
-      content: `${t('seo.landing.description')}`
-    },
-    {
-      name: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`
-    },
-    {
-      name: 'og:image',
-      content: '/images/sns-thumbnail.png'
+      property: 'og:site_name',
+      content: 'Zempie',
     },
     {
       name: 'og:type',
-      content: 'website'
+      content: 'website',
     },
-  ]
+    {
+      name: 'description',
+      content: `${t('seo.landing.desc')}`,
+    },
+    {
+      property: 'og:title',
+      content: `${t('seo.landing.title')}`,
+    },
+    {
+      property: 'og:description',
+      content: `${t('seo.landing.description')}`,
+    },
+    {
+      property: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.path}`,
+    },
+    {
+      name: 'og:image',
+      content: '/images/sns-thumbnail.png',
+    },
+    {
+      name: 'og:type',
+      content: 'website',
+    },
+  ],
 })
 
 provide(ID_INJECTION_KEY, {
@@ -65,13 +86,11 @@ onBeforeMount(() => {
   }
   useCommon().setLang(locale.value)
   router.replace(localePath(route.path))
-
-
 })
 </script>
 
 <style lang="scss">
-@import "https://unicons.iconscout.com/release/v3.0.3/css/line.css";
+@import 'https://unicons.iconscout.com/release/v3.0.3/css/line.css';
 
 body {
   margin: 0px !important;

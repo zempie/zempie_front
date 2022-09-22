@@ -2,63 +2,89 @@
   <NuxtLayout name="user-setting">
     <div>
       <dl class="area-title">
-        <dt>Followers <span>{{  totalCount  }}</span></dt>
+        <dt>
+          Followers <span>{{ totalCount }}</span>
+        </dt>
       </dl>
       <UserList :users="users" :isPending="isPending" />
       <div v-if="!isPending && !users.length" class="no-result">
-        <h1>{{  $t('no.followers')  }}</h1>
-        <img src="/images/not-found.png" style="width:100px; height:100px" />
+        <h1>{{ $t('no.followers') }}</h1>
+        <img src="/images/not-found.png" style="width: 100px; height: 100px" />
       </div>
     </div>
   </NuxtLayout>
 </template>
 
 <script setup lang="ts">
-import { IUser } from '~~/types';
+import { IUser } from '~~/types'
 
-import { useI18n } from 'vue-i18n';
+import { useI18n } from 'vue-i18n'
 
 const { t, locale } = useI18n()
-const route = useRoute();
+const route = useRoute()
 const config = useRuntimeConfig()
-
 
 definePageMeta({
   title: 'my-follower',
   name: 'myFollowers',
-  middleware: 'auth'
-
+  middleware: 'auth',
 })
 
 useHead({
   title: `${t('seo.profile.followers.title')} | Zempie`,
+  link: [
+    {
+      rel: 'alternate',
+      href: `${config.ZEMPIE_URL}${route.fullPath}`,
+      hreflang: locale,
+    },
+    {
+      rel: 'canonical',
+      href: `${config.ZEMPIE_URL}${route.fullPath}`,
+    },
+  ],
   meta: [
     {
+      property: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.fullPath}`,
+    },
+    {
+      property: 'og:site_name',
+      content: 'Zempie',
+    },
+    {
+      name: 'og:type',
+      content: 'website',
+    },
+    {
+      name: 'robots',
+      content: 'noindex, nofollow',
+    },
+    {
       name: 'description',
-      content: `${t('seo.profile.followers.desc')}`
+      content: `${t('seo.profile.followers.desc')}`,
     },
     {
-      name: 'og:title',
-      content: `${t('seo.profile.followers.title')}`
+      property: 'og:title',
+      content: `${t('seo.profile.followers.title')}`,
     },
     {
-      name: 'og:description',
-      content: `${t('seo.profile.followers.description')}`
+      property: 'og:description',
+      content: `${t('seo.profile.followers.description')}`,
     },
     {
-      name: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`
+      property: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.path}`,
     },
-  ]
+  ],
 })
 
 const MAX_PAGE_SIZE = 20
 
-
 const payload = reactive({
   limit: MAX_PAGE_SIZE,
   offset: 0,
-  search: ''
+  search: '',
 })
 
 const totalCount = ref(0)
@@ -71,19 +97,22 @@ watch(
   () => userInfo.value,
   (user) => {
     if (user) {
-      fetch();
+      fetch()
     }
   }
 )
 
 onMounted(async () => {
   if (userInfo.value?.id) {
-    await fetch();
+    await fetch()
   }
 })
 
 async function fetch() {
-  const { data, pending, refresh, error } = await user.followerList(payload, Number(userInfo.value.id))
+  const { data, pending, refresh, error } = await user.followerList(
+    payload,
+    Number(userInfo.value.id)
+  )
   if (!error.value) {
     totalCount.value = data.value.totalCount
     users.value = data.value.result.map((user) => {
@@ -96,14 +125,12 @@ async function fetch() {
         followers_cnt: user.followers_cnt,
         followings_cnt: user.followings_cnt,
         is_following: user.is_following,
-        picture: user.profile_img
+        picture: user.profile_img,
       }
     })
-
   }
 
-
-  isPending.value = false;
+  isPending.value = false
 }
 </script>
 
@@ -122,8 +149,7 @@ async function fetch() {
   }
 
   img {
-    margin: 0 auto
+    margin: 0 auto;
   }
-
 }
 </style>

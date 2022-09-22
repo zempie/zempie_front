@@ -262,21 +262,48 @@ async function setHead() {
   if (feed.value) {
     useHead({
       title: `${feed.value?.user.name}${t('seo.feed.title')} | Zempie`,
+      link: [
+        {
+          rel: 'alternate',
+          href: `${config.ZEMPIE_URL}${route.fullPath}`,
+          hreflang: locale,
+        },
+        {
+          rel: 'canonical',
+          href: `${config.ZEMPIE_URL}${route.fullPath}`,
+        },
+      ],
       meta: [
+        {
+          property: 'og:url',
+          content: `${config.ZEMPIE_URL}${route.fullPath}`,
+        },
+        {
+          property: 'og:site_name',
+          content: 'Zempie',
+        },
+        {
+          name: 'og:type',
+          content: 'website',
+        },
+        {
+          name: 'robots',
+          content: 'index, follow',
+        },
         {
           name: 'description',
           content: `${feed.value?.content.slice(0, 20)}${t('seo.feed.desc')}`,
         },
         {
-          name: 'og:title',
+          property: 'og:title',
           content: `${feed.value?.user.name}${t('seo.feed.title')}`,
         },
         {
-          name: 'og:description',
+          property: 'og:description',
           content: `${feed.value?.content.slice(0, 20)}${t('seo.feed.desc')}`,
         },
         {
-          name: 'og:url',
+          property: 'og:url',
           content: `${config.ZEMPIE_URL}${route.path}`,
         },
       ],

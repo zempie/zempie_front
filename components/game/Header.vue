@@ -59,7 +59,7 @@
             </div>
           </dt>
           <dd>
-            <h2>{{ gameInfo.title }}<span></span></h2>
+            <h1>{{ gameInfo.title }}<span></span></h1>
             <h3 @click="moveUserPage" style="cursor: pointer">
               By
 
@@ -315,7 +315,7 @@ async function updateBannerImg() {
     formData.append('game_id', String(props.gameInfo.id))
     formData.append('file', file)
 
-    const { data, error, pending } = await useFetch(
+    const { data, error, pending } = await useFetch<any>(
       '/game/banner',
       getZempieFetchOptions('put', true, formData)
     )
@@ -349,7 +349,7 @@ function saveBannerImg() {
     formData.append('game_id', String(props.gameInfo.id))
     formData.append('file', file)
 
-    const { data, error, pending } = await useFetch(
+    const { data, error, pending } = await useFetch<any>(
       '/game/banner',
       getZempieFetchOptions('post', true, formData)
     )
@@ -368,6 +368,14 @@ function moveUserPage() {
 </script>
 
 <style lang="scss" scoped>
+.visual-info-left {
+  h1 {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 18px;
+    color: #fff;
+  }
+}
 .like-btn {
   height: 65px;
   display: inline-flex;

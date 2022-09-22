@@ -116,7 +116,7 @@
   background: #33e4ce;
 }
 
-.visual-info-center>dl dd h2 {
+.visual-info-center>dl dd h1 {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -126,7 +126,7 @@
   color: #fff;
 }
 
-.visual-info-center>dl dd h2 span {
+.visual-info-center>dl dd h1 span {
   display: inline-block;
   width: 22px;
   height: 22px;
@@ -137,7 +137,7 @@
   background: #f97316;
 }
 
-.visual-info-center>dl dd h2 em {
+.visual-info-center>dl dd h1 em {
   display: inline-block;
   width: 22px;
   height: 22px;
@@ -340,12 +340,12 @@
   width: 63%;
 }
 
-.visual-info-left>dl>dt dl dd h2 {
+/* .visual-info-left>dl>dt dl dd h2 {
   font-weight: 600;
   font-size: 18px;
   line-height: 18px;
   color: #fff;
-}
+} */
 
 .visual-info-left>dl>dt dl dd h3 {
   margin-top: 10px;
@@ -627,18 +627,18 @@
   overflow: hidden;
 }
 
+/* 
 .visual-title h2 {
   font-weight: 600;
   font-size: 30px;
   line-height: 30px;
   color: #fff;
-}
+} */
 
-.visual-title h2 span {
-  /* font-weight: 400; */
+/* .visual-title h2 span {
   font-size: 2.25rem;
   font-weight: 700;
-}
+} */
 
 .jam-visual-title h2 {
   font-weight: 600;
@@ -657,10 +657,11 @@
     height: 120px;
   }
 
+  /* 
   .visual-title h2 {
     font-size: 20px;
     line-height: 20px;
-  }
+  } */
 
   .jam-visual-title {
     width: 100%;
@@ -679,10 +680,11 @@
     height: 120px;
   }
 
+  /* 
   .visual-title h2 {
     font-size: 20px;
     line-height: 20px;
-  }
+  } */
 
   .jam-visual-title {
     width: 470px;

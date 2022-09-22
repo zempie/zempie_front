@@ -149,7 +149,13 @@
                   </div>
                 </div>
 
-                <p style="width: 130%; text-align: left">
+                <p
+                  style="
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-around;
+                  "
+                >
                   <button class="btn-gray" @click="uploadFile">
                     <i class="uil uil-upload"></i>&nbsp;
                     {{ $t('addGameInfo.game.thumbnail') }}
@@ -200,7 +206,13 @@
                     ref="thumbnailGif" name="fileInput" />
                   </div>
                 </div>
-                <p style="width: 130%; text-align: left">
+                <p
+                  style="
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-around;
+                  "
+                >
                   <button class="btn-gray" @click="uploadGif">
                     <i class="uil uil-upload"></i>&nbsp;
                     {{ $t('addGameInfo.game.thumbnail') }}</button
@@ -340,7 +352,7 @@ const prevImg = ref(editProject.value.info.picture)
 const thumbFile = ref<File | null>()
 const isThumbErr = ref(false)
 
-const prevGif = ref('')
+const prevGif = ref(editProject.value.info.picture2)
 const thumbFileGif = ref<File | string | null>()
 const thumbnailGif = ref<HTMLElement>()
 

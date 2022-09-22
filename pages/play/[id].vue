@@ -48,21 +48,44 @@ onMounted(async () => {
 
     useHead({
       title: `${gameData.value.title} | Zempie`,
+      link: [
+        {
+          rel: 'alternate',
+          href: `${config.ZEMPIE_URL}${route.fullPath}`,
+          hreflang: locale,
+        },
+      ],
       meta: [
+        {
+          property: 'og:url',
+          content: `${config.ZEMPIE_URL}${route.fullPath}`,
+        },
+        {
+          property: 'og:site_name',
+          content: 'Zempie',
+        },
+        {
+          name: 'og:type',
+          content: 'website',
+        },
+        {
+          name: 'robots',
+          content: 'index, follow',
+        },
         {
           name: 'description',
           content: `${gameData.value.title}`,
         },
         {
-          name: 'og:title',
+          property: 'og:title',
           content: `${gameData.value.description}`,
         },
         {
-          name: 'og:description',
+          property: 'og:description',
           content: `${gameData.value.description}`,
         },
         {
-          name: 'og:url',
+          property: 'og:url',
           content: `${config.ZEMPIE_URL}${route.path}`,
         },
         {
@@ -101,12 +124,6 @@ function onResize() {
 //   async mounted() {
 //     this.gameData = this.$store.getters.gameByPathname(this.pathname);
 
-//     if (!this.gameData) {
-//       //todo 게임 요청
-//       const result = await this.$api.game(this.pathname);
-//       this.metaSetting = new MetaSetting({
-//         title: `${result.game?.title} | Zempie.com`, //게임 리스트
-//         meta: [
 //           { name: 'description', content: result.game?.description },
 //           { property: 'og:url', content: `${this.$store.getters.homeUrl}/play/${result.game?.pathname}` },
 //           { property: 'og:title', content: `${result.game?.title} | Zempie.com` },

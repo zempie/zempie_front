@@ -2,50 +2,72 @@
   <NuxtLayout name="project-manage">
     <ProjectEdit />
   </NuxtLayout>
-
 </template>
 
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n';
+import { useI18n } from 'vue-i18n'
 
 const { t, locale } = useI18n()
 const route = useRoute()
-const router = useRouter();
+const router = useRouter()
 const config = useRuntimeConfig()
 
 useHead({
   title: `${t('seo.project.title')} | Zempie Studio`,
+  link: [
+    {
+      rel: 'alternate',
+      href: `${config.ZEMPIE_URL}${route.fullPath}`,
+      hreflang: locale,
+    },
+    {
+      rel: 'canonical',
+      href: `${config.ZEMPIE_URL}${route.fullPath}`,
+    },
+  ],
   meta: [
     {
+      property: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.fullPath}`,
+    },
+    {
+      property: 'og:site_name',
+      content: 'Zempie',
+    },
+    {
+      name: 'og:type',
+      content: 'website',
+    },
+    {
+      name: 'robots',
+      content: 'noindex, nofollow',
+    },
+    {
       name: 'description',
-      content: `${t('seo.project.desc')}`
+      content: `${t('seo.project.desc')}`,
     },
     {
-      name: 'og:title',
-      content: `${t('seo.project.title')}`
+      property: 'og:title',
+      content: `${t('seo.project.title')}`,
     },
     {
-      name: 'og:description',
-      content: `${t('seo.project.description')}`
+      property: 'og:description',
+      content: `${t('seo.project.description')}`,
     },
     {
-      name: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`
+      property: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.path}`,
     },
-  ]
+  ],
 })
 
 definePageMeta({
   title: 'Edit game information',
   name: 'projectId',
-  middleware: 'auth'
+  middleware: 'auth',
 })
 
 const projectId = computed(() => parseInt(route.params.id as string))
-
-
-
-
 
 onMounted(async () => {
   if (!useProject().editProject.value.info.id) await fetch()
@@ -58,9 +80,6 @@ async function fetch() {
   useProject().setProjectInfo(result)
   useProject().setStageOnEdit(result.stage)
 }
-
-
-
 </script>
 
 <style scoped lang="scss">
@@ -68,23 +87,20 @@ async function fetch() {
   min-height: 700px;
 }
 
-
 //transition
 .component-fade-enter-active,
 .component-fade-leave-active {
-  transition: opacity .3s ease;
+  transition: opacity 0.3s ease;
 }
 
 .component-fade-enter,
 .component-fade-leave-to
 
-/* .component-fade-leave-active below version 2.1.8 */
-  {
+/* .component-fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
 
 // /transition
-
 
 .step {
   opacity: 0.5;
@@ -131,9 +147,7 @@ async function fetch() {
       border-radius: 90px;
     }
   }
-
 }
-
 
 .publish-btn:hover {
   background-color: #fff;
@@ -149,17 +163,17 @@ async function fetch() {
   }
 }
 
-input[type="radio"] {
+input[type='radio'] {
   display: none;
 }
 
-input[type="radio"]:checked+label {
+input[type='radio']:checked + label {
   color: #fff;
-  background: #FF6E17;
-  border-color: #FF6E17;
+  background: #ff6e17;
+  border-color: #ff6e17;
 }
 
-input[type="radio"]+label {
+input[type='radio'] + label {
   display: inline-block;
   width: 22px;
   height: 22px;

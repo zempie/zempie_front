@@ -1,16 +1,20 @@
 <template>
   <div class="content">
-
-    <h2> {{ $t('term.title') }}</h2>
-    <p><strong>{{ $t('term.title1') }}</strong></p>
+    <h1>{{ $t('term.title') }}</h1>
+    <p>
+      <strong>{{ $t('term.title1') }}</strong>
+    </p>
     <p>
       {{ $t('term.title1.info1') }}
     </p>
-    <p><strong>{{ $t('term.title2') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.title2') }}</strong>
+    </p>
     <ol>
       <li>
         <p>
-          {{ $t('term.title2.info1') }}</p>
+          {{ $t('term.title2.info1') }}
+        </p>
         <ol>
           <li>
             <p>
@@ -24,47 +28,57 @@
           </li>
           <li>
             <p>
-              {{ $t('term.title2.info4') }}</p>
+              {{ $t('term.title2.info4') }}
+            </p>
           </li>
         </ol>
       </li>
       <li>
-        <p>{{ $t('term.title2.info5') }}
-        </p>
+        <p>{{ $t('term.title2.info5') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.title3') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.title3') }}</strong>
+    </p>
     <ol>
       <li>
         <p>
-          {{ $t('term.title3.info1') }}</p>
+          {{ $t('term.title3.info1') }}
+        </p>
       </li>
       <li>
         <p>
-          {{ $t('term.title3.info2') }}</p>
+          {{ $t('term.title3.info2') }}
+        </p>
       </li>
       <li>
         <p>
-          {{ $t('term.title3.info3') }}</p>
+          {{ $t('term.title3.info3') }}
+        </p>
         <ol>
           <li>
             <p>
-              {{ $t('term.title3.info4') }}</p>
+              {{ $t('term.title3.info4') }}
+            </p>
           </li>
         </ol>
       </li>
       <li>
         <p>
-          {{ $t('term.title3.info5') }}</p>
+          {{ $t('term.title3.info5') }}
+        </p>
         <ol>
           <li>
             <p>
-              {{ $t('term.title3.info6') }}</p>
+              {{ $t('term.title3.info6') }}
+            </p>
           </li>
         </ol>
       </li>
     </ol>
-    <p><strong>{{ $t('term.title4') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.title4') }}</strong>
+    </p>
     <p>
       {{ $t('term.title4.info1') }}
     </p>
@@ -85,7 +99,9 @@
         <p>{{ $t('term.title4.info6') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.title5') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.title5') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.title5.info1') }}</p>
@@ -94,7 +110,9 @@
         <p>{{ $t('term.title5.info2') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.title6') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.title6') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.title6.info1') }}</p>
@@ -119,9 +137,13 @@
         <p>{{ $t('term.title6.info6') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.title7') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.title7') }}</strong>
+    </p>
     <p>{{ $t('term.title7.info1') }}</p>
-    <p><strong>{{ $t('term.title8') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.title8') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.title8.info1') }}</p>
@@ -138,7 +160,9 @@
         </ol>
       </li>
     </ol>
-    <p><strong>{{ $t('term.title9') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.title9') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.title9.info1') }}</p>
@@ -203,7 +227,9 @@
         </ol>
       </li>
     </ol>
-    <p><strong>{{ $t('term.title10') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.title10') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.title10.info1') }}</p>
@@ -217,7 +243,9 @@
         <p>{{ $t('term.title10.info3') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.title11') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.title11') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.title11.info1') }}</p>
@@ -237,7 +265,9 @@
         </ol>
       </li>
     </ol>
-    <p><strong>{{ $t('term.title12') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.title12') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.title12.info1') }}</p>
@@ -276,7 +306,9 @@
         <p>{{ $t('term.title12.info10') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.title13') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.title13') }}</strong>
+    </p>
     <p>{{ $t('term.title13.info1') }}</p>
     <ol>
       <li>
@@ -289,7 +321,9 @@
         <p>{{ $t('term.title13.info4') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.title14') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.title14') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.title14.info1') }}</p>
@@ -307,7 +341,9 @@
         <p>{{ $t('term.title14.info5') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.title15') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.title15') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.title15.info1') }}</p>
@@ -325,7 +361,9 @@
         <p>{{ $t('term.title15.info5') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.title16') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.title16') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.title16.info1') }}</p>
@@ -337,7 +375,9 @@
         <p>{{ $t('term.title16.info3') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.title17') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.title17') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.title17.info1') }}</p>
@@ -373,7 +413,9 @@
         <p>{{ $t('term.title17.info11') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.title18') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.title18') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.title18.info1') }}</p>
@@ -386,7 +428,9 @@
       </li>
     </ol>
     <h1>{{ $t('term.private') }}</h1>
-    <p><strong>{{ $t('term.private.title1') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.private.title1') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.private.title1.info1') }}</p>
@@ -401,9 +445,13 @@
         <p>{{ $t('term.private.title1.info4') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.private.title2') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.private.title2') }}</strong>
+    </p>
     <p>{{ $t('term.private.title2.info1') }}</p>
-    <p><strong>{{ $t('term.private.title3') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.private.title3') }}</strong>
+    </p>
     <p>{{ $t('term.private.title3.info1') }}</p>
     <ol>
       <li>
@@ -434,7 +482,9 @@
         <p>{{ $t('term.private.title3.info10') }}</p>
       </li>
     </ul>
-    <p><strong>{{ $t('term.private.title4') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.private.title4') }}</strong>
+    </p>
     <p>{{ $t('term.private.title4.info1') }}</p>
     <ol>
       <li>
@@ -462,7 +512,9 @@
         </ol>
       </li>
     </ol>
-    <p><strong>{{ $t('term.private.title5') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.private.title5') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.private.title5.info1') }}</p>
@@ -474,16 +526,27 @@
         <p>{{ $t('term.private.title5.info3') }}</p>
       </li>
     </ol>
-    <p>&nbsp;&nbsp; – {{ $t('term.private.title5.info4') }} [(<a href="http://www.spayment.org"
-        data-card-appearance="inline">http://www.spayment.org</a>
-      )]</p>
-    <p>&nbsp;&nbsp; – {{ $t('term.private.title5.info5') }}: 02-563-4033, 4012</p>
-    <p><strong>{{ $t('term.private.title6') }}</strong></p>
+    <p>
+      &nbsp;&nbsp; – {{ $t('term.private.title5.info4') }} [(<a
+        href="http://www.spayment.org"
+        data-card-appearance="inline"
+        >http://www.spayment.org</a
+      >
+      )]
+    </p>
+    <p>
+      &nbsp;&nbsp; – {{ $t('term.private.title5.info5') }}: 02-563-4033, 4012
+    </p>
+    <p>
+      <strong>{{ $t('term.private.title6') }}</strong>
+    </p>
     <p>{{ $t('term.private.title6.info1') }}</p>
     <p>{{ $t('term.private.title6.info2') }}</p>
     <p>{{ $t('term.private.title6.info3') }}</p>
     <p>{{ $t('term.private.title6.info4') }}</p>
-    <p><strong>{{ $t('term.private.title7') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.private.title7') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.private.title7.info1') }}</p>
@@ -517,7 +580,9 @@
         </ol>
       </li>
     </ol>
-    <p><strong>{{ $t('term.private.title8') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.private.title8') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.private.title8.info1') }}</p>
@@ -539,7 +604,9 @@
         </ol>
       </li>
     </ol>
-    <p><strong>{{ $t('term.private.title9') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.private.title9') }}</strong>
+    </p>
     <p>{{ $t('term.private.title9.info1') }}</p>
     <ol>
       <li>
@@ -579,7 +646,9 @@
         </ol>
       </li>
     </ol>
-    <p><strong>{{ $t('term.private.title10') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.private.title10') }}</strong>
+    </p>
     <p>{{ $t('term.private.title10.info1') }}</p>
     <ol>
       <li>
@@ -589,22 +658,31 @@
         <p>{{ $t('term.private.title10.info3') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.private.title11') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.private.title11') }}</strong>
+    </p>
     <p>{{ $t('term.private.title11.info1') }}</p>
-    <p><strong>{{ $t('term.private.title12') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.private.title12') }}</strong>
+    </p>
     <p>{{ $t('term.private.title12.info1') }}</p>
     <ol>
       <li>
-        <p>{{ $t('term.private.title12.info2') }}, CEO, 02-393-2574, <a
-            href="mailto:fred.seo@fromthered.com">fred.seo@fromthered.com</a></p>
+        <p>
+          {{ $t('term.private.title12.info2') }}, CEO, 02-393-2574,
+          <a href="mailto:fred.seo@fromthered.com">fred.seo@fromthered.com</a>
+        </p>
       </li>
       <li>
-        <p>{{ $t('term.private.title12.info3') }}, 02-393-2574, <a
-            href="mailto:cindy.lee@fromthered.com">cindy.lee@fromthered.com</a>
+        <p>
+          {{ $t('term.private.title12.info3') }}, 02-393-2574,
+          <a href="mailto:cindy.lee@fromthered.com">cindy.lee@fromthered.com</a>
         </p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.private.title13') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.private.title13') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.private.title13.info1') }}</p>
@@ -638,9 +716,13 @@
       </li>
     </ol>
     <h1>{{ $t('term.developer') }}</h1>
-    <p><strong>{{ $t('term.developer.title1') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.developer.title1') }}</strong>
+    </p>
     <p>{{ $t('term.developer.title1.info') }}</p>
-    <p><strong>{{ $t('term.developer.title2') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.developer.title2') }}</strong>
+    </p>
     <p>{{ $t('term.developer.title1.info1') }}</p>
     <ol>
       <li>
@@ -653,7 +735,9 @@
         <p>{{ $t('term.developer.title1.info4') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.developer.title3') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.developer.title3') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.developer.title3.info1') }}&nbsp;</p>
@@ -671,7 +755,9 @@
         <p>{{ $t('term.developer.title3.info5') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.developer.title4') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.developer.title4') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.developer.title4.info1') }}</p>
@@ -686,7 +772,9 @@
         <p>{{ $t('term.developer.title4.info4') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.developer.title5') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.developer.title5') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.developer.title5.info1') }}</p>
@@ -698,7 +786,9 @@
         <p>{{ $t('term.developer.title5.info3') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.developer.title6') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.developer.title6') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.developer.title6.info1') }}</p>
@@ -713,7 +803,9 @@
         <p>{{ $t('term.developer.title6.info4') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.developer.title7') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.developer.title7') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.developer.title7.info1') }}</p>
@@ -754,9 +846,13 @@
         </ol>
       </li>
     </ol>
-    <p><strong>{{ $t('term.developer.title8') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.developer.title8') }}</strong>
+    </p>
     <p>{{ $t('term.developer.title8.info') }}</p>
-    <p><strong>{{ $t('term.developer.title9') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.developer.title9') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.developer.title9.info1') }}</p>
@@ -765,7 +861,9 @@
         <p>{{ $t('term.developer.title9.info2') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.developer.title10') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.developer.title10') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.developer.title10.info1') }}</p>
@@ -777,7 +875,9 @@
         <p>{{ $t('term.developer.title10.info3') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.developer.title11') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.developer.title11') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.developer.title11.info1') }}</p>
@@ -786,7 +886,9 @@
         <p>{{ $t('term.developer.title11.info2') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.developer.title12') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.developer.title12') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.developer.title12.info1') }}</p>
@@ -801,16 +903,13 @@
             <p>{{ $t('term.developer.title12.info4') }}</p>
           </li>
           <li>
-            <p>{{ $t('term.developer.title12.info5') }}
-            </p>
+            <p>{{ $t('term.developer.title12.info5') }}</p>
           </li>
           <li>
-            <p>{{ $t('term.developer.title12.info6') }}
-            </p>
+            <p>{{ $t('term.developer.title12.info6') }}</p>
           </li>
           <li>
-            <p>{{ $t('term.developer.title12.info7') }}
-            </p>
+            <p>{{ $t('term.developer.title12.info7') }}</p>
           </li>
           <li>
             <p>{{ $t('term.developer.title12.info8') }}</p>
@@ -827,7 +926,9 @@
         <p>{{ $t('term.developer.title12.info11') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.developer.title13') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.developer.title13') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.developer.title13.info1') }}</p>
@@ -836,7 +937,9 @@
         <p>{{ $t('term.developer.title13.info2') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.developer.title14') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.developer.title14') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.developer.title14.info1') }}</p>
@@ -854,7 +957,9 @@
         <p>{{ $t('term.developer.title14.info5') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.developer.title15') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.developer.title15') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.developer.title15.info1') }}</p>
@@ -869,10 +974,14 @@
         <p>{{ $t('term.developer.title15.info4') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.developer.title16') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.developer.title16') }}</strong>
+    </p>
     <p>{{ $t('term.developer.title16.info1') }}</p>
     <h1>{{ $t('term.operation') }}</h1>
-    <p><strong>{{ $t('term.operation.title1') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.operation.title1') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.operation.title1.info1') }}</p>
@@ -887,18 +996,18 @@
         <p>{{ $t('term.operation.title1.info4') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.operation.title2') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.operation.title2') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.operation.title2.info1') }}</p>
       </li>
       <li>
-        <p>{{ $t('term.operation.title2.info2') }}
-        </p>
+        <p>{{ $t('term.operation.title2.info2') }}</p>
       </li>
       <li>
-        <p>{{ $t('term.operation.title2.info3') }}
-        </p>
+        <p>{{ $t('term.operation.title2.info3') }}</p>
       </li>
       <li>
         <p>{{ $t('term.operation.title2.info4') }}</p>
@@ -907,11 +1016,12 @@
         <p>{{ $t('term.operation.title2.info5') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.operation.title3') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.operation.title3') }}</strong>
+    </p>
     <ol>
       <li>
-        <p>{{ $t('term.operation.title3.info1') }}
-        </p>
+        <p>{{ $t('term.operation.title3.info1') }}</p>
       </li>
       <li>
         <p>{{ $t('term.operation.title3.info2') }}</p>
@@ -932,7 +1042,9 @@
         <p>{{ $t('term.operation.title3.info7') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.operation.title4') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.operation.title4') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.operation.title4.info1') }}</p>
@@ -950,12 +1062,10 @@
             <p>{{ $t('term.operation.title4.info5') }}</p>
           </li>
           <li>
-            <p>{{ $t('term.operation.title4.info6') }}
-            </p>
+            <p>{{ $t('term.operation.title4.info6') }}</p>
           </li>
           <li>
-            <p>{{ $t('term.operation.title4.info7') }}
-            </p>
+            <p>{{ $t('term.operation.title4.info7') }}</p>
           </li>
           <li>
             <p>{{ $t('term.operation.title4.info8') }}</p>
@@ -996,15 +1106,13 @@
             <p>{{ $t('term.operation.title4.info19') }}</p>
           </li>
           <li>
-            <p>{{ $t('term.operation.title4.info20') }}
-            </p>
+            <p>{{ $t('term.operation.title4.info20') }}</p>
           </li>
           <li>
             <p>{{ $t('term.operation.title4.info21') }}</p>
           </li>
           <li>
-            <p>{{ $t('term.operation.title4.info22') }}
-            </p>
+            <p>{{ $t('term.operation.title4.info22') }}</p>
           </li>
           <li>
             <p>{{ $t('term.operation.title4.info23') }}</p>
@@ -1041,8 +1149,7 @@
             <p>{{ $t('term.operation.title4.info32') }}</p>
           </li>
           <li>
-            <p>{{ $t('term.operation.title4.info33') }}
-            </p>
+            <p>{{ $t('term.operation.title4.info33') }}</p>
           </li>
         </ol>
       </li>
@@ -1079,8 +1186,7 @@
             <p>{{ $t('term.operation.title4.info43') }}</p>
           </li>
           <li>
-            <p>{{ $t('term.operation.title4.info44') }}
-            </p>
+            <p>{{ $t('term.operation.title4.info44') }}</p>
           </li>
           <li>
             <p>{{ $t('term.operation.title4.info45') }}</p>
@@ -1205,7 +1311,9 @@
         </ol>
       </li>
     </ol>
-    <p><strong>{{ $t('term.operation.title5') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.operation.title5') }}</strong>
+    </p>
     <ol>
       <li>
         <p>{{ $t('term.operation.title5.info1') }}</p>
@@ -1220,7 +1328,9 @@
         <p>{{ $t('term.operation.title5.info4') }}</p>
       </li>
     </ol>
-    <p><strong>{{ $t('term.operation.title6') }}</strong></p>
+    <p>
+      <strong>{{ $t('term.operation.title6') }}</strong>
+    </p>
     <p>{{ $t('term.operation.title6.info1') }}</p>
     <ol>
       <li>
@@ -1258,70 +1368,101 @@
     <p>{{ $t('term.operation.title6.info17') }}</p>
     <p>{{ $t('term.operation.title6.info18') }}</p>
     <p>{{ $t('term.operation.title6.info19') }}</p>
-    <p>{{ $t('term.operation.title6.info20') }}
+    <p>{{ $t('term.operation.title6.info20') }}</p>
+    <p>
+      <strong>{{ $t('term.operation.title7') }}</strong>
     </p>
-    <p><strong>{{ $t('term.operation.title7') }}</strong></p>
     <ol>
       <li>
         <p>{{ $t('term.operation.title7.info1') }}</p>
       </li>
       <li>
-        <p>{{ $t('term.operation.title7.info2') }}
-        </p>
+        <p>{{ $t('term.operation.title7.info2') }}</p>
       </li>
       <li>
-        <p>{{ $t('term.operation.title7.info3') }}
-        </p>
+        <p>{{ $t('term.operation.title7.info3') }}</p>
       </li>
     </ol>
     <p></p>
     <p>{{ $t('term.start') }}</p>
     <p>&nbsp;</p>
-
-
   </div>
 </template>
 
-
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n';
+import { useI18n } from 'vue-i18n'
 
 const { t, locale } = useI18n()
-const route = useRoute();
+const route = useRoute()
 const config = useRuntimeConfig()
 
 useHead({
   title: `${t('seo.terms.title')} | Zempie`,
+  link: [
+    {
+      rel: 'alternate',
+      href: `${config.ZEMPIE_URL}${route.fullPath}`,
+      hreflang: locale,
+    },
+    {
+      rel: 'canonical',
+      href: `${config.ZEMPIE_URL}${route.fullPath}`,
+    },
+  ],
   meta: [
     {
+      property: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.fullPath}`,
+    },
+    {
+      property: 'og:site_name',
+      content: 'Zempie',
+    },
+    {
+      name: 'og:type',
+      content: 'website',
+    },
+    {
       name: 'description',
-      content: `${t('seo.terms.desc')}`
+      content: `${t('seo.terms.desc')}`,
     },
     {
-      name: 'og:title',
-      content: `${t('seo.terms.title')}`
+      name: 'robots',
+      content: 'noindex, nofollow',
     },
     {
-      name: 'og:description',
-      content: `${t('seo.terms.description')}`
+      property: 'og:title',
+      content: `${t('seo.terms.title')}`,
     },
     {
-      name: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`
+      property: 'og:description',
+      content: `${t('seo.terms.description')}`,
     },
-  ]
+    {
+      property: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.path}`,
+    },
+  ],
 })
 </script>
 
 <style scoped lang="scss">
 * {
-  color: #000
+  color: #000;
 }
 
 .content {
   padding-left: 30px;
 }
-
+h1 {
+  display: block;
+  font-size: 2em;
+  margin-top: 0.67em;
+  margin-bottom: 0.67em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
 h2 {
   margin-block-start: 0.83em;
   margin-block-end: 0.83em;

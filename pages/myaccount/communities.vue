@@ -6,62 +6,94 @@
 
     <Transition name="component-fade" mode="out-in">
       <ul class="card-timeline">
-        <CommunityCardSk v-if="isPending" v-for="community in 4" :key="community" />
+        <CommunityCardSk
+          v-if="isPending"
+          v-for="community in 4"
+          :key="community"
+        />
         <template v-else>
-          <CommunityCard v-if="communities.length" v-for="community in communities" :key="community?.id"
-            :community="community">
+          <CommunityCard
+            v-if="communities.length"
+            v-for="community in communities"
+            :key="community?.id"
+            :community="community"
+          >
             <template v-slot:subBtn>
               <CommunitySubscribeBtn :community="community" @refresh="fetch" />
             </template>
           </CommunityCard>
           <div class="no-result" v-else>
-            <h1> {{  t('noJoined.community')  }} </h1>
+            <h1>{{ t('noJoined.community') }}</h1>
             <img src="/images/not-found.png" width="100px" height="100px" />
           </div>
         </template>
       </ul>
     </Transition>
-
   </NuxtLayout>
 </template>
 
 <script setup lang="ts">
-import { ICommunity } from '~~/types';
+import { ICommunity } from '~~/types'
 
-import { useI18n } from 'vue-i18n';
+import { useI18n } from 'vue-i18n'
 
 const { t, locale } = useI18n()
-const route = useRoute();
+const route = useRoute()
 const config = useRuntimeConfig()
-
 
 definePageMeta({
   title: 'my-communities',
   name: 'myCommunities',
-  middleware: 'auth'
-
+  middleware: 'auth',
 })
 
 useHead({
   title: `${t('seo.profile.communities.title')} | Zempie`,
+  link: [
+    {
+      rel: 'alternate',
+      href: `${config.ZEMPIE_URL}${route.fullPath}`,
+      hreflang: locale,
+    },
+    {
+      rel: 'canonical',
+      href: `${config.ZEMPIE_URL}${route.fullPath}`,
+    },
+  ],
   meta: [
     {
+      property: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.fullPath}`,
+    },
+    {
+      property: 'og:site_name',
+      content: 'Zempie',
+    },
+    {
+      name: 'og:type',
+      content: 'website',
+    },
+    {
+      name: 'robots',
+      content: 'noindex, nofollow',
+    },
+    {
       name: 'description',
-      content: `${t('seo.profile.communities.desc')}`
+      content: `${t('seo.profile.communities.desc')}`,
     },
     {
-      name: 'og:title',
-      content: `${t('seo.profile.communities.title')}`
+      property: 'og:title',
+      content: `${t('seo.profile.communities.title')}`,
     },
     {
-      name: 'og:description',
-      content: `${t('seo.profile.communities.description')}`
+      property: 'og:description',
+      content: `${t('seo.profile.communities.description')}`,
     },
     {
-      name: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`
+      property: 'og:url',
+      content: `${config.ZEMPIE_URL}${route.path}`,
     },
-  ]
+  ],
 })
 
 const communities = ref<ICommunity[]>([])
@@ -73,28 +105,26 @@ watch(
   () => userInfo.value,
   (user) => {
     if (user) {
-      fetch();
+      fetch()
     }
   }
 )
 
 onMounted(async () => {
   if (userInfo.value?.id) {
-    await fetch();
+    await fetch()
   }
 })
-
 
 async function fetch() {
   const { data } = await user.joinedCommunity(Number(userInfo.value.id))
 
   communities.value = data.value.map((community: ICommunity) => {
-    return community = { ...community, is_subscribed: true };
+    return (community = { ...community, is_subscribed: true })
   })
 
-  isPending.value = false;
+  isPending.value = false
 }
-
 </script>
 
 <style lang="scss" scoped>
@@ -113,7 +143,7 @@ async function fetch() {
   }
 
   img {
-    margin: 0 auto
+    margin: 0 auto;
   }
 }
 

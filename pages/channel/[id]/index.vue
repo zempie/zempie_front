@@ -26,7 +26,7 @@
         <dt v-else-if="channelInfo">
           <div class="ta-myinfo">
             <UserAvatar :user="channelInfo" :tag="'p'"></UserAvatar>
-            <h2>{{ channelInfo.name }}</h2>
+            <h1>{{ channelInfo.name }}</h1>
             <ul>
               <li>
                 <NuxtLink :to="localePath(`/channel/${channelId}`)">
@@ -117,11 +117,11 @@
 <script setup lang="ts">
 import { useLocalePath } from 'vue-i18n-routing'
 import { useI18n } from 'vue-i18n'
+const { t, locale } = useI18n()
 
 const config = useRuntimeConfig()
 const nuxt = useNuxtApp()
 
-const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const route = useRoute()
 const isPending = ref(true)
@@ -140,21 +140,48 @@ watch(
   (info) => {
     useHead({
       title: `${info.name}${t('seo.channel.title')} | Zempie`,
+      link: [
+        {
+          rel: 'alternate',
+          href: `${config.ZEMPIE_URL}${route.fullPath}`,
+          hreflang: locale,
+        },
+        {
+          rel: 'canonical',
+          href: `${config.ZEMPIE_URL}${route.fullPath}`,
+        },
+      ],
       meta: [
+        {
+          property: 'og:url',
+          content: `${config.ZEMPIE_URL}${route.fullPath}`,
+        },
+        {
+          property: 'og:site_name',
+          content: 'Zempie',
+        },
+        {
+          name: 'og:type',
+          content: 'website',
+        },
+        {
+          name: 'robots',
+          content: 'index, follow',
+        },
         {
           name: 'description',
           content: `${info.name}${t('seo.channel.desc')}`,
         },
         {
-          name: 'og:title',
+          property: 'og:title',
           content: `${info.name}${t('seo.channel.title')}`,
         },
         {
-          name: 'og:description',
+          property: 'og:description',
           content: `${info.name}${t('seo.channel.desc')}`,
         },
         {
-          name: 'og:url',
+          property: 'og:url',
           content: `${config.ZEMPIE_URL}${route.path}`,
         },
         {

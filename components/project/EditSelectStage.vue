@@ -1,37 +1,57 @@
 <template>
   <ProjectStepMenu>
     <template #uploadGameBtn>
-      <li :lass="'publish-btn'">
+      <li :class="'publish-btn'">
         <h4>{{ $t('update') }}</h4>
       </li>
     </template>
   </ProjectStepMenu>
   <dd>
-
     <ul class="studio-game-step">
-
-      <li @click="selectStage(eGameStage.DEV)" :class="stage === 1 ? 'active' : ''">
+      <li
+        @click="selectStage(eGameStage.DEV)"
+        :class="stage === 1 ? 'active' : ''"
+      >
         <dl>
-          <dt><img src="/images/studio_icon01.png" :alt="$t('devLog')" title="" /></dt>
+          <dt>
+            <img src="/images/studio_icon01.png" :alt="$t('devLog')" title="" />
+          </dt>
           <dd>
             <h3>{{ $t('devLog') }}</h3>
-            <div>{{ $t('devLog.info') }}
-            </div>
+            <div>{{ $t('devLog.info') }}</div>
           </dd>
         </dl>
       </li>
-      <li @click="selectStage(eGameStage.EARLY)" :class="stage === 2 ? 'active' : ''">
+      <li
+        @click="selectStage(eGameStage.EARLY)"
+        :class="stage === 2 ? 'active' : ''"
+      >
         <dl>
-          <dt><img src="/images/studio_icon02.png" :alt="$t('earlyAccess')" title="" /></dt>
+          <dt>
+            <img
+              src="/images/studio_icon02.png"
+              :alt="$t('earlyAccess')"
+              title=""
+            />
+          </dt>
           <dd>
             <h3>{{ $t('earlyAccess') }}</h3>
             <div>{{ $t('earlyAccess.info') }}</div>
           </dd>
         </dl>
       </li>
-      <li @click="selectStage(eGameStage.COMPLETE)" :class="stage === 3 ? 'active' : ''">
+      <li
+        @click="selectStage(eGameStage.COMPLETE)"
+        :class="stage === 3 ? 'active' : ''"
+      >
         <dl>
-          <dt><img src="/images/studio_icon03.png" :alt="$t('complete')" title="" /></dt>
+          <dt>
+            <img
+              src="/images/studio_icon03.png"
+              :alt="$t('complete')"
+              title=""
+            />
+          </dt>
           <dd>
             <h3>{{ $t('complete') }}</h3>
             <div>{{ $t('complete.info') }}</div>
@@ -39,8 +59,7 @@
         </dl>
       </li>
       <li :class="stage === 4 ? 'active' : ''">
-        <p>
-        </p>
+        <p></p>
         <dl>
           <dt><img src="/images/studio_icon04.png" alt="" title="" /></dt>
           <dd>
@@ -49,7 +68,6 @@
           </dd>
         </dl>
       </li>
-
 
       <!-- <modal :clickToClose="false"
                class="modal-area-type"
@@ -75,80 +93,76 @@
                 </div>
             </div>
         </modal> -->
-
-
     </ul>
   </dd>
 </template>
 
 <script setup lang="ts">
-import { eGameStage } from '~~/types/index';
+import { eGameStage } from '~~/types/index'
 
 const stage = computed(() => useProject().editProject.value.info.stage)
 
-
-const router = useRouter();
+const router = useRouter()
 
 function selectStage(stage: number) {
   useProject().setStageOnEdit(stage)
   useProject().setStepTwoOnEdit()
 }
-    // @Prop() projectInfo !: any;
-    // uploadStage = eGameStage;
+// @Prop() projectInfo !: any;
+// uploadStage = eGameStage;
 
-    // selectedStage:number = 0;
+// selectedStage:number = 0;
 
-    // mounted() {
-    //     this.$store.commit("gameStage", null);
-    // }
+// mounted() {
+//     this.$store.commit("gameStage", null);
+// }
 
-    // selectStage(selectedStage: number) {
-    //     if (this.projectInfo) {
-    //         const {projectVersions, stage} = this.projectInfo;
+// selectStage(selectedStage: number) {
+//     if (this.projectInfo) {
+//         const {projectVersions, stage} = this.projectInfo;
 
-    //         if (selectedStage === eGameStage.Dev) {
-    //             if (projectVersions.length > 0) {
-    //                 this.$modal.show('changedStage')
-    //                 this.selectedStage = selectedStage;
-    //             }
-    //             else {
-    //                 this.saveStage(selectedStage);
-    //             }
-    //         }
-    //         else {
-    //             this.saveStage(selectedStage);
+//         if (selectedStage === eGameStage.Dev) {
+//             if (projectVersions.length > 0) {
+//                 this.$modal.show('changedStage')
+//                 this.selectedStage = selectedStage;
+//             }
+//             else {
+//                 this.saveStage(selectedStage);
+//             }
+//         }
+//         else {
+//             this.saveStage(selectedStage);
 
-    //         }
-    //     }else{
-    //         this.saveStage(selectedStage);
-    //     }
+//         }
+//     }else{
+//         this.saveStage(selectedStage);
+//     }
 
-    // }
+// }
 
-    // changedStage() {
-    //     this.saveStage(this.selectedStage);
-    //     this.$modal.hide('changedStage')
-    // }
+// changedStage() {
+//     this.saveStage(this.selectedStage);
+//     this.$modal.hide('changedStage')
+// }
 
-    // saveStage(stage:number){
-    //     this.$emit('stage', stage)
-    //     this.$store.commit("gameStage", stage);
-    // }
-
+// saveStage(stage:number){
+//     this.$emit('stage', stage)
+//     this.$store.commit("gameStage", stage);
+// }
 </script>
 
 <style scoped lang="scss">
-input[type="radio"] {
+input[type='radio'] {
   display: none;
 }
 
-input[type="radio"]:checked+label {
+input[type='radio']:checked + label {
   color: #fff;
-  background: #FF6E17;
-  border-color: #FF6E17;
+  background: #ff6e17;
+  border-color: #ff6e17;
 }
 
-input[type="radio"]+label {
+input[type='radio'] + label {
   display: inline-block;
   width: 22px;
   height: 22px;
@@ -160,14 +174,13 @@ input[type="radio"]+label {
   cursor: pointer;
 }
 
-.studio-game-step>li:hover {
+.studio-game-step > li:hover {
   box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.2);
   cursor: pointer;
-
 }
 
 .studio-game-step .active {
-  border: 2px solid #FF6E17;
+  border: 2px solid #ff6e17;
 }
 
 .dimmed {
