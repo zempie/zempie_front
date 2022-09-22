@@ -1,46 +1,68 @@
 <template>
-  <div class="login-bg pt50 pb50" style="height:100vh; min-height:900px">
+  <div class="login-bg pt50 pb50" style="height: 100vh; min-height: 900px">
     <div class="login-logo">
-      <LoginWhiteLogoDt path='/' />
+      <LoginWhiteLogoDt path="/" />
     </div>
     <div class="pw-find">
       <div class="pf-title">
-        <h3>{{  $t('find.pwd.text')  }}</h3>
-        <p>{{  $t('find.pwd.desc')  }}</p>
+        <h3>{{ $t('find.pwd.text') }}</h3>
+        <p>{{ $t('find.pwd.desc') }}</p>
       </div>
       <div class="pf-content">
-        <div><i class="uil uil-info-circle" style="font-size:16px; line-height:24px;"></i>&nbsp;&nbsp;{{
-           $t('find.pwd.input.text') 
-          }}</div>
+        <div>
+          <i
+            class="uil uil-info-circle"
+            style="font-size: 16px; line-height: 24px"
+          ></i
+          >&nbsp;&nbsp;{{ $t('find.pwd.input.text') }}
+        </div>
         <ul>
           <li>
             <div>
-              <input v-model="email" @input="email ? (isEmailErr = false) : isEmailErr = true" @keyup.enter="sendEmail"
-                type="text" :placeholder="$t('login.email.placeholder')" class="w100p h60" />
+              <input
+                v-model="email"
+                @input="email ? (isEmailErr = false) : (isEmailErr = true)"
+                @keyup.enter="sendEmail"
+                type="text"
+                :placeholder="$t('login.email.placeholder')"
+                class="w100p h60"
+              />
               <h3 class="input-errors" v-if="isEmailErr">
-                <i class="uil uil-check"></i>{{  $t('login.empty.email')  }}
+                <i class="uil uil-check"></i>{{ $t('login.empty.email') }}
               </h3>
             </div>
           </li>
         </ul>
-        <p><button @click="sendEmail" class="btn-default-big">
-            {{  $t('send.email.btn')  }}</button></p>
+        <p>
+          <button @click="sendEmail" class="btn-default-big">
+            {{ $t('send.email.btn') }}
+          </button>
+        </p>
       </div>
     </div>
 
-    <el-dialog v-model="openModal" append-to-body custom-class="modal-area-type" :show-close="false">
+    <el-dialog
+      v-model="openModal"
+      append-to-body
+      class="modal-area-type"
+      :show-close="false"
+    >
       <div class="modal-alert">
         <dl class="ma-header">
-          <dt>{{  $t('information')  }}</dt>
+          <dt>{{ $t('information') }}</dt>
           <dd>
-            <button @click="closeModal"><i class=" uil uil-times"></i></button>
+            <button @click="closeModal"><i class="uil uil-times"></i></button>
           </dd>
         </dl>
         <div class="ma-content">
-          <h2>{{  $t('send.email.modal.text1')  }}<br />
-            {{  $t('send.email.modal.text2')  }}</h2>
+          <h2>
+            {{ $t('send.email.modal.text1') }}<br />
+            {{ $t('send.email.modal.text2') }}
+          </h2>
           <div>
-            <button class="btn-default" style="width: 100%" @click="closeModal">{{  $t('confirm')  }}</button>
+            <button class="btn-default" style="width: 100%" @click="closeModal">
+              {{ $t('confirm') }}
+            </button>
           </div>
         </div>
       </div>
@@ -49,18 +71,17 @@
 </template>
 
 <script setup lang="ts">
-import { ElDialog, ElMessage } from "element-plus";
-import { useI18n } from 'vue-i18n';
+import { ElDialog, ElMessage } from 'element-plus'
+import { useI18n } from 'vue-i18n'
 import { sendPasswordResetEmail } from 'firebase/auth'
-import { useLocalePath } from 'vue-i18n-routing';
+import { useLocalePath } from 'vue-i18n-routing'
 
-const route = useRoute();
+const route = useRoute()
 const config = useRuntimeConfig()
 const { t, locale } = useI18n()
 const { $firebaseAuth } = useNuxtApp()
-const localePath = useLocalePath();
-const router = useRouter();
-
+const localePath = useLocalePath()
+const router = useRouter()
 
 const openModal = ref(false)
 const email = ref('')
@@ -71,27 +92,26 @@ useHead({
   meta: [
     {
       name: 'description',
-      content: `${t('seo.reset.pwd.desc')}`
+      content: `${t('seo.reset.pwd.desc')}`,
     },
     {
       name: 'og:title',
-      content: `${t('seo.reset.pwd.title')}`
+      content: `${t('seo.reset.pwd.title')}`,
     },
     {
       name: 'og:description',
-      content: `${t('seo.reset.pwd.description')}`
+      content: `${t('seo.reset.pwd.description')}`,
     },
     {
       name: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`
+      content: `${config.ZEMPIE_URL}${route.path}`,
     },
-  ]
+  ],
 })
-
 
 definePageMeta({
   layout: 'layout-none',
-});
+})
 
 async function sendEmail() {
   if (!email.value) {
@@ -99,28 +119,28 @@ async function sendEmail() {
     return
   }
 
-  const { data, error } = await useFetch<{ result: string }>('/user/has-email', getZempieFetchOptions('post', false, { email: email.value }))
+  const { data, error } = await useFetch<{ result: string }>(
+    '/user/has-email',
+    getZempieFetchOptions('post', false, { email: email.value })
+  )
 
   if (data.value.result) {
     try {
-      await sendPasswordResetEmail($firebaseAuth, email.value);
-      openModal.value = true;
-
+      await sendPasswordResetEmail($firebaseAuth, email.value)
+      openModal.value = true
     } catch (error: any) {
       ElMessage({
         message: error.message,
-        type: 'error'
+        type: 'error',
       })
     }
-
   } else {
     ElMessage({
       message: t('login.err.text1'),
-      type: 'error'
+      type: 'error',
     })
   }
 }
-
 
 function closeModal() {
   openModal.value = false

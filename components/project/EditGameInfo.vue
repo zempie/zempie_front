@@ -270,7 +270,7 @@
         </dl>
       </div>
       <!-- <ClientOnly>
-      <el-dialog v-model="isDeleteModalOpen" append-to-body custom-class="modal-area-type" width="90%">
+      <el-dialog v-model="isDeleteModalOpen" append-to-body class="modal-area-type" width="90%">
         <div class="modal-alert">
           <dl class="ma-header">
             <dt>

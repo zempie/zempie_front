@@ -101,7 +101,7 @@
         >
       </dd>
     </dl>
-    <el-dialog v-model="showChangeBanner" custom-class="modal-area-game-banner">
+    <el-dialog v-model="showChangeBanner" class="modal-area-game-banner">
       <div class="modal-alert">
         <dl class="ma-header">
           <dt>{{ t('banner.photo') }}</dt>
@@ -147,7 +147,7 @@
     <el-dialog
       v-model="showDeleteBanner"
       append-to-body
-      custom-class="modal-area-type"
+      class="modal-area-type"
       width="380px"
     >
       <div class="modal-alert">
