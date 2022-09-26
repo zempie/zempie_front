@@ -50,11 +50,17 @@
             </swiper>
           </dd>
         </div>
-
-        <div v-if="snsAttachFiles.video?.url" class="mp-midi">
+        <div v-if="isVideoUploading" class="video-loading">
+          <BeatLoader :color="'#ff6e17'" size="20px" />
+        </div>
+        <div
+          v-else-if="!isVideoUploading && snsAttachFiles.video?.url"
+          class="mp-midi"
+        >
           <span @click="deleteVideo" class="delete-video-btn"
             ><i class="uis uis-times-circle"></i
           ></span>
+
           <video
             style="width: 100%"
             :src="snsAttachFiles.video?.url"
@@ -65,7 +71,14 @@
           ></video>
         </div>
 
-        <div v-if="snsAttachFiles.audio?.length" class="mp-midi">
+        <div v-if="isAudioUploading" class="video-loading">
+          <BeatLoader :color="'#ff6e17'" size="20px" />
+        </div>
+
+        <div
+          v-if="!isAudioUploading && snsAttachFiles.audio?.length"
+          class="mp-midi"
+        >
           <ul
             v-for="(audio, idx) in snsAttachFiles.audio"
             class="audio-wrapper"
@@ -89,20 +102,16 @@
               : ''
           "
         >
-          <el-popover
-            name="category"
-            trigger="click"
-            v-model:visible="isCommunityListVisible"
-          >
+          <el-popover name="category" trigger="click">
             <template #reference>
-              <button
-                class="btn-line-small"
-                style="width: 30%"
-                @click="communityFetch"
-              >
+              <button class="btn-line-small" style="width: 30%">
                 <i class="uil uil-plus"></i>
-                <span v-if="postingChannels.length >= 2">Add</span>
-                <span>Add </span><span>community</span>
+                <template v-if="postingChannels.length >= 2">
+                  <span>Add</span>
+                </template>
+                <template v-else>
+                  <span>Add </span><span>community</span>
+                </template>
               </button>
             </template>
 
@@ -214,6 +223,7 @@
 
 <script setup lang="ts">
 import _ from 'lodash'
+import BeatLoader from 'vue-spinner/src/BeatLoader.vue'
 import { PropType } from 'vue'
 import { IFeed } from '~~/types'
 import { Pagination } from 'swiper'
@@ -236,6 +246,9 @@ const { t, locale } = useI18n()
 
 const route = useRoute()
 const popover = ref()
+
+const isVideoUploading = ref(false)
+const isAudioUploading = ref(false)
 
 const props = defineProps({
   type: String,
@@ -289,15 +302,9 @@ const form = reactive({
   post_contents: '',
 })
 
-onMounted(() => {
+onMounted(async () => {
+  await communityFetch()
   if (props.isEdit) {
-    // const loading = ElLoading.service({
-    //   lock: true,
-    //   text: 'Loading',
-    //   customClass: 'loading-spinner',
-    //   background: 'rgba(0, 0, 0, 0.7)',
-    // })
-
     if (props.feed?.posted_at?.community) {
       for (const community of props.feed.posted_at.community) {
         postingChannels.value.push({
@@ -549,10 +556,6 @@ function getEditorContent(content: Editor) {
 }
 
 function uploadImageFile() {
-  image.value.click()
-}
-
-function onSelectImageFile(event: any) {
   if (activeTab.value.toUpperCase() === 'SNS') {
     if (snsAttachFiles.value.video || snsAttachFiles.value.audio?.length) {
       ElMessage({
@@ -562,7 +565,10 @@ function onSelectImageFile(event: any) {
       return
     }
   }
+  image.value.click()
+}
 
+function onSelectImageFile(event: any) {
   const files = event.target.files
 
   for (const file of files) {
@@ -612,10 +618,6 @@ function deleteImg(idx: number) {
 }
 
 function uploaVideoFile() {
-  video.value.click()
-}
-
-function onSelectVideoFile(event: any) {
   if (activeTab.value.toUpperCase() === 'SNS') {
     if (
       snsAttachFiles.value.img?.length ||
@@ -628,6 +630,11 @@ function onSelectVideoFile(event: any) {
       return
     }
   }
+  video.value.click()
+}
+
+function onSelectVideoFile(event: any) {
+  isVideoUploading.value = true
 
   const files = event.target.files
 
@@ -657,8 +664,8 @@ function onSelectVideoFile(event: any) {
           }
         }
       }
+      isVideoUploading.value = false
     }
-
     reader.readAsDataURL(file)
   }
   event.target.value = ''
@@ -682,6 +689,7 @@ function uploadAudioFile() {
 }
 
 function onSelectAudioFile(event: any) {
+  isAudioUploading.value = true
   const files = event.target.files
 
   for (const file of files) {
@@ -716,6 +724,7 @@ function onSelectAudioFile(event: any) {
           ]
         }
       }
+      isAudioUploading.value = false
     }
 
     reader.readAsDataURL(file)
@@ -735,10 +744,7 @@ async function onUpdatePost() {
       : JSON.parse(props.feed.attatchment_files)
     : []
 
-  let newImgArr = []
-  let newSoundArr = []
-  let newVideo = null
-
+  const attachedFile = []
   const payload = {
     post_id: props.feed.id,
     post_state: activeTab.value,
@@ -764,7 +770,11 @@ async function onUpdatePost() {
     }
   }
 
-  const formData = new FormData()
+  const dom = htmlToDomElem(form.post_contents)
+
+  imgArr.value = [...dom.getElementsByTagName('img')]
+  videoArr.value = [...dom.getElementsByTagName('video')]
+  audioArr.value = [...dom.getElementsByTagName('audio')]
 
   const loading = ElLoading.service({
     lock: true,
@@ -773,30 +783,20 @@ async function onUpdatePost() {
     background: 'rgba(0, 0, 0, 0.7)',
   })
 
-  const dom = htmlToDomElem(form.post_contents)
-
-  imgArr.value = [...dom.getElementsByClassName('attr-img')]
-  videoArr.value = [...dom.getElementsByTagName('video')]
-  audioArr.value = [...dom.getElementsByTagName('audio')]
-
-  if (activeTab.value.toLocaleUpperCase() === 'BLOG') {
-    const imgFiles = []
-    const videoFiles = []
-    const audioFiles = []
-
-    if (imgArr.value.length) {
+  switch (activeTab.value.toLocaleUpperCase()) {
+    case 'BLOG':
+      const imgFiles = []
+      const videoFiles = []
+      const audioFiles = []
+      //블로그 수정 시 이미지가 있는 경우
       for (const img of imgArr.value) {
-        if (
-          img.src.substring(0, 4) === 'blob' ||
-          img.src.substring(0, 4) === 'data'
-        ) {
+        //s3 업로드가 필요한 경우
+        if (img.src.search('blob:') !== -1 || img.src.search('data:') !== -1) {
           const formData = new FormData()
-
           await fetch(img.src).then(async (result) => {
             formData.append(img.title, await result.blob())
           })
-
-          const { data, error, pending } = await useFetch<{ result: [] }>(
+          const { data, error, pending } = await useFetch<any>(
             '/community/att',
             getZempieFetchOptions('post', true, formData)
           )
@@ -808,27 +808,28 @@ async function onUpdatePost() {
             imgFiles.push(...data.value.result)
           }
         }
-        payload.post_contents = form.post_contents
-        attatchment_files = [...payload.attatchment_files, ...imgFiles]
+        //필요없는 경우
+        else {
+          //기존 파일에서 찾아서 push
+          const file = attatchment_files.find((file) => {
+            return file.url === img.src
+          })
+          imgFiles.push(file)
+        }
       }
-    } else {
-      payload.post_contents = form.post_contents
-      attatchment_files = []
-    }
+      attachedFile.push(...imgFiles)
 
-    if (videoArr.value.length) {
+      //이미지 로직과 동일
       for (const video of videoArr.value) {
         if (
-          video.src.substring(0, 4) === 'blob' ||
-          video.src.substring(0, 4) === 'data'
+          video.src.search('blob:') !== -1 ||
+          video.src.search('data:') !== -1
         ) {
           const formData = new FormData()
-
           await fetch(video.src).then(async (result) => {
             formData.append(video.title, await result.blob())
           })
-
-          const { data, error, pending } = await useFetch<{ result: [] }>(
+          const { data, error, pending } = await useFetch<any>(
             '/community/att',
             getZempieFetchOptions('post', true, formData)
           )
@@ -839,27 +840,29 @@ async function onUpdatePost() {
             )
             videoFiles.push(...data.value.result)
           }
+        } else {
+          //기존 파일에서 찾아서 push
+          const file = attatchment_files.find((file) => {
+            return file.url === video.src
+          })
+          videoFiles.push(file)
         }
-        payload.post_contents = form.post_contents
-        attatchment_files = [...attatchment_files, ...videoFiles]
       }
-    } else {
-      payload.post_contents = form.post_contents
-      attatchment_files = [...attatchment_files]
-    }
-    if (audioArr.value.length) {
+
+      attachedFile.push(...videoFiles)
+
+      //이미지 로직과 동일
       for (const audio of audioArr.value) {
         if (
-          audio.src.substring(0, 4) === 'blob' ||
-          audio.src.substring(0, 4) === 'data'
+          audio.src.search('blob:') !== -1 ||
+          audio.src.search('data:') !== -1
         ) {
+          //블로그 수정 시 이미지가 있는 경우
           const formData = new FormData()
-
           await fetch(audio.src).then(async (result) => {
             formData.append(audio.title, await result.blob())
           })
-
-          const { data, error, pending } = await useFetch<{ result: [] }>(
+          const { data, error, pending } = await useFetch<any>(
             '/community/att',
             getZempieFetchOptions('post', true, formData)
           )
@@ -869,121 +872,145 @@ async function onUpdatePost() {
               data.value.result[0].url
             )
             audioFiles.push(...data.value.result)
+          } else {
+            //기존 파일에서 찾아서 push
+            const file = attatchment_files.find((file) => {
+              return file.url === audio.src
+            })
+            audioFiles.push(file)
           }
         }
-        payload.post_contents = form.post_contents
-        attatchment_files = [...attatchment_files, ...audioFiles]
       }
-    } else {
-      payload.post_contents = form.post_contents
-      attatchment_files = [...attatchment_files]
-    }
-  } else {
-    if (snsAttachFiles.value.img?.length > 0) {
-      attatchment_files = snsAttachFiles.value.img
-    } else if (snsAttachFiles.value.audio?.length > 0) {
-      attatchment_files = snsAttachFiles.value.audio
-    } else if (snsAttachFiles.value.video) {
-      attatchment_files =
-        snsAttachFiles.value.video !== null ? [snsAttachFiles.value.video] : []
-    } else {
-      attatchment_files = []
-    }
-    if (snsAttachFiles.value.img?.length) {
-      for (const img of snsAttachFiles.value.img) {
-        formData.append(img.name, img.file)
-      }
+      attachedFile.push(...audioFiles)
 
-      const { data, error, pending } = await useFetch<{
-        result: {
-          priority: number
-          url: string
-          type: string
-          name: string
-          size: number
-        }[]
-      }>('/community/att', getZempieFetchOptions('post', true, formData))
+      break
 
-      if (data.value) {
-        const { result } = data.value
+    case 'SNS':
+      const formData = new FormData()
 
-        for (const data of result) {
-          attatchment_files.push({
-            priority: data.priority,
-            url: data.url,
-            type: data.type,
-            name: data.name,
-            size: data.size,
-          })
+      if (snsAttachFiles.value.img?.length > 0) {
+        for (const img of snsAttachFiles.value.img) {
+          //이미지 파일 중 s3 업로드가 필요한 파일 formdata append
+          if (
+            img.url.search('blob:') !== -1 ||
+            img.url.search('data:') !== -1
+          ) {
+            formData.append(img.name, img.file)
+          } else {
+            attachedFile.push(img)
+          }
+        }
+        if (!!formData.entries().next().value) {
+          const { data, error, pending } = await useFetch<{
+            result: {
+              priority: number
+              url: string
+              type: string
+              name: string
+              size: number
+            }[]
+          }>('/community/att', getZempieFetchOptions('post', true, formData))
+
+          if (data.value) {
+            const { result } = data.value
+
+            for (const data of result) {
+              attachedFile.push({
+                priority: data.priority,
+                url: data.url,
+                type: data.type,
+                name: data.name,
+                size: data.size,
+              })
+            }
+          }
+        }
+      } else if (snsAttachFiles.value.audio?.length > 0) {
+        for (const sound of snsAttachFiles.value.audio) {
+          if (
+            sound.url.search('blob:') !== -1 ||
+            sound.url.search('data:') !== -1
+          ) {
+            formData.append(sound.name, sound.file)
+          } else {
+            attachedFile.push(sound)
+          }
+        }
+        if (!!formData.entries().next().value) {
+          const { data, error, pending } = await useFetch<{
+            result: {
+              priority: number
+              url: string
+              type: string
+              name: string
+              size: number
+            }[]
+          }>('/community/att', getZempieFetchOptions('post', true, formData))
+
+          if (data.value) {
+            const { result } = data.value
+            for (const data of result) {
+              attachedFile.push({
+                priority: data.priority,
+                url: data.url,
+                type: data.type,
+                name: data.name,
+                size: data.size,
+              })
+            }
+          }
+        }
+      } else if (snsAttachFiles.value.video) {
+        if (
+          snsAttachFiles.value.video.url.search('blob:') !== -1 ||
+          snsAttachFiles.value.video.url.search('data:') !== -1
+        ) {
+          formData.append(
+            snsAttachFiles.value.video.name,
+            snsAttachFiles.value.video.file
+          )
+
+          const { data, error, pending } = await useFetch<{
+            result: {
+              priority: number
+              url: string
+              type: string
+              name: string
+              size: number
+            }[]
+          }>('/community/att', getZempieFetchOptions('post', true, formData))
+
+          if (data.value) {
+            const { result } = data.value
+            for (const data of result) {
+              attachedFile.push({
+                priority: data.priority,
+                url: data.url,
+                type: data.type,
+                name: data.name,
+                size: data.size,
+              })
+            }
+          }
+        } else {
+          attachedFile.push(snsAttachFiles.value.video)
         }
       }
-    } else if (snsAttachFiles.value.audio?.length) {
-      for (const sound of snsAttachFiles.value.audio) {
-        formData.append(sound.name, sound.file)
+      if (snsAttachFiles.value.audio?.length) {
+      } else if (snsAttachFiles.value.video) {
       }
-      const { data, error, pending } = await useFetch<{
-        result: {
-          priority: number
-          url: string
-          type: string
-          name: string
-          size: number
-        }[]
-      }>('/community/att', getZempieFetchOptions('post', true, formData))
-
-      if (data.value) {
-        const { result } = data.value
-        for (const data of result) {
-          attatchment_files.push({
-            priority: data.priority,
-            url: data.url,
-            type: data.type,
-            name: data.name,
-            size: data.size,
-          })
-        }
-      }
-    } else if (snsAttachFiles.value.video) {
-      formData.append(
-        snsAttachFiles.value.video.name,
-        snsAttachFiles.value.video.file
-      )
-      const { data, error, pending } = await useFetch<{
-        result: {
-          priority: number
-          url: string
-          type: string
-          name: string
-          size: number
-        }[]
-      }>('/community/att', getZempieFetchOptions('post', true, formData))
-
-      if (data.value) {
-        const { result } = data.value
-        for (const data of result) {
-          attatchment_files = [
-            {
-              priority: data.priority,
-              url: data.url,
-              type: data.type,
-              name: data.name,
-              size: data.size,
-            },
-          ]
-        }
-      }
-    }
+      break
+    default:
+      break
   }
 
-  Array.isArray(attatchment_files)
-    ? attatchment_files
-    : JSON.parse(attatchment_files)
+  Array.isArray(attachedFile) ? attachedFile : JSON.parse(attatchment_files)
 
-  attatchment_files = attatchment_files?.filter((file) => {
+  attachedFile?.filter((file) => {
     return file.size
   })
 
-  payload.attatchment_files = attatchment_files
+  payload.attatchment_files = attachedFile
 
   const { data, error, pending } = await useFetch(
     `/post/${props.feed.id}`,
@@ -1068,6 +1095,22 @@ function deletePostingChannel(idx: number) {
     border-top: #e9e9e9 1px solid;
   }
 
+  .video-loading {
+    height: 150px;
+    background-color: #ededed;
+    margin: 20px;
+    border-radius: 10px;
+    div {
+      display: flex;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+      .v-clip {
+        height: 50px !important;
+        width: 50px !important;
+      }
+    }
+  }
   .mp-midi {
     .delete-video-btn {
       display: flex;

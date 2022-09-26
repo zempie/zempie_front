@@ -828,10 +828,11 @@
   "banner.photo": "Banner image",
   "delete.banner": "Do you want to delete this banner image?",
   "delete.banner.text": "You won't be able to recover the banner image you have deleted",
-  "studio.preview.info": "__STRING_NOT_TRANSLATED__",
+  "studio.preview.info": "You are not allowed to choose the picture for Look Ahead option with this game. Please upload the other file with GIF format.",
   "addGameInfo.game.max.err": "Game title has to be within 50 letters",
   "exist.wt.diff.email": "The email address associated with this social account is already in use. Try logging in.",
   "banner.image.title": "Banner image",
-  "studio.preview.banner.info": "__STRING_NOT_TRANSLATED__",
-  "leave.router.warning": "The content you are writing is not saved. Are you sure you want to finish to writing?"
+  "studio.preview.banner.info": "You may choose the banner image, which will be shown on the game's description page.",
+  "leave.router.warning": "The content you are writing is not saved. Are you sure you want to finish to writing?",
+  "fb.not.found": "This email address does not exist. Please go for sign up to be a registered user."
 }

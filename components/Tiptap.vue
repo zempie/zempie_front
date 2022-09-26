@@ -123,19 +123,7 @@ const editor = useEditor({
             },
             addCommands() {
               return {
-                // Inherit all the commands of the Image extension.
-                // This way we can add images as always:
-                // this.editor.chain().focus()
-                //      .setImage({
-                //          src: 'https://source.unsplash.com/8xznAGy4HcY/800x400',
-                //          width: '80',
-                //          height: '40'
-                //      })
-                //      .run();
                 ...this.parent?.(),
-
-                // New command that is going to be called like:
-                // this.editor.chain().focus().toggleResizable().run();
                 toggleResizable:
                   () =>
                   ({ tr }) => {
@@ -147,7 +135,6 @@ const editor = useEditor({
                   },
               }
             },
-
             addNodeView() {
               return VueNodeViewRenderer(ResizableImage)
             },
