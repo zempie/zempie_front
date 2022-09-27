@@ -1,6 +1,5 @@
 <template>
   <div class="content">
-    <!-- <ClientOnly> -->
     <div class="visual-title">
       <h1>
         '{{ keyword }}'
@@ -75,13 +74,11 @@
         </ul>
       </div>
     </template>
-    <!-- </ClientOnly> -->
   </div>
 </template>
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { onBeforeRouteLeave } from 'vue-router'
 
 const { t, locale } = useI18n()
 const route = useRoute()

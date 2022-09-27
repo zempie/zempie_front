@@ -11,7 +11,6 @@ export default function () {
     const config = useRuntimeConfig()
     const accessToken = useCookie(config.COOKIE_NAME).value
 
-    //FIXME: composable 왜 안되지??????
     const { data, pending, error } = await useFetch<any>(`/community/${id}`, {
       method: 'get',
       baseURL: config.COMMUNITY_API,

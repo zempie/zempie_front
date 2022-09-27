@@ -285,6 +285,7 @@
             class="header-side-mobile"
             :style="isHeaderSideMobile ? 'left:0px;' : ''"
             id="headerSideMobile"
+            v-on-click-outside="clickOutside"
           >
             <div class="hsm-close">
               <i class="uil uil-times" @click="isHeaderSideMobile = false"></i>
@@ -512,7 +513,8 @@
 <script setup lang="ts">
 import _ from 'lodash'
 //TODO: 모바일 메뉴 다른 곳 클릭하면 닫히게
-import { onClickOutside } from '@vueuse/core'
+import { vOnClickOutside } from '@vueuse/components'
+
 import { useI18n } from 'vue-i18n'
 import {
   ElDropdown,
@@ -523,11 +525,14 @@ import {
   ElMessage,
   ElDialog,
 } from 'element-plus'
-import { useLocalePath } from 'vue-i18n-routing'
+import { useLocalePath, useSwitchLocalePath } from 'vue-i18n-routing'
 
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
-const $router = useRouter()
+const switchLocalePath = useSwitchLocalePath()
+
+const router = useRouter()
+const route = useRoute()
 
 const { $firebaseAuth, $cookies } = useNuxtApp()
 const config = useRuntimeConfig()
@@ -563,10 +568,6 @@ watch(
     isOpen.value = state
   }
 )
-// const isLogin = computed(() => userStore.$state.isLogin)
-// const user = computed(() => userStore.$state.user)
-
-// const fUser = ref(computed(() => userStore.$state.fUser))
 
 watch(
   () => locale,
@@ -587,7 +588,10 @@ onBeforeMount(() => {
 function headerSideCloseMobile() {}
 
 function switchLangauge() {
+  switchLocalePath(selectedLang.value)
   locale.value = selectedLang.value
+  console.log(route.fullPath)
+  router.replace(route.fullPath)
 }
 
 function logout() {
@@ -599,7 +603,7 @@ function logout() {
   //       path: '/',
   //       domain: config.COOKIE_DOMAIN
   //     })
-  //     $router.push('/')
+  //     router.push('/')
   //   })
   //   .catch((error: any) => {
   //     ElMessage({
@@ -632,7 +636,7 @@ const search = _.debounce(async () => {
 function moveSearchPage() {
   isHeaderSideMobile.value = false
 
-  $router.push({ path: localePath(`/search`), query: { q: searchInput.value } })
+  router.push({ path: localePath(`/search`), query: { q: searchInput.value } })
   searchDropdown.value.handleClose()
 }
 
@@ -649,16 +653,16 @@ function movePage(command: any) {
 
 function moveUserPage(channelId: string) {
   initSearchData()
-  $router.push(localePath(`/channel/${channelId}`))
+  router.push(localePath(`/channel/${channelId}`))
 }
 function moveCommunityPage(communityId: string) {
   initSearchData()
-  $router.push(localePath(`/community/${communityId}`))
+  router.push(localePath(`/community/${communityId}`))
 }
 
 function moveGamePage(pathname: string) {
   initSearchData()
-  $router.push(localePath(`/game/${pathname}`))
+  router.push(localePath(`/game/${pathname}`))
 }
 
 function initSearchData() {
@@ -668,6 +672,11 @@ function initSearchData() {
   communityList.value = []
   hasResearchResult.value = false
   searchDropdown.value.handleClose()
+}
+function clickOutside() {
+  if (isHeaderSideMobile.value) {
+    isHeaderSideMobile.value = false
+  }
 }
 </script>
 

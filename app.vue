@@ -85,7 +85,8 @@ onBeforeMount(() => {
     switchLocalePath('en')
   }
   useCommon().setLang(locale.value)
-  router.replace(localePath(route.path))
+
+  router.replace(route.fullPath)
 })
 </script>
 

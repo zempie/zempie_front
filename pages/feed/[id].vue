@@ -163,7 +163,7 @@ import { useI18n } from 'vue-i18n'
 import { useLocalePath } from 'vue-i18n-routing'
 
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import { dateFormat, execCommandCopy } from '~~/scripts/utils'
+import { dateFormat, execCommandCopy, stringToDomElem } from '~~/scripts/utils'
 const localePath = useLocalePath()
 
 const COMMENT_LIMIT = 10
@@ -183,7 +183,6 @@ const swiperOption = ref({
     el: '.swiper-pagination',
   },
 })
-const userInfo = ref(computed(() => useUser().user.value.info))
 const feedId = computed(() => route.params.id as string)
 
 const observer = ref<IntersectionObserver>(null)
@@ -195,11 +194,17 @@ const {
   error,
   pending,
   refresh,
-} = await useAsyncData('feed', () =>
-  $fetch(`/post/${feedId.value}`, getComFetchOptions('get', true))
+} = await useFetch<any>(
+  `/post/${feedId.value}`,
+  getComFetchOptions('get', true)
 )
 
-setHead()
+watch(
+  () => feed.value,
+  (feed) => {
+    setHead()
+  }
+)
 
 onMounted(async () => {
   hljs.configure({
@@ -260,6 +265,9 @@ async function commentFetch() {
 
 async function setHead() {
   if (feed.value) {
+    const descText = stringToDomElem(feed.value.content).firstChild.firstChild
+      .innerHTML
+
     useHead({
       title: `${feed.value?.user.name}${t('seo.feed.title')} | Zempie`,
       link: [
@@ -292,7 +300,7 @@ async function setHead() {
         },
         {
           name: 'description',
-          content: `${feed.value?.content.slice(0, 20)}${t('seo.feed.desc')}`,
+          content: `${descText.slice(0, 20)}${t('seo.feed.desc')}`,
         },
         {
           property: 'og:title',
@@ -300,7 +308,7 @@ async function setHead() {
         },
         {
           property: 'og:description',
-          content: `${feed.value?.content.slice(0, 20)}${t('seo.feed.desc')}`,
+          content: `${descText.slice(0, 20)}${t('seo.feed.desc')}`,
         },
         {
           property: 'og:url',
