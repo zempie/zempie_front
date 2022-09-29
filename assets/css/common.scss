@@ -15,6 +15,21 @@
   background-color: #e4e6ef;
 }
 
+.btn-green-small {
+  display: inline-block;
+  height: 30px;
+  padding: 8px 20px;
+  text-align: center;
+  font-size: 13px;
+  line-height: 13px;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  background: #1bc5bd;
+  transition: all 0.4s ease-in-out;
+  cursor: pointer;
+}
+
 .grey-text {
   background-color: #ededed;
   border-radius: 10px;
@@ -76,7 +91,7 @@
 
 //포스팅 작성 모달
 .post-modal {
-  min-width: 700px;
+  max-width: 700px;
   border-radius: 10px !important;
   position: absolute !important;
   left: 50%;

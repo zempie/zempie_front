@@ -15,7 +15,6 @@
       <form class="lj-content">
         <ul>
           <li>
-            <!-- FIXME: error message margin, padding -->
             <input type="text" name="register-email" v-model="v$.email.$model"
               :placeholder="$t('login.email.placeholder')" class="w100p h60" :readonly="fUser?.email" />
 

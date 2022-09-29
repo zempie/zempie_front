@@ -18,7 +18,7 @@ export const htmlToDomElem = (html: string) => {
 }
 
 export const stringToDomElem = (string: string) => {
-    return new DOMParser().parseFromString(string, 'text/xml')
+    return new DOMParser().parseFromString(string, 'text/html')
 }
 
 export const blobToFile = (blob: Blob, fileName?: string, fileType?: string) => {

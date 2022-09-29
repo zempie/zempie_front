@@ -70,7 +70,6 @@
             allowfullscreen
           ></video>
         </div>
-
         <div v-if="isAudioUploading" class="video-loading">
           <BeatLoader :color="'#ff6e17'" size="20px" />
         </div>
@@ -175,7 +174,7 @@
             <a><i class="uil uil-image"></i></a>
             <div style="height: 0px; overflow: hidden">
               <input type="file" @change="onSelectImageFile" multiple
-              accept=image/* ref="image" />
+              id="image-selector" accept=image/* ref="image" />
             </div>
           </div>
           <div style="width: 30px" @click="uploaVideoFile">
@@ -200,24 +199,97 @@
         </dt>
         <dd>
           <button
+            v-if="draftList.length > 0"
+            class="btn-line-small w100 mr10"
+            id="loadPostBtn"
+            @click="onLoadPost"
+          >
+            Load
+          </button>
+          <button
+            class="btn-green-small w100 mr10"
+            id="draftPostBtn"
+            @click="onSavePost"
+          >
+            Draft
+          </button>
+          <button
             class="btn-default-samll w100 cancel-btn"
+            id="cancelPostBtn"
             @click="closeTextEditor"
           >
             Cancel
           </button>
+
           <button
             v-if="isEdit"
             class="btn-default-samll w100"
+            id="updatePostBtn"
             @click="onUpdatePost"
           >
             Update
           </button>
-          <button v-else class="btn-default-samll w100" @click="onSubmit">
+          <button
+            v-else
+            id="submitPostBtn"
+            class="btn-default-samll w100"
+            @click="onSubmit"
+          >
             Post
           </button>
         </dd>
       </dl>
     </div>
+
+    <el-dialog
+      v-model="showDraftList"
+      append-to-body
+      custom-class="modal-area-type"
+      width="380px"
+    >
+      <div class="modal-alert">
+        <dl class="ma-header">
+          <dt>{{ t('draft') }}</dt>
+          <dd>
+            <button @click="showDraftList = false">
+              <i class="uil uil-times"></i>
+            </button>
+          </dd>
+        </dl>
+        <div class="ma-content">
+          <ul>
+            <li
+              v-for="(draft, index) in draftList"
+              class="draft"
+              @click="selectDraft(draft, index)"
+            >
+              <div>
+                <p>
+                  {{
+                    stringToDomElem(draft.post_contents).getElementsByTagName(
+                      'p'
+                    )[0].innerText
+                  }}
+                </p>
+                <small>{{
+                  dayjs(draft.time).format('YYYY.MM.DD HH:mm')
+                }}</small>
+              </div>
+              <div>
+                <i
+                  @click.stop="deleteDraft(draft, index)"
+                  class="uil uil-trash-alt"
+                ></i>
+              </div>
+            </li>
+
+            <li v-if="draftList.length === 0" style="align-items: center">
+              <p>{{ $t('no.draft.data') }}</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -228,6 +300,7 @@ import { PropType } from 'vue'
 import { IFeed } from '~~/types'
 import { Pagination } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/vue'
+import dayjs from 'dayjs'
 
 import { Editor } from '@tiptap/vue-3'
 import {
@@ -240,7 +313,14 @@ import {
 } from 'element-plus'
 
 import { useI18n } from 'vue-i18n'
-import { htmlToDomElem } from '~~/scripts/utils'
+import { htmlToDomElem, stringToDomElem } from '~~/scripts/utils'
+
+interface IDraft {
+  time: number
+  key: string
+  post_contents: string
+  post_type: string
+}
 
 const { t, locale } = useI18n()
 
@@ -249,6 +329,7 @@ const popover = ref()
 
 const isVideoUploading = ref(false)
 const isAudioUploading = ref(false)
+const emit = defineEmits(['closeModal', 'refresh'])
 
 const props = defineProps({
   type: String,
@@ -296,10 +377,37 @@ const isCommunityListVisible = ref(false)
 const imgArr = ref([])
 const videoArr = ref([])
 const audioArr = ref([])
-const emit = defineEmits(['closeModal', 'refresh'])
 
 const form = reactive({
   post_contents: '',
+})
+
+//임시저장
+const showDraftList = ref(false)
+const draftList = ref([])
+
+onBeforeMount(() => {
+  createDraftList()
+
+  //유저가 직접 저장하지 않은 경우
+  if (draftList.value[0]?.save_type === 'cancel') {
+    ElMessageBox.confirm(`${t('ask.load.draft.post')}`, {
+      confirmButtonText: 'YES',
+      cancelButtonText: 'Cancel',
+      type: 'info',
+    })
+      .then(() => {
+        editor.value
+          .chain()
+          .insertContent(draftList.value[0].post_contents)
+          .run()
+      })
+      .catch(() => {})
+      .finally(() => {
+        localStorage.removeItem(draftList.value[0].key)
+        draftList.value.splice(0, 1)
+      })
+  }
 })
 
 onMounted(async () => {
@@ -377,7 +485,6 @@ function postingType(type: string) {
     usePost().setType(type)
   }
 }
-
 async function onSubmit() {
   const payload = {
     post_contents: form.post_contents,
@@ -1034,7 +1141,24 @@ async function onUpdatePost() {
 function closeTextEditor() {
   snsAttachFiles.value.img = _.cloneDeep(initFiles)
 
-  emit('closeModal')
+  //작성한 글이 있는 경우 임시저장 처리
+  if (!editor.value.isEmpty) {
+    ElMessageBox.confirm(`${t('ask.save.draft.post')}`, {
+      confirmButtonText: 'YES',
+      cancelButtonText: 'Cancel',
+      type: 'info',
+    })
+      .then(() => {
+        form['save_type'] = 'cancel'
+        onSavePost()
+      })
+      .catch(() => {})
+      .finally(() => {
+        emit('closeModal')
+      })
+  } else {
+    emit('closeModal')
+  }
 }
 
 async function communityFetch() {
@@ -1080,6 +1204,119 @@ async function selectChannel(channel: any) {
 
 function deletePostingChannel(idx: number) {
   postingChannels.value.splice(idx, 1)
+}
+
+function onSavePost() {
+  // 저장시간, 포스팅 내용, 포스팅 타입, 포스팅 uid
+  // 저장 시간으로부터 저장 기한 한달
+  // 마지막 타이핑을 기준으로 1분마다 자동 저장
+  // 유저가 저장한 경우를 제외하고 알람 띄워야함
+
+  if (editor.value.isEmpty) return
+
+  let count = 0
+  let timeList = []
+  for (let i = 0; i < localStorage.length; i++) {
+    if (
+      localStorage
+        .key(i)
+        .includes(useUser().user.value.info.channel_id + 'draft:')
+    ) {
+      count++
+      timeList.push(localStorage.key(i).split('draft:')[1])
+      if (count >= 3) {
+        const oldestDraft = Math.min(...timeList)
+
+        draftList.value = draftList.value.filter((x) => {
+          return (
+            x.key !==
+            `${useUser().user.value.info.channel_id}draft:${oldestDraft}`
+          )
+        })
+
+        localStorage.removeItem(
+          `${useUser().user.value.info.channel_id}draft:${oldestDraft}`
+        )
+      }
+    }
+  }
+
+  form['post_type'] = activeTab.value
+  form['time'] = Date.now()
+  form['key'] = `${useUser().user.value.info.channel_id}draft:${Date.now()}`
+
+  localStorage.setItem(
+    `${useUser().user.value.info.channel_id}draft:${Date.now()}`,
+    JSON.stringify(form)
+  )
+  draftList.value.push(JSON.parse(JSON.stringify(form)))
+
+  ElMessage({
+    message: t('save.draft.done'),
+    type: 'success',
+  })
+  emit('closeModal')
+}
+
+function createDraftList() {
+  draftList.value = []
+  for (let i = 0; i < localStorage.length; i++) {
+    if (
+      localStorage
+        .key(i)
+        .includes(useUser().user.value.info.channel_id + 'draft:')
+    ) {
+      draftList.value.push(
+        JSON.parse(localStorage.getItem(localStorage.key(i)))
+      )
+    }
+  }
+  //최신순으로 정렬
+  draftList.value.sort((a, b) => {
+    return b.time - a.time
+  })
+}
+
+function onLoadPost() {
+  showDraftList.value = true
+}
+
+function deleteDraft(draft: IDraft, index: number) {
+  localStorage.removeItem(draft.key)
+  draftList.value.splice(index, 1)
+  ElMessage({
+    message: t('delete.draft.done'),
+    type: 'success',
+  })
+}
+
+function selectDraft(draft: IDraft, index: number) {
+  //작성 중인 글 있는 지 확인
+  if (!editor.value.isEmpty) {
+    ElMessageBox.confirm(`${t('ask.overwrite.draft')}`, {
+      confirmButtonText: 'YES',
+      cancelButtonText: 'Cancel',
+      type: 'info',
+    })
+      .then(() => {
+        editor.value
+          .chain()
+          .clearContent()
+          .insertContent(draft.post_contents)
+          .run()
+        localStorage.removeItem(draft.key)
+        draftList.value.splice(index, 1)
+        showDraftList.value = false
+      })
+      .catch(() => {})
+      .finally(() => {})
+  } else {
+    editor.value.chain().insertContent(draft.post_contents).run()
+    localStorage.removeItem(draft.key)
+    draftList.value.splice(index, 1)
+
+    showDraftList.value = false
+  }
 }
 </script>
 
@@ -1246,6 +1483,36 @@ function deletePostingChannel(idx: number) {
 
     .cross-btn {
       cursor: pointer;
+    }
+  }
+}
+
+.ma-header {
+  padding: 10px 20px 10px 20px !important;
+}
+
+.ma-content {
+  padding: 10px 20px 10px 20px !important;
+  div {
+    margin-top: 0px !important;
+  }
+  ul {
+    li {
+      display: flex;
+      justify-content: space-between;
+      min-height: 50px;
+      margin: 10px 0px 10px 0px;
+      div {
+        text-align: left;
+        justify-content: center !important;
+        flex-direction: column;
+        i {
+          font-size: 20px;
+        }
+      }
+    }
+    li:not(:last-child) {
+      border-bottom: 1px solid #999;
     }
   }
 }

@@ -214,6 +214,7 @@ onMounted(async () => {
     hljs.highlightElement(block)
   })
   if (feed.value) {
+    setHead()
     observer.value = new IntersectionObserver(
       (entries) => {
         handleIntersection(entries[0])
@@ -265,8 +266,9 @@ async function commentFetch() {
 
 async function setHead() {
   if (feed.value) {
-    const descText = stringToDomElem(feed.value.content).firstChild.firstChild
-      .innerHTML
+    const descText = stringToDomElem(feed.value.content).getElementsByTagName(
+      'p'
+    )[0].innerText
 
     useHead({
       title: `${feed.value?.user.name}${t('seo.feed.title')} | Zempie`,
@@ -300,7 +302,7 @@ async function setHead() {
         },
         {
           name: 'description',
-          content: `${descText.slice(0, 20)}${t('seo.feed.desc')}`,
+          content: `${descText.slice(0, 20)}`,
         },
         {
           property: 'og:title',
@@ -308,7 +310,7 @@ async function setHead() {
         },
         {
           property: 'og:description',
-          content: `${descText.slice(0, 20)}${t('seo.feed.desc')}`,
+          content: `${descText.slice(0, 20)}`,
         },
         {
           property: 'og:url',

@@ -91,13 +91,13 @@
         :show-close="false"
         :close-on-click-modal="false"
         :close-on-press-escape="false"
+        :destroy-on-close="true"
         @close="closeEditor"
       >
         <TextEditor
           @closeModal="isTextEditorOpen = false"
           :type="type"
           @refresh="refresh"
-          :key="editorKey"
           :channelInfo="channelInfo"
         />
       </el-dialog>
@@ -135,7 +135,6 @@ const isPending = ref(true)
 
 const isTextEditorOpen = ref(false)
 const isEditorDestroy = ref(false)
-const editorKey = ref(0)
 
 const observer = ref<IntersectionObserver>(null)
 const triggerDiv = ref()
@@ -345,7 +344,6 @@ function timelineFilter(selected?: string) {
 
 function closeEditor() {
   isEditorDestroy.value = true
-  editorKey.value = Date.now()
 }
 
 function refreshFollow(user_id: number) {

@@ -14,7 +14,6 @@ declare module '@tiptap/core' {
         }
     }
 }
-let renderCount = 2;
 
 export default Node.create({
     name: 'audio',
@@ -50,12 +49,8 @@ export default Node.create({
         }]
     },
 
-
     renderHTML({ HTMLAttributes }) {
-        return ['div', this.options.HTMLAttributes, ['audio', mergeAttributes({ 'controls': true }, HTMLAttributes)]
-            // FIXME: content호출시 p 두번 출력..; 왜? 
-            // , ['p', HTMLAttributes.title]
-        ]
+        return ['div', this.options.HTMLAttributes, ['audio', mergeAttributes({ 'controls': true }, HTMLAttributes)], ['p', HTMLAttributes.title]]
     },
 
     addCommands() {

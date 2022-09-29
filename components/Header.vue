@@ -216,7 +216,9 @@
                   <div>
                     <h2>{{ t('myProfile') }}</h2>
                     <div>
-                      <NuxtLink :to="localePath(`/channel/${user.channel_id}`)"
+                      <NuxtLink
+                        :to="localePath(`/channel/${user.channel_id}`)"
+                        id="myChannel"
                         ><i class="uil uil-user"></i>
                         {{ t('myChannel') }}
                       </NuxtLink>
