@@ -95,10 +95,13 @@
                             <div @click="moveUserPage(user.channel_id)">
                               <dl>
                                 <dt>
+                                  <UserAvatarSk v-if="isPending" />
+
                                   <UserAvatar
+                                    v-else
                                     :user="user"
                                     :tag="'span'"
-                                  ></UserAvatar>
+                                  />
                                   {{ user.name }}
                                 </dt>
                                 <dd><i class="uil uil-user"></i></dd>
@@ -163,6 +166,7 @@
           </div>
 
           <!-- FIXME: popper-class: css수정 -->
+
           <div class="header-language">
             <el-select
               class="hl-select-box"
@@ -179,85 +183,92 @@
             </el-select>
           </div>
 
-          <div
-            class="header-info ml10"
-            v-if="isLogin"
-            style="display: flex"
-            id="userMenu"
-          >
-            <el-dropdown trigger="click" ref="userMenu">
-              <UserAvatar
-                style="width: 30px; height: 30px"
-                :user="user"
-                :key="user?.picture"
-              />
+          <div class="header-info ml10" style="display: flex" id="userMenu">
+            <template v-if="isLogin">
+              <el-dropdown trigger="click" ref="userMenu">
+                <UserAvatarSk v-if="isPending" />
+                <UserAvatar
+                  v-else
+                  style="width: 30px; height: 30px"
+                  :user="user"
+                  :key="user?.picture"
+                />
 
-              <template #dropdown>
-                <div
-                  slot="body"
-                  class="header-setting"
-                  style="min-width: 250px"
-                  @click="userMenu?.handleClose()"
-                >
-                  <dl style="margin: 10px 0px 0px 0px">
-                    <UserAvatar
-                      style="width: 30px; height: 30px"
-                      :user="user"
-                      :key="user?.picture"
-                    />
-                    <dd>
-                      <NuxtLink
-                        :to="localePath(`/channel/${user?.channel_id}`)"
-                      >
-                        <h2>{{ user.name }}</h2>
-                      </NuxtLink>
-                    </dd>
-                  </dl>
-                  <div>
-                    <h2>{{ t('myProfile') }}</h2>
+                <template #dropdown>
+                  <div
+                    slot="body"
+                    class="header-setting"
+                    style="min-width: 250px"
+                    @click="userMenu?.handleClose()"
+                  >
+                    <dl style="margin: 10px 0px 0px 0px">
+                      <UserAvatarSk v-if="isPending" />
+
+                      <UserAvatar
+                        v-else
+                        style="width: 30px; height: 30px"
+                        :user="user"
+                        :key="user?.picture"
+                      />
+                      <dd>
+                        <NuxtLink
+                          :to="localePath(`/channel/${user?.channel_id}`)"
+                        >
+                          <h2>{{ user.name }}</h2>
+                        </NuxtLink>
+                      </dd>
+                    </dl>
                     <div>
-                      <NuxtLink :to="localePath(`/channel/${user.channel_id}`)"
-                        ><i class="uil uil-user"></i>
-                        {{ t('myChannel') }}
-                      </NuxtLink>
-                      <NuxtLink :to="localePath('/project/list')"
-                        ><i class="uil uil-robot"></i>
-                        {{ t('gameStudio') }}
-                      </NuxtLink>
+                      <h2>{{ t('myProfile') }}</h2>
+                      <div>
+                        <NuxtLink
+                          :to="localePath(`/channel/${user.channel_id}`)"
+                          ><i class="uil uil-user"></i>
+                          {{ t('myChannel') }}
+                        </NuxtLink>
+                        <NuxtLink :to="localePath('/project/list')"
+                          ><i class="uil uil-robot"></i>
+                          {{ t('gameStudio') }}
+                        </NuxtLink>
+                      </div>
                     </div>
-                  </div>
-                  <div>
-                    <h2>{{ t('group') }}</h2>
                     <div>
-                      <NuxtLink :to="localePath(`/myaccount/communities`)"
-                        ><i class="uil uil-users-alt"></i>
-                        {{ t('joined.group') }}
-                      </NuxtLink>
+                      <h2>{{ t('group') }}</h2>
+                      <div>
+                        <NuxtLink :to="localePath(`/myaccount/communities`)"
+                          ><i class="uil uil-users-alt"></i>
+                          {{ t('joined.group') }}
+                        </NuxtLink>
+                      </div>
                     </div>
-                  </div>
-                  <div>
-                    <h2>{{ t('account') }}</h2>
                     <div>
-                      <NuxtLink :to="localePath(`/myaccount`)"
-                        ><i class="uil uil-setting"></i>
-                        {{ t('my.account') }}
-                      </NuxtLink>
+                      <h2>{{ t('account') }}</h2>
+                      <div>
+                        <NuxtLink :to="localePath(`/myaccount`)"
+                          ><i class="uil uil-setting"></i>
+                          {{ t('my.account') }}
+                        </NuxtLink>
+                      </div>
                     </div>
+                    <p>
+                      <a class="btn-default w100p" @click="logout">{{
+                        t('logout')
+                      }}</a>
+                    </p>
                   </div>
-                  <p>
-                    <a class="btn-default w100p" @click="logout">{{
-                      t('logout')
-                    }}</a>
-                  </p>
-                </div>
-              </template>
-            </el-dropdown>
+                </template>
+              </el-dropdown>
+            </template>
+            <img
+              v-else
+              src="/images/300_300_default_profile.png"
+              width="30"
+              height="30"
+            />
+            <!-- <UserAvatarSk v-else /> -->
           </div>
 
-          <div
-            class="header-login"
-            v-else-if="!useCookie(config.COOKIE_NAME).value"
-          >
+          <div class="header-login" v-if="!useCookie(config.COOKIE_NAME).value">
             <NuxtLink :to="localePath('/login')">
               <button class="btn-default">
                 <i class="uil uil-user"></i>{{ t('login') }}
@@ -556,6 +567,7 @@ const selectedLang = ref(locale.value)
 
 const isOpen = ref(false)
 const { loginModal } = useModal()
+const nuxt = useNuxtApp()
 
 watch(
   () => loginModal.value.isOpen,
@@ -579,8 +591,7 @@ watch(
   },
   { immediate: true }
 )
-
-onBeforeMount(() => {
+nuxt.hook('page:finish', () => {
   isPending.value = false
 })
 
