@@ -15,6 +15,7 @@ import { PropType } from 'vue'
 import { IFeed } from '~~/types'
 import { useI18n } from 'vue-i18n'
 
+import { mergeAttributes } from '@tiptap/core'
 import { useEditor, EditorContent, VueNodeViewRenderer } from '@tiptap/vue-3'
 import Link from '@tiptap/extension-link'
 import StarterKit from '@tiptap/starter-kit'
@@ -33,6 +34,8 @@ import CustomAudio from '~~/scripts/tiptap/customAudio'
 import CustomVideo from '~~/scripts/tiptap/customVideo'
 
 import ResizableImage from './ResizableImage.vue'
+import PreviewLink from './PreviewLink.vue'
+// import { Link } from '~~/scripts/tiptap/customLink'
 const emit = defineEmits(['editorContent'])
 const { t, locale } = useI18n()
 
@@ -79,7 +82,6 @@ const editor = useEditor({
             limit: limit.value,
           }),
           Link,
-
           Typography,
           Highlight,
           Image.extend({
@@ -114,7 +116,6 @@ const editor = useEditor({
 
                 isDraggable: {
                   default: true,
-
                   renderHTML: (attributes) => {
                     return {}
                   },
@@ -168,7 +169,7 @@ const editor = useEditor({
             },
           }),
         ],
-  onUpdate: () => {
+  onUpdate: (edit) => {
     charCount.value = editor.value.storage.characterCount.characters()
     emit('editorContent', editor.value)
   },

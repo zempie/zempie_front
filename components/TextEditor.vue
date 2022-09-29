@@ -101,7 +101,11 @@
               : ''
           "
         >
-          <el-popover name="category" trigger="click">
+          <el-popover
+            name="category"
+            trigger="click"
+            v-model:visible="showCommunity"
+          >
             <template #reference>
               <button class="btn-line-small" style="width: 30%">
                 <i class="uil uil-plus"></i>
@@ -168,6 +172,7 @@
           </swiper>
         </div>
       </ClientOnly>
+
       <dl class="mp-type">
         <dt>
           <div style="width: 30px" @click="uploadImageFile">
@@ -197,6 +202,14 @@
             </div>
           </div>
         </dt>
+        <!-- 
+           1분마다 자동 저장
+         -->
+        <Transition name="component-fade" mode="out-in">
+          <small style="color: #999"
+            >자동저장 {{ dayjs(Date.now()).format('HH:mm') }}</small
+          >
+        </Transition>
         <dd>
           <button
             v-if="draftList.length > 0"
@@ -268,6 +281,9 @@
                   {{
                     stringToDomElem(draft.post_contents).getElementsByTagName(
                       'p'
+                    )[0]?.innerText ||
+                    stringToDomElem(draft.post_contents).getElementsByTagName(
+                      'pre'
                     )[0].innerText
                   }}
                 </p>
@@ -373,6 +389,7 @@ const selectedGroup = ref()
 const channels = ref()
 const postingChannels = ref([])
 const isCommunityListVisible = ref(false)
+const showCommunity = ref(false)
 
 const imgArr = ref([])
 const videoArr = ref([])
@@ -1200,6 +1217,7 @@ async function selectChannel(channel: any) {
   isCommunityListVisible.value = false
   isCommunityListOpen.value = !isCommunityListOpen.value
   isChannelListOpen.value = !isChannelListOpen.value
+  showCommunity.value = false
 }
 
 function deletePostingChannel(idx: number) {
@@ -1299,29 +1317,39 @@ function selectDraft(draft: IDraft, index: number) {
       type: 'info',
     })
       .then(() => {
+        activeTab.value = draft.post_type
         editor.value
           .chain()
           .clearContent()
           .insertContent(draft.post_contents)
           .run()
-        localStorage.removeItem(draft.key)
-        draftList.value.splice(index, 1)
+
         showDraftList.value = false
       })
       .catch(() => {})
       .finally(() => {})
   } else {
-    editor.value.chain().insertContent(draft.post_contents).run()
-    localStorage.removeItem(draft.key)
-    draftList.value.splice(index, 1)
-
+    activeTab.value = draft.post_type
+    editor.value.commands.insertContent(draft.post_contents)
     showDraftList.value = false
   }
+  localStorage.removeItem(draft.key)
+  draftList.value.splice(index, 1)
 }
 </script>
 
 <style lang="scss">
 @use 'sass:math';
+
+.component-fade-enter-active,
+.component-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.component-fade-enter-from,
+.component-fade-leave-to {
+  opacity: 0;
+}
 
 .modal-post {
   .mp-category {
@@ -1468,13 +1496,15 @@ function selectDraft(draft: IDraft, index: number) {
 
       span {
         text-overflow: ellipsis;
-        max-width: 70px;
+        max-width: 50px;
         overflow: hidden;
         white-space: nowrap;
         display: inline-block;
       }
 
       em {
+        max-width: 40px;
+        text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
         display: inline-block;
