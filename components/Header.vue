@@ -95,10 +95,13 @@
                             <div @click="moveUserPage(user.channel_id)">
                               <dl>
                                 <dt>
+                                  <UserAvatarSk v-if="isPending" />
+
                                   <UserAvatar
+                                    v-else
                                     :user="user"
                                     :tag="'span'"
-                                  ></UserAvatar>
+                                  />
                                   {{ user.name }}
                                 </dt>
                                 <dd><i class="uil uil-user"></i></dd>
@@ -163,6 +166,7 @@
           </div>
 
           <!-- FIXME: popper-class: css수정 -->
+
           <div class="header-language">
             <el-select
               class="hl-select-box"
@@ -178,10 +182,9 @@
               />
             </el-select>
           </div>
-
           <div
-            class="header-info ml10"
             v-if="isLogin"
+            class="header-info ml10"
             style="display: flex"
             id="userMenu"
           >
@@ -217,8 +220,8 @@
                     <h2>{{ t('myProfile') }}</h2>
                     <div>
                       <NuxtLink
-                        :to="localePath(`/channel/${user.channel_id}`)"
                         id="myChannel"
+                        :to="localePath(`/channel/${user.channel_id}`)"
                         ><i class="uil uil-user"></i>
                         {{ t('myChannel') }}
                       </NuxtLink>
@@ -255,18 +258,13 @@
               </template>
             </el-dropdown>
           </div>
-
-          <div
-            class="header-login"
-            v-else-if="!useCookie(config.COOKIE_NAME).value"
-          >
+          <div v-else class="header-login">
             <NuxtLink :to="localePath('/login')">
               <button class="btn-default">
                 <i class="uil uil-user"></i>{{ t('login') }}
               </button>
             </NuxtLink>
           </div>
-          <div v-else style="min-width: 80px"></div>
 
           <!-- TODO: 알람, 디엠 비턴 -->
           <!-- <div class="header-info-mobile" v-if="isLogin">
@@ -563,6 +561,7 @@ const selectedLang = ref(locale.value)
 
 const isOpen = ref(false)
 const { loginModal } = useModal()
+const nuxt = useNuxtApp()
 
 watch(
   () => loginModal.value.isOpen,
@@ -583,7 +582,13 @@ watch(
   { immediate: true }
 )
 
-onBeforeMount(() => {
+// nuxt.hook('page:finish', () => {
+//   console.log(1)
+//   isPending.value = false
+// })
+
+onMounted(() => {
+  console.log(2)
   isPending.value = false
 })
 
