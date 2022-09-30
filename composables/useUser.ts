@@ -11,7 +11,8 @@ export default function () {
     isLogin: false,
     info: null as IUser,
     fUser: null,
-    isSignUp: false
+    isSignUp: false,
+    isLoading: true,
   }))
 
 
@@ -25,6 +26,7 @@ export default function () {
 
   const setLogin = () => {
     user.value.isLogin = true;
+    user.value.isLoading = false;
   }
   const setLogout = () => {
     user.value.isLogin = false;

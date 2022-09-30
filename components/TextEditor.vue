@@ -206,8 +206,8 @@
            1분마다 자동 저장
          -->
         <Transition name="component-fade" mode="out-in">
-          <small style="color: #999"
-            >자동저장 {{ dayjs(Date.now()).format('HH:mm') }}</small
+          <small v-if="showSavedTime" style="color: #999"
+            >자동저장 {{ savedTime }}</small
           >
         </Transition>
         <dd>
@@ -222,7 +222,7 @@
           <button
             class="btn-green-small w100 mr10"
             id="draftPostBtn"
-            @click="onSavePost"
+            @click="saveDraftCloseModal()"
           >
             Draft
           </button>
@@ -400,11 +400,21 @@ const form = reactive({
 })
 
 //임시저장
+const MAX_LOCAL_SAVE = 3
 const showDraftList = ref(false)
 const draftList = ref([])
 
+//자동저장
+const interval = ref()
+const savedTime = ref()
+const showSavedTime = ref()
+const textInterval = ref()
+const prevText = ref()
+const saveId = ref(Date.now())
+
 onBeforeMount(() => {
   createDraftList()
+  autoSave()
 
   //유저가 직접 저장하지 않은 경우
   if (draftList.value[0]?.save_type === 'cancel') {
@@ -414,10 +424,7 @@ onBeforeMount(() => {
       type: 'info',
     })
       .then(() => {
-        editor.value
-          .chain()
-          .insertContent(draftList.value[0].post_contents)
-          .run()
+        insertContet(draftList.value[0])
       })
       .catch(() => {})
       .finally(() => {
@@ -472,6 +479,11 @@ onMounted(async () => {
       ]
     }
   }
+})
+
+onBeforeUnmount(() => {
+  clearInterval(interval.value)
+  clearTimeout(textInterval.value)
 })
 
 function postingType(type: string) {
@@ -1161,18 +1173,21 @@ function closeTextEditor() {
   //작성한 글이 있는 경우 임시저장 처리
   if (!editor.value.isEmpty) {
     ElMessageBox.confirm(`${t('ask.save.draft.post')}`, {
-      confirmButtonText: 'YES',
-      cancelButtonText: 'Cancel',
+      confirmButtonText: 'SAVE',
+      cancelButtonText: 'LEAVE',
       type: 'info',
     })
       .then(() => {
         form['save_type'] = 'cancel'
-        onSavePost()
+        saveDraftCloseModal()
       })
-      .catch(() => {})
-      .finally(() => {
+      .catch(() => {
+        localStorage.removeItem(
+          useUser().user.value.info.channel_id + 'draft:' + saveId.value
+        )
         emit('closeModal')
       })
+      .finally(() => {})
   } else {
     emit('closeModal')
   }
@@ -1224,50 +1239,14 @@ function deletePostingChannel(idx: number) {
   postingChannels.value.splice(idx, 1)
 }
 
-function onSavePost() {
-  // 저장시간, 포스팅 내용, 포스팅 타입, 포스팅 uid
-  // 저장 시간으로부터 저장 기한 한달
-  // 마지막 타이핑을 기준으로 1분마다 자동 저장
-  // 유저가 저장한 경우를 제외하고 알람 띄워야함
-
+//임시저장 후 모달 종료
+function saveDraftCloseModal() {
   if (editor.value.isEmpty) return
-
-  let count = 0
-  let timeList = []
-  for (let i = 0; i < localStorage.length; i++) {
-    if (
-      localStorage
-        .key(i)
-        .includes(useUser().user.value.info.channel_id + 'draft:')
-    ) {
-      count++
-      timeList.push(localStorage.key(i).split('draft:')[1])
-      if (count >= 3) {
-        const oldestDraft = Math.min(...timeList)
-
-        draftList.value = draftList.value.filter((x) => {
-          return (
-            x.key !==
-            `${useUser().user.value.info.channel_id}draft:${oldestDraft}`
-          )
-        })
-
-        localStorage.removeItem(
-          `${useUser().user.value.info.channel_id}draft:${oldestDraft}`
-        )
-      }
-    }
-  }
-
-  form['post_type'] = activeTab.value
-  form['time'] = Date.now()
-  form['key'] = `${useUser().user.value.info.channel_id}draft:${Date.now()}`
-
-  localStorage.setItem(
-    `${useUser().user.value.info.channel_id}draft:${Date.now()}`,
-    JSON.stringify(form)
+  localStorage.removeItem(
+    useUser().user.value.info.channel_id + 'draft:' + saveId.value
   )
-  draftList.value.push(JSON.parse(JSON.stringify(form)))
+
+  onSavePost()
 
   ElMessage({
     message: t('save.draft.done'),
@@ -1275,6 +1254,70 @@ function onSavePost() {
   })
   emit('closeModal')
 }
+
+function onSavePost(time = Date.now()) {
+  // 저장시간, 포스팅 내용, 포스팅 타입, 포스팅 uid
+  // 저장 시간으로부터 저장 기한 한달
+  // 마지막 타이핑을 기준으로 1분마다 자동 저장
+  // 유저가 저장한 경우를 제외하고 알람 띄워야함
+
+  if (isFullLocal()) {
+    const oldestDraft = getOldestDraft()
+    localStorage.removeItem(oldestDraft)
+    draftList.value = draftList.value.filter((x) => {
+      return x.key !== oldestDraft
+    })
+  }
+
+  saveOnLocal(time)
+
+  draftList.value.push(JSON.parse(JSON.stringify(form)))
+}
+
+function getOldestDraft(): string {
+  let timeList = []
+
+  for (let i = 0; i < localStorage.length; i++) {
+    if (
+      localStorage
+        .key(i)
+        .includes(useUser().user.value.info.channel_id + 'draft:')
+    ) {
+      timeList.push(localStorage.key(i).split('draft:')[1])
+    }
+  }
+
+  const oldestDraft = Math.min(...timeList)
+  return `${useUser().user.value.info.channel_id}draft:${oldestDraft}`
+}
+
+function isFullLocal(): boolean {
+  let count = 0
+
+  for (let i = 0; i < localStorage.length; i++) {
+    if (
+      localStorage
+        .key(i)
+        .includes(useUser().user.value.info.channel_id + 'draft:')
+    ) {
+      count++
+    }
+  }
+  return count >= MAX_LOCAL_SAVE ? true : false
+}
+
+function saveOnLocal(time: number) {
+  form['post_type'] = activeTab.value
+  form['time'] = Date.now()
+  form['key'] = `${useUser().user.value.info.channel_id}draft:${time}`
+
+  localStorage.setItem(
+    `${useUser().user.value.info.channel_id}draft:${time}`,
+    JSON.stringify(form)
+  )
+}
+
+function saveAutoPost() {}
 
 function createDraftList() {
   draftList.value = []
@@ -1317,24 +1360,58 @@ function selectDraft(draft: IDraft, index: number) {
       type: 'info',
     })
       .then(() => {
-        activeTab.value = draft.post_type
-        editor.value
-          .chain()
-          .clearContent()
-          .insertContent(draft.post_contents)
-          .run()
+        insertContet(draft)
 
         showDraftList.value = false
       })
       .catch(() => {})
       .finally(() => {})
   } else {
-    activeTab.value = draft.post_type
-    editor.value.commands.insertContent(draft.post_contents)
+    insertContet(draft)
+
     showDraftList.value = false
   }
   localStorage.removeItem(draft.key)
   draftList.value.splice(index, 1)
+}
+
+function insertContet(draft: IDraft) {
+  activeTab.value = draft.post_type
+
+  nextTick(() => {
+    editor.value.view.dom.focus()
+    editor.value.chain().focus().insertContent(draft.post_contents).run()
+  })
+}
+
+//바뀐게 있을 경우 자동저장 5초마다 저장
+function autoSave() {
+  interval.value = setInterval(() => {
+    console.log(saveId.value)
+
+    //바뀐게 없거나 텍스트가 없는 경우 종료
+    if (prevText.value === form.post_contents || editor.value.isEmpty) {
+      return
+    }
+    savedTime.value = dayjs(Date.now()).format('HH:mm')
+    showSavedTime.value = false
+
+    //자동저장 id
+    form['saveId'] = saveId.value
+    onSavePost(saveId.value)
+    console.log('auto save!')
+
+    showTimeText()
+    showSavedTime.value = true
+  }, 5000)
+}
+
+//텍스트 1.5초간 유지
+function showTimeText() {
+  textInterval.value = setTimeout(() => {
+    showSavedTime.value = false
+    prevText.value = _.cloneDeep(form.post_contents)
+  }, 1500)
 }
 </script>
 
@@ -1343,7 +1420,7 @@ function selectDraft(draft: IDraft, index: number) {
 
 .component-fade-enter-active,
 .component-fade-leave-active {
-  transition: opacity 0.3s ease;
+  transition: opacity 0.5s ease;
 }
 
 .component-fade-enter-from,

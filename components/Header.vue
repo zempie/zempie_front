@@ -259,7 +259,13 @@
             </el-dropdown>
           </div>
           <div v-else class="header-login">
-            <NuxtLink :to="localePath('/login')">
+            <img
+              v-if="useUser().user.value.isLoading"
+              src="/images/300_300_default_profile.png"
+              width="30"
+              height="30"
+            />
+            <NuxtLink v-else :to="localePath('/login')">
               <button class="btn-default">
                 <i class="uil uil-user"></i>{{ t('login') }}
               </button>
@@ -582,13 +588,7 @@ watch(
   { immediate: true }
 )
 
-// nuxt.hook('page:finish', () => {
-//   console.log(1)
-//   isPending.value = false
-// })
-
-onMounted(() => {
-  console.log(2)
+nuxt.hook('page:finish', () => {
   isPending.value = false
 })
 
