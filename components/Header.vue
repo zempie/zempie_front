@@ -271,22 +271,6 @@
               </button>
             </NuxtLink>
           </div>
-
-          <!-- TODO: 알람, 디엠 비턴 -->
-          <!-- <div class="header-info-mobile" v-if="isLogin">
-            <button class="btn-none" @click="isOpenMessage = !isOpenMessage">
-              <i class="uil uil-comment" style="font-size:21px;"></i>
-              <span></span>
-            </button>
-            <button class="btn-none" @click="isOpenMessage = !isOpenMessage">
-              <i class="uil uil-bell" style="font-size:23px;"></i>
-              <span></span>
-            </button>
-            <button class="btn-none">
-              <i class="uil uil-comment"></i>
-            </button>
-          </div> -->
-
           <div
             class="header-side-mobile"
             :style="isHeaderSideMobile ? 'left:0px;' : ''"

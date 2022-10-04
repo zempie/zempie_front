@@ -12,7 +12,7 @@ export default function () {
     info: null as IUser,
     fUser: null,
     isSignUp: false,
-    isLoading: true,
+    isLoading: true, //header loading
   }))
 
 
@@ -96,6 +96,10 @@ export default function () {
     const { data } = await auth.signUp(payload)
   }
 
+  const setLoadDone = () => {
+    user.value.isLoading = false;
+  }
+
 
 
   return {
@@ -111,7 +115,8 @@ export default function () {
     login,
     setSignup,
     unsetSignup,
-    setBannerImg
+    setBannerImg,
+    setLoadDone
   }
 }
 

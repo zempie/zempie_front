@@ -396,16 +396,12 @@ onBeforeRouteLeave((to, from, next) => {
     form.project_picture ||
     form.project_picture2
   ) {
-    ElMessageBox.confirm(
-      `${t('leave.router.warning')}`, //작성하신 글은 저장되지않고 지워집니다. 이 페이지를 나가시겠습니까?
-      'Warning',
-      {
-        confirmButtonText: 'Cancel',
-        cancelButtonText: 'Leave',
-        type: 'warning',
-        showClose: false,
-      }
-    ).catch((action: Action) => {
+    ElMessageBox.confirm(`${t('leave.router.warning')}`, 'Warning', {
+      confirmButtonText: 'Cancel',
+      cancelButtonText: 'Leave',
+      type: 'warning',
+      showClose: false,
+    }).catch((action: Action) => {
       next()
     })
   } else {
