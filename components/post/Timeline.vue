@@ -93,12 +93,14 @@
         :close-on-press-escape="false"
         :destroy-on-close="true"
         @close="closeEditor"
+        :fullscreen="isFullScreen"
       >
         <TextEditor
           @closeModal="isTextEditorOpen = false"
           :type="type"
           @refresh="refresh"
           :channelInfo="channelInfo"
+          :isFullScreen="isFullScreen"
         />
       </el-dialog>
     </ClientOnly>
@@ -121,7 +123,6 @@ import {
 } from 'element-plus'
 
 import { useLocalePath } from 'vue-i18n-routing'
-import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router'
 const { t, locale } = useI18n()
 
 const LIMIT_SIZE = 30
@@ -167,6 +168,12 @@ const props = defineProps({
   channelInfo: Object as PropType<IComChannel>,
 })
 
+const isFullScreen = ref(false)
+
+const isMobile = computed(() =>
+  window.matchMedia('screen and (max-width: 767px)')
+)
+
 const watcher = watch(
   () => route.query,
   (query) => {
@@ -190,6 +197,11 @@ const userWatcher = watch(
 )
 
 onMounted(async () => {
+  nextTick(() => {
+    onResize()
+  })
+  window.addEventListener('resize', onResize)
+
   if (paramId.value || route.meta.name === 'myTimeline') {
     const result = await fetch()
     if (result) {
@@ -218,6 +230,7 @@ onBeforeUnmount(() => {
   initPaging()
   watcher()
   userWatcher()
+  window.removeEventListener('resize', onResize)
 })
 
 async function fetch() {
@@ -355,6 +368,10 @@ function refreshFollow(user_id: number) {
       feed.user.is_following = !feed.user.is_following
       return feed
     })
+}
+
+function onResize() {
+  isFullScreen.value = isMobile.value.matches ? true : false
 }
 </script>
 

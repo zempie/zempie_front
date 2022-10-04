@@ -3,6 +3,8 @@
     <EditorContent
       :editor="editor"
       :class="['editor-container', postType === 'SNS' ? 'sns' : 'blog']"
+      @drop="dropEditor"
+      @paste="pasteEditor"
     />
     <div class="character-count">
       <p>{{ charCount }}/{{ limit }}</p>
@@ -178,6 +180,33 @@ const editor = useEditor({
 onMounted(() => {
   emit('editorContent', editor.value)
 })
+
+function dropEditor(e: DragEvent) {
+  e.preventDefault()
+  e.stopPropagation()
+  addImage(e.dataTransfer)
+}
+
+function pasteEditor(e: ClipboardEvent) {
+  addImage(e.clipboardData)
+}
+
+function addImage(data: DataTransfer) {
+  if (props.postType === 'SNS') return
+
+  const { files } = data
+
+  if (files && files.length > 0) {
+    for (const file of Array.from(files)) {
+      const [mime] = file.type.split('/')
+
+      if (mime === 'image') {
+        const url = URL.createObjectURL(file)
+        editor?.value.chain().focus().setImage({ src: url }).run()
+      }
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

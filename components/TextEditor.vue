@@ -1,6 +1,9 @@
 <template>
   <div class="modal-post">
     <ul class="mp-header">
+      <li v-if="isFullScreen" @click="closeTextEditor" style="width: 50px">
+        <i class="uil uil-angle-left-b"></i>
+      </li>
       <li
         :class="activeTab === 'SNS' ? 'active' : ''"
         @click="postingType('SNS')"
@@ -227,6 +230,7 @@
             Draft
           </button>
           <button
+            v-if="!isFullScreen"
             class="btn-default-samll w100 cancel-btn"
             id="cancelPostBtn"
             @click="closeTextEditor"
@@ -278,14 +282,7 @@
             >
               <div>
                 <p>
-                  {{
-                    stringToDomElem(draft.post_contents).getElementsByTagName(
-                      'p'
-                    )[0]?.innerText ||
-                    stringToDomElem(draft.post_contents).getElementsByTagName(
-                      'pre'
-                    )[0].innerText
-                  }}
+                  {{ getFirstPostContent(draft.post_contents) }}
                 </p>
                 <small>{{
                   dayjs(draft.time).format('YYYY.MM.DD HH:mm')
@@ -345,6 +342,7 @@ const popover = ref()
 
 const isVideoUploading = ref(false)
 const isAudioUploading = ref(false)
+
 const emit = defineEmits(['closeModal', 'refresh'])
 
 const props = defineProps({
@@ -355,6 +353,7 @@ const props = defineProps({
   },
   feed: Object as PropType<IFeed>,
   channelInfo: Object,
+  isFullScreen: Boolean,
 })
 
 const initFiles = _.cloneDeep(props.feed?.attatchment_files)
@@ -435,6 +434,8 @@ onBeforeMount(() => {
 })
 
 onMounted(async () => {
+  //새로고침 시 알람
+  window.addEventListener('beforeunload', refreshPage)
   await communityFetch()
   if (props.isEdit) {
     if (props.feed?.posted_at?.community) {
@@ -482,9 +483,17 @@ onMounted(async () => {
 })
 
 onBeforeUnmount(() => {
+  window.removeEventListener('beforeunload', refreshPage)
   clearInterval(interval.value)
   clearTimeout(textInterval.value)
 })
+
+function refreshPage(event) {
+  if (editor.value.isEmpty) return
+  event.preventDefault()
+
+  event.returnValue = `${t('leave.router.warning')}` //안뜨는 거 같음
+}
 
 function postingType(type: string) {
   if (
@@ -1387,8 +1396,6 @@ function insertContet(draft: IDraft) {
 //바뀐게 있을 경우 자동저장 5초마다 저장
 function autoSave() {
   interval.value = setInterval(() => {
-    console.log(saveId.value)
-
     //바뀐게 없거나 텍스트가 없는 경우 종료
     if (prevText.value === form.post_contents || editor.value.isEmpty) {
       return
@@ -1399,7 +1406,6 @@ function autoSave() {
     //자동저장 id
     form['saveId'] = saveId.value
     onSavePost(saveId.value)
-    console.log('auto save!')
 
     showTimeText()
     showSavedTime.value = true
@@ -1412,6 +1418,17 @@ function showTimeText() {
     showSavedTime.value = false
     prevText.value = _.cloneDeep(form.post_contents)
   }, 1500)
+}
+
+function getFirstPostContent(content: string) {
+  return (
+    stringToDomElem(content).getElementsByTagName('p')[0]?.innerText ||
+    stringToDomElem(content).getElementsByTagName('pre')[0]?.innerText ||
+    (stringToDomElem(content).getElementsByTagName('img')[0]?.src && 'Image') ||
+    (stringToDomElem(content).getElementsByTagName('video')[0]?.src &&
+      'Video') ||
+    (stringToDomElem(content).getElementsByTagName('audio')[0]?.src && 'Audio')
+  )
 }
 </script>
 
@@ -1632,9 +1649,32 @@ function showTimeText() {
       }
     }
   }
+  .mp-type {
+    dd {
+      button {
+        padding: 0px;
+        width: 50px !important;
+      }
+    }
+  }
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
+  .mp-category {
+    .btn-line-small {
+      span:nth-child(3) {
+        display: none;
+      }
+    }
+  }
+  .mp-type {
+    dd {
+      button {
+        padding: 0px;
+        width: 70px !important;
+      }
+    }
+  }
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
