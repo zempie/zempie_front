@@ -145,7 +145,7 @@
             />
           </ul>
         </div>
-        <template v-else-if="data.result?.length">
+        <template v-else-if="data?.result?.length">
           <TransitionGroup name="list-complete" tag="div">
             <ul
               v-for="project in projects"
