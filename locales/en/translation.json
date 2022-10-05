@@ -841,5 +841,6 @@
   "ask.save.draft.post": "Would you like to leave this session without saving a draft?",
   "save.draft.done": "Your draft is successfully saved.",
   "delete.draft.done": "Do you really want to delete the selected post?",
-  "ask.overwrite.draft": "Would you like to load the selected draft and delete the post you were writing?"
+  "ask.overwrite.draft": "Would you like to load the selected draft and delete the post you were writing?",
+  "autosave": "Auto save"
 }

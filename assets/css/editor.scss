@@ -212,7 +212,9 @@ pre {
   min-height: 200px;
   text-align: left;
   padding: 15px;
-  max-height: 80vh;
+  max-height: 350px;
+  overflow-y: scroll;
+  // max-height: 80vh;
 
   h1 {
     display: block;

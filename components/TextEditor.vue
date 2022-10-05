@@ -154,7 +154,7 @@
             style="width: 100%; margin-left: 10px"
             v-if="postingChannels.length"
             class="swiper-area"
-            :space-between="10"
+            :space-between="7"
             :slides-per-view="3"
           >
             <swiper-slide
@@ -209,8 +209,8 @@
            1분마다 자동 저장
          -->
         <Transition name="component-fade" mode="out-in">
-          <small v-if="showSavedTime" style="color: #999"
-            >자동저장 {{ savedTime }}</small
+          <small class="auto-save" v-if="showSavedTime" style="color: #999"
+            >{{ t('autosave') }} <span> {{ savedTime }}</span></small
           >
         </Transition>
         <dd>
@@ -1578,10 +1578,7 @@ function getFirstPostContent(content: string) {
 }
 
 .community-slide {
-  max-width: 200px;
-
   .category-select-finish {
-    max-width: 200px;
     height: 30px;
     justify-content: space-around;
 
@@ -1639,6 +1636,18 @@ function getFirstPostContent(content: string) {
       border-bottom: 1px solid #999;
     }
   }
+  .draft {
+    div {
+      p {
+        height: 65px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+      }
+    }
+  }
 }
 
 @media all and (max-width: 479px) {
@@ -1647,6 +1656,11 @@ function getFirstPostContent(content: string) {
       span:nth-child(3) {
         display: none;
       }
+    }
+  }
+  .auto-save {
+    span {
+      display: block;
     }
   }
   .mp-type {
@@ -1667,6 +1681,7 @@ function getFirstPostContent(content: string) {
       }
     }
   }
+
   .mp-type {
     dd {
       button {
