@@ -175,7 +175,8 @@ watch(
         maxNumVersion = ver
       }
     }
-    const ver = new Version(maxNumVersion?.version)
+    const ver = new Version(maxNumVersion.version)
+    console.log(ver)
     ver.patch++
     version.value = ver.toString()
   }
