@@ -168,19 +168,28 @@ const projectId = computed(() => route.params.id)
 watch(
   () => useProject().editProject.value.info,
   (newVal) => {
-    let maxNumVersion = null
-    for (const version of newVal.projectVersions) {
-      const ver: IVersion = version
-      if (!maxNumVersion || maxNumVersion.number < ver.number) {
-        maxNumVersion = ver
-      }
-    }
-    const ver = new Version(maxNumVersion.version)
-    console.log(ver)
-    ver.patch++
-    version.value = ver.toString()
+    createVersionNum()
   }
 )
+
+onMounted(() => {
+  if (useProject().editProject.value.info?.projectVersions) {
+    createVersionNum()
+  }
+})
+
+function createVersionNum() {
+  let maxNumVersion = null
+  for (const version of useProject().editProject.value.info.projectVersions) {
+    const ver: IVersion = version
+    if (!maxNumVersion || maxNumVersion.number < ver.number) {
+      maxNumVersion = ver
+    }
+  }
+  const ver = new Version(maxNumVersion.version)
+  ver.patch++
+  version.value = ver.toString()
+}
 
 function setZipFile(gameFile: {
   startFileList: []
