@@ -1,6 +1,9 @@
 <template>
   <div class="modal-post">
     <ul class="mp-header">
+      <li v-if="isFullScreen" @click="closeTextEditor" style="width: 50px">
+        <i class="uil uil-angle-left-b"></i>
+      </li>
       <li
         :class="activeTab === 'SNS' ? 'active' : ''"
         @click="postingType('SNS')"
@@ -50,11 +53,17 @@
             </swiper>
           </dd>
         </div>
-
-        <div v-if="snsAttachFiles.video?.url" class="mp-midi">
+        <div v-if="isVideoUploading" class="video-loading">
+          <BeatLoader :color="'#ff6e17'" size="20px" />
+        </div>
+        <div
+          v-else-if="!isVideoUploading && snsAttachFiles.video?.url"
+          class="mp-midi"
+        >
           <span @click="deleteVideo" class="delete-video-btn"
             ><i class="uis uis-times-circle"></i
           ></span>
+
           <video
             style="width: 100%"
             :src="snsAttachFiles.video?.url"
@@ -64,8 +73,14 @@
             allowfullscreen
           ></video>
         </div>
+        <div v-if="isAudioUploading" class="video-loading">
+          <BeatLoader :color="'#ff6e17'" size="20px" />
+        </div>
 
-        <div v-if="snsAttachFiles.audio?.length" class="mp-midi">
+        <div
+          v-if="!isAudioUploading && snsAttachFiles.audio?.length"
+          class="mp-midi"
+        >
           <ul
             v-for="(audio, idx) in snsAttachFiles.audio"
             class="audio-wrapper"
@@ -92,17 +107,17 @@
           <el-popover
             name="category"
             trigger="click"
-            v-model:visible="isCommunityListVisible"
+            v-model:visible="showCommunity"
           >
             <template #reference>
-              <button
-                class="btn-line-small"
-                style="width: 30%"
-                @click="communityFetch"
-              >
+              <button class="btn-line-small" style="width: 30%">
                 <i class="uil uil-plus"></i>
-                <span v-if="postingChannels.length >= 2">Add</span>
-                <span>Add </span><span>community</span>
+                <template v-if="postingChannels.length >= 2">
+                  <span>Add</span>
+                </template>
+                <template v-else>
+                  <span>Add </span><span>community</span>
+                </template>
               </button>
             </template>
 
@@ -139,7 +154,7 @@
             style="width: 100%; margin-left: 10px"
             v-if="postingChannels.length"
             class="swiper-area"
-            :space-between="10"
+            :space-between="7"
             :slides-per-view="3"
           >
             <swiper-slide
@@ -160,13 +175,14 @@
           </swiper>
         </div>
       </ClientOnly>
+
       <dl class="mp-type">
         <dt>
           <div style="width: 30px" @click="uploadImageFile">
             <a><i class="uil uil-image"></i></a>
             <div style="height: 0px; overflow: hidden">
               <input type="file" @change="onSelectImageFile" multiple
-              accept=image/* ref="image" />
+              id="image-selector" accept=image/* ref="image" />
             </div>
           </div>
           <div style="width: 30px" @click="uploaVideoFile">
@@ -189,35 +205,115 @@
             </div>
           </div>
         </dt>
+        <!-- 
+           1분마다 자동 저장
+         -->
+        <Transition name="component-fade" mode="out-in">
+          <small class="auto-save" v-if="showSavedTime" style="color: #999"
+            >{{ t('autosave') }} <span> {{ savedTime }}</span></small
+          >
+        </Transition>
         <dd>
           <button
+            v-if="draftList.length > 0"
+            class="btn-line-small w100 mr10"
+            id="loadPostBtn"
+            @click="onLoadPost"
+          >
+            Load
+          </button>
+          <button
+            class="btn-green-small w100 mr10"
+            id="draftPostBtn"
+            @click="saveDraftCloseModal()"
+          >
+            Draft
+          </button>
+          <button
+            v-if="!isFullScreen"
             class="btn-default-samll w100 cancel-btn"
+            id="cancelPostBtn"
             @click="closeTextEditor"
           >
             Cancel
           </button>
+
           <button
             v-if="isEdit"
             class="btn-default-samll w100"
+            id="updatePostBtn"
             @click="onUpdatePost"
           >
             Update
           </button>
-          <button v-else class="btn-default-samll w100" @click="onSubmit">
+          <button
+            v-else
+            id="submitPostBtn"
+            class="btn-default-samll w100"
+            @click="onSubmit"
+          >
             Post
           </button>
         </dd>
       </dl>
     </div>
+
+    <el-dialog
+      v-model="showDraftList"
+      append-to-body
+      custom-class="modal-area-type"
+      width="380px"
+    >
+      <div class="modal-alert">
+        <dl class="ma-header">
+          <dt>{{ t('draft') }}</dt>
+          <dd>
+            <button @click="showDraftList = false">
+              <i class="uil uil-times"></i>
+            </button>
+          </dd>
+        </dl>
+        <div class="ma-content">
+          <ul>
+            <li
+              v-for="(draft, index) in draftList"
+              class="draft"
+              @click="selectDraft(draft, index)"
+            >
+              <div>
+                <p>
+                  {{ getFirstPostContent(draft.post_contents) }}
+                </p>
+                <small>{{
+                  dayjs(draft.time).format('YYYY.MM.DD HH:mm')
+                }}</small>
+              </div>
+              <div>
+                <i
+                  @click.stop="deleteDraft(draft, index)"
+                  class="uil uil-trash-alt"
+                ></i>
+              </div>
+            </li>
+
+            <li v-if="draftList.length === 0" style="align-items: center">
+              <p>{{ $t('no.draft.data') }}</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import _ from 'lodash'
+import BeatLoader from 'vue-spinner/src/BeatLoader.vue'
 import { PropType } from 'vue'
 import { IFeed } from '~~/types'
 import { Pagination } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/vue'
+import dayjs from 'dayjs'
 
 import { Editor } from '@tiptap/vue-3'
 import {
@@ -230,12 +326,24 @@ import {
 } from 'element-plus'
 
 import { useI18n } from 'vue-i18n'
-import { htmlToDomElem } from '~~/scripts/utils'
+import { htmlToDomElem, stringToDomElem } from '~~/scripts/utils'
+
+interface IDraft {
+  time: number
+  key: string
+  post_contents: string
+  post_type: string
+}
 
 const { t, locale } = useI18n()
 
 const route = useRoute()
 const popover = ref()
+
+const isVideoUploading = ref(false)
+const isAudioUploading = ref(false)
+
+const emit = defineEmits(['closeModal', 'refresh'])
 
 const props = defineProps({
   type: String,
@@ -245,6 +353,7 @@ const props = defineProps({
   },
   feed: Object as PropType<IFeed>,
   channelInfo: Object,
+  isFullScreen: Boolean,
 })
 
 const initFiles = _.cloneDeep(props.feed?.attatchment_files)
@@ -279,25 +388,56 @@ const selectedGroup = ref()
 const channels = ref()
 const postingChannels = ref([])
 const isCommunityListVisible = ref(false)
+const showCommunity = ref(false)
 
 const imgArr = ref([])
 const videoArr = ref([])
 const audioArr = ref([])
-const emit = defineEmits(['closeModal', 'refresh'])
 
 const form = reactive({
   post_contents: '',
 })
 
-onMounted(() => {
-  if (props.isEdit) {
-    // const loading = ElLoading.service({
-    //   lock: true,
-    //   text: 'Loading',
-    //   customClass: 'loading-spinner',
-    //   background: 'rgba(0, 0, 0, 0.7)',
-    // })
+//임시저장
+const MAX_LOCAL_SAVE = 3
+const showDraftList = ref(false)
+const draftList = ref([])
 
+//자동저장
+const interval = ref()
+const savedTime = ref()
+const showSavedTime = ref()
+const textInterval = ref()
+const prevText = ref()
+const saveId = ref(Date.now())
+
+onBeforeMount(() => {
+  createDraftList()
+  autoSave()
+
+  //유저가 직접 저장하지 않은 경우
+  if (draftList.value[0]?.save_type === 'cancel') {
+    ElMessageBox.confirm(`${t('ask.load.draft.post')}`, {
+      confirmButtonText: 'YES',
+      cancelButtonText: 'Cancel',
+      type: 'info',
+    })
+      .then(() => {
+        insertContet(draftList.value[0])
+      })
+      .catch(() => {})
+      .finally(() => {
+        localStorage.removeItem(draftList.value[0].key)
+        draftList.value.splice(0, 1)
+      })
+  }
+})
+
+onMounted(async () => {
+  //새로고침 시 알람
+  window.addEventListener('beforeunload', refreshPage)
+  await communityFetch()
+  if (props.isEdit) {
     if (props.feed?.posted_at?.community) {
       for (const community of props.feed.posted_at.community) {
         postingChannels.value.push({
@@ -342,6 +482,19 @@ onMounted(() => {
   }
 })
 
+onBeforeUnmount(() => {
+  window.removeEventListener('beforeunload', refreshPage)
+  clearInterval(interval.value)
+  clearTimeout(textInterval.value)
+})
+
+function refreshPage(event) {
+  if (editor.value.isEmpty) return
+  event.preventDefault()
+
+  event.returnValue = `${t('leave.router.warning')}` //안뜨는 거 같음
+}
+
 function postingType(type: string) {
   if (
     snsAttachFiles.value.img?.length ||
@@ -370,7 +523,6 @@ function postingType(type: string) {
     usePost().setType(type)
   }
 }
-
 async function onSubmit() {
   const payload = {
     post_contents: form.post_contents,
@@ -549,10 +701,6 @@ function getEditorContent(content: Editor) {
 }
 
 function uploadImageFile() {
-  image.value.click()
-}
-
-function onSelectImageFile(event: any) {
   if (activeTab.value.toUpperCase() === 'SNS') {
     if (snsAttachFiles.value.video || snsAttachFiles.value.audio?.length) {
       ElMessage({
@@ -562,7 +710,10 @@ function onSelectImageFile(event: any) {
       return
     }
   }
+  image.value.click()
+}
 
+function onSelectImageFile(event: any) {
   const files = event.target.files
 
   for (const file of files) {
@@ -612,10 +763,6 @@ function deleteImg(idx: number) {
 }
 
 function uploaVideoFile() {
-  video.value.click()
-}
-
-function onSelectVideoFile(event: any) {
   if (activeTab.value.toUpperCase() === 'SNS') {
     if (
       snsAttachFiles.value.img?.length ||
@@ -628,6 +775,11 @@ function onSelectVideoFile(event: any) {
       return
     }
   }
+  video.value.click()
+}
+
+function onSelectVideoFile(event: any) {
+  isVideoUploading.value = true
 
   const files = event.target.files
 
@@ -657,8 +809,8 @@ function onSelectVideoFile(event: any) {
           }
         }
       }
+      isVideoUploading.value = false
     }
-
     reader.readAsDataURL(file)
   }
   event.target.value = ''
@@ -682,6 +834,7 @@ function uploadAudioFile() {
 }
 
 function onSelectAudioFile(event: any) {
+  isAudioUploading.value = true
   const files = event.target.files
 
   for (const file of files) {
@@ -716,6 +869,7 @@ function onSelectAudioFile(event: any) {
           ]
         }
       }
+      isAudioUploading.value = false
     }
 
     reader.readAsDataURL(file)
@@ -735,10 +889,7 @@ async function onUpdatePost() {
       : JSON.parse(props.feed.attatchment_files)
     : []
 
-  let newImgArr = []
-  let newSoundArr = []
-  let newVideo = null
-
+  const attachedFile = []
   const payload = {
     post_id: props.feed.id,
     post_state: activeTab.value,
@@ -764,7 +915,11 @@ async function onUpdatePost() {
     }
   }
 
-  const formData = new FormData()
+  const dom = htmlToDomElem(form.post_contents)
+
+  imgArr.value = [...dom.getElementsByTagName('img')]
+  videoArr.value = [...dom.getElementsByTagName('video')]
+  audioArr.value = [...dom.getElementsByTagName('audio')]
 
   const loading = ElLoading.service({
     lock: true,
@@ -773,30 +928,20 @@ async function onUpdatePost() {
     background: 'rgba(0, 0, 0, 0.7)',
   })
 
-  const dom = htmlToDomElem(form.post_contents)
-
-  imgArr.value = [...dom.getElementsByClassName('attr-img')]
-  videoArr.value = [...dom.getElementsByTagName('video')]
-  audioArr.value = [...dom.getElementsByTagName('audio')]
-
-  if (activeTab.value.toLocaleUpperCase() === 'BLOG') {
-    const imgFiles = []
-    const videoFiles = []
-    const audioFiles = []
-
-    if (imgArr.value.length) {
+  switch (activeTab.value.toLocaleUpperCase()) {
+    case 'BLOG':
+      const imgFiles = []
+      const videoFiles = []
+      const audioFiles = []
+      //블로그 수정 시 이미지가 있는 경우
       for (const img of imgArr.value) {
-        if (
-          img.src.substring(0, 4) === 'blob' ||
-          img.src.substring(0, 4) === 'data'
-        ) {
+        //s3 업로드가 필요한 경우
+        if (img.src.search('blob:') !== -1 || img.src.search('data:') !== -1) {
           const formData = new FormData()
-
           await fetch(img.src).then(async (result) => {
             formData.append(img.title, await result.blob())
           })
-
-          const { data, error, pending } = await useFetch<{ result: [] }>(
+          const { data, error, pending } = await useFetch<any>(
             '/community/att',
             getZempieFetchOptions('post', true, formData)
           )
@@ -808,27 +953,28 @@ async function onUpdatePost() {
             imgFiles.push(...data.value.result)
           }
         }
-        payload.post_contents = form.post_contents
-        attatchment_files = [...payload.attatchment_files, ...imgFiles]
+        //필요없는 경우
+        else {
+          //기존 파일에서 찾아서 push
+          const file = attatchment_files.find((file) => {
+            return file.url === img.src
+          })
+          imgFiles.push(file)
+        }
       }
-    } else {
-      payload.post_contents = form.post_contents
-      attatchment_files = []
-    }
+      attachedFile.push(...imgFiles)
 
-    if (videoArr.value.length) {
+      //이미지 로직과 동일
       for (const video of videoArr.value) {
         if (
-          video.src.substring(0, 4) === 'blob' ||
-          video.src.substring(0, 4) === 'data'
+          video.src.search('blob:') !== -1 ||
+          video.src.search('data:') !== -1
         ) {
           const formData = new FormData()
-
           await fetch(video.src).then(async (result) => {
             formData.append(video.title, await result.blob())
           })
-
-          const { data, error, pending } = await useFetch<{ result: [] }>(
+          const { data, error, pending } = await useFetch<any>(
             '/community/att',
             getZempieFetchOptions('post', true, formData)
           )
@@ -839,27 +985,29 @@ async function onUpdatePost() {
             )
             videoFiles.push(...data.value.result)
           }
+        } else {
+          //기존 파일에서 찾아서 push
+          const file = attatchment_files.find((file) => {
+            return file.url === video.src
+          })
+          videoFiles.push(file)
         }
-        payload.post_contents = form.post_contents
-        attatchment_files = [...attatchment_files, ...videoFiles]
       }
-    } else {
-      payload.post_contents = form.post_contents
-      attatchment_files = [...attatchment_files]
-    }
-    if (audioArr.value.length) {
+
+      attachedFile.push(...videoFiles)
+
+      //이미지 로직과 동일
       for (const audio of audioArr.value) {
         if (
-          audio.src.substring(0, 4) === 'blob' ||
-          audio.src.substring(0, 4) === 'data'
+          audio.src.search('blob:') !== -1 ||
+          audio.src.search('data:') !== -1
         ) {
+          //블로그 수정 시 이미지가 있는 경우
           const formData = new FormData()
-
           await fetch(audio.src).then(async (result) => {
             formData.append(audio.title, await result.blob())
           })
-
-          const { data, error, pending } = await useFetch<{ result: [] }>(
+          const { data, error, pending } = await useFetch<any>(
             '/community/att',
             getZempieFetchOptions('post', true, formData)
           )
@@ -869,121 +1017,145 @@ async function onUpdatePost() {
               data.value.result[0].url
             )
             audioFiles.push(...data.value.result)
+          } else {
+            //기존 파일에서 찾아서 push
+            const file = attatchment_files.find((file) => {
+              return file.url === audio.src
+            })
+            audioFiles.push(file)
           }
         }
-        payload.post_contents = form.post_contents
-        attatchment_files = [...attatchment_files, ...audioFiles]
       }
-    } else {
-      payload.post_contents = form.post_contents
-      attatchment_files = [...attatchment_files]
-    }
-  } else {
-    if (snsAttachFiles.value.img?.length > 0) {
-      attatchment_files = snsAttachFiles.value.img
-    } else if (snsAttachFiles.value.audio?.length > 0) {
-      attatchment_files = snsAttachFiles.value.audio
-    } else if (snsAttachFiles.value.video) {
-      attatchment_files =
-        snsAttachFiles.value.video !== null ? [snsAttachFiles.value.video] : []
-    } else {
-      attatchment_files = []
-    }
-    if (snsAttachFiles.value.img?.length) {
-      for (const img of snsAttachFiles.value.img) {
-        formData.append(img.name, img.file)
-      }
+      attachedFile.push(...audioFiles)
 
-      const { data, error, pending } = await useFetch<{
-        result: {
-          priority: number
-          url: string
-          type: string
-          name: string
-          size: number
-        }[]
-      }>('/community/att', getZempieFetchOptions('post', true, formData))
+      break
 
-      if (data.value) {
-        const { result } = data.value
+    case 'SNS':
+      const formData = new FormData()
 
-        for (const data of result) {
-          attatchment_files.push({
-            priority: data.priority,
-            url: data.url,
-            type: data.type,
-            name: data.name,
-            size: data.size,
-          })
+      if (snsAttachFiles.value.img?.length > 0) {
+        for (const img of snsAttachFiles.value.img) {
+          //이미지 파일 중 s3 업로드가 필요한 파일 formdata append
+          if (
+            img.url.search('blob:') !== -1 ||
+            img.url.search('data:') !== -1
+          ) {
+            formData.append(img.name, img.file)
+          } else {
+            attachedFile.push(img)
+          }
+        }
+        if (!!formData.entries().next().value) {
+          const { data, error, pending } = await useFetch<{
+            result: {
+              priority: number
+              url: string
+              type: string
+              name: string
+              size: number
+            }[]
+          }>('/community/att', getZempieFetchOptions('post', true, formData))
+
+          if (data.value) {
+            const { result } = data.value
+
+            for (const data of result) {
+              attachedFile.push({
+                priority: data.priority,
+                url: data.url,
+                type: data.type,
+                name: data.name,
+                size: data.size,
+              })
+            }
+          }
+        }
+      } else if (snsAttachFiles.value.audio?.length > 0) {
+        for (const sound of snsAttachFiles.value.audio) {
+          if (
+            sound.url.search('blob:') !== -1 ||
+            sound.url.search('data:') !== -1
+          ) {
+            formData.append(sound.name, sound.file)
+          } else {
+            attachedFile.push(sound)
+          }
+        }
+        if (!!formData.entries().next().value) {
+          const { data, error, pending } = await useFetch<{
+            result: {
+              priority: number
+              url: string
+              type: string
+              name: string
+              size: number
+            }[]
+          }>('/community/att', getZempieFetchOptions('post', true, formData))
+
+          if (data.value) {
+            const { result } = data.value
+            for (const data of result) {
+              attachedFile.push({
+                priority: data.priority,
+                url: data.url,
+                type: data.type,
+                name: data.name,
+                size: data.size,
+              })
+            }
+          }
+        }
+      } else if (snsAttachFiles.value.video) {
+        if (
+          snsAttachFiles.value.video.url.search('blob:') !== -1 ||
+          snsAttachFiles.value.video.url.search('data:') !== -1
+        ) {
+          formData.append(
+            snsAttachFiles.value.video.name,
+            snsAttachFiles.value.video.file
+          )
+
+          const { data, error, pending } = await useFetch<{
+            result: {
+              priority: number
+              url: string
+              type: string
+              name: string
+              size: number
+            }[]
+          }>('/community/att', getZempieFetchOptions('post', true, formData))
+
+          if (data.value) {
+            const { result } = data.value
+            for (const data of result) {
+              attachedFile.push({
+                priority: data.priority,
+                url: data.url,
+                type: data.type,
+                name: data.name,
+                size: data.size,
+              })
+            }
+          }
+        } else {
+          attachedFile.push(snsAttachFiles.value.video)
         }
       }
-    } else if (snsAttachFiles.value.audio?.length) {
-      for (const sound of snsAttachFiles.value.audio) {
-        formData.append(sound.name, sound.file)
+      if (snsAttachFiles.value.audio?.length) {
+      } else if (snsAttachFiles.value.video) {
       }
-      const { data, error, pending } = await useFetch<{
-        result: {
-          priority: number
-          url: string
-          type: string
-          name: string
-          size: number
-        }[]
-      }>('/community/att', getZempieFetchOptions('post', true, formData))
-
-      if (data.value) {
-        const { result } = data.value
-        for (const data of result) {
-          attatchment_files.push({
-            priority: data.priority,
-            url: data.url,
-            type: data.type,
-            name: data.name,
-            size: data.size,
-          })
-        }
-      }
-    } else if (snsAttachFiles.value.video) {
-      formData.append(
-        snsAttachFiles.value.video.name,
-        snsAttachFiles.value.video.file
-      )
-      const { data, error, pending } = await useFetch<{
-        result: {
-          priority: number
-          url: string
-          type: string
-          name: string
-          size: number
-        }[]
-      }>('/community/att', getZempieFetchOptions('post', true, formData))
-
-      if (data.value) {
-        const { result } = data.value
-        for (const data of result) {
-          attatchment_files = [
-            {
-              priority: data.priority,
-              url: data.url,
-              type: data.type,
-              name: data.name,
-              size: data.size,
-            },
-          ]
-        }
-      }
-    }
+      break
+    default:
+      break
   }
 
-  Array.isArray(attatchment_files)
-    ? attatchment_files
-    : JSON.parse(attatchment_files)
+  Array.isArray(attachedFile) ? attachedFile : JSON.parse(attatchment_files)
 
-  attatchment_files = attatchment_files?.filter((file) => {
+  attachedFile?.filter((file) => {
     return file.size
   })
 
-  payload.attatchment_files = attatchment_files
+  payload.attatchment_files = attachedFile
 
   const { data, error, pending } = await useFetch(
     `/post/${props.feed.id}`,
@@ -1007,7 +1179,27 @@ async function onUpdatePost() {
 function closeTextEditor() {
   snsAttachFiles.value.img = _.cloneDeep(initFiles)
 
-  emit('closeModal')
+  //작성한 글이 있는 경우 임시저장 처리
+  if (!editor.value.isEmpty) {
+    ElMessageBox.confirm(`${t('ask.save.draft.post')}`, {
+      confirmButtonText: 'SAVE',
+      cancelButtonText: 'LEAVE',
+      type: 'info',
+    })
+      .then(() => {
+        form['save_type'] = 'cancel'
+        saveDraftCloseModal()
+      })
+      .catch(() => {
+        localStorage.removeItem(
+          useUser().user.value.info.channel_id + 'draft:' + saveId.value
+        )
+        emit('closeModal')
+      })
+      .finally(() => {})
+  } else {
+    emit('closeModal')
+  }
 }
 
 async function communityFetch() {
@@ -1049,15 +1241,225 @@ async function selectChannel(channel: any) {
   isCommunityListVisible.value = false
   isCommunityListOpen.value = !isCommunityListOpen.value
   isChannelListOpen.value = !isChannelListOpen.value
+  showCommunity.value = false
 }
 
 function deletePostingChannel(idx: number) {
   postingChannels.value.splice(idx, 1)
 }
+
+//임시저장 후 모달 종료
+function saveDraftCloseModal() {
+  if (editor.value.isEmpty) return
+  localStorage.removeItem(
+    useUser().user.value.info.channel_id + 'draft:' + saveId.value
+  )
+
+  onSavePost()
+
+  ElMessage({
+    message: t('save.draft.done'),
+    type: 'success',
+  })
+  emit('closeModal')
+}
+
+function onSavePost(time = Date.now()) {
+  // 저장시간, 포스팅 내용, 포스팅 타입, 포스팅 uid
+  // 저장 시간으로부터 저장 기한 한달
+  // 마지막 타이핑을 기준으로 1분마다 자동 저장
+  // 유저가 저장한 경우를 제외하고 알람 띄워야함
+
+  if (isFullLocal()) {
+    const oldestDraft = getOldestDraft()
+    localStorage.removeItem(oldestDraft)
+    draftList.value = draftList.value.filter((x) => {
+      return x.key !== oldestDraft
+    })
+  }
+
+  saveOnLocal(time)
+
+  draftList.value.push(JSON.parse(JSON.stringify(form)))
+}
+
+function getOldestDraft(): string {
+  let timeList = []
+
+  for (let i = 0; i < localStorage.length; i++) {
+    if (
+      localStorage
+        .key(i)
+        .includes(useUser().user.value.info.channel_id + 'draft:')
+    ) {
+      timeList.push(localStorage.key(i).split('draft:')[1])
+    }
+  }
+
+  const oldestDraft = Math.min(...timeList)
+  return `${useUser().user.value.info.channel_id}draft:${oldestDraft}`
+}
+
+function isFullLocal(): boolean {
+  let count = 0
+
+  for (let i = 0; i < localStorage.length; i++) {
+    if (
+      localStorage
+        .key(i)
+        .includes(useUser().user.value.info.channel_id + 'draft:')
+    ) {
+      count++
+    }
+  }
+  return count >= MAX_LOCAL_SAVE ? true : false
+}
+
+function saveOnLocal(time: number) {
+  form['post_type'] = activeTab.value
+  form['time'] = Date.now()
+  form['key'] = `${useUser().user.value.info.channel_id}draft:${time}`
+
+  localStorage.setItem(
+    `${useUser().user.value.info.channel_id}draft:${time}`,
+    JSON.stringify(form)
+  )
+}
+
+function saveAutoPost() {}
+
+function createDraftList() {
+  draftList.value = []
+  for (let i = 0; i < localStorage.length; i++) {
+    if (
+      localStorage
+        .key(i)
+        .includes(useUser().user.value.info.channel_id + 'draft:')
+    ) {
+      draftList.value.push(
+        JSON.parse(localStorage.getItem(localStorage.key(i)))
+      )
+    }
+  }
+  //최신순으로 정렬
+  draftList.value.sort((a, b) => {
+    return b.time - a.time
+  })
+}
+
+function onLoadPost() {
+  showDraftList.value = true
+}
+
+function deleteDraft(draft: IDraft, index: number) {
+  //
+  //
+  ElMessageBox.confirm(`${t('ask.delete.draft')}`, {
+    confirmButtonText: 'YES',
+    cancelButtonText: 'Cancel',
+    type: 'info',
+  })
+    .then(() => {
+      insertContet(draft)
+      showDraftList.value = false
+      ElMessage({
+        message: t('delete.draft.done'),
+        type: 'success',
+      })
+    })
+    .catch(() => {})
+    .finally(() => {})
+
+  // ElMessage({
+  //   message: t('delete.draft.done'),
+  //   type: 'success',
+  // })
+}
+
+function selectDraft(draft: IDraft, index: number) {
+  //작성 중인 글 있는 지 확인
+  if (!editor.value.isEmpty) {
+    ElMessageBox.confirm(`${t('ask.overwrite.draft')}`, {
+      confirmButtonText: 'YES',
+      cancelButtonText: 'Cancel',
+      type: 'info',
+    })
+      .then(() => {
+        insertContet(draft)
+
+        showDraftList.value = false
+      })
+      .catch(() => {})
+      .finally(() => {})
+  } else {
+    insertContet(draft)
+
+    showDraftList.value = false
+  }
+  localStorage.removeItem(draft.key)
+  draftList.value.splice(index, 1)
+}
+
+function insertContet(draft: IDraft) {
+  activeTab.value = draft.post_type
+
+  nextTick(() => {
+    editor.value.view.dom.focus()
+    editor.value.chain().focus().insertContent(draft.post_contents).run()
+  })
+}
+
+//바뀐게 있을 경우 자동저장 5초마다 저장
+function autoSave() {
+  interval.value = setInterval(() => {
+    //바뀐게 없거나 텍스트가 없는 경우 종료
+    if (prevText.value === form.post_contents || editor.value.isEmpty) {
+      return
+    }
+    savedTime.value = dayjs(Date.now()).format('HH:mm')
+    showSavedTime.value = false
+
+    //자동저장 id
+    form['saveId'] = saveId.value
+    onSavePost(saveId.value)
+
+    showTimeText()
+    showSavedTime.value = true
+  }, 5000)
+}
+
+//텍스트 1.5초간 유지
+function showTimeText() {
+  textInterval.value = setTimeout(() => {
+    showSavedTime.value = false
+    prevText.value = _.cloneDeep(form.post_contents)
+  }, 1500)
+}
+
+function getFirstPostContent(content: string) {
+  return (
+    stringToDomElem(content).getElementsByTagName('p')[0]?.innerText ||
+    stringToDomElem(content).getElementsByTagName('pre')[0]?.innerText ||
+    (stringToDomElem(content).getElementsByTagName('img')[0]?.src && 'Image') ||
+    (stringToDomElem(content).getElementsByTagName('video')[0]?.src &&
+      'Video') ||
+    (stringToDomElem(content).getElementsByTagName('audio')[0]?.src && 'Audio')
+  )
+}
 </script>
 
 <style lang="scss">
 @use 'sass:math';
+
+.component-fade-enter-active,
+.component-fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.component-fade-enter-from,
+.component-fade-leave-to {
+  opacity: 0;
+}
 
 .modal-post {
   .mp-category {
@@ -1068,6 +1470,22 @@ function deletePostingChannel(idx: number) {
     border-top: #e9e9e9 1px solid;
   }
 
+  .video-loading {
+    height: 150px;
+    background-color: #ededed;
+    margin: 20px;
+    border-radius: 10px;
+    div {
+      display: flex;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+      .v-clip {
+        height: 50px !important;
+        width: 50px !important;
+      }
+    }
+  }
   .mp-midi {
     .delete-video-btn {
       display: flex;
@@ -1176,10 +1594,7 @@ function deletePostingChannel(idx: number) {
 }
 
 .community-slide {
-  max-width: 200px;
-
   .category-select-finish {
-    max-width: 200px;
     height: 30px;
     justify-content: space-around;
 
@@ -1188,13 +1603,15 @@ function deletePostingChannel(idx: number) {
 
       span {
         text-overflow: ellipsis;
-        max-width: 70px;
+        max-width: 50px;
         overflow: hidden;
         white-space: nowrap;
         display: inline-block;
       }
 
       em {
+        max-width: 40px;
+        text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
         display: inline-block;
@@ -1207,6 +1624,48 @@ function deletePostingChannel(idx: number) {
   }
 }
 
+.ma-header {
+  padding: 10px 20px 10px 20px !important;
+}
+
+.ma-content {
+  padding: 10px 20px 10px 20px !important;
+  div {
+    margin-top: 0px !important;
+  }
+  ul {
+    li {
+      display: flex;
+      justify-content: space-between;
+      min-height: 50px;
+      margin: 10px 0px 10px 0px;
+      div {
+        text-align: left;
+        justify-content: center !important;
+        flex-direction: column;
+        i {
+          font-size: 20px;
+        }
+      }
+    }
+    li:not(:last-child) {
+      border-bottom: 1px solid #999;
+    }
+  }
+  .draft {
+    div {
+      p {
+        height: 65px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+      }
+    }
+  }
+}
+
 @media all and (max-width: 479px) {
   .mp-category {
     .btn-line-small {
@@ -1215,9 +1674,38 @@ function deletePostingChannel(idx: number) {
       }
     }
   }
+  .auto-save {
+    span {
+      display: block;
+    }
+  }
+  .mp-type {
+    dd {
+      button {
+        padding: 0px;
+        width: 50px !important;
+      }
+    }
+  }
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
+  .mp-category {
+    .btn-line-small {
+      span:nth-child(3) {
+        display: none;
+      }
+    }
+  }
+
+  .mp-type {
+    dd {
+      button {
+        padding: 0px;
+        width: 70px !important;
+      }
+    }
+  }
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {

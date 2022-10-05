@@ -236,12 +236,18 @@ async function onSubmit() {
 
       switch (errorCode) {
         case 'auth/weak-password':
-          message =
-            'Please enter a 6-20 digit password including English letter and at least 1 number or special character'
+          message = `${t('login.pwd.format.err')}`
+          // 'Please enter a 6-20 digit password including English letter and at least 1 number or special character'
           break
         case 'auth/wrong-password':
           ElMessage.error(`${t('fb.wrong.info')}`)
+          break
+        case 'auth/user-not-found':
+          ElMessage.error(`${t('fb.not.found')}`)
 
+          break
+        default:
+          ElMessage.error(errorCode)
           break
       }
       throw { message }

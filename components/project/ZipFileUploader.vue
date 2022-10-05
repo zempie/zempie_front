@@ -13,8 +13,7 @@
         accept=".zip"
       />
 
-      <ClipLoader v-if="isLoadingFile" :color="'#ff6e17'" :size="'20px'">
-      </ClipLoader>
+      <ClipLoader v-if="isLoadingFile" :color="'#ff6e17'" :size="'20px'" />
       <button class="btn-circle-icon" @click="deleteFile" v-if="fileName">
         <i class="uil uil-trash-alt"></i>
       </button>

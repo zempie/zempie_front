@@ -141,6 +141,7 @@
       </li>
     </ul>
 
+    <!-- TODO: mobile: 댓글만 보기 -->
     <div
       v-show="isOpenedComments"
       :class="['tapl-comment', isOpenedComments ? 'open' : 'close']"
@@ -615,6 +616,8 @@ function refreshFollow() {}
 // /더보기
 
 .tapl-comment {
+  max-height: 500px;
+  overflow-y: scroll;
   ul {
     li:nth-child(1) {
       border-top: none;

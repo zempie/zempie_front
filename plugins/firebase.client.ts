@@ -26,6 +26,8 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   const app = firebase.initializeApp(firebaseConfig);
   const auth = getAuth(app)
 
+
+
   onIdTokenChanged(auth, async (user) => {
 
     if (user) {
@@ -39,7 +41,13 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       if (!useUser().user.value.isSignUp) {
         setUserInfo()
       }
+
+    } else {
+      useUser().setLoadDone()
     }
+
+
+
   })
   nuxtApp.provide('firebaseApp', app);
   nuxtApp.provide('firebaseAuth', auth);

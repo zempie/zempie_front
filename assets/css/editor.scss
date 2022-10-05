@@ -47,6 +47,7 @@
     border-radius: 5px;
     background: #f5f5f5;
     flex-direction: column;
+    margin-top: 10px;
     audio {
       width: 100%;
     }
@@ -211,7 +212,9 @@ pre {
   min-height: 200px;
   text-align: left;
   padding: 15px;
-  max-height: 80vh;
+  max-height: 350px;
+  overflow-y: scroll;
+  // max-height: 80vh;
 
   h1 {
     display: block;
