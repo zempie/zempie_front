@@ -203,10 +203,7 @@
                   @click="userMenu?.handleClose()"
                 >
                   <dl style="margin: 10px 0px 0px 0px">
-                    <UserAvatarSk v-if="isPending" />
-
                     <UserAvatar
-                      v-else
                       style="width: 30px; height: 30px"
                       :user="user"
                       :key="user?.picture"
@@ -220,16 +217,19 @@
                     </dd>
                   </dl>
                   <div>
-                    <NuxtLink
-                      id="myChannel"
-                      :to="localePath(`/channel/${user.channel_id}`)"
-                      ><i class="uil uil-user"></i>
-                      {{ t('myChannel') }}
-                    </NuxtLink>
-                    <NuxtLink :to="localePath('/project/list')"
-                      ><i class="uil uil-robot"></i>
-                      {{ t('gameStudio') }}
-                    </NuxtLink>
+                    <h2>{{ t('myProfile') }}</h2>
+                    <div>
+                      <NuxtLink
+                        id="myChannel"
+                        :to="localePath(`/channel/${user.channel_id}`)"
+                        ><i class="uil uil-user"></i>
+                        {{ t('myChannel') }}
+                      </NuxtLink>
+                      <NuxtLink :to="localePath('/project/list')"
+                        ><i class="uil uil-robot"></i>
+                        {{ t('gameStudio') }}
+                      </NuxtLink>
+                    </div>
                   </div>
                   <div>
                     <h2>{{ t('group') }}</h2>
@@ -258,7 +258,7 @@
               </template>
             </el-dropdown>
           </div>
-          <div class="header-login">
+          <div v-else class="header-login">
             <img
               v-if="useUser().user.value.isLoading"
               src="/images/300_300_default_profile.png"
@@ -571,6 +571,7 @@ watch(
   },
   { immediate: true }
 )
+
 nuxt.hook('page:finish', () => {
   isPending.value = false
 })
