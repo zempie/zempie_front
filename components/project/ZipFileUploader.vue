@@ -21,14 +21,14 @@
     <Transition name="component-fade" mode="out-in">
       <div v-if="fileName">
         <p class="file-size">
-          {{ $t('file.size') }} :
           {{ totalSize < 1 ? `${totalSize * 1000} KB` : `${totalSize} MB` }}
         </p>
+
         <p class="file-name">{{ $t('file.name') }} : {{ fileName }}</p>
       </div>
     </Transition>
     <Transition name="component-fade" mode="out-in">
-      <h2 :class="isFileEmpty ? 'file-err on' : 'file-err off'">
+      <h2 v-if="isFileEmpty">
         {{ $t('addGameFile.selectFile.text1') }}
       </h2>
     </Transition>
@@ -59,7 +59,7 @@ const uploadGameFiles = ref([])
 const startFileOptions = ref([])
 const startFile = ref('')
 const fileName = ref('')
-const isFileEmpty = ref(false)
+const isFileEmpty = ref(true)
 
 const emit = defineEmits(['sendZipFile'])
 
@@ -120,7 +120,7 @@ async function onFileChange(e: any) {
   //     this.$store.commit("sendGameFileDone", true);
 
   //     this.$store.commit("uploadGameFiles", this.uploadGameFiles);
-  //     this.isFileEmpty = false;
+  isFileEmpty.value = false
   // }
   // else {
   //     this.$store.commit("sendGameFileDone", false);
@@ -139,6 +139,8 @@ async function onFileChange(e: any) {
 
 function deleteFile() {
   fileName.value = ''
+  isFileEmpty.value = true
+
   //     this.$store.commit("uploadGameFiles", []);
   //     this.zipFile = null;
   //     this.uploadGameFiles = [];

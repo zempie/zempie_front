@@ -322,11 +322,9 @@ async function deploy() {
 
 async function changeStage() {
   const deployVersion: IVersion =
-    useProject().editProject.value.info.projectVersions.find(
-      (version: IVersion) => {
-        return (version.version = selectVersion.value)
-      }
-    )
+    useProject().editProject.value.info.projectVersions.find((project: any) => {
+      return project.version === selectVersion.value
+    })
 
   const formData = new FormData()
 
