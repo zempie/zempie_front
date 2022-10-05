@@ -175,7 +175,7 @@ watch(
         maxNumVersion = ver
       }
     }
-    const ver = new Version(maxNumVersion.version)
+    const ver = new Version(maxNumVersion?.version)
     ver.patch++
     version.value = ver.toString()
   }
@@ -202,9 +202,9 @@ async function upload() {
     return
   } else {
     const lastVersion = version.value
-    if (lastVersion && Version.validity(lastVersion.version)) {
+    if (lastVersion && Version.validity(lastVersion?.version)) {
       const newVersion = new Version(version.value)
-      const oldVersion = new Version(lastVersion.version)
+      const oldVersion = new Version(lastVersion?.version)
 
       if (!newVersion.isNew(oldVersion)) {
         //이전 버전 보다 작음.
