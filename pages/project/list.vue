@@ -129,7 +129,6 @@
             ></i>
           </li>
         </ul>
-
         <div v-if="isPending">
           <ul>
             <ClipLoader
@@ -317,7 +316,7 @@ onMounted(async () => {
     projects.value = (data.value as any).result
     pagingByClient()
   }
-  isPending.value = pending.value
+  isPending.value = false
 })
 
 const searchProject = _.debounce(() => {
