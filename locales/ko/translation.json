@@ -840,7 +840,8 @@
   "ask.load.draft.post": "작성 중인 글이 있습니다. 이어서 작성하시겠습니까?",
   "ask.save.draft.post": "작성 중인 글을 저장하지 않고 떠나시겠습니까?",
   "save.draft.done": "임시저장이 완료되었습니다.",
-  "delete.draft.done": "선택글을 삭제하시겠습니까?",
+  "delete.draft.done": "해당 글이 삭제되었습니다.",
   "ask.overwrite.draft": "작성 중인 내용을 삭제하고 선택한 문서를 불러오시겠습니까?",
-  "autosave": "자동 저장"
+  "autosave": "자동 저장",
+  "ask.delete.draft": "해당 글을 삭제하시겠습니까?"
 }

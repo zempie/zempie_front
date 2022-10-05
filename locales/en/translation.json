@@ -839,8 +839,9 @@
   "no.draft.data": "There is no draft saved",
   "ask.load.draft.post": "There is a draft you were on. Would you like to keep writing on your post?",
   "ask.save.draft.post": "Would you like to leave this session without saving a draft?",
-  "save.draft.done": "Your draft is successfully saved.",
+  "save.draft.done": "Your draft is successfully deleted.",
   "delete.draft.done": "Do you really want to delete the selected post?",
   "ask.overwrite.draft": "Would you like to load the selected draft and delete the post you were writing?",
-  "autosave": "Auto save"
+  "autosave": "Auto save",
+  "ask.delete.draft": "Do you really want to delete the selected draft?"
 }

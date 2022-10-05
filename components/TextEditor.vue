@@ -1352,12 +1352,28 @@ function onLoadPost() {
 }
 
 function deleteDraft(draft: IDraft, index: number) {
-  localStorage.removeItem(draft.key)
-  draftList.value.splice(index, 1)
-  ElMessage({
-    message: t('delete.draft.done'),
-    type: 'success',
+  //
+  //
+  ElMessageBox.confirm(`${t('ask.delete.draft')}`, {
+    confirmButtonText: 'YES',
+    cancelButtonText: 'Cancel',
+    type: 'info',
   })
+    .then(() => {
+      insertContet(draft)
+      showDraftList.value = false
+      ElMessage({
+        message: t('delete.draft.done'),
+        type: 'success',
+      })
+    })
+    .catch(() => {})
+    .finally(() => {})
+
+  // ElMessage({
+  //   message: t('delete.draft.done'),
+  //   type: 'success',
+  // })
 }
 
 function selectDraft(draft: IDraft, index: number) {
