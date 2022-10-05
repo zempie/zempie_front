@@ -186,7 +186,7 @@
               </li>
               <li>
                 <span> {{ $t('game.likeCnt') }}:</span> &nbsp;&nbsp;{{
-                  project.game.count_heart
+                  project.game?.count_heart
                 }}
               </li>
             </ul>
