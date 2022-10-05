@@ -168,18 +168,28 @@ const projectId = computed(() => route.params.id)
 watch(
   () => useProject().editProject.value.info,
   (newVal) => {
-    let maxNumVersion = null
-    for (const version of newVal.projectVersions) {
-      const ver: IVersion = version
-      if (!maxNumVersion || maxNumVersion.number < ver.number) {
-        maxNumVersion = ver
-      }
-    }
-    const ver = new Version(maxNumVersion.version)
-    ver.patch++
-    version.value = ver.toString()
+    createVersionNum()
   }
 )
+
+onMounted(() => {
+  if (useProject().editProject.value.info?.projectVersions) {
+    createVersionNum()
+  }
+})
+
+function createVersionNum() {
+  let maxNumVersion = null
+  for (const version of useProject().editProject.value.info.projectVersions) {
+    const ver: IVersion = version
+    if (!maxNumVersion || maxNumVersion.number < ver.number) {
+      maxNumVersion = ver
+    }
+  }
+  const ver = new Version(maxNumVersion.version)
+  ver.patch++
+  version.value = ver.toString()
+}
 
 function setZipFile(gameFile: {
   startFileList: []
@@ -202,9 +212,9 @@ async function upload() {
     return
   } else {
     const lastVersion = version.value
-    if (lastVersion && Version.validity(lastVersion.version)) {
+    if (lastVersion && Version.validity(lastVersion?.version)) {
       const newVersion = new Version(version.value)
-      const oldVersion = new Version(lastVersion.version)
+      const oldVersion = new Version(lastVersion?.version)
 
       if (!newVersion.isNew(oldVersion)) {
         //이전 버전 보다 작음.

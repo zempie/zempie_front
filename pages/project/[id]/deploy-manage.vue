@@ -37,9 +37,16 @@
           <li>{{ $t('deployManage.undeploy.title') }}</li>
           <li>{{ $t('deployManage.undeploy.info') }}</li>
           <li>
-            <a class="btn-gray w100p" @click="showUndeployModal = true">{{
-              $t('deployManage.undeploy.title')
-            }}</a>
+            <a
+              class="btn-gray w100p"
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              "
+              @click="showUndeployModal = true"
+              >{{ $t('deployManage.undeploy.title') }}</a
+            >
           </li>
         </ol>
       </div>
@@ -112,7 +119,7 @@
         <el-dialog
           v-model="showSelectStageModal"
           append-to-body
-          class="modal-area-type"
+          custom-class="modal-area-type"
         >
           <div class="modal-alert">
             <dl class="ma-header">
@@ -322,11 +329,9 @@ async function deploy() {
 
 async function changeStage() {
   const deployVersion: IVersion =
-    useProject().editProject.value.info.projectVersions.find(
-      (version: IVersion) => {
-        return (version.version = selectVersion.value)
-      }
-    )
+    useProject().editProject.value.info.projectVersions.find((project: any) => {
+      return project.version === selectVersion.value
+    })
 
   const formData = new FormData()
 

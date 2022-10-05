@@ -146,11 +146,10 @@
             />
           </ul>
         </div>
-
-        <template v-else-if="projects.length">
+        <template v-else-if="data?.result.length">
           <TransitionGroup name="list-complete" tag="div">
             <ul
-              v-for="project in projects"
+              v-for="project in data?.result"
               :key="project.id"
               @click="goToProjectPage(project.id)"
             >
@@ -186,7 +185,7 @@
               </li>
               <li>
                 <span> {{ $t('game.likeCnt') }}:</span> &nbsp;&nbsp;{{
-                  project.game.count_heart
+                  project.game?.count_heart
                 }}
               </li>
             </ul>
@@ -307,17 +306,16 @@ const currPage = ref(1)
 const totalCount = ref(0)
 const totalPage = computed(() => Math.ceil(totalCount.value / pageSize.value))
 
-const { data, pending } = await useFetch(
-  '/studio/project',
-  getStudioFetchOptions('get', true)
+const { data, pending } = await useAsyncData<any>('project', () =>
+  $fetch('/studio/project', getStudioFetchOptions('get', true))
 )
 
 onMounted(async () => {
-  if (data.value) {
-    projects.value = (data.value as any).result
-    pagingByClient()
-  }
-  isPending.value = pending.value
+  // if (data.value) {
+  //   projects.value = data.value.result
+  pagingByClient()
+  // }
+  isPending.value = false
 })
 
 const searchProject = _.debounce(() => {

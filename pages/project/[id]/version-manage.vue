@@ -22,7 +22,7 @@
       </ul>
 
       <ProjectVersionRow
-        v-for="(version, idx) in data.result.projectVersions"
+        v-for="(version, idx) in data.result?.projectVersions"
         :version="version"
         :idx="idx"
         @refresh="refresh"
