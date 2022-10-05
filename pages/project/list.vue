@@ -129,6 +129,7 @@
             ></i>
           </li>
         </ul>
+
         <div v-if="isPending">
           <ul>
             <ClipLoader
@@ -145,10 +146,10 @@
             />
           </ul>
         </div>
-        <template v-else-if="data?.result?.length">
+        <template v-else-if="data?.result.length">
           <TransitionGroup name="list-complete" tag="div">
             <ul
-              v-for="project in projects"
+              v-for="project in data?.result"
               :key="project.id"
               @click="goToProjectPage(project.id)"
             >
@@ -305,16 +306,15 @@ const currPage = ref(1)
 const totalCount = ref(0)
 const totalPage = computed(() => Math.ceil(totalCount.value / pageSize.value))
 
-const { data, pending } = await useFetch<any>(
-  '/studio/project',
-  getStudioFetchOptions('get', true)
+const { data, pending } = await useAsyncData<any>('project', () =>
+  $fetch('/studio/project', getStudioFetchOptions('get', true))
 )
 
 onMounted(async () => {
-  if (data.value) {
-    projects.value = data.value.result
-    pagingByClient()
-  }
+  // if (data.value) {
+  //   projects.value = data.value.result
+  pagingByClient()
+  // }
   isPending.value = false
 })
 
