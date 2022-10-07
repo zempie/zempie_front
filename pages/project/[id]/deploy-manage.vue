@@ -43,6 +43,7 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                padding: 0px;
               "
               @click="showUndeployModal = true"
               >{{ $t('deployManage.undeploy.title') }}</a
@@ -90,6 +91,7 @@
           v-model="showUndeployModal"
           append-to-body
           custom-class="modal-area-type"
+          width="500px"
         >
           <div class="modal-alert">
             <dl class="ma-header">
@@ -120,6 +122,7 @@
           v-model="showSelectStageModal"
           append-to-body
           custom-class="modal-area-type"
+          width="500px"
         >
           <div class="modal-alert">
             <dl class="ma-header">

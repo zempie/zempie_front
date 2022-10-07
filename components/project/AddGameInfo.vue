@@ -128,6 +128,7 @@
                   >
                     <div style="height: 0px; overflow: hidden">
                       <input
+                        id="image-selector"
                         type="file"
                         @change="onImgChange"
                         accept="image/jpeg, image/png, image/svg, image/jpg, image/webp, image/bmp,"
@@ -294,18 +295,75 @@
             ></a>
           </li>
         </ul>
+        <div
+          v-if="editProject.info?.id"
+          class="sui-input"
+          style="margin-top: 100px"
+        >
+          <dl class="suii-content delete-area">
+            <dt>
+              {{ $t('addGameInfo.delete.game') }}
+            </dt>
+            <dd class="game-delete-btn">
+              <a @click="isDeleteModalOpen = true" class="btn-default w150">
+                {{ $t('addGameInfo.delete') }}
+              </a>
+            </dd>
+          </dl>
+        </div>
       </template>
+
       <ProjectAddGameFile
-        v-else
+        v-else-if="isFormDone && uploadProject.form.stage !== 1"
         @cancelFormDone="isFormDone = false"
         @uploadDone="isUploadDone = true"
       />
     </div>
+    <el-dialog
+      v-model="isDeleteModalOpen"
+      append-to-body
+      custom-class="modal-area-type"
+      width="380px"
+    >
+      <div class="modal-alert">
+        <dl class="ma-header">
+          <dt>
+            {{ $t('addGameInfo.info') }}
+          </dt>
+          <dd>
+            <button @click="isDeleteModalOpen = false">
+              <i class="uil uil-times"></i>
+            </button>
+          </dd>
+        </dl>
+        <div class="ma-content">
+          <h2>
+            {{ $t('addGameInfo.delete.modal') }}
+            <br />
+            {{ $t('addGameInfo.delete.modal.confirm') }}
+          </h2>
+          <div>
+            <button class="btn-default w48p" @click="deleteProject">
+              {{ $t('yes') }}
+            </button>
+            <button class="btn-gray w48p" @click="isDeleteModalOpen = false">
+              {{ $t('no') }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
   </dd>
 </template>
 
 <script setup lang="ts">
-import { ElMessage, ElMessageBox, ElLoading, ElTooltip } from 'element-plus'
+import {
+  ElMessage,
+  ElMessageBox,
+  ElLoading,
+  ElTooltip,
+  ElDialog,
+} from 'element-plus'
 import type { Action } from 'element-plus'
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
 import { eGameStage } from '~~/types'
@@ -382,32 +440,34 @@ const v$ = useVuelidate(rules, form)
 
 const waitGamePath = ref(false)
 
-onBeforeRouteLeave((to, from, next) => {
-  if (isUploadDone.value) {
-    next()
-    return
-  }
+const isDeleteModalOpen = ref(false)
 
-  if (
-    form.name ||
-    form.pathname ||
-    form.description ||
-    form.hashtags ||
-    form.project_picture ||
-    form.project_picture2
-  ) {
-    ElMessageBox.confirm(`${t('leave.router.warning')}`, 'Warning', {
-      confirmButtonText: 'Cancel',
-      cancelButtonText: 'Leave',
-      type: 'warning',
-      showClose: false,
-    }).catch((action: Action) => {
-      next()
-    })
-  } else {
-    next()
-  }
-})
+// onBeforeRouteLeave((to, from, next) => {
+//   if (isUploadDone.value) {
+//     next()
+//     return
+//   }
+
+//   if (
+//     form.name ||
+//     form.pathname ||
+//     form.description ||
+//     form.hashtags ||
+//     form.project_picture ||
+//     form.project_picture2
+//   ) {
+//     ElMessageBox.confirm(`${t('leave.router.warning')}`, 'Warning', {
+//       confirmButtonText: 'Cancel',
+//       cancelButtonText: 'Leave',
+//       type: 'warning',
+//       showClose: false,
+//     }).catch((action: Action) => {
+//       next()
+//     })
+//   } else {
+//     next()
+//   }
+// })
 
 onMounted(() => {
   window.addEventListener('beforeunload', refreshPage)
@@ -673,6 +733,23 @@ async function updateGame() {
       router.push(localePath('/project/list'))
     }
   }, 1000)
+}
+
+async function deleteProject() {
+  const { data, error } = await project.delete(editProject.value.info.id)
+
+  if (data.value) {
+    resetProjectInfo()
+    isDeleteModalOpen.value = false
+    router.replace(localePath('/project/list'))
+
+    ElMessage({
+      message: t('deleted.game.success.msg'),
+      type: 'success',
+    })
+  } else if (error.value) {
+    ElMessage.error(t('deleted.game.fail.msg'))
+  }
 }
 </script>
 
