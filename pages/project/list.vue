@@ -28,6 +28,7 @@
           </dt>
           <dd>
             <NuxtLink
+              id="gameUploadBtn"
               :to="localePath('/project/upload')"
               class="btn-default ml20"
               ><i class="uil uil-plus"></i>{{ $t('gameUpload') }}</NuxtLink
@@ -155,6 +156,7 @@
             >
               <li>
                 <span> {{ $t('game.thumbnail') }}: </span>
+
                 <p
                   :style="`background: url(${
                     project.picture_web ||
@@ -306,15 +308,16 @@ const currPage = ref(1)
 const totalCount = ref(0)
 const totalPage = computed(() => Math.ceil(totalCount.value / pageSize.value))
 
-const { data, pending } = await useAsyncData<any>('project', () =>
-  $fetch('/studio/project', getStudioFetchOptions('get', true))
+const { data, pending } = await useCustomFetch(
+  '/studio/project',
+  getStudioFetchOptions('get', true)
 )
 
 onMounted(async () => {
-  // if (data.value) {
-  //   projects.value = data.value.result
-  pagingByClient()
-  // }
+  if (data.value) {
+    projects.value = data.value.result
+    pagingByClient()
+  }
   isPending.value = false
 })
 
