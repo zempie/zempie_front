@@ -384,9 +384,7 @@ function goToProjectPage(id: number) {
 }
 
 function setProjectInfo(id: number) {
-  const { result } = data.value as any
-
-  const project = result.find((project: IProject) => project.id === id)
+  const project = projects.value.find((project: IProject) => project.id === id)
   useProject().setProjectInfo(project)
 }
 
