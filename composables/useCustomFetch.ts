@@ -8,17 +8,17 @@ export const useCustomFetch = (url: string, options?: FetchOptions) => {
   return useFetch(url, {
     ...options,
     async onResponse({ request, response, options }) {
-      console.log('[fetch response]')
+      // console.log('[fetch response]')
 
     },
     async onResponseError({ request, response, options }) {
-      console.log('[fetch response error]', response)
+      // console.log('[fetch response error]', response)
       const { status } = response
       switch (status) {
         case 401:
-          console.log('unauth')
+          // console.log('unauth')
           $firebaseAuth.currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken: string) {
-            console.log(idToken)
+            // console.log(idToken)
             $cookies.set(config.COOKIE_NAME, idToken, {
               maxAge: DAYSTOSEC_30,
               path: '/',
@@ -37,10 +37,10 @@ export const useCustomFetch = (url: string, options?: FetchOptions) => {
     },
 
     async onRequest({ request, options }) {
-      console.log('[fetch request]')
+      // console.log('[fetch request]')
     },
     async onRequestError({ request, options, error }) {
-      console.log('[fetch request error]')
+      // console.log('[fetch request error]')
     }
   })
 }
