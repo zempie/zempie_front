@@ -22,10 +22,9 @@
       </ul>
 
       <ProjectVersionRow
-        v-for="(version, idx) in data.result?.projectVersions"
+        v-for="(version, idx) in project?.projectVersions"
         :version="version"
         :idx="idx"
-        @refresh="refresh"
       />
     </div>
   </NuxtLayout>
@@ -39,6 +38,8 @@ const { t, locale } = useI18n()
 const route = useRoute()
 const config = useRuntimeConfig()
 const localePath = useLocalePath()
+
+const project = ref()
 
 definePageMeta({
   title: 'Version Mgmt.',
@@ -94,7 +95,15 @@ useHead({
   ],
 })
 
-const { data, error, pending, refresh } = await useFetch<{
-  result: { projectVersions: IVersion[] }
-}>(`/community/project/${route.params.id}`, getZempieFetchOptions('get', true))
+watch(
+  () => useProject().editProject.value.info,
+  (newVal) => {
+    project.value = useProject().editProject.value.info
+  }
+)
+onMounted(() => {
+  if (useProject().editProject.value.info?.id) {
+    project.value = useProject().editProject.value.info
+  }
+})
 </script>

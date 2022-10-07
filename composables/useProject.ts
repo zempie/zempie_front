@@ -8,7 +8,7 @@ export default function () {
   }))
 
   const getProjectInfo = async (id: string | number) => {
-    const { data, error } = await useFetch<{ result: IProject }>(`/community/project/${id}`, getZempieFetchOptions('get', true))
+    const { data, error } = await useCustomFetch<{ result: IProject }>(`/community/project/${id}`, getZempieFetchOptions('get', true))
 
     if (data.value) {
       const { result } = data.value
