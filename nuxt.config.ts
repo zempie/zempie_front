@@ -93,7 +93,3 @@ export default defineNuxtConfig({
 
 })
 
-
-// @import "https://unicons.iconscout.com/release/v3.0.3/css/line.css";
-// @import "https://unicons.iconscout.com/release/v3.0.3/css/solid.css";
-// @import "https://cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css";

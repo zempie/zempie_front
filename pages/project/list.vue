@@ -1,14 +1,11 @@
 <template>
   <NuxtLayout name="studio">
     <div class="content-studio" style="min-height: calc(100vh - 200px)">
-      <!-- 상단배너 -->
       <div class="studio-banner bg03">
         <h2>{{ $t('projectList.banner.text') }}</h2>
         <p>{{ $t('projectList.banner.info') }}</p>
       </div>
-      <!-- 상단배너 끝 -->
 
-      <!-- 모든게임 끝 -->
       <div class="studio-all-game">
         <dl>
           <dt>
@@ -147,10 +144,10 @@
             />
           </ul>
         </div>
-        <template v-else-if="data?.result.length">
-          <TransitionGroup name="list-complete" tag="div">
+        <template v-else-if="projects.length">
+          <div>
             <ul
-              v-for="project in data?.result"
+              v-for="project in projects"
               :key="project.id"
               @click="goToProjectPage(project.id)"
             >
@@ -159,9 +156,9 @@
 
                 <p
                   :style="`background: url(${
-                    project.picture_web ||
+                    project.picture_webp ||
                     project.picture ||
-                    project.url_thumb ||
+                    project.picture2 ||
                     '/images/default.png'
                   }?t=${Date.now()}) center center / cover no-repeat; background-size: cover;`"
                 ></p>
@@ -191,26 +188,35 @@
                 }}
               </li>
             </ul>
-          </TransitionGroup>
+          </div>
 
           <div class="studio-pagination">
             <dl>
               <dd>{{ currPage }}-{{ totalPage }} of {{ totalCount }}</dd>
               <dd>
                 <span
+                  @click="firstPage()"
+                  :class="[currPage === 1 && 'disabled', 'prev-btn']"
+                >
+                  <i class="uil uil-angle-double-left"></i>
+                </span>
+                <span
                   @click="prevPage()"
-                  :class="[currPage !== 1 ? '' : 'disabled', 'prev-btn']"
-                  ><i class="uil uil-angle-left-b"></i></span
+                  :class="[currPage === 1 && 'disabled', 'prev-btn']"
+                  ><i class="uil uil-angle-left"></i></span
                 >&nbsp;&nbsp;
                 <span
                   @click="nextPage()"
-                  :class="[
-                    currPage === totalPage ? 'disabled' : '',
-                    'next-btn',
-                  ]"
+                  :class="[currPage === totalPage && 'disabled', 'next-btn']"
                 >
-                  <i class="uil uil-angle-right-b"></i
+                  <i class="uil uil-angle-right"></i
                 ></span>
+                <span
+                  @click="lastPage()"
+                  :class="[currPage === totalPage && 'disabled', 'next-btn']"
+                >
+                  <i class="uil uil-step-forward"></i>
+                </span>
               </dd>
             </dl>
           </div>
@@ -303,23 +309,31 @@ const isStageSortAsc = ref(true)
 const isPlayCountSortAsc = ref(true)
 const isLikeCountSortAsc = ref(true)
 
-const pageSize = ref(10)
+const PAGE_SIZE = 10
 const currPage = ref(1)
 const totalCount = ref(0)
-const totalPage = computed(() => Math.ceil(totalCount.value / pageSize.value))
-
-const { data, pending } = await useCustomFetch(
-  '/studio/project',
-  getStudioFetchOptions('get', true)
-)
+const originProjects = ref()
+const totalPage = computed(() => Math.ceil(totalCount.value / PAGE_SIZE))
 
 onMounted(async () => {
+  fetch()
+
+  isPending.value = false
+})
+
+async function fetch() {
+  const { data, pending } = await useCustomFetch<{ result: IProject[] }>(
+    '/studio/project',
+    getStudioFetchOptions('get', true)
+  )
+
   if (data.value) {
+    originProjects.value = _.cloneDeep(data.value.result)
+    totalCount.value = data.value.result.length
     projects.value = data.value.result
     pagingByClient()
   }
-  isPending.value = false
-})
+}
 
 const searchProject = _.debounce(() => {
   const { result } = data.value as any
@@ -337,22 +351,30 @@ const searchProject = _.debounce(() => {
 }, 300)
 
 function nextPage() {
-  document.documentElement.scrollTop = 0
   currPage.value += 1
   pagingByClient()
 }
 function prevPage() {
-  document.documentElement.scrollTop = 0
   currPage.value -= 1
   pagingByClient()
 }
 
-function pagingByClient() {
-  const start = (currPage.value - 1) * pageSize.value
-  const end = start + pageSize.value
+function firstPage() {
+  currPage.value = 1
+  pagingByClient()
+}
 
-  totalCount.value = projects.value.length
-  projects.value = projects.value.slice(start, end)
+function lastPage() {
+  currPage.value = totalPage.value
+  pagingByClient()
+}
+function pagingByClient() {
+  document.documentElement.scrollTop = 0
+
+  const start = (currPage.value - 1) * PAGE_SIZE
+  const end = start + PAGE_SIZE - 1
+
+  projects.value = originProjects.value.slice(start, end)
 }
 
 function goToProjectPage(id: number) {
@@ -362,9 +384,7 @@ function goToProjectPage(id: number) {
 }
 
 function setProjectInfo(id: number) {
-  const { result } = data.value as any
-
-  const project = result.find((project: IProject) => project.id === id)
+  const project = projects.value.find((project: IProject) => project.id === id)
   useProject().setProjectInfo(project)
 }
 
@@ -394,26 +414,10 @@ function sortDescListByGame(key: string) {
 </script>
 
 <style scoped lang="scss">
-//transition
-.list-complete-item {
-  transition: all 1s;
-  display: inline-block;
-  margin-right: 10px;
-}
-
-.list-complete-enter,
-.list-complete-leave-to
-
-/* .list-complete-leave-active below version 2.1.8 */ {
-  opacity: 0;
-  transform: translateY(30px);
-}
-
-.list-complete-leave-active {
-  position: absolute;
-}
-
 //pagination
+.next-btn {
+  cursor: pointer;
+}
 .prev-btn.disabled,
 .next-btn.disabled {
   pointer-events: none;
@@ -427,6 +431,27 @@ function sortDescListByGame(key: string) {
   background-color: #fff;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.05);
   border-radius: 10px;
+
+  div {
+    ul {
+      &:hover {
+        background-color: #f9f9f9;
+        cursor: pointer;
+      }
+      li {
+        &:nth-child(5),
+        &:nth-child(6) {
+          width: 10%;
+        }
+        p {
+          width: 70px;
+          height: 70px;
+          border-radius: 5px;
+          margin: auto;
+        }
+      }
+    }
+  }
 
   dl {
     display: flex;
@@ -485,49 +510,6 @@ function sortDescListByGame(key: string) {
       }
     }
   }
-}
-
-.studio-all-game > div > ul > li > p {
-  width: 70px;
-  height: 70px;
-  border-radius: 5px;
-  margin: auto;
-}
-
-.studio-all-game > div > ul:hover {
-  background-color: #f9f9f9;
-}
-
-.studio-all-game .ag-empty {
-  padding: 150px 0;
-  text-align: center;
-}
-
-.studio-all-game .ag-empty > p {
-  width: 60px;
-  height: 60px;
-  margin: auto;
-  padding-top: 15px;
-  text-align: center;
-  font-size: 24px;
-  color: #c1c1c1;
-  border-radius: 50%;
-  background-color: #f1f1f1;
-}
-
-.studio-all-game .ag-empty > h4 {
-  margin-top: 25px;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 16px;
-}
-
-.studio-all-game > div > ul > li:nth-child(5) {
-  width: 10%;
-}
-
-.studio-all-game > div > ul > li:nth-child(6) {
-  width: 10%;
 }
 
 @media all and (max-width: 479px) {

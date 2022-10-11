@@ -52,39 +52,38 @@
       </li>
       <li></li>
     </ul>
-    <ClientOnly>
-      <el-dialog
-        v-model="showDeleteModal"
-        append-to-body
-        custom-class="modal-area-type"
-      >
-        <div class="modal-alert">
-          <dl class="ma-header">
-            <dt>{{ $t('information') }}</dt>
-            <dd>
-              <button @click="showDeleteModal = false">
-                <i class="uil uil-times"></i>
-              </button>
-            </dd>
-          </dl>
-          <div class="ma-content">
-            <h2>
-              {{ $t('versionManage.delete.modal') }}<br />{{
-                $t('versionManage.delete.modal.confirm')
-              }}
-            </h2>
-            <div>
-              <button class="btn-default w48p" @click="deleteOneVersion">
-                {{ $t('delete') }}
-              </button>
-              <button class="btn-gray w48p" @click="showDeleteModal = false">
-                {{ $t('no') }}
-              </button>
-            </div>
+    <el-dialog
+      v-model="showDeleteModal"
+      append-to-body
+      width="380px"
+      custom-class="modal-area-type"
+    >
+      <div class="modal-alert">
+        <dl class="ma-header">
+          <dt>{{ $t('information') }}</dt>
+          <dd>
+            <button @click="showDeleteModal = false">
+              <i class="uil uil-times"></i>
+            </button>
+          </dd>
+        </dl>
+        <div class="ma-content">
+          <h2>
+            {{ $t('versionManage.delete.modal') }}<br />{{
+              $t('versionManage.delete.modal.confirm')
+            }}
+          </h2>
+          <div>
+            <button class="btn-default w48p" @click="deleteOneVersion">
+              {{ $t('delete') }}
+            </button>
+            <button class="btn-gray w48p" @click="showDeleteModal = false">
+              {{ $t('no') }}
+            </button>
           </div>
         </div>
-      </el-dialog>
-    </ClientOnly>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script setup lang="ts">
@@ -94,10 +93,12 @@ import { ElMessage, ElDialog, ElLoading } from 'element-plus'
 import { IVersion } from '~~/types'
 import { useI18n } from 'vue-i18n'
 
+const route = useRoute()
 const { t, locale } = useI18n()
 
 const isOpenDelete = ref(false)
 const showDeleteModal = ref(false)
+const projectId = computed(() => route.params.id as string)
 
 const props = defineProps({
   version: Object as PropType<IVersion>,
@@ -126,7 +127,10 @@ async function deleteOneVersion() {
       message: t('versionManage.deleted.version'),
       type: 'success',
     })
-    emit('refresh')
+    useProject().getProjectInfo(projectId.value)
+    showDeleteModal.value = false
+    isOpenDelete.value = false
+    // emit('refresh')
   }
 }
 </script>

@@ -1,6 +1,7 @@
 import { defineNuxtPlugin } from '#app'
 import * as firebase from 'firebase/app'
-import { getAuth, onIdTokenChanged, signOut } from 'firebase/auth'
+import { getAuth, onIdTokenChanged, signOut, onAuthStateChanged } from 'firebase/auth'
+import { IUser } from '~~/types';
 
 
 const DAYSTOSEC_30 = 60 * 60 * 24 * 30;
@@ -26,10 +27,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   const app = firebase.initializeApp(firebaseConfig);
   const auth = getAuth(app)
 
-
-
-  onIdTokenChanged(auth, async (user) => {
-
+  onIdTokenChanged(auth, (user) => {
     if (user) {
       $cookies.set(config.COOKIE_NAME, (user as any).accessToken, {
         maxAge: DAYSTOSEC_30,
@@ -41,13 +39,9 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       if (!useUser().user.value.isSignUp) {
         setUserInfo()
       }
-
     } else {
       useUser().setLoadDone()
     }
-
-
-
   })
   nuxtApp.provide('firebaseApp', app);
   nuxtApp.provide('firebaseAuth', auth);
@@ -59,7 +53,8 @@ async function setUserInfo() {
   const { $cookies, $firebaseAuth } = useNuxtApp()
   const router = useRouter()
 
-  const { data, error } = await auth.login()
+  const { data, error } = await useCustomFetch<{ result: { user: IUser } }>('/user/info', getZempieFetchOptions('get', true))
+
 
   if (data.value) {
     const { user } = data.value.result
@@ -67,22 +62,22 @@ async function setUserInfo() {
     useUser().setUser(user)
     routerToHome()
   } else if (error.value) {
-    const { error: err } = error.value.data;
+    const { error: err } = (error.value as any).data;
+    console.log(err)
 
-
-    if (err.code === 20001) {
-      // signOut($firebaseAuth)
-
-      // $cookies.remove(config.COOKIE_NAME, {
-      //   path: '/',
-      //   domain: config.COOKIE_DOMAIN
-      // })
-      // useUser().removeUserState()
-      // alert('회원가입이 완료되지않았습니다. 회원가입을 진행해주세요')
-      router.push(`/${useCommon().setting.value.lang}/join`)
-
+    switch (err.code) {
+      case 20001:
+        router.push(`/${useCommon().setting.value.lang}/join`)
+        break;
+      case 10001:
+        alert('일정시간동안 활동이 없어 세션이 만료되었습니다. 다시 로그인해주세요')
+        useUser().logout()
+        break;
+      default:
+        break;
     }
   }
+
 }
 
 async function routerToHome() {

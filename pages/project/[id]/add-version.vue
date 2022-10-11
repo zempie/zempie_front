@@ -95,6 +95,21 @@ const route = useRoute()
 const localePath = useLocalePath()
 const config = useRuntimeConfig()
 
+const isAdvancedOpen = ref(false)
+const autoDeploy = ref(false)
+
+const startFileOptions = ref([])
+const startFile = ref('')
+const fileSize = ref(0)
+const version = ref()
+const uploadGameFiles = ref<File[]>([])
+
+const isVersionError = ref(false)
+
+const { editProject } = useProject()
+
+const projectId = computed(() => route.params.id as string)
+
 useHead({
   title: `${t('seo.project.add.verison.title')} | Zempie Studio`,
   link: [
@@ -150,21 +165,6 @@ definePageMeta({
   middleware: 'auth',
 })
 
-const isAdvancedOpen = ref(false)
-const autoDeploy = ref(false)
-
-const startFileOptions = ref([])
-const startFile = ref('')
-const fileSize = ref(0)
-const version = ref()
-const uploadGameFiles = ref<File[]>([])
-
-const isVersionError = ref(false)
-
-const { editProject } = useProject()
-
-const projectId = computed(() => route.params.id)
-
 watch(
   () => useProject().editProject.value.info,
   (newVal) => {
@@ -180,15 +180,20 @@ onMounted(() => {
 
 function createVersionNum() {
   let maxNumVersion = null
-  for (const version of useProject().editProject.value.info.projectVersions) {
-    const ver: IVersion = version
-    if (!maxNumVersion || maxNumVersion.number < ver.number) {
-      maxNumVersion = ver
+  //기존의 프로젝트 버전이 존재하는 경우
+  if (useProject().editProject.value.info.projectVersions.length) {
+    for (const version of useProject().editProject.value.info.projectVersions) {
+      const ver: IVersion = version
+      if (!maxNumVersion || maxNumVersion.number < ver.number) {
+        maxNumVersion = ver
+      }
     }
+    const ver = new Version(maxNumVersion.version)
+    ver.patch++
+    version.value = ver.toString()
+  } else {
+    version.value = '1.0.0'
   }
-  const ver = new Version(maxNumVersion.version)
-  ver.patch++
-  version.value = ver.toString()
 }
 
 function setZipFile(gameFile: {
@@ -258,277 +263,13 @@ async function upload() {
   )
 
   loading.close()
+
   if (!error.value) {
+    useProject().getProjectInfo(projectId.value)
     router.push(localePath(`/project/${projectId.value}/version-manage`))
   }
 }
-
-function deleteFile() {}
 </script>
-<!-- <template>
-    <dd>
-        <div class="studio-upload-input">
-            <div class="sui-input">
-                <div class="suii-title">{{ $t('versionManage.addVersion') }}</div>
-                <dl class="suii-content">
-                    <dt>{{ $t('gameUpload') }}</dt>
-                    <dd>
-                        <p class="upload-file-container">
-                            <label for="game-file"><i class="uil uil-file-plus" style="font-size:18px;"></i> &nbsp;
-                                {{ $t('fileUpload') }}</label>
-                            <input
-                                @input="onFileChange"
-                                type="file"
-                                ref="gameFile"
-                                id="game-file"
-                                accept=".zip">
-                            <ClipLoader v-if="isLoadingFile" :color="'#ff6e17'" :size="'20px'"></ClipLoader>
-                            <button class="btn-circle-icon" @click="deleteFile" v-if="fileName"><i
-                                class="uil uil-trash-alt"></i>
-                            </button>
-                        </p>
-                        <transition name="component-fade" mode="out-in">
-                            <div v-if="fileName">
-                                <p class="file-size">{{ $t('file.size') }} : {{
-                                        totalSize < 1
-                                            ? `${totalSize * 1000} KB`
-                                            : `${totalSize} MB`
-                                    }}</p>
-                                <p class="file-name">{{ $t('file.name') }} : {{ fileName }}</p>
-                            </div>
-                        </transition>
-                        <h2>
-                            {{ $t('addGameFile.selectMode.text1') }}<br/>
-                            {{ $t('addGameFile.selectFile.text3') }}
-                        </h2>
-                    </dd>
-                </dl>
-                <div class="suii-open"
-                     :class="isAdvancedOpen ? 'open' : 'close'"
-                     @click="isAdvancedOpen = !isAdvancedOpen">
-                    <span>  {{ $t('advanced.setting') }}</span> &nbsp;<i class="uil uil-sliders-v-alt"></i>
-                </div>
-                <transition name="component-fade" mode="out-in">
-                    <div v-show="isAdvancedOpen">
-                        <dl class="suii-content">
-                            <dt>{{ $t('addGameFile.select.startFile.text1') }}</dt>
-                            <dd>
-                                <select name="" title="" class="w100p">
-                                    <option v-for="file in startFileOptions" :value="file">{{ file }}</option>
-                                </select>
-                            </dd>
-                        </dl>
-                        <dl class="suii-content">
-                            <dt>{{ $t('addGameFile.selectMode') }}</dt>
-                            <dd>
-                                <ul>
-                                    <li>
-                                    <li>
-                                        <label class="switch-button">
-                                            <input type="checkbox" name="" v-model="autoDeploy"/>
-                                            <span class="onoff-switch"></span>
-                                        </label>
-                                    </li>
-                                    <li>Auto-deployment mode</li>
-                                </ul>
-                                <h2>
-                                    {{ $t('addGameFile.selectMode.text1') }}<br/>
-                                    {{ $t('addGameFile.selectFile.text3') }}
-                                </h2>
-                            </dd>
-                        </dl>
-                        <dl class="suii-content">
-                            <dt>{{ $t('version') }}</dt>
-                            <dd>
-                                <input v-model="version" type="text" class="w100p">
-
-                            </dd>
-                        </dl>
-                        <div class="suii-close">
-                            <button class="btn-line" @click="isAdvancedOpen = !isAdvancedOpen">{{ $t('close') }} &nbsp;&nbsp;<i
-                                class="uil uil-angle-up"></i></button>
-                        </div>
-                    </div>
-                </transition>
-            </div>
-
-        </div>
-
-        <ul class="sui-btn">
-            <li><a @click="upload" class="btn-default w150"><ClipLoader v-if="isLoadingUpload" :color="'#fff'" :size="'20px'" style="height: 20px"></ClipLoader>
-                <span v-else>{{ $t('upload') }}</span></a></li>
-        </ul>
-
-
-    </dd>
-</template>
-
-import {Component, Prop, Vue, Watch} from "vue-property-decorator";
-import ZipUtil from "@/script/zipUtil";
-import ClipLoader from 'vue-spinner/src/ClipLoader.vue';
-import Toast from "@/script/message";
-import Version from "@/script/version";
-import store from "@/store";
-import {eGameStage} from "@/common/enumData";
-
-@Component({
-    components: {ClipLoader},
-})
-export default class AddVersion extends Vue {
-    projectId = this.$route.params.id;
-    toast = new Toast();
-    limitSize: number = 1024 * 1000 * 500;
-    totalSize: number = 0;
-    uploadGameFile: File | null = null;
-    uploadGameFiles: File[] = [];
-    isAdvancedOpen: boolean = false;
-    startFile: string = '';
-    startFileOptions: string[] = [];
-
-    fileName: string = '';
-    versionDescription: string = "";
-
-    isLoadingFile: boolean = false;
-    autoDeploy: boolean = true;
-
-    version: string = '1.0.1';
-    isUpdate: boolean = false;
-    description: string = '';
-
-    isLoadingUpload: boolean = false;
-
-    // beforeRouteEnter(to, from, next){
-    //
-    //     if(eGameStage.Dev === (from.params.id && store.getters.projects[from.params.id].stage)){
-    //         alert('개발 단계를 얼리억세스 이상으로 설정하여, 게임 파일을 업로드해주세요')
-    //     }else if(!from.params.id){
-    //         next('/projectList')
-    //     }
-    //     else{
-    //         next();
-    //     }
-    //
-    // }
-
-
-    async mounted() {
-        await this.$store.dispatch("loginState");
-        await this.$store.dispatch("project", this.projectId);
-
-        const lastVersion = this.$store.getters.lastVersion(this.projectId);
-
-        if (lastVersion) {
-            const ver = new Version(lastVersion.version)
-            ver.patch++;
-            this.version = ver.toString();
-        }
-
-        const updateVersion = this.$store.getters.updateVersion(this.projectId);
-        this.isUpdate = updateVersion && updateVersion.state === 'process';
-
-
-    }
-
-
-
-    async onFileChange(e) {
-
-        this.uploadGameFile = e.target.files[0];
-
-        this.isLoadingFile = true;
-        const zip = await ZipUtil.zipFileToZip(this.uploadGameFile);
-
-        const files: any = await ZipUtil.zipToFiles(zip);
-        let size: number = 0;
-
-        for (let f in files) {
-            size += files[f].size;
-        }
-
-        if (size > this.limitSize) {
-            alert(`${this.$t('file.upload.overSize.500')}`)
-            return;
-
-        }
-
-        this.totalSize = Number((size / (1024 * 1000)).toFixed(2));
-        this.uploadGameFiles = files;
-
-        const htmls = this.uploadGameFiles.filter((file) => {
-            return file.name.indexOf('.html') > -1;
-        });
-
-        this.startFileOptions = htmls.map(file => file.name);
-        this.startFileOptions.sort((a, b) => a.length - b.length);
-        const indexFiles = this.startFileOptions.filter(name => name.includes('index'));
-
-        if (indexFiles.length) {
-            indexFiles.sort((a, b) => a.length - b.length);
-            this.startFile = indexFiles[0];
-        }
-        else {
-            this.startFile = this.startFileOptions[0];
-        }
-
-        this.startFileOptions.sort((a, b) => a.length - b.length);
-
-        if (this.startFileOptions.length) {
-            // this.uploadGameFileError = '';
-            this.fileName = e.target.files[0].name
-        }
-        else {
-            alert(`${this.$t('notFoundHtml')}`)
-            this.fileName = ''
-            // this.uploadGameFileError = this.$t('projectAddVersion.error.notFoundHtml').toString();
-
-        }
-
-        if (
-            this.uploadGameFiles.length > 0 &&
-            this.startFileOptions.length > 0
-        ) {
-            this.$store.commit("sendGameFileDone", true);
-
-            const gameFileInfo = {
-                autoDeploy: this.autoDeploy,
-                startFile: this.startFile,
-                size: this.totalSize,
-                version_description: this.versionDescription,
-            };
-            
-            this.$store.commit("gameFileInfoObj", gameFileInfo);
-            this.$store.commit("uploadGameFiles", this.uploadGameFiles);
-        }
-        else {
-            this.$store.commit("sendGameFileDone", false);
-        }
-
-        this.isLoadingFile = false;
-    }
-
-    deleteFile() {
-        this.uploadGameFile = null;
-        this.uploadGameFiles = [];
-        this.startFile = '';
-        this.startFileOptions = [];
-        this.totalSize = 0;
-        this.fileName = '';
-        (this.$refs.gameFile as any).value = '';
-    }
-
-
-
-    updateProject() {
-
-    }
-
-    prevPage() {
-        this.$emit('gameInfoDone', false)
-    }
-
-}
-</script>
- -->
 <style scoped lang="scss">
 .sui-btn {
   width: 1200px;

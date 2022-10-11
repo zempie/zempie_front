@@ -19,8 +19,8 @@
   "previous": "Previous ",
   "next": "Next",
   "addGameInfo.upload": "Upload",
-  "addGameInfo.delete.game": "Erase game",
-  "addGameInfo.delete": "Erase/delete",
+  "addGameInfo.delete.game": "Delete game",
+  "addGameInfo.delete": "Delete",
   "addGameInfo.info": "Announcement",
   "addGameInfo.delete.modal": "You won't be able to recover the game you have deleted",
   "addGameInfo.delete.modal.confirm": "Are you sure you want to delete it?",
@@ -843,5 +843,6 @@
   "delete.draft.done": "Do you really want to delete the selected post?",
   "ask.overwrite.draft": "Would you like to load the selected draft and delete the post you were writing?",
   "autosave": "Auto save",
-  "ask.delete.draft": "Do you really want to delete the selected draft?"
+  "ask.delete.draft": "Do you really want to delete the selected draft?",
+  "auto.login": "__STRING_NOT_TRANSLATED__"
 }
