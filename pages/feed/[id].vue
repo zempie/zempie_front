@@ -222,7 +222,7 @@ const {
   error,
   pending,
   refresh,
-} = await useFetch<any>(
+} = await useCustomFetch<any>(
   `/post/${feedId.value}`,
   getComFetchOptions('get', true)
 )
@@ -235,6 +235,7 @@ watch(
 )
 
 onMounted(async () => {
+  //code highlighter
   hljs.configure({
     ignoreUnescapedHTML: true,
   })
@@ -365,7 +366,7 @@ function copyUrl() {
   })
 }
 
-function clickFeed(e: { target: HTMLInputElement }) {
+function clickFeed(e: any) {
   //클릭한 요소가 이미지인 경우
   if (e.target.nodeName === 'IMG') {
     openOriginPhoto.value = true
@@ -374,7 +375,7 @@ function clickFeed(e: { target: HTMLInputElement }) {
 }
 
 function openOriginImage() {
-  window.open(imgUrl.value)
+  window.open(imgUrl.value, '_blank')
 }
 </script>
 
@@ -475,7 +476,7 @@ input[type='radio'] {
 
 .origin-btn {
   position: absolute;
-  top: 25px;
+  top: 40px;
   border-radius: 10px;
   opacity: 0.3;
   margin: 10px;
