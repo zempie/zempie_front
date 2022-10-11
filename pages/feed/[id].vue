@@ -252,6 +252,8 @@ onMounted(async () => {
       { root: null, threshold: 1 }
     )
     observer.value.observe(triggerDiv.value)
+  } else {
+    refresh()
   }
   await commentFetch()
 })
