@@ -317,7 +317,7 @@ onMounted(() => {
   })
   const dom = props.feed?.content && htmlToDomElem(props.feed.content)
 
-  const linkTag = dom.getElementsByTagName('a')
+  // const linkTag = dom.getElementsByTagName('a')
   // for (const link of linkTag) {
   //   const url = link.href;
   //   getMetaData(url).then((res) => {
