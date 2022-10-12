@@ -315,7 +315,7 @@ onMounted(() => {
   document.querySelectorAll('pre').forEach((block) => {
     hljs.highlightElement(block)
   })
-  const dom = htmlToDomElem(props.feed?.content)
+  const dom = props.feed?.content && htmlToDomElem(props.feed.content)
 
   const linkTag = dom.getElementsByTagName('a')
   // for (const link of linkTag) {
