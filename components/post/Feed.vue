@@ -295,9 +295,11 @@ const feedContent = ref(props.feed?.content || '')
 const emit = defineEmits(['refresh'])
 
 const attatchment_files = computed(() => {
-  return Array.isArray(props.feed.attatchment_files)
-    ? props.feed.attatchment_files
-    : JSON.parse(props.feed.attatchment_files as string)
+  return props.feed?.attatchment_files?.length
+    ? Array.isArray(props.feed.attatchment_files)
+      ? props.feed.attatchment_files
+      : JSON.parse(props.feed.attatchment_files as string)
+    : null
 })
 
 const isOverflow = computed(() => {
