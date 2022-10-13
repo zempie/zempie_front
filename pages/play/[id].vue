@@ -5,7 +5,7 @@
         ref="game"
         class="iframe"
         :style="`height:${iframeHeight};`"
-        :src="`${config.LAUNCHER_URL}/game/${gamePath}`"
+        :src="`${config.LAUNCHER_URL}/#/game/${gamePath}`"
       ></iframe>
     </ClientOnly>
   </div>
@@ -35,16 +35,46 @@ definePageMeta({
   layout: 'layout-none',
 })
 
-const { data, error, pending } = await useFetch<{
+const { data, error, pending } = await useCustomFetch<{
   result: { game: {}; my_emotions: {}; my_heart: boolean }
 }>(`/game/${gamePath.value}`, getZempieFetchOptions('get', false))
 
+watch(
+  () => userInfo.value,
+  (info) => {
+    if (info) {
+      onChangedToken()
+    }
+  }
+)
+
+watch(
+  () => data.value,
+  (info) => {
+    if (info) {
+      setHead()
+    }
+  }
+)
+
 onMounted(async () => {
+  if (process.client) {
+    window.addEventListener('message', onMessage)
+    window.addEventListener('resize', onResize)
+    onResize()
+  }
+  setHead()
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('message', onMessage)
+  window.removeEventListener('resize', onResize)
+})
+
+function setHead() {
   if (data.value) {
     const { game, my_emotions, my_heart } = data.value.result
     gameData.value = game
-
-    // url.value = `/${config.LAUNCHER_URL}/game/${gamePath.value}`;
 
     useHead({
       title: `${gameData.value.title} | Zempie`,
@@ -94,77 +124,12 @@ onMounted(async () => {
         },
       ],
     })
-
-    window.addEventListener('message', onMessage)
-    window.addEventListener('resize', onResize)
-    onResize()
   }
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('message', onMessage)
-  window.removeEventListener('resize', onResize)
-})
+}
 
 function onResize() {
   iframeHeight.value = `${window.innerHeight}px`
 }
-
-// import { Vue, Component, Watch, Prop } from "vue-property-decorator";
-// import firebase from "firebase/app";
-// import { LoginState } from "@/store/modules/user";
-// import MetaSetting from "@/script/metaSetting";
-
-// export default class Play extends Vue {
-
-//   metaSetting !: MetaSetting;
-//   gameData: any;
-//   initLauncher: boolean = false;
-
-//   async mounted() {
-//     this.gameData = this.$store.getters.gameByPathname(this.pathname);
-
-//           { name: 'description', content: result.game?.description },
-//           { property: 'og:url', content: `${this.$store.getters.homeUrl}/play/${result.game?.pathname}` },
-//           { property: 'og:title', content: `${result.game?.title} | Zempie.com` },
-//           { property: 'og:description', content: result.game?.description },
-//           { property: 'og:image', content: result.game?.url_thumb },
-
-//         ]
-//       });
-//       if (!result && result.error) {
-//         console.error((result && result.error) || "error");
-//       } else {
-//         this.gameData = result.game;
-//         // const title = this.gameData?.title;
-//         // const description = this.gameData?.description;
-//         // const thumb = this.gameData?.url_thumb;
-//         // const author = this.gameData?.user.name;
-
-//       }
-//     }
-
-//     this.url = `${process.env.VUE_APP_LAUNCHER_URL}game/${this.gameData.pathname}`;
-//     // document.title = this.gameData.title;
-
-//     // this.url = `game/${this.gameData.pathname}`;
-
-// window.addEventListener("message", this.onMessage);
-// window.addEventListener("resize", this.onResize);
-// this.onResize();
-
-//     // this.tagEvent();
-//   }
-
-//   @Watch("$store.getters.idToken")
-watch(
-  () => userInfo.value,
-  (info) => {
-    if (info) {
-      onChangedToken()
-    }
-  }
-)
 
 function onChangedToken() {
   toMessage({

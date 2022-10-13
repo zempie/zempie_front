@@ -48,9 +48,6 @@ onMounted(async () => {
     window.addEventListener('message', onMessage)
     window.addEventListener('load', onLoad)
   }
-
-  // window.addEventListener('resize', onResize)
-  // onResize()
 })
 
 onBeforeUnmount(() => {
@@ -140,10 +137,6 @@ function toMessage(message: any) {
   if (iframe.contentWindow) {
     iframe.contentWindow.postMessage(message, '*')
   }
-}
-
-function exit() {
-  router.push(localePath('/'))
 }
 </script>
 <style lang="scss" scoped>
