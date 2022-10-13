@@ -178,7 +178,7 @@ function toMessage(message: any) {
 }
 
 function exit() {
-  router.push(localePath('/'))
+  router.back()
 }
 </script>
 <style lang="scss" scoped>

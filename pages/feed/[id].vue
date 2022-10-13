@@ -16,7 +16,7 @@
                     {{ dateFormat(feed?.created_at) }}
                   </span>
                   <TranslateBtn
-                    :text="feed?.content"
+                    :text="feed.content"
                     @translatedText="translate"
                     @untranslatedText="untranslatedText"
                   />
@@ -31,7 +31,7 @@
               </dl>
             </dt>
             <dd>
-              <UserFollowBtn :user="feed?.user" class="follow-btn-feed" />
+              <UserFollowBtn :user="feed.user" class="follow-btn-feed" />
             </dd>
           </dl>
 
@@ -189,7 +189,6 @@ import { useLocalePath } from 'vue-i18n-routing'
 
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { dateFormat, execCommandCopy, stringToDomElem } from '~~/scripts/utils'
-import { IFeed } from '~~/types'
 const localePath = useLocalePath()
 
 const COMMENT_LIMIT = 10
@@ -223,9 +222,9 @@ const {
   error,
   pending,
   refresh,
-} = await useCustomFetch<any>(
+} = await useFetch<any>(
   `/post/${feedId.value}`,
-  getComFetchOptions('get', false)
+  getComFetchOptions('get', true)
 )
 
 watch(
@@ -236,7 +235,6 @@ watch(
 )
 
 onMounted(async () => {
-  //code highlighter
   hljs.configure({
     ignoreUnescapedHTML: true,
   })
@@ -252,8 +250,6 @@ onMounted(async () => {
       { root: null, threshold: 1 }
     )
     observer.value.observe(triggerDiv.value)
-  } else {
-    refresh()
   }
   await commentFetch()
 })
