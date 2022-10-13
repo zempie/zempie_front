@@ -28,8 +28,15 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   const auth = getAuth(app)
 
   onIdTokenChanged(auth, (user) => {
+    // console.log('user', user.stsTokenManager.refreshToken)
     if (user) {
       $cookies.set(config.COOKIE_NAME, (user as any).accessToken, {
+        maxAge: DAYSTOSEC_30,
+        path: '/',
+        domain: config.COOKIE_DOMAIN
+      });
+
+      $cookies.set(config.REFRESH_TOKEN, (user as any).stsTokenManager.refreshToken, {
         maxAge: DAYSTOSEC_30,
         path: '/',
         domain: config.COOKIE_DOMAIN

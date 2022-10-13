@@ -82,6 +82,11 @@ export default function () {
           domain: config.COOKIE_DOMAIN
         })
 
+        $cookies.remove(config.REFRESH_TOKEN, {
+          path: '/',
+          domain: config.COOKIE_DOMAIN
+        })
+
         router.replace(`/${useCommon().setting.value.lang}`)
       })
       .catch((error: any) => {
