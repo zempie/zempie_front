@@ -200,20 +200,6 @@
           </div>
         </div>
       </el-dialog>
-      <el-dialog
-        v-model="showEditModal"
-        append-to-body
-        custom-class="modal-area-type"
-        width="700px"
-      >
-        <TextEditor
-          @closeModal="closeEditor"
-          :isEdit="true"
-          :feed="feed"
-          @refresh="emit('refresh')"
-          :key="editorKey"
-        />
-      </el-dialog>
     </ClientOnly>
   </li>
 </template>
@@ -255,7 +241,6 @@ const MAX_FEED_HEIGHT = 450
 
 const feedMenu = ref()
 const showDeletePostModal = ref(false)
-const showEditModal = ref(false)
 const feedId = ref(null)
 const feedDiv = ref<HTMLElement>()
 
@@ -350,11 +335,6 @@ async function openComments() {
   if (isOpenedComments.value && props.feed.comment_cnt > 0) {
     await commentFetch()
   }
-}
-
-async function closeEditor() {
-  showEditModal.value = false
-  editorKey.value = Date.now()
 }
 
 function commentInit() {

@@ -215,7 +215,7 @@
                   @click="lastPage()"
                   :class="[currPage === totalPage && 'disabled', 'next-btn']"
                 >
-                  <i class="uil uil-step-forward"></i>
+                  <i class="uil uil-angle-double-right"></i>
                 </span>
               </dd>
             </dl>

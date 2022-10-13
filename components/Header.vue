@@ -581,27 +581,11 @@ function headerSideCloseMobile() {}
 function switchLangauge() {
   switchLocalePath(selectedLang.value)
   locale.value = selectedLang.value
-  console.log(route.fullPath)
   router.replace(route.fullPath)
 }
 
 function logout() {
   useUser().logout()
-  // signOut($firebaseAuth)
-  //   .then(() => {
-  //     useUser().removeUserState();
-  //     $cookies.remove(config.COOKIE_NAME, {
-  //       path: '/',
-  //       domain: config.COOKIE_DOMAIN
-  //     })
-  //     router.push('/')
-  //   })
-  //   .catch((error: any) => {
-  //     ElMessage({
-  //       message: error.message,
-  //       type: 'error'
-  //     })
-  //   })
 }
 
 const search = _.debounce(async () => {

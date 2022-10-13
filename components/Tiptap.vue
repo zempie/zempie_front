@@ -1,11 +1,43 @@
 <template>
   <div style="min-height: 200px; max-height: 80vh">
+    <BubbleMenu :editor="editor" v-if="editor" class="table-bubble-menu">
+      <ul>
+        <li @click="editor.chain().focus().addColumnBefore().run()">
+          <p><i class="uil uil-plus"></i> add column before</p>
+        </li>
+        <li @click="editor.chain().focus().addColumnAfter().run()">
+          <p><i class="uil uil-plus"></i> add column after</p>
+        </li>
+        <li @click="editor.chain().focus().addRowBefore().run()">
+          <p><i class="uil uil-plus"></i> add row before</p>
+        </li>
+        <li @click="editor.chain().focus().addRowAfter().run()">
+          <p><i class="uil uil-plus"></i> add row after</p>
+        </li>
+        <li @click="editor.chain().focus().deleteTable().run()">
+          <p><i class="uil uil-trash-alt"></i> delete table</p>
+        </li>
+        <li @click="editor.chain().focus().deleteRow().run()">
+          <p><i class="uil uil-minus"></i> delete row</p>
+        </li>
+        <li @click="editor.chain().focus().deleteColumn().run()">
+          <p><i class="uil uil-minus"></i> delete column</p>
+        </li>
+        <li @click="editor.chain().focus().mergeCells().run()">
+          <p><i class="uil uil-arrows-merge"></i> merge</p>
+        </li>
+        <li @click="editor.chain().focus().splitCell().run()">
+          <p><i class="uil uil-arrows-resize-h"></i> split</p>
+        </li>
+      </ul>
+    </BubbleMenu>
     <EditorContent
       :editor="editor"
       :class="['editor-container', postType === 'SNS' ? 'sns' : 'blog']"
       @drop="dropEditor"
       @paste="pasteEditor"
     />
+
     <div class="character-count">
       <p>{{ charCount }}/{{ limit }}</p>
     </div>
@@ -18,7 +50,12 @@ import { IFeed } from '~~/types'
 import { useI18n } from 'vue-i18n'
 
 import { mergeAttributes } from '@tiptap/core'
-import { useEditor, EditorContent, VueNodeViewRenderer } from '@tiptap/vue-3'
+import {
+  useEditor,
+  EditorContent,
+  VueNodeViewRenderer,
+  BubbleMenu,
+} from '@tiptap/vue-3'
 import Link from '@tiptap/extension-link'
 import StarterKit from '@tiptap/starter-kit'
 import CharacterCount from '@tiptap/extension-character-count'
@@ -28,8 +65,13 @@ import Placeholder from '@tiptap/extension-placeholder'
 import Typography from '@tiptap/extension-typography'
 import Highlight from '@tiptap/extension-highlight'
 import { lowlight } from 'lowlight/lib/core.js'
-import BubbleMenu from '@tiptap/extension-bubble-menu'
 import Image from '@tiptap/extension-image'
+import Table from '@tiptap/extension-table'
+import TableRow from '@tiptap/extension-table-row'
+import TableHeader from '@tiptap/extension-table-header'
+import TableCell from '@tiptap/extension-table-cell'
+// import BubbleMenu from '@tiptap/extension-bubble-menu'
+import { PluginKey } from 'prosemirror-state'
 
 import CustomImage from '~/scripts/tiptap/customImage'
 import CustomAudio from '~~/scripts/tiptap/customAudio'
@@ -38,6 +80,11 @@ import CustomVideo from '~~/scripts/tiptap/customVideo'
 import ResizableImage from './ResizableImage.vue'
 import PreviewLink from './PreviewLink.vue'
 // import { Link } from '~~/scripts/tiptap/customLink'
+
+// import { library, config } from '@fortawesome/fontawesome-svg-core'
+// import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+// import { faTableColumns, faTableCells } from '@fortawesome/free-solid-svg-icons'
+
 const emit = defineEmits(['editorContent'])
 const { t, locale } = useI18n()
 
@@ -84,6 +131,19 @@ const editor = useEditor({
             limit: limit.value,
           }),
           Link,
+          Table.configure({
+            resizable: true,
+          }),
+          // BubbleMenu.configure({
+          //   element: document.querySelector('#bubble-menu'),
+          //   shouldShow: ({ editor, view, state, oldState, from, to }) => {
+          //     // only show the bubble menu for images and links
+          //     return editor.isActive('image') || editor.isActive('link')
+          //   },
+          // }),
+          TableRow,
+          TableHeader,
+          TableCell,
           Typography,
           Highlight,
           Image.extend({
@@ -100,6 +160,7 @@ const editor = useEditor({
                     }
                   },
                 },
+
                 width: {
                   default: 300,
                   renderHTML: ({ width }) => ({ width }),
@@ -207,6 +268,13 @@ function addImage(data: DataTransfer) {
     }
   }
 }
+
+function shouldShow() {
+  return ({ editor, view, state, oldState, from, to }) => {
+    // only show the bubble menu for images and links
+    return editor.isActive('table')
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -216,5 +284,34 @@ function addImage(data: DataTransfer) {
   display: flex !important;
   justify-content: flex-end !important;
   margin: 10px;
+}
+
+.table-bubble-menu {
+  background-color: #fff;
+  position: absolute;
+  min-width: 200px;
+  left: 100px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #888;
+  ul {
+    li {
+      color: black;
+
+      p {
+        padding: 5px;
+        margin: 5px;
+      }
+
+      p:hover {
+        background-color: gainsboro;
+
+        border-radius: 10px;
+      }
+    }
+    li:not(:last-child) {
+      border-bottom: 1px solid #888;
+    }
+  }
 }
 </style>

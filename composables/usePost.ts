@@ -3,11 +3,17 @@ import _ from 'lodash'
 export default function () {
   const post = useState('post', () => ({
     type: 'SNS',
-    img: []
+    img: [],
+    isFullScreen: false
   }))
 
   const setType = (type: string) => {
     post.value.type = type;
+  }
+
+  const setFullScreen = (state: boolean) => {
+    post.value.isFullScreen = state;
+
   }
 
 
@@ -15,6 +21,7 @@ export default function () {
 
   return {
     post,
-    setType
+    setType,
+    setFullScreen
   }
 }

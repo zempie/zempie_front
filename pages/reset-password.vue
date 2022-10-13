@@ -46,6 +46,7 @@
       append-to-body
       custom-class="modal-area-type"
       :show-close="false"
+      width="380px"
     >
       <div class="modal-alert">
         <dl class="ma-header">

@@ -85,7 +85,18 @@
     </dd>
 
     <ClientOnly>
-      <el-dialog
+      <PostModal :isTextEditorOpen="isTextEditorOpen">
+        <template #textEditor>
+          <TextEditor
+            @closeModal="isTextEditorOpen = false"
+            :type="type"
+            @refresh="refresh"
+            :channelInfo="channelInfo"
+            :isFullScreen="usePost().post.value.isFullScreen"
+          />
+        </template>
+      </PostModal>
+      <!-- <el-dialog
         v-model="isTextEditorOpen"
         custom-class="post-modal"
         :show-close="false"
@@ -94,15 +105,9 @@
         :destroy-on-close="true"
         @close="closeEditor"
         :fullscreen="isFullScreen"
-      >
-        <TextEditor
-          @closeModal="isTextEditorOpen = false"
-          :type="type"
-          @refresh="refresh"
-          :channelInfo="channelInfo"
-          :isFullScreen="isFullScreen"
-        />
-      </el-dialog>
+      > -->
+
+      <!-- </el-dialog> -->
     </ClientOnly>
   </ul>
 </template>
@@ -112,15 +117,6 @@ import _ from 'lodash'
 import { PropType } from 'vue'
 import { IComChannel, IFeed } from '~~/types'
 import { useI18n } from 'vue-i18n'
-import {
-  ElDropdown,
-  ElDropdownMenu,
-  ElDropdownItem,
-  ElSelect,
-  ElOption,
-  ElMessage,
-  ElDialog,
-} from 'element-plus'
 
 import { useLocalePath } from 'vue-i18n-routing'
 const { t, locale } = useI18n()
@@ -168,8 +164,6 @@ const props = defineProps({
   channelInfo: Object as PropType<IComChannel>,
 })
 
-const isFullScreen = ref(false)
-
 const isMobile = computed(() =>
   window.matchMedia('screen and (max-width: 767px)')
 )
@@ -197,11 +191,6 @@ const userWatcher = watch(
 )
 
 onMounted(async () => {
-  nextTick(() => {
-    onResize()
-  })
-  window.addEventListener('resize', onResize)
-
   if (paramId.value || route.meta.name === 'myTimeline') {
     const result = await fetch()
     if (result) {
@@ -230,7 +219,6 @@ onBeforeUnmount(() => {
   initPaging()
   watcher()
   userWatcher()
-  window.removeEventListener('resize', onResize)
 })
 
 async function fetch() {
@@ -287,10 +275,11 @@ async function fetch() {
       isPending.value = false
       return isAddData.value
     case 'userAll':
-      const { data: userAllPostData } = await useFetch<{
-        result: IFeed[]
-        totalCount: number
-      }>(
+      const { data: userAllPostData } = await useCustomFetch(
+        // <{
+        //   result: IFeed[]
+        //   totalCount: number
+        // }>
         createQueryUrl(`/timeline/mine`, query),
         getComFetchOptions('get', true)
       )
@@ -368,10 +357,6 @@ function refreshFollow(user_id: number) {
       feed.user.is_following = !feed.user.is_following
       return feed
     })
-}
-
-function onResize() {
-  isFullScreen.value = isMobile.value.matches ? true : false
 }
 </script>
 

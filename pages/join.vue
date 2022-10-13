@@ -46,9 +46,7 @@
             <h3 class="input-errors" v-for="error of v$.username.$errors" :key="error.$uid">
               <i class="uil uil-check"></i>{{  error.$message  }}
             </h3>
-          </li>
-          <!--                    todo:백엔드에 닉네임 추가후 입력 -->
-         
+          </li>         
         </ul>
         <div class="login-agreement-container">
 
@@ -81,8 +79,6 @@
       </form>
     </ClientOnly>
     </div>
-
-
   </div>
 </template>
 
@@ -94,6 +90,7 @@ import { emailRegex, passwordRegex } from '~/scripts/utils'
 import { useI18n } from 'vue-i18n';
 import { createUserWithEmailAndPassword, type UserCredential } from 'firebase/auth'
 import { useLocalePath } from "vue-i18n-routing";
+import { onBeforeRouteLeave } from 'vue-router'
 
 const { t, locale } = useI18n()
 const route = useRoute();
@@ -149,6 +146,11 @@ useHead({
       content: `${config.ZEMPIE_URL}${route.path}`
     },
   ]
+})
+
+onBeforeRouteLeave((to, from, next)=>{
+  useUser().logout()
+  next()
 })
 
 
