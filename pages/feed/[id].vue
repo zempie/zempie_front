@@ -163,14 +163,19 @@
         <dl class="ma-header">
           <dt></dt>
           <dd style="text-align: right">
-            <i
-              @click="openOriginPhoto = false"
-              style="cursor: pointer"
-              class="uil uil-times"
-            ></i>
+            <i @click="openOriginPhoto = false" class="uil uil-times"></i>
           </dd>
         </dl>
-        <button class="btn-default origin-btn" @click="openOriginImage">
+        <button
+          class="btn-default"
+          @click="openOriginImage"
+          style="
+            position: absolute;
+            top: 25px;
+            border-radius: 10px;
+            opacity: 0.3;
+          "
+        >
           <i class="uil uil-expand-arrows-alt"></i>
           Origin
         </button>
@@ -374,7 +379,7 @@ function clickFeed(e: any) {
 }
 
 function openOriginImage() {
-  window.open(imgUrl.value, '_blank')
+  window.open(imgUrl.value)
 }
 </script>
 
@@ -470,19 +475,6 @@ input[type='radio'] {
 .tapl-comment {
   .comment:nth-child(1) {
     border-top: 0px;
-  }
-}
-
-.origin-btn {
-  position: absolute;
-  top: 40px;
-  border-radius: 10px;
-  opacity: 0.3;
-  margin: 10px;
-  padding: 5px 10px 5px 10px;
-  height: 30px;
-  &:hover {
-    opacity: 1;
   }
 }
 </style>
