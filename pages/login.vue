@@ -1,105 +1,98 @@
 <template>
   <div class="login-bg pt50 pb50" style="height: 100vh; min-height: 900px">
-    <ClientOnly>
-      <div class="login-logo">
-        <LoginWhiteLogoDt path="/" />
+    <div class="login-logo">
+      <LoginWhiteLogoDt path="/" />
+    </div>
+    <div class="login-area">
+      <div class="la-logo">
+        <LoginWhiteLogoMb path="/" />
       </div>
-
-      <div class="login-area">
-        <div class="la-logo">
-          <LoginWhiteLogoMb path="/" />
-        </div>
-        <div class="la-title">
-          <h3>{{ $t('login.text1') }}</h3>
-          <p>{{ $t('login.text2') }}</p>
-        </div>
-        <div class="la-content">
-          <form>
-            <input
-              type="email"
-              v-model="v$.email.$model"
-              name="login-email"
-              title=""
-              :placeholder="$t('login.email.placeholder')"
-              class="w100p h60"
-              style="margin-bottom: 10px"
-              autocomplete="user-email"
-              @keyup.enter="onSubmit"
-            />
-            <h2
-              class="input-errors"
-              v-for="error of v$.email.$errors"
-              :key="error.$uid"
-            >
-              <i class="uil uil-check"></i>{{ error.$message }}
-            </h2>
-
-            <input
-              type="password"
-              v-model="v$.password.$model"
-              name="login-password"
-              title=""
-              autocomplete="current-password"
-              :placeholder="$t('login.pwd.placeholder')"
-              class="w100p h60"
-              style="margin-bottom: 10px"
-              @keyup.enter="onSubmit"
-            />
-
-            <h2
-              class="input-errors"
-              v-for="error of v$.password.$errors"
-              :key="error.$uid"
-            >
-              <i class="uil uil-check"></i>{{ error.$message }}
-            </h2>
-          </form>
-          <p @click="onSubmit">
-            <a class="btn-default-big">{{ $t('login') }}</a>
-          </p>
-
-          <dl>
-            <dt>
-              <NuxtLink :to="localePath('/reset-password')">{{
-                $t('reset.pwd')
-              }}</NuxtLink>
-            </dt>
-            <dd>|</dd>
-            <dt>
-              <NuxtLink :to="localePath('/join')">{{ $t('join') }}</NuxtLink>
-            </dt>
-          </dl>
-        </div>
-        <div class="la-bottom">
-          <dl>
-            <dt></dt>
-            <dd>{{ $t('login.text3') }}</dd>
-            <dt></dt>
-          </dl>
-          <ul>
-            <li @click="googleLogin">
-              <img src="/images/google_login.png" alt="google-login" title="" />
-            </li>
-            <li @click="facebookLogin" class="mt10">
-              <img
-                src="/images/facebook_login.png"
-                alt="google-login"
-                title=""
-              />
-            </li>
-          </ul>
-          <p>
-            <span
-              ><i
-                class="uil uil-info-circle"
-                style="font-size: 16px; line-height: 24px"
-              ></i
-            ></span>
-            {{ $t('login.text4') }}
-          </p>
-        </div>
+      <div class="la-title">
+        <h3>{{ $t('login.text1') }}</h3>
+        <p>{{ $t('login.text2') }}</p>
       </div>
-    </ClientOnly>
+      <div class="la-content">
+        <form>
+          <input
+            type="email"
+            v-model="v$.email.$model"
+            name="login-email"
+            title=""
+            :placeholder="$t('login.email.placeholder')"
+            class="w100p h60"
+            style="margin-bottom: 10px"
+            autocomplete="user-email"
+            @keyup.enter="onSubmit"
+          />
+          <h2
+            class="input-errors"
+            v-for="error of v$.email.$errors"
+            :key="error.$uid"
+          >
+            <i class="uil uil-check"></i>{{ error.$message }}
+          </h2>
+
+          <input
+            type="password"
+            v-model="v$.password.$model"
+            name="login-password"
+            title=""
+            autocomplete="current-password"
+            :placeholder="$t('login.pwd.placeholder')"
+            class="w100p h60"
+            style="margin-bottom: 10px"
+            @keyup.enter="onSubmit"
+          />
+
+          <h2
+            class="input-errors"
+            v-for="error of v$.password.$errors"
+            :key="error.$uid"
+          >
+            <i class="uil uil-check"></i>{{ error.$message }}
+          </h2>
+        </form>
+        <p @click="onSubmit">
+          <a class="btn-default-big">{{ $t('login') }}</a>
+        </p>
+
+        <dl>
+          <dt>
+            <NuxtLink :to="localePath('/reset-password')">{{
+              $t('reset.pwd')
+            }}</NuxtLink>
+          </dt>
+          <dd>|</dd>
+          <dt>
+            <NuxtLink :to="localePath('/join')">{{ $t('join') }}</NuxtLink>
+          </dt>
+        </dl>
+      </div>
+      <div class="la-bottom">
+        <dl>
+          <dt></dt>
+          <dd>{{ $t('login.text3') }}</dd>
+          <dt></dt>
+        </dl>
+        <ul>
+          <li @click="googleLogin">
+            <img src="/images/google_login.png" alt="google-login" title="" />
+          </li>
+          <li @click="facebookLogin" class="mt10">
+            <img src="/images/facebook_login.png" alt="google-login" title="" />
+          </li>
+        </ul>
+        <p>
+          <span
+            ><i
+              class="uil uil-info-circle"
+              style="font-size: 16px; line-height: 24px"
+            ></i
+          ></span>
+          {{ $t('login.text4') }}
+        </p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -228,6 +221,7 @@ async function onSubmit() {
     .then(async (result) => {
       const { user } = result
       useUser().setFirebaseUser(user)
+      router.push('/')
     })
     .catch((err: any) => {
       const errorCode = err.code

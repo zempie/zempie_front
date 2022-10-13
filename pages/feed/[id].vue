@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <div class="area-view">
-      <ul class="ta-post" @click="clickFeed">
+      <ul class="ta-post" @click="clickFeed" v-if="feed">
         <li class="tap-list">
           <dl class="tapl-title">
             <dt>

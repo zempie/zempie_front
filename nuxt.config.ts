@@ -88,7 +88,9 @@ export default defineNuxtConfig({
     STUDIO_API: process.env.STUDIO_API,
     ZEMPIE_URL: process.env.ZEMPIE_URL,
     LAUNCHER_URL: process.env.LAUNCHER_URL,
-    GA_TAG: process.env.GA_TAG
+    GA_TAG: process.env.GA_TAG,
+    GOOGLE_REFRESH_TOKEN_URL: process.env.GOOGLE_REFRESH_TOKEN_URL,
+    REFRESH_TOKEN: process.env.REFRESH_TOKEN_COOKIE
   },
 
 })
