@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <div class="area-view">
-      <ul class="ta-post" @click="clickFeed" v-if="feed">
+      <ul class="ta-post" v-if="feed">
         <li class="tap-list">
           <dl class="tapl-title">
             <dt>
@@ -152,36 +152,6 @@
         </li>
       </ul>
     </div>
-    <el-dialog
-      v-model="openOriginPhoto"
-      append-to-body
-      custom-class="modal-area-type"
-      :show-close="false"
-      width="50vw"
-    >
-      <div>
-        <dl class="ma-header">
-          <dt></dt>
-          <dd style="text-align: right">
-            <i @click="openOriginPhoto = false" class="uil uil-times"></i>
-          </dd>
-        </dl>
-        <button
-          class="btn-default"
-          @click="openOriginImage"
-          style="
-            position: absolute;
-            top: 25px;
-            border-radius: 10px;
-            opacity: 0.3;
-          "
-        >
-          <i class="uil uil-expand-arrows-alt"></i>
-          Origin
-        </button>
-        <img :src="imgUrl" style="width: 100%" />
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -218,9 +188,6 @@ const feedId = computed(() => route.params.id as string)
 const observer = ref<IntersectionObserver>(null)
 const triggerDiv = ref()
 const isAddData = ref(false)
-
-const openOriginPhoto = ref(false)
-const imgUrl = ref('')
 
 const {
   data: feed,
@@ -368,18 +335,6 @@ function copyUrl() {
     message: t('copied.clipboard'),
     type: 'success',
   })
-}
-
-function clickFeed(e: any) {
-  //클릭한 요소가 이미지인 경우
-  if (e.target.nodeName === 'IMG') {
-    openOriginPhoto.value = true
-    imgUrl.value = e.target.src
-  }
-}
-
-function openOriginImage() {
-  window.open(imgUrl.value)
 }
 </script>
 
