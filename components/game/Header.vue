@@ -181,14 +181,15 @@ import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
 import { ElMessage, ElMessageBox, ElLoading, ElDialog } from 'element-plus'
 import { IGame, eGameStage } from '~~/types'
-import { useLocalePath } from 'vue-i18n-routing'
+
 import { PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const IMAGE_MAX_SIZE = 4
+const { $$ } = useNuxtApp()
 
 const { t, locale } = useI18n()
-const localePath = useLocalePath()
+
 const router = useRouter()
 
 const hashtags = computed(() =>
@@ -363,7 +364,7 @@ function saveBannerImg() {
 }
 
 function moveUserPage() {
-  router.push(localePath(`/channel/${props.gameInfo.user.channel_id}`))
+  router.push($localePath(`/channel/${props.gameInfo.user.channel_id}`))
 }
 </script>
 

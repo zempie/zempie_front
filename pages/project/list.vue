@@ -26,7 +26,7 @@
           <dd>
             <NuxtLink
               id="gameUploadBtn"
-              :to="localePath('/project/upload')"
+              :to="$localePath('/project/upload')"
               class="btn-default ml20"
               ><i class="uil uil-plus"></i>{{ $t('gameUpload') }}</NuxtLink
             >
@@ -236,18 +236,17 @@
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
 import _ from 'lodash'
 import dayjs from 'dayjs'
-import { useLocalePath } from 'vue-i18n-routing'
 import { IProject, eGameStage } from '~~/types'
 import { useI18n } from 'vue-i18n'
 
 const { t, locale } = useI18n()
 const route = useRoute()
 const config = useRuntimeConfig()
-const localePath = useLocalePath()
 const $router = useRouter()
+const { $localePath } = useNuxtApp()
 
 definePageMeta({
-  middleware: 'auth',
+  //middleware: 'auth',
 })
 useHead({
   title: `${t('seo.project.list.title')} | Zempie Studio`,
@@ -380,7 +379,7 @@ function pagingByClient() {
 function goToProjectPage(id: number) {
   setProjectInfo(id)
   useProject().setStepTwoOnEdit()
-  $router.push(localePath(`/project/${id}`))
+  $router.push($localePath(`/project/${id}`))
 }
 
 function setProjectInfo(id: number) {

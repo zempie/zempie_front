@@ -1,41 +1,53 @@
 <template>
   <div class="content">
     <ClientOnly>
-      <div class="visual-menu"
-        :style="{ 'background': 'url(/images/1200_240_setting.png) center no-repeat', 'background-size': 'cover' }">
-        <p class="title"> Settings</p>
+      <div
+        class="visual-menu"
+        :style="{
+          background: 'url(/images/1200_240_setting.png) center no-repeat',
+          'background-size': 'cover',
+        }"
+      >
+        <p class="title">Settings</p>
 
         <div class="swiper-area uppercase">
-          <NuxtLink class="swiper-slide" :to="localePath(`/myaccount`)">
+          <NuxtLink class="swiper-slide" :to="$localePath(`/myaccount`)">
             <a :class="$route.meta.name === 'myAccount' ? 'active' : ''">
               <i class="uil uil-setting"></i>
-              <span> {{  $t('account')  }}</span>
+              <span> {{ $t('account') }}</span>
             </a>
           </NuxtLink>
-          <NuxtLink class="swiper-slide" :to="localePath(`/myaccount/followers`)">
+          <NuxtLink
+            class="swiper-slide"
+            :to="$localePath(`/myaccount/followers`)"
+          >
             <a :class="$route.meta.name === 'myFollowers' ? 'active' : ''">
-
               <i class="uil uil-users-alt"></i>
 
-              <span>{{  $t('follower')  }}
-              </span></a>
+              <span>{{ $t('follower') }} </span></a
+            >
           </NuxtLink>
 
-          <NuxtLink :to="localePath(`/myaccount/following`)" class="swiper-slide">
+          <NuxtLink
+            :to="$localePath(`/myaccount/following`)"
+            class="swiper-slide"
+          >
             <a :class="$route.meta.name === 'myFollowing' ? 'active' : ''">
               <i class="uil uil-users-alt"></i>
-              <span style="border:0"> {{  $t('following')  }}</span>
-
+              <span style="border: 0"> {{ $t('following') }}</span>
             </a>
           </NuxtLink>
 
-          <NuxtLink :to="localePath(`/myaccount/communities`)" class="swiper-slide">
+          <NuxtLink
+            :to="$localePath(`/myaccount/communities`)"
+            class="swiper-slide"
+          >
             <a :class="$route.meta.name === 'myCommunities' ? 'active' : ''">
-              <i class="uil uil-comments"></i><span style="border:0">
-                {{
-                 $t('community') 
-                }}
-              </span></a>
+              <i class="uil uil-comments"></i
+              ><span style="border: 0">
+                {{ $t('community') }}
+              </span></a
+            >
           </NuxtLink>
         </div>
       </div>
@@ -45,12 +57,8 @@
 </template>
 
 <script setup lang="ts">
-import { useLocalePath } from "vue-i18n-routing";
-
-const localePath = useLocalePath();
+const { $localePath } = useNuxtApp()
 const userInfo = computed(() => useUser().user.value.info)
-
-
 </script>
 
 <style scoped lang="scss">
@@ -66,7 +74,6 @@ const userInfo = computed(() => useUser().user.value.info)
 }
 
 .swiper-area {
-
   justify-content: center;
 
   a {
@@ -85,7 +92,6 @@ const userInfo = computed(() => useUser().user.value.info)
       }
     }
   }
-
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
@@ -96,13 +102,14 @@ const userInfo = computed(() => useUser().user.value.info)
       }
     }
   }
-
-
 }
 
-@media all and (min-width: 768px) and (max-width: 991px) {}
+@media all and (min-width: 768px) and (max-width: 991px) {
+}
 
-@media all and (min-width: 992px) and (max-width: 1199px) {}
+@media all and (min-width: 992px) and (max-width: 1199px) {
+}
 
-@media all and (min-width: 1200px) {}
+@media all and (min-width: 1200px) {
+}
 </style>

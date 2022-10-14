@@ -1,5 +1,5 @@
 <template>
-  <li @click="$router.push(localePath(`/channel/${user.channel_id}`))">
+  <li @click="$router.push($localePath(`/channel/${user.channel_id}`))">
     <div
       class="cf-img"
       :style="
@@ -32,8 +32,8 @@
 <script setup lang="ts">
 import { IUser } from '~~/types'
 import { PropType } from 'vue'
-import { useLocalePath } from 'vue-i18n-routing'
-const localePath = useLocalePath()
+
+const { $localePath } = useNuxtApp()
 
 const props = defineProps({
   user: Object as PropType<IUser>,

@@ -31,7 +31,6 @@
           >
             <i class="uil uil-check"></i>{{ error.$message }}
           </h2>
-
           <input
             type="password"
             v-model="v$.password.$model"
@@ -58,13 +57,13 @@
 
         <dl>
           <dt>
-            <NuxtLink :to="localePath('/reset-password')">{{
+            <NuxtLink :to="$localePath('/reset-password')">{{
               $t('reset.pwd')
             }}</NuxtLink>
           </dt>
           <dd>|</dd>
           <dt>
-            <NuxtLink :to="localePath('/join')">{{ $t('join') }}</NuxtLink>
+            <NuxtLink :to="$localePath('/join')">{{ $t('join') }}</NuxtLink>
           </dt>
         </dl>
       </div>
@@ -115,22 +114,19 @@ import {
   FacebookAuthProvider,
   GoogleAuthProvider,
   signInWithPopup,
-  linkWithCredential,
-  OAuthProvider,
-  signInWithCredential,
-  type UserCredential,
   AuthProvider,
 } from 'firebase/auth'
-import { useLocalePath } from 'vue-i18n-routing'
 
-const { $firebaseAuth, $cookies } = useNuxtApp()
+const { $firebaseAuth, $cookies, $localePath } = useNuxtApp()
 
 const { t, locale } = useI18n()
 const router = useRouter()
 const route = useRoute()
-const localePath = useLocalePath()
 const config = useRuntimeConfig()
 
+definePageMeta({
+  layout: false,
+})
 useHead({
   title: `${t('seo.login.title')} | Zempie`,
   link: [
@@ -187,8 +183,6 @@ const form = reactive({
 
 const emailValidator = helpers.regex(emailRegex)
 
-const pwdValidator = helpers.regex(passwordRegex)
-
 const rules = computed(() => {
   const formRule = {
     email: {
@@ -200,10 +194,6 @@ const rules = computed(() => {
     },
     password: {
       required: helpers.withMessage(t('login.empty.pwd'), required),
-      // pwdValidator: helpers.withMessage(
-      //   t('login.pwd.format.err'),
-      //   pwdValidator
-      // ),
     },
   }
 
@@ -231,7 +221,6 @@ async function onSubmit() {
       switch (errorCode) {
         case 'auth/weak-password':
           message = `${t('login.pwd.format.err')}`
-          // 'Please enter a 6-20 digit password including English letter and at least 1 number or special character'
           break
         case 'auth/wrong-password':
           ElMessage.error(`${t('fb.wrong.info')}`)
@@ -248,135 +237,15 @@ async function onSubmit() {
     })
 }
 
-//     private redirect: string = "";
-//     private form = {email: "", password: ""};
-
-//     // private googleRegister: boolean = false;
-//     // private isClickedLoginBtn: boolean = false;
-//     private isGoolgeLoginDone: boolean = false;
-//     // private isClickedRegisterTab: boolean = false;
-
-//     // private googleBtn: string = "img/btn_google_signin_dark_normal_web.png";
-
-// vuelidate
-// validateState(name) {
-//   const { $dirty, $error } = this.$v.form[name]!;
-//   return $dirty ? !$error : null;
-// }
-
-//     //login enter key event
-//     checkLogin(event) {
-//         if (event.which === 13) {
-//             this.login();
-//         }
-//     }
-
-//     async login() {
-//         this.$v.form.$touch();
-//         if (this.$v.form.$anyError) {
-//             return;
-//         }
-
-//         try {
-//             const result = await firebase
-//                 .auth()
-//                 .signInWithEmailAndPassword(
-//                     this.form.email,
-//                     this.form.password
-//                 );
-
-//             if (result.user) {
-//                 const token = await firebase.auth().currentUser!.getIdToken();
-//                 this.$store.commit("idToken", token);
-
-//                 const result = await Vue.$api.user();
-//                 // if( result.error && result.error && result.error.message === '잘 못 된 유저 아이디입니다' ) {
-//                 if (result?.error?.code === 20001) {
-//                     // alert( this.$t('login.joinError') as string );
-//                     this.$store.commit("loginState", LoginState.no_user);
-
-//                     // this.googleRegister = false;
-//                     // await this.$router.replace("/joinEmailContinue");
-//                     return;
-//                 }
-
-//                 const {user} = result;
-//                 this.$store.commit("user", user);
-//                 await LoginManager.login();
-//                 // this.$store.commit('loginState', LoginState.login );
-
-//                 if (this.$store.getters.redirectRouter) {
-//                     const router = this.$store.getters.redirectRouter;
-//                     this.$store.commit("redirectRouter", null);
-//                     await this.$router.replace(router);
-//                 }
-//                 else if (this.$store.getters.redirectUrl) {
-//                     const url = this.$store.getters.redirectUrl;
-//                     this.$store.commit("redirectUrl", null);
-//                     window.location.href = url;
-//                 }
-//                 else {
-//                     await this.$router.replace('/');
-//                 }
-//             }
-//         }
-//         catch (e) {
-//             const code = e.code;
-//             // console.log(code);
-//             if (code) {
-//                 switch (code) {
-//                     case "auth/wrong-password":
-//                         this.$modal.show('wrongInfo')
-//                         // this.passwordError = '잘못된 비밀번호 입니다. 다시 입력하세요.'
-//                         break;
-//                     case "auth/user-not-found":
-//                         this.$modal.show('noUser')
-//                         // alert(this.$t('login.firebaseError.userNotFound') as string);
-//                         break;
-//                     default:
-//                         // alert('잠시 후 다시 시도해주세요.');
-//                         break;
-//                 }
-//             }
-//         }
-//     }
-
-//     async mounted() {
-//         //로그인
-//         const loginState = await this.$store.dispatch("loginState");
-//         switch (loginState) {
-//             case LoginState.login:
-//                 // if(this.redirect) {
-//                 //     window.location.href = this.redirect;
-//                 // }
-//                 // else {
-//                 //     await this.$router.replace('/');
-//                 // }
-
-//                 await this.$router.replace('/');
-//                 break;
-//         }
-
-//         this.redirect = UrlHelper.getParameterByName("z_redirect_url");
-
-//         if (this.redirect) {
-//             // console.log(this.redirect);
-//             this.$store.commit("redirectUrl", this.redirect);
-//         }
-//     }
-
 async function googleLogin() {
   const provider = new GoogleAuthProvider()
   return socialLogin(provider)
-  // await signInWithPopup($firebaseAuth, provider)
 }
 
 async function facebookLogin() {
   const provider = new FacebookAuthProvider()
   provider.addScope('email')
   return socialLogin(provider)
-
-  // await signInWithPopup($firebaseAuth, provider)
 }
 
 async function socialLogin(provider: AuthProvider) {
@@ -393,71 +262,6 @@ async function socialLogin(provider: AuthProvider) {
     }
   }
 }
-
-//     async google() {
-//         await this.$store.dispatch("loginState");
-
-//         const provider = new firebase.auth.GoogleAuthProvider();
-//         const result: any = await firebase.auth().signInWithPopup(provider);
-
-//         if (result.user) {
-//             const token = await firebase.auth().currentUser?.getIdToken();
-//             this.$store.commit("idToken", token);
-//             Vue.$api.user()
-//                 .then(async (res: any) => {
-//                     const {user} = res;
-//                     this.$store.commit("user", user);
-//                     await LoginManager.login();
-//                     // this.$store.commit('loginState', LoginState.login );
-//                     // await this.$router.replace('/');
-//                     if (this.$store.getters.redirectRouter) {
-
-//                         const router = this.$store.getters.redirectRouter;
-//                         this.$store.commit("redirectRouter", null);
-//                         await this.$router.replace(router);
-//                     }
-//                     else if (this.$store.getters.redirectUrl) {
-//                         const url = this.$store.getters.redirectUrl;
-//                         this.$store.commit("redirectUrl", null);
-//                         window.location.href = url;
-//                     }
-//                     else {
-//                         await this.$router.push(`/${this.$i18n.locale}/channel/${this.$store.getters.user.channel_id}/timeline`
-//                         );
-//                     }
-
-//                 })
-//                 .catch((err: any) => {
-//                     if (err.error.code === 20001) {
-//                         this.$store.commit("loginState", LoginState.no_user);
-//                         this.$router.replace(`/${this.$i18n.locale}/googleJoin`);
-//                         return;
-//                     }
-//                 })
-
-//             // const result = await Vue.$api.user();
-//             // if( result.error && result.error && result.error.message === '잘 못 된 유저 아이디입니다' ) {
-
-//         }
-//     }
-
-//     findPwd() {
-//         document.getElementById("forgotPwdBtn")!.click();
-//         (this.$refs.forgotPwdBtn as any).click();
-//     }
-
-//     googleRegisterDone() {
-//         (this.$refs.registerBtn as any).click();
-//         this.isGoolgeLoginDone = !this.isGoolgeLoginDone;
-//     }
-
-//     closeModal() {
-//         this.$modal.hide('noUser')
-//     }
-
-definePageMeta({
-  layout: false,
-})
 </script>
 
 <style scoped lang="scss">

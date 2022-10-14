@@ -74,13 +74,11 @@
 import { ElDialog, ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import { sendPasswordResetEmail } from 'firebase/auth'
-import { useLocalePath } from 'vue-i18n-routing'
 
 const route = useRoute()
 const config = useRuntimeConfig()
 const { t, locale } = useI18n()
-const { $firebaseAuth } = useNuxtApp()
-const localePath = useLocalePath()
+const { $firebaseAuth, $localePath } = useNuxtApp()
 const router = useRouter()
 
 const openModal = ref(false)
@@ -144,7 +142,7 @@ async function sendEmail() {
 
 function closeModal() {
   openModal.value = false
-  router.push(localePath(`/login`))
+  router.push($localePath(`/login`))
 }
 </script>
 

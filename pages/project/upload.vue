@@ -18,7 +18,7 @@ const route = useRoute()
 const config = useRuntimeConfig()
 
 definePageMeta({
-  middleware: 'auth',
+  //middleware: 'auth',
 })
 
 useHead({

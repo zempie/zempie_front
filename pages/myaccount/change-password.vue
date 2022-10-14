@@ -75,7 +75,7 @@ const config = useRuntimeConfig()
 definePageMeta({
   title: 'change-pwd',
   name: 'changePwd',
-  middleware: 'auth',
+  //middleware: 'auth',
 })
 
 useHead({

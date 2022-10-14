@@ -34,10 +34,8 @@
 <script setup lang="ts">
 import { PropType } from 'vue'
 import { IGame } from '~~/types'
+const { $localePath } = useNuxtApp()
 
-import { useLocalePath } from 'vue-i18n-routing'
-
-const localePath = useLocalePath()
 const router = useRouter()
 
 const props = defineProps({
@@ -67,11 +65,11 @@ function playGame() {
 
 function moveGamePage() {
   useGame().setGame(props.gameInfo)
-  router.push(localePath(`/game/${props.gameInfo?.pathname}`))
+  router.push($localePath(`/game/${props.gameInfo?.pathname}`))
 }
 
 function moveUserPage() {
-  router.push(localePath(`/channel/${props.gameInfo?.user.channel_id}`))
+  router.push($localePath(`/channel/${props.gameInfo?.user.channel_id}`))
 }
 </script>
 

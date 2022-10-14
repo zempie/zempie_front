@@ -4,7 +4,7 @@
       <dt>
         <dl>
           <dt>
-            <NuxtLink :to="localePath(`/channel/${feed.user?.channel_id}`)">
+            <NuxtLink :to="$localePath(`/channel/${feed.user?.channel_id}`)">
               <UserAvatar :user="feed.user" :tag="'span'"></UserAvatar>
             </NuxtLink>
           </dt>
@@ -57,7 +57,7 @@
         ref="feedDiv"
         class="tapl-content"
         v-html="feedContent"
-        @click="$router.push(localePath(`/feed/${feed.id}`))"
+        @click="$router.push($localePath(`/feed/${feed.id}`))"
       ></div>
 
       <div v-if="isOverflow" :class="isMoreView ? '' : 'gradient'"></div>
@@ -142,28 +142,29 @@
     </ul>
 
     <!-- TODO: mobile: 댓글만 보기 -->
-    <div
-      v-show="isOpenedComments"
-      :class="['tapl-comment', isOpenedComments ? 'open' : 'close']"
-    >
-      <ul ref="commentEl">
-        <li v-for="comment in comments" :key="comment.id">
-          <Comment
-            :comment="comment"
-            :isEdit="isCommentEdit"
-            @refresh="commentRefresh"
-          >
-            <!-- <template #commentEdit>
+    <ClientOnly>
+      <div
+        v-show="isOpenedComments"
+        :class="['tapl-comment', isOpenedComments ? 'open' : 'close']"
+      >
+        <ul ref="commentEl">
+          <li v-for="comment in comments" :key="comment.id">
+            <Comment
+              :comment="comment"
+              :isEdit="isCommentEdit"
+              @refresh="commentRefresh"
+            >
+              <!-- <template #commentEdit>
               <a @click="isCommentEdit = !isCommentEdit">{{ t('comment.edit') }}</a>
             </template> -->
-          </Comment>
-        </li>
-      </ul>
-      <!-- <CommentInput :postId="feed.id" @sendComment="editDone" @updateComment="updateDone" /> -->
+            </Comment>
+          </li>
+        </ul>
+        <!-- <CommentInput :postId="feed.id" @sendComment="editDone" @updateComment="updateDone" /> -->
 
-      <CommentInput :postId="feed.id" @refresh="commentRefresh" />
-    </div>
-
+        <CommentInput :postId="feed.id" @refresh="commentRefresh" />
+      </div>
+    </ClientOnly>
     <ClientOnly>
       <el-dialog
         v-model="showDeletePostModal"
@@ -241,12 +242,13 @@ import {
   enDateFormat,
 } from '~/scripts/utils'
 import { useI18n } from 'vue-i18n'
-import { useLocalePath } from 'vue-i18n-routing'
+
 import hljs from 'highlight.js'
 import { useWindowScroll, useInfiniteScroll } from '@vueuse/core'
+const { $localePath } = useNuxtApp()
 
 const { x, y } = useWindowScroll()
-const localePath = useLocalePath()
+
 const config = useRuntimeConfig()
 const { t, locale } = useI18n()
 

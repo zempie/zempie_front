@@ -7,7 +7,7 @@
         </dt>
         <dd>
           <NuxtLink
-            :to="localePath(`/project/upload`)"
+            :to="$localePath(`/project/upload`)"
             v-if="isMine"
             class="btn-default-samll"
           >
@@ -36,14 +36,11 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { useLocalePath } from 'vue-i18n-routing'
-
-const localePath = useLocalePath()
 const config = useRuntimeConfig()
 
 const { t, locale } = useI18n()
 const route = useRoute()
-
+const { $localePath } = useNuxtApp()
 const userInfo = computed(() => useChannel().userChannel.value.info)
 
 definePageMeta({

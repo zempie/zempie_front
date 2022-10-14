@@ -6,21 +6,21 @@
       <div class="swiper-area">
         <NuxtLink
           :class="['swiper-slide', !routeQuery ? 'active' : '']"
-          :to="localePath(`/game/${gamePath}`)"
+          :to="$localePath(`/game/${gamePath}`)"
         >
           <p><i class="uil uil-clock-three"></i></p>
           <h2>{{ $t('timeline') }}(ALL)</h2>
         </NuxtLink>
         <NuxtLink
           :class="['swiper-slide', routeQuery === 'sns' ? 'active' : '']"
-          :to="localePath(`/game/${gamePath}`) + '?media=sns'"
+          :to="$localePath(`/game/${gamePath}`) + '?media=sns'"
         >
           <p><i class="uil uil-comment-dots"></i></p>
           <h2>SNS</h2>
         </NuxtLink>
         <NuxtLink
           :class="['swiper-slide', routeQuery === 'blog' ? 'active' : '']"
-          :to="localePath(`/game/${gamePath}`) + '?media=blog'"
+          :to="$localePath(`/game/${gamePath}`) + '?media=blog'"
         >
           <p><i class="uil uil-edit"></i></p>
           <h2>{{ $t('blog') }}</h2>
@@ -28,7 +28,7 @@
 
         <NuxtLink
           :class="['swiper-slide', routeQuery === 'image' ? 'active' : '']"
-          :to="localePath(`/game/${gamePath}`) + '?media=image'"
+          :to="$localePath(`/game/${gamePath}`) + '?media=image'"
         >
           <p><i class="uil uil-image-edit"></i></p>
           <h2>{{ $t('image') }}</h2>
@@ -36,7 +36,7 @@
 
         <NuxtLink
           :class="['swiper-slide', routeQuery === 'video' ? 'active' : '']"
-          :to="localePath(`/game/${gamePath}`) + '?media=video'"
+          :to="$localePath(`/game/${gamePath}`) + '?media=video'"
         >
           <p><i class="uil uil-play-circle"></i></p>
           <h2>{{ $t('video') }}</h2>
@@ -44,7 +44,7 @@
 
         <NuxtLink
           :class="['swiper-slide', routeQuery === 'sound' ? 'active' : '']"
-          :to="localePath(`/game/${gamePath}`) + '?media=sound'"
+          :to="$localePath(`/game/${gamePath}`) + '?media=sound'"
         >
           <p><i class="uil uil-music"></i></p>
           <h2>{{ $t('audio') }}</h2>
@@ -57,9 +57,7 @@
 
 <script setup lang="ts">
 import { IGame } from '~~/types'
-import { useLocalePath } from 'vue-i18n-routing'
-
-const localePath = useLocalePath()
+const { $localePath } = useNuxtApp()
 const route = useRoute()
 
 const gameInfo = ref<IGame>()

@@ -8,7 +8,7 @@
       <div class="swiper-area">
         <NuxtLink
           :class="['swiper-slide', !routeQuery ? 'active' : '']"
-          :to="localePath(`/community/${communityInfo?.id}`)"
+          :to="$localePath(`/community/${communityInfo?.id}`)"
         >
           <p><i class="uil uil-clock-three"></i></p>
           <h2>{{ $t('timeline') }}(ALL)</h2>
@@ -16,7 +16,7 @@
 
         <NuxtLink
           :class="['swiper-slide', routeQuery === 'image' ? 'active' : '']"
-          :to="localePath(`/community/${communityInfo?.id}`) + '?media=image'"
+          :to="$localePath(`/community/${communityInfo?.id}`) + '?media=image'"
         >
           <p><i class="uil uil-image-edit"></i></p>
           <h2>{{ $t('image') }}</h2>
@@ -24,7 +24,7 @@
 
         <NuxtLink
           :class="['swiper-slide', routeQuery === 'video' ? 'active' : '']"
-          :to="localePath(`/community/${communityInfo?.id}`) + '?media=video'"
+          :to="$localePath(`/community/${communityInfo?.id}`) + '?media=video'"
         >
           <p><i class="uil uil-play-circle"></i></p>
           <h2>{{ $t('video') }}</h2>
@@ -32,7 +32,7 @@
 
         <NuxtLink
           :class="['swiper-slide', routeQuery === 'sound' ? 'active' : '']"
-          :to="localePath(`/community/${communityInfo?.id}`) + '?media=sound'"
+          :to="$localePath(`/community/${communityInfo?.id}`) + '?media=sound'"
         >
           <p><i class="uil uil-music"></i></p>
           <h2>{{ $t('audio') }}</h2>
@@ -44,9 +44,8 @@
 </template>
 
 <script setup lang="ts">
-import { useLocalePath } from 'vue-i18n-routing'
+const { $localePath } = useNuxtApp()
 
-const localePath = useLocalePath()
 const route = useRoute()
 
 const communityInfo = computed(() => useCommunity().community.value.info)

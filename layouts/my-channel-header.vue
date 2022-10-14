@@ -8,8 +8,8 @@
               <NuxtLink
                 :to="
                   isMine
-                    ? localePath(`/timeline`)
-                    : localePath(`/channel/${channelId}`)
+                    ? $localePath(`/timeline`)
+                    : $localePath(`/channel/${channelId}`)
                 "
                 :class="route.meta.name === 'userChannel' ? 'active' : ''"
               >
@@ -21,7 +21,7 @@
             </div>
             <div class="swiper-slide" style="width: 25%; cursor: pointer">
               <NuxtLink
-                :to="localePath(`/channel/${channelId}/followers`)"
+                :to="$localePath(`/channel/${channelId}/followers`)"
                 :class="route.meta.name === 'userFollowers' ? 'active' : ''"
               >
                 <p class="mobile">
@@ -32,7 +32,7 @@
             </div>
             <div class="swiper-slide" style="width: 25%; cursor: pointer">
               <NuxtLink
-                :to="localePath(`/channel/${channelId}/following`)"
+                :to="$localePath(`/channel/${channelId}/following`)"
                 :class="route.meta.name === 'userFollwoing' ? 'active' : ''"
               >
                 <p class="mobile">
@@ -44,7 +44,7 @@
 
             <div class="swiper-slide" style="width: 25%; cursor: pointer">
               <NuxtLink
-                :to="localePath(`/channel/${channelId}/games`)"
+                :to="$localePath(`/channel/${channelId}/games`)"
                 :class="route.meta.name === 'userGame' ? 'active' : ''"
               >
                 <p class="mobile">
@@ -62,12 +62,9 @@
 </template>
 
 <script setup lang="ts">
-import { ElTooltip } from 'element-plus'
-
 import { IUserChannel } from '~~/types'
-import { useLocalePath } from 'vue-i18n-routing'
 
-const localePath = useLocalePath()
+const { $localePath } = useNuxtApp()
 const route = useRoute()
 
 const userInfo = ref<IUserChannel>()
