@@ -31,7 +31,7 @@ definePageMeta({
   layout: 'layout-none',
 })
 
-const { data, error, pending } = await useFetch<any>(
+const { data, error, pending } = await useCustomFetch<any>(
   `/launch/game/${gamePath.value}`,
   getZempieFetchOptions('get', false)
 )
@@ -110,6 +110,8 @@ async function onMessage(message: MessageEvent) {
     case '@gameOver': {
       var score = message.data.score
       ZempieSdk.gameOver(score)
+      getRefreshToken()
+      onChangedToken()
       break
     }
     case '@gamePlay': {
