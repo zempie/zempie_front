@@ -27,7 +27,7 @@ const config = useRuntimeConfig()
 definePageMeta({
   title: 'my-follower',
   name: 'myFollowers',
-  middleware: 'auth',
+  //middleware: 'auth',
 })
 
 useHead({

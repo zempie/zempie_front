@@ -57,7 +57,7 @@
         <li
           class="thumbmail"
           v-for="post in posts.result"
-          @click="$router.push(localePath(`/feed/${post?.id}`))"
+          @click="$router.push($localePath(`/feed/${post?.id}`))"
         >
           <img :src="post.attatchment_files[0]?.url" />
         </li>
@@ -68,14 +68,14 @@
 
 <script lang="ts" setup>
 import { useI18n } from 'vue-i18n'
-import { useLocalePath } from 'vue-i18n-routing'
+
+const { $localePath } = useNuxtApp()
 
 const nuxt = useNuxtApp()
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
 const route = useRoute()
 const router = useRouter()
-const localePath = useLocalePath()
 
 const isPending = ref(true)
 
@@ -189,7 +189,7 @@ const {
 
 onBeforeMount(() => {
   if (useCookie(config.COOKIE_NAME).value) {
-    router.push(localePath('/timeline'))
+    router.push($localePath('/timeline'))
   }
 })
 </script>

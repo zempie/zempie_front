@@ -364,18 +364,17 @@ import {
   ElTooltip,
   ElDialog,
 } from 'element-plus'
-import type { Action } from 'element-plus'
+
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
 import { eGameStage } from '~~/types'
 import useVuelidate from '@vuelidate/core'
 import { required, helpers, maxLength } from '@vuelidate/validators'
 import { useI18n } from 'vue-i18n'
 import { randomString } from '~~/scripts/utils.js'
-import { useLocalePath } from 'vue-i18n-routing'
-import { onBeforeRouteLeave } from 'vue-router'
+const { $localePath } = useNuxtApp()
 
 const IMAGE_MAX_SIZE = 4
-const localePath = useLocalePath()
+
 const { t, locale } = useI18n()
 const router = useRouter()
 const {
@@ -591,7 +590,7 @@ async function uploadGame() {
       loading.close()
       useProject().resetForm()
 
-      router.push(localePath('/project/list'))
+      router.push($localePath('/project/list'))
     }, 1000)
   }
 
@@ -730,7 +729,7 @@ async function updateGame() {
     loading.close()
     useProject().resetProjectInfo()
     if (!error.value) {
-      router.push(localePath('/project/list'))
+      router.push($localePath('/project/list'))
     }
   }, 1000)
 }
@@ -741,7 +740,7 @@ async function deleteProject() {
   if (data.value) {
     resetProjectInfo()
     isDeleteModalOpen.value = false
-    router.replace(localePath('/project/list'))
+    router.replace($localePath('/project/list'))
 
     ElMessage({
       message: t('deleted.game.success.msg'),

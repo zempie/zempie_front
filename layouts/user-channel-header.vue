@@ -10,9 +10,6 @@
 
 <script setup lang="ts">
 import { IUserChannel } from '~~/types'
-import { useLocalePath } from 'vue-i18n-routing'
-
-const localePath = useLocalePath()
 const route = useRoute()
 
 const userInfo = ref<IUserChannel>()

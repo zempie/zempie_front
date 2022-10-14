@@ -52,10 +52,7 @@
 
 <script setup lang="ts">
 import { PropType } from 'vue'
-import { useLocalePath } from 'vue-i18n-routing'
 import { ICommunity } from '~~/types'
-
-const localePath = useLocalePath()
 
 const route = useRoute()
 const communityId = computed(() => route.params.id as string)

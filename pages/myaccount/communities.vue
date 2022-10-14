@@ -44,7 +44,7 @@ const config = useRuntimeConfig()
 definePageMeta({
   title: 'my-communities',
   name: 'myCommunities',
-  middleware: 'auth',
+  //middleware: 'auth',
 })
 
 useHead({

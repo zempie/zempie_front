@@ -1,128 +1,124 @@
 <template>
   <NuxtLayout name="my-channel-header">
-    <ClientOnly>
-      <dl class="three-area">
-        <dt v-if="isPending">
-          <div class="ta-game-list">
-            <dl>
-              <dt>Games</dt>
-            </dl>
-            <ul v-for="game in 4">
-              <li>
-                <p style="background-color: #d5d5d5"></p>
-                <h2
-                  class="grey-text"
-                  style="
-                    text-overflow: ellipsis;
-                    overflow: hidden;
-                    margin: 15px 0 10px 0;
-                  "
-                ></h2>
-              </li>
-            </ul>
-            <div></div>
-          </div>
-        </dt>
-        <dt v-else-if="channelInfo">
-          <div class="ta-myinfo">
-            <UserAvatar :user="channelInfo" :tag="'p'"></UserAvatar>
-            <h1>{{ channelInfo.name }}</h1>
+    <dl class="three-area">
+      <dt v-if="isPending">
+        <div class="ta-game-list">
+          <dl>
+            <dt>Games</dt>
+          </dl>
+          <ul v-for="game in 4">
+            <li>
+              <p style="background-color: #d5d5d5"></p>
+              <h2
+                class="grey-text"
+                style="
+                  text-overflow: ellipsis;
+                  overflow: hidden;
+                  margin: 15px 0 10px 0;
+                "
+              ></h2>
+            </li>
+          </ul>
+          <div></div>
+        </div>
+      </dt>
+      <dt v-else-if="channelInfo">
+        <div class="ta-myinfo">
+          <UserAvatar :user="channelInfo" :tag="'p'"></UserAvatar>
+          <h1>{{ channelInfo.name }}</h1>
+          <ul>
+            <li>
+              <NuxtLink :to="localePath(`/channel/${channelId}`)">
+                <p style="background: #feb100; cursor: pointer">
+                  <i class="uil uil-comment-chart-line"></i>
+                </p>
+                <h2>{{ channelInfo.post_cnt }}</h2>
+                <h3>Posts</h3>
+              </NuxtLink>
+            </li>
+            <li>
+              <NuxtLink :to="localePath(`/channel/${channelId}/followers`)">
+                <p style="background: #33e4ce; cursor: pointer">
+                  <i class="uil uil-users-alt"></i>
+                </p>
+                <h2>{{ channelInfo.follower_cnt }}</h2>
+                <h3>Followers</h3>
+              </NuxtLink>
+            </li>
+            <li>
+              <NuxtLink :to="localePath(`/channel/${channelId}/following`)">
+                <p style="background: #5d5ffe; cursor: pointer">
+                  <i class="uil uil-user-plus"></i>
+                </p>
+                <h2>{{ channelInfo.following_cnt }}</h2>
+                <h3>following</h3>
+              </NuxtLink>
+            </li>
+          </ul>
+        </div>
+        <div class="ta-game-list">
+          <dl>
+            <dt>Games</dt>
+          </dl>
+          <template v-if="games?.length">
             <ul>
-              <li>
-                <NuxtLink :to="localePath(`/channel/${channelId}`)">
-                  <p style="background: #feb100; cursor: pointer">
-                    <i class="uil uil-comment-chart-line"></i>
-                  </p>
-                  <h2>{{ channelInfo.post_cnt }}</h2>
-                  <h3>Posts</h3>
-                </NuxtLink>
-              </li>
-              <li>
-                <NuxtLink :to="localePath(`/channel/${channelId}/followers`)">
-                  <p style="background: #33e4ce; cursor: pointer">
-                    <i class="uil uil-users-alt"></i>
-                  </p>
-                  <h2>{{ channelInfo.follower_cnt }}</h2>
-                  <h3>Followers</h3>
-                </NuxtLink>
-              </li>
-              <li>
-                <NuxtLink :to="localePath(`/channel/${channelId}/following`)">
-                  <p style="background: #5d5ffe; cursor: pointer">
-                    <i class="uil uil-user-plus"></i>
-                  </p>
-                  <h2>{{ channelInfo.following_cnt }}</h2>
-                  <h3>following</h3>
-                </NuxtLink>
+              <li
+                v-for="game in games?.slice(0, 5)"
+                @click="$router.push(localePath(`/game/${game.pathname}`))"
+              >
+                <p
+                  :style="`background:url(${
+                    game.url_thumb_webp || '/images/default.png'
+                  }) center; background-size:cover;`"
+                ></p>
+                <h2 style="text-overflow: ellipsis; overflow: hidden">
+                  {{ game.title }}
+                </h2>
               </li>
             </ul>
-          </div>
-          <div class="ta-game-list">
-            <dl>
-              <dt>Games</dt>
-            </dl>
-            <template v-if="games?.length">
-              <ul>
-                <li
-                  v-for="game in games?.slice(0, 5)"
-                  @click="$router.push(localePath(`/game/${game.pathname}`))"
-                >
-                  <p
-                    :style="`background:url(${
-                      game.url_thumb_webp || '/images/default.png'
-                    }) center; background-size:cover;`"
-                  ></p>
-                  <h2 style="text-overflow: ellipsis; overflow: hidden">
-                    {{ game.title }}
-                  </h2>
-                </li>
-              </ul>
 
-              <div v-if="games?.length > 5">
-                <NuxtLink
-                  :to="localePath(`/channel/${channelId}/games`)"
-                  class="btn-default-samll w100p"
-                  >{{ $t('moreView') }}
-                </NuxtLink>
-              </div>
-            </template>
-            <ul v-else class="no-game">
-              <li>{{ $t('no.game') }}</li>
-            </ul>
-          </div>
-        </dt>
-
-        <dd>
-          <TimelineSk v-if="isPending" />
-          <ClientOnly v-else>
-            <PostTimeline type="user" :isMine="isMine" :key="channelId" />
-          </ClientOnly>
-        </dd>
-        <dt>
-          <div class="ta-groups" style="margin-top: 0px">
-            <h2>Community</h2>
-            <div v-if="isPending">
-              <dl v-for="group in 4">
-                <CommunityListItemSk />
-              </dl>
+            <div v-if="games?.length > 5">
+              <NuxtLink
+                :to="localePath(`/channel/${channelId}/games`)"
+                class="btn-default-samll w100p"
+                >{{ $t('moreView') }}
+              </NuxtLink>
             </div>
-            <CommunityList v-else :communities="channelInfo?.communities" />
+          </template>
+          <ul v-else class="no-game">
+            <li>{{ $t('no.game') }}</li>
+          </ul>
+        </div>
+      </dt>
+
+      <dd>
+        <TimelineSk v-if="isPending" />
+        <ClientOnly v-else>
+          <PostTimeline type="user" :isMine="isMine" :key="channelId" />
+        </ClientOnly>
+      </dd>
+      <dt>
+        <div class="ta-groups" style="margin-top: 0px">
+          <h2>Community</h2>
+          <div v-if="isPending">
+            <dl v-for="group in 4">
+              <CommunityListItemSk />
+            </dl>
           </div>
-        </dt>
-      </dl>
-    </ClientOnly>
+          <CommunityList v-else :communities="channelInfo?.communities" />
+        </div>
+      </dt>
+    </dl>
   </NuxtLayout>
 </template>
 
 <script setup lang="ts">
-import { useLocalePath } from 'vue-i18n-routing'
 import { useI18n } from 'vue-i18n'
 const { t, locale } = useI18n()
 
 const config = useRuntimeConfig()
 const nuxt = useNuxtApp()
 
-const localePath = useLocalePath()
 const route = useRoute()
 const isPending = ref(true)
 const channelInfo = computed(() => useChannel().userChannel.value.info)

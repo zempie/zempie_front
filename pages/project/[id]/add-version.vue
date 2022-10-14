@@ -86,14 +86,13 @@
 import { ElMessage, ElMessageBox, ElLoading } from 'element-plus'
 import { IVersion, eGameStage } from '~~/types'
 import Version from '~~/scripts/version'
-import { useLocalePath } from 'vue-i18n-routing'
 import { useI18n } from 'vue-i18n'
 
 const { t, locale } = useI18n()
 const router = useRouter()
 const route = useRoute()
-const localePath = useLocalePath()
 const config = useRuntimeConfig()
+const { $localePath } = useNuxtApp()
 
 const isAdvancedOpen = ref(false)
 const autoDeploy = ref(false)
@@ -162,7 +161,7 @@ useHead({
 definePageMeta({
   title: 'Add version',
   name: 'addVersion',
-  middleware: 'auth',
+  //middleware: 'auth',
 })
 
 watch(
@@ -266,7 +265,7 @@ async function upload() {
 
   if (!error.value) {
     useProject().getProjectInfo(projectId.value)
-    router.push(localePath(`/project/${projectId.value}/version-manage`))
+    router.push($localePath(`/project/${projectId.value}/version-manage`))
   }
 }
 </script>

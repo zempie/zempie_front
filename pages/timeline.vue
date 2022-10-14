@@ -33,7 +33,7 @@
             <li>
               <NuxtLink
                 :to="
-                  localePath(
+                  $localePath(
                     `/channel/${useUser().user.value.info?.channel_id}`
                   )
                 "
@@ -48,7 +48,7 @@
             <li>
               <NuxtLink
                 :to="
-                  localePath(
+                  $localePath(
                     `/channel/${
                       useChannel().userChannel.value.info?.channel_id
                     }/followers`
@@ -65,7 +65,7 @@
             <li>
               <NuxtLink
                 :to="
-                  localePath(
+                  $localePath(
                     `/channel/${
                       useChannel().userChannel.value.info?.channel_id
                     }/following`
@@ -92,7 +92,7 @@
                 0,
                 5
               )"
-              @click="$router.push(localePath(`/game/${game.pathname}`))"
+              @click="$router.push($localePath(`/game/${game.pathname}`))"
             >
               <p
                 :style="`background:url(${
@@ -109,7 +109,7 @@
           </ul>
           <div v-if="useChannel().userChannel.value.info?.games?.length > 5">
             <NuxtLink
-              :to="localePath(`/channel/${userInfo?.channel_id}/games`)"
+              :to="$localePath(`/channel/${userInfo?.channel_id}/games`)"
               class="btn-default-samll w100p"
               >{{ $t('moreView') }}
             </NuxtLink>
@@ -136,13 +136,12 @@
 </template>
 
 <script setup lang="ts">
-import { useLocalePath } from 'vue-i18n-routing'
 import { useI18n } from 'vue-i18n'
 
+const { $localePath } = useNuxtApp()
 const config = useRuntimeConfig()
 
 const { t, locale } = useI18n()
-const localePath = useLocalePath()
 const route = useRoute()
 const isPending = ref(true)
 const isUserPending = ref(true)
@@ -173,7 +172,7 @@ watch(
 definePageMeta({
   title: 'my-timeline',
   name: 'myTimeline',
-  middleware: 'auth',
+  //middleware: 'auth',
 })
 
 function createHead(info) {

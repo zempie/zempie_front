@@ -11,15 +11,13 @@
 <script setup lang="ts">
 import { getIdToken } from 'firebase/auth'
 import { useI18n } from 'vue-i18n'
-import { useLocalePath } from 'vue-i18n-routing'
 import { ZempieSdk } from '~/scripts/zempieSdk'
 
 const { t, locale } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const config = useRuntimeConfig()
-const { $firebaseAuth } = useNuxtApp()
-const localePath = useLocalePath()
+const { $firebaseAuth, $localePath } = useNuxtApp()
 
 const url = ref('')
 const iframeHeight = ref('')
@@ -137,6 +135,10 @@ function toMessage(message: any) {
   if (iframe.contentWindow) {
     iframe.contentWindow.postMessage(message, '*')
   }
+}
+
+function exit() {
+  router.push($localePath('/'))
 }
 </script>
 <style lang="scss" scoped>

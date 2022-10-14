@@ -12,9 +12,7 @@
           </template>
           <template v-else>
             <NuxtLink
-              :to="
-                localePath(`/channel/${feed?.user && feed.user?.channel_id}`)
-              "
+              :to="$localePath(`/channel/${feed.user && feed.user.channel_id}`)"
             >
               {{ t('visit.userChannel') }}
             </NuxtLink>
@@ -85,9 +83,9 @@ import {
   ElDialog,
 } from 'element-plus'
 import { useI18n } from 'vue-i18n'
-import { useLocalePath } from 'vue-i18n-routing'
 
-const localePath = useLocalePath()
+const { $localePath } = useNuxtApp()
+
 const { t, locale } = useI18n()
 
 const showEditModal = ref(false)

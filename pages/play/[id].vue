@@ -14,14 +14,13 @@
 <script setup lang="ts">
 import { getIdToken } from 'firebase/auth'
 import { useI18n } from 'vue-i18n'
-import { useLocalePath } from 'vue-i18n-routing'
 
 const { t, locale } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const config = useRuntimeConfig()
 const { $firebaseAuth } = useNuxtApp()
-const localePath = useLocalePath()
+const { $localePath } = useNuxtApp()
 
 const url = ref('')
 const iframeHeight = ref('')

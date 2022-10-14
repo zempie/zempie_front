@@ -1,21 +1,21 @@
 <template>
-  <div class="error-section">
-    <div class="login-logo">
-      <NuxtLink :to="localePath('/')"
-        ><img src="/images/zempie_logo.png" alt="zempie" title="zempie"
-      /></NuxtLink>
+  <ClientOnly>
+    <div class="error-section">
+      <div class="login-logo">
+        <NuxtLink :to="$localePath('/')"
+          ><img src="/images/zempie_logo.png" alt="zempie" title="zempie"
+        /></NuxtLink>
+      </div>
+      <img class="img404" src="/images/404.png" alt="404" title="404" />
+      <button class="btn-default" @click="$router.back()">
+        {{ $t('goBack') }}
+      </button>
     </div>
-    <img class="img404" src="/images/404.png"  alt="404" title="404"/>
-    <button class="btn-default" @click="$router.go(-1)">
-      {{ $t('goBack') }}
-    </button>
-  </div>
+  </ClientOnly>
 </template>
 
 <script setup lang="ts">
-import { useLocalePath } from 'vue-i18n-routing'
-
-const localePath = useLocalePath()
+const { $localePath } = useNuxtApp()
 
 const props = defineProps({
   error: Object,

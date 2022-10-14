@@ -96,7 +96,7 @@ const router = useRouter()
 definePageMeta({
   title: 'leave-account',
   name: 'leaveAccount',
-  middleware: 'auth',
+  //middleware: 'auth',
 })
 
 useHead({

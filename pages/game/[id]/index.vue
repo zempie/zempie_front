@@ -12,7 +12,7 @@
               <ul style="margin-bottom: 20px">
                 <li
                   v-for="game in games.slice(0, 5)"
-                  @click="$router.push(localePath(`/game/${game.pathname}`))"
+                  @click="$router.push($localePath(`/game/${game.pathname}`))"
                 >
                   <p
                     :style="`background:url(${
@@ -29,7 +29,7 @@
 
               <div v-if="games.length > 5">
                 <NuxtLink
-                  :to="localePath(`/channel/${game.user.channel_id}/games`)"
+                  :to="$localePath(`/channel/${game.user.channel_id}/games`)"
                   class="btn-default-samll w100p"
                 >
                   {{ $t('moreView') }}
@@ -70,11 +70,10 @@
 <script setup lang="ts">
 import { IUserChannel } from '~~/types'
 import { execCommandCopy } from '~/scripts/utils'
-import { useLocalePath } from 'vue-i18n-routing'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 
-const localePath = useLocalePath()
+const { $localePath } = useNuxtApp()
 const config = useRuntimeConfig()
 const route = useRoute()
 const { t, locale } = useI18n()

@@ -9,26 +9,34 @@
       <div class="tab-search-swiper">
         <div class="swiper-area">
           <div class="swiper-slide">
-            <NuxtLink :to="localePath(`/project/${$route.params.id}`)"
-              :class="$route.meta.name === 'projectId' ? 'active' : ''">
+            <NuxtLink
+              :to="$localePath(`/project/${$route.params.id}`)"
+              :class="$route.meta.name === 'projectId' ? 'active' : ''"
+            >
               {{ $t('projectManager.edit.gameInfo') }}
             </NuxtLink>
           </div>
           <div class="swiper-slide">
-            <NuxtLink :to="localePath(`/project/${$route.params.id}/version-manage`)"
-              :class="$route.meta.name === 'versionManage' ? 'active' : ''">
+            <NuxtLink
+              :to="$localePath(`/project/${$route.params.id}/version-manage`)"
+              :class="$route.meta.name === 'versionManage' ? 'active' : ''"
+            >
               {{ $t('projectManager.manage.version') }}
             </NuxtLink>
           </div>
           <div class="swiper-slide">
-            <NuxtLink :to="localePath(`/project/${$route.params.id}/add-version`)"
-              :class="$route.meta.name === 'addVersion' ? 'active' : ''">
+            <NuxtLink
+              :to="$localePath(`/project/${$route.params.id}/add-version`)"
+              :class="$route.meta.name === 'addVersion' ? 'active' : ''"
+            >
               {{ $t('projectManager.add.version') }}
             </NuxtLink>
           </div>
           <div class="swiper-slide">
-            <NuxtLink :to="localePath(`/project/${$route.params.id}/deploy-manage`)"
-              :class="$route.meta.name === 'deployManage' ? 'active' : ''">
+            <NuxtLink
+              :to="$localePath(`/project/${$route.params.id}/deploy-manage`)"
+              :class="$route.meta.name === 'deployManage' ? 'active' : ''"
+            >
               {{ $t('projectManager.manage.deploy') }}
             </NuxtLink>
           </div>
@@ -40,24 +48,15 @@
 </template>
 
 <script setup lang="ts">
-import { useLocalePath } from 'vue-i18n-routing';
-
-const localePath = useLocalePath()
+const { $localePath } = useNuxtApp()
 const route = useRoute()
-
 
 const projectId = computed(() => parseInt(route.params.id as string))
 const { editProject, getProjectInfo } = useProject()
 
 onMounted(async () => {
-
   if (!editProject.value.info.id) await getProjectInfo(projectId.value)
 })
-
-
-
-
-
 </script>
 
 <style lang="scss" scoped>
@@ -71,8 +70,7 @@ onMounted(async () => {
   border-radius: 10px;
 }
 
-
 .numbers {
-  min-height: 18px
+  min-height: 18px;
 }
 </style>

@@ -7,7 +7,7 @@
           <div class="header-logo-menu">
             <p>
               <NuxtLink
-                :to="isLogin ? localePath('/timeline') : localePath('/')"
+                :to="isLogin ? $localePath('/timeline') : $localePath('/')"
               >
                 <img class="logo" src="/images/zempie-logo-black.png" />
                 <img
@@ -26,7 +26,7 @@
             <ul class="menu">
               <li class="uppercase">
                 <NuxtLink
-                  :to="localePath('/community/list')"
+                  :to="$localePath('/community/list')"
                   :class="
                     $route.name.toString().includes('community-list')
                       ? 'active'
@@ -38,7 +38,7 @@
               </li>
               <li class="uppercase">
                 <NuxtLink
-                  :to="localePath('/game/list')"
+                  :to="$localePath('/game/list')"
                   :class="
                     $route.name.toString().includes('game-list') ? 'active' : ''
                   "
@@ -48,7 +48,7 @@
               </li>
               <li class="uppercase">
                 <NuxtLink
-                  :to="localePath('/zem-jam')"
+                  :to="$localePath('/zem-jam')"
                   :class="
                     $route.name.toString().includes('zem-jam') ? 'active' : ''
                   "
@@ -210,7 +210,7 @@
                     />
                     <dd>
                       <NuxtLink
-                        :to="localePath(`/channel/${user?.channel_id}`)"
+                        :to="$localePath(`/channel/${user?.channel_id}`)"
                       >
                         <h2>{{ user.name }}</h2>
                       </NuxtLink>
@@ -221,11 +221,11 @@
                     <div>
                       <NuxtLink
                         id="myChannel"
-                        :to="localePath(`/channel/${user.channel_id}`)"
+                        :to="$localePath(`/channel/${user.channel_id}`)"
                         ><i class="uil uil-user"></i>
                         {{ t('myChannel') }}
                       </NuxtLink>
-                      <NuxtLink :to="localePath('/project/list')"
+                      <NuxtLink :to="$localePath('/project/list')"
                         ><i class="uil uil-robot"></i>
                         {{ t('gameStudio') }}
                       </NuxtLink>
@@ -234,7 +234,7 @@
                   <div>
                     <h2>{{ t('group') }}</h2>
                     <div>
-                      <NuxtLink :to="localePath(`/myaccount/communities`)"
+                      <NuxtLink :to="$localePath(`/myaccount/communities`)"
                         ><i class="uil uil-users-alt"></i>
                         {{ t('joined.group') }}
                       </NuxtLink>
@@ -243,7 +243,7 @@
                   <div>
                     <h2>{{ t('account') }}</h2>
                     <div>
-                      <NuxtLink :to="localePath(`/myaccount`)"
+                      <NuxtLink :to="$localePath(`/myaccount`)"
                         ><i class="uil uil-setting"></i>
                         {{ t('my.account') }}
                       </NuxtLink>
@@ -265,7 +265,7 @@
               width="30"
               height="30"
             />
-            <NuxtLink v-else :to="localePath('/login')">
+            <NuxtLink v-else :to="$localePath('/login')">
               <button class="btn-default">
                 <i class="uil uil-user"></i>{{ t('login') }}
               </button>
@@ -297,18 +297,18 @@
             </div>
             <div class="hsm-menu">
               <NuxtLink
-                :to="localePath('/community/list')"
+                :to="$localePath('/community/list')"
                 @click.native="isHeaderSideMobile = false"
                 ><i class="uil uil-comment"></i>
                 Community
               </NuxtLink>
               <NuxtLink
-                :to="localePath('/game/list')"
+                :to="$localePath('/game/list')"
                 @click.native="isHeaderSideMobile = false"
                 ><i class="uil uil-robot"></i> Games
               </NuxtLink>
               <NuxtLink
-                :to="localePath('/zem-jam')"
+                :to="$localePath('/zem-jam')"
                 @click.native="isHeaderSideMobile = false"
                 ><i class="uil uil-comment"></i>
                 ZEMJAM
@@ -488,7 +488,7 @@
               <button
                 class="btn-default"
                 style="width: 100%"
-                @click="$router.push(localePath('/login'))"
+                @click="$router.push($localePath('/login'))"
               >
                 {{ t('login') }}
               </button>
@@ -515,10 +515,11 @@ import {
   ElMessage,
   ElDialog,
 } from 'element-plus'
-import { useLocalePath, useSwitchLocalePath } from 'vue-i18n-routing'
+
+const { $localePath } = useNuxtApp()
 
 const { t, locale } = useI18n()
-const localePath = useLocalePath()
+
 const switchLocalePath = useSwitchLocalePath()
 
 const router = useRouter()
@@ -611,7 +612,7 @@ const search = _.debounce(async () => {
 function moveSearchPage() {
   isHeaderSideMobile.value = false
 
-  router.push({ path: localePath(`/search`), query: { q: searchInput.value } })
+  router.push({ path: $localePath(`/search`), query: { q: searchInput.value } })
   searchDropdown.value.handleClose()
 }
 
@@ -628,16 +629,16 @@ function movePage(command: any) {
 
 function moveUserPage(channelId: string) {
   initSearchData()
-  router.push(localePath(`/channel/${channelId}`))
+  router.push($localePath(`/channel/${channelId}`))
 }
 function moveCommunityPage(communityId: string) {
   initSearchData()
-  router.push(localePath(`/community/${communityId}`))
+  router.push($localePath(`/community/${communityId}`))
 }
 
 function moveGamePage(pathname: string) {
   initSearchData()
-  router.push(localePath(`/game/${pathname}`))
+  router.push($localePath(`/game/${pathname}`))
 }
 
 function initSearchData() {

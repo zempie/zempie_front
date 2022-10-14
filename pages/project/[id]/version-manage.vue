@@ -5,7 +5,7 @@
         <dt></dt>
         <dd>
           <NuxtLink
-            :to="localePath(`/project/${$route.params.id}/add-version`)"
+            :to="$localePath(`/project/${$route.params.id}/add-version`)"
             class="btn-default"
             ><i class="uil uil-plus"></i> {{ $t('versionManage.addVersion') }}
           </NuxtLink>
@@ -31,20 +31,18 @@
 </template>
 <script setup lang="ts">
 import { IVersion } from '~~/types'
-import { useLocalePath } from 'vue-i18n-routing'
 import { useI18n } from 'vue-i18n'
 
 const { t, locale } = useI18n()
 const route = useRoute()
 const config = useRuntimeConfig()
-const localePath = useLocalePath()
-
+const { $localePath } = useNuxtApp()
 const project = ref()
 
 definePageMeta({
   title: 'Version Mgmt.',
   name: 'versionManage',
-  middleware: 'auth',
+  //middleware: 'auth',
 })
 useHead({
   title: `${t('seo.project.version.manage.title')} | Zempie Studio`,

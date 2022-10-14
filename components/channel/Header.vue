@@ -11,14 +11,14 @@
       <dt>
         <ul>
           <li>
-            <NuxtLink :to="localePath(`/channel/${userInfo.channel_id}`)">
+            <NuxtLink :to="$localePath(`/channel/${userInfo.channel_id}`)">
               <h2>{{ userInfo.post_cnt }}</h2>
               <h3>Posts</h3>
             </NuxtLink>
           </li>
           <li>
             <NuxtLink
-              :to="localePath(`/channel/${userInfo.channel_id}/followers`)"
+              :to="$localePath(`/channel/${userInfo.channel_id}/followers`)"
             >
               <h2>{{ userInfo.follower_cnt }}</h2>
               <h3>Followers</h3>
@@ -26,7 +26,7 @@
           </li>
           <li>
             <NuxtLink
-              :to="localePath(`/channel/${userInfo.channel_id}/following`)"
+              :to="$localePath(`/channel/${userInfo.channel_id}/following`)"
             >
               <h2>{{ userInfo.following_cnt }}</h2>
               <h3>Followings</h3>
@@ -48,9 +48,8 @@
 <script setup lang="ts">
 import { PropType } from 'vue'
 import { IUserChannel } from '~~/types'
-import { useLocalePath } from 'vue-i18n-routing'
 
-const localePath = useLocalePath()
+const { $localePath } = useNuxtApp()
 
 const props = defineProps({
   userInfo: Object as PropType<IUserChannel>,

@@ -64,7 +64,7 @@
                         }})</label></span>
                   </dt>
                   <dd>
-                    <NuxtLink :to="localePath('/terms')" target="_blank">{{  $t('view')  }}</NuxtLink>
+                    <NuxtLink :to="$localePath('/terms')" target="_blank">{{  $t('view')  }}</NuxtLink>
                   </dd>
                 </dl>
               </li>
@@ -89,14 +89,12 @@ import { required, helpers, maxLength } from '@vuelidate/validators'
 import { emailRegex, passwordRegex } from '~/scripts/utils'
 import { useI18n } from 'vue-i18n';
 import { createUserWithEmailAndPassword, type UserCredential } from 'firebase/auth'
-import { useLocalePath } from "vue-i18n-routing";
-import { onBeforeRouteLeave } from 'vue-router'
 
 const { t, locale } = useI18n()
 const route = useRoute();
 const config = useRuntimeConfig()
-const { $firebaseAuth, $cookies } = useNuxtApp()
-const localePath = useLocalePath();
+const { $firebaseAuth, $cookies, $localePath  } = useNuxtApp()
+
 const router = useRouter();
 
 useHead({
@@ -337,7 +335,7 @@ async function joinZempie() {
     }
 
 
-    window.location.href = localePath('/')
+    window.location.href = $localePath('/')
 
     //FIXME: router.push가 왜 안되는지 모르겠음 => blank page
     // router.push(localePath('/'))

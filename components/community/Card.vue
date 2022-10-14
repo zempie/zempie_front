@@ -1,5 +1,5 @@
 <template>
-  <li @click="$router.push(localePath(`/community/${community.id}`))">
+  <li @click="$router.push($localePath(`/community/${community.id}`))">
     <div
       :style="{
         background: 'url(' + bannerImg + ') center center / cover no-repeat',
@@ -19,7 +19,9 @@
       <dl>
         <dd
           @click.stop="
-            $router.push(localePath(`/community/${props.community.id}/members`))
+            $router.push(
+              $localePath(`/community/${props.community.id}/members`)
+            )
           "
         >
           <h4>{{ community.member_cnt }}</h4>
@@ -47,13 +49,13 @@
 </template>
 
 <script setup lang="ts">
-import { useLocalePath } from 'vue-i18n-routing'
 import { numToKMB } from '~/scripts/utils'
+
+const { $localePath } = useNuxtApp()
 
 const props = defineProps({
   community: Object,
 })
-const localePath = useLocalePath()
 
 const bannerImg = computed(
   () => props.community.banner_img ?? '/images/1500_300_com_channel_default.png'

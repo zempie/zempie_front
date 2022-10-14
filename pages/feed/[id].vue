@@ -130,24 +130,26 @@
               />
             </li>
           </ul>
-          <div class="tapl-comment" v-if="comments">
-            <p>
-              {{ $t('comment') }} {{ feed?.comment_cnt
-              }}{{ $t('comment.count.unit') }}
-            </p>
-            <CommentInput :postId="feed?.id" @refresh="commentFetch" />
-            <ul>
-              <TransitionGroup name="fade">
-                <li
-                  v-for="comment in comments"
-                  :key="comment.id"
-                  class="comment"
-                >
-                  <Comment :comment="comment" @refresh="commentFetch" />
-                </li>
-              </TransitionGroup>
-            </ul>
-          </div>
+          <ClientOnly>
+            <div class="tapl-comment" v-if="comments">
+              <p>
+                {{ $t('comment') }} {{ feed?.comment_cnt
+                }}{{ $t('comment.count.unit') }}
+              </p>
+              <CommentInput :postId="feed?.id" @refresh="commentFetch" />
+              <ul>
+                <TransitionGroup name="fade">
+                  <li
+                    v-for="comment in comments"
+                    :key="comment.id"
+                    class="comment"
+                  >
+                    <Comment :comment="comment" @refresh="commentFetch" />
+                  </li>
+                </TransitionGroup>
+              </ul>
+            </div>
+          </ClientOnly>
           <div ref="triggerDiv"></div>
         </li>
       </ul>
@@ -160,11 +162,10 @@ import hljs from 'highlight.js'
 import _ from 'lodash'
 import { ElMessage, ElDropdown, ElDialog } from 'element-plus'
 import { useI18n } from 'vue-i18n'
-import { useLocalePath } from 'vue-i18n-routing'
 
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { dateFormat, execCommandCopy, stringToDomElem } from '~~/scripts/utils'
-const localePath = useLocalePath()
+import { IFeed } from '~~/types'
 
 const COMMENT_LIMIT = 10
 const route = useRoute()

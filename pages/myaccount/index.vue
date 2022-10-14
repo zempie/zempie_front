@@ -92,7 +92,7 @@
         <p>
           {{ $t('userSetting.pwd.change.info1') }}
           <span>
-            <NuxtLink :to="localePath(`/myaccount/change-password`)">
+            <NuxtLink :to="$localePath(`/myaccount/change-password`)">
               {{ $t('click') }}</NuxtLink
             >
           </span>
@@ -106,7 +106,7 @@
         <p>
           {{ $t('userSetting.account.leave.info1') }}
           <span>
-            <NuxtLink :to="localePath(`/myaccount/leave`)"
+            <NuxtLink :to="$localePath(`/myaccount/leave`)"
               >{{ $t('click') }}
             </NuxtLink>
           </span>
@@ -121,18 +121,16 @@
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
 import { ElMessage, ElLoading } from 'element-plus'
 
-import { useLocalePath } from 'vue-i18n-routing'
 import { useI18n } from 'vue-i18n'
 
-const localePath = useLocalePath()
 const { t, locale } = useI18n()
 const route = useRoute()
 const config = useRuntimeConfig()
-
+const { $localePath } = useNuxtApp()
 definePageMeta({
   title: 'my-account',
   name: 'myAccount',
-  middleware: 'auth',
+  //middleware: 'auth',
 })
 
 useHead({

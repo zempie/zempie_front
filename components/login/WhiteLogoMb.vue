@@ -1,24 +1,17 @@
 <template>
-    <div>
-        <NuxtLink :to="localePath(path)"><img src="/images/logo.svg" alt="zempie-logo" title="zempie-logo" />
-        </NuxtLink>
-    </div>
-
+  <NuxtLink :to="$localePath(path)"
+    ><img src="/images/logo.svg" alt="zempie-logo" title="zempie-logo" />
+  </NuxtLink>
 </template>
-<script lang='ts' setup>
-import { useLocalePath } from 'vue-i18n-routing';
-
-const localePath = useLocalePath();
-
+<script lang="ts" setup>
+const { $localePath } = useNuxtApp()
 
 const props = defineProps({
-    path: {
-        default: '/',
-        type: String
-    }
+  path: {
+    default: '/',
+    type: String,
+  },
 })
-
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

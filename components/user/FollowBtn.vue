@@ -12,7 +12,9 @@
   <div v-else>
     <p
       class="btn-default uppercase my-channel"
-      @click.stop="$router.push(localePath(`/channel/${loginUser.channel_id}`))"
+      @click.stop="
+        $router.push($localePath(`/channel/${loginUser.channel_id}`))
+      "
     >
       {{ $t('myChannel') }}
     </p>
@@ -23,12 +25,10 @@
 import { ElMessage } from 'element-plus'
 import { PropType } from 'vue'
 import { IUser } from '~~/types'
-import { useLocalePath } from 'vue-i18n-routing'
 import { useI18n } from 'vue-i18n'
 
-const localePath = useLocalePath()
 const { t, locale } = useI18n()
-
+const { $localePath } = useNuxtApp()
 const isLogin = computed(() => useUser().user.value.isLogin)
 const loginUser = computed(() => useUser().user.value.info)
 

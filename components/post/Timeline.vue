@@ -38,7 +38,7 @@
           </div>
           <div class="swiper-slide" style="width: 50%; cursor: pointer">
             <NuxtLink
-              :to="localePath(`/channel/${paramId}/games`)"
+              :to="$localePath(`/channel/${paramId}/games`)"
               @click.native="timelineFilter('game')"
               :class="media === 'game' ? 'active' : ''"
             >
@@ -118,13 +118,13 @@ import { PropType } from 'vue'
 import { IComChannel, IFeed } from '~~/types'
 import { useI18n } from 'vue-i18n'
 
-import { useLocalePath } from 'vue-i18n-routing'
 const { t, locale } = useI18n()
 
 const LIMIT_SIZE = 30
 
 const route = useRoute()
-const localePath = useLocalePath()
+const { $localePath } = useNuxtApp()
+
 const config = useRuntimeConfig()
 
 const feeds = ref<IFeed[]>([])

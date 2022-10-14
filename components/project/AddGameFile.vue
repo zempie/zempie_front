@@ -132,9 +132,7 @@ import { ElMessage, ElLoading } from 'element-plus'
 import ZipUtil from '~~/scripts/zipUtil'
 import { eGameStage } from '~~/types'
 import { useI18n } from 'vue-i18n'
-import { useLocalePath } from 'vue-i18n-routing'
-
-const localePath = useLocalePath()
+const { $localePath } = useNuxtApp()
 
 const MAX_FILE_SIZE = 500
 // @Prop() isEditProject !: any;
@@ -300,7 +298,7 @@ async function upload() {
   useProject().resetForm()
 
   if (!error.value) {
-    router.push(localePath('/project/list'))
+    router.push($localePath('/project/list'))
   }
 
   //     const {uploadGameFiles, gameStage} = this.$store.getters;
