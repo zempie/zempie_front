@@ -5,7 +5,7 @@
         ref="game"
         class="iframe"
         :style="`height:${iframeHeight};`"
-        :src="`${config.LAUNCHER_URL}/#/game/${gamePath}`"
+        :src="`${config.LAUNCHER_URL}/game/${gamePath}`"
       ></iframe>
     </ClientOnly>
   </div>
