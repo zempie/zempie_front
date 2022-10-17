@@ -59,11 +59,11 @@
             </div>
           </dt>
           <dd>
-            <h2>{{ gameInfo.title }}<span></span></h2>
+            <h2 style="color: #fff; font-size: 20px; font-weight: bold">
+              {{ gameInfo.title }}<span></span>
+            </h2>
             <h3 @click="moveUserPage" style="cursor: pointer">
-              By
-
-              {{ gameInfo.user?.name }}
+              By {{ gameInfo.user?.name }}
             </h3>
 
             <div class="tag-item secondary">

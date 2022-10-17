@@ -259,12 +259,25 @@
             </el-dropdown>
           </div>
           <div v-else class="header-login">
-            <img
-              v-if="useUser().user.value.isLoading"
+            <!-- <img
+            
               src="/images/300_300_default_profile.png"
               width="30"
               height="30"
-            />
+            /> -->
+            <p
+              v-if="useUser().user.value.isLoading"
+              style="
+                font-size: 35px;
+                display: flex;
+                align-items: center;
+                border-radius: 50%;
+                width: 30px;
+                justify-content: center;
+              "
+            >
+              <i class="uil uil-user-circle"></i>
+            </p>
             <NuxtLink v-else :to="$localePath('/login')">
               <button class="btn-default">
                 <i class="uil uil-user"></i>{{ t('login') }}
@@ -323,145 +336,6 @@
           >
             &nbsp;
           </div>
-          <!-- 모바일 - 좌측영역 끝 -->
-          <!-- 로그인 했을 때 끝 -->
-          <!-- 로그인 안했을 때 -->
-          <!-- <div class="header-login" v-else>
-
-          <NuxtLink to="/login">
-            <button flat class="btn-default">
-              <i class="uil uil-user"></i>{{ t('login') }}
-            </button>
-          </NuxtLink>
-        </div> -->
-          <!-- 로그인 안했을 때 끝 -->
-
-          <!--          <div class="header-info-mobile">-->
-          <!--            <button class="btn-none" @click="isOpenMessage = !isOpenMessage">-->
-          <!--              <i class="uil uil-comment"></i>-->
-          <!--              <span></span>-->
-          <!--            </button>-->
-          <!--            <button class="btn-none" @click="isOpenMessage = !isOpenMessage">-->
-          <!--              <i class="uil uil-bell"></i>-->
-          <!--              <span></span>-->
-          <!--            </button>-->
-          <!--            <button class="btn-none" @click="isOpenSetting = !isOpenSetting">-->
-          <!--              <i class="uil uil-setting"></i>-->
-          <!--            </button>-->
-          <!--          </div>-->
-
-          <!-- <div class="header-search-mobile">
-                  <div class="input-search" @click="isOpenSearch = !isOpenSearch">
-                    <p><i class="uil uil-search"></i><p>
-                    <div><input type="text" name="" title="keywords" placeholder="검색어를 입력하세요." /></div>
-                  </div>
-                </div> -->
-
-          <!-- 검색 리스트 -->
-          <!-- <template v-if="searchInput.length > 0">
-                    <dropdown-menu :isOpen="isOpenSearch" @closed="isOpenSearch = false" :overlay="false"
-                                   class="header-search-dropdown">
-
-                        <div slot="body" class="header-search-list">
-                            <div>
-                                <template v-if="userList && userList.length > 0">
-                                    <h2>{{ t('user.name') }}</h2>
-                                    <div v-for="user in userList"
-                                         :key="user.id"
-                                         @click="userPage(user.channel_id)">
-                                        <dl>
-                                            <dt>
-                                                <UserAvatar :user="user" :tag="'span'"></UserAvatar>
-                                                {{ user.name }}
-                                            </dt>
-                                            <dd><i class="uil uil-user"></i></dd>
-                                        </dl>
-                                    </div>
-                                </template>
-                                <template v-if="gameList && gameList.length > 0">
-                                    <h2>{{ t('game.name') }}</h2>
-                                    <div v-for="game in gameList" :key="game.id"
-                                         @click="moveGamePage(game.pathname)"
-                                    >
-                                        <dl>
-                                            <dt>
-                                        <span
-                                            :style="`background:url(${game.profile_img ||  game.url_thumb}) center center / cover no-repeat; background-size:cover;`"></span>
-                                                {{ game.title }}
-                                            </dt>
-                                            <dd><i class="uil uil-robot"></i></dd>
-                                        </dl>
-                                    </div>
-                                </template>
-                                <template v-if="groupList &&groupList.length > 0">
-                                    <h2>{{ t('community.name') }}</h2>
-                                    <div v-for="group in groupList" :key="group.id" @click="groupPage(group.id)">
-                                        <dl>
-                                            <dt>
-                                        <span
-                                            :style="`background:url(${group.profile_img}) center center / cover no-repeat; background-size:cover;`"></span>
-                                                {{ group.name }}
-                                            </dt>
-                                            <dd><i class="uil uil-comments"></i></dd>
-                                        </dl>
-                                    </div>
-                                </template>
-
-                            </div>
-                        </div>
-                    </dropdown-menu>
-                </template> -->
-          <!-- 검색 리스트 끝 -->
-
-          <!-- 신규 메세지 -->
-          <!-- 퍼블리싱 페이지에서 붙여와서 사용-->
-          <!-- 신규 메세지 끝 -->
-
-          <!-- 설정 -->
-
-          <!-- <dropdown-menu v-if="$store.getters.user" :isOpen="isOpenSetting" @closed="isOpenSetting = false"
-                               :overlay="false" class="header-setting-dropdown">
-
-                    <div slot="body" class="header-setting">
-                        <dl>
-                            <dt>
-                                <UserAvatar :user="$store.getters.user" :tag="'span'"></UserAvatar>
-                            </dt>
-                            <dd>
-                                <h2>{{ user.name }}</h2>
-                            </dd>
-                        </dl>
-                        <div>
-                            <h2>{{ t('myProfile') }}</h2>
-                            <div>
-                                <router-link :to="`/${$i18n.locale}/myChannel`" @click.native="isOpenSetting = false"><i
-                                    class="uil uil-user"></i>
-                                    {{ t('myChannel') }}
-                                </router-link>
-                                <router-link :to="`/${$i18n.locale}/projectList`"><i class="uil uil-robot"></i>
-                                    {{ t('gameStudio') }}
-                                </router-link>
-                                <router-link :to="`/${$i18n.locale}/user/${user.channel_id}/settings`"
-                                             @click.native="isOpenSetting = false"><i
-                                    class="uil uil-setting"></i>
-                                    {{ t('account.settings') }}
-                                </router-link>
-                            </div>
-                        </div>
-                        <div>
-                            <h2>{{ t('group') }}</h2>
-                            <div>
-                                <router-link @click.native="isOpenSetting = false"
-                                             :to="`/${$i18n.locale}/user/${user.channel_id}/manageJoinedGroup`"><i
-                                    class="uil uil-users-alt"></i>
-                                    {{ t('joined.group') }}
-                                </router-link>
-                            </div>
-                        </div>
-                        <p @click="logout"><a class="btn-default w100p">{{ t('logout') }}</a></p>
-                    </div>
-                </dropdown-menu> -->
-          <!-- 설정 끝 -->
         </dd>
       </dl>
 

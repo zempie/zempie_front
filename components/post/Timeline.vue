@@ -230,7 +230,7 @@ async function fetch() {
   switch (props.type) {
     case 'community':
       if (props.channelInfo) {
-        const { data, error, refresh } = await useFetch<{
+        const { data, error, refresh } = await useCustomFetch<{
           result: []
           totalCount: number
         }>(
@@ -246,7 +246,7 @@ async function fetch() {
         isPending.value = false
         return isAddData.value
       } else {
-        const { data, error, refresh } = await useFetch<{
+        const { data, error, refresh } = await useCustomFetch<{
           result: []
           totalCount: number
         }>(
@@ -261,7 +261,7 @@ async function fetch() {
       }
 
     case 'user':
-      const { data: userPostData } = await useFetch<{
+      const { data: userPostData } = await useCustomFetch<{
         result: IFeed[]
         totalCount: number
       }>(
@@ -293,7 +293,7 @@ async function fetch() {
     // return isAddData.value
 
     case 'game':
-      const { data: gamePostData, error: gameError } = await useFetch<{
+      const { data: gamePostData, error: gameError } = await useCustomFetch<{
         result: []
         totalCount: number
       }>(
