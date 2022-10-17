@@ -81,10 +81,6 @@ import ResizableImage from './ResizableImage.vue'
 import PreviewLink from './PreviewLink.vue'
 // import { Link } from '~~/scripts/tiptap/customLink'
 
-// import { library, config } from '@fortawesome/fontawesome-svg-core'
-// import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-// import { faTableColumns, faTableCells } from '@fortawesome/free-solid-svg-icons'
-
 const emit = defineEmits(['editorContent'])
 const { t, locale } = useI18n()
 
