@@ -151,51 +151,15 @@ async function onMessage(msg: MessageEvent) {
     }
     case '@refreshToken': {
       if (useCookie(config.COOKIE_NAME).value) {
-        const refreshToken =
-          useUser().user.value?.fUser?.stsTokenManager?.refreshToken
-
-        // const idToken = await getIdToken(useUser().user.value.fUser)
-        let body = {
-          grant_type: 'refresh_token',
-          refresh_token: refreshToken,
-        }
-
-        let formBody = []
-        for (var property in body) {
-          var encodedKey = encodeURIComponent(property)
-          var encodedValue = encodeURIComponent(body[property])
-          formBody.push(encodedKey + '=' + encodedValue)
-        }
-        const formBody2 = formBody.join('&')
-
-        const { data, error } = await useFetch<{
-          access_token: string
-          expires_in: string
-          id_token: string
-          project_id: string
-          refresh_token: string
-          token_type: string
-          user_id: string
-        }>(config.GOOGLE_REFRESH_TOKEN_URL, {
-          method: 'post',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: formBody2,
+        getIdToken(useUser().user.value.fUser, true).then((idToken) => {
+          if (idToken) {
+            $cookies.set(config.COOKIE_NAME, idToken, {
+              maxAge: DAYSTOSEC_30,
+              path: '/',
+              domain: config.COOKIE_DOMAIN,
+            })
+          }
         })
-
-        if (data.value) {
-          $cookies.set(config.COOKIE_NAME, data.value.access_token, {
-            maxAge: DAYSTOSEC_30,
-            path: '/',
-            domain: config.COOKIE_DOMAIN,
-          })
-          $cookies.set(config.REFRESH_TOKEN, data.value.refresh_token, {
-            maxAge: DAYSTOSEC_30,
-            path: '/',
-            domain: config.COOKIE_DOMAIN,
-          })
-        }
       }
       break
     }
