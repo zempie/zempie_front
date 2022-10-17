@@ -66,11 +66,10 @@ const gamePath = computed(() => route.params.id as string)
 const routeQuery = computed(() => route.query.media)
 const isPending = ref(true)
 
-const { data, pending } = await useFetch<any>(
+const { data, pending } = await useCustomFetch<any>(
   `/launch/game/${gamePath.value}`,
-  getZempieFetchOptions('get', true)
+  getZempieFetchOptions('get', false)
 )
-//  game.getInfo(gamePath.value)
 
 onMounted(async () => {
   if (data.value) {

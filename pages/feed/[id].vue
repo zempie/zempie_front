@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <div class="area-view">
-      <ul class="ta-post" @click="clickFeed" v-if="feed">
+      <ul class="ta-post" v-if="feed">
         <li class="tap-list">
           <dl class="tapl-title">
             <dt>
@@ -16,7 +16,7 @@
                     {{ dateFormat(feed?.created_at) }}
                   </span>
                   <TranslateBtn
-                    :text="feed?.content"
+                    :text="feed.content"
                     @translatedText="translate"
                     @untranslatedText="untranslatedText"
                   />
@@ -31,7 +31,7 @@
               </dl>
             </dt>
             <dd>
-              <UserFollowBtn :user="feed?.user" class="follow-btn-feed" />
+              <UserFollowBtn :user="feed.user" class="follow-btn-feed" />
             </dd>
           </dl>
 
@@ -154,31 +154,6 @@
         </li>
       </ul>
     </div>
-    <el-dialog
-      v-model="openOriginPhoto"
-      append-to-body
-      custom-class="modal-area-type"
-      :show-close="false"
-      width="50vw"
-    >
-      <div>
-        <dl class="ma-header">
-          <dt></dt>
-          <dd style="text-align: right">
-            <i
-              @click="openOriginPhoto = false"
-              style="cursor: pointer"
-              class="uil uil-times"
-            ></i>
-          </dd>
-        </dl>
-        <button class="btn-default origin-btn" @click="openOriginImage">
-          <i class="uil uil-expand-arrows-alt"></i>
-          Origin
-        </button>
-        <img :src="imgUrl" style="width: 100%" />
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -215,17 +190,14 @@ const observer = ref<IntersectionObserver>(null)
 const triggerDiv = ref()
 const isAddData = ref(false)
 
-const openOriginPhoto = ref(false)
-const imgUrl = ref('')
-
 const {
   data: feed,
   error,
   pending,
   refresh,
-} = await useCustomFetch<any>(
+} = await useFetch<any>(
   `/post/${feedId.value}`,
-  getComFetchOptions('get', false)
+  getComFetchOptions('get', true)
 )
 
 watch(
@@ -236,7 +208,6 @@ watch(
 )
 
 onMounted(async () => {
-  //code highlighter
   hljs.configure({
     ignoreUnescapedHTML: true,
   })
@@ -252,8 +223,6 @@ onMounted(async () => {
       { root: null, threshold: 1 }
     )
     observer.value.observe(triggerDiv.value)
-  } else {
-    refresh()
   }
   await commentFetch()
 })
@@ -368,18 +337,6 @@ function copyUrl() {
     type: 'success',
   })
 }
-
-function clickFeed(e: any) {
-  //클릭한 요소가 이미지인 경우
-  if (e.target.nodeName === 'IMG') {
-    openOriginPhoto.value = true
-    imgUrl.value = e.target.src
-  }
-}
-
-function openOriginImage() {
-  window.open(imgUrl.value, '_blank')
-}
 </script>
 
 <style lang="scss" scoped>
@@ -474,19 +431,6 @@ input[type='radio'] {
 .tapl-comment {
   .comment:nth-child(1) {
     border-top: 0px;
-  }
-}
-
-.origin-btn {
-  position: absolute;
-  top: 40px;
-  border-radius: 10px;
-  opacity: 0.3;
-  margin: 10px;
-  padding: 5px 10px 5px 10px;
-  height: 30px;
-  &:hover {
-    opacity: 1;
   }
 }
 </style>

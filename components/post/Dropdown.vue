@@ -6,7 +6,7 @@
       ></a>
       <template #dropdown>
         <div slot="body" class="more-list fixed" style="min-width: 150px">
-          <template v-if="user && user.id === (feed.user && feed.user.id)">
+          <template v-if="user && user.id === (feed?.user && feed?.user.id)">
             <a @click="openEdit">{{ t('feed.edit') }}</a>
             <a @click="showDeletePostModal = true">{{ t('feed.delete') }}</a>
           </template>
@@ -55,19 +55,19 @@
         </div>
       </div>
     </el-dialog>
-    <el-dialog
-      v-model="showEditModal"
-      append-to-body
-      custom-class="modal-area-type"
-    >
-      <TextEditor
-        @closeModal="closeEditor"
-        :isEdit="true"
-        :feed="feed"
-        @refresh="emit('refresh')"
-        :key="editorKey"
-      />
-    </el-dialog>
+
+    <PostModal :isTextEditorOpen="showEditModal">
+      <template #textEditor>
+        <TextEditor
+          @closeModal="closeEditor"
+          :isEdit="true"
+          :feed="feed"
+          @refresh="emit('refresh')"
+          :isFullScreen="usePost().post.value.isFullScreen"
+          :key="editorKey"
+        />
+      </template>
+    </PostModal>
   </ClientOnly>
 </template>
 <script lang="ts" setup>
@@ -91,6 +91,7 @@ const { t, locale } = useI18n()
 const showEditModal = ref(false)
 const showDeletePostModal = ref(false)
 const editorKey = ref(0)
+const isFullScreen = ref(false)
 
 const props = defineProps({
   feed: Object as PropType<IFeed>,

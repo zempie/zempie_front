@@ -1,5 +1,5 @@
 <template>
-  <div v-if="user.id !== loginUser?.id">
+  <div v-if="user && user.id !== loginUser?.id">
     <p
       class="btn-default unfollow uppercase"
       @click.stop="unfollow"

@@ -31,7 +31,7 @@ definePageMeta({
   layout: 'layout-none',
 })
 
-const { data, error, pending } = await useFetch<any>(
+const { data, error, pending } = await useCustomFetch<any>(
   `/launch/game/${gamePath.value}`,
   getZempieFetchOptions('get', false)
 )
@@ -46,9 +46,6 @@ onMounted(async () => {
     window.addEventListener('message', onMessage)
     window.addEventListener('load', onLoad)
   }
-
-  // window.addEventListener('resize', onResize)
-  // onResize()
 })
 
 onBeforeUnmount(() => {
@@ -113,6 +110,8 @@ async function onMessage(message: MessageEvent) {
     case '@gameOver': {
       var score = message.data.score
       ZempieSdk.gameOver(score)
+      getRefreshToken()
+      onChangedToken()
       break
     }
     case '@gamePlay': {

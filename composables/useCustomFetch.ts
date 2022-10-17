@@ -43,7 +43,7 @@ export const useCustomFetch = <T>(url: string, options?: FetchOptions) => {
 }
 
 
-async function getRefreshToken() {
+export async function getRefreshToken() {
   const config = useRuntimeConfig();
   const { $cookies, $firebaseAuth } = useNuxtApp()
 

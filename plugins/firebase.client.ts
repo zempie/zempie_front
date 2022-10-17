@@ -1,9 +1,9 @@
 import { defineNuxtPlugin } from '#app'
 import * as firebase from 'firebase/app'
-// import { getAuth, onIdTokenChanged, } from 'firebase/auth'
+import { getAuth, onIdTokenChanged, } from 'firebase/auth'
 
 
-import * as firebaseAuth from '@firebase/auth'
+// import * as firebaseAuth from '@firebase/auth'
 import { IUser } from '~~/types';
 
 
@@ -29,9 +29,16 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   const app = firebase.initializeApp(firebaseConfig);
 
-  const auth = firebaseAuth.getAuth(app)
+  let auth = null
 
-  firebaseAuth.onIdTokenChanged(auth, (user) => {
+  try {
+    auth = getAuth(app)
+
+  } catch (error) {
+    useUser().setLoadDone()
+  }
+
+  onIdTokenChanged(auth, (user) => {
     if (user) {
       $cookies.set(config.COOKIE_NAME, (user as any).accessToken, {
         maxAge: DAYSTOSEC_30,

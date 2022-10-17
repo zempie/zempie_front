@@ -666,7 +666,7 @@ async function onSubmit() {
         )
       }
 
-      const { data, error, pending } = await useFetch<{ result: [] }>(
+      const { data, error, pending } = await useCustomFetch<{ result: [] }>(
         '/community/att',
         getZempieFetchOptions('post', true, formData)
       )
@@ -682,7 +682,12 @@ async function onSubmit() {
       break
   }
 
-  const { error: uploadError } = await post.upload(payload)
+  const { error: uploadError } = await useCustomFetch(
+    '/post',
+    getComFetchOptions('post', true, payload)
+  )
+
+  // post.upload(payload)
 
   if (!uploadError.value) {
     emit('closeModal')
@@ -1204,7 +1209,7 @@ function closeTextEditor() {
 
 async function communityFetch() {
   const { data, error, pending } = await useFetch<[]>(
-    `/user/${useUser().user.value.info.id}/list/community`,
+    `/user/${useUser().user.value.info?.id}/list/community`,
     getComFetchOptions('get', true)
   )
 
@@ -1290,14 +1295,14 @@ function getOldestDraft(): string {
     if (
       localStorage
         .key(i)
-        .includes(useUser().user.value.info.channel_id + 'draft:')
+        .includes(useUser().user.value.info?.channel_id + 'draft:')
     ) {
       timeList.push(localStorage.key(i).split('draft:')[1])
     }
   }
 
   const oldestDraft = Math.min(...timeList)
-  return `${useUser().user.value.info.channel_id}draft:${oldestDraft}`
+  return `${useUser().user.value.info?.channel_id}draft:${oldestDraft}`
 }
 
 function isFullLocal(): boolean {
@@ -1307,7 +1312,7 @@ function isFullLocal(): boolean {
     if (
       localStorage
         .key(i)
-        .includes(useUser().user.value.info.channel_id + 'draft:')
+        .includes(useUser().user.value.info?.channel_id + 'draft:')
     ) {
       count++
     }
@@ -1318,10 +1323,10 @@ function isFullLocal(): boolean {
 function saveOnLocal(time: number) {
   form['post_type'] = activeTab.value
   form['time'] = Date.now()
-  form['key'] = `${useUser().user.value.info.channel_id}draft:${time}`
+  form['key'] = `${useUser().user.value.info?.channel_id}draft:${time}`
 
   localStorage.setItem(
-    `${useUser().user.value.info.channel_id}draft:${time}`,
+    `${useUser().user.value.info?.channel_id}draft:${time}`,
     JSON.stringify(form)
   )
 }
@@ -1334,7 +1339,7 @@ function createDraftList() {
     if (
       localStorage
         .key(i)
-        .includes(useUser().user.value.info.channel_id + 'draft:')
+        .includes(useUser().user.value.info?.channel_id + 'draft:')
     ) {
       draftList.value.push(
         JSON.parse(localStorage.getItem(localStorage.key(i)))
