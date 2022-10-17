@@ -15,12 +15,13 @@
 import { getIdToken } from 'firebase/auth'
 import { useI18n } from 'vue-i18n'
 
+const DAYSTOSEC_30 = 60 * 60 * 24 * 30
+
 const { t, locale } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const config = useRuntimeConfig()
-const { $firebaseAuth } = useNuxtApp()
-const { $localePath } = useNuxtApp()
+const { $firebaseAuth, $localePath, $cookies } = useNuxtApp()
 
 const url = ref('')
 const iframeHeight = ref('')
@@ -138,6 +139,7 @@ function onChangedToken() {
 }
 
 async function onMessage(msg: MessageEvent) {
+  console.log('msag', msg.data)
   const { type, channel_id } = msg.data
 
   switch (type) {
@@ -149,7 +151,51 @@ async function onMessage(msg: MessageEvent) {
     }
     case '@refreshToken': {
       if (useCookie(config.COOKIE_NAME).value) {
-        const idToken = await getIdToken($firebaseAuth)
+        const refreshToken =
+          useUser().user.value?.fUser?.stsTokenManager?.refreshToken
+
+        // const idToken = await getIdToken(useUser().user.value.fUser)
+        let body = {
+          grant_type: 'refresh_token',
+          refresh_token: refreshToken,
+        }
+
+        let formBody = []
+        for (var property in body) {
+          var encodedKey = encodeURIComponent(property)
+          var encodedValue = encodeURIComponent(body[property])
+          formBody.push(encodedKey + '=' + encodedValue)
+        }
+        const formBody2 = formBody.join('&')
+
+        const { data, error } = await useFetch<{
+          access_token: string
+          expires_in: string
+          id_token: string
+          project_id: string
+          refresh_token: string
+          token_type: string
+          user_id: string
+        }>(config.GOOGLE_REFRESH_TOKEN_URL, {
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: formBody2,
+        })
+
+        if (data.value) {
+          $cookies.set(config.COOKIE_NAME, data.value.access_token, {
+            maxAge: DAYSTOSEC_30,
+            path: '/',
+            domain: config.COOKIE_DOMAIN,
+          })
+          $cookies.set(config.REFRESH_TOKEN, data.value.refresh_token, {
+            maxAge: DAYSTOSEC_30,
+            path: '/',
+            domain: config.COOKIE_DOMAIN,
+          })
+        }
       }
       break
     }
@@ -163,7 +209,7 @@ async function onMessage(msg: MessageEvent) {
       break
     }
     case '@moveChannel': {
-      await router.push(localePath(`/channel/${channel_id}`))
+      await router.push($localePath(`/channel/${channel_id}`))
       break
     }
   }
