@@ -1,332 +1,342 @@
 <template>
-  <div class="header">
-    <dl>
-      <dt>
-        <div class="header-logo-menu">
-          <p>
-            <NuxtLink :to="$localePath('/')">
-              <img class="logo" src="/images/zempie-logo-black.png" />
-              <img class="mobile-logo" src="/images/zempie_logo_154_155.png" />
-            </NuxtLink>
-          </p>
-          <button
-            class="btn-circle-none mobile"
-            @click="isHeaderSideMobile = true"
-          >
-            <i class="uil uil-bars"></i>
-          </button>
-          <!-- <i class="uil uil-bars" v-on:click="headerSideOpenMobile"></i> -->
-          <ul class="menu">
-            <li class="uppercase">
-              <NuxtLink
-                :to="$localePath('/community/list')"
-                :class="
-                  $route.name.toString().includes('community-list')
-                    ? 'active'
-                    : ''
-                "
-              >
-                community
-              </NuxtLink>
-            </li>
-            <li class="uppercase">
-              <NuxtLink
-                :to="$localePath('/game/list')"
-                :class="
-                  $route.name.toString().includes('game-list') ? 'active' : ''
-                "
-              >
-                games
-              </NuxtLink>
-            </li>
-            <li class="uppercase">
-              <NuxtLink
-                :to="$localePath('/zem-jam')"
-                :class="
-                  $route.name.toString().includes('zem-jam') ? 'active' : ''
-                "
-              >
-                ZEMJAM
-              </NuxtLink>
-            </li>
-          </ul>
-        </div>
-      </dt>
-
-      <dd>
-        <div class="header-search">
-          <div class="input-search-line">
-            <i class="uil uil-search"></i>
-            <div>
-              <el-dropdown
-                ref="searchDropdown"
-                trigger="click"
-                @command="movePage"
-              >
-                <input
-                  type="text"
-                  name=""
-                  title="keywords"
-                  :placeholder="t('needSearchInput')"
-                  v-model="searchInput"
-                  @input="search"
-                  @keyup.enter="moveSearchPage"
+  <ClientOnly>
+    <!-- 상단영역 -->
+    <div class="header">
+      <dl>
+        <dt>
+          <div class="header-logo-menu">
+            <p>
+              <NuxtLink :to="$localePath('/')">
+                <img class="logo" src="/images/zempie-logo-black.png" />
+                <img
+                  class="mobile-logo"
+                  src="/images/zempie_logo_154_155.png"
                 />
-                <template #dropdown>
-                  <el-dropdown-menu
-                    class="header-search-list"
-                    style="min-width: 260px"
-                  >
-                    <div :class="hasResearchResult ? '' : 'no-result'">
-                      <template v-if="userList?.length">
-                        <h2>{{ t('user.name') }}</h2>
-                        <el-dropdown-item
-                          v-for="user in userList"
-                          :key="user.id"
-                          :command="[(user['isUser'] = true), user]"
-                        >
-                          <div @click="moveUserPage(user.channel_id)">
-                            <dl>
-                              <dt>
-                                <UserAvatarSk v-if="isPending" />
+              </NuxtLink>
+            </p>
+            <button
+              class="btn-circle-none mobile"
+              @click="isHeaderSideMobile = true"
+            >
+              <i class="uil uil-bars"></i>
+            </button>
+            <!-- <i class="uil uil-bars" v-on:click="headerSideOpenMobile"></i> -->
+            <ul class="menu">
+              <li class="uppercase">
+                <NuxtLink
+                  :to="$localePath('/community/list')"
+                  :class="
+                    $route.name.toString().includes('community-list')
+                      ? 'active'
+                      : ''
+                  "
+                >
+                  community
+                </NuxtLink>
+              </li>
+              <li class="uppercase">
+                <NuxtLink
+                  :to="$localePath('/game/list')"
+                  :class="
+                    $route.name.toString().includes('game-list') ? 'active' : ''
+                  "
+                >
+                  games
+                </NuxtLink>
+              </li>
+              <li class="uppercase">
+                <NuxtLink
+                  :to="$localePath('/zem-jam')"
+                  :class="
+                    $route.name.toString().includes('zem-jam') ? 'active' : ''
+                  "
+                >
+                  ZEMJAM
+                </NuxtLink>
+              </li>
+            </ul>
+          </div>
+        </dt>
 
-                                <UserAvatar v-else :user="user" :tag="'span'" />
-                                {{ user.name }}
-                              </dt>
-                              <dd><i class="uil uil-user"></i></dd>
-                            </dl>
-                          </div>
-                        </el-dropdown-item>
-                      </template>
-                      <template v-if="gameList?.length">
-                        <h2>{{ t('addGameInfo.game.name') }}</h2>
-                        <el-dropdown-item
-                          v-for="game in gameList"
-                          :key="game.id"
-                          :command="[(game['isGame'] = true), game]"
-                        >
-                          <div @click="moveGamePage(game.pathname)">
-                            <dl>
-                              <dt>
-                                <span
-                                  :style="`background:url(${
-                                    game.profile_img || game.url_thumb
-                                  }) center center / cover no-repeat; background-size:cover;`"
-                                ></span>
-                                {{ game.title }}
-                              </dt>
-                              <dd><i class="uil uil-robot"></i></dd>
-                            </dl>
-                          </div>
-                        </el-dropdown-item>
-                      </template>
-                      <template v-if="communityList?.length">
-                        <h2>{{ t('community.name') }}</h2>
-                        <el-dropdown-item
-                          v-for="community in communityList"
-                          :key="community.id"
-                          :command="[
-                            (community['isCommunity'] = true),
-                            community,
-                          ]"
-                        >
-                          <div @click="moveCommunityPage(community.id)">
-                            <dl>
-                              <dt>
-                                <span
-                                  :style="`background:url(${community.profile_img}) center center / cover no-repeat; background-size:cover;`"
-                                ></span>
-                                {{ community.name }}
-                              </dt>
-                              <dd><i class="uil uil-comments"></i></dd>
-                            </dl>
-                          </div>
-                        </el-dropdown-item>
-                      </template>
-                      <template v-if="!hasResearchResult">
-                        <h2>{{ t('no.search.result') }}</h2>
-                      </template>
-                    </div>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
+        <dd>
+          <div class="header-search">
+            <div class="input-search-line">
+              <i class="uil uil-search"></i>
+              <div>
+                <el-dropdown
+                  ref="searchDropdown"
+                  trigger="click"
+                  @command="movePage"
+                >
+                  <input
+                    type="text"
+                    name=""
+                    title="keywords"
+                    :placeholder="t('needSearchInput')"
+                    v-model="searchInput"
+                    @input="search"
+                    @keyup.enter="moveSearchPage"
+                  />
+                  <template #dropdown>
+                    <el-dropdown-menu
+                      class="header-search-list"
+                      style="min-width: 260px"
+                    >
+                      <div :class="hasResearchResult ? '' : 'no-result'">
+                        <template v-if="userList?.length">
+                          <h2>{{ t('user.name') }}</h2>
+                          <el-dropdown-item
+                            v-for="user in userList"
+                            :key="user.id"
+                            :command="[(user['isUser'] = true), user]"
+                          >
+                            <div @click="moveUserPage(user.channel_id)">
+                              <dl>
+                                <dt>
+                                  <UserAvatarSk v-if="isPending" />
+
+                                  <UserAvatar
+                                    v-else
+                                    :user="user"
+                                    :tag="'span'"
+                                  />
+                                  {{ user.name }}
+                                </dt>
+                                <dd><i class="uil uil-user"></i></dd>
+                              </dl>
+                            </div>
+                          </el-dropdown-item>
+                        </template>
+                        <template v-if="gameList?.length">
+                          <h2>{{ t('addGameInfo.game.name') }}</h2>
+                          <el-dropdown-item
+                            v-for="game in gameList"
+                            :key="game.id"
+                            :command="[(game['isGame'] = true), game]"
+                          >
+                            <div @click="moveGamePage(game.pathname)">
+                              <dl>
+                                <dt>
+                                  <span
+                                    :style="`background:url(${
+                                      game.profile_img || game.url_thumb
+                                    }) center center / cover no-repeat; background-size:cover;`"
+                                  ></span>
+                                  {{ game.title }}
+                                </dt>
+                                <dd><i class="uil uil-robot"></i></dd>
+                              </dl>
+                            </div>
+                          </el-dropdown-item>
+                        </template>
+                        <template v-if="communityList?.length">
+                          <h2>{{ t('community.name') }}</h2>
+                          <el-dropdown-item
+                            v-for="community in communityList"
+                            :key="community.id"
+                            :command="[
+                              (community['isCommunity'] = true),
+                              community,
+                            ]"
+                          >
+                            <div @click="moveCommunityPage(community.id)">
+                              <dl>
+                                <dt>
+                                  <span
+                                    :style="`background:url(${community.profile_img}) center center / cover no-repeat; background-size:cover;`"
+                                  ></span>
+                                  {{ community.name }}
+                                </dt>
+                                <dd><i class="uil uil-comments"></i></dd>
+                              </dl>
+                            </div>
+                          </el-dropdown-item>
+                        </template>
+                        <template v-if="!hasResearchResult">
+                          <h2>{{ t('no.search.result') }}</h2>
+                        </template>
+                      </div>
+                    </el-dropdown-menu>
+                  </template>
+                </el-dropdown>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- FIXME: popper-class: css수정 -->
+          <!-- FIXME: popper-class: css수정 -->
 
-        <div class="header-language">
-          <el-select
-            class="hl-select-box"
-            v-model="selectedLang"
-            :placeholder="t('korean')"
+          <div class="header-language">
+            <el-select
+              class="hl-select-box"
+              v-model="selectedLang"
+              :placeholder="t('korean')"
+            >
+              <el-option
+                v-for="item in options"
+                :key="item.code"
+                :label="item.label"
+                :value="item.code"
+                @click="switchLangauge"
+              />
+            </el-select>
+          </div>
+          <div
+            v-if="isLogin"
+            class="header-info ml10"
+            style="display: flex"
+            id="userMenu"
           >
-            <el-option
-              v-for="item in options"
-              :key="item.code"
-              :label="item.label"
-              :value="item.code"
-              @click="switchLangauge"
-            />
-          </el-select>
-        </div>
-        <div
-          v-if="isLogin"
-          class="header-info ml10"
-          style="display: flex"
-          id="userMenu"
-        >
-          <el-dropdown trigger="click" ref="userMenu">
-            <UserAvatar
-              style="width: 30px; height: 30px"
-              :user="user"
-              :key="user?.picture"
-            />
+            <el-dropdown trigger="click" ref="userMenu">
+              <UserAvatar
+                style="width: 30px; height: 30px"
+                :user="user"
+                :key="user?.picture"
+              />
 
-            <template #dropdown>
-              <div
-                slot="body"
-                class="header-setting"
-                style="min-width: 250px"
-                @click="userMenu?.handleClose()"
-              >
-                <dl style="margin: 10px 0px 0px 0px">
-                  <UserAvatar
-                    style="width: 30px; height: 30px"
-                    :user="user"
-                    :key="user?.picture"
-                  />
-                  <dd>
-                    <NuxtLink :to="$localePath(`/channel/${user?.channel_id}`)">
-                      <h2>{{ user.name }}</h2>
-                    </NuxtLink>
-                  </dd>
-                </dl>
-                <div>
-                  <h2>{{ t('myProfile') }}</h2>
+              <template #dropdown>
+                <div
+                  slot="body"
+                  class="header-setting"
+                  style="min-width: 250px"
+                  @click="userMenu?.handleClose()"
+                >
+                  <dl style="margin: 10px 0px 0px 0px">
+                    <UserAvatar
+                      style="width: 30px; height: 30px"
+                      :user="user"
+                      :key="user?.picture"
+                    />
+                    <dd>
+                      <NuxtLink
+                        :to="$localePath(`/channel/${user?.channel_id}`)"
+                      >
+                        <h2>{{ user.name }}</h2>
+                      </NuxtLink>
+                    </dd>
+                  </dl>
                   <div>
-                    <NuxtLink
-                      id="myChannel"
-                      :to="$localePath(`/channel/${user.channel_id}`)"
-                      ><i class="uil uil-user"></i>
-                      {{ t('myChannel') }}
-                    </NuxtLink>
-                    <NuxtLink :to="$localePath('/project/list')"
-                      ><i class="uil uil-robot"></i>
-                      {{ t('gameStudio') }}
-                    </NuxtLink>
+                    <h2>{{ t('myProfile') }}</h2>
+                    <div>
+                      <NuxtLink
+                        id="myChannel"
+                        :to="$localePath(`/channel/${user.channel_id}`)"
+                        ><i class="uil uil-user"></i>
+                        {{ t('myChannel') }}
+                      </NuxtLink>
+                      <NuxtLink :to="$localePath('/project/list')"
+                        ><i class="uil uil-robot"></i>
+                        {{ t('gameStudio') }}
+                      </NuxtLink>
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <h2>{{ t('group') }}</h2>
                   <div>
-                    <NuxtLink :to="$localePath(`/myaccount/communities`)"
-                      ><i class="uil uil-users-alt"></i>
-                      {{ t('joined.group') }}
-                    </NuxtLink>
+                    <h2>{{ t('group') }}</h2>
+                    <div>
+                      <NuxtLink :to="$localePath(`/myaccount/communities`)"
+                        ><i class="uil uil-users-alt"></i>
+                        {{ t('joined.group') }}
+                      </NuxtLink>
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <h2>{{ t('account') }}</h2>
                   <div>
-                    <NuxtLink :to="$localePath(`/myaccount`)"
-                      ><i class="uil uil-setting"></i>
-                      {{ t('my.account') }}
-                    </NuxtLink>
+                    <h2>{{ t('account') }}</h2>
+                    <div>
+                      <NuxtLink :to="$localePath(`/myaccount`)"
+                        ><i class="uil uil-setting"></i>
+                        {{ t('my.account') }}
+                      </NuxtLink>
+                    </div>
                   </div>
+                  <p>
+                    <a class="btn-default w100p" @click="logout">{{
+                      t('logout')
+                    }}</a>
+                  </p>
                 </div>
-                <p>
-                  <a class="btn-default w100p" @click="logout">{{
-                    t('logout')
-                  }}</a>
-                </p>
-              </div>
-            </template>
-          </el-dropdown>
-        </div>
-        <div v-else class="header-login">
-          <!-- <img
+              </template>
+            </el-dropdown>
+          </div>
+          <div v-else class="header-login">
+            <!-- <img
             
               src="/images/300_300_default_profile.png"
               width="30"
               height="30"
             /> -->
-          <p
-            v-if="useUser().user.value.isLoading"
-            style="
-              font-size: 35px;
-              display: flex;
-              align-items: center;
-              border-radius: 50%;
-              width: 30px;
-              justify-content: center;
-            "
-          >
-            <i class="uil uil-user-circle"></i>
-          </p>
-          <NuxtLink v-else :to="$localePath('/login')">
-            <button class="btn-default">
-              <i class="uil uil-user"></i>{{ t('login') }}
-            </button>
-          </NuxtLink>
-        </div>
-        <div
-          class="header-side-mobile"
-          :style="isHeaderSideMobile ? 'left:0px;' : ''"
-          id="headerSideMobile"
-          v-on-click-outside="clickOutside"
-        >
-          <div class="hsm-close">
-            <i class="uil uil-times" @click="isHeaderSideMobile = false"></i>
+            <p
+              v-if="useUser().user.value.isLoading"
+              style="
+                font-size: 35px;
+                display: flex;
+                align-items: center;
+                border-radius: 50%;
+                width: 30px;
+                justify-content: center;
+              "
+            >
+              <i class="uil uil-user-circle"></i>
+            </p>
+            <NuxtLink v-else :to="$localePath('/login')">
+              <button class="btn-default">
+                <i class="uil uil-user"></i>{{ t('login') }}
+              </button>
+            </NuxtLink>
           </div>
-          <div class="hsm-search">
-            <div class="input-search-line-mobile">
-              <p><i class="uil uil-search"></i></p>
-              <div>
-                <input
-                  type="text"
-                  name=""
-                  title="keywords"
-                  v-model="searchInput"
-                  @keyup.enter="moveSearchPage"
-                  :placeholder="t('needSearchInput')"
-                />
+          <div
+            class="header-side-mobile"
+            :style="isHeaderSideMobile ? 'left:0px;' : ''"
+            id="headerSideMobile"
+            v-on-click-outside="clickOutside"
+          >
+            <div class="hsm-close">
+              <i class="uil uil-times" @click="isHeaderSideMobile = false"></i>
+            </div>
+            <div class="hsm-search">
+              <div class="input-search-line-mobile">
+                <p><i class="uil uil-search"></i></p>
+                <div>
+                  <input
+                    type="text"
+                    name=""
+                    title="keywords"
+                    v-model="searchInput"
+                    @keyup.enter="moveSearchPage"
+                    :placeholder="t('needSearchInput')"
+                  />
+                </div>
               </div>
             </div>
+            <div class="hsm-menu">
+              <NuxtLink
+                :to="$localePath('/community/list')"
+                @click.native="isHeaderSideMobile = false"
+                ><i class="uil uil-comment"></i>
+                Community
+              </NuxtLink>
+              <NuxtLink
+                :to="$localePath('/game/list')"
+                @click.native="isHeaderSideMobile = false"
+                ><i class="uil uil-robot"></i> Games
+              </NuxtLink>
+              <NuxtLink
+                :to="$localePath('/zem-jam')"
+                @click.native="isHeaderSideMobile = false"
+                ><i class="uil uil-comment"></i>
+                ZEMJAM
+              </NuxtLink>
+            </div>
           </div>
-          <div class="hsm-menu">
-            <NuxtLink
-              :to="$localePath('/community/list')"
-              @click.native="isHeaderSideMobile = false"
-              ><i class="uil uil-comment"></i>
-              Community
-            </NuxtLink>
-            <NuxtLink
-              :to="$localePath('/game/list')"
-              @click.native="isHeaderSideMobile = false"
-              ><i class="uil uil-robot"></i> Games
-            </NuxtLink>
-            <NuxtLink
-              :to="$localePath('/zem-jam')"
-              @click.native="isHeaderSideMobile = false"
-              ><i class="uil uil-comment"></i>
-              ZEMJAM
-            </NuxtLink>
+          <div
+            class="header-side-bg-mobile"
+            :style="isHeaderSideBgMobile ? 'display:block;' : ''"
+            id="headerSideBgMobile"
+            v-on:click="headerSideCloseMobile"
+          >
+            &nbsp;
           </div>
-        </div>
-        <div
-          class="header-side-bg-mobile"
-          :style="isHeaderSideBgMobile ? 'display:block;' : ''"
-          id="headerSideBgMobile"
-          v-on:click="headerSideCloseMobile"
-        >
-          &nbsp;
-        </div>
-      </dd>
-    </dl>
+        </dd>
+      </dl>
 
-    <ClientOnly>
       <el-dialog
         v-model="isOpen"
         append-to-body
@@ -358,8 +368,8 @@
           </div>
         </div>
       </el-dialog>
-    </ClientOnly>
-  </div>
+    </div>
+  </ClientOnly>
 </template>
 
 <script setup lang="ts">
