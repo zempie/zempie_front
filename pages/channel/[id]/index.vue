@@ -28,7 +28,7 @@
           <h1>{{ channelInfo.name }}</h1>
           <ul>
             <li>
-              <NuxtLink :to="localePath(`/channel/${channelId}`)">
+              <NuxtLink :to="$localePath(`/channel/${channelId}`)">
                 <p style="background: #feb100; cursor: pointer">
                   <i class="uil uil-comment-chart-line"></i>
                 </p>
@@ -37,7 +37,7 @@
               </NuxtLink>
             </li>
             <li>
-              <NuxtLink :to="localePath(`/channel/${channelId}/followers`)">
+              <NuxtLink :to="$localePath(`/channel/${channelId}/followers`)">
                 <p style="background: #33e4ce; cursor: pointer">
                   <i class="uil uil-users-alt"></i>
                 </p>
@@ -46,7 +46,7 @@
               </NuxtLink>
             </li>
             <li>
-              <NuxtLink :to="localePath(`/channel/${channelId}/following`)">
+              <NuxtLink :to="$localePath(`/channel/${channelId}/following`)">
                 <p style="background: #5d5ffe; cursor: pointer">
                   <i class="uil uil-user-plus"></i>
                 </p>
@@ -64,7 +64,7 @@
             <ul>
               <li
                 v-for="game in games?.slice(0, 5)"
-                @click="$router.push(localePath(`/game/${game.pathname}`))"
+                @click="$router.push($localePath(`/game/${game.pathname}`))"
               >
                 <p
                   :style="`background:url(${
@@ -79,7 +79,7 @@
 
             <div v-if="games?.length > 5">
               <NuxtLink
-                :to="localePath(`/channel/${channelId}/games`)"
+                :to="$localePath(`/channel/${channelId}/games`)"
                 class="btn-default-samll w100p"
                 >{{ $t('moreView') }}
               </NuxtLink>
@@ -93,9 +93,7 @@
 
       <dd>
         <TimelineSk v-if="isPending" />
-        <ClientOnly v-else>
-          <PostTimeline type="user" :isMine="isMine" :key="channelId" />
-        </ClientOnly>
+        <PostTimeline v-else type="user" :isMine="isMine" :key="channelId" />
       </dd>
       <dt>
         <div class="ta-groups" style="margin-top: 0px">
@@ -114,6 +112,7 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+const { $localePath } = useNuxtApp()
 const { t, locale } = useI18n()
 
 const config = useRuntimeConfig()

@@ -152,7 +152,8 @@ async function gameListFetch() {
   )
 
   if (data.value) {
-    const { target } = data.value.result
+    const { result } = data.value
+    const { target } = result
     const { games: gameList } = target
     const list = gameList.filter((gm) => {
       return gm.id !== game.value.id

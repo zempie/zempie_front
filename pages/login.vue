@@ -200,7 +200,6 @@ const rules = computed(() => {
   return formRule
 })
 const v$ = useVuelidate(rules, form)
-onMounted(() => {})
 
 async function onSubmit() {
   const isValid = await v$.value.$validate()
@@ -211,7 +210,7 @@ async function onSubmit() {
     .then(async (result) => {
       const { user } = result
       useUser().setFirebaseUser(user)
-      router.push('/')
+      // router.push($localePath('/'))
     })
     .catch((err: any) => {
       const errorCode = err.code

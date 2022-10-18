@@ -89,6 +89,7 @@ import { required, helpers, maxLength } from '@vuelidate/validators'
 import { emailRegex, passwordRegex } from '~/scripts/utils'
 import { useI18n } from 'vue-i18n';
 import { createUserWithEmailAndPassword, type UserCredential } from 'firebase/auth'
+import { onBeforeRouteLeave } from 'vue-router';
 
 const { t, locale } = useI18n()
 const route = useRoute();

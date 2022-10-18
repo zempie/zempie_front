@@ -54,26 +54,28 @@
                 {{ t('post.modal.block.text') }}
             </div> -->
       <ul class="ta-post">
-        <div v-if="isPending" class="ta-post-none bg-grey-1">
-          <p></p>
-        </div>
-        <TransitionGroup name="fade" v-else-if="!isPending && feeds?.length">
-          <PostFeed
-            v-for="feed in feeds"
-            :feed="feed"
-            :key="feed.id"
-            @refresh="refresh"
-          >
-            <template #followBtn>
-              <UserFollowBtn
-                :user="feed.user"
-                :key="`${feed.user.is_following}`"
-                class="follow-btn-feed"
-                @refresh="refreshFollow"
-              />
-            </template>
-          </PostFeed>
-        </TransitionGroup>
+        <PostFeedSk v-if="isPending" v-for="feed in 6" :key="feed" />
+        <template v-else-if="!isPending && feeds?.length">
+          <TransitionGroup name="fade">
+            <PostFeed
+              v-for="feed in feeds"
+              :feed="feed"
+              :key="feed.id"
+              @refresh="refresh"
+            >
+              <template #followBtn>
+                <UserFollowBtn
+                  :user="feed.user"
+                  :key="`${feed.user.is_following}`"
+                  class="follow-btn-feed"
+                  @refresh="refreshFollow"
+                />
+              </template>
+            </PostFeed>
+          </TransitionGroup>
+          <div ref="triggerDiv"></div>
+        </template>
+
         <div v-else class="ta-post-none">
           <p>
             <span><i class="uil uil-layers-slash"></i></span>
@@ -81,7 +83,6 @@
           <h2>{{ t('timeline.noPost') }}</h2>
         </div>
       </ul>
-      <div ref="triggerDiv"></div>
     </dd>
 
     <ClientOnly>
@@ -96,18 +97,6 @@
           />
         </template>
       </PostModal>
-      <!-- <el-dialog
-        v-model="isTextEditorOpen"
-        custom-class="post-modal"
-        :show-close="false"
-        :close-on-click-modal="false"
-        :close-on-press-escape="false"
-        :destroy-on-close="true"
-        @close="closeEditor"
-        :fullscreen="isFullScreen"
-      > -->
-
-      <!-- </el-dialog> -->
     </ClientOnly>
   </ul>
 </template>
@@ -184,14 +173,14 @@ const watcher = watch(
 const userWatcher = watch(
   () => user.value,
   (userInfo) => {
-    if (route.meta.name === 'myTimeline' && userInfo?.id) {
+    if (route.meta.name === 'main' && userInfo?.id) {
       refresh()
     }
   }
 )
 
 onMounted(async () => {
-  if (paramId.value || route.meta.name === 'myTimeline') {
+  if (paramId.value || route.meta.name === 'main') {
     const result = await fetch()
     if (result) {
       observer.value = new IntersectionObserver(
@@ -206,6 +195,12 @@ onMounted(async () => {
   }
 })
 
+onBeforeUnmount(() => {
+  initPaging()
+  watcher()
+  userWatcher()
+})
+
 async function handleIntersection(target) {
   if (target.isIntersecting) {
     if (isAddData.value) {
@@ -215,18 +210,13 @@ async function handleIntersection(target) {
   }
 }
 
-onBeforeUnmount(() => {
-  initPaging()
-  watcher()
-  userWatcher()
-})
-
 async function fetch() {
   const query = {
     limit: limit.value,
     offset: offset.value,
     media: media.value,
   }
+
   switch (props.type) {
     case 'community':
       if (props.channelInfo) {

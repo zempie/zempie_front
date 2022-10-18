@@ -2,10 +2,13 @@ import { IUserChannel } from "~~/types"
 
 export default function () {
   const userChannel = useState('userChannel', () => ({
-    info: null as IUserChannel
+    info: null as IUserChannel,
+    isLoading: true
   }))
 
   const setUserChannel = async (info: IUserChannel) => {
+    userChannel.value.isLoading = true;
+
     const { data: communities, error } = await useFetch<[]>(`/user/${info.id}/list/community`, getComFetchOptions('get', true))
 
     info.games.map((game) => {
@@ -20,6 +23,7 @@ export default function () {
     })
     info.communities = communities.value
     userChannel.value.info = info;
+    userChannel.value.isLoading = false;
   }
 
   const getChannelInfo = async (channelId: string) => {
