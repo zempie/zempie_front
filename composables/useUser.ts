@@ -87,7 +87,8 @@ export default function () {
           domain: config.COOKIE_DOMAIN
         })
 
-        router.replace(`/${useCommon().setting.value.lang}`)
+        window.location.href = `/${useCommon().setting.value.lang}`
+
       })
       .catch((error: any) => {
         ElMessage({
