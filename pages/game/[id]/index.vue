@@ -153,12 +153,15 @@ async function gameListFetch() {
 
   if (data.value) {
     const { result } = data.value
-    const { target } = result
-    const { games: gameList } = target
-    const list = gameList.filter((gm) => {
-      return gm.id !== game.value.id
-    })
-    games.value = list
+
+    if (result) {
+      const { target } = result
+      const { games: gameList } = target
+      const list = gameList.filter((gm) => {
+        return gm.id !== game.value.id
+      })
+      games.value = list
+    }
   }
 }
 

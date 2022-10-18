@@ -55,27 +55,23 @@
             </div> -->
       <ul class="ta-post">
         <PostFeedSk v-if="isPending" v-for="feed in 6" :key="feed" />
-        <template v-else-if="!isPending && feeds?.length">
-          <TransitionGroup name="fade">
-            <PostFeed
-              v-for="feed in feeds"
-              :feed="feed"
-              :key="feed.id"
-              @refresh="refresh"
-            >
-              <template #followBtn>
-                <UserFollowBtn
-                  :user="feed.user"
-                  :key="`${feed.user.is_following}`"
-                  class="follow-btn-feed"
-                  @refresh="refreshFollow"
-                />
-              </template>
-            </PostFeed>
-          </TransitionGroup>
-          <div ref="triggerDiv"></div>
-        </template>
-
+        <TransitionGroup name="fade" v-else-if="!isPending && feeds?.length">
+          <PostFeed
+            v-for="feed in feeds"
+            :feed="feed"
+            :key="feed.id"
+            @refresh="refresh"
+          >
+            <template #followBtn>
+              <UserFollowBtn
+                :user="feed.user"
+                :key="`${feed.user.is_following}`"
+                class="follow-btn-feed"
+                @refresh="refreshFollow"
+              />
+            </template>
+          </PostFeed>
+        </TransitionGroup>
         <div v-else class="ta-post-none">
           <p>
             <span><i class="uil uil-layers-slash"></i></span>
@@ -83,6 +79,7 @@
           <h2>{{ t('timeline.noPost') }}</h2>
         </div>
       </ul>
+      <div ref="triggerDiv"></div>
     </dd>
 
     <ClientOnly>
@@ -180,19 +177,19 @@ const userWatcher = watch(
 )
 
 onMounted(async () => {
-  if (paramId.value || route.meta.name === 'main') {
-    const result = await fetch()
-    if (result) {
-      observer.value = new IntersectionObserver(
-        async (entries) => {
-          await handleIntersection(entries[0])
-        },
-        { root: null, threshold: 1 }
-      )
+  // if (paramId.value || route.meta.name === 'main') {
+  const result = await fetch()
+  if (result) {
+    observer.value = new IntersectionObserver(
+      async (entries) => {
+        await handleIntersection(entries[0])
+      },
+      { root: null, threshold: 1 }
+    )
 
-      observer.value.observe(triggerDiv.value)
-    }
+    observer.value.observe(triggerDiv.value)
   }
+  // }
 })
 
 onBeforeUnmount(() => {
@@ -300,21 +297,23 @@ async function fetch() {
 
 function dataPaging(data: { result: IFeed[]; totalCount: number }) {
   const { result, totalCount } = data
-  const validFeed = result.filter((feed) => {
-    return feed.id !== null
-  })
-  const uniqueResult = _.uniqBy(validFeed, 'id')
+  if (result.length) {
+    const validFeed = result.filter((feed) => {
+      return feed.id !== null
+    })
+    const uniqueResult = _.uniqBy(validFeed, 'id')
 
-  if (isAddData.value) {
-    if (result.length > 0) {
-      feeds.value = [...feeds.value, ...uniqueResult]
+    if (isAddData.value) {
+      if (result.length > 0) {
+        feeds.value = [...feeds.value, ...uniqueResult]
+      } else {
+        isAddData.value = false
+        observer.value.unobserve(triggerDiv.value)
+      }
     } else {
-      isAddData.value = false
-      observer.value.unobserve(triggerDiv.value)
+      feeds.value = uniqueResult
+      isAddData.value = true
     }
-  } else {
-    feeds.value = uniqueResult
-    isAddData.value = true
   }
 }
 
