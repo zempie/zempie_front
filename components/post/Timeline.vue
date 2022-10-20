@@ -54,9 +54,7 @@
                 {{ t('post.modal.block.text') }}
             </div> -->
       <ul class="ta-post">
-        <div v-if="isPending" class="ta-post-none bg-grey-1">
-          <p></p>
-        </div>
+        <PostFeedSk v-if="isPending" v-for="feed in 6" :key="feed" />
         <TransitionGroup name="fade" v-else-if="!isPending && feeds?.length">
           <PostFeed
             v-for="feed in feeds"
@@ -96,18 +94,6 @@
           />
         </template>
       </PostModal>
-      <!-- <el-dialog
-        v-model="isTextEditorOpen"
-        custom-class="post-modal"
-        :show-close="false"
-        :close-on-click-modal="false"
-        :close-on-press-escape="false"
-        :destroy-on-close="true"
-        @close="closeEditor"
-        :fullscreen="isFullScreen"
-      > -->
-
-      <!-- </el-dialog> -->
     </ClientOnly>
   </ul>
 </template>
@@ -184,26 +170,32 @@ const watcher = watch(
 const userWatcher = watch(
   () => user.value,
   (userInfo) => {
-    if (route.meta.name === 'myTimeline' && userInfo?.id) {
+    if (route.meta.name === 'main' && userInfo?.id) {
       refresh()
     }
   }
 )
 
 onMounted(async () => {
-  if (paramId.value || route.meta.name === 'myTimeline') {
-    const result = await fetch()
-    if (result) {
-      observer.value = new IntersectionObserver(
-        async (entries) => {
-          await handleIntersection(entries[0])
-        },
-        { root: null, threshold: 1 }
-      )
+  // if (paramId.value || route.meta.name === 'main') {
+  const result = await fetch()
+  if (result) {
+    observer.value = new IntersectionObserver(
+      async (entries) => {
+        await handleIntersection(entries[0])
+      },
+      { root: null, threshold: 1 }
+    )
 
-      observer.value.observe(triggerDiv.value)
-    }
+    observer.value.observe(triggerDiv.value)
   }
+  // }
+})
+
+onBeforeUnmount(() => {
+  initPaging()
+  watcher()
+  userWatcher()
 })
 
 async function handleIntersection(target) {
@@ -215,18 +207,13 @@ async function handleIntersection(target) {
   }
 }
 
-onBeforeUnmount(() => {
-  initPaging()
-  watcher()
-  userWatcher()
-})
-
 async function fetch() {
   const query = {
     limit: limit.value,
     offset: offset.value,
     media: media.value,
   }
+
   switch (props.type) {
     case 'community':
       if (props.channelInfo) {
@@ -310,21 +297,23 @@ async function fetch() {
 
 function dataPaging(data: { result: IFeed[]; totalCount: number }) {
   const { result, totalCount } = data
-  const validFeed = result.filter((feed) => {
-    return feed.id !== null
-  })
-  const uniqueResult = _.uniqBy(validFeed, 'id')
+  if (result.length) {
+    const validFeed = result.filter((feed) => {
+      return feed.id !== null
+    })
+    const uniqueResult = _.uniqBy(validFeed, 'id')
 
-  if (isAddData.value) {
-    if (result.length > 0) {
-      feeds.value = [...feeds.value, ...uniqueResult]
+    if (isAddData.value) {
+      if (result.length > 0) {
+        feeds.value = [...feeds.value, ...uniqueResult]
+      } else {
+        isAddData.value = false
+        observer.value.unobserve(triggerDiv.value)
+      }
     } else {
-      isAddData.value = false
-      observer.value.unobserve(triggerDiv.value)
+      feeds.value = uniqueResult
+      isAddData.value = true
     }
-  } else {
-    feeds.value = uniqueResult
-    isAddData.value = true
   }
 }
 

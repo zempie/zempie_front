@@ -720,7 +720,7 @@ async function updateGame() {
     background: 'rgba(0, 0, 0, 0.7)',
   })
 
-  const { data, error } = await useFetch(
+  const { data, error } = await useCustomFetch(
     `/studio/project/${editProject.value.info.id}`,
     getStudioFetchOptions('post', true, formData)
   )

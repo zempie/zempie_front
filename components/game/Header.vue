@@ -5,7 +5,7 @@
     :style="
       prevBanner
         ? `background: url(${
-            prevBanner + `?_=$${Date.now()}`
+            prevBanner + `?_=${Date.now()}`
           }) center center / cover no-repeat; background-size: cover;`
         : 'background-color: #f973165c'
     "
@@ -48,9 +48,9 @@
       </span>
     </div>
     <dl>
-      <dt>
+      <dt class="header-left">
         <dl>
-          <dt>
+          <dt class="game-profile-img">
             &nbsp;
             <div
               :style="`background:url(${gameInfo?.url_thumb}) center center / cover no-repeat; background-size:cover;`"
@@ -58,7 +58,7 @@
               <!--                                <span></span>-->
             </div>
           </dt>
-          <dd>
+          <dd class="game-tag">
             <h2 style="color: #fff; font-size: 20px; font-weight: bold">
               {{ gameInfo.title }}<span></span>
             </h2>
@@ -67,7 +67,12 @@
             </h3>
 
             <div class="tag-item secondary">
-              <a v-for="hashtag in hashtags" :key="hashtag">{{ hashtag }}</a>
+              <a
+                v-for="hashtag in hashtags"
+                :key="hashtag"
+                @click="searchHashtag(hashtag)"
+                >#{{ hashtag }}
+              </a>
             </div>
           </dd>
         </dl>
@@ -186,7 +191,7 @@ import { PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const IMAGE_MAX_SIZE = 4
-const { $$ } = useNuxtApp()
+const { $localePath } = useNuxtApp()
 
 const { t, locale } = useI18n()
 
@@ -229,7 +234,7 @@ const setLike = _.debounce(async () => {
     game_id: props.gameInfo.id,
     on: true,
   }
-  const { data, error, refresh } = await useFetch(
+  const { data, error, refresh } = await useCustomFetch(
     `/game/heart`,
     getZempieFetchOptions('post', true, payload)
   )
@@ -245,7 +250,7 @@ const unsetLike = _.debounce(async () => {
     game_id: props.gameInfo.id,
     on: false,
   }
-  const { data, error, refresh } = await useFetch(
+  const { data, error, refresh } = await useCustomFetch(
     `/game/heart`,
     getZempieFetchOptions('post', true, payload)
   )
@@ -316,7 +321,7 @@ async function updateBannerImg() {
     formData.append('game_id', String(props.gameInfo.id))
     formData.append('file', file)
 
-    const { data, error, pending } = await useFetch(
+    const { data, error, pending } = await useCustomFetch(
       '/game/banner',
       getZempieFetchOptions('put', true, formData)
     )
@@ -330,7 +335,7 @@ async function updateBannerImg() {
 }
 
 async function deleteBanner() {
-  const { data, error, pending } = await useFetch(
+  const { data, error, pending } = await useCustomFetch(
     '/game/banner',
     getZempieFetchOptions('delete', true, { game_id: props.gameInfo.id })
   )
@@ -350,7 +355,7 @@ function saveBannerImg() {
     formData.append('game_id', String(props.gameInfo.id))
     formData.append('file', file)
 
-    const { data, error, pending } = await useFetch(
+    const { data, error, pending } = await useCustomFetch(
       '/game/banner',
       getZempieFetchOptions('post', true, formData)
     )
@@ -366,6 +371,10 @@ function saveBannerImg() {
 function moveUserPage() {
   router.push($localePath(`/channel/${props.gameInfo.user.channel_id}`))
 }
+
+function searchHashtag(hashtag: string) {
+  router.push({ path: $localePath(`/search`), query: { q: hashtag } })
+}
 </script>
 
 <style lang="scss" scoped>
@@ -374,6 +383,18 @@ function moveUserPage() {
   display: inline-flex;
   justify-content: center;
   align-items: center;
+}
+.secondary {
+  a {
+    margin-right: 5px;
+    margin-bottom: 5px;
+
+    &:hover {
+      cursor: pointer;
+      color: #fff;
+      background-color: #f97316;
+    }
+  }
 }
 
 .modal-alert {
@@ -457,6 +478,18 @@ function moveUserPage() {
 }
 
 @media all and (min-width: 992px) and (max-width: 1199px) {
+  .header-left {
+    width: 70%;
+    .game-profile-img {
+      width: 30%;
+    }
+    .game-tag {
+      width: 70%;
+    }
+  }
+  .play-btn-container {
+    width: 30%;
+  }
   .modal-alert {
     .btn-container {
       button {
@@ -470,5 +503,17 @@ function moveUserPage() {
 }
 
 @media all and (min-width: 1200px) {
+  .header-left {
+    width: 70%;
+    .game-profile-img {
+      width: 24%;
+    }
+    .game-tag {
+      width: 70%;
+    }
+  }
+  .play-btn-container {
+    width: 30%;
+  }
 }
 </style>

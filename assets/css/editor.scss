@@ -189,6 +189,11 @@
       pointer-events: none;
     }
   }
+
+  .resize-cursor {
+    cursor: ew-resize;
+    cursor: col-resize;
+  }
 }
 
 pre {

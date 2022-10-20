@@ -2,11 +2,14 @@ import { IUserChannel } from "~~/types"
 
 export default function () {
   const userChannel = useState('userChannel', () => ({
-    info: null as IUserChannel
+    info: null as IUserChannel,
+    isLoading: true
   }))
 
   const setUserChannel = async (info: IUserChannel) => {
-    const { data: communities, error } = await useFetch<[]>(`/user/${info.id}/list/community`, getComFetchOptions('get', true))
+    userChannel.value.isLoading = true;
+
+    const { data: communities, error } = await useCustomFetch<[]>(`/user/${info.id}/list/community`, getComFetchOptions('get', true))
 
     info.games.map((game) => {
       game.user = {
@@ -20,10 +23,11 @@ export default function () {
     })
     info.communities = communities.value
     userChannel.value.info = info;
+    userChannel.value.isLoading = false;
   }
 
   const getChannelInfo = async (channelId: string) => {
-    const { data, error } = await useFetch<{ result: { target: IUserChannel } }>(`/channel/${channelId}`, getZempieFetchOptions('get', true))
+    const { data, error } = await useCustomFetch<{ result: { target: IUserChannel } }>(`/channel/${channelId}`, getZempieFetchOptions('get', true))
     if (data.value) {
       const { target } = data.value.result;
       setUserChannel(target)

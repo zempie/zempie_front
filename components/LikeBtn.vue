@@ -1,17 +1,17 @@
 <template>
-  <li v-if="!isLiked" @click="setLike">
+  <li>
     <i
+      v-if="!isLiked"
+      @click="setLike"
       class="xi-heart-o like-icon"
       style="font-size: 22px; color: #ff6e17; cursor: pointer"
     ></i>
-    {{ likeCnt }}
-  </li>
-  <li v-else @click="unsetLike">
     <i
+      v-else
       class="xi-heart like-icon"
       style="font-size: 22px; color: #ff6e17; cursor: pointer"
     ></i>
-    {{ likeCnt }}
+    <span @click="showLikeHistory"> {{ likeCnt }}</span>
   </li>
 </template>
 
@@ -62,6 +62,15 @@ async function unsetLike() {
   }
   unlikeAcceessableCount = unlikeAcceessableCount + 1
 }
+
+function showLikeHistory() {}
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+span {
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+}
+</style>

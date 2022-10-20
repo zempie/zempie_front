@@ -195,7 +195,7 @@ const {
   error,
   pending,
   refresh,
-} = await useFetch<any>(
+} = await useCustomFetch<any>(
   `/post/${feedId.value}`,
   getComFetchOptions('get', true)
 )
@@ -243,7 +243,7 @@ async function commentFetch() {
     sort: sort.value,
   }
 
-  const { data, pending, refresh } = await useFetch<{ result: [] }>(
+  const { data, pending, refresh } = await useCustomFetch<{ result: [] }>(
     createQueryUrl(`/post/${feedId.value}/comment/list`, query),
     getComFetchOptions('get', true)
   )

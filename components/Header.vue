@@ -6,9 +6,7 @@
         <dt>
           <div class="header-logo-menu">
             <p>
-              <NuxtLink
-                :to="isLogin ? $localePath('/timeline') : $localePath('/')"
-              >
+              <NuxtLink :to="$localePath('/')">
                 <img class="logo" src="/images/zempie-logo-black.png" />
                 <img
                   class="mobile-logo"

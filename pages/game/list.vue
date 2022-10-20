@@ -32,17 +32,16 @@
       <dt>Games <span>{{ games.length }}</span></dt>
     </dl> -->
     <ul class="card-game">
-      <ClientOnly>
-        <TransitionGroup name="fade">
-          <GameCardSk v-if="isPending" v-for="game in 16" :key="game" />
-          <GameCard
-            v-else
-            v-for="(game, index) in games"
-            :gameInfo="game"
-            :key="index"
-          />
-        </TransitionGroup>
-      </ClientOnly>
+      <!--  -->
+      <GameCardSk v-if="isPending" v-for="game in 16" :key="game" />
+
+      <TransitionGroup name="fade" v-else>
+        <GameCard
+          v-for="(game, index) in games"
+          :gameInfo="game"
+          :key="index"
+        />
+      </TransitionGroup>
     </ul>
     <div ref="triggerDiv"></div>
   </div>
@@ -161,7 +160,9 @@ async function fetch() {
     category: category.value,
   }
 
-  const { data, pending, refresh } = await useFetch<{ result: { games: [] } }>(
+  const { data, pending, refresh } = await useCustomFetch<{
+    result: { games: [] }
+  }>(
     `/games?_=${Date.now()}&limit=${limit.value}&offset=${
       offset.value
     }&category=${category.value}`,
@@ -229,20 +230,27 @@ function initData() {
   width: 50% !important;
 }
 
-.fade-move,
+//transition
+.component-fade-enter-active,
+.component-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.component-fade-enter,
+.component-fade-leave-to
+
+/* .component-fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
 .fade-enter-active,
 .fade-leave-active {
-  transition: all 0.5s;
+  transition: opacity 0.15s ease;
 }
 
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
-  transform: translateY(30px);
-}
-
-.fade-leave-active {
-  position: absolute;
 }
 
 @media all and (max-width: 479px) {

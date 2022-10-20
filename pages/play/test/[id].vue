@@ -54,8 +54,6 @@ onBeforeUnmount(() => {
 })
 
 function onLoad() {
-  console.log('---onLoadGame')
-
   ZempieSdk.on('@gamePlay', function () {
     toGameFrame('@gamePlay')
   })

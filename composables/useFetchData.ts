@@ -152,18 +152,11 @@ const studioFetch = async (method: string, url: string, data = null, withCredent
 
 
 export const auth = {
-  // getUserInfo() {
-  //   return useFetchData('get', '/user/info', undefined, true)
-  // },
-  setCookie() {
-    return useFetchData('get', '/__cookie', undefined, false)
-  },
+ 
   login() {
     return useFetchData('get', '/user/info', undefined, true)
   },
-  hasEmail(obj: { email: string }) {
-    return useFetchData('post', '/user/has-email', obj, false)
-  },
+ 
   signUp(obj: { name: string; nickname?: string }) {
     return useFetchData('post', '/user/sign-up', obj, true)
   },

@@ -146,18 +146,24 @@ onMounted(async () => {
 })
 
 async function gameListFetch() {
-  const { data, error, pending, refresh } = await useFetch<{ result: any }>(
+  const { data, error, pending, refresh } = await useCustomFetch<{
+    result: any
+  }>(
     `/channel/${useGame().game.value.info.user.channel_id}`,
     getZempieFetchOptions('get', false)
   )
 
   if (data.value) {
-    const { target } = data.value.result
-    const { games: gameList } = target
-    const list = gameList.filter((gm) => {
-      return gm.id !== game.value.id
-    })
-    games.value = list
+    const { result } = data.value
+
+    if (result) {
+      const { target } = result
+      const { games: gameList } = target
+      const list = gameList.filter((gm) => {
+        return gm.id !== game.value.id
+      })
+      games.value = list
+    }
   }
 }
 

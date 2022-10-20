@@ -91,9 +91,9 @@ onMounted(async () => {
 async function getChannelHeaderInfo() {
   if (channelId.value) {
     //   getUserInfo(channelId: string) {
-    //   return useFetchData('get', `/channel/${channelId}`, undefined, true)
+    //   return useCustomFetchData('get', `/channel/${channelId}`, undefined, true)
     // },
-    const { data, pending } = await useCustomFetch(
+    const { data, pending } = await useCustomFetch<{ result: any }>(
       `/channel/${channelId.value}`,
       getZempieFetchOptions('get', true)
     )

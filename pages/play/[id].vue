@@ -5,7 +5,11 @@
         ref="game"
         class="iframe"
         :style="`height:${iframeHeight};`"
-        :src="`${config.LAUNCHER_URL}/game/${gamePath}`"
+        :src="
+          config.ENV === 'local' || config.ENV === 'development'
+            ? `${config.LAUNCHER_URL}/#/game/${gamePath}`
+            : `${config.LAUNCHER_URL}/game/${gamePath}`
+        "
       ></iframe>
     </ClientOnly>
   </div>
@@ -139,7 +143,6 @@ function onChangedToken() {
 }
 
 async function onMessage(msg: MessageEvent) {
-  console.log('msag', msg.data)
   const { type, channel_id } = msg.data
 
   switch (type) {
