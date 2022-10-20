@@ -2,58 +2,8 @@
   <div class="content">
 
     <div class="area-view">
-      <ul class="ta-post" v-if="useCommon().loading.value"  >
-        <li class="tap-list">
-          <dl class="tapl-title">
-            <dt>
-              <dl>
-                <dt>
-                  <dt><UserAvatarSk style="width: 40px; height: 40px" /></dt>
-                </dt>
-                <dd>
-                  <h2 class="grey-text skeleton-animation"
-          style="width: 300px; margin-bottom: 10px">
-          </h2>
-                 
-                 <p class="grey-text skeleton-animation"
-          style="width: 150px; margin-bottom: 10px"></p>
-                </dd>
-               
-              </dl>
-            </dt>
-          
-          </dl>
-
-          <div  class="tapl-content grey-text skeleton-animation"
-        style="margin: 20px; padding: 20px" ></div>
-       
-         
-
-          <ul class="tapl-option">
-            <li>
-              <ul>
-                <li>
-                  <i
-                    class="uil uil-comment-alt-dots"
-                    style="font-size: 22px"
-                  ></i
-                  >&nbsp;
-                </li>
-
-                <li >
-                  <a
-                    ><i class="uil uil-share-alt" style="font-size: 20px"></i>
-                  </a>
-                </li>
-              </ul>
-            </li>
-
-           
-          </ul>
-         
-        </li>
-      </ul>
-      <ul class="ta-post" v-else-if="feed">
+     
+      <ul class="ta-post" v-if="feed">
         <li class="tap-list">
           <dl class="tapl-title">
             <dt>
@@ -175,6 +125,7 @@
             </li>
 
             <li>
+              
               <PostDropdown
                 :feed="feed"
                 @deletePost="$router.back()"
@@ -204,7 +155,57 @@
         </li>
       </ul>
 
-     
+      <ul class="ta-post" v-else  >
+        <li class="tap-list">
+          <dl class="tapl-title">
+            <dt>
+              <dl>
+                <dt>
+                  <dt><UserAvatarSk style="width: 40px; height: 40px" /></dt>
+                </dt>
+                <dd>
+                  <h2 class="grey-text skeleton-animation"
+          style="width: 300px; margin-bottom: 10px">
+          </h2>
+                 
+                 <p class="grey-text skeleton-animation"
+          style="width: 150px; margin-bottom: 10px"></p>
+                </dd>
+               
+              </dl>
+            </dt>
+          
+          </dl>
+
+          <div  class="tapl-content grey-text skeleton-animation"
+        style="margin: 20px; padding: 20px" ></div>
+       
+         
+
+          <ul class="tapl-option">
+            <li>
+              <ul>
+                <li>
+                  <i
+                    class="uil uil-comment-alt-dots"
+                    style="font-size: 22px"
+                  ></i
+                  >&nbsp;
+                </li>
+
+                <li >
+                  <a
+                    ><i class="uil uil-share-alt" style="font-size: 20px"></i>
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+           
+          </ul>
+         
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -256,16 +257,15 @@ watch(
     setHead()
   }
 )
+
 onMounted(async () => {
+  if (feed.value) {
     hljs.configure({
       ignoreUnescapedHTML: true,
     })
     document.querySelectorAll('pre').forEach((block) => {
-      console.log(block)
       hljs.highlightElement(block)
     })
-  if (feed.value) {
-   
     setHead()
     observer.value = new IntersectionObserver(
       (entries) => {
