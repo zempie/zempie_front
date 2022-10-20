@@ -28,13 +28,7 @@ const isEditorDestroy = ref(false)
 const isFullScreen = ref(false)
 
 const props = defineProps({
-  isTextEditorOpen: {
-    type: Boolean,
-  },
-})
-
-const isTextEditorOpen = computed(() => {
-  return props.isTextEditorOpen ? props.isTextEditorOpen : false
+  isTextEditorOpen: Boolean,
 })
 
 const isMobile = computed(() =>
