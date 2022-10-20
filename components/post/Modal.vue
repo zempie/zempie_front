@@ -34,6 +34,10 @@ const props = defineProps({
   },
 })
 
+const isTextEditorOpen = computed(() => {
+  return props.isTextEditorOpen ? props.isTextEditorOpen : false
+})
+
 const isMobile = computed(() =>
   window.matchMedia('screen and (max-width: 767px)')
 )
