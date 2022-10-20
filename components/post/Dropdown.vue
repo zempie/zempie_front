@@ -7,7 +7,7 @@
       <template #dropdown>
         <div slot="body" class="more-list fixed" style="min-width: 150px">
           <template v-if="user && user.id === (feed?.user && feed?.user.id)">
-            <a @click="openEdit">{{ t('feed.edit') }}</a>
+            <a @click="isTextEditorOpen = true">{{ t('feed.edit') }}</a>
             <a @click="showDeletePostModal = true">{{ t('feed.delete') }}</a>
           </template>
           <template v-else>
@@ -55,20 +55,20 @@
         </div>
       </div>
     </el-dialog>
-
-    <PostModal :isTextEditorOpen="showEditModal">
-      <template #textEditor>
-        <TextEditor
-          @closeModal="closeEditor"
-          :isEdit="true"
-          :feed="feed"
-          @refresh="emit('refresh')"
-          :isFullScreen="usePost().post.value.isFullScreen"
-          :key="editorKey"
-        />
-      </template>
-    </PostModal>
   </ClientOnly>
+
+  <PostModal :isTextEditorOpen="isTextEditorOpen">
+    <template #textEditor>
+      <TextEditor
+        @closeModal="closeEditor"
+        :isEdit="true"
+        :feed="feed"
+        @refresh="emit('refresh')"
+        :isFullScreen="usePost().post.value.isFullScreen"
+        :key="editorKey"
+      />
+    </template>
+  </PostModal>
 </template>
 <script lang="ts" setup>
 import { PropType } from 'vue'
@@ -88,10 +88,9 @@ const { $localePath } = useNuxtApp()
 
 const { t, locale } = useI18n()
 
-const showEditModal = ref(false)
+const isTextEditorOpen = ref(false)
 const showDeletePostModal = ref(false)
 const editorKey = ref(0)
-const isFullScreen = ref(false)
 
 const props = defineProps({
   feed: Object as PropType<IFeed>,
@@ -99,10 +98,6 @@ const props = defineProps({
 const emit = defineEmits(['refresh', 'deletePost'])
 
 const user = computed(() => useUser().user.value.info)
-
-function openEdit() {
-  showEditModal.value = true
-}
 
 async function deletePost() {
   const { data, error, pending } = await post.delete(props.feed.id)
@@ -118,7 +113,7 @@ async function deletePost() {
 }
 
 async function closeEditor() {
-  showEditModal.value = false
+  isTextEditorOpen.value = false
   editorKey.value = Date.now()
 }
 </script>

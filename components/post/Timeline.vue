@@ -82,19 +82,17 @@
       <div ref="triggerDiv"></div>
     </dd>
 
-    <ClientOnly>
-      <PostModal :isTextEditorOpen="isTextEditorOpen">
-        <template #textEditor>
-          <TextEditor
-            @closeModal="isTextEditorOpen = false"
-            :type="type"
-            @refresh="refresh"
-            :channelInfo="channelInfo"
-            :isFullScreen="usePost().post.value.isFullScreen"
-          />
-        </template>
-      </PostModal>
-    </ClientOnly>
+    <PostModal :isTextEditorOpen="isTextEditorOpen">
+      <template #textEditor>
+        <TextEditor
+          @closeModal="isTextEditorOpen = false"
+          :type="type"
+          @refresh="refresh"
+          :channelInfo="channelInfo"
+          :isFullScreen="usePost().post.value.isFullScreen"
+        />
+      </template>
+    </PostModal>
   </ul>
 </template>
 
