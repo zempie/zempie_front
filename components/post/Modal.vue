@@ -30,7 +30,6 @@ const isFullScreen = ref(false)
 const props = defineProps({
   isTextEditorOpen: {
     type: Boolean,
-    default: false,
   },
 })
 

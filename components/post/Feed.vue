@@ -515,12 +515,6 @@ function untranslatedText(originText: string) {
 //         // this.isOpenReportModal = !this.isOpenReportModal
 //         this.$modal.show('modalUserReport')
 //     }
-
-//     userReport(){
-//         console.log("?")
-//     }
-
-function refreshFollow() {}
 </script>
 
 <style lang="scss" scoped>

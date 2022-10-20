@@ -1,7 +1,59 @@
 <template>
   <div class="content">
+
     <div class="area-view">
-      <ul class="ta-post" v-if="feed">
+      <ul class="ta-post" v-if="useCommon().loading.value"  >
+        <li class="tap-list">
+          <dl class="tapl-title">
+            <dt>
+              <dl>
+                <dt>
+                  <dt><UserAvatarSk style="width: 40px; height: 40px" /></dt>
+                </dt>
+                <dd>
+                  <h2 class="grey-text skeleton-animation"
+          style="width: 300px; margin-bottom: 10px">
+          </h2>
+                 
+                 <p class="grey-text skeleton-animation"
+          style="width: 150px; margin-bottom: 10px"></p>
+                </dd>
+               
+              </dl>
+            </dt>
+          
+          </dl>
+
+          <div  class="tapl-content grey-text skeleton-animation"
+        style="margin: 20px; padding: 20px" ></div>
+       
+         
+
+          <ul class="tapl-option">
+            <li>
+              <ul>
+                <li>
+                  <i
+                    class="uil uil-comment-alt-dots"
+                    style="font-size: 22px"
+                  ></i
+                  >&nbsp;
+                </li>
+
+                <li >
+                  <a
+                    ><i class="uil uil-share-alt" style="font-size: 20px"></i>
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+           
+          </ul>
+         
+        </li>
+      </ul>
+      <ul class="ta-post" v-else-if="feed">
         <li class="tap-list">
           <dl class="tapl-title">
             <dt>
@@ -130,29 +182,29 @@
               />
             </li>
           </ul>
-          <ClientOnly>
-            <div class="tapl-comment" v-if="comments">
-              <p>
-                {{ $t('comment') }} {{ feed?.comment_cnt
-                }}{{ $t('comment.count.unit') }}
-              </p>
-              <CommentInput :postId="feed?.id" @refresh="commentFetch" />
-              <ul>
-                <TransitionGroup name="fade">
-                  <li
-                    v-for="comment in comments"
-                    :key="comment.id"
-                    class="comment"
-                  >
-                    <Comment :comment="comment" @refresh="commentFetch" />
-                  </li>
-                </TransitionGroup>
-              </ul>
-            </div>
-          </ClientOnly>
+          <div class="tapl-comment" v-if="comments">
+            <p>
+              {{ $t('comment') }} {{ feed?.comment_cnt
+              }}{{ $t('comment.count.unit') }}
+            </p>
+            <CommentInput :postId="feed?.id" @refresh="commentFetch" />
+            <ul>
+              <TransitionGroup name="fade">
+                <li
+                  v-for="comment in comments"
+                  :key="comment.id"
+                  class="comment"
+                >
+                  <Comment :comment="comment" @refresh="commentFetch" />
+                </li>
+              </TransitionGroup>
+            </ul>
+          </div>
           <div ref="triggerDiv"></div>
         </li>
       </ul>
+
+     
     </div>
   </div>
 </template>
@@ -165,14 +217,12 @@ import { useI18n } from 'vue-i18n'
 
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { dateFormat, execCommandCopy, stringToDomElem } from '~~/scripts/utils'
-import { IFeed } from '~~/types'
 
 const COMMENT_LIMIT = 10
 const route = useRoute()
 const router = useRouter()
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
-const createdDate = ref('')
 const comments = ref([])
 
 const limit = ref(COMMENT_LIMIT)
@@ -206,15 +256,16 @@ watch(
     setHead()
   }
 )
-
 onMounted(async () => {
-  hljs.configure({
-    ignoreUnescapedHTML: true,
-  })
-  document.querySelectorAll('pre').forEach((block) => {
-    hljs.highlightElement(block)
-  })
+    hljs.configure({
+      ignoreUnescapedHTML: true,
+    })
+    document.querySelectorAll('pre').forEach((block) => {
+      console.log(block)
+      hljs.highlightElement(block)
+    })
   if (feed.value) {
+   
     setHead()
     observer.value = new IntersectionObserver(
       (entries) => {
@@ -222,6 +273,7 @@ onMounted(async () => {
       },
       { root: null, threshold: 1 }
     )
+
     observer.value.observe(triggerDiv.value)
   }
   await commentFetch()
@@ -267,9 +319,19 @@ async function commentFetch() {
 
 async function setHead() {
   if (feed.value) {
-    const descText = stringToDomElem(feed.value.content).getElementsByTagName(
-      'p'
-    )[0].innerText
+    let descText = ''
+
+    if (stringToDomElem(feed.value.content).getElementsByTagName('p')[0]) {
+      descText = stringToDomElem(feed.value.content).getElementsByTagName(
+        'p'
+      )[0].innerText
+    } else if (
+      stringToDomElem(feed.value.content).getElementsByTagName('pre')[0]
+    ) {
+      descText = stringToDomElem(feed.value.content).getElementsByTagName(
+        'pre'
+      )[0].innerText
+    }
 
     useHead({
       title: `${feed.value?.user.name}${t('seo.feed.title')} | Zempie`,
@@ -340,6 +402,12 @@ function copyUrl() {
 </script>
 
 <style lang="scss" scoped>
+
+@use 'sass:math';
+
+.tapl-content {
+  width: calc(100% - 40px);
+}
 .fade-move,
 .fade-enter-active,
 .fade-leave-active {

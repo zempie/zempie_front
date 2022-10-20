@@ -10,9 +10,9 @@ export const useCustomFetch = <T>(url: string, options?: FetchOptions) => {
   return useFetch<T>(url, {
     ...options,
     async onResponse({ request, response, options }) {
-      console.log('[fetch response]')
+      useCommon().setLoadingDone()
 
-
+      console.log('[fetch response]', useCommon().loading.value)
 
     },
     async onResponseError({ request, response, options }) {
@@ -32,7 +32,8 @@ export const useCustomFetch = <T>(url: string, options?: FetchOptions) => {
     },
 
     async onRequest({ request, options }) {
-      console.log('[fetch request]')
+      useCommon().setLoading()
+      console.log('[fetch request]', useCommon().loading.value)
     },
     async onRequestError({ request, options, error }) {
       console.log('[fetch request error]')
