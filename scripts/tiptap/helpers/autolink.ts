@@ -119,7 +119,7 @@ export function autolink(options: AutolinkOptions): Plugin {
                 background: 'rgba(0, 0, 0, 0.7)',
               })
 
-              const { data, error, pending } = await useFetch(`/og-tag?url=${link.href}`, getZempieFetchOptions('get', true, { url: link.href }))
+              const { data, error, pending } = await useCustomFetch(`/og-tag?url=${link.href}`, getZempieFetchOptions('get', true, { url: link.href }))
 
 
               const tmpNode = document.createElement('div');

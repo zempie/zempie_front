@@ -572,7 +572,7 @@ async function onSubmit() {
           formData.append(img.title, await result.blob())
         })
 
-        const { data, error, pending } = await useFetch<{ result: [] }>(
+        const { data, error, pending } = await useCustomFetch<{ result: [] }>(
           '/community/att',
           getZempieFetchOptions('post', true, formData)
         )
@@ -598,7 +598,7 @@ async function onSubmit() {
           formData.append(video.title, await result.blob())
         })
 
-        const { data, error, pending } = await useFetch<{ result: [] }>(
+        const { data, error, pending } = await useCustomFetch<{ result: [] }>(
           '/community/att',
           getZempieFetchOptions('post', true, formData)
         )
@@ -624,7 +624,7 @@ async function onSubmit() {
           formData.append(audio.title, await result.blob())
         })
 
-        const { data, error, pending } = await useFetch<{ result: [] }>(
+        const { data, error, pending } = await useCustomFetch<{ result: [] }>(
           '/community/att',
           getZempieFetchOptions('post', true, formData)
         )
@@ -946,7 +946,7 @@ async function onUpdatePost() {
           await fetch(img.src).then(async (result) => {
             formData.append(img.title, await result.blob())
           })
-          const { data, error, pending } = await useFetch<any>(
+          const { data, error, pending } = await useCustomFetch<any>(
             '/community/att',
             getZempieFetchOptions('post', true, formData)
           )
@@ -979,7 +979,7 @@ async function onUpdatePost() {
           await fetch(video.src).then(async (result) => {
             formData.append(video.title, await result.blob())
           })
-          const { data, error, pending } = await useFetch<any>(
+          const { data, error, pending } = await useCustomFetch<any>(
             '/community/att',
             getZempieFetchOptions('post', true, formData)
           )
@@ -1012,7 +1012,7 @@ async function onUpdatePost() {
           await fetch(audio.src).then(async (result) => {
             formData.append(audio.title, await result.blob())
           })
-          const { data, error, pending } = await useFetch<any>(
+          const { data, error, pending } = await useCustomFetch<any>(
             '/community/att',
             getZempieFetchOptions('post', true, formData)
           )
@@ -1051,7 +1051,7 @@ async function onUpdatePost() {
           }
         }
         if (!!formData.entries().next().value) {
-          const { data, error, pending } = await useFetch<{
+          const { data, error, pending } = await useCustomFetch<{
             result: {
               priority: number
               url: string
@@ -1087,7 +1087,7 @@ async function onUpdatePost() {
           }
         }
         if (!!formData.entries().next().value) {
-          const { data, error, pending } = await useFetch<{
+          const { data, error, pending } = await useCustomFetch<{
             result: {
               priority: number
               url: string
@@ -1120,7 +1120,7 @@ async function onUpdatePost() {
             snsAttachFiles.value.video.file
           )
 
-          const { data, error, pending } = await useFetch<{
+          const { data, error, pending } = await useCustomFetch<{
             result: {
               priority: number
               url: string
@@ -1162,7 +1162,7 @@ async function onUpdatePost() {
 
   payload.attatchment_files = attachedFile
 
-  const { data, error, pending } = await useFetch(
+  const { data, error, pending } = await useCustomFetch(
     `/post/${props.feed.id}`,
     getComFetchOptions('put', true, payload)
   )
@@ -1208,7 +1208,7 @@ function closeTextEditor() {
 }
 
 async function communityFetch() {
-  const { data, error, pending } = await useFetch<[]>(
+  const { data, error, pending } = await useCustomFetch<[]>(
     `/user/${useUser().user.value.info?.id}/list/community`,
     getComFetchOptions('get', true)
   )

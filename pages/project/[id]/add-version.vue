@@ -256,7 +256,7 @@ async function upload() {
     formData.append(`file_${i + 1}`, file)
   }
 
-  const { data, pending, error } = await useFetch(
+  const { data, pending, error } = await useCustomFetch(
     '/studio/version',
     getStudioFetchOptions('post', true, formData)
   )

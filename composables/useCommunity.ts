@@ -11,13 +11,10 @@ export default function () {
     const config = useRuntimeConfig()
     const accessToken = useCookie(config.COOKIE_NAME).value
 
-    const { data, pending, error } = await useFetch<any>(`/community/${id}`, {
+    const { data, pending, error } = await useCustomFetch<any>(`/community/${id}`, {
       method: 'get',
       baseURL: config.COMMUNITY_API,
       headers: accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {},
-      initialCache: false,
-
-
     })
     community.value.info = data.value
   }

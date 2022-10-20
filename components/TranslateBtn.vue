@@ -29,7 +29,7 @@ async function translate() {
     target: locale.value,
     format: 'text',
   }
-  const { data, pending, refresh } = await useFetch<{
+  const { data, pending, refresh } = await useCustomFetch<{
     result: {
       translations: {
         translatedText: string

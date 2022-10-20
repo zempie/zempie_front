@@ -117,7 +117,7 @@ function deleteVersion() {
 }
 
 async function deleteOneVersion() {
-  const { data, error } = await useFetch(
+  const { data, error } = await useCustomFetch(
     `/studio/version/${props.version.id}`,
     getStudioFetchOptions('delete', true)
   )

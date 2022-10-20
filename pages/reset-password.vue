@@ -118,7 +118,7 @@ async function sendEmail() {
     return
   }
 
-  const { data, error } = await useFetch<{ result: string }>(
+  const { data, error } = await useCustomFetch<{ result: string }>(
     '/user/has-email',
     getZempieFetchOptions('post', false, { email: email.value })
   )

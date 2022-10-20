@@ -58,7 +58,7 @@ export const getComFetchOptions = (method = 'get', withCredentials = false, body
 }
 
 
-const useFetchData = async (method: string, url: string, data = null, withCredentials: boolean = false, error = false) => {
+const useCustomFetchData = async (method: string, url: string, data = null, withCredentials: boolean = false, error = false) => {
   const config = useRuntimeConfig();
   const accessToken = useCookie(config.COOKIE_NAME).value
 
@@ -89,7 +89,7 @@ const useFetchData = async (method: string, url: string, data = null, withCreden
   } else {
     options['body'] = data;
   }
-  const result = await useFetch(url, options)
+  const result = await useCustomFetch(url, options)
 
   return result
 
@@ -117,7 +117,7 @@ const communityFetch = async (method: string, url: string, data = null, withCred
     options['body'] = data;
   }
 
-  return await useFetch<any>(url, options)
+  return await useCustomFetch<any>(url, options)
 
 
 }
@@ -145,7 +145,7 @@ const studioFetch = async (method: string, url: string, data = null, withCredent
   }
 
 
-  return await useFetch<any>(url, options)
+  return await useCustomFetch<any>(url, options)
 }
 
 
@@ -153,25 +153,25 @@ const studioFetch = async (method: string, url: string, data = null, withCredent
 
 export const auth = {
   // getUserInfo() {
-  //   return useFetchData('get', '/user/info', undefined, true)
+  //   return useCustomFetchData('get', '/user/info', undefined, true)
   // },
   setCookie() {
-    return useFetchData('get', '/__cookie', undefined, false)
+    return useCustomFetchData('get', '/__cookie', undefined, false)
   },
   login() {
-    return useFetchData('get', '/user/info', undefined, true)
+    return useCustomFetchData('get', '/user/info', undefined, true)
   },
   hasEmail(obj: { email: string }) {
-    return useFetchData('post', '/user/has-email', obj, false)
+    return useCustomFetchData('post', '/user/has-email', obj, false)
   },
   signUp(obj: { name: string; nickname?: string }) {
-    return useFetchData('post', '/user/sign-up', obj, true)
+    return useCustomFetchData('post', '/user/sign-up', obj, true)
   },
 }
 
 export const user = {
   getUserInfo(channelId: string) {
-    return useFetchData('get', `/channel/${channelId}`, undefined, true)
+    return useCustomFetchData('get', `/channel/${channelId}`, undefined, true)
   },
   follow(userId: number) {
     return communityFetch('post', `/user/${userId}/follow`, undefined, true);
@@ -189,16 +189,16 @@ export const user = {
     return communityFetch('get', `/user/${userId}/list/follower`, obj, true);
   },
   updateInfo(formData: FormData) {
-    return useFetchData('post', `/user/update/info`, formData, true);
+    return useCustomFetchData('post', `/user/update/info`, formData, true);
   },
   leave(obj: { text: string, num: string }) {
-    return useFetchData('post', `/user/leave-zempie`, obj, true);
+    return useCustomFetchData('post', `/user/leave-zempie`, obj, true);
   }
 }
 
 export const game = {
   list(obj: { limit: number, offset: number, category?: number, sort?: string, dir?: string }) {
-    return useFetchData('get', '/games', obj, false)
+    return useCustomFetchData('get', '/games', obj, false)
   },
   upload(formData: FormData) {
     return studioFetch('post', '/studio/project', formData, true);
@@ -207,7 +207,7 @@ export const game = {
     return studioFetch('get', `/studio/verify-pathname/${pathName}`, undefined, true);
   },
   getInfo(pathname: string) {
-    return useFetchData('get', `/launch/game/${pathname}`, undefined, false)
+    return useCustomFetchData('get', `/launch/game/${pathname}`, undefined, false)
   },
   getTimeline(gameId: number, obj?: { limit: number, offset: number, sort: string, media: string }) {
     return communityFetch('get', `/timeline/game/${gameId}`, obj, false)
@@ -220,7 +220,7 @@ export const project = {
     return studioFetch('get', '/studio/project', undefined, true);
   },
   getInfoById(id: number) {
-    return useFetchData('get', `/community/project/${id}`, undefined, true);
+    return useCustomFetchData('get', `/community/project/${id}`, undefined, true);
   },
   delete(id: number) {
     return studioFetch('delete', `/studio/project/${id}`, undefined, true);

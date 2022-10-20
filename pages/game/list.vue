@@ -160,7 +160,9 @@ async function fetch() {
     category: category.value,
   }
 
-  const { data, pending, refresh } = await useFetch<{ result: { games: [] } }>(
+  const { data, pending, refresh } = await useCustomFetch<{
+    result: { games: [] }
+  }>(
     `/games?_=${Date.now()}&limit=${limit.value}&offset=${
       offset.value
     }&category=${category.value}`,

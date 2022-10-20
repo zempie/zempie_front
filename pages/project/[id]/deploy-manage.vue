@@ -286,7 +286,7 @@ async function undeploy() {
   formData.append('deploy_version_id', '0')
   formData.append('stage', String(eGameStage.DEV))
 
-  const { data, refresh, error } = await useFetch(
+  const { data, refresh, error } = await useCustomFetch(
     `/studio/project/${projectId.value}`,
     getStudioFetchOptions('post', true, formData)
   )
@@ -315,7 +315,7 @@ async function deploy() {
   formData.append('id', String(projectId.value))
   formData.append('deploy_version_id', String(deployVersion.id))
 
-  const { data, refresh, error } = await useFetch(
+  const { data, refresh, error } = await useCustomFetch(
     `/studio/project/${projectId.value}`,
     getStudioFetchOptions('post', true, formData)
   )
@@ -342,7 +342,7 @@ async function changeStage() {
   formData.append('stage', String(selectedStage.value))
   formData.append('deploy_version_id', String(deployVersion.id))
 
-  const { data, refresh, error } = await useFetch(
+  const { data, refresh, error } = await useCustomFetch(
     `/studio/project/${projectId.value}`,
     getStudioFetchOptions('post', true, formData)
   )
