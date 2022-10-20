@@ -52,7 +52,7 @@ export default function () {
 
   const login = async () => {
     const router = useRouter();
-    const { data, error } = await auth.login()
+    const { data, error } = await useCustomFetch<{ result: any }>('/user/info', getZempieFetchOptions('get', true))
 
     if (data.value) {
       const { user } = data.value.result
@@ -61,7 +61,7 @@ export default function () {
       routerToHome()
     } else if (error.value) {
 
-      const { error: err } = error.value.data;
+      const { error: err } = (error.value as any).data;
 
       if (err.code === 20001) {
 
@@ -98,9 +98,6 @@ export default function () {
       })
   }
 
-  const joinUser = async (payload: { name: string, nickname?: string }) => {
-    const { data } = await auth.signUp(payload)
-  }
 
   const setLoadDone = () => {
     user.value.isLoading = false;
@@ -115,7 +112,6 @@ export default function () {
     setLogin,
     setLogout,
     setProfileImg,
-    joinUser,
     removeUserState,
     logout,
     login,

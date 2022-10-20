@@ -88,15 +88,60 @@ import { ElMessage } from 'element-plus'
 import { required, helpers, maxLength } from '@vuelidate/validators'
 import { emailRegex, passwordRegex } from '~/scripts/utils'
 import { useI18n } from 'vue-i18n';
-import { createUserWithEmailAndPassword, type UserCredential } from 'firebase/auth'
+import { createUserWithEmailAndPassword} from 'firebase/auth'
 import { onBeforeRouteLeave } from 'vue-router';
 
 const { t, locale } = useI18n()
 const route = useRoute();
 const config = useRuntimeConfig()
 const { $firebaseAuth, $cookies, $localePath  } = useNuxtApp()
-
 const router = useRouter();
+
+const form = reactive({
+  email: "",
+  password: "",
+  username: "",
+  nickname: "",
+  // repeatPassword: "",
+  policyAgreement: false
+})
+const errorAgree = ref(false);
+
+const emailValidator = helpers.regex(emailRegex);
+const pwdValidator = helpers.regex(passwordRegex);
+
+const rules = computed(() => {
+  const formRule = {
+    email: {
+      required: helpers.withMessage(t('login.empty.email'), required),
+      emailValidator: helpers.withMessage(t('login.email.format.err'), emailValidator)
+    },
+    password: {
+      required: helpers.withMessage(t('login.empty.pwd'), required),
+      pwdValidator: helpers.withMessage(t('login.pwd.format.err'), pwdValidator)
+    },
+    // repeatPassword: {
+
+    // },
+    nickname: {
+
+    },
+    username: {
+      required: helpers.withMessage(t('join.name.empty.err'), required),
+      maxLength: helpers.withMessage(t('join.name.format.err'), maxLength(100)),
+
+    }
+
+  }
+
+  return formRule
+})
+
+const fUser = ref(computed(() => useUser().user.value.fUser))
+
+definePageMeta({
+  layout: 'layout-none',
+});
 
 useHead({
   title: `${t('seo.join.title')} | Zempie`,
@@ -152,117 +197,12 @@ onBeforeRouteLeave((to, from, next)=>{
   next()
 })
 
-
-const form = reactive({
-  email: "",
-  password: "",
-  username: "",
-  nickname: "",
-  // repeatPassword: "",
-  policyAgreement: false
-})
-
-
-const emailValidator = helpers.regex(emailRegex);
-
-const pwdValidator = helpers.regex(passwordRegex);
-
-
-
-const rules = computed(() => {
-  const formRule = {
-    email: {
-      required: helpers.withMessage(t('login.empty.email'), required),
-      emailValidator: helpers.withMessage(t('login.email.format.err'), emailValidator)
-    },
-    password: {
-      required: helpers.withMessage(t('login.empty.pwd'), required),
-      pwdValidator: helpers.withMessage(t('login.pwd.format.err'), pwdValidator)
-    },
-    // repeatPassword: {
-
-    // },
-    nickname: {
-
-    },
-    username: {
-      required: helpers.withMessage(t('join.name.empty.err'), required),
-      maxLength: helpers.withMessage(t('join.name.format.err'), maxLength(100)),
-
-    }
-
-  }
-
-  return formRule
-})
-
-const fUser = ref(computed(() => useUser().user.value.fUser))
-
-definePageMeta({
-  layout: 'layout-none',
-});
-
 onMounted(() => {
   if (fUser.value) form.email = fUser.value.email;
 
-  // console.log('fb', $firebaseApp)
-
 })
-
-
 
 const v$ = useVuelidate(rules, form)
-
-
-const errorAgree = ref(false);
-
-onBeforeMount(() => {
-  //로그임 분기 처리 해야될듯
-
-})
-// allAgreement = false;
-
-// isDuplicatedNickname = false;
-
-// async mounted() {
-//   const loginState = await this.$store.dispatch("loginState");
-
-//   switch (loginState) {
-//     case LoginState.login:
-//       await this.$router.replace("/").catch(() => {
-//       });
-//       return;
-//   }
-
-// }
-
-
-// beforeDestroy() {
-//   this.isEmailReadOnly = false;
-//   this.isNameReadOnly = false;
-// }
-
-// // vuelidate
-// validateState(name) {
-//   const { $dirty, $error } = this.$v.form[name]!;
-//   return $dirty ? !$error : null;
-// }
-// @Watch('this.form.nickname')
-// watchNickname() {
-//   if (this.form.nickname.length === 0)
-//     this.isDuplicatedNickname = false;
-// }
-
-// checkNickname() {
-//   this.$api.hasNickname(this.form.nickname)
-//     .then((res: any) => {
-//       if (res.result === true) {
-//         this.isDuplicatedNickname = true;
-//       } else {
-//         this.isDuplicatedNickname = false;
-//       }
-//     })
-// }
 
 async function register() {
 
@@ -286,35 +226,21 @@ async function register() {
     
     const { message } = error
     if (message.includes('auth/email-already-in-use')) {
-      const { result } = await auth.hasEmail({ email: form.email })
+      // const { result } = await useCustomFetch<{result:any}>('/user/has-email', getZempieFetchOptions('post', false, { email: form.email }))
 
       ElMessage.error(`${t('fb.using.email')}`)
+    } 
+    // else if (message.includes('auth/weak-password')) {
 
-      // if (data.value) {
-
-      //   const { data: res } = data.value.result
-      //   if (res) {
-      //     ElMessage({
-      //       message: `${t('joined.email')}`,
-      //       type: 'error',
-      //     })
-
-      //   } else {
-      // await joinZempie();
-      // }
-      // }
-
-    } else if (message.includes('auth/weak-password')) {
-
-    } else if (message.includes('EMAIL_EXISTS')) {
+    // } 
+    else if (message.includes('EMAIL_EXISTS')) {
       ElMessage.error(`${t('fb.using.email')}`)
+
+    }else{
+      ElMessage.error(message)
 
     }
-
   }
-
-
-
 }
 
 /**
@@ -325,8 +251,8 @@ async function joinZempie() {
     name: form.username,
   }
 
-  try {
-    const { data } = await auth.signUp(payload)
+    const { data,error } = await useCustomFetch<{result:any}>('/user/sign-up',getZempieFetchOptions('post', true, payload))
+    if(data.value){
     const { user } = data.value.result;
 
     if (user) {
@@ -335,151 +261,13 @@ async function joinZempie() {
       useUser().unsetSignup()
     }
 
-
     window.location.href = $localePath('/')
-
     //FIXME: router.push가 왜 안되는지 모르겠음 => blank page
     // router.push(localePath('/'))
-  } catch (err: any) {
-    console.error(err)
+  } else if(error.value) {
+    ElMessage.error((error.value as any).data.error)
   }
-
-
 }
-  // this.$api.signUp(obj)
-  //   .then(async (result: any) => {
-  //     const { user } = result;
-  //     this.$store.commit("user", user);
-  //     await LoginManager.login();
-  //     // await this.$router.replace('/');
-
-  //     if (this.$store.getters.redirectRouter) {
-  //       const router = this.$store.getters.redirectRouter;
-  //       this.$store.commit("redirectRouter", null);
-  //       await this.$router.replace(router).catch(() => {
-  //       });
-  //     }
-  //     else if (this.$store.getters.redirectUrl) {
-  //       const url = this.$store.getters.redirectUrl;
-  //       this.$store.commit("redirectUrl", null);
-  //       window.location.href = url;
-  //     }
-  //     else {
-  //       await this.$router.replace("/").catch(() => {
-  //       });
-  //     }
-  //   })
-  //   .catch((result: any) => {
-  //     if (result?.error?.code === 40101) {
-  //       alert(`${this.$t('name.err.text')}`);
-  //       // todo 닉네임 필터 에러 처리
-  //       // alert(this.$t('join.joinNicknameError'));
-  //     }
-  //     else {
-  //       console.error((result && result.error) || "error");
-  //       result && result.error && alert(result.error.message);
-  //     }
-  //   })
-//   event.preventDefault();
-//   this.$v.form.$touch();
-//   let isReturn = false;
-//   if (this.$v.form.$anyError) {
-//     isReturn = true;
-//   }
-//   if (!this.form.policyAgreement1) {
-//     isReturn = true;
-//     this.errorAgree1 = true;
-//   }
-//   if (this.isDuplicatedNickname) {
-//     this.isDuplicatedNickname = true;
-//     isReturn = true;
-//   }
-
-//   if (isReturn) return;
-
-
-//   try {
-//     await firebase
-//       .auth()
-//       .createUserWithEmailAndPassword(
-//         this.form.email,
-//         this.form.password
-//       );
-//     const currentUser = firebase.auth().currentUser;
-//     const idToken = await currentUser!.getIdToken();
-
-//     this.$store.commit("idToken", idToken);
-
-//     this.joinZempie();
-
-//     // const obj={
-//     //     name:this.form.username,
-//     //     // nickname:this.form.nickname
-//     // }
-//     //
-//     // this.$api.signUp(obj)
-//     // .then(async (result:any)=>{
-//     //     const {user} = result;
-//     //     this.$store.commit("user", user);
-//     //     await LoginManager.login();
-//     //     // await this.$router.replace('/');
-//     //
-//     //     if (this.$store.getters.redirectRouter) {
-//     //         const router = this.$store.getters.redirectRouter;
-//     //         this.$store.commit("redirectRouter", null);
-//     //         await this.$router.replace(router).catch(() => {
-//     //         });
-//     //     }
-//     //     else if (this.$store.getters.redirectUrl) {
-//     //         const url = this.$store.getters.redirectUrl;
-//     //         this.$store.commit("redirectUrl", null);
-//     //         window.location.href = url;
-//     //     }
-//     //     else {
-//     //         await this.$router.replace("/").catch(() => {
-//     //         });
-//     //     }
-//     // })
-//     // .catch((result:any)=>{
-//     //     if (result?.error?.code === 40101) {
-//     //         alert("사용할 수 없는 이름입니다");
-//     //         // todo 닉네임 필터 에러 처리
-//     //         // alert(this.$t('join.joinNicknameError'));
-//     //     }
-//     //     else {
-//     //         console.error((result && result.error) || "error");
-//     //         result && result.error && alert(result.error.message);
-//     //     }
-//     // })
-
-//   }
-//   catch (error) {
-//     const code = error.code;
-//     if (code) {
-//       switch (code) {
-//         case 'auth/wrong-password':
-//           alert(`${this.$t('wrong.pwd')}`)
-//           break;
-//         case 'auth/user-not-found':
-//           alert(`${this.$t('login.email.fail')}`)
-//           break;
-//         case 'auth/email-already-in-use':
-//           const result = await this.$api.hasEmail(this.form.email)
-//           if (result === true) {
-//             alert(`${this.$t('joined.email')}`)
-//           } else {
-//             this.joinZempie();
-//           }
-//           break;
-//       }
-//     }
-//   }
-// }
-
-// 
-
-
-
 </script>
 
 <style lang="scss" scoped>

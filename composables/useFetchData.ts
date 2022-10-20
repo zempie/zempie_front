@@ -58,7 +58,7 @@ export const getComFetchOptions = (method = 'get', withCredentials = false, body
 }
 
 
-const useCustomFetchData = async (method: string, url: string, data = null, withCredentials: boolean = false, error = false) => {
+const useFetchData = async (method: string, url: string, data = null, withCredentials: boolean = false, error = false) => {
   const config = useRuntimeConfig();
   const accessToken = useCookie(config.COOKIE_NAME).value
 
@@ -89,7 +89,7 @@ const useCustomFetchData = async (method: string, url: string, data = null, with
   } else {
     options['body'] = data;
   }
-  const result = await useCustomFetch(url, options)
+  const result = await useFetch(url, options)
 
   return result
 
@@ -117,7 +117,7 @@ const communityFetch = async (method: string, url: string, data = null, withCred
     options['body'] = data;
   }
 
-  return await useCustomFetch<any>(url, options)
+  return await useFetch<any>(url, options)
 
 
 }
@@ -145,33 +145,26 @@ const studioFetch = async (method: string, url: string, data = null, withCredent
   }
 
 
-  return await useCustomFetch<any>(url, options)
+  return await useFetch<any>(url, options)
 }
 
 
 
 
 export const auth = {
-  // getUserInfo() {
-  //   return useCustomFetchData('get', '/user/info', undefined, true)
-  // },
-  setCookie() {
-    return useCustomFetchData('get', '/__cookie', undefined, false)
-  },
+ 
   login() {
-    return useCustomFetchData('get', '/user/info', undefined, true)
+    return useFetchData('get', '/user/info', undefined, true)
   },
-  hasEmail(obj: { email: string }) {
-    return useCustomFetchData('post', '/user/has-email', obj, false)
-  },
+ 
   signUp(obj: { name: string; nickname?: string }) {
-    return useCustomFetchData('post', '/user/sign-up', obj, true)
+    return useFetchData('post', '/user/sign-up', obj, true)
   },
 }
 
 export const user = {
   getUserInfo(channelId: string) {
-    return useCustomFetchData('get', `/channel/${channelId}`, undefined, true)
+    return useFetchData('get', `/channel/${channelId}`, undefined, true)
   },
   follow(userId: number) {
     return communityFetch('post', `/user/${userId}/follow`, undefined, true);
@@ -189,16 +182,16 @@ export const user = {
     return communityFetch('get', `/user/${userId}/list/follower`, obj, true);
   },
   updateInfo(formData: FormData) {
-    return useCustomFetchData('post', `/user/update/info`, formData, true);
+    return useFetchData('post', `/user/update/info`, formData, true);
   },
   leave(obj: { text: string, num: string }) {
-    return useCustomFetchData('post', `/user/leave-zempie`, obj, true);
+    return useFetchData('post', `/user/leave-zempie`, obj, true);
   }
 }
 
 export const game = {
   list(obj: { limit: number, offset: number, category?: number, sort?: string, dir?: string }) {
-    return useCustomFetchData('get', '/games', obj, false)
+    return useFetchData('get', '/games', obj, false)
   },
   upload(formData: FormData) {
     return studioFetch('post', '/studio/project', formData, true);
@@ -207,7 +200,7 @@ export const game = {
     return studioFetch('get', `/studio/verify-pathname/${pathName}`, undefined, true);
   },
   getInfo(pathname: string) {
-    return useCustomFetchData('get', `/launch/game/${pathname}`, undefined, false)
+    return useFetchData('get', `/launch/game/${pathname}`, undefined, false)
   },
   getTimeline(gameId: number, obj?: { limit: number, offset: number, sort: string, media: string }) {
     return communityFetch('get', `/timeline/game/${gameId}`, obj, false)
@@ -220,7 +213,7 @@ export const project = {
     return studioFetch('get', '/studio/project', undefined, true);
   },
   getInfoById(id: number) {
-    return useCustomFetchData('get', `/community/project/${id}`, undefined, true);
+    return useFetchData('get', `/community/project/${id}`, undefined, true);
   },
   delete(id: number) {
     return studioFetch('delete', `/studio/project/${id}`, undefined, true);

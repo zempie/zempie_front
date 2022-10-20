@@ -21,8 +21,6 @@ export const useCustomFetch = <T>(url: string, options?: FetchOptions) => {
       switch (status) {
         case 401:
           console.log('unauth')
-
-
           break;
         case 500:
           useUser().logout()

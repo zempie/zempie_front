@@ -52,8 +52,6 @@
 import { PropType } from 'vue'
 import { IFeed } from '~~/types'
 import { useI18n } from 'vue-i18n'
-
-import { mergeAttributes } from '@tiptap/core'
 import {
   useEditor,
   EditorContent,
@@ -74,8 +72,6 @@ import Table from '@tiptap/extension-table'
 import TableRow from '@tiptap/extension-table-row'
 import TableHeader from '@tiptap/extension-table-header'
 import TableCell from '@tiptap/extension-table-cell'
-// import BubbleMenu from '@tiptap/extension-bubble-menu'
-import { PluginKey } from 'prosemirror-state'
 
 import CustomImage from '~/scripts/tiptap/customImage'
 import CustomAudio from '~~/scripts/tiptap/customAudio'
