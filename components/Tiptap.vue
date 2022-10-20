@@ -1,6 +1,10 @@
 <template>
   <div style="min-height: 200px; max-height: 80vh">
-    <BubbleMenu :editor="editor" v-if="editor" class="table-bubble-menu">
+    <BubbleMenu
+      :editor="editor"
+      v-if="editor && shouldShow()"
+      class="table-bubble-menu"
+    >
       <ul>
         <li @click="editor.chain().focus().addColumnBefore().run()">
           <p><i class="uil uil-plus"></i> add column before</p>
@@ -130,13 +134,6 @@ const editor = useEditor({
           Table.configure({
             resizable: true,
           }),
-          // BubbleMenu.configure({
-          //   element: document.querySelector('#bubble-menu'),
-          //   shouldShow: ({ editor, view, state, oldState, from, to }) => {
-          //     // only show the bubble menu for images and links
-          //     return editor.isActive('image') || editor.isActive('link')
-          //   },
-          // }),
           TableRow,
           TableHeader,
           TableCell,
@@ -266,10 +263,7 @@ function addImage(data: DataTransfer) {
 }
 
 function shouldShow() {
-  return ({ editor, view, state, oldState, from, to }) => {
-    // only show the bubble menu for images and links
-    return editor.isActive('table')
-  }
+  return editor.value?.isActive('table')
 }
 </script>
 
