@@ -1,16 +1,18 @@
 <template>
-  <el-dialog
-    v-model="isTextEditorOpen"
-    custom-class="post-modal"
-    :show-close="false"
-    :close-on-click-modal="false"
-    :close-on-press-escape="false"
-    :destroy-on-close="true"
-    @close="closeEditor"
-    :fullscreen="isFullScreen"
-  >
-    <slot name="textEditor"></slot>
-  </el-dialog>
+  <ClientOnly>
+    <el-dialog
+      v-model="isTextEditorOpen"
+      custom-class="post-modal"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :destroy-on-close="true"
+      @close="closeEditor"
+      :fullscreen="isFullScreen"
+    >
+      <slot name="textEditor"></slot>
+    </el-dialog>
+  </ClientOnly>
 </template>
 <script setup lang="ts">
 import {
