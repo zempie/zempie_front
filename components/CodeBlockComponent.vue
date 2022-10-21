@@ -17,10 +17,11 @@
 
 <script setup lang="ts">
 import { NodeViewContent, nodeViewProps, NodeViewWrapper } from '@tiptap/vue-3'
+import { lowlight } from 'lowlight'
 
 const props = defineProps(nodeViewProps)
 
-const languages = props.extension.options.lowlight.listLanguages()
+const languages = lowlight.listLanguages()
 
 const selectedLanguage = computed({
   get() {
