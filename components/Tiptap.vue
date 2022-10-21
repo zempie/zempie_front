@@ -72,10 +72,6 @@ import Table from '@tiptap/extension-table'
 import TableRow from '@tiptap/extension-table-row'
 import TableHeader from '@tiptap/extension-table-header'
 import TableCell from '@tiptap/extension-table-cell'
-import css from 'highlight.js/lib/languages/css'
-import js from 'highlight.js/lib/languages/javascript'
-import ts from 'highlight.js/lib/languages/typescript'
-import html from 'highlight.js/lib/languages/xml'
 import CustomImage from '~/scripts/tiptap/customImage'
 import CustomAudio from '~~/scripts/tiptap/customAudio'
 import CustomVideo from '~~/scripts/tiptap/customVideo'
@@ -127,7 +123,11 @@ const editor = useEditor({
         ]
       : [
           StarterKit.configure({ codeBlock: false }),
-          CodeBlockLowlight.configure({ lowlight }),
+          CodeBlockLowlight.extend({
+            addNodeView() {
+              return VueNodeViewRenderer(CodeBlockComponent)
+            },
+          }).configure({ lowlight }),
           Placeholder.configure({
             emptyEditorClass: 'is-editor-empty',
             placeholder: `${t('posting.placeholder')}`,
