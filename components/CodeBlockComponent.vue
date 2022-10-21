@@ -21,7 +21,9 @@ import { lowlight } from 'lowlight'
 
 const props = defineProps(nodeViewProps)
 
-const languages = lowlight.listLanguages()
+const languages = ref(lowlight.listLanguages())
+
+console.log(languages.value)
 
 const selectedLanguage = computed({
   get() {
