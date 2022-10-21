@@ -23,7 +23,7 @@ export const useCustomFetch = <T>(url: string, options?: FetchOptions) => {
           console.log('unauth')
           break;
         case 500:
-          useUser().logout()
+          // useUser().logout()
           break;
 
         default:

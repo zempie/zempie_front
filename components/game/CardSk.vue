@@ -20,3 +20,7 @@
     </dl>
   </li>
 </template>
+
+<style scoped lang="scss">
+// @use 'sass:math';
+</style>
