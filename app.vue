@@ -86,6 +86,10 @@ onBeforeMount(() => {
 
   router.replace(route.fullPath)
 })
+
+onBeforeUnmount(() => {
+  getRefreshToken()
+})
 </script>
 
 <style lang="scss">
