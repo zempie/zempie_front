@@ -61,8 +61,6 @@ const languages = [
   'yaml',
 ]
 
-console.log(languages.value)
-
 const selectedLanguage = computed({
   get() {
     return props.node.attrs.language
