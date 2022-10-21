@@ -21,7 +21,45 @@ import { lowlight } from 'lowlight'
 
 const props = defineProps(nodeViewProps)
 
-const languages = ref(lowlight.listLanguages())
+const languages = [
+  'arduino',
+  'bash',
+  'c',
+  'cpp',
+  'csharp',
+  'css',
+  'diff',
+  'go',
+  'graphql',
+  'ini',
+  'java',
+  'javascript',
+  'json',
+  'kotlin',
+  'less',
+  'lua',
+  'makefile',
+  'markdown',
+  'objectivec',
+  'perl',
+  'php',
+  'php-template',
+  'plaintext',
+  'python',
+  'python-repl',
+  'r',
+  'ruby',
+  'rust',
+  'scss',
+  'shell',
+  'sql',
+  'swift',
+  'typescript',
+  'vbnet',
+  'wasm',
+  'xml',
+  'yaml',
+]
 
 console.log(languages.value)
 
