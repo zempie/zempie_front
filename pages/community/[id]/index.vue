@@ -175,7 +175,7 @@ async function fetch() {
     offset: offset.value,
   }
 
-  const { data, pending } = await useCustomFetch<any>(
+  const { data, pending } = await useFetch<any>(
     createQueryUrl(`/community/list`, query),
     {
       method: 'get',

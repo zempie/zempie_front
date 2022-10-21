@@ -13,7 +13,7 @@
           <li>
             <h2
               @click="
-                $router.push(localePath(`/community/${communityId}/members`))
+                $router.push($localePath(`/community/${communityId}/members`))
               "
               class="numbers"
             >
@@ -53,6 +53,7 @@
 <script setup lang="ts">
 import { PropType } from 'vue'
 import { ICommunity } from '~~/types'
+const { $localePath } = useNuxtApp()
 
 const route = useRoute()
 const communityId = computed(() => route.params.id as string)
