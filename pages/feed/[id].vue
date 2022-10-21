@@ -211,7 +211,7 @@
 </template>
 
 <script setup lang="ts">
-import hljs from 'highlight.js'
+import Prism from '~/plugins/prism'
 import _ from 'lodash'
 import { ElMessage, ElDropdown, ElDialog } from 'element-plus'
 import { useI18n } from 'vue-i18n'
@@ -260,12 +260,8 @@ watch(
 
 onMounted(async () => {
   if (feed.value) {
-    hljs.configure({
-      ignoreUnescapedHTML: true,
-    })
-    document.querySelectorAll('pre').forEach((block) => {
-      hljs.highlightElement(block)
-    })
+    Prism.highlightAll()
+
     setHead()
     observer.value = new IntersectionObserver(
       (entries) => {

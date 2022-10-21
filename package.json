@@ -54,6 +54,7 @@
     "i18next-scanner": "^4.0.0",
     "lodash": "^4.17.21",
     "lowlight": "^2.7.0",
+    "prismjs": "^1.29.0",
     "swiper": "^8.3.1",
     "vue-i18n-routing": "^0.7.0",
     "vue-infinite-loading": "^2.4.5",

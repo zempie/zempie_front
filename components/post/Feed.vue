@@ -206,6 +206,7 @@
 </template>
 
 <script setup lang="ts">
+import Prism from '~/plugins/prism'
 import _ from 'lodash'
 import { PropType } from 'vue'
 import { IFeed } from '~~/types'
@@ -229,7 +230,7 @@ import {
 } from '~/scripts/utils'
 import { useI18n } from 'vue-i18n'
 
-import hljs from 'highlight.js'
+// import hljs from 'highlight.js'
 import { useWindowScroll, useInfiniteScroll } from '@vueuse/core'
 const { $localePath } = useNuxtApp()
 
@@ -296,14 +297,14 @@ const isOverflow = computed(() => {
 const initFiles = _.cloneDeep(attatchment_files.value)
 
 onMounted(() => {
-  hljs.configure({
-    ignoreUnescapedHTML: true,
-  })
-  document.querySelectorAll('pre').forEach((block) => {
-    hljs.highlightElement(block)
-  })
+  Prism.highlightAll()
+  // hljs.configure({
+  //   ignoreUnescapedHTML: true,
+  // })
+  // document.querySelectorAll('pre').forEach((block) => {
+  //   hljs.highlightElement(block)
+  // })
   const dom = props.feed?.content && htmlToDomElem(props.feed.content)
-
   // const linkTag = dom.getElementsByTagName('a')
   // for (const link of linkTag) {
   //   const url = link.href;

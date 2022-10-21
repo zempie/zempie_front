@@ -66,13 +66,16 @@ import Placeholder from '@tiptap/extension-placeholder'
 
 import Typography from '@tiptap/extension-typography'
 import Highlight from '@tiptap/extension-highlight'
-import { lowlight } from 'lowlight/lib/core.js'
+import { lowlight } from 'lowlight'
 import Image from '@tiptap/extension-image'
 import Table from '@tiptap/extension-table'
 import TableRow from '@tiptap/extension-table-row'
 import TableHeader from '@tiptap/extension-table-header'
 import TableCell from '@tiptap/extension-table-cell'
-
+import css from 'highlight.js/lib/languages/css'
+import js from 'highlight.js/lib/languages/javascript'
+import ts from 'highlight.js/lib/languages/typescript'
+import html from 'highlight.js/lib/languages/xml'
 import CustomImage from '~/scripts/tiptap/customImage'
 import CustomAudio from '~~/scripts/tiptap/customAudio'
 import CustomVideo from '~~/scripts/tiptap/customVideo'
@@ -80,6 +83,8 @@ import CustomVideo from '~~/scripts/tiptap/customVideo'
 import ResizableImage from './ResizableImage.vue'
 import PreviewLink from './PreviewLink.vue'
 // import { Link } from '~~/scripts/tiptap/customLink'
+
+import CodeBlockComponent from './CodeBlockComponent.vue'
 
 const emit = defineEmits(['editorContent'])
 const { t, locale } = useI18n()
@@ -104,7 +109,11 @@ const editor = useEditor({
     props.postType === 'SNS'
       ? [
           StarterKit.configure({ codeBlock: false }),
-          CodeBlockLowlight.configure({ lowlight }),
+          CodeBlockLowlight.extend({
+            addNodeView() {
+              return VueNodeViewRenderer(CodeBlockComponent)
+            },
+          }).configure({ lowlight }),
           Placeholder.configure({
             emptyEditorClass: 'is-editor-empty',
             placeholder: `${t('posting.placeholder')}`,
