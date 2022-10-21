@@ -141,27 +141,29 @@ definePageMeta({
 watch(
   () => communityInfo.value,
   (info) => {
-    useHead({
-      title: `${info.name} | Zempie community`,
-      meta: [
-        {
-          name: 'description',
-          content: `${info.description}`,
-        },
-        {
-          name: 'og:title',
-          content: `${info.name}`,
-        },
-        {
-          name: 'og:description',
-          content: `${info.description}`,
-        },
-        {
-          name: 'og:url',
-          content: `${config.ZEMPIE_URL}${route.path}`,
-        },
-      ],
-    })
+    if (info) {
+      useHead({
+        title: `${info.name} | Zempie community`,
+        meta: [
+          {
+            name: 'description',
+            content: `${info.description}`,
+          },
+          {
+            name: 'og:title',
+            content: `${info.name}`,
+          },
+          {
+            name: 'og:description',
+            content: `${info.description}`,
+          },
+          {
+            name: 'og:url',
+            content: `${config.ZEMPIE_URL}${route.path}`,
+          },
+        ],
+      })
+    }
   }
 )
 
@@ -175,7 +177,7 @@ async function fetch() {
     offset: offset.value,
   }
 
-  const { data, pending } = await useCustomFetch<any>(
+  const { data, pending } = await useFetch<any>(
     createQueryUrl(`/community/list`, query),
     {
       method: 'get',

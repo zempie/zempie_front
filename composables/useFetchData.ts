@@ -152,11 +152,11 @@ const studioFetch = async (method: string, url: string, data = null, withCredent
 
 
 export const auth = {
- 
+
   login() {
     return useFetchData('get', '/user/info', undefined, true)
   },
- 
+
   signUp(obj: { name: string; nickname?: string }) {
     return useFetchData('post', '/user/sign-up', obj, true)
   },
@@ -224,9 +224,7 @@ export const project = {
 }
 
 export const community = {
-  list(obj: ICommunityPayload) {
-    return communityFetch('get', '/community/list', obj, true)
-  },
+
   subscribe(communityId: string) {
     return communityFetch('post', `/community/${communityId}/subscribe`, undefined, true);
   },
