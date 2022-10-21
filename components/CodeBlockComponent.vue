@@ -17,10 +17,49 @@
 
 <script setup lang="ts">
 import { NodeViewContent, nodeViewProps, NodeViewWrapper } from '@tiptap/vue-3'
+import { lowlight } from 'lowlight'
 
 const props = defineProps(nodeViewProps)
 
-const languages = props.extension.options.lowlight.listLanguages()
+const languages = [
+  'arduino',
+  'bash',
+  'c',
+  'cpp',
+  'csharp',
+  'css',
+  'diff',
+  'go',
+  'graphql',
+  'ini',
+  'java',
+  'javascript',
+  'json',
+  'kotlin',
+  'less',
+  'lua',
+  'makefile',
+  'markdown',
+  'objectivec',
+  'perl',
+  'php',
+  'php-template',
+  'plaintext',
+  'python',
+  'python-repl',
+  'r',
+  'ruby',
+  'rust',
+  'scss',
+  'shell',
+  'sql',
+  'swift',
+  'typescript',
+  'vbnet',
+  'wasm',
+  'xml',
+  'yaml',
+]
 
 const selectedLanguage = computed({
   get() {
