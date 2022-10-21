@@ -3,16 +3,18 @@ import dayjs from "dayjs";
 const DAYSTOSEC_30 = 60 * 60 * 24 * 30;
 
 
-export const useCustomFetch = <T>(url: string, options?: FetchOptions) => {
-
+export const useCustomFetch = async <T>(url: string, options?: FetchOptions) => {
+  const config = useRuntimeConfig()
+  const accessToken = useCookie(config.COOKIE_NAME).value
   getRefreshToken()
 
-  return useFetch<T>(url, {
+  return await useFetch<T>(url, {
     ...options,
     async onResponse({ request, response, options }) {
+
       useCommon().setLoadingDone()
 
-      console.log('[fetch response]', useCommon().loading.value)
+      console.log('[fetch response]')
 
     },
     async onResponseError({ request, response, options }) {
@@ -32,8 +34,11 @@ export const useCustomFetch = <T>(url: string, options?: FetchOptions) => {
     },
 
     async onRequest({ request, options }) {
+      options.headers = options.headers || {}
+      options.headers['Authorization'] = `Bearer ${accessToken}`
+
       useCommon().setLoading()
-      console.log('[fetch request]', useCommon().loading.value)
+      console.log('[fetch request]')
     },
     async onRequestError({ request, options, error }) {
       console.log('[fetch request error]')

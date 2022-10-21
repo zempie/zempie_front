@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="communityInfo"
     class="visual-info-center"
     :style="{
       background:
