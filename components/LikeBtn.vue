@@ -168,18 +168,18 @@ async function showLikeHistory() {
   }
 }
 
-@media all and (max-width: 479px) {
-}
+// @media all and (max-width: 479px) {
+// }
 
-@media all and (min-width: 480px) and (max-width: 767px) {
-}
+// @media all and (min-width: 480px) and (max-width: 767px) {
+// }
 
-@media all and (min-width: 768px) and (max-width: 991px) {
-}
+// @media all and (min-width: 768px) and (max-width: 991px) {
+// }
 
-@media all and (min-width: 992px) and (max-width: 1199px) {
-}
+// @media all and (min-width: 992px) and (max-width: 1199px) {
+// }
 
-@media all and (min-width: 1200px) {
-}
+// @media all and (min-width: 1200px) {
+// }
 </style>
