@@ -184,7 +184,7 @@ const config = useRuntimeConfig()
 definePageMeta({
   title: 'Distribution Mgmt.',
   name: 'deployManage',
-  //middleware: 'auth',
+  middleware: 'auth',
 })
 
 useHead({
