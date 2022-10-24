@@ -6,7 +6,7 @@ const DAYSTOSEC_30 = 60 * 60 * 24 * 30;
 export const useCustomFetch = async <T>(url: string, options?: FetchOptions) => {
   const config = useRuntimeConfig()
   const accessToken = useCookie(config.COOKIE_NAME).value
-  getRefreshToken()
+  if (accessToken) getRefreshToken()
 
   return await useFetch<T>(url, {
     ...options,
@@ -35,7 +35,7 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions) => 
 
     async onRequest({ request, options }) {
       options.headers = options.headers || {}
-      options.headers['Authorization'] = `Bearer ${accessToken}`
+      options.headers['Authorization'] = accessToken && `Bearer ${accessToken}`
 
       useCommon().setLoading()
       console.log('[fetch request]')
