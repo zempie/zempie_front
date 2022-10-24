@@ -246,7 +246,7 @@ const $router = useRouter()
 const { $localePath } = useNuxtApp()
 
 definePageMeta({
-  //middleware: 'auth',
+  middleware: 'auth',
 })
 useHead({
   title: `${t('seo.project.list.title')} | Zempie Studio`,
