@@ -161,7 +161,7 @@ useHead({
 definePageMeta({
   title: 'Add version',
   name: 'addVersion',
-  //middleware: 'auth',
+  middleware: 'auth',
 })
 
 watch(

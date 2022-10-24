@@ -42,7 +42,7 @@ const project = ref()
 definePageMeta({
   title: 'Version Mgmt.',
   name: 'versionManage',
-  //middleware: 'auth',
+  middleware: 'auth',
 })
 useHead({
   title: `${t('seo.project.version.manage.title')} | Zempie Studio`,

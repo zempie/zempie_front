@@ -51,7 +51,8 @@ export async function getRefreshToken() {
   const config = useRuntimeConfig();
   const { $cookies, $firebaseAuth } = useNuxtApp()
 
-  const expirationTime = useUser().user.value?.fUser?.stsTokenManager?.expirationTime
+  //3분 빠르게 
+  const expirationTime = dayjs(useUser().user.value?.fUser?.stsTokenManager?.expirationTime).subtract(3, 'minutes')
 
   console.log(dayjs(expirationTime).format('YYYY-MM-DD HH:mm:ss'))
 

@@ -1,17 +1,23 @@
 <template>
   <div v-if="user && user.id !== loginUser?.id">
     <p
-      class="btn-default unfollow uppercase"
+      :class="[customClass, 'btn-default unfollow uppercase']"
       @click.stop="unfollow"
       v-if="isFollowing"
     >
       Followed
     </p>
-    <p class="btn-default uppercase" @click.stop="follow" v-else>Follow</p>
+    <p
+      :class="[customClass, 'btn-default uppercase']"
+      @click.stop="follow"
+      v-else
+    >
+      Follow
+    </p>
   </div>
   <div v-else>
     <p
-      class="btn-default uppercase my-channel"
+      :class="[customClass, 'btn-default uppercase my-channel']"
       @click.stop="
         $router.push($localePath(`/channel/${loginUser.channel_id}`))
       "
@@ -36,6 +42,7 @@ const emit = defineEmits(['refresh'])
 
 const props = defineProps({
   user: Object as PropType<IUser | any>,
+  customClass: String,
 })
 
 const isFollowing = ref(props.user?.is_following)
@@ -80,7 +87,6 @@ async function unfollow() {
   align-items: center;
 
   justify-content: center;
-  // margin-top: 20px;
   &.unfollow {
     background: #feb100;
   }
@@ -93,5 +99,29 @@ async function unfollow() {
     color: #28a745;
     background-color: rgba(40, 167, 69, 0.3);
   }
+}
+
+@media all and (max-width: 479px) {
+  .small-btn {
+    font-size: 16px;
+  }
+}
+
+@media all and (min-width: 480px) and (max-width: 767px) {
+  .small-btn {
+    font-size: 16px;
+  }
+}
+
+@media all and (min-width: 768px) and (max-width: 991px) {
+  .small-btn {
+    font-size: 16px;
+  }
+}
+
+@media all and (min-width: 992px) and (max-width: 1199px) {
+}
+
+@media all and (min-width: 1200px) {
 }
 </style>

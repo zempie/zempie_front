@@ -1453,7 +1453,7 @@ function getFirstPostContent(content: string) {
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 @use 'sass:math';
 
 .component-fade-enter-active,
