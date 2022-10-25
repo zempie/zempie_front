@@ -9,25 +9,28 @@ export default function () {
   const setUserChannel = async (info: IUserChannel) => {
     userChannel.value.isLoading = true;
 
-    const { data: communities, error } = await useCustomFetch<[]>(`/user/${info.id}/list/community`, getComFetchOptions('get', true))
+    if (info) {
 
-    info.games.map((game) => {
-      game.user = {
-        name: info.name,
-        id: info.id,
-        uid: info.uid,
-        email: info.email,
-        channel_id: info.channel_id,
-        picture: info.picture,
-      }
-    })
-    info.communities = communities.value
-    userChannel.value.info = info;
+      const { data: communities, error } = await useCustomFetch<[]>(`/user/${info.id}/list/community`, getComFetchOptions('get', true))
+
+      info.games.map((game) => {
+        game.user = {
+          name: info.name,
+          id: info.id,
+          uid: info.uid,
+          email: info.email,
+          channel_id: info.channel_id,
+          picture: info.picture,
+        }
+      })
+      info.communities = communities.value
+      userChannel.value.info = info;
+    }
     userChannel.value.isLoading = false;
   }
 
   const getChannelInfo = async (channelId: string) => {
-    const { data, error } = await useCustomFetch<{ result: { target: IUserChannel } }>(`/channel/${channelId}`, getZempieFetchOptions('get', true))
+    const { data, error } = await useCustomFetch<{ result: { target: IUserChannel } }>(`/channel/${channelId}`, getZempieFetchOptions('get', false))
     if (data.value) {
       const { target } = data.value.result;
       setUserChannel(target)

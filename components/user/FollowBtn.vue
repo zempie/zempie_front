@@ -53,7 +53,10 @@ async function follow() {
     return
   }
 
-  const { data, error } = await user.follow(props.user.id)
+  const { data, error } = await useCustomFetch(
+    `/user/${props.user.id}/follow`,
+    getComFetchOptions('post', true)
+  )
 
   if (!error.value) {
     isFollowing.value = !isFollowing.value
@@ -65,7 +68,10 @@ async function follow() {
 }
 
 async function unfollow() {
-  const { data, error } = await user.unfollow(props.user.id)
+  const { data, error } = await useCustomFetch(
+    `/user/${props.user.id}/unfollow`,
+    getComFetchOptions('post', true)
+  )
   if (!error.value) {
     isFollowing.value = !isFollowing.value
     emit('refresh', props.user.id)
@@ -104,18 +110,21 @@ async function unfollow() {
 @media all and (max-width: 479px) {
   .small-btn {
     font-size: 16px;
+    padding: 0px;
   }
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
   .small-btn {
     font-size: 16px;
+    padding: 0px;
   }
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
   .small-btn {
     font-size: 16px;
+    padding: 0px;
   }
 }
 

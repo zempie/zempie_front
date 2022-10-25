@@ -35,7 +35,8 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions) => 
 
     async onRequest({ request, options }) {
       options.headers = options.headers || {}
-      options.headers['Authorization'] = accessToken && `Bearer ${accessToken}`
+
+      if (accessToken) options.headers['Authorization'] = accessToken && `Bearer ${accessToken}`
 
       useCommon().setLoading()
       console.log('[fetch request]')

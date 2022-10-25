@@ -1,7 +1,31 @@
 <template>
-  <NuxtLayout name="my-channel-header">
+  <NuxtLayout name="channel-header">
     <dl class="three-area">
-      <dt v-if="isPending">
+      <dt v-if="isLoading">
+        <div class="ta-myinfo">
+          <UserAvatarSk tag="p" style="width: 100px; height: 100px" />
+          <h1 class="grey-text skeleton-animation"></h1>
+          <ul>
+            <li>
+              <p style="background: #feb100; cursor: pointer">
+                <i class="uil uil-comment-chart-line"></i>
+              </p>
+              <h2 class="grey-text mt10 skeleton-animation"></h2>
+            </li>
+            <li>
+              <p style="background: #33e4ce; cursor: pointer">
+                <i class="uil uil-users-alt"></i>
+              </p>
+              <h2 class="grey-text mt10 skeleton-animation"></h2>
+            </li>
+            <li>
+              <p style="background: #33e4ce; cursor: pointer">
+                <i class="uil uil-users-alt"></i>
+              </p>
+              <h2 class="grey-text mt10 skeleton-animation"></h2>
+            </li>
+          </ul>
+        </div>
         <div class="ta-game-list">
           <dl>
             <dt>Games</dt>
@@ -47,8 +71,8 @@
             </li>
             <li>
               <NuxtLink :to="$localePath(`/channel/${channelId}/following`)">
-                <p style="background: #5d5ffe; cursor: pointer">
-                  <i class="uil uil-user-plus"></i>
+                <p style="background: #33e4ce; cursor: pointer">
+                  <i class="uil uil-users-alt"></i>
                 </p>
                 <h2>{{ channelInfo.following_cnt }}</h2>
                 <h3>following</h3>
@@ -92,13 +116,13 @@
       </dt>
 
       <dd>
-        <TimelineSk v-if="isPending" />
+        <TimelineSk v-if="isLoading" />
         <PostTimeline v-else type="user" :isMine="isMine" :key="channelId" />
       </dd>
       <dt>
         <div class="ta-groups" style="margin-top: 0px">
           <h2>Community</h2>
-          <div v-if="isPending">
+          <div v-if="isLoading">
             <dl v-for="group in 4">
               <CommunityListItemSk />
             </dl>
@@ -121,6 +145,7 @@ const nuxt = useNuxtApp()
 const route = useRoute()
 const isPending = ref(true)
 const channelInfo = computed(() => useChannel().userChannel.value.info)
+const isLoading = computed(() => useChannel().userChannel.value.isLoading)
 const games = computed(() => channelInfo.value.games)
 const channelId = computed(() => route.params.id as string)
 const isMine = computed(() => {

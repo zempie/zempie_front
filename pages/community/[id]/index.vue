@@ -10,16 +10,12 @@
           <CommunityAboutSk />
         </dl>
         <dl class="three-area" v-else>
-          <CommunityChannelList
-            :community="communityInfo"
-            @channelInfo="getChannelInfo"
-          />
+          <CommunityChannelList :community="communityInfo" />
           <dd>
             <PostTimeline
               type="community"
               :isSubscribed="communityInfo?.is_subscribed"
-              :channelInfo="channelInfo"
-              :key="channelInfo?.id"
+              :key="communityInfo?.id"
             >
               <template #inputBox>
                 <input
@@ -28,9 +24,7 @@
                   readonly
                   @click="
                     isLogin
-                      ? communityInfo?.is_subscribed
-                        ? ''
-                        : (needSubscribe = true)
+                      ? !communityInfo?.is_subscribed && (needSubscribe = true)
                       : useModal().openLoginModal()
                   "
                 />
@@ -94,15 +88,7 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 
-import {
-  ElDropdown,
-  ElDropdownMenu,
-  ElDropdownItem,
-  ElSelect,
-  ElOption,
-  ElMessage,
-  ElDialog,
-} from 'element-plus'
+import { ElDialog } from 'element-plus'
 import { dateFormat } from '~/scripts/utils'
 import { IComChannel } from '~~/types'
 import { useI18n } from 'vue-i18n'
@@ -111,7 +97,8 @@ const { t, locale } = useI18n()
 const MAX_LIST_SIZE = 5
 const route = useRoute()
 const router = useRouter()
-const $nuxt = useNuxtApp()
+const nuxt = useNuxtApp()
+
 const config = useRuntimeConfig()
 const accessToken = useCookie(config.COOKIE_NAME).value
 
@@ -128,6 +115,7 @@ const needSubscribe = ref(false)
 const isLogin = computed(() => useUser().user.value.isLogin)
 
 const communityId = computed(() => route.params.id as string)
+const channelId = computed(() => route.params.channel_id as string)
 
 const channelInfo = ref()
 
@@ -138,6 +126,7 @@ definePageMeta({
   title: 'community-channel',
   name: 'communityChannel',
 })
+
 watch(
   () => communityInfo.value,
   (info) => {
@@ -206,10 +195,6 @@ async function subscribe() {
     //   type: 'error'
     // })
   }
-}
-
-function getChannelInfo(info: IComChannel) {
-  channelInfo.value = info
 }
 </script>
 

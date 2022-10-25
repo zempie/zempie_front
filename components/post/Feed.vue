@@ -62,6 +62,7 @@
 
       <div v-if="isOverflow" :class="isMoreView ? '' : 'gradient'"></div>
     </div>
+
     <template v-if="isOverflow">
       <div v-if="!isMoreView" class="more-container">
         <span> <hr class="dot-line" /> </span
@@ -120,6 +121,7 @@
         <div class="swiper-pagination" slot="pagination"></div>
       </swiper>
     </template>
+    <CommunityTarget :communities="feed?.posted_at?.community" />
 
     <ul class="tapl-option">
       <li>
@@ -212,15 +214,7 @@ import { PropType } from 'vue'
 import { IFeed } from '~~/types'
 import { Pagination } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import {
-  ElDropdown,
-  ElDropdownMenu,
-  ElDropdownItem,
-  ElSelect,
-  ElOption,
-  ElMessage,
-  ElDialog,
-} from 'element-plus'
+import { ElMessage, ElDialog } from 'element-plus'
 
 import {
   dateFormat,
@@ -228,16 +222,17 @@ import {
   htmlToDomElem,
   enDateFormat,
 } from '~/scripts/utils'
+
 import { useI18n } from 'vue-i18n'
 
 // import hljs from 'highlight.js'
 import { useWindowScroll, useInfiniteScroll } from '@vueuse/core'
+
 const { $localePath } = useNuxtApp()
-
 const { x, y } = useWindowScroll()
-
 const config = useRuntimeConfig()
 const { t, locale } = useI18n()
+const router = useRouter()
 
 const COMMENT_LIMIT = 5
 const MAX_FEED_HEIGHT = 450
@@ -478,6 +473,7 @@ async function translate(text: string) {
 function untranslatedText(originText: string) {
   feedContent.value = originText
 }
+
 //     /**
 //      * 댓글
 //      * */
@@ -533,6 +529,7 @@ function untranslatedText(originText: string) {
     }
   }
 }
+
 // transition
 
 .component-fade-enter-active,

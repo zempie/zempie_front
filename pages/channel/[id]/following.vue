@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout name="my-channel-header">
+  <NuxtLayout name="channel-header">
     <div>
       <dl class="area-title">
         <dt>

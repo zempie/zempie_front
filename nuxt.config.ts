@@ -1,9 +1,19 @@
 import { defineNuxtConfig } from 'nuxt'
 
 import { i18n } from './modules/i18n'
+import { resolve } from 'pathe'
+
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
-
+  hooks: {
+    'pages:extend'(routes) {
+      routes.push({
+        name: 'community-channel',
+        path: '/community/:id/:channel_name',
+        file: resolve(__dirname, './pages/community/[id]/index.vue')
+      })
+    }
+  },
   head: {
     title: 'Zempie',
     htmlAttrs: {
