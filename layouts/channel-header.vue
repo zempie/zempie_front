@@ -69,7 +69,6 @@ const route = useRoute()
 
 const userInfo = ref<IUserChannel>()
 
-const isPending = ref(true)
 const channelId = computed(() => route.params.id as string)
 const routeQuery = computed(() => route.query.media)
 
@@ -80,33 +79,15 @@ const isMine = computed(() => {
 watch(
   () => useUser().user.value.info,
   async (userInfo) => {
-    await getChannelHeaderInfo()
+    await useChannel().getChannelInfo(channelId.value)
   }
 )
 
 onMounted(async () => {
-  await getChannelHeaderInfo()
-})
-
-async function getChannelHeaderInfo() {
   if (channelId.value) {
-    //   getUserInfo(channelId: string) {
-    //   return useCustomFetchData('get', `/channel/${channelId}`, undefined, true)
-    // },
-    const { data, pending } = await useCustomFetch<{ result: any }>(
-      `/channel/${channelId.value}`,
-      getZempieFetchOptions('get', true)
-    )
-    // user.getUserInfo(channelId.value)
-
-    if (data.value) {
-      const { result } = data.value
-      userInfo.value = result.target
-      useChannel().setUserChannel(userInfo.value)
-    }
+    await useChannel().getChannelInfo(channelId.value)
   }
-  isPending.value = false
-}
+})
 </script>
 
 <style lang="scss" scoped>

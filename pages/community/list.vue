@@ -75,7 +75,7 @@ const sort = ref('')
 const observer = ref<IntersectionObserver>(null)
 const isAddData = ref(false)
 
-const triggerDiv = ref()
+const triggerDiv = ref<Element>()
 definePageMeta({
   layout: 'default',
 })

@@ -30,16 +30,19 @@
             </button>
           </dd>
         </dl>
-        <ul class="ma-content" v-for="like in likeList" :key="like.id">
-          <li>
-            <div>
+        <ul class="ma-content">
+          <li v-for="like in likeList" :key="like.id">
+            <div @click="moveUserChannel(like.user.channel_id)">
               <UserAvatar :user="like.user" style="width: 40px; height: 40px" />
             </div>
             <div>
-              <h2>{{ like.user.name }}</h2>
+              <h2 @click="moveUserChannel(like.user.channel_id)">
+                {{ like.user.name }}
+              </h2>
             </div>
             <div>
               <UserFollowBtn
+                v-if="isLogin"
                 :user="like.user"
                 :customClass="'small-btn'"
                 style="width: 100%"
@@ -54,20 +57,14 @@
 
 <script setup lang="ts">
 import _ from 'lodash'
-import {
-  ElDropdown,
-  ElDropdownMenu,
-  ElDropdownItem,
-  ElSelect,
-  ElOption,
-  ElMessage,
-  ElDialog,
-} from 'element-plus'
+import { ElDialog } from 'element-plus'
+const { $localePath } = useNuxtApp()
 
 const props = defineProps({
   feed: Object,
 })
 const emit = defineEmits(['refresh'])
+const router = useRouter()
 
 const isLiked = ref(props.feed.liked)
 const likeCnt = ref(props.feed.like_cnt)
@@ -119,12 +116,16 @@ async function showLikeHistory() {
 
   const { data, error, refresh } = await useCustomFetch(
     `/post/${props.feed.id}/like/list`,
-    getComFetchOptions('get', true)
+    getComFetchOptions('get', false)
   )
 
   if (data.value) {
     likeList.value = data.value
   }
+}
+
+function moveUserChannel(channel_id: string) {
+  router.push($localePath(`/channel/${channel_id}`))
 }
 </script>
 
@@ -136,38 +137,40 @@ async function showLikeHistory() {
   }
 }
 
-.ma-content {
-  padding: 0px;
-  margin: 10px 0px 10px 0px;
-  li {
-    display: flex;
-    padding: 10px 20px 10px 20px;
-
-    &:not(:last-child) {
-      border-bottom: #e9e9e9 1px solid;
-    }
-    div {
-      margin-top: 0px;
-    }
-
-    div:nth-child(1) {
-      width: 20%;
+.modal-alert {
+  min-height: 100px;
+  .ma-content {
+    padding: 0px;
+    li {
       display: flex;
-      align-items: center;
-    }
-    div:nth-child(2) {
-      width: 50%;
-      h2 {
-        text-align: left;
-        width: 100%;
+      padding: 10px 20px 10px 20px;
+
+      &:not(:last-child) {
+        border-bottom: #e9e9e9 1px solid;
       }
-    }
-    div:nth-child(3) {
-      width: 140px;
+      div {
+        margin-top: 0px;
+      }
+
+      div:nth-child(1) {
+        width: 20%;
+        display: flex;
+        align-items: center;
+      }
+      div:nth-child(2) {
+        width: 50%;
+        cursor: pointer;
+        h2 {
+          text-align: left;
+          width: 100%;
+        }
+      }
+      div:nth-child(3) {
+        width: 140px;
+      }
     }
   }
 }
-
 // @media all and (max-width: 479px) {
 // }
 

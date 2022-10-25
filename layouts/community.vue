@@ -7,7 +7,7 @@
     <div class="tab-menu-swiper">
       <div class="swiper-area">
         <NuxtLink
-          :class="['swiper-slide', !routeQuery ? 'active' : '']"
+          :class="['swiper-slide', !routeQuery && 'active']"
           :to="$localePath(`/community/${communityInfo?.id}`)"
         >
           <p><i class="uil uil-clock-three"></i></p>
@@ -15,7 +15,7 @@
         </NuxtLink>
 
         <NuxtLink
-          :class="['swiper-slide', routeQuery === 'image' ? 'active' : '']"
+          :class="['swiper-slide', routeQuery === 'image' && 'active']"
           :to="$localePath(`/community/${communityInfo?.id}`) + '?media=image'"
         >
           <p><i class="uil uil-image-edit"></i></p>
@@ -23,7 +23,7 @@
         </NuxtLink>
 
         <NuxtLink
-          :class="['swiper-slide', routeQuery === 'video' ? 'active' : '']"
+          :class="['swiper-slide', routeQuery === 'video' && 'active']"
           :to="$localePath(`/community/${communityInfo?.id}`) + '?media=video'"
         >
           <p><i class="uil uil-play-circle"></i></p>
@@ -31,7 +31,7 @@
         </NuxtLink>
 
         <NuxtLink
-          :class="['swiper-slide', routeQuery === 'sound' ? 'active' : '']"
+          :class="['swiper-slide', routeQuery === 'sound' && 'active']"
           :to="$localePath(`/community/${communityInfo?.id}`) + '?media=sound'"
         >
           <p><i class="uil uil-music"></i></p>

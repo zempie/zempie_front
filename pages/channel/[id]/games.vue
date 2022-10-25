@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout name="my-channel-header">
+  <NuxtLayout name="channel-header">
     <div v-if="games">
       <dl class="area-title" style="margin-top: 12.5px">
         <dt>

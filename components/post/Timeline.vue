@@ -88,9 +88,9 @@
           @closeModal="isTextEditorOpen = false"
           :type="type"
           @refresh="refresh"
-          :channelInfo="channelInfo"
           :isFullScreen="usePost().post.value.isFullScreen"
         />
+        <!-- :channelInfo="channelInfo" -->
       </template>
     </PostModal>
   </ul>
@@ -99,7 +99,7 @@
 <script setup lang="ts">
 import _ from 'lodash'
 import { PropType } from 'vue'
-import { IComChannel, IFeed } from '~~/types'
+import { IComChannel, ICommunity, IFeed } from '~~/types'
 import { useI18n } from 'vue-i18n'
 
 const { t, locale } = useI18n()
@@ -118,10 +118,10 @@ const isTextEditorOpen = ref(false)
 const isEditorDestroy = ref(false)
 
 const observer = ref<IntersectionObserver>(null)
-const triggerDiv = ref()
+const triggerDiv = ref<Element>()
 const limit = ref(LIMIT_SIZE)
 const offset = ref(0)
-const media = ref(route.query?.media || null)
+const media = computed(() => route.query?.media || null)
 const isAddData = ref(false)
 
 const user = computed(() => useUser().user.value.info)
@@ -145,7 +145,6 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  channelInfo: Object as PropType<IComChannel>,
 })
 
 const isMobile = computed(() =>
@@ -177,7 +176,7 @@ const userWatcher = watch(
 onMounted(async () => {
   // if (paramId.value || route.meta.name === 'main') {
   const result = await fetch()
-  if (result) {
+  if (result && triggerDiv.value) {
     observer.value = new IntersectionObserver(
       async (entries) => {
         await handleIntersection(entries[0])
@@ -214,13 +213,19 @@ async function fetch() {
 
   switch (props.type) {
     case 'community':
-      if (props.channelInfo) {
+      const channelName = computed(() => route.params.channel_name)
+      const channel = useCommunity().community.value.info.channels.find(
+        (channel) => {
+          return channel.title === channelName.value
+        }
+      )
+      if (channelName.value) {
         const { data, error, refresh } = await useCustomFetch<{
           result: []
           totalCount: number
         }>(
           createQueryUrl(
-            `/timeline/${paramId.value}/channel/${props.channelInfo.id}`,
+            `/timeline/${paramId.value}/channel/${channel.id}`,
             query
           ),
           getComFetchOptions('get', true)

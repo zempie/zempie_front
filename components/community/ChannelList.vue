@@ -12,9 +12,9 @@
       <TransitionGroup name="list">
         <ul v-if="showChannelList">
           <li
-            :class="['channel', { active: currentIndex === ALLPOSTINDEX }]"
+            :class="['channel', { active: !channelName }]"
             :style="`background: url('/images/1500_300_com_banner_default.png') center center / cover no-repeat;`"
-            @click="isActive(ALLPOSTINDEX), emit('channelInfo', undefined)"
+            @click="$router.push($localePath(`/community/${community.id}`))"
           >
             <span>All Posts</span>
           </li>
@@ -23,8 +23,12 @@
             :style="`background: url(${
               channel.profile_img || '/images/1500_300_com_channel_default.png'
             }) center center / cover no-repeat;`"
-            :class="[{ active: currentIndex === index }, 'channel']"
-            @click=";[isActive(index), emit('channelInfo', channel)]"
+            :class="[{ active: channelName === channel.title }, 'channel']"
+            @click="
+              $router.push(
+                $localePath(`/community/${community.id}/${channel.title}`)
+              )
+            "
           >
             <span>{{ channel.title }}</span>
           </li>
@@ -37,12 +41,11 @@
 import { PropType } from 'vue'
 import { ICommunity } from '~~/types'
 
-import { useI18n } from 'vue-i18n'
+const route = useRoute()
+const { $localePath } = useNuxtApp()
 
-const { t, locale } = useI18n()
-const ALLPOSTINDEX = -1
-const currentIndex = ref(ALLPOSTINDEX)
 const showChannelList = ref(true)
+const channelName = computed(() => route.params.channel_name)
 
 const props = defineProps({
   community: {
@@ -54,12 +57,6 @@ const props = defineProps({
 const isMobile = computed(() =>
   window.matchMedia('screen and (max-width: 991px)')
 )
-
-const emit = defineEmits(['channelInfo'])
-
-function isActive(id: number) {
-  currentIndex.value = id
-}
 
 onMounted(() => {
   nextTick(() => {

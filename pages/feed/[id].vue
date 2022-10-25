@@ -102,7 +102,8 @@
               </div>
             </div>
           </template>
-
+          <CommunityTarget :communities="feed?.posted_at[0].community"/>
+         
           <ul class="tapl-option">
             <li>
               <ul>
@@ -238,7 +239,7 @@ const swiperOption = ref({
 const feedId = computed(() => route.params.id as string)
 
 const observer = ref<IntersectionObserver>(null)
-const triggerDiv = ref()
+const triggerDiv = ref<Element>()
 const isAddData = ref(false)
 
 const {
@@ -497,4 +498,6 @@ input[type='radio'] {
     border-top: 0px;
   }
 }
+
+
 </style>

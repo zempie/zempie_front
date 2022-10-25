@@ -120,7 +120,7 @@ const offset = ref(0)
 // sort: string = 'c';
 // dir: string = 'asc'
 
-const triggerDiv = ref()
+const triggerDiv = ref<Element>()
 const observer = ref<IntersectionObserver>(null)
 const isAddData = ref(false)
 
