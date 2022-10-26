@@ -214,7 +214,7 @@
 <script setup lang="ts">
 import Prism from '~/plugins/prism'
 import _ from 'lodash'
-import { ElMessage, ElDropdown, ElDialog } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 
 import { Swiper, SwiperSlide } from 'swiper/vue'

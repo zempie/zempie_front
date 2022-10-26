@@ -42,7 +42,7 @@
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
 
 import ZipUtil from '~~/scripts/zipUtil'
-import { ElMessage, ElLoading } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 
 const { t, locale } = useI18n()

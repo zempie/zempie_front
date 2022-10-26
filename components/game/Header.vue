@@ -184,7 +184,7 @@
 import _ from 'lodash'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
-import { ElMessage, ElMessageBox, ElLoading, ElDialog } from 'element-plus'
+import { ElMessage, ElDialog } from 'element-plus'
 import { IGame, eGameStage } from '~~/types'
 
 import { PropType } from 'vue'

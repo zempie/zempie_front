@@ -12,8 +12,6 @@ import { MarkType, DOMParser } from 'prosemirror-model'
 import { Plugin, PluginKey } from 'prosemirror-state'
 import { ElLoading } from 'element-plus'
 
-import addPreview from './addPreview'
-
 
 type AutolinkOptions = {
   type: MarkType,

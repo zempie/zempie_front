@@ -87,10 +87,7 @@
 </template>
 <script setup lang="ts">
 import dayjs from 'dayjs'
-
 import { ElDialog } from 'element-plus'
-import { dateFormat } from '~/scripts/utils'
-import { IComChannel } from '~~/types'
 import { useI18n } from 'vue-i18n'
 const { t, locale } = useI18n()
 
