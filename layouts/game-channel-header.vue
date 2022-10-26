@@ -66,36 +66,33 @@ const gamePath = computed(() => route.params.id as string)
 const routeQuery = computed(() => route.query.media)
 const isPending = ref(true)
 
-const { data, pending } = await useCustomFetch<any>(
-  `/launch/game/${gamePath.value}`,
-  getZempieFetchOptions('get', false)
+watch(
+  () => gameInfo.value,
+  (data) => {
+    if (data) {
+      gameInfo.value = data
+      useGame().setGame(data)
+      isPending.value = false
+    }
+  }
 )
 
 onMounted(async () => {
+  await fetch()
+})
+
+async function fetch() {
+  const { data, pending, error } = await useCustomFetch<any>(
+    `/launch/game/${gamePath.value}`,
+    getZempieFetchOptions('get', false)
+  )
+
   if (data.value) {
     const { result } = data.value
     gameInfo.value = result.game
     useGame().setGame(gameInfo.value)
-    // await getUserInfo()
     isPending.value = false
-  }
-})
-
-async function getUserInfo() {
-  if (gameInfo.value.user) {
-    const { data, pending } = await user.getUserInfo(
-      gameInfo.value.user.channel_id
-    )
-    const { result } = data.value
-    useChannel().setUserChannel(result.target)
-  } else {
-    gameInfo.value['user'] = {
-      name: '탈퇴한 회원입니다.',
-      id: -1,
-      channel_id: '',
-      email: '',
-      uid: '',
-    }
+  } else if (error.value) {
   }
 }
 </script>
