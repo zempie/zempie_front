@@ -7,7 +7,11 @@
           <div class="header-logo-menu">
             <p>
               <NuxtLink :to="$localePath('/')">
-                <img class="logo" src="/images/zempie-logo-black.png" />
+                <img
+                  class="logo"
+                  src="/images/zempie-logo-black.png"
+                  alt="zempie-logo"
+                />
                 <img
                   class="mobile-logo"
                   src="/images/zempie_logo_154_155.png"
@@ -108,7 +112,7 @@
                           </el-dropdown-item>
                         </template>
                         <template v-if="gameList?.length">
-                          <h2>{{ t('addGameInfo.game.name') }}</h2>
+                          <h2>{{ t('addGameInfo.game.title') }}</h2>
                           <el-dropdown-item
                             v-for="game in gameList"
                             :key="game.id"
@@ -384,7 +388,6 @@ import {
   ElDropdownItem,
   ElSelect,
   ElOption,
-  ElMessage,
   ElDialog,
 } from 'element-plus'
 

@@ -83,7 +83,7 @@
 </template>
 
 <script setup lang="ts">
-import { ElMessage, ElMessageBox, ElLoading } from 'element-plus'
+import { ElLoading } from 'element-plus'
 import { IVersion, eGameStage } from '~~/types'
 import Version from '~~/scripts/version'
 import { useI18n } from 'vue-i18n'

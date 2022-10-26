@@ -15,15 +15,7 @@
   </ClientOnly>
 </template>
 <script setup lang="ts">
-import {
-  ElDropdown,
-  ElDropdownMenu,
-  ElDropdownItem,
-  ElSelect,
-  ElOption,
-  ElMessage,
-  ElDialog,
-} from 'element-plus'
+import { ElDialog } from 'element-plus'
 const isEditorDestroy = ref(false)
 const isFullScreen = ref(false)
 
