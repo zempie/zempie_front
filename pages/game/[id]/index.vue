@@ -149,7 +149,7 @@ async function gameListFetch() {
   const { data, error, pending, refresh } = await useCustomFetch<{
     result: any
   }>(
-    `/channel/${useGame().game.value.info.user.channel_id}`,
+    `/channel/${useGame().game.value.info?.user?.channel_id}`,
     getZempieFetchOptions('get', false)
   )
 
