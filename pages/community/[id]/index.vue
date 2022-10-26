@@ -163,13 +163,9 @@ async function fetch() {
     offset: offset.value,
   }
 
-  const { data, pending } = await useFetch<any>(
+  const { data, pending } = await useCustomFetch<any>(
     createQueryUrl(`/community/list`, query),
-    {
-      method: 'get',
-      baseURL: config.COMMUNITY_API,
-      headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
-    }
+    getComFetchOptions('get', true)
   )
 
   if (data.value.length) {
