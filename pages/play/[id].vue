@@ -39,10 +39,6 @@ definePageMeta({
   layout: 'layout-none',
 })
 
-const { data, error, pending } = await useCustomFetch<{
-  result: { game: {}; my_emotions: {}; my_heart: boolean }
-}>(`/game/${gamePath.value}`, getZempieFetchOptions('get', false))
-
 watch(
   () => userInfo.value,
   (info) => {
@@ -53,9 +49,10 @@ watch(
 )
 
 watch(
-  () => data.value,
+  () => gameData.value,
   (info) => {
     if (info) {
+      gameData.value = info
       setHead()
     }
   }
@@ -68,6 +65,7 @@ onMounted(async () => {
     onResize()
   }
   setHead()
+  await fetch()
 })
 
 onBeforeUnmount(() => {
@@ -75,60 +73,66 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', onResize)
 })
 
-function setHead() {
+async function fetch() {
+  const { data, error, pending } = await useCustomFetch<{
+    result: { game: {}; my_emotions: {}; my_heart: boolean }
+  }>(`/game/${gamePath.value}`, getZempieFetchOptions('get', false))
+
   if (data.value) {
     const { game, my_emotions, my_heart } = data.value.result
     gameData.value = game
-
-    useHead({
-      title: `${gameData.value.title} | Zempie`,
-      link: [
-        {
-          rel: 'alternate',
-          href: `${config.ZEMPIE_URL}${route.fullPath}`,
-          hreflang: locale,
-        },
-      ],
-      meta: [
-        {
-          property: 'og:url',
-          content: `${config.ZEMPIE_URL}${route.fullPath}`,
-        },
-        {
-          property: 'og:site_name',
-          content: 'Zempie',
-        },
-        {
-          name: 'og:type',
-          content: 'website',
-        },
-        {
-          name: 'robots',
-          content: 'index, follow',
-        },
-        {
-          name: 'description',
-          content: `${gameData.value.title}`,
-        },
-        {
-          property: 'og:title',
-          content: `${gameData.value.description}`,
-        },
-        {
-          property: 'og:description',
-          content: `${gameData.value.description}`,
-        },
-        {
-          property: 'og:url',
-          content: `${config.ZEMPIE_URL}${route.path}`,
-        },
-        {
-          name: 'og:image',
-          content: `${gameData.value.url_thumb}`,
-        },
-      ],
-    })
   }
+}
+
+function setHead() {
+  useHead({
+    title: `${gameData.value.title} | Zempie`,
+    link: [
+      {
+        rel: 'alternate',
+        href: `${config.ZEMPIE_URL}${route.fullPath}`,
+        hreflang: locale,
+      },
+    ],
+    meta: [
+      {
+        property: 'og:url',
+        content: `${config.ZEMPIE_URL}${route.fullPath}`,
+      },
+      {
+        property: 'og:site_name',
+        content: 'Zempie',
+      },
+      {
+        name: 'og:type',
+        content: 'website',
+      },
+      {
+        name: 'robots',
+        content: 'index, follow',
+      },
+      {
+        name: 'description',
+        content: `${gameData.value.title}`,
+      },
+      {
+        property: 'og:title',
+        content: `${gameData.value.description}`,
+      },
+      {
+        property: 'og:description',
+        content: `${gameData.value.description}`,
+      },
+      {
+        property: 'og:url',
+        content: `${config.ZEMPIE_URL}${route.path}`,
+      },
+      {
+        name: 'og:image',
+        content: `${gameData.value.url_thumb}`,
+      },
+    ],
+  })
 }
 
 function onResize() {

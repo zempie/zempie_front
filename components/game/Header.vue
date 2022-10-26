@@ -321,7 +321,7 @@ async function updateBannerImg() {
     formData.append('game_id', String(props.gameInfo.id))
     formData.append('file', file)
 
-    const { data, error, pending } = await useCustomFetch(
+    const { data, error, pending } = await useCustomFetch<{ result: any }>(
       '/game/banner',
       getZempieFetchOptions('put', true, formData)
     )
