@@ -89,55 +89,57 @@ const isMine = computed(
 watch(
   () => game.value,
   async (info) => {
-    await gameListFetch()
-    useHead({
-      title: `${info.title} | Zempie game`,
-      link: [
-        {
-          rel: 'alternate',
-          href: `${config.ZEMPIE_URL}${route.fullPath}`,
-          hreflang: locale,
-        },
-        {
-          rel: 'canonical',
-          href: `${config.ZEMPIE_URL}${route.fullPath}`,
-        },
-      ],
-      meta: [
-        {
-          property: 'og:url',
-          content: `${config.ZEMPIE_URL}${route.fullPath}`,
-        },
-        {
-          property: 'og:site_name',
-          content: 'Zempie',
-        },
-        {
-          name: 'og:type',
-          content: 'website',
-        },
-        {
-          name: 'robots',
-          content: 'index, follow',
-        },
-        {
-          name: 'description',
-          content: `${info.description}`,
-        },
-        {
-          property: 'og:title',
-          content: `${info.title}`,
-        },
-        {
-          property: 'og:description',
-          content: `${info.description}`,
-        },
-        {
-          property: 'og:url',
-          content: `${config.ZEMPIE_URL}${route.path}`,
-        },
-      ],
-    })
+    if (info) {
+      await gameListFetch()
+      useHead({
+        title: `${info.title} | Zempie game`,
+        link: [
+          {
+            rel: 'alternate',
+            href: `${config.ZEMPIE_URL}${route.fullPath}`,
+            hreflang: locale,
+          },
+          {
+            rel: 'canonical',
+            href: `${config.ZEMPIE_URL}${route.fullPath}`,
+          },
+        ],
+        meta: [
+          {
+            property: 'og:url',
+            content: `${config.ZEMPIE_URL}${route.fullPath}`,
+          },
+          {
+            property: 'og:site_name',
+            content: 'Zempie',
+          },
+          {
+            name: 'og:type',
+            content: 'website',
+          },
+          {
+            name: 'robots',
+            content: 'index, follow',
+          },
+          {
+            name: 'description',
+            content: `${info.description}`,
+          },
+          {
+            property: 'og:title',
+            content: `${info.title}`,
+          },
+          {
+            property: 'og:description',
+            content: `${info.description}`,
+          },
+          {
+            property: 'og:url',
+            content: `${config.ZEMPIE_URL}${route.path}`,
+          },
+        ],
+      })
+    }
   }
 )
 
