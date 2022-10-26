@@ -29,7 +29,7 @@
 
               <div v-if="games.length > 5">
                 <NuxtLink
-                  :to="$localePath(`/channel/${game.user.channel_id}/games`)"
+                  :to="$localePath(`/channel/${game?.user.channel_id}/games`)"
                   class="btn-default-samll w100p"
                 >
                   {{ $t('moreView') }}
