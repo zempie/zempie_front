@@ -322,7 +322,7 @@
     <el-dialog
       v-model="isDeleteModalOpen"
       append-to-body
-      custom-class="modal-area-type"
+      class="modal-area-type"
       width="380px"
     >
       <div class="modal-alert">
@@ -357,7 +357,13 @@
 </template>
 
 <script setup lang="ts">
-import { ElMessage, ElLoading, ElTooltip, ElDialog } from 'element-plus'
+import {
+  ElMessage,
+  ElMessageBox,
+  ElLoading,
+  ElTooltip,
+  ElDialog,
+} from 'element-plus'
 
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
 import { eGameStage } from '~~/types'

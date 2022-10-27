@@ -26,7 +26,7 @@
     <el-dialog
       v-model="showDeletePostModal"
       append-to-body
-      custom-class="modal-area-type"
+      class="modal-area-type"
       width="380px"
     >
       <div class="modal-alert">
@@ -73,7 +73,15 @@
 <script lang="ts" setup>
 import { PropType } from 'vue'
 import { IFeed } from '~~/types'
-import { ElDropdown, ElMessage, ElDialog } from 'element-plus'
+import {
+  ElDropdown,
+  ElDropdownMenu,
+  ElDropdownItem,
+  ElSelect,
+  ElOption,
+  ElMessage,
+  ElDialog,
+} from 'element-plus'
 import { useI18n } from 'vue-i18n'
 
 const { $localePath } = useNuxtApp()

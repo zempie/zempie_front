@@ -12,7 +12,7 @@
               <ul style="margin-bottom: 20px">
                 <li
                   v-for="game in games.slice(0, 5)"
-                  @click="$router.push($localePath(`/game/${game.pathname}`))"
+                  @click="$router.push($localePath(`/game/${game?.pathname}`))"
                 >
                   <p
                     :style="`background:url(${
@@ -68,6 +68,7 @@
 </template>
 
 <script setup lang="ts">
+import { IUserChannel } from '~~/types'
 import { execCommandCopy } from '~/scripts/utils'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
@@ -82,7 +83,7 @@ const games = ref()
 const game = computed(() => useGame().game.value.info)
 
 const isMine = computed(
-  () => useGame().game.value.info?.user?.id === useUser().user.value.info?.id
+  () => game.value?.user.id === useUser().user.value.info?.id
 )
 
 watch(
@@ -150,7 +151,7 @@ async function gameListFetch() {
   const { data, error, pending, refresh } = await useCustomFetch<{
     result: any
   }>(
-    `/channel/${useGame().game.value.info?.user?.channel_id}`,
+    `/channel/${game.value?.user.channel_id}`,
     getZempieFetchOptions('get', false)
   )
 
@@ -159,14 +160,32 @@ async function gameListFetch() {
 
     if (result) {
       const { target } = result
-      // const { games: gameList } = target
-      const list = target?.games.filter((gm) => {
+
+      const list = target?.games?.filter((gm) => {
         return gm.id !== game.value.id
       })
       games.value = list
     }
   }
 }
+
+// gameListFetch() {
+//     this.$api.userChannel(this.user.channel_id)
+//         .then((res: any) => {
+//             const {target} = res;
+//             const {games} = target;
+//             this.$store.commit('gameList', games)
+//             if (games.length > 0) {
+//                 this.totalGameCnt = games.length;
+//             }
+//             this.games = games.slice(0, 5)
+//         })
+//         .catch((err: AxiosError) => {
+//             // this.$router.push(`/${this.$i18n.locale}`)
+//             // console.log('err', err)
+//         })
+
+// }
 
 // beforeDestroy() {
 //     this.$store.commit('currPage', null)

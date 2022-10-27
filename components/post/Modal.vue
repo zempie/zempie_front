@@ -2,7 +2,7 @@
   <ClientOnly>
     <el-dialog
       v-model="isTextEditorOpen"
-      custom-class="post-modal"
+      class="post-modal"
       :show-close="false"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
@@ -15,7 +15,15 @@
   </ClientOnly>
 </template>
 <script setup lang="ts">
-import { ElDialog } from 'element-plus'
+import {
+  ElDropdown,
+  ElDropdownMenu,
+  ElDropdownItem,
+  ElSelect,
+  ElOption,
+  ElMessage,
+  ElDialog,
+} from 'element-plus'
 const isEditorDestroy = ref(false)
 const isFullScreen = ref(false)
 

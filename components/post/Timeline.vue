@@ -280,6 +280,8 @@ async function fetch() {
       isPending.value = false
       return isAddData.value
 
+    // return isAddData.value
+
     case 'game':
       const { data: gamePostData, error: gameError } = await useCustomFetch<{
         result: []

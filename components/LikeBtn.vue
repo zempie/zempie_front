@@ -8,6 +8,7 @@
     ></i>
     <i
       v-else
+      @click="unsetLike"
       class="xi-heart like-icon"
       style="font-size: 22px; color: #ff6e17; cursor: pointer"
     ></i>
@@ -18,9 +19,8 @@
   <ClientOnly>
     <el-dialog
       v-model="isLikeHistoryOpen"
-      custom-class="modal-area-type"
+      class="modal-area-type"
       width="500px"
-      @close="closeList"
     >
       <div class="modal-alert">
         <dl class="ma-header">
@@ -31,7 +31,7 @@
             </button>
           </dd>
         </dl>
-        <ul ref="likeEl" class="ma-content">
+        <ul class="ma-content">
           <li v-for="like in likeList" :key="like.id">
             <div @click="moveUserChannel(like.user.channel_id)">
               <UserAvatar :user="like.user" style="width: 40px; height: 40px" />
@@ -59,42 +59,24 @@
 <script setup lang="ts">
 import _ from 'lodash'
 import { ElDialog } from 'element-plus'
-import { useInfiniteScroll } from '@vueuse/core'
-
-const LIKE_LIMIT = 5
-let likeAcceessableCount = 2
-let unlikeAcceessableCount = 2
-
 const { $localePath } = useNuxtApp()
-const router = useRouter()
 
 const props = defineProps({
   feed: Object,
 })
 const emit = defineEmits(['refresh'])
+const router = useRouter()
 
 const isLiked = ref(props.feed.liked)
 const likeCnt = ref(props.feed.like_cnt)
 
 const isLikeHistoryOpen = ref(false)
 const likeList = ref()
-const offset = ref(0)
-const limit = ref(LIKE_LIMIT)
-const likeEl = ref<HTMLElement | null>(null)
-const isAddData = ref(false)
 
 const isLogin = computed(() => useUser().user.value.isLogin)
 
-useInfiniteScroll(
-  likeEl,
-  async () => {
-    if (isAddData.value) {
-      offset.value += limit.value
-      await likeFetch()
-    }
-  },
-  { distance: 10 }
-)
+let likeAcceessableCount = 2
+let unlikeAcceessableCount = 2
 
 async function setLike() {
   if (!isLogin.value) {
@@ -103,10 +85,7 @@ async function setLike() {
   }
   likeAcceessableCount = likeAcceessableCount - 1
   if (likeAcceessableCount > 0) {
-    const { data, error } = await useCustomFetch(
-      `/post/${props.feed.id}/like`,
-      getComFetchOptions('post', true)
-    )
+    const { data, error } = await post.like(props.feed.id)
     if (!error.value) {
       isLiked.value = true
       likeCnt.value++
@@ -136,40 +115,18 @@ async function showLikeHistory() {
 
   isLikeHistoryOpen.value = true
 
-  await likeFetch()
-}
-
-async function likeFetch() {
-  const query = {
-    limit: limit.value,
-    offset: offset.value,
-  }
-
-  const { data, error, refresh } = await useCustomFetch<[]>(
-    createQueryUrl(`/post/${props.feed.id}/like/list`, query),
+  const { data, error, refresh } = await useCustomFetch(
+    `/post/${props.feed.id}/like/list`,
     getComFetchOptions('get', false)
   )
+
   if (data.value) {
-    if (isAddData.value) {
-      if (data.value.length > 0) {
-        likeList.value = [...likeList.value, ...data.value]
-      } else {
-        isAddData.value = false
-      }
-    } else {
-      likeList.value = data.value
-      isAddData.value = true
-    }
+    likeList.value = data.value
   }
 }
+
 function moveUserChannel(channel_id: string) {
   router.push($localePath(`/channel/${channel_id}`))
-}
-
-function closeList() {
-  offset.value = 0
-  limit.value = LIKE_LIMIT
-  likeList.value = []
 }
 </script>
 
@@ -183,12 +140,8 @@ function closeList() {
 
 .modal-alert {
   min-height: 100px;
-
   .ma-content {
     padding: 0px;
-    border-radius: 10px;
-    max-height: 380px;
-    overflow-y: auto;
     li {
       display: flex;
       padding: 10px 20px 10px 20px;

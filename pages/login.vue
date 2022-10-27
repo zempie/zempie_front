@@ -96,7 +96,15 @@
 </template>
 
 <script setup lang="ts">
-import { ElMessage } from 'element-plus'
+import {
+  ElDropdown,
+  ElMessageBox,
+  ElDropdownItem,
+  ElLoading,
+  ElPopover,
+  ElMessage,
+  ElDialog,
+} from 'element-plus'
 import useVuelidate from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
 import { useI18n } from 'vue-i18n'
@@ -199,10 +207,8 @@ async function onSubmit() {
   const isValid = await v$.value.$validate()
 
   if (!isValid) return
-
   setPersistence($firebaseAuth, browserSessionPersistence)
-    .then(() => {
-      console.log('browserSessionPersistence')
+    .then((res) => {
       signInWithEmailAndPassword($firebaseAuth, form.email, form.password)
         .then(async (result) => {
           const { user } = result
@@ -232,10 +238,8 @@ async function onSubmit() {
           throw { message }
         })
     })
-    .catch((error) => {
-      // Handle Errors here.
-      const errorCode = error.code
-      const errorMessage = error.message
+    .catch((err: any) => {
+      ElMessage.error(err.message)
     })
 }
 

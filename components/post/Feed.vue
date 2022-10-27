@@ -171,7 +171,7 @@
       <el-dialog
         v-model="showDeletePostModal"
         append-to-body
-        custom-class="modal-area-type"
+        class="modal-area-type"
         width="380px"
       >
         <div class="modal-alert">

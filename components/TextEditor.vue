@@ -261,7 +261,7 @@
     <el-dialog
       v-model="showDraftList"
       append-to-body
-      custom-class="modal-area-type"
+      class="modal-area-type"
       width="380px"
     >
       <div class="modal-alert">
@@ -317,6 +317,7 @@ import dayjs from 'dayjs'
 
 import { Editor } from '@tiptap/vue-3'
 import {
+  ElDropdown,
   ElMessageBox,
   ElLoading,
   ElPopover,

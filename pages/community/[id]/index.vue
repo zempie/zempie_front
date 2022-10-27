@@ -53,7 +53,7 @@
       <el-dialog
         v-model="needSubscribe"
         append-to-body
-        custom-class="modal-area-type"
+        class="modal-area-type"
         width="380px"
       >
         <div class="modal-alert">
@@ -87,7 +87,10 @@
 </template>
 <script setup lang="ts">
 import dayjs from 'dayjs'
+
 import { ElDialog } from 'element-plus'
+import { dateFormat } from '~/scripts/utils'
+import { IComChannel } from '~~/types'
 import { useI18n } from 'vue-i18n'
 const { t, locale } = useI18n()
 
@@ -163,9 +166,13 @@ async function fetch() {
     offset: offset.value,
   }
 
-  const { data, pending } = await useCustomFetch<any>(
+  const { data, pending } = await useFetch<any>(
     createQueryUrl(`/community/list`, query),
-    getComFetchOptions('get', true)
+    {
+      method: 'get',
+      baseURL: config.COMMUNITY_API,
+      headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
+    }
   )
 
   if (data.value.length) {

@@ -1,6 +1,20 @@
 <template>
   <div class="wrap is-ready event-popup">
     <div class="container" ref="eventRef">
+      <!-- HEADER -->
+      <!-- <div class="header" v-if="$route.name !== 'ZemJam'">
+                <div>
+                    <dl>
+                        <dt class="click-text" @click="neverOpen">
+                            <span style=" font-family:'Russo One'"> Don’t Show Again </span>
+                        </dt>
+                        <dd class="click-text">
+                            <span @click="$modal.hide('openEventPopup')" style=" font-family:'Russo One'">Close</span>
+            </dd>
+            </dl>
+        </div>
+    </div> -->
+
       <div class="slogan">
         <div style="font-family: 'Press Start 2P'">
           <h1
@@ -34,10 +48,14 @@
             <a style="font-family: 'Russo One', 'NeoDunggeunmo'"
               >종료된 게임젬</a
             >
+            <!-- <router-link :to="`/${$i18n.locale}/uploadGame`" style=" font-family:'Russo One'">UPLOAD GAME
+                        </router-link> -->
           </div>
         </div>
       </div>
+      <!-- SLOGAN END -->
 
+      <!-- ZEM JAM Is -->
       <div class="zemjam-is">
         <div>
           <h2 data-scroll data-scroll-speed="1" data-scroll-delay="0.05">
@@ -78,7 +96,9 @@
           </div>
         </div>
       </div>
+      <!-- ZEM JAM Is END -->
 
+      <!-- GAME SUBMISSION -->
       <div class="game-submission">
         <div>
           <h2 data-scroll data-scroll-speed="1" data-scroll-delay="0.05">
@@ -105,7 +125,9 @@
           </div>
         </div>
       </div>
+      <!-- GAME SUBMISSION END -->
 
+      <!-- OUR MISSION -->
       <div class="out-mission">
         <div>
           <dl>
@@ -162,7 +184,9 @@
           </ul>
         </div>
       </div>
+      <!-- OUR MISSION END -->
 
+      <!-- OUR PARTNER -->
       <div class="out-partner">
         <div>
           <h2 data-scroll data-scroll-speed="1" data-scroll-delay="0.05">
@@ -178,7 +202,9 @@
           </h3>
         </div>
       </div>
+      <!-- OUR PARTNER END -->
 
+      <!-- Footer -->
       <div class="footer">
         <div>
           <p></p>
@@ -204,10 +230,6 @@ import { useI18n } from 'vue-i18n'
 const { t, locale } = useI18n()
 const route = useRoute()
 const config = useRuntimeConfig()
-
-definePageMeta({
-  layout: 'header-only',
-})
 
 useHead({
   title: `${t('seo.zemjam.title')} | Zempie`,
@@ -259,8 +281,85 @@ useHead({
     },
   ],
 })
+
+definePageMeta({
+  layout: 'header-only',
+})
+
+// import {Vue, Component, Watch} from 'vue-property-decorator';
+// import '@/script/js/anime.min'
+// // import '@/script/js/common'
+// import '@/script/js/easing'
+// import '@/script/js/fittext'
+// // @ts-ignore
+// import gsap from '@/script/js/gsap.min'
+// import '@/script/js/lettering'
+// import LocomotiveScroll from '@/script/js/locomotive-scroll'
+// import '@/script/js/nice-select'
+// // @ts-ignore
+// import ScrollTrigger from '@/script/js/ScrollTrigger.min'
+// import MetaSetting from "@/script/metaSetting";
+
+// @Component
+// export default class ZemJam extends Vue {
+//     scroller: any = null;
+//     metaSetting !: MetaSetting;
+
+//     mounted() {
+
+//         });
+
+//         this.$nextTick(() => {
+//             this.initLocoScroll();
+//         })
+//     }
+
+//     initLocoScroll() {
+
+//         //@ts-ignore
+//         this.scroller = new LocomotiveScroll({
+//             el: (this.$refs['eventRef'] as HTMLElement),
+//             smooth: true,
+//             smoothMobile: true,
+//             mobile: {
+//                 getDirection: true,
+//                 smooth: true
+//             },
+//             tablet: {
+//                 getDirection: true,
+//                 smooth: true
+//             },
+//             lerp: 0.05,
+//             smartphone: {
+//                 smooth: false,
+//                 // direction: "vertical"
+//             },
+//         });
+
+//         this.scroller.update()
+//     }
+
+//     neverOpen() {
+//         localStorage.setItem('zj-popup-open', 'false')
+//         this.$modal.hide('openEventPopup')
+//     }
+
+//     openApplyForm() {
+//         if (this.$i18n.locale === 'ko') {
+//             window.open('https://forms.gle/TmuUzjtK6o8bahqA7', "_blank")
+//         }
+//         else {
+//             window.open('https://forms.gle/X2ZhXzUE7aV41xRT9', "_blank")
+//         }
+//     }
+
+//     beforeDestroy() {
+//         this.scroller.destroy()
+//     }
+
+// }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
 @import '/assets/css/animate.css';
 @import '/assets/css/fonts-jam.css';
 @import '/assets/css/jquery-ui.css';

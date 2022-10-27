@@ -56,7 +56,7 @@
       <el-dialog
         v-model="showDeleteModal"
         append-to-body
-        custom-class="modal-area-type"
+        class="modal-area-type"
         width="380px"
       >
         <div class="modal-alert">
@@ -94,7 +94,15 @@
 
 <script setup lang="ts">
 import _ from 'lodash'
-import { ElDropdown, ElDialog } from 'element-plus'
+import {
+  ElDropdown,
+  ElDropdownMenu,
+  ElDropdownItem,
+  ElSelect,
+  ElOption,
+  ElMessage,
+  ElDialog,
+} from 'element-plus'
 
 const showDeleteModal = ref(false)
 const isCommentEdit = ref(false)

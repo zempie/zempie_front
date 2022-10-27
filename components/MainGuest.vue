@@ -2,7 +2,7 @@
   <div class="main-bg">
     <div class="main-copy">
       <h1>
-        <nuxt-img
+        <NuxtImg
           src="/images/main_copy.svg"
           width="500"
           alt="zempie"
@@ -20,7 +20,6 @@
         <span class="card-game">
           <GameCardSk v-if="isPending" v-for="game in GAME_COUNT" />
           <GameCard
-            v-else
             v-for="game in data.result.games"
             :gameInfo="game"
             :key="game.id"
@@ -28,10 +27,6 @@
         </span>
       </ul>
     </div>
-    <!-- <div class="main-upload">
-        <p></p>
-      </div> -->
-
     <div class="main-visual">
       <h2><span style="font: 36px/46px 'Jalnan'">Communities</span></h2>
 
@@ -60,10 +55,7 @@
           v-for="post in posts.result"
           @click="$router.push($localePath(`/feed/${post?.id}`))"
         >
-          <nuxt-img
-            :src="post.attatchment_files[0]?.url"
-            :alt="`${post.attatchment_files[0].name}`"
-          />
+          <NuxtImg :src="post.attatchment_files[0]?.url" />
         </li>
       </ul>
     </div>
