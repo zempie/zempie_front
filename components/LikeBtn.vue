@@ -8,6 +8,7 @@
     ></i>
     <i
       v-else
+      @click="unsetLike"
       class="xi-heart like-icon"
       style="font-size: 22px; color: #ff6e17; cursor: pointer"
     ></i>
