@@ -1,6 +1,6 @@
 import { IUser } from "~~/types"
 import { signOut } from 'firebase/auth'
-import { ElMessage, ElDialog } from "element-plus";
+import { ElMessage } from "element-plus";
 
 export default function () {
   const { $firebaseAuth, $cookies } = useNuxtApp()

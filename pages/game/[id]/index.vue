@@ -29,7 +29,7 @@
 
               <div v-if="games.length > 5">
                 <NuxtLink
-                  :to="$localePath(`/channel/${game.user.channel_id}/games`)"
+                  :to="$localePath(`/channel/${game?.user.channel_id}/games`)"
                   class="btn-default-samll w100p"
                 >
                   {{ $t('moreView') }}
@@ -68,7 +68,6 @@
 </template>
 
 <script setup lang="ts">
-import { IUserChannel } from '~~/types'
 import { execCommandCopy } from '~/scripts/utils'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
@@ -160,32 +159,14 @@ async function gameListFetch() {
 
     if (result) {
       const { target } = result
-      const { games: gameList } = target
-      const list = gameList.filter((gm) => {
+      // const { games: gameList } = target
+      const list = target?.games.filter((gm) => {
         return gm.id !== game.value.id
       })
       games.value = list
     }
   }
 }
-
-// gameListFetch() {
-//     this.$api.userChannel(this.user.channel_id)
-//         .then((res: any) => {
-//             const {target} = res;
-//             const {games} = target;
-//             this.$store.commit('gameList', games)
-//             if (games.length > 0) {
-//                 this.totalGameCnt = games.length;
-//             }
-//             this.games = games.slice(0, 5)
-//         })
-//         .catch((err: AxiosError) => {
-//             // this.$router.push(`/${this.$i18n.locale}`)
-//             // console.log('err', err)
-//         })
-
-// }
 
 // beforeDestroy() {
 //     this.$store.commit('currPage', null)

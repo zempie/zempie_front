@@ -5,6 +5,23 @@ import { resolve } from 'pathe'
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
+
+  render: {
+    http2: {
+      push: true,
+      pushAssets: (req) => {
+        const assetsToPush = ['</css/bootstrap.min.css>; rel=preload; as=style']
+
+        if (req.url === '/') {
+          assetsToPush.push(
+            '</css/placeholder-loading.min.css>; rel=preload; as=style'
+          )
+        }
+
+        return assetsToPush
+      }
+    }
+  },
   hooks: {
     'pages:extend'(routes) {
       routes.push({
@@ -38,6 +55,19 @@ export default defineNuxtConfig({
     ],
   },
   build: {
+    // html: {
+    //   minify: {
+    //     collapseBooleanAttributes: true,
+    //     decodeEntities: true,
+    //     minifyCSS: true,
+    //     minifyJS: true,
+    //     processConditionalComments: true,
+    //     removeEmptyAttributes: true,
+    //     removeRedundantAttributes: true,
+    //     trimCustomFragments: true,
+    //     useShortDoctype: true
+    //   }
+    // },
     terser: {
       terserOptions: {
         compress: {
@@ -75,6 +105,7 @@ export default defineNuxtConfig({
     'cookie-universal-nuxt',
     ['@nuxtjs/i18n', i18n],
     '@vueuse/nuxt',
+    '@nuxt/image-edge',
 
   ],
 

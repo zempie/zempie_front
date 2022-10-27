@@ -87,10 +87,7 @@
 </template>
 <script setup lang="ts">
 import dayjs from 'dayjs'
-
 import { ElDialog } from 'element-plus'
-import { dateFormat } from '~/scripts/utils'
-import { IComChannel } from '~~/types'
 import { useI18n } from 'vue-i18n'
 const { t, locale } = useI18n()
 
@@ -166,13 +163,9 @@ async function fetch() {
     offset: offset.value,
   }
 
-  const { data, pending } = await useFetch<any>(
+  const { data, pending } = await useCustomFetch<any>(
     createQueryUrl(`/community/list`, query),
-    {
-      method: 'get',
-      baseURL: config.COMMUNITY_API,
-      headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
-    }
+    getComFetchOptions('get', true)
   )
 
   if (data.value.length) {
