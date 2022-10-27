@@ -96,7 +96,15 @@
 </template>
 
 <script setup lang="ts">
-import { ElMessage } from 'element-plus'
+import {
+  ElDropdown,
+  ElMessageBox,
+  ElDropdownItem,
+  ElLoading,
+  ElPopover,
+  ElMessage,
+  ElDialog,
+} from 'element-plus'
 import useVuelidate from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
 import { useI18n } from 'vue-i18n'
@@ -107,8 +115,6 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   AuthProvider,
-  setPersistence,
-  browserSessionPersistence,
 } from 'firebase/auth'
 
 const { $firebaseAuth, $cookies, $localePath } = useNuxtApp()
@@ -200,42 +206,33 @@ async function onSubmit() {
 
   if (!isValid) return
 
-  setPersistence($firebaseAuth, browserSessionPersistence)
-    .then(() => {
-      console.log('browserSessionPersistence')
-      signInWithEmailAndPassword($firebaseAuth, form.email, form.password)
-        .then(async (result) => {
-          const { user } = result
-          useUser().setFirebaseUser(user)
-          // router.push($localePath('/'))
-        })
-        .catch((err: any) => {
-          const errorCode = err.code
-          const errorMessage = err.message
-          let message = errorCode ? errorCode : errorMessage
-
-          switch (errorCode) {
-            case 'auth/weak-password':
-              message = `${t('login.pwd.format.err')}`
-              break
-            case 'auth/wrong-password':
-              ElMessage.error(`${t('fb.wrong.info')}`)
-              break
-            case 'auth/user-not-found':
-              ElMessage.error(`${t('fb.not.found')}`)
-
-              break
-            default:
-              ElMessage.error(errorCode)
-              break
-          }
-          throw { message }
-        })
+  signInWithEmailAndPassword($firebaseAuth, form.email, form.password)
+    .then(async (result) => {
+      const { user } = result
+      useUser().setFirebaseUser(user)
+      // router.push($localePath('/'))
     })
-    .catch((error) => {
-      // Handle Errors here.
-      const errorCode = error.code
-      const errorMessage = error.message
+    .catch((err: any) => {
+      const errorCode = err.code
+      const errorMessage = err.message
+      let message = errorCode ? errorCode : errorMessage
+
+      switch (errorCode) {
+        case 'auth/weak-password':
+          message = `${t('login.pwd.format.err')}`
+          break
+        case 'auth/wrong-password':
+          ElMessage.error(`${t('fb.wrong.info')}`)
+          break
+        case 'auth/user-not-found':
+          ElMessage.error(`${t('fb.not.found')}`)
+
+          break
+        default:
+          ElMessage.error(errorCode)
+          break
+      }
+      throw { message }
     })
 }
 

@@ -119,7 +119,7 @@
 
 <script setup lang="ts">
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElLoading } from 'element-plus'
 
 import { useI18n } from 'vue-i18n'
 

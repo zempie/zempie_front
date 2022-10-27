@@ -89,7 +89,7 @@
 <script setup lang="ts">
 import { PropType } from 'vue'
 import dayjs from 'dayjs'
-import { ElMessage, ElDialog } from 'element-plus'
+import { ElMessage, ElDialog, ElLoading } from 'element-plus'
 import { IVersion } from '~~/types'
 import { useI18n } from 'vue-i18n'
 

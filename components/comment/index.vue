@@ -94,7 +94,15 @@
 
 <script setup lang="ts">
 import _ from 'lodash'
-import { ElDropdown, ElDialog } from 'element-plus'
+import {
+  ElDropdown,
+  ElDropdownMenu,
+  ElDropdownItem,
+  ElSelect,
+  ElOption,
+  ElMessage,
+  ElDialog,
+} from 'element-plus'
 
 const showDeleteModal = ref(false)
 const isCommentEdit = ref(false)

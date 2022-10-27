@@ -357,7 +357,13 @@
 </template>
 
 <script setup lang="ts">
-import { ElMessage, ElLoading, ElTooltip, ElDialog } from 'element-plus'
+import {
+  ElMessage,
+  ElMessageBox,
+  ElLoading,
+  ElTooltip,
+  ElDialog,
+} from 'element-plus'
 
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
 import { eGameStage } from '~~/types'
