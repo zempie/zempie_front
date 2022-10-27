@@ -6,7 +6,7 @@ const DAYSTOSEC_30 = 60 * 60 * 24 * 30;
 export const useCustomFetch = async <T>(url: string, options?: FetchOptions) => {
   const config = useRuntimeConfig()
   const accessToken = useCookie(config.COOKIE_NAME).value
-  if (accessToken) await getRefreshToken()
+  if (accessToken) getRefreshToken()
 
   return await useFetch<T>(url, {
     ...options,

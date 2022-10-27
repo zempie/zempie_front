@@ -214,7 +214,7 @@ async function fetch() {
   switch (props.type) {
     case 'community':
       const channelName = computed(() => route.params.channel_name)
-      const channel = useCommunity().community.value.info?.channels.find(
+      const channel = useCommunity().community.value.info.channels.find(
         (channel) => {
           return channel.title === channelName.value
         }
