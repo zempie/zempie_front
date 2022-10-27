@@ -5,6 +5,9 @@ import { resolve } from 'pathe'
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
+  experimental: {
+    writeEarlyHints: false,
+  },
   hooks: {
     'pages:extend'(routes) {
       routes.push({
