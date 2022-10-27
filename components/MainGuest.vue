@@ -2,7 +2,7 @@
   <div class="main-bg">
     <div class="main-copy">
       <h1>
-        <img
+        <NuxtImg
           src="/images/main_copy.svg"
           width="500"
           alt="zempie"
@@ -27,10 +27,6 @@
         </span>
       </ul>
     </div>
-    <!-- <div class="main-upload">
-        <p></p>
-      </div> -->
-
     <div class="main-visual">
       <h2><span style="font: 36px/46px 'Jalnan'">Communities</span></h2>
 
@@ -59,7 +55,7 @@
           v-for="post in posts.result"
           @click="$router.push($localePath(`/feed/${post?.id}`))"
         >
-          <img :src="post.attatchment_files[0]?.url" />
+          <NuxtImg :src="post.attatchment_files[0]?.url" />
         </li>
       </ul>
     </div>

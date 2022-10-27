@@ -30,7 +30,7 @@
     <el-dialog
       v-model="openModal"
       append-to-body
-      custom-class="modal-area-type"
+      class="modal-area-type"
       :show-close="false"
     >
       <div class="modal-alert">

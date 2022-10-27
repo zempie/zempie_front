@@ -106,7 +106,7 @@
         >
       </dd>
     </dl>
-    <el-dialog v-model="showChangeBanner" custom-class="modal-area-game-banner">
+    <el-dialog v-model="showChangeBanner" class="modal-area-game-banner">
       <div class="modal-alert">
         <dl class="ma-header">
           <dt>{{ t('banner.photo') }}</dt>
@@ -152,7 +152,7 @@
     <el-dialog
       v-model="showDeleteBanner"
       append-to-body
-      custom-class="modal-area-type"
+      class="modal-area-type"
       width="380px"
     >
       <div class="modal-alert">
@@ -197,24 +197,27 @@ const { t, locale } = useI18n()
 
 const router = useRouter()
 
-const hashtags = computed(() =>
-  props.gameInfo.hashtags.length > 0
-    ? props.gameInfo.hashtags.split(',')
-    : undefined
+const gameInfo = computed(() => useGame().game.value.info)
+
+console.log('gameInfo:', gameInfo.value)
+
+const hashtags = computed(
+  () =>
+    gameInfo.value.hashtags?.length > 0 && gameInfo.value.hashtags?.split(',')
 )
 
-const props = defineProps({
-  gameInfo: Object as PropType<IGame>,
-})
+// const props = defineProps({
+//   gameInfo: Object as PropType<IGame>,
+// })
 
 const isMine = computed(
-  () => props.gameInfo?.user.id === useUser().user.value.info?.id
+  () => gameInfo.value.user?.id === useUser().user.value.info?.id
 )
-const isLike = ref(props.gameInfo?.is_like)
-const likeCnt = ref(props.gameInfo?.count_heart)
+const isLike = ref(gameInfo.value?.is_like)
+const likeCnt = ref(gameInfo.value?.count_heart)
 const bannerImg = ref()
 const bannerFile = ref<File>()
-const prevBanner = ref<String | ArrayBuffer>(props.gameInfo?.url_banner)
+const prevBanner = ref<String | ArrayBuffer>(gameInfo.value?.url_banner)
 
 const showChangeBanner = ref(false)
 const editBanner = ref()
@@ -223,7 +226,7 @@ const cropper = ref()
 const showDeleteBanner = ref(false)
 
 function playGame() {
-  window.open(`/play/${props.gameInfo.pathname}`, '_blank')
+  window.open(`/play/${gameInfo.value.pathname}`, '_blank')
 }
 
 //TODO: 중복 클릭 처리는 디바운스로 할지 세마포어로 할지 모르겟음
@@ -231,7 +234,7 @@ const setLike = _.debounce(async () => {
   isLike.value = true
 
   const payload = {
-    game_id: props.gameInfo.id,
+    game_id: gameInfo.value.id,
     on: true,
   }
   const { data, error, refresh } = await useCustomFetch(
@@ -247,7 +250,7 @@ const unsetLike = _.debounce(async () => {
   isLike.value = false
 
   const payload = {
-    game_id: props.gameInfo.id,
+    game_id: gameInfo.value.id,
     on: false,
   }
   const { data, error, refresh } = await useCustomFetch(
@@ -318,7 +321,7 @@ async function updateBannerImg() {
     const file = new File([blob], 'banner-img')
 
     const formData = new FormData()
-    formData.append('game_id', String(props.gameInfo.id))
+    formData.append('game_id', String(gameInfo.value.id))
     formData.append('file', file)
 
     const { data, error, pending } = await useCustomFetch<{ result: any }>(
@@ -337,7 +340,7 @@ async function updateBannerImg() {
 async function deleteBanner() {
   const { data, error, pending } = await useCustomFetch(
     '/game/banner',
-    getZempieFetchOptions('delete', true, { game_id: props.gameInfo.id })
+    getZempieFetchOptions('delete', true, { game_id: gameInfo.value.id })
   )
 
   if (data.value) {
@@ -352,10 +355,10 @@ function saveBannerImg() {
     const file = new File([blob], 'banner-img')
 
     const formData = new FormData()
-    formData.append('game_id', String(props.gameInfo.id))
+    formData.append('game_id', String(gameInfo.value.id))
     formData.append('file', file)
 
-    const { data, error, pending } = await useCustomFetch(
+    const { data, error, pending } = await useCustomFetch<{ result: any }>(
       '/game/banner',
       getZempieFetchOptions('post', true, formData)
     )
@@ -369,7 +372,7 @@ function saveBannerImg() {
 }
 
 function moveUserPage() {
-  router.push($localePath(`/channel/${props.gameInfo.user.channel_id}`))
+  router.push($localePath(`/channel/${gameInfo.value.user.channel_id}`))
 }
 
 function searchHashtag(hashtag: string) {

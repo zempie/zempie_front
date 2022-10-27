@@ -18,7 +18,7 @@
   <ClientOnly>
     <el-dialog
       v-model="isLikeHistoryOpen"
-      custom-class="modal-area-type"
+      class="modal-area-type"
       width="500px"
     >
       <div class="modal-alert">

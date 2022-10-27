@@ -56,7 +56,7 @@
       v-model="showDeleteModal"
       append-to-body
       width="380px"
-      custom-class="modal-area-type"
+      class="modal-area-type"
     >
       <div class="modal-alert">
         <dl class="ma-header">

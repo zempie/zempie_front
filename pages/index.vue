@@ -6,10 +6,10 @@
 <script lang="ts" setup>
 const config = useRuntimeConfig()
 
-// definePageMeta({
-//   title: 'main',
-//   name: 'main',
-// })
+definePageMeta({
+  title: 'main',
+  name: 'main',
+})
 </script>
 
 <style scoped lang="scss"></style>

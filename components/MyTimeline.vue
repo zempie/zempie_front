@@ -129,14 +129,13 @@ import { useI18n } from 'vue-i18n'
 
 const { $localePath } = useNuxtApp()
 const config = useRuntimeConfig()
-
 const { t, locale } = useI18n()
 const route = useRoute()
-const isPending = ref(true)
 
+const isPending = ref(true)
 const games = ref()
 
-const userInfo = computed(() => useUser().user.value.info as any)
+const userInfo = computed(() => useUser().user.value.info)
 const channelInfo = computed(() => useChannel().userChannel.value.info)
 const isChannelLoading = computed(
   () => useChannel().userChannel.value.isLoading
@@ -206,9 +205,11 @@ function createHead(info) {
 }
 
 onMounted(() => {
+  if (userInfo.value) createHead(userInfo.value)
+  if (!useCookie(config.COOKIE_NAME).value) navigateTo('/')
+
   games.value = channelInfo.value?.games
   isPending.value = false
-  if (userInfo.value) createHead(userInfo.value)
 })
 </script>
 

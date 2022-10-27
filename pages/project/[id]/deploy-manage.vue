@@ -90,7 +90,7 @@
         <el-dialog
           v-model="showUndeployModal"
           append-to-body
-          custom-class="modal-area-type"
+          class="modal-area-type"
           width="500px"
         >
           <div class="modal-alert">
@@ -121,7 +121,7 @@
         <el-dialog
           v-model="showSelectStageModal"
           append-to-body
-          custom-class="modal-area-type"
+          class="modal-area-type"
           width="500px"
         >
           <div class="modal-alert">

@@ -1,5 +1,3 @@
-import { defineNuxtConfig } from 'nuxt'
-
 import { i18n } from './modules/i18n'
 import { resolve } from 'pathe'
 
@@ -41,11 +39,17 @@ export default defineNuxtConfig({
     ],
   },
   build: {
-    terser: {
-      terserOptions: {
-        compress: {
-          drop_console: true
-        }
+    html: {
+      minify: {
+        collapseBooleanAttributes: true,
+        decodeEntities: true,
+        minifyCSS: true,
+        minifyJS: true,
+        processConditionalComments: true,
+        removeEmptyAttributes: true,
+        removeRedundantAttributes: true,
+        trimCustomFragments: true,
+        useShortDoctype: true,
       }
     }
   },
@@ -78,7 +82,7 @@ export default defineNuxtConfig({
     'cookie-universal-nuxt',
     ['@nuxtjs/i18n', i18n],
     '@vueuse/nuxt',
-
+    '@nuxt/image-edge',
   ],
 
   publicRuntimeConfig: {

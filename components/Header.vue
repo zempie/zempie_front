@@ -7,8 +7,8 @@
           <div class="header-logo-menu">
             <p>
               <NuxtLink :to="$localePath('/')">
-                <img class="logo" src="/images/zempie-logo-black.png" />
-                <img
+                <nuxt-img class="logo" src="/images/zempie-logo-black.png" />
+                <nuxt-img
                   class="mobile-logo"
                   src="/images/zempie_logo_154_155.png"
                 />
@@ -257,12 +257,6 @@
             </el-dropdown>
           </div>
           <div v-else class="header-login">
-            <!-- <img
-            
-              src="/images/300_300_default_profile.png"
-              width="30"
-              height="30"
-            /> -->
             <p
               v-if="useUser().user.value.isLoading"
               style="
@@ -340,7 +334,7 @@
       <el-dialog
         v-model="isOpen"
         append-to-body
-        custom-class="modal-area-type"
+        class="modal-area-type"
         :show-close="false"
         width="380px"
       >

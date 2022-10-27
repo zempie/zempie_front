@@ -12,7 +12,7 @@
               <ul style="margin-bottom: 20px">
                 <li
                   v-for="game in games.slice(0, 5)"
-                  @click="$router.push($localePath(`/game/${game.pathname}`))"
+                  @click="$router.push($localePath(`/game/${game?.pathname}`))"
                 >
                   <p
                     :style="`background:url(${
@@ -29,7 +29,7 @@
 
               <div v-if="games.length > 5">
                 <NuxtLink
-                  :to="$localePath(`/channel/${game.user.channel_id}/games`)"
+                  :to="$localePath(`/channel/${game?.user.channel_id}/games`)"
                   class="btn-default-samll w100p"
                 >
                   {{ $t('moreView') }}
@@ -83,7 +83,7 @@ const games = ref()
 const game = computed(() => useGame().game.value.info)
 
 const isMine = computed(
-  () => useGame().game.value.info?.user?.id === useUser().user.value.info?.id
+  () => game.value?.user.id === useUser().user.value.info?.id
 )
 
 watch(
@@ -151,7 +151,7 @@ async function gameListFetch() {
   const { data, error, pending, refresh } = await useCustomFetch<{
     result: any
   }>(
-    `/channel/${useGame().game.value.info?.user?.channel_id}`,
+    `/channel/${game.value?.user.channel_id}`,
     getZempieFetchOptions('get', false)
   )
 
@@ -160,8 +160,8 @@ async function gameListFetch() {
 
     if (result) {
       const { target } = result
-      const { games: gameList } = target
-      const list = gameList.filter((gm) => {
+
+      const list = target?.games?.filter((gm) => {
         return gm.id !== game.value.id
       })
       games.value = list

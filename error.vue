@@ -3,10 +3,10 @@
     <div class="error-section">
       <div class="login-logo">
         <NuxtLink :to="$localePath('/')"
-          ><img src="/images/zempie_logo.png" alt="zempie" title="zempie"
+          ><NuxtImg src="/images/zempie_logo.png" alt="zempie" title="zempie"
         /></NuxtLink>
       </div>
-      <img class="img404" src="/images/404.png" alt="404" title="404" />
+      <NuxtImg class="img404" src="/images/404.png" alt="404" title="404" />
       <button class="btn-default" @click="$router.back()">
         {{ $t('goBack') }}
       </button>

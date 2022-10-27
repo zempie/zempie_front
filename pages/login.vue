@@ -115,6 +115,8 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   AuthProvider,
+  setPersistence,
+  browserSessionPersistence,
 } from 'firebase/auth'
 
 const { $firebaseAuth, $cookies, $localePath } = useNuxtApp()
@@ -205,34 +207,39 @@ async function onSubmit() {
   const isValid = await v$.value.$validate()
 
   if (!isValid) return
+  setPersistence($firebaseAuth, browserSessionPersistence)
+    .then((res) => {
+      signInWithEmailAndPassword($firebaseAuth, form.email, form.password)
+        .then(async (result) => {
+          const { user } = result
+          useUser().setFirebaseUser(user)
+          // router.push($localePath('/'))
+        })
+        .catch((err: any) => {
+          const errorCode = err.code
+          const errorMessage = err.message
+          let message = errorCode ? errorCode : errorMessage
 
-  signInWithEmailAndPassword($firebaseAuth, form.email, form.password)
-    .then(async (result) => {
-      const { user } = result
-      useUser().setFirebaseUser(user)
-      // router.push($localePath('/'))
+          switch (errorCode) {
+            case 'auth/weak-password':
+              message = `${t('login.pwd.format.err')}`
+              break
+            case 'auth/wrong-password':
+              ElMessage.error(`${t('fb.wrong.info')}`)
+              break
+            case 'auth/user-not-found':
+              ElMessage.error(`${t('fb.not.found')}`)
+
+              break
+            default:
+              ElMessage.error(errorCode)
+              break
+          }
+          throw { message }
+        })
     })
     .catch((err: any) => {
-      const errorCode = err.code
-      const errorMessage = err.message
-      let message = errorCode ? errorCode : errorMessage
-
-      switch (errorCode) {
-        case 'auth/weak-password':
-          message = `${t('login.pwd.format.err')}`
-          break
-        case 'auth/wrong-password':
-          ElMessage.error(`${t('fb.wrong.info')}`)
-          break
-        case 'auth/user-not-found':
-          ElMessage.error(`${t('fb.not.found')}`)
-
-          break
-        default:
-          ElMessage.error(errorCode)
-          break
-      }
-      throw { message }
+      ElMessage.error(err.message)
     })
 }
 
