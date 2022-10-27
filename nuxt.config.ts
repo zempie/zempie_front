@@ -5,6 +5,23 @@ import { resolve } from 'pathe'
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
+
+  render: {
+    http2: {
+      push: true,
+      pushAssets: (req) => {
+        const assetsToPush = ['</css/bootstrap.min.css>; rel=preload; as=style']
+
+        if (req.url === '/') {
+          assetsToPush.push(
+            '</css/placeholder-loading.min.css>; rel=preload; as=style'
+          )
+        }
+
+        return assetsToPush
+      }
+    }
+  },
   hooks: {
     'pages:extend'(routes) {
       routes.push({
