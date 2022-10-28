@@ -64,6 +64,8 @@ export async function getRefreshToken() {
 
   console.log(dayjs(useUser().user.value?.fUser?.stsTokenManager?.expirationTime).format('YYYY-MM-DD HH:mm:ss'))
 
+
+
   if (expirationTime && dayjs().isSame(expirationTime) || dayjs().isAfter(expirationTime)) {
     const refreshToken = useUser().user.value?.fUser?.stsTokenManager?.refreshToken
     if (!refreshToken) return;
@@ -72,7 +74,7 @@ export async function getRefreshToken() {
       'refresh_token': refreshToken,
     };
 
-
+    colorLog(expirationTime && dayjs().isSame(expirationTime) || dayjs().isAfter(expirationTime), 'warning')
 
 
     let formBody = [];
