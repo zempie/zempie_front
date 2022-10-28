@@ -1,17 +1,17 @@
 <template>
-  <MyTimeline v-if="useCookie(config.COOKIE_NAME).value" />
+  <template v-if="useUser().user.value.isLoading">
+    <NuxtLoadingIndicator />
+  </template>
   <template v-else>
-    <NuxtLoadingIndicator v-if="useUser().user.value.isLoading" />
+    <MyTimeline
+      v-if="useCookie(config.COOKIE_NAME).value && useUser().user.value.isLogin"
+    />
     <MainGuest v-else />
   </template>
 </template>
 
 <script lang="ts" setup>
 const config = useRuntimeConfig()
-
-const showTimeline = computed(() => {
-  return useCookie(config.COOKIE_NAME).value && useUser().user.value.isLogin
-})
 
 definePageMeta({
   title: 'main',
