@@ -47,7 +47,7 @@
         </div>
       </dt>
       <dt v-else-if="channelInfo">
-        <div class="ta-myinfo">
+        <div class="ta-myinfo" :key="channelInfo.id">
           <UserAvatar :user="channelInfo" :tag="'p'"></UserAvatar>
           <h1>{{ channelInfo.name }}</h1>
           <ul>
