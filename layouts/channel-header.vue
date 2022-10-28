@@ -82,12 +82,13 @@ watch(
     await useChannel().getChannelInfo(channelId.value)
   }
 )
+await useChannel().getChannelInfo(channelId.value)
 
-onMounted(async () => {
-  if (channelId.value) {
-    await useChannel().getChannelInfo(channelId.value)
-  }
-})
+// onMounted(async () => {
+//   if (channelId.value) {
+//     await useChannel().getChannelInfo(channelId.value)
+//   }
+// })
 </script>
 
 <style lang="scss" scoped>
