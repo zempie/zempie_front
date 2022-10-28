@@ -10,6 +10,8 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions) => 
 
   const config = useRuntimeConfig()
   const accessToken = useCookie(config.COOKIE_NAME).value
+
+  colorLog(accessToken, 'issue')
   if (accessToken) getRefreshToken()
 
   return await useFetch<T>(url, {
@@ -69,6 +71,9 @@ export async function getRefreshToken() {
       'grant_type': 'refresh_token',
       'refresh_token': refreshToken,
     };
+
+
+
 
     let formBody = [];
     for (var property in body) {
