@@ -40,13 +40,22 @@ watch(
   }
 )
 
+watch(
+  () => url.value,
+  (url) => {
+    if (url) {
+      url.value = url
+    }
+  }
+)
+
 onMounted(async () => {
+  const { data, error, pending } = await useCustomFetch<any>(
+    `/launch/game/${gamePath.value}`,
+    getZempieFetchOptions('get', false)
+  )
   if (process.client) {
-    const { data, error, pending } = await useCustomFetch<any>(
-      `/launch/game/${gamePath.value}`,
-      getZempieFetchOptions('get', false)
-    )
-    url.value = data.value.result?.game.url_game
+    url.value = data.value?.result?.game.url_game
     console.log(data.value)
     ZempieSdk.useCtrl()
     ZempieSdk.useLading()
