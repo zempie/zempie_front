@@ -4,7 +4,7 @@
     ref="game"
     class="iframe"
     :style="`height:${iframeHeight};`"
-    :src="data?.result?.game.url_game"
+    :src="url"
   />
 </template>
 
@@ -22,8 +22,6 @@ const { $firebaseAuth, $localePath } = useNuxtApp()
 const url = ref('')
 const iframeHeight = ref('')
 const game = ref<HTMLIFrameElement>()
-const gameData = ref()
-const initLauncher = ref(false)
 const gamePath = computed(() => route.params.id)
 const userInfo = computed(() => useUser().user.value.info)
 
@@ -33,6 +31,12 @@ definePageMeta({
 
 onMounted(async () => {
   if (process.client) {
+    const { data, error, pending } = await useCustomFetch<any>(
+      `/launch/game/${gamePath.value}`,
+      getZempieFetchOptions('get', false)
+    )
+    url.value = data.value.result?.game.url_game
+    console.log(data.value)
     ZempieSdk.useCtrl()
     ZempieSdk.useLading()
     ZempieSdk.postMessage({ type: '@initSdk' })
