@@ -42,9 +42,9 @@ watch(
 
 watch(
   () => url.value,
-  (url) => {
-    if (url) {
-      url.value = url
+  (data) => {
+    if (data) {
+      url.value = data
     }
   }
 )
@@ -54,9 +54,9 @@ onMounted(async () => {
     `/launch/game/${gamePath.value}`,
     getZempieFetchOptions('get', false)
   )
+  if (data.value) url.value = data.value?.result?.game.url_game
+
   if (process.client) {
-    url.value = data.value?.result?.game.url_game
-    console.log(data.value)
     ZempieSdk.useCtrl()
     ZempieSdk.useLading()
     ZempieSdk.postMessage({ type: '@initSdk' })
