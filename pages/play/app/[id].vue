@@ -1,17 +1,11 @@
 <template>
-  <ClientOnly>
-    <iframe
-      id="gamePage"
-      ref="game"
-      class="iframe"
-      :style="`height:${iframeHeight};`"
-      :src="
-        config.ENV === 'local' || config.ENV === 'development'
-          ? `${config.LAUNCHER_URL}/#/game/${gamePath}`
-          : `${config.LAUNCHER_URL}/game/${gamePath}`
-      "
-    />
-  </ClientOnly>
+  <iframe
+    id="gamePage"
+    ref="game"
+    class="iframe"
+    :style="`height:${iframeHeight};`"
+    :src="data?.result?.game.url_game"
+  />
 </template>
 
 <script setup lang="ts">

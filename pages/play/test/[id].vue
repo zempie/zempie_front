@@ -5,11 +5,7 @@
       ref="game"
       class="iframe"
       :style="`height:${iframeHeight};`"
-      :src="
-        config.ENV === 'local' || config.ENV === 'development'
-          ? `${config.LAUNCHER_URL}/#/game/${gamePath}`
-          : `${config.LAUNCHER_URL}/game/${gamePath}`
-      "
+      :src="data?.result?.game.url_game"
     />
   </ClientOnly>
 </template>
