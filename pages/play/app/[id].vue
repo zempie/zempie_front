@@ -28,23 +28,24 @@ const userInfo = computed(() => useUser().user.value.info)
 definePageMeta({
   layout: 'layout-none',
 })
+const result = await $fetch<any>(
+  `/launch/game/${gamePath.value}`,
+  getZempieFetchOptions('get', false)
+)
 
+if (result) {
+  url.value = result?.result?.game.url_game
+}
 watch(
-  () => url.value,
+  () => result,
   (data) => {
     if (data) {
-      url.value = data
+      url.value = result.result.game.url_game
     }
   }
 )
 
 onMounted(async () => {
-  const { data, error, pending } = await useCustomFetch<any>(
-    `/launch/game/${gamePath.value}`,
-    getZempieFetchOptions('get', false)
-  )
-  if (data.value) url.value = data.value?.result?.game.url_game
-
   if (process.client) {
     ZempieSdk.useCtrl()
     ZempieSdk.useLading()
