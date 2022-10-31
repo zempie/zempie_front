@@ -28,16 +28,10 @@
       <dt v-else>
         <div class="ta-myinfo" :key="userInfo?.id">
           <UserAvatar :user="userInfo" :tag="'p'"></UserAvatar>
-          <h1>{{ useUser().user.value.info?.name }}</h1>
+          <h1>{{ userInfo?.name }}</h1>
           <ul>
             <li>
-              <NuxtLink
-                :to="
-                  $localePath(
-                    `/channel/${useUser().user.value.info?.channel_id}`
-                  )
-                "
-              >
+              <NuxtLink :to="$localePath(`/channel/${userInfo?.channel_id}`)">
                 <p style="background: #feb100; cursor: pointer">
                   <i class="uil uil-comment-chart-line"></i>
                 </p>

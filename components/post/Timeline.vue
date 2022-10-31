@@ -32,14 +32,13 @@
       >
         <div class="swiper-area uppercase">
           <div class="swiper-slide" style="width: 50%; cursor: pointer">
-            <a @click="timelineFilter()" :class="media ?? 'active'">
+            <a :class="media ?? 'active'">
               <p><i class="uil uil-clock-three"></i>TIMELINE</p>
             </a>
           </div>
           <div class="swiper-slide" style="width: 50%; cursor: pointer">
             <NuxtLink
               :to="$localePath(`/channel/${paramId}/games`)"
-              @click.native="timelineFilter('game')"
               :class="media === 'game' ? 'active' : ''"
             >
               <p><i class="uil uil-map-pin-alt"></i>GAME</p>
@@ -196,6 +195,7 @@ onBeforeUnmount(() => {
 })
 
 async function handleIntersection(target) {
+  console.log('handleIntersection')
   if (target.isIntersecting) {
     if (isAddData.value) {
       offset.value += limit.value
@@ -251,6 +251,7 @@ async function fetch() {
       }
 
     case 'user':
+      console.log('user')
       const { data: userPostData } = await useCustomFetch<{
         result: IFeed[]
         totalCount: number
@@ -265,11 +266,10 @@ async function fetch() {
       isPending.value = false
       return isAddData.value
     case 'userAll':
-      const { data: userAllPostData } = await useCustomFetch(
-        // <{
-        //   result: IFeed[]
-        //   totalCount: number
-        // }>
+      const { data: userAllPostData } = await useCustomFetch<{
+        result: IFeed[]
+        totalCount: number
+      }>(
         createQueryUrl(`/timeline/mine`, query),
         getComFetchOptions('get', true)
       )
@@ -279,8 +279,6 @@ async function fetch() {
       }
       isPending.value = false
       return isAddData.value
-
-    // return isAddData.value
 
     case 'game':
       const { data: gamePostData, error: gameError } = await useCustomFetch<{
@@ -330,14 +328,6 @@ function initPaging() {
 async function refresh() {
   initPaging()
   await fetch()
-}
-
-function timelineFilter(selected?: string) {
-  media.value = selected
-}
-
-function closeEditor() {
-  isEditorDestroy.value = true
 }
 
 function refreshFollow(user_id: number) {

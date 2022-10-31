@@ -18,8 +18,9 @@
 
       <ul style="margin: 40px 0px">
         <span class="card-game">
-          <GameCardSk v-if="isPending" v-for="game in GAME_COUNT" />
+          <GameCardSk v-if="pending" v-for="game in GAME_COUNT" />
           <GameCard
+            v-else
             v-for="game in data.result.games"
             :gameInfo="game"
             :key="game.id"
@@ -31,7 +32,7 @@
       <h2><span style="font: 36px/46px 'Jalnan'">Communities</span></h2>
 
       <div class="card-timeline">
-        <CommunityCardSk v-if="isPending" v-for="commi in COMMUNITY_COUNT" />
+        <CommunityCardSk v-if="cPending" v-for="commi in COMMUNITY_COUNT" />
         <CommunityCard
           v-else
           v-for="community in communities"
@@ -41,7 +42,7 @@
       </div>
     </div>
 
-    <div v-if="isPending">
+    <div v-if="pPending">
       <ul style="margin-top: 40px" class="post-container">
         <li class="thumbmail skeleton" v-for="post in POST_COUNT"></li>
       </ul>
@@ -53,6 +54,7 @@
         <li
           class="thumbmail"
           v-for="post in posts.result"
+          :key="post.id"
           @click="$router.push($localePath(`/feed/${post?.id}`))"
         >
           <NuxtImg :src="post.attatchment_files[0]?.url" />
@@ -72,12 +74,6 @@ const { t, locale } = useI18n()
 const config = useRuntimeConfig()
 const route = useRoute()
 const router = useRouter()
-
-const isPending = ref(true)
-
-nuxt.hook('page:finish', () => {
-  isPending.value = false
-})
 
 // definePageMeta({
 //   layout: 'default',

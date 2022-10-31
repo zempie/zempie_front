@@ -74,6 +74,7 @@ export default function () {
   }
 
   const logout = () => {
+
     signOut($firebaseAuth)
       .then(() => {
         removeUserState();
@@ -87,7 +88,7 @@ export default function () {
           domain: config.COOKIE_DOMAIN
         })
 
-        window.location.href = `/${useCommon().setting.value.lang}`
+        // window.location.href = `/${useCommon().setting.value.lang}`
 
       })
       .catch((error: any) => {

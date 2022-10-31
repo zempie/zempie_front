@@ -5,7 +5,6 @@
 </template>
 <script setup lang="ts">
 import { ID_INJECTION_KEY } from 'element-plus'
-// import { useLocalePath, useSwitchLocalePath } from 'vue-i18n-routing'
 
 import { useI18n } from 'vue-i18n'
 const { t, locale } = useI18n()
@@ -13,6 +12,7 @@ const config = useRuntimeConfig()
 const switchLocalePath = useSwitchLocalePath()
 const route = useRoute()
 const router = useRouter()
+const { $cookies } = useNuxtApp()
 
 useHead({
   title: `${t('seo.landing.title')} | Zempie`,
@@ -87,8 +87,8 @@ onBeforeMount(() => {
   router.replace(route.fullPath)
 })
 
-onBeforeUnmount(() => {
-  getRefreshToken()
+onBeforeMount(async () => {
+  // await getRefreshToken()
 })
 </script>
 
