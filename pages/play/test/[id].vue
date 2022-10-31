@@ -1,11 +1,17 @@
 <template>
-  <iframe
-    id="gamePage"
-    ref="game"
-    class="iframe"
-    :style="`height:${iframeHeight};`"
-    :src="data?.result?.game.url_game"
-  />
+  <ClientOnly>
+    <iframe
+      id="gamePage"
+      ref="game"
+      class="iframe"
+      :style="`height:${iframeHeight};`"
+      :src="
+        config.ENV === 'local' || config.ENV === 'development'
+          ? `${config.LAUNCHER_URL}/#/game/${gamePath}`
+          : `${config.LAUNCHER_URL}/game/${gamePath}`
+      "
+    />
+  </ClientOnly>
 </template>
 
 <script setup lang="ts">
@@ -30,11 +36,6 @@ const userInfo = computed(() => useUser().user.value.info)
 definePageMeta({
   layout: 'layout-none',
 })
-
-const { data, error, pending } = await useCustomFetch<any>(
-  `/launch/game/${gamePath.value}`,
-  getZempieFetchOptions('get', false)
-)
 
 onMounted(async () => {
   if (process.client) {
@@ -71,6 +72,9 @@ function onLoad() {
   })
   ZempieSdk.on('@soundOff', function () {
     toGameFrame('@soundOff')
+  })
+  ZempieSdk.on('@gameContinue', function () {
+    toGameFrame('@gameContinue')
   })
 }
 
@@ -126,6 +130,9 @@ async function onMessage(message: MessageEvent) {
     }
     case '@soundOff': {
       toGameFrame('@soundOff')
+    }
+    case '@gameContinue': {
+      toGameFrame('@gameContinue')
     }
   }
 }
