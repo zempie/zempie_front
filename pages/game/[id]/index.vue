@@ -140,6 +140,10 @@ watch(
         ],
       })
     }
+  },
+  {
+    deep: true,
+    immediate: true,
   }
 )
 
@@ -162,7 +166,7 @@ async function gameListFetch() {
       const { target } = result
 
       const list = target?.games?.filter((gm) => {
-        return gm.id !== game.value.id
+        return gm.id !== game.value?.id
       })
       games.value = list
     }

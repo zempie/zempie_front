@@ -80,10 +80,13 @@ watch(
     immediate: true,
   }
 )
+fetch()
+  .then((res) => {})
+  .catch((err) => {
+    console.error(err)
+  })
 
-onMounted(async () => {
-  await fetch()
-})
+onMounted(async () => {})
 
 async function fetch() {
   const { data, pending, error } = await useCustomFetch<any>(
