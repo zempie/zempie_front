@@ -412,7 +412,7 @@ const prevText = ref()
 const saveId = ref(Date.now())
 
 onBeforeMount(() => {
-  createDraftList()
+  getDraftList()
   autoSave()
 
   //유저가 직접 저장하지 않은 경우
@@ -1284,8 +1284,17 @@ function onSavePost(time = Date.now()) {
   }
 
   saveOnLocal(time)
+  console.log('save', saveId.value)
+  console.log('draftList.value: ', draftList.value)
 
-  draftList.value.push(JSON.parse(JSON.stringify(form)))
+  const draftItem = draftList.value.find((draft) => {
+    return draft.saveId === saveId.value
+  })
+  if (draftItem) {
+    draftItem.post_contents = JSON.parse(JSON.stringify(form)).post_contents
+  } else {
+    draftList.value.push(JSON.parse(JSON.stringify(form)))
+  }
 }
 
 function getOldestDraft(): string {
@@ -1331,9 +1340,7 @@ function saveOnLocal(time: number) {
   )
 }
 
-function saveAutoPost() {}
-
-function createDraftList() {
+function getDraftList() {
   draftList.value = []
   for (let i = 0; i < localStorage.length; i++) {
     if (
@@ -1391,18 +1398,18 @@ function selectDraft(draft: IDraft, index: number) {
     })
       .then(() => {
         insertContet(draft)
-
         showDraftList.value = false
+        localStorage.removeItem(draft.key)
+        draftList.value.splice(index, 1)
       })
       .catch(() => {})
       .finally(() => {})
   } else {
     insertContet(draft)
-
     showDraftList.value = false
+    localStorage.removeItem(draft.key)
+    draftList.value.splice(index, 1)
   }
-  localStorage.removeItem(draft.key)
-  draftList.value.splice(index, 1)
 }
 
 function insertContet(draft: IDraft) {

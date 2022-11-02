@@ -7,6 +7,8 @@ export interface IUser {
   email_verified?: boolean,
   followers_cnt?: number,
   followings_cnt?: number,
+  follower_cnt: number,
+  following_cnt: number,
   is_following?: boolean,
   games?: IGame[],
   is_developer?: boolean,
@@ -40,6 +42,7 @@ export interface IFollowUser {
 
 
 export interface IGame {
+  game: { name: string; id: number; uid: string; email: string; channel_id: string; picture: string }
   activated: boolean,
   category: number,
   control_type: number,

@@ -1,13 +1,11 @@
 <template>
-  <ClientOnly>
-    <iframe
-      id="gamePage"
-      ref="game"
-      class="iframe"
-      :style="`height:${iframeHeight};`"
-      :src="url"
-    />
-  </ClientOnly>
+  <iframe
+    id="gamePage"
+    ref="game"
+    class="iframe"
+    :style="`height:${iframeHeight};`"
+    :src="url"
+  />
 </template>
 
 <script setup lang="ts">
@@ -30,7 +28,6 @@ const userInfo = computed(() => useUser().user.value.info)
 definePageMeta({
   layout: 'layout-none',
 })
-
 const result = await $fetch<any>(
   `/launch/game/${gamePath.value}`,
   getZempieFetchOptions('get', false)
@@ -47,6 +44,7 @@ watch(
     }
   }
 )
+
 onMounted(async () => {
   if (process.client) {
     ZempieSdk.useCtrl()
@@ -83,14 +81,19 @@ function onLoad() {
   ZempieSdk.on('@soundOff', function () {
     toGameFrame('@soundOff')
   })
-  ZempieSdk.on('@gameContinue', function () {
-    toGameFrame('@gameContinue')
-  })
 }
 
 function toGameFrame(type) {
   game.value.contentWindow.postMessage({ type: type }, '*')
 }
+watch(
+  () => userInfo.value,
+  (info) => {
+    if (info) {
+      onChangedToken()
+    }
+  }
+)
 
 function onChangedToken() {
   toMessage({
@@ -132,9 +135,6 @@ async function onMessage(message: MessageEvent) {
     }
     case '@soundOff': {
       toGameFrame('@soundOff')
-    }
-    case '@gameContinue': {
-      toGameFrame('@gameContinue')
     }
   }
 }

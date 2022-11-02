@@ -85,54 +85,56 @@ async function fetch() {
 }
 
 function setHead() {
-  useHead({
-    title: `${gameData.value.title} | Zempie`,
-    link: [
-      {
-        rel: 'alternate',
-        href: `${config.ZEMPIE_URL}${route.fullPath}`,
-        hreflang: locale,
-      },
-    ],
-    meta: [
-      {
-        property: 'og:url',
-        content: `${config.ZEMPIE_URL}${route.fullPath}`,
-      },
-      {
-        property: 'og:site_name',
-        content: 'Zempie',
-      },
-      {
-        name: 'og:type',
-        content: 'website',
-      },
-      {
-        name: 'robots',
-        content: 'index, follow',
-      },
-      {
-        name: 'description',
-        content: `${gameData.value.title}`,
-      },
-      {
-        property: 'og:title',
-        content: `${gameData.value.description}`,
-      },
-      {
-        property: 'og:description',
-        content: `${gameData.value.description}`,
-      },
-      {
-        property: 'og:url',
-        content: `${config.ZEMPIE_URL}${route.path}`,
-      },
-      {
-        name: 'og:image',
-        content: `${gameData.value.url_thumb}`,
-      },
-    ],
-  })
+  if (gameData.value) {
+    useHead({
+      title: `${gameData.value.title} | Zempie`,
+      link: [
+        {
+          rel: 'alternate',
+          href: `${config.ZEMPIE_URL}${route.fullPath}`,
+          hreflang: locale,
+        },
+      ],
+      meta: [
+        {
+          property: 'og:url',
+          content: `${config.ZEMPIE_URL}${route.fullPath}`,
+        },
+        {
+          property: 'og:site_name',
+          content: 'Zempie',
+        },
+        {
+          name: 'og:type',
+          content: 'website',
+        },
+        {
+          name: 'robots',
+          content: 'index, follow',
+        },
+        {
+          name: 'description',
+          content: `${gameData.value.title}`,
+        },
+        {
+          property: 'og:title',
+          content: `${gameData.value.description}`,
+        },
+        {
+          property: 'og:description',
+          content: `${gameData.value.description}`,
+        },
+        {
+          property: 'og:url',
+          content: `${config.ZEMPIE_URL}${route.path}`,
+        },
+        {
+          name: 'og:image',
+          content: `${gameData.value.url_thumb}`,
+        },
+      ],
+    })
+  }
 }
 
 function onResize() {

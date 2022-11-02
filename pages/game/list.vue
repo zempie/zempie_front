@@ -39,7 +39,7 @@
         <GameCard
           v-for="(game, index) in games"
           :gameInfo="game"
-          :key="index"
+          :key="game.id"
         />
       </TransitionGroup>
     </ul>

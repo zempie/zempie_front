@@ -7,10 +7,15 @@
           <div class="header-logo-menu">
             <p>
               <NuxtLink :to="$localePath('/')">
-                <nuxt-img class="logo" src="/images/zempie-logo-black.png" />
+                <nuxt-img
+                  class="logo"
+                  src="/images/zempie-logo-black.png"
+                  alt="zempie-logo"
+                />
                 <nuxt-img
                   class="mobile-logo"
                   src="/images/zempie_logo_154_155.png"
+                  alt="zempie-logo"
                 />
               </NuxtLink>
             </p>

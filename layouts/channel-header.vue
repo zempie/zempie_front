@@ -76,18 +76,19 @@ const isMine = computed(() => {
   return channelId.value === useUser().user.value.info?.channel_id
 })
 
-watch(
-  () => useUser().user.value.info,
-  async (userInfo) => {
-    await useChannel().getChannelInfo(channelId.value)
-  }
-)
+// watch(
+//   () => useUser().user.value.info,
+//   async (userInfo) => {
+//     await useChannel().getChannelInfo(channelId.value)
+//   }
+// )
+await useChannel().getChannelInfo(channelId.value)
 
-onMounted(async () => {
-  if (channelId.value) {
-    await useChannel().getChannelInfo(channelId.value)
-  }
-})
+// onMounted(async () => {
+//   if (channelId.value) {
+//     await useChannel().getChannelInfo(channelId.value)
+//   }
+// })
 </script>
 
 <style lang="scss" scoped>

@@ -19,17 +19,17 @@
       <dt></dt>
       <dd>
         <div class="sort-default">
-          <a @click="sortGroups(0)" :class="filter === 0 ? 'active' : ''"
+          <a @click="sortGroups(0)" :class="filter === 0 && 'active'"
             ><i class="uis uis-check"></i>
             {{ t('filter.recent') }}
           </a>
           <span>·</span>
-          <a @click="sortGroups(1)" :class="filter === 1 ? 'active' : ''"
+          <a @click="sortGroups(1)" :class="filter === 1 && 'active'"
             ><i class="uis uis-check"></i>
             {{ t('filter.subscribe') }}
           </a>
           <span>·</span>
-          <a @click="sortGroups(2)" :class="filter === 2 ? 'active' : ''"
+          <a @click="sortGroups(2)" :class="filter === 2 && 'active'"
             ><i class="uis uis-check"></i>
             {{ t('filter.alphabet') }}
           </a>

@@ -52,6 +52,7 @@
 import { PropType } from 'vue'
 import { IFeed } from '~~/types'
 import { useI18n } from 'vue-i18n'
+import { fileUpload } from '~~/scripts/fileManager'
 import {
   useEditor,
   EditorContent,
@@ -250,7 +251,7 @@ function pasteEditor(e: ClipboardEvent) {
   addImage(e.clipboardData)
 }
 
-function addImage(data: DataTransfer) {
+async function addImage(data: DataTransfer) {
   if (props.postType === 'SNS') return
 
   const { files } = data
@@ -260,8 +261,17 @@ function addImage(data: DataTransfer) {
       const [mime] = file.type.split('/')
 
       if (mime === 'image') {
-        const url = URL.createObjectURL(file)
-        editor?.value.chain().focus().setImage({ src: url }).run()
+        //이미지 파일 서버에 바로 저장
+        const response = await fileUpload(file)
+
+        if (response) {
+          const { url, name, priority } = response.result[0]
+          editor?.value
+            .chain()
+            .focus()
+            .setImage({ src: url, alt: name, title: name })
+            .run()
+        }
       }
     }
   }

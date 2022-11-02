@@ -29,6 +29,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   const app = firebase.initializeApp(firebaseConfig);
 
+
   let auth = null
 
   try {
@@ -37,8 +38,10 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   } catch (error) {
     useUser().setLoadDone()
   }
+  console.log('auth', auth)
 
   onIdTokenChanged(auth, (user) => {
+    console.log(2, user)
     if (user) {
       $cookies.set(config.COOKIE_NAME, (user as any).accessToken, {
         maxAge: DAYSTOSEC_30,
@@ -56,9 +59,8 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       if (!useUser().user.value.isSignUp) {
         setUserInfo()
       }
-    } else {
-      useUser().setLoadDone()
     }
+    useUser().setLoadDone()
   })
 
   nuxtApp.provide('firebaseApp', app);
@@ -67,19 +69,19 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
 
 async function setUserInfo() {
-  const config = useRuntimeConfig();
-  const { $cookies, $firebaseAuth } = useNuxtApp()
   const router = useRouter()
 
-  const { data, error } = await useCustomFetch<{ result: { user: IUser } }>('/user/info', getZempieFetchOptions('get', true))
 
-
-  if (data.value) {
-    const { user } = data.value.result
-    useUser().setLogin()
-    useUser().setUser(user)
-    routerToHome()
-  } else if (error.value) {
+  try {
+    const response = await $fetch<{ result: { user: IUser } }>('/user/info', getZempieFetchOptions('get', true))
+    if (response) {
+      const { user } = response.result
+      useUser().setLogin()
+      useUser().setUser(user)
+      routerToHome()
+    }
+  }
+  catch (error: any) {
     const { error: err } = (error.value as any).data;
     console.log(err)
 

@@ -6,6 +6,7 @@ export default defineNuxtConfig({
   experimental: {
     writeEarlyHints: false,
   },
+
   hooks: {
     'pages:extend'(routes) {
       routes.push({

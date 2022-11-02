@@ -1,6 +1,10 @@
 <template>
-  <MyTimeline v-if="useCookie(config.COOKIE_NAME).value" />
-  <MainGuest v-else />
+  <div>
+    <MyTimeline
+      v-if="useCookie(config.COOKIE_NAME).value && useUser().user.value.isLogin"
+    />
+    <MainGuest v-else />
+  </div>
 </template>
 
 <script lang="ts" setup>

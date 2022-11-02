@@ -304,8 +304,8 @@ pre {
   .ProseMirror {
     min-height: 200px;
     max-height: 75vh;
-    overflow: auto;
-    overflow-x: hidden;
+    // overflow: auto;
+    // overflow-x: hidden;
 
     > * + * {
       margin-top: 0.75em;
