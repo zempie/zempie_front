@@ -136,6 +136,12 @@ async function onMessage(message: MessageEvent) {
     case '@soundOff': {
       toGameFrame('@soundOff')
     }
+    case '@gameContinue': {
+      colorLog('gameContinue', 'yellow')
+      // ZempieSdk.gameContinue()
+
+      toGameFrame('@gameContinue')
+    }
   }
 }
 
