@@ -20,6 +20,7 @@
         <img
           v-bind="node.attrs"
           ref="resizableImg"
+          :alt="node.alt"
           :draggable="isDraggable"
           :data-drag-handle="isDraggable"
         />

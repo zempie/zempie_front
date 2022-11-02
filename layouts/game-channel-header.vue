@@ -66,17 +66,12 @@ const gamePath = computed(() => route.params.id as string)
 const routeQuery = computed(() => route.query.media)
 const isPending = ref(true)
 
-const { data, pending, error } = await useCustomFetch<any>(
-  `/launch/game/${gamePath.value}`,
-  getZempieFetchOptions('get', false)
-)
-
 watch(
-  () => data.value,
+  () => gameInfo.value,
   (game) => {
     if (game) {
-      gameInfo.value = game.result.game
-      useGame().setGame(game.result.game)
+      gameInfo.value = game
+      useGame().setGame(game)
       isPending.value = false
     }
   },
@@ -87,7 +82,7 @@ watch(
 )
 
 onMounted(async () => {
-  // await fetch()
+  await fetch()
 })
 
 async function fetch() {
@@ -96,14 +91,11 @@ async function fetch() {
     getZempieFetchOptions('get', false)
   )
 
-  console.log('?', data.value)
-
   if (data.value) {
     const { result } = data.value
     gameInfo.value = result.game
     useGame().setGame(gameInfo.value)
     isPending.value = false
-  } else if (error.value) {
   }
 }
 </script>

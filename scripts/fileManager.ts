@@ -50,11 +50,29 @@ async function onSelectFile(files, maxFileNum, maxFileSize) {
     }
 }
 
+async function fileUpload(file: File) {
+    const formData = new FormData()
+    formData.append(file.name, file)
+
+    const response = await $fetch<{
+        result: Array<{
+            priority: number
+            name: string
+            size: number
+            type: string
+            url: string
+        }>
+    }>('/community/att', getZempieFetchOptions('post', true, formData))
+
+    return response
+
+}
+
 export {
     onSelectFile,
     FileSizeCheck,
     kbToByte,
     mbToByte,
-    byteToMb
-
+    byteToMb,
+    fileUpload,
 }
