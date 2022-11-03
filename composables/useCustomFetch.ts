@@ -50,7 +50,7 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions) => 
       if (accessToken) options.headers['Authorization'] = result && `Bearer ${result.access_token}`
 
       useCommon().setLoading()
-      console.log('[fetch request]', result)
+      console.log('[fetch request]')
     },
     async onRequestError({ request, options, error }) {
       console.log('[fetch request error]')
@@ -65,9 +65,9 @@ export async function getRefreshToken() {
 
 
   //5분 빨리 refresh
-  const expirationTime = dayjs(useUser().user.value.fUser?.stsTokenManager?.expirationTime).subtract(5, 'minutes')
-  const refreshToken = useCookie(config.REFRESH_TOKEN).value
+  const expirationTime = dayjs(useUser().user.value.fUser && useUser().user.value.fUser.stsTokenManager?.expirationTime).subtract(5, 'minutes')
 
+  const refreshToken = useCookie(config.REFRESH_TOKEN).value
   let isContinue = false;
 
   if (!refreshToken) {
@@ -78,10 +78,10 @@ export async function getRefreshToken() {
   /**
    * 토큰 리프레시 해야되는 경우
    * 1. api 실행하기 전에 유효기간 확인하고 유효기간 끝났으면 리프레시 해야함
-   * 2. 리프레시 토큰이 있는데 useState 값 사라졋을 때 다시 리프레시 해야함
+   * 2. 리프레시 토큰이 있는데 useState 값 사라졋을 때 유효기간 끝났으면 다시 리프레시 해야함
    */
 
-  if (!useUser().user.value.fUser && useCookie(config.COOKIE_NAME).value) {
+  if ((!useUser().user.value.fUser && useCookie(config.COOKIE_NAME).value)) {
     colorLog('case 2', 'yellow')
     isContinue = true
   } else if (useUser().user.value.fUser && (dayjs().isSame(expirationTime) || dayjs().isAfter(expirationTime))) {
@@ -136,11 +136,13 @@ export async function getRefreshToken() {
 
     if (!useUser().user.value.fUser) {
       const user = $firebaseAuth.currentUser;
-      useUser().setFirebaseUser(user)
+      console.log('user: ', user)
 
-      const result = await $fetch<{ result: { user: IUser } }>('/user/info', getZempieFetchOptions('get', true))
-      if (result) {
-        const { user } = result.result
+
+      const response = await $fetch<{ result: { user: IUser } }>('/user/info', getZempieFetchOptions('get', true))
+      console.log('result: ', result)
+      if (response) {
+        const { user } = response.result
         useUser().setUser(user)
       }
     }

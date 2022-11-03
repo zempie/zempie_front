@@ -3,6 +3,32 @@ import { resolve } from 'pathe'
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
+  app: {
+    head: {
+      meta: [
+        {
+          property: 'og:site_name',
+          content: 'Zempie'
+        },
+        {
+          name: 'og:type',
+          content: 'website',
+        },
+        { charset: 'utf-8' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1' },
+        { hid: 'description', name: 'description', content: "Worldwide Community Platform for Game Creators." },
+        { name: 'format-detection', content: 'telephone=no' }
+      ],
+
+      link: [
+        { hid: 'icon', rel: 'icon', type: 'image/x-icon', href: '~/static/favicon.ico' },
+        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/icon?family=Material+Icons' },
+        { rel: 'stylesheet', href: 'https://unicons.iconscout.com/release/v3.0.3/css/line.css' },
+        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0' }
+      ],
+
+    }
+  },
   experimental: {
     writeEarlyHints: false,
   },
@@ -16,29 +42,7 @@ export default defineNuxtConfig({
       })
     }
   },
-  head: {
-    title: 'Zempie',
-    htmlAttrs: {
-      lang: 'en',
-    },
-    meta: [
-      {
-        property: 'og:site_name',
-        content: 'Zempie'
-      },
-      {
-        name: 'og:type',
-        content: 'website',
-      },
-      { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1' },
-      { hid: 'description', name: 'description', content: "Worldwide Community Platform for Game Creators." },
-      { name: 'format-detection', content: 'telephone=no' }
-    ],
-    link: [
-      { hid: 'icon', rel: 'icon', type: 'image/x-icon', href: '~/static/favicon.ico' },
-    ],
-  },
+
   build: {
     html: {
       minify: {

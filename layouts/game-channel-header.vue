@@ -80,27 +80,23 @@ watch(
     immediate: true,
   }
 )
-fetch()
-  .then((res) => {})
+
+useCustomFetch<any>(
+  `/launch/game/${gamePath.value}`,
+  getZempieFetchOptions('get', true)
+)
+  .then((res) => {
+    const { data, pending, refresh, error } = res
+    if (data.value) {
+      const { result } = data.value
+      gameInfo.value = result.game
+      useGame().setGame(gameInfo.value)
+      isPending.value = false
+    }
+  })
   .catch((err) => {
     console.error(err)
   })
-
-onMounted(async () => {})
-
-async function fetch() {
-  const { data, pending, error } = await useCustomFetch<any>(
-    `/launch/game/${gamePath.value}`,
-    getZempieFetchOptions('get', false)
-  )
-
-  if (data.value) {
-    const { result } = data.value
-    gameInfo.value = result.game
-    useGame().setGame(gameInfo.value)
-    isPending.value = false
-  }
-}
 </script>
 
 <style lang="scss" scoped>

@@ -61,7 +61,7 @@ definePageMeta({
 })
 
 useHead({
-  title: `${t('seo.game.list.title')} | Zempie community`,
+  title: `${t('seo.game.list.title')} | Zempie`,
   link: [
     {
       rel: 'alternate',
