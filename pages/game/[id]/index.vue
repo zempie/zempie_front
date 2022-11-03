@@ -2,45 +2,43 @@
   <NuxtLayout name="game-channel-header">
     <dl class="three-area">
       <dt>
-        <ClientOnly>
-          <div class="ta-game-list">
-            <dl>
-              <dt>Games</dt>
-            </dl>
+        <div class="ta-game-list">
+          <dl>
+            <dt>Games</dt>
+          </dl>
 
-            <template v-if="games?.length">
-              <ul style="margin-bottom: 20px">
-                <li
-                  v-for="game in games.slice(0, 5)"
-                  @click="$router.push($localePath(`/game/${game?.pathname}`))"
-                >
-                  <p
-                    :style="`background:url(${
-                      game?.url_thumb_webp ||
-                      game?.url_thumb ||
-                      '/images/default.png'
-                    }) center; background-size:cover;`"
-                  ></p>
-                  <h2 style="text-overflow: ellipsis; overflow: hidden">
-                    {{ game?.title }}
-                  </h2>
-                </li>
-              </ul>
-
-              <div v-if="games.length > 5">
-                <NuxtLink
-                  :to="$localePath(`/channel/${game?.user.channel_id}/games`)"
-                  class="btn-default-samll w100p"
-                >
-                  {{ $t('moreView') }}
-                </NuxtLink>
-              </div>
-            </template>
-            <ul v-else class="no-game">
-              <li>{{ $t('no.game') }}</li>
+          <template v-if="games?.length">
+            <ul style="margin-bottom: 20px">
+              <li
+                v-for="game in games.slice(0, 5)"
+                @click="$router.push($localePath(`/game/${game?.pathname}`))"
+              >
+                <p
+                  :style="`background:url(${
+                    game?.url_thumb_webp ||
+                    game?.url_thumb ||
+                    '/images/default.png'
+                  }) center; background-size:cover;`"
+                ></p>
+                <h2 style="text-overflow: ellipsis; overflow: hidden">
+                  {{ game?.title }}
+                </h2>
+              </li>
             </ul>
-          </div>
-        </ClientOnly>
+
+            <div v-if="games.length > 5">
+              <NuxtLink
+                :to="$localePath(`/channel/${game?.user.channel_id}/games`)"
+                class="btn-default-samll w100p"
+              >
+                {{ $t('moreView') }}
+              </NuxtLink>
+            </div>
+          </template>
+          <ul v-else class="no-game">
+            <li>{{ $t('no.game') }}</li>
+          </ul>
+        </div>
       </dt>
       <dd>
         <PostTimeline type="game" :isMine="isMine" />
@@ -87,7 +85,7 @@ const isMine = computed(
 )
 
 watch(
-  () => game.value,
+  () => useGame().game.value.info,
   async (info) => {
     if (info) {
       await gameListFetch()
@@ -152,15 +150,15 @@ onMounted(async () => {
 })
 
 async function gameListFetch() {
-  const { data, error, pending, refresh } = await useCustomFetch<{
+  const response = await $fetch<{
     result: any
   }>(
     `/channel/${game.value?.user.channel_id}`,
     getZempieFetchOptions('get', false)
   )
 
-  if (data.value) {
-    const { result } = data.value
+  if (response) {
+    const { result } = response
 
     if (result) {
       const { target } = result
