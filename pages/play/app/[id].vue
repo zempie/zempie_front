@@ -104,6 +104,8 @@ function onChangedToken() {
 
 async function onMessage(message: MessageEvent) {
   var type = message.data.type
+  console.log(type)
+
   switch (type) {
     case '@gameReady': {
       ZempieSdk.ready()
@@ -137,7 +139,6 @@ async function onMessage(message: MessageEvent) {
       toGameFrame('@soundOff')
     }
     case '@gameContinue': {
-      colorLog('gameContinue', 'yellow')
       // ZempieSdk.gameContinue()
 
       toGameFrame('@gameContinue')
