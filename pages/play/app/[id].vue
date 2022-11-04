@@ -104,11 +104,12 @@ function onChangedToken() {
 
 async function onMessage(message: MessageEvent) {
   var type = message.data.type
-  console.log(type)
 
   switch (type) {
     case '@gameReady': {
       ZempieSdk.ready()
+      console.log('@gameReady')
+
       break
     }
     case '@updateScore': {
@@ -117,6 +118,8 @@ async function onMessage(message: MessageEvent) {
       break
     }
     case '@gameOver': {
+      console.log('@gameOver')
+
       var score = message.data.score
       ZempieSdk.gameOver(score)
       getRefreshToken()
@@ -124,24 +127,42 @@ async function onMessage(message: MessageEvent) {
       break
     }
     case '@gamePlay': {
+      console.log('@gamePlay')
+
       toGameFrame('@gamePlay')
+      break
     }
     case '@gameRetry': {
+      console.log('@gameRetry')
+
       toGameFrame('@gameRetry')
+      break
     }
     case '@gamePause': {
+      console.log('@gamePause')
+
       toGameFrame('@gamePause')
+      break
     }
     case '@soundOn': {
+      console.log('@soundOn')
+
       toGameFrame('@soundOn')
+      break
     }
     case '@soundOff': {
+      console.log('@soundOff')
+
       toGameFrame('@soundOff')
+      break
     }
     case '@gameContinue': {
+      console.log('@gameContinue')
+
       // ZempieSdk.gameContinue()
 
       toGameFrame('@gameContinue')
+      break
     }
   }
 }
