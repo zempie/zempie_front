@@ -1,7 +1,4 @@
 <template>
-  <button @click="toGameFrame({ type: '@gamePause' })">pause</button>
-  <button @click="toGameFrame({ type: '@gameResume' })">resume</button>
-
   <iframe
     height="90%"
     id="gamePage"
