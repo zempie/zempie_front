@@ -114,6 +114,8 @@ async function onMessage(message: MessageEvent) {
     }
     case '@updateScore': {
       var score = message.data.score
+      console.log('@updateScore', score)
+
       ZempieSdk.updateScore(score)
       break
     }
@@ -162,6 +164,12 @@ async function onMessage(message: MessageEvent) {
       // ZempieSdk.gameContinue()
 
       toGameFrame('@gameContinue')
+      break
+    }
+    case '@gameResume': {
+      console.log('@gameResume')
+
+      toGameFrame('@gameResume')
       break
     }
   }
