@@ -1,5 +1,9 @@
 <template>
+  <button @click="toGameFrame({ type: '@gamePause' })">pause</button>
+  <button @click="toGameFrame({ type: '@gameResume' })">resume</button>
+
   <iframe
+    height="90%"
     id="gamePage"
     ref="game"
     class="iframe"
@@ -84,6 +88,7 @@ function onLoad() {
 }
 
 function toGameFrame(type) {
+  console.log(type)
   game.value.contentWindow.postMessage({ type: type }, '*')
 }
 watch(
