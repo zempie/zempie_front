@@ -15,6 +15,7 @@ export const ZempieSdk = {
   },
 
   updateScore: function (score) {
+    console.log('score', score)
     ZempieSdk.postMessage({ type: '@updateScore', score })
   },
 
