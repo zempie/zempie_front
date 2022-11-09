@@ -1,4 +1,5 @@
 export const ZempieSdk = {
+  
   event: {},
   isProduction: false,
 
@@ -15,14 +16,18 @@ export const ZempieSdk = {
   },
 
   updateScore: function (score) {
+    console.log('score', score)
     ZempieSdk.postMessage({ type: '@updateScore', score })
   },
 
   gameOver: function (score) {
+
     ZempieSdk.postMessage({ type: '@gameOver', score })
   },
 
   postMessage(message) {
+    window.ReactNativeWebView.postMessage(JSON.stringify({ event: message }))
+
     if (window.parent !== window) {
       window.parent.postMessage(message, '*')
     }
