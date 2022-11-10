@@ -336,8 +336,7 @@ async function upload() {
     return
 
   }
-
-  if(!selectedPlatform.value.length  && eGameType.Download ){
+  if(!selectedPlatform.value.length && selectedType.value.value === eGameType.Download ){
     selectedPlatformErr.value  = true
     return
 
