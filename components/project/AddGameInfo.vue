@@ -6,7 +6,7 @@
       </li>
       <li v-else class="publish-btn">
         <h4
-          :class="uploadStage === eGameStage.DEV ? 'active' : ''"
+          :class="uploadStage === eGameStage.DEV && 'active'"
           @click="uploadGame"
         >
           {{ $t('publishing') }}
@@ -28,8 +28,9 @@
               <input
                 v-model="v$.name.$model"
                 type="text"
-                name=""
-                title=""
+                name="title"
+                title="game title"
+                id="gameTitle"
                 :placeholder="$t('addGameInfo.game.title')"
                 class="w100p"
               />
@@ -52,8 +53,9 @@
             <dd>
               <textarea
                 v-model="v$.description.$model"
-                name=""
-                title=""
+                name="description"
+                title="game description"
+                id="gameDesc"
                 :placeholder="$t('addGameInfo.game.desc')"
                 class="w100p h100"
               ></textarea>
@@ -85,6 +87,7 @@
                 </div>
 
                 <input
+                  id="gameTag"
                   v-model="chipInput"
                   @blur="saveChip"
                   @keyup.enter="saveChip"
@@ -314,8 +317,8 @@
       </template>
 
       <ProjectAddGameFile
-        v-else-if="isFormDone && uploadProject.form.stage !== 1"
-        @cancelFormDone="isFormDone = false"
+      v-else-if="isFormDone && uploadProject.form.stage !== 1"
+      @cancelFormDone="isFormDone = false"
         @uploadDone="isUploadDone = true"
       />
     </div>
@@ -382,9 +385,11 @@ const {
   editProject,
   resetStage,
   setForm,
-  setStepOne,
+  resetForm,
   setStepTwo,
   resetProjectInfo,
+  setStepThree,
+  resetPurpose
 } = useProject()
 const isAuthGamePath = ref(true)
 const confirmedGamePath = ref()
@@ -473,7 +478,7 @@ onMounted(() => {
   //게임 정보 수정
   if (editProject.value.info?.id) {
     isEditInfo.value = true
-    setStepTwo()
+    setStepThree()
     const { stage, name, description, hashtags, game, picture, picture2 } =
       editProject.value.info
     form.pathname = game.pathname
@@ -510,8 +515,10 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   window.removeEventListener('beforeunload', refreshPage)
-  useProject().resetForm()
-  useProject().resetProjectInfo()
+  // setStepOne()
+  // resetPurpose()
+  // useProject().resetForm()
+  // useProject().resetProjectInfo()
 })
 
 function refreshPage(event) {
@@ -524,10 +531,11 @@ function prevPage() {
   form.hashtags = hashtagsArr?.value.toString()
   form.project_picture = thumbFile?.value
   form.project_picture2 = gifThumFile?.value
-  setForm(form)
-
+  
+  setForm(form)  
   resetStage()
-  setStepOne()
+  setStepTwo()
+  if (editProject.value.info?.id)  useProject().setStepTwoOnEdit()
 }
 
 async function checkPathName() {
@@ -561,7 +569,7 @@ async function save() {
   setForm(form)
   isFormDone.value = true
 
-  useProject().setStepThree()
+  useProject().setStepFour()
 }
 
 async function uploadGame() {
@@ -588,7 +596,8 @@ async function uploadGame() {
     isUploadDone.value = true
     setTimeout(() => {
       loading.close()
-      useProject().resetForm()
+      setStepTwo()
+      resetForm()
 
       router.push($localePath('/project/list'))
     }, 1000)
@@ -708,6 +717,8 @@ async function updateGame() {
   if (!isValid || isThumbErr.value) return
 
   const formData = new FormData()
+
+  formData.append('category', useProject().editProject.value.purpose.toString())
 
   for (let k in form) {
     formData.append(k, form[k])

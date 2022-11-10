@@ -378,7 +378,7 @@ function pagingByClient() {
 
 function goToProjectPage(id: number) {
   setProjectInfo(id)
-  useProject().setStepTwoOnEdit()
+  useProject().setStepThreeOnEdit()
   $router.push($localePath(`/project/${id}`))
 }
 

@@ -1,55 +1,101 @@
 <template>
   <div>
     <div class="sui-input">
-      <div class="suii-title">{{ $t('addGameFile.title') }}</div>
+      <div class="suii-title">{{ $t('addGameFile.title') }}
+      </div>
+
       <dl class="suii-content">
-        <dt>{{ $t('gameUpload') }}</dt>
+        <dt>파일 종류</dt>
+        
         <dd>
           <p class="upload-file-container">
-            <label for="game-file"
-              ><i class="uil uil-file-plus" style="font-size: 18px"></i> &nbsp;
-              {{ $t('fileUpload') }}</label
-            >
-            <input
-              @change="onFileChange"
-              type="file"
-              ref="gameFile"
-              id="game-file"
-              accept=".zip"
-            />
-
-            <ClipLoader
-              v-if="isLoadingFile"
-              :color="'#ff6e17'"
-              :size="'20px'"
-            ></ClipLoader>
-            <button class="btn-circle-icon" @click="deleteFile" v-if="fileName">
-              <i class="uil uil-trash-alt"></i>
-            </button>
+           <select v-model="selectedType">
+             <option v-for="fileType in fileTypes" :value="fileType">{{fileType.name}}</option>
+            </select>
           </p>
-          <Transition name="component-fade" mode="out-in">
-            <div v-if="fileName">
-              <p class="file-size">
-                {{ $t('file.size') }} :
-                {{
-                  totalSize < 1 ? `${totalSize * 1000} KB` : `${totalSize} MB`
-                }}
-              </p>
-              <p class="file-name">{{ $t('file.name') }} : {{ fileName }}</p>
-            </div>
+          <Transition name="component-fade" mode="out-in" v-if="selectedTypeErr">
+            <p class="file-type-err" >게임 파일의 종류를 선택해주세요</p>
           </Transition>
-          <Transition name="component-fade" mode="out-in">
-            <h2 :class="isFileEmpty ? 'file-err on' : 'file-err off'">
-              {{ $t('addGameFile.selectFile.text1') }}
-            </h2>
+
+          <ul class="platform-list" v-if="selectedType.value === 2">
+            <li v-for="pf of platforms">
+              <input type="checkbox" :id="pf.value" :value="pf.value" :name="pf.name" v-model="selectedPlatform" >
+              <label :for="pf.value"><i class="uil uil-check"></i></label>
+              <span><label :for="pf.value">{{pf.name}}</label>
+              </span>
+            </li>
+          </ul>
+          <Transition name="component-fade" mode="out-in" v-if="selectedPlatformErr">
+            <p class="file-type-err" >해당 게임의 서포트 플랫폼을 골라주세요</p>
           </Transition>
-          <h2>
-            {{ $t('addGameFile.selectFile.text2') }} <br />
-            {{ $t('addGameFile.selectFile.text3') }}
-          </h2>
         </dd>
       </dl>
-      <div class="suii-open" @click="isAdvancedOpen = !isAdvancedOpen">
+
+      <Transition name="component-fade" mode="out-in">
+        <dl class="suii-content" v-if="selectedType.value" >
+          <dt>{{ $t('gameUpload') }}</dt>
+          <dd>
+            <p class="upload-file-container">
+              <template v-if="selectedType.value === eGameType.Html">
+              <label for="game-file"
+                ><i class="uil uil-file-plus" style="font-size: 18px"></i> &nbsp;
+                {{ $t('fileUpload') }}</label
+              >
+              <input
+                @change="onFileChange"
+                type="file"
+                id="game-file"
+                accept=".zip"
+              />
+            </template>
+            <template v-else>
+              <label for="game-file"
+                ><i class="uil uil-file-plus" style="font-size: 18px"></i> &nbsp;
+                {{ $t('fileUpload') }}</label
+              >
+              <input
+                @change="onDownloadFileChange"
+                type="file"
+                id="game-file"
+                accept=".zip"
+              />
+            </template>
+              <ClipLoader
+                v-if="isLoadingFile"
+                :color="'#ff6e17'"
+                :size="'20px'"
+              ></ClipLoader>
+              <button class="btn-circle-icon" @click="deleteFile" v-if="fileName">
+                <i class="uil uil-trash-alt"></i>
+              </button>
+            </p>
+          
+
+            <Transition name="component-fade" mode="out-in">
+              <div v-if="fileName">
+                <p class="file-size">
+                  {{ $t('file.size') }} :
+                  {{
+                    totalSize < 1 ? `${totalSize * 1000} KB` : `${totalSize} MB`
+                  }}
+                </p>
+                <p class="file-name">{{ $t('file.name') }} : {{ fileName }}</p>
+              </div>
+            </Transition>
+            <Transition name="component-fade" mode="out-in">
+              <h2 :class="isFileEmpty ? 'file-err on' : 'file-err off'">
+                {{ $t('addGameFile.selectFile.text1') }}
+              </h2>
+            </Transition>
+            <h2>
+              {{ $t('addGameFile.selectFile.text2') }} <br />
+              {{ $t('addGameFile.selectFile.text3') }}
+            </h2>
+          </dd>
+        </dl>
+      </Transition>
+
+      <div v-if="selectedType.value === eGameType.Html"  class="suii-open" @click="isAdvancedOpen = !isAdvancedOpen">
         <span>{{ $t('advanced.setting') }}</span> &nbsp;<i
           class="uil uil-sliders-v-alt"
         ></i>
@@ -117,7 +163,7 @@
                     <ClipLoader v-if="isLoadingUpload" :color="'#fff'" :size="'20px'" style="height: 20px"></ClipLoader>
                     <span v-else> {{ $t('update') }}</span>
                 </a> -->
-        <a @click="upload" class="btn-default w150">
+        <a id="game-upload" @click="upload" class="btn-default w150">
           <!-- <ClipLoader v-if="isLoadingUpload" :color="'#fff'" :size="'20px'" style="height: 20px"></ClipLoader> -->
           <span> {{ $t('upload') }}</span>
         </a>
@@ -128,31 +174,23 @@
 
 <script setup lang="ts">
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
-import { ElMessage, ElLoading } from 'element-plus'
+import { ElMessage, ElLoading, ElProgress } from 'element-plus'
 import ZipUtil from '~~/scripts/zipUtil'
-import { eGameStage } from '~~/types'
+import { eGameStage, eGameType, ePlatformType } from '~~/types'
 import { useI18n } from 'vue-i18n'
-const { $localePath } = useNuxtApp()
 
 const MAX_FILE_SIZE = 500
-// @Prop() isEditProject !: any;
+
+const { $localePath } = useNuxtApp()
 const { uploadProject } = useProject()
 const { t, locale } = useI18n()
+const config = useRuntimeConfig()
 const router = useRouter()
-// eGameStage = eGameStage;
-// projectId = this.$route.params.id;
-
-// toast = new Toast();
-// limitSize: number = 1024 * 1000 * 500;
-// zipFile: File | null = null;
-// uploadGameFiles: File[] = [];
 const startFileOptions = ref([])
 const startFile = ref('')
 
-// versionDescription: string = "";
-
-const zipFile = ref(null as File)
-const uploadGameFiles = ref([])
+const zipFile = ref<File>()
+const uploadGameFiles = ref()
 
 const totalSize = ref(0)
 const isLoadingFile = ref(false)
@@ -163,21 +201,48 @@ const isAutoDeploy = ref(true)
 
 const isAdvancedOpen = ref(false)
 
+//다운로드
+const downloadFile = ref<File>()
+
+//파일 타입
+const selectedType = ref({name:'Select type of file', value:null},)
+const fileTypes = [{name:'Select type of file', value:null}, {name:'HTML', value:1}, {name:'DOWNLOAD', value:2}]
+const selectedTypeErr = ref(false)
+
+//support platform
+const platforms=[{name:'Window', value:1}, {name:'Mac', value:2} , {name:'Android', value:3}, {name:'Ios', value:4} ]
+const selectedPlatform = ref([])
+const selectedPlatformErr = ref(false)
+
+watch(
+  ()=>selectedType.value, 
+  (type) =>{
+    if(type.value){
+      fileName.value = '',
+      
+      selectedTypeErr.value = false
+    }else{
+      selectedTypeErr.value = true
+    }
+  }
+)
+
+
+watch(
+  ()=>selectedPlatform.value, 
+  (platform) =>{
+    if(platform.length){
+      selectedPlatformErr.value = false
+    }else{
+      selectedPlatformErr.value = true
+    }
+  }
+)
+
+
 const emit = defineEmits(['cancelFormDone', 'uploadDone'])
-// const versionDescription = ref('')
 
-// isLoadingUpload: boolean = false;
-
-// mounted() {
-//     this.init();
-// }
-
-// init() {
-//     this.isLoadingUpload = false;
-//     this.uploadGameFiles = [];
-//     this.$store.commit('uploadGameFiles', [])
-// }
-
+// 게임 파일 업로드
 async function onFileChange(e: any) {
   zipFile.value = e.target.files[0]
 
@@ -208,6 +273,7 @@ async function onFileChange(e: any) {
   startFileOptions.value = htmls.map((file) => file.name)
   startFileOptions.value.sort((a, b) => a.length - b.length)
 
+  //html중 index가 포함된 파일
   const indexFiles = startFileOptions.value.filter((name) =>
     name.includes('index')
   )
@@ -226,44 +292,71 @@ async function onFileChange(e: any) {
     ElMessage.error(t('notFoundHtml'))
 
     fileName.value = ''
-    // this.uploadGameFileError = this.$t('projectAddVersion.error.notFoundHtml').toString();
   }
-
-  // if (
-  //     uploadGameFiles.value.length > 0 &&        startFileOptions.value.length > 0
-  // ) {
-  //     this.$store.commit("sendGameFileDone", true);
-
-  //     this.$store.commit("uploadGameFiles", this.uploadGameFiles);
-  //     this.isFileEmpty = false;
-  // }
-  // else {
-  //     this.$store.commit("sendGameFileDone", false);
-  // }
 
   isLoadingFile.value = false
   e.target.value = ''
 }
 
+//다운로드용 파일 업로드
+async function onDownloadFileChange(e: any){
+  
+  downloadFile.value = e.target.files[0]
+  const size = downloadFile.value.size
+  isLoadingFile.value = true
+  
+  //file limit check
+  if (size > limitSize) {
+    ElMessage.error(t('file.upload.overSize.500'))
+    isLoadingFile.value = false
+    return
+  }
+
+
+  totalSize.value = Number((size / (1024 * 1000)).toFixed(2))
+  fileName.value = downloadFile.value.name
+  uploadGameFiles.value = downloadFile.value
+
+  uploadGameFiles.value = downloadFile.value
+
+
+  isLoadingFile.value = false
+
+  e.target.value = ''
+
+}
+
 function deleteFile() {
   fileName.value = ''
-  //     this.$store.commit("uploadGameFiles", []);
-  //     this.zipFile = null;
-  //     this.uploadGameFiles = [];
-  //     this.startFile = '';
-  //     this.startFileOptions = [];
-  //     this.totalSize = 0;
-  //     (this.$refs.gameFile as any).value = '';
 }
 
 async function upload() {
-  if (isLoadingFile.value) {
+  if(!selectedType.value.value){
+    selectedTypeErr.value  = true
+    return
+
+  }
+
+  if(!selectedPlatform.value.length  && eGameType.Download ){
+    selectedPlatformErr.value  = true
+    return
+
+  }
+
+  if (isLoadingFile.value || !uploadGameFiles.value) {
     return
   }
+
+
 
   const form = useProject().uploadProject.value.form
 
   const formData = new FormData()
+
+  formData.append('category', useProject().uploadProject.value.purpose.toString() )
+  formData.append('file_type',selectedType.value.value )
+  formData.append('support_platform', selectedPlatform.value.toString() || '0')
+
   for (let k in form) {
     formData.append(k, form[k])
   }
@@ -295,6 +388,7 @@ async function upload() {
 
   loading.close()
   emit('uploadDone')
+  useProject().setStepTwo()
   useProject().resetForm()
 
   if (!error.value) {
@@ -322,102 +416,40 @@ async function upload() {
   //         this.isFileEmpty = false;
 }
 
-// }
-
-// createProject() {
-//     const {gameInfoObj, uploadGameFiles, gameStage} = this.$store.getters;
-
-//     this.$api.createProject(
-//         gameInfoObj,
-//         gameFileInfo,
-//         uploadGameFiles
-//     )
-//         .then((res) => {
-//             this.toast.successToast(`${this.$t('gameUpload.done')}`);
-//             this.$router.push(`/${this.$i18n.locale}/projectList`)
-
-//         })
-//         .catch((err) => {
-//         })
-//         .finally(() => {
-//             this.isLoadingUpload = false;
-//         })
-// }
-
-// async updateProject() {
-//     const {gameStage} = this.$store.getters;
-//     if (this.isLoadingUpload) {
-//         return;
-//     }
-
-//     let isError = false;
-
-//     if (gameStage !== eGameStage.Dev) {
-//         if (!this.uploadGameFiles.length) {
-//             isError = true;
-//             this.isFileEmpty = true;
-//         }
-
-//         if (!this.startFileOptions.length) {
-//             isError = true;
-//         }
-
-//         if (isError) {
-//             // this.wait = false;
-//             return;
-//         }
-//     }
-//     else {
-//         this.isFileEmpty = false;
-//     }
-//     this.isLoadingUpload = true;
-
-//     const option: any = {
-//         id: this.projectId,
-//         name: localStorage.getItem('title'),
-//         description: localStorage.getItem('description'),
-//         hashtags: localStorage.getItem('hashtagsArr'),
-//         stage: this.$store.getters.gameStage
-//     };
-
-//     if (this.$store.getters.gameStage === eGameStage.Dev) {
-//         this.autoDeploy = false;
-//     }
-
-//     this.$api.updateProject(option, this.$store.getters.thumbFile)
-//         .then((res) => {
-//             // this.toast.successToast("게임이 업로드되었습니다.");
-//             // this.$router.push('/projectList')
-//         })
-//         .catch((err) => {
-//             console.log('err', err)
-//             return;
-//         })
-//         .finally(() => {
-//             this.isLoadingUpload = false;
-//         })
-//     if(this.uploadGameFiles && this.uploadGameFiles.length > 0) {
-//         const version = await this.$api.createVersion(this.projectId, '1.0.0', this.uploadGameFiles, this.startFile,
-//         this.autoDeploy, this.totalSize, '', this.$store.getters.gameStage);
-//     }
-//     await this.$router.replace(`/${this.$i18n.locale}/projectList`);
-// }
-
 function prevPage() {
   emit('cancelFormDone')
-
-  //     this.$emit('gameInfoDone', false)
 }
+
 </script>
 
 <style scoped lang="scss">
+.suii-content{
+  .file-type-err{
+    color:#c5292a;
+    margin-left:2px;
+    margin-top:10px;
+  }
+  .upload-file-container{
+    select{
+      width: 250px;
+    }
+   
+  }
+  .platform-list{
+    margin-top: 20px;
+    li{
+      span{
+        margin-left: 5px;
+      }
+    }
+  }
+}
 .loading-spinner {
   color: #f97316 !important;
 }
 
 .file-err {
   color: #c5292a;
-
   &.on {
     display: inline-block;
   }

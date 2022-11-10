@@ -69,6 +69,16 @@ useHead({
     },
   ],
 })
+
+
+
+onBeforeMount(() => {
+  useProject().setStepOne()
+  useProject().resetPurpose()
+  useProject().resetForm()
+  useProject().resetProjectInfo()
+  useProject().resetEditStep()
+})
 </script>
 
 <style scoped lang="scss">

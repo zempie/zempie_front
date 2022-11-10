@@ -98,11 +98,17 @@
         </div>
 
         <a
-          v-if="gameInfo.stage !== eGameStage.DEV"
+          v-if="gameInfo.stage !== eGameStage.DEV && gameInfo.game_type === eGameType.Html"
           @click="playGame"
           class="btn-default w150"
           style="margin-left: 12px"
           >Play Game</a
+        >
+        <a
+          v-if="gameInfo.game_type === eGameType.Download"
+          class="btn-default w150"
+          style="margin-left: 12px"
+          >Download</a
         >
       </dd>
     </dl>
@@ -185,7 +191,7 @@ import _ from 'lodash'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
 import { ElMessage, ElMessageBox, ElLoading, ElDialog } from 'element-plus'
-import { IGame, eGameStage } from '~~/types'
+import { IGame, eGameStage, eGameType } from '~~/types'
 
 import { PropType } from 'vue'
 import { useI18n } from 'vue-i18n'

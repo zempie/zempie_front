@@ -185,7 +185,4 @@ input[type='radio'] + label {
   cursor: pointer;
 }
 
-.studio-upload-step li {
-  cursor: pointer;
-}
 </style>

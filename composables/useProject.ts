@@ -1,10 +1,12 @@
-import { IProject, eGameStage } from "~~/types"
+import { IProject, eGameStage, eGameCategory } from "~~/types"
 
 export default function () {
 
   const editProject = useState('editProject', () => ({
     info: {} as IProject,
-    step: 1
+    step: 1,
+    purpose: -1
+
   }))
 
   const getProjectInfo = async (id: string | number) => {
@@ -36,6 +38,11 @@ export default function () {
     editProject.value.info = info;
   }
 
+  const resetEditStep = () => {
+    editProject.value.step = 1;
+
+  }
+
   const resetProjectInfo = () => {
     editProject.value.info = {} as IProject
   }
@@ -52,10 +59,28 @@ export default function () {
       project_picture: '',
       project_picture2: ''
     },
-    step: 1
+    step: 1,
+    purpose: -1
   }))
 
 
+  //purpose
+  const setPurpose = (purpose: number) => {
+    uploadProject.value.purpose = purpose;
+  }
+  const resetPurpose = () => {
+    uploadProject.value.purpose = eGameCategory.NONE;
+  }
+
+  const setEditPurpose = (purpose: number) => {
+    editProject.value.purpose = purpose;
+  }
+  const resetEditPurpose = () => {
+    editProject.value.purpose = eGameCategory.NONE;
+  }
+
+
+  //stage
   const setStepOne = () => {
     uploadProject.value.step = 1;
   }
@@ -64,6 +89,9 @@ export default function () {
   }
   const setStepThree = () => {
     uploadProject.value.step = 3;
+  }
+  const setStepFour = () => {
+    uploadProject.value.step = 4;
   }
 
 
@@ -80,7 +108,6 @@ export default function () {
   }
 
   const resetForm = () => {
-    setStepOne();
 
     uploadProject.value.form = {
       stage: eGameStage.NONE,
@@ -105,10 +132,16 @@ export default function () {
     setStepOne,
     setStepTwo,
     setStepThree,
+    setStepFour,
     setStepOneOnEdit,
     setStepTwoOnEdit,
     setStepThreeOnEdit,
     setStageOnEdit,
-    getProjectInfo
+    getProjectInfo,
+    setPurpose,
+    resetPurpose,
+    resetEditStep,
+    setEditPurpose,
+    resetEditPurpose
   }
 }

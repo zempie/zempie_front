@@ -41,6 +41,7 @@
               </li>
               <li class="uppercase">
                 <NuxtLink
+                  id="gameMenu"
                   :to="$localePath('/game/list')"
                   :class="
                     $route.name.toString().includes('game-list') ? 'active' : ''
@@ -191,7 +192,7 @@
             style="display: flex"
             id="userMenu"
           >
-            <el-dropdown trigger="click" ref="userMenu">
+            <el-dropdown trigger="click" ref="userMenu" id="userMenu">
               <UserAvatar
                 style="width: 30px; height: 30px"
                 :user="user"
@@ -228,7 +229,9 @@
                         ><i class="uil uil-user"></i>
                         {{ t('myChannel') }}
                       </NuxtLink>
-                      <NuxtLink :to="$localePath('/project/list')"
+                      <NuxtLink 
+                        id="gameStudio"
+                        :to="$localePath('/project/list')"
                         ><i class="uil uil-robot"></i>
                         {{ t('gameStudio') }}
                       </NuxtLink>

@@ -70,7 +70,9 @@ export interface IGame {
   version: string,
   user: IUser,
   game_jam: any,
-  is_like?: boolean
+  is_like?: boolean,
+  game_type: number,
+  support_platform: number
 }
 
 
@@ -268,8 +270,29 @@ export enum eGameStage {
 }
 
 export enum eGameCategory {
+  NONE = -1,
   Challenge,
   Certified,
   Affiliated,
-  ZemJam
+  ZemJam,
+  GJ
 }
+
+export enum eGameType {
+  Html = 1,
+  Download
+}
+
+export enum ePlatformType {
+  Window = 1,
+  Mac,
+  Android,
+  Ios
+}
+
+// export enum eGamePurpose {
+//   NONE = -1,
+//   Normal = 0,
+//   Gamejam = 3,
+//   GJ = 4,
+// }

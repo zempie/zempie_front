@@ -12,7 +12,7 @@
         <div class="swiper-slide">
           <a
             @click="clickCategory(AllGameCategory)"
-            :class="category === AllGameCategory ? 'active' : ''"
+            :class="category === AllGameCategory && 'active'"
           >
             game
           </a>
@@ -20,9 +20,17 @@
         <div class="swiper-slide">
           <a
             @click="clickCategory('3')"
-            :class="category === `${eGameCategory.ZemJam}` ? 'active' : ''"
+            :class="category === `${eGameCategory.ZemJam}` && 'active'"
           >
             zem
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a
+            @click="clickCategory('4')"
+            :class="category === `${eGameCategory.GJ}` && 'active'"
+          >
+          GJ+
           </a>
         </div>
       </div>
@@ -113,7 +121,7 @@ const LIMIT_SIZE = 20
 const el = ref<HTMLElement>(null)
 
 //기존 카테고리가 0 : 공식게임 1 : 도전 게임 으로 나뉘어져있던걸 합쳐서 0,1 둘다 호출 해야함
-const AllGameCategory = `${eGameCategory.Challenge}, ${eGameCategory.Certified}`
+const AllGameCategory = `${eGameCategory.Challenge}, ${eGameCategory.Certified},${eGameCategory.GJ} `
 const category = ref(AllGameCategory)
 const limit = ref(LIMIT_SIZE)
 const offset = ref(0)
@@ -227,7 +235,7 @@ function initData() {
 
 .swiper-slide {
   cursor: pointer;
-  width: 50% !important;
+  width: 33.3% !important;
 }
 
 //transition
