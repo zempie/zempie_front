@@ -205,7 +205,6 @@ const isAdvancedOpen = ref(false)
 
 //다운로드
 const downloadFile = ref<File>()
-const percentage = ref(0)
 
 //파일 타입
 const selectedType = ref({name:'Select type of file', value:null},)
@@ -223,7 +222,7 @@ watch(
     if(type.value){
       fileName.value = '',
       selectedTypeErr.value = false
-      selectedPlatform.value = []
+
     }else{
       selectedTypeErr.value = true
     }
@@ -331,6 +330,7 @@ function deleteFile() {
 }
 
 async function upload() {
+
   if(!selectedType.value.value){
     selectedTypeErr.value  = true
     return
@@ -352,9 +352,16 @@ async function upload() {
 
   const formData = new FormData()
 
+
+
   formData.append('category', useProject().uploadProject.value.purpose.toString() )
   formData.append('file_type',selectedType.value.value )
-  formData.append('support_platform', selectedPlatform.value.toString() || '0')
+  if(selectedType.value.value  === eGameType.Html){
+    formData.append('support_platform', '0')
+  }else if(selectedType.value.value === eGameType.Download){
+    formData.append('support_platform', selectedPlatform.value.toString())
+
+  }
 
   for (let k in form) {
     formData.append(k, form[k])
@@ -406,6 +413,11 @@ async function upload() {
     onUploadProgress : (e) => { 
       const percentage = Math.round((e.loaded * 100) / e.total)
       loading.setText(`Loading...${percentage}%`)
+
+      if(Number(percentage) === 100){
+       loading.setText('파일이 업로드되었습니다. 잠시만 기다려주세요')
+
+      }
    }
   })
   .then(()=>{
