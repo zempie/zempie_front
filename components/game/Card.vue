@@ -24,23 +24,26 @@
         <UserAvatar :user="gameInfo.user" :tag="'p'"></UserAvatar>
       </dt>
       <dd>
+        
         <h2 @click="playGame">
           {{ gameInfo.title }}
         </h2>
         <p @click="moveUserPage">{{ gameInfo.user?.name }}</p>
         <ul>
-          <li v-if="gameInfo.support_platform === ePlatformType.Android">
-            <i class="uil uil-android"></i>
-          </li>
-          <li v-if="gameInfo.support_platform === ePlatformType.Window">
-            <img src="/icons/window_os.svg" alt="window"/>
-          </li>
-          <li v-if="gameInfo.support_platform === ePlatformType.Mac">
-            <i class="uil uil-apple"></i>
-          </li>
-          <li v-if="gameInfo.support_platform === ePlatformType.Ios">
-            <img src="/icons/ios.svg" alt="ios"/>
-          </li>
+          <template  v-for="platform in support_platforms"> 
+            <li v-if="Number(platform) === ePlatformType.Android">
+              <i class="uil uil-android"></i>
+            </li>
+            <li v-if="Number(platform) === ePlatformType.Window">
+              <img src="/icons/window_os.svg" alt="window"/>
+            </li>
+            <li v-if="Number(platform) === ePlatformType.Mac">
+              <i class="uil uil-apple"></i>
+            </li>
+            <li v-if="Number(platform) === ePlatformType.Ios">
+              <img src="/icons/ios.svg" alt="ios"/>
+            </li>
+          </template>
 
           <li v-if="gameInfo.game_type === eGameType.Download"  style="margin-top: 2px;">
             <i class="uil uil-file-download"></i>
@@ -62,9 +65,13 @@ const { $localePath } = useNuxtApp()
 
 const router = useRouter()
 
+
 const props = defineProps({
   gameInfo: Object as PropType<IGame>,
-})
+  })
+  const support_platforms = computed(() => {
+    return props.gameInfo.support_platform.split(',')
+  })
 
 const thumbnail = ref(
   props.gameInfo?.url_thumb_webp ||
