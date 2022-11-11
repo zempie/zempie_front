@@ -11,21 +11,7 @@
           <p><i class="uil uil-clock-three"></i></p>
           <h2>{{ $t('timeline') }}(ALL)</h2>
         </NuxtLink>
-        <NuxtLink
-          :class="['swiper-slide', routeQuery === 'sns' ? 'active' : '']"
-          :to="$localePath(`/game/${gamePath}`) + '?media=sns'"
-        >
-          <p><i class="uil uil-comment-dots"></i></p>
-          <h2>SNS</h2>
-        </NuxtLink>
-        <NuxtLink
-          :class="['swiper-slide', routeQuery === 'blog' ? 'active' : '']"
-          :to="$localePath(`/game/${gamePath}`) + '?media=blog'"
-        >
-          <p><i class="uil uil-edit"></i></p>
-          <h2>{{ $t('blog') }}</h2>
-        </NuxtLink>
-
+       
         <NuxtLink
           :class="['swiper-slide', routeQuery === 'image' ? 'active' : '']"
           :to="$localePath(`/game/${gamePath}`) + '?media=image'"
@@ -102,6 +88,7 @@ useCustomFetch<any>(
 <style lang="scss" scoped>
 .tab-menu-swiper {
   .swiper-slide {
+    width: 25%;
     display: inline-block;
   }
 }

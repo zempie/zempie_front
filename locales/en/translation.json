@@ -844,5 +844,14 @@
   "ask.overwrite.draft": "Would you like to load the selected draft and delete the post you were writing?",
   "autosave": "Auto save",
   "ask.delete.draft": "Do you really want to delete the selected draft?",
-  "auto.login": "__STRING_NOT_TRANSLATED__"
+  "auto.login": "Auto login",
+  "file.type": "Type of File",
+  "file.type.info": "__STRING_NOT_TRANSLATED__",
+  "game.support.os.info": "__STRING_NOT_TRANSLATED__",
+  "zempie.upload": "__STRING_NOT_TRANSLATED__",
+  "zempie.upload.info": "__STRING_NOT_TRANSLATED__",
+  "global.game.zem.info": "Be Our Plus One! Join in Game Jam event and become one of us",
+  "zempie.gamejam.info": "__STRING_NOT_TRANSLATED__",
+  "finish": "Finish",
+  "select.purpose": "Choose your Purporse"
 }

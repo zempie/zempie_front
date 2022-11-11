@@ -5,7 +5,7 @@
       </div>
 
       <dl class="suii-content">
-        <dt>파일 종류</dt>
+        <dt>{{$t('file.type')}}</dt>
         
         <dd>
           <p class="upload-file-container">
@@ -14,7 +14,7 @@
             </select>
           </p>
           <Transition name="component-fade" mode="out-in" v-if="selectedTypeErr">
-            <p class="file-type-err" >게임 파일의 종류를 선택해주세요</p>
+            <p class="file-type-err" >{{$t('file.type.info')}} </p>
           </Transition>
 
           <ul class="platform-list" v-if="selectedType.value === 2">
@@ -26,7 +26,7 @@
             </li>
           </ul>
           <Transition name="component-fade" mode="out-in" v-if="selectedPlatformErr">
-            <p class="file-type-err" >해당 게임의 서포트 플랫폼을 골라주세요</p>
+            <p class="file-type-err" > {{$t('game.support.os.info')}}</p>
           </Transition>
         </dd>
       </dl>
@@ -88,8 +88,8 @@
               </h2>
             </Transition>
             <h2>
-              {{ $t('addGameFile.selectFile.text2') }} <br />
-              {{ $t('addGameFile.selectFile.text3') }}
+              <p v-if="selectedType.value === eGameType.Html">{{ $t('addGameFile.selectFile.text2') }}</p>
+              <p>{{ $t('addGameFile.selectFile.text3') }}</p>
             </h2>
           </dd>
         </dl>
@@ -317,9 +317,6 @@ async function onDownloadFileChange(e: any){
   fileName.value = downloadFile.value.name
   uploadGameFiles.value = downloadFile.value
 
-  uploadGameFiles.value = downloadFile.value
-
-
   isLoadingFile.value = false
 
   e.target.value = ''
@@ -371,10 +368,21 @@ async function upload() {
     formData.append(k, gameFileInfo[k])
   }
 
-  for (let i = 0; i < uploadGameFiles.value.length; i++) {
-    const file = uploadGameFiles.value[i]
-    formData.append(`file_${i + 1}`, file)
+  switch(selectedType.value.value){
+    case eGameType.Download:
+      formData.append('file',  uploadGameFiles.value)
+      break;
+    case eGameType.Html:
+      for (let i = 0; i < uploadGameFiles.value.length; i++) {
+        const file = uploadGameFiles.value[i]
+        formData.append(`file_${i + 1}`, file)
+      }
+      break;
+    default:
+      break;
   }
+
+  
 
   const loading = ElLoading.service({
     lock: true,

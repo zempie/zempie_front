@@ -217,8 +217,8 @@ const {
     }
 
     height: 240px;
-    margin: 3px;
-    width: 24%;
+    margin: 1%;
+    width: 23%;
     transition: all 0.4s ease-in-out;
 
     img {

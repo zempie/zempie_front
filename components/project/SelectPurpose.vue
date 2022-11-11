@@ -12,10 +12,10 @@
       :class="purpose === eGameCategory.Challenge && 'active' "
        >
         <dl id="basicUpload">
-          <dt><img src="/images/studio_icon01.png" :alt="$t('devLog')" title="" /></dt>
+          <dt><img src="/images/zempie_logo_154_155.png" width="70" :alt="$t('devLog')" title="" /></dt>
           <dd>
-            <h3>일반 업로드</h3>
-            <div>게임을 올려보세요.
+            <h3>{{ $t('zempie.upload') }}</h3>
+            <div>{{ $t('zempie.upload.info') }}
             </div>
           </dd>
         </dl>
@@ -24,23 +24,23 @@
       :class="purpose === eGameCategory.GJ&& 'active' "
       >
         <dl id="GJ">
-          <dt><img src="/images/studio_icon02.png" :alt="$t('earlyAccess')" title="" /></dt>
+          <dt><img src="/images/GJ_transparent.png" width="70" :alt="$t('earlyAccess')" title="" /></dt>
           <dd>
             <h3>GJ+</h3>
-            <div>글로벌 게임젬에 도전해보세요.
+            <div>{{ $t('global.game.zem.info') }}
             </div>
-            <small>22/11/08 ~ 22/11/10</small>
+            <small>2022/11/18 ~ 2022/11/20</small>
             
           </dd>
         </dl>
       </li>
       <li >
         <dl>
-          <dt><img src="/images/studio_icon03.png" :alt="$t('complete')" title="" /></dt>
+          <dt><img src="/images/zemjam_logo_1.png" :alt="$t('seo.zemjam.title')" width="100" title="" /></dt>
           <dd>
             <h3>ZemJam</h3>
-            <div>젬파이 게임젬에 도전해보세요.</div>
-            <small>종료</small>
+            <div>{{ $t('zempie.gamejam.info') }}</div>
+            <small>{{ $t('finish') }}</small>
           </dd>
         </dl>
       </li>

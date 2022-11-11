@@ -844,5 +844,14 @@
   "ask.overwrite.draft": "작성 중인 내용을 삭제하고 선택한 문서를 불러오시겠습니까?",
   "autosave": "자동 저장",
   "ask.delete.draft": "해당 글을 삭제하시겠습니까?",
-  "auto.login": "__STRING_NOT_TRANSLATED__"
+  "auto.login": "자동 로그인",
+  "file.type": "파일 종류",
+  "file.type.info": "게임을 배포할 방식을 선택해주세요",
+  "game.support.os.info": "게임과 호환되는 운영 체제를 선택해주세요",
+  "zempie.upload": "젬파이 업로드",
+  "zempie.upload.info": "창작물을 업로드하고 젬파이에서 쉽게 공유해보세요.",
+  "global.game.zem.info": "Be Our Plus One! 게임젬과 함께 게임 크리에이터가 되어보세요!",
+  "zempie.gamejam.info": "실력을 시험해볼 수 있는 젬파이 게임잼 이벤트에 참여해보세요.",
+  "finish": "종료",
+  "select.purpose": "목적 선택"
 }

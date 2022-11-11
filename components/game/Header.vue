@@ -106,6 +106,7 @@
         >
         <a
           v-if="gameInfo.game_type === eGameType.Download"
+          :href="gameInfo.url_game"
           class="btn-default w150"
           style="margin-left: 12px"
           >Download</a

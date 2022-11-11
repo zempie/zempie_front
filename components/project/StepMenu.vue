@@ -4,7 +4,7 @@
       <li :class="[uploadProject.step === 1 && 'active', 'step']">
         <p>STEP 01</p>
         <h3>
-        목적 선택
+          {{ $t('select.purpose') }}
         </h3>
       </li>
       <li :class="[uploadProject.step === 2 &&  'active' , 'step']">
