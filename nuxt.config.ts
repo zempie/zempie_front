@@ -113,7 +113,8 @@ export default defineNuxtConfig({
     LAUNCHER_URL: process.env.LAUNCHER_URL,
     GA_TAG: process.env.GA_TAG,
     GOOGLE_REFRESH_TOKEN_URL: process.env.GOOGLE_REFRESH_TOKEN_URL,
-    REFRESH_TOKEN: process.env.REFRESH_TOKEN_COOKIE
+    REFRESH_TOKEN: process.env.REFRESH_TOKEN_COOKIE,
+    GAME_JAM_PLUS: process.env.GAME_JAM_PLUS
   },
 
 })

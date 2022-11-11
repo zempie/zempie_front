@@ -107,8 +107,7 @@
         <a
           v-if="gameInfo.game_type === eGameType.Download"
           :href="gameInfo.url_game"
-          class="btn-default w150"
-          style="margin-left: 12px"
+          class="btn-default w150 download"
           >Download</a
         >
       </dd>
@@ -423,6 +422,16 @@ function searchHashtag(hashtag: string) {
       width: 180px;
     }
   }
+}
+.play-btn-container{
+  .download{
+    margin-left: 12px; background-color: #5552F9;
+    &:hover{
+      color:#5552F9;
+      background-color: #fff;
+    }
+  }
+
 }
 
 @media all and (max-width: 479px) {

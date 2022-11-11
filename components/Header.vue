@@ -31,10 +31,7 @@
                 <NuxtLink
                   :to="$localePath('/community/list')"
                   :class="
-                    $route.name.toString().includes('community-list')
-                      ? 'active'
-                      : ''
-                  "
+                    $route.name.toString().includes('community-list') && 'active'"
                 >
                   community
                 </NuxtLink>
@@ -44,7 +41,7 @@
                   id="gameMenu"
                   :to="$localePath('/game/list')"
                   :class="
-                    $route.name.toString().includes('game-list') ? 'active' : ''
+                    $route.name.toString().includes('game-list') && 'active' 
                   "
                 >
                   games
@@ -54,10 +51,20 @@
                 <NuxtLink
                   :to="$localePath('/zem-jam')"
                   :class="
-                    $route.name.toString().includes('zem-jam') ? 'active' : ''
+                    $route.name.toString().includes('zem-jam') && 'active' 
                   "
                 >
                   ZEMJAM
+                </NuxtLink>
+              </li>
+              <li class="uppercase">
+                <NuxtLink
+                  :to="$localePath('/game-jam-plus')"
+                  :class="
+                    $route.name.toString().includes('game-jam-plus') && 'active' 
+                  "
+                >
+                  GJ+
                 </NuxtLink>
               </li>
             </ul>
@@ -325,6 +332,12 @@
                 @click.native="isHeaderSideMobile = false"
                 ><i class="uil uil-comment"></i>
                 ZEMJAM
+              </NuxtLink>
+              <NuxtLink
+                :to="$localePath('/game-jam-plus')"
+                @click.native="isHeaderSideMobile = false"
+                ><i class="uil uil-comment"></i>
+                GJ+
               </NuxtLink>
             </div>
           </div>

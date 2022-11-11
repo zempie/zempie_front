@@ -17,6 +17,7 @@
             <p class="file-type-err" >{{$t('file.type.info')}} </p>
           </Transition>
 
+
           <ul class="platform-list" v-if="selectedType.value === 2">
             <li v-for="pf of platforms">
               <input type="checkbox" :id="pf.value" :value="pf.value" :name="pf.name" v-model="selectedPlatform" >
@@ -173,6 +174,7 @@
 </template>
 
 <script setup lang="ts">
+import axios from 'Axios'
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
 import { ElMessage, ElLoading, ElProgress } from 'element-plus'
 import ZipUtil from '~~/scripts/zipUtil'
@@ -203,6 +205,7 @@ const isAdvancedOpen = ref(false)
 
 //다운로드
 const downloadFile = ref<File>()
+const percentage = ref(0)
 
 //파일 타입
 const selectedType = ref({name:'Select type of file', value:null},)
@@ -219,8 +222,8 @@ watch(
   (type) =>{
     if(type.value){
       fileName.value = '',
-      
       selectedTypeErr.value = false
+      selectedPlatform.value = []
     }else{
       selectedTypeErr.value = true
     }
@@ -386,41 +389,42 @@ async function upload() {
 
   const loading = ElLoading.service({
     lock: true,
-    text: 'Loading',
+    text: `Loading...`,
     customClass: 'loading-spinner',
     background: 'rgba(0, 0, 0, 0.7)',
   })
 
-  const { data, error } = await game.upload(formData)
 
-  loading.close()
-  emit('uploadDone')
-  useProject().setStepTwo()
-  useProject().resetForm()
-
-  if (!error.value) {
+  //onUploadProgress 사용을 위해서 axios 사용.. ohmyfetch가 지원하면 그때 수정
+  axios('/studio/project', {
+    method:'post',
+    baseURL:config.STUDIO_API,
+    data:formData,
+    headers:{
+      'Context-Type' : 'multipart/form-data', 
+      Authorization : `Bearer ${useCookie(config.COOKIE_NAME).value}`},
+    onUploadProgress : (e) => { 
+      const percentage = Math.round((e.loaded * 100) / e.total)
+      loading.setText(`Loading...${percentage}%`)
+   }
+  })
+  .then(()=>{
     router.push($localePath('/project/list'))
-  }
+  })
+  .catch((err)=>{
+    console.log(err)
+  })
+  .finally(()=>{
+    emit('uploadDone')
+    useProject().setStepTwo()
+    useProject().resetForm()
+    loading.close()
+  })
 
-  //     const {uploadGameFiles, gameStage} = this.$store.getters;
+}
 
-  //     if (gameStage !== eGameStage.Dev) {
-  //         if (!uploadGameFiles) {
-  //             this.isFileEmpty = true;
-  //         }
-  //         else if (uploadGameFiles && uploadGameFiles.length === 0) {
-  //             this.isFileEmpty = true;
-  //         }
-  //         else{
-  //             this.isLoadingUpload = true;
-  //             this.createProject();
-  //         }
-
-  //     }
-  //     else {
-  //         this.isLoadingUpload = true;
-  //         this.createProject();
-  //         this.isFileEmpty = false;
+function handleProgress(e){
+      
 }
 
 function prevPage() {

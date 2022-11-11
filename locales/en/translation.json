@@ -846,12 +846,12 @@
   "ask.delete.draft": "Do you really want to delete the selected draft?",
   "auto.login": "Auto login",
   "file.type": "Type of File",
-  "file.type.info": "__STRING_NOT_TRANSLATED__",
-  "game.support.os.info": "__STRING_NOT_TRANSLATED__",
-  "zempie.upload": "__STRING_NOT_TRANSLATED__",
-  "zempie.upload.info": "__STRING_NOT_TRANSLATED__",
+  "file.type.info": "Choose your game's distribution method",
+  "game.support.os.info": "Choose the proper OS for your game",
+  "zempie.upload": "Upload your game on Zempie",
+  "zempie.upload.info": "Hop on Global Game Jam and Seize your dream",
   "global.game.zem.info": "Be Our Plus One! Join in Game Jam event and become one of us",
-  "zempie.gamejam.info": "__STRING_NOT_TRANSLATED__",
+  "zempie.gamejam.info": "Join in Zempie's Game Jam and Test yourself",
   "finish": "Finish",
   "select.purpose": "Choose your Purporse"
 }
