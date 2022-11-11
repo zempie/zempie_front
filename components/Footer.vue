@@ -11,6 +11,7 @@
               >{{ $t('company.info.title') }}</a
             >
             <NuxtLink :to="$localePath('/terms')">{{ $t('terms') }}</NuxtLink>
+            <NuxtLink :to="$localePath('/privacy')" style="color:#f97316">{{ $t('term.private') }}</NuxtLink>
           </p>
           <div>
             {{ $t('fromthered') }} &nbsp; | &nbsp; {{ $t('company.owner') }} :
@@ -27,7 +28,7 @@
             >
               {{ config.SUPPORT_EMAIL }}</a
             ><br />
-            Copyright ⓒ FROMtheRED Inc. All rights reserved.
+            ⓒ FROMtheRED Inc. All rights reserved.
           </div>
         </dt>
         <dd>
