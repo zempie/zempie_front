@@ -174,7 +174,7 @@
 </template>
 
 <script setup lang="ts">
-import axios from 'Axios'
+import axios from 'axios'
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
 import { ElMessage, ElLoading, ElProgress } from 'element-plus'
 import ZipUtil from '~~/scripts/zipUtil'
