@@ -9,7 +9,9 @@
             <dt>
               <dl>
                 <dt>
-                  <UserAvatar :user="feed?.user" :tag="'span'" />
+                  <NuxtLink :to="$localePath(`/channel/${feed.user?.channel_id}`)">
+                    <UserAvatar :user="feed?.user" :tag="'span'" />
+                  </NuxtLink>
                 </dt>
                 <dd v-if="feed?.user">
                   <h2>{{ feed?.user?.name }}</h2>
@@ -166,12 +168,12 @@
                 </dt>
                 <dd>
                   <h2 class="grey-text skeleton-animation"
-          style="width: 300px; margin-bottom: 10px">
-          </h2>
+                 style="width: 300px; margin-bottom: 10px">
+                  </h2>
                  
                  <p class="grey-text skeleton-animation"
-          style="width: 150px; margin-bottom: 10px"></p>
-                </dd>
+                   style="width: 150px; margin-bottom: 10px"></p>
+                 </dd>
                
               </dl>
             </dt>
@@ -180,10 +182,7 @@
 
           <div  class="tapl-content grey-text skeleton-animation"
         style="margin: 20px; padding: 20px" ></div>
-       
-         
-
-          <ul class="tapl-option">
+           <ul class="tapl-option">
             <li>
               <ul>
                 <li>
@@ -193,18 +192,14 @@
                   ></i
                   >&nbsp;
                 </li>
-
-                <li >
+                <li>
                   <a
                     ><i class="uil uil-share-alt" style="font-size: 20px"></i>
                   </a>
                 </li>
               </ul>
             </li>
-
-           
           </ul>
-         
         </li>
       </ul>
     </div>
@@ -221,6 +216,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue'
 import { dateFormat, execCommandCopy, stringToDomElem } from '~~/scripts/utils'
 
 const COMMENT_LIMIT = 10
+const { $localePath } = useNuxtApp()
 const route = useRoute()
 const router = useRouter()
 const { t, locale } = useI18n()

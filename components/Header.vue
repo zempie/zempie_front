@@ -286,7 +286,7 @@
               <i class="uil uil-user-circle"></i>
             </p>
             <NuxtLink v-else :to="$localePath('/login')">
-              <button class="btn-default">
+              <button class="btn-default" id="loginBtn">
                 <i class="uil uil-user"></i>{{ t('login') }}
               </button>
             </NuxtLink>
