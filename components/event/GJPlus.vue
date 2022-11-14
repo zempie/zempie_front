@@ -52,7 +52,7 @@
 
       </ul>
       <div>
-        <a href="https://forms.gle/8NXazCYicG1c3NkQ9" target="_blank">게임젬 플러스 폼 제출하기</a>
+        <a href="https://forms.gle/8NXazCYicG1c3NkQ9" target="_blank">게임잼 플러스 신청하기 </a>
       </div>
       <h3 style="color:#54b5ff">
         [준비사항]</h3>
