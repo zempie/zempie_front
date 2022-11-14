@@ -31,19 +31,17 @@
                 <NuxtLink
                   :to="$localePath('/community/list')"
                   :class="
-                    $route.name.toString().includes('community-list')
-                      ? 'active'
-                      : ''
-                  "
+                    $route.name.toString().includes('community-list') && 'active'"
                 >
                   community
                 </NuxtLink>
               </li>
               <li class="uppercase">
                 <NuxtLink
+                  id="gameMenu"
                   :to="$localePath('/game/list')"
                   :class="
-                    $route.name.toString().includes('game-list') ? 'active' : ''
+                    $route.name.toString().includes('game-list') && 'active' 
                   "
                 >
                   games
@@ -53,10 +51,20 @@
                 <NuxtLink
                   :to="$localePath('/zem-jam')"
                   :class="
-                    $route.name.toString().includes('zem-jam') ? 'active' : ''
+                    $route.name.toString().includes('zem-jam') && 'active' 
                   "
                 >
                   ZEMJAM
+                </NuxtLink>
+              </li>
+              <li class="uppercase">
+                <NuxtLink
+                  :to="$localePath('/game-jam-plus')"
+                  :class="
+                    $route.name.toString().includes('game-jam-plus') && 'active' 
+                  "
+                >
+                  GJ+
                 </NuxtLink>
               </li>
             </ul>
@@ -191,7 +199,7 @@
             style="display: flex"
             id="userMenu"
           >
-            <el-dropdown trigger="click" ref="userMenu">
+            <el-dropdown trigger="click" ref="userMenu" id="userMenu">
               <UserAvatar
                 style="width: 30px; height: 30px"
                 :user="user"
@@ -228,7 +236,9 @@
                         ><i class="uil uil-user"></i>
                         {{ t('myChannel') }}
                       </NuxtLink>
-                      <NuxtLink :to="$localePath('/project/list')"
+                      <NuxtLink 
+                        id="gameStudio"
+                        :to="$localePath('/project/list')"
                         ><i class="uil uil-robot"></i>
                         {{ t('gameStudio') }}
                       </NuxtLink>
@@ -276,7 +286,7 @@
               <i class="uil uil-user-circle"></i>
             </p>
             <NuxtLink v-else :to="$localePath('/login')">
-              <button class="btn-default">
+              <button class="btn-default" id="loginBtn">
                 <i class="uil uil-user"></i>{{ t('login') }}
               </button>
             </NuxtLink>
@@ -322,6 +332,12 @@
                 @click.native="isHeaderSideMobile = false"
                 ><i class="uil uil-comment"></i>
                 ZEMJAM
+              </NuxtLink>
+              <NuxtLink
+                :to="$localePath('/game-jam-plus')"
+                @click.native="isHeaderSideMobile = false"
+                ><i class="uil uil-comment"></i>
+                GJ+
               </NuxtLink>
             </div>
           </div>
@@ -387,17 +403,14 @@ import {
   ElDialog,
 } from 'element-plus'
 
+const config = useRuntimeConfig()
 const { $localePath } = useNuxtApp()
-
 const { t, locale } = useI18n()
-
 const switchLocalePath = useSwitchLocalePath()
 
 const router = useRouter()
 const route = useRoute()
 
-const { $firebaseAuth, $cookies } = useNuxtApp()
-const config = useRuntimeConfig()
 
 const isLogin = computed(() => useUser().user.value.isLogin)
 const user = computed(() => useUser().user.value.info)

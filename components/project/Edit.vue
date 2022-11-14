@@ -1,12 +1,12 @@
 <template>
   <dl class="studio-upload-area">
-    <ProjectEditSelectStage v-if="editProject.step === 1" />
-    <AddGameInfo v-else-if="editProject.step === 2" />
+    <ProjectSelectPurpose v-if="editProject.step === 1" />
+    <ProjectEditSelectStage v-else-if="editProject.step === 2" />
+    <ProjectAddGameInfo v-else-if="editProject.step === 3" />
   </dl>
 </template>
 
 <script setup lang="ts">
-import AddGameInfo from './AddGameInfo.vue'
 const { editProject, resetProjectInfo } = useProject()
 </script>
 

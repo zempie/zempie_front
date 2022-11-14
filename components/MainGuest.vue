@@ -21,7 +21,7 @@
           <GameCardSk v-if="pending" v-for="game in GAME_COUNT" />
           <GameCard
             v-else
-            v-for="game in data.result.games"
+            v-for="game in data?.result.games"
             :gameInfo="game"
             :key="game.id"
           />
@@ -53,7 +53,7 @@
       <ul style="margin-top: 40px" class="post-container">
         <li
           class="thumbmail"
-          v-for="post in posts.result"
+          v-for="post in posts?.result"
           :key="post.id"
           @click="$router.push($localePath(`/feed/${post?.id}`))"
         >
@@ -179,11 +179,6 @@ const {
   )
 )
 
-// onBeforeMount(() => {
-//   if (useCookie(config.COOKIE_NAME).value) {
-//     router.push($localePath('/timeline'))
-//   }
-// })
 </script>
 
 <style scoped lang="scss">
@@ -222,8 +217,8 @@ const {
     }
 
     height: 240px;
-    margin: 3px;
-    width: 24%;
+    margin: 1%;
+    width: 23%;
     transition: all 0.4s ease-in-out;
 
     img {

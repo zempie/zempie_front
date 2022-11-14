@@ -10,7 +10,7 @@
     <ul class="studio-game-step">
       <li
         @click="selectStage(eGameStage.DEV)"
-        :class="stage === 1 ? 'active' : ''"
+        :class="stage === 1 && 'active' "
       >
         <dl>
           <dt>
@@ -24,7 +24,7 @@
       </li>
       <li
         @click="selectStage(eGameStage.EARLY)"
-        :class="stage === 2 ? 'active' : ''"
+        :class="stage === 2 && 'active' "
       >
         <dl>
           <dt>
@@ -42,7 +42,7 @@
       </li>
       <li
         @click="selectStage(eGameStage.COMPLETE)"
-        :class="stage === 3 ? 'active' : ''"
+        :class="stage === 3 && 'active' "
       >
         <dl>
           <dt>
@@ -58,7 +58,7 @@
           </dd>
         </dl>
       </li>
-      <li :class="stage === 4 ? 'active' : ''">
+      <li :class="stage === 4 && 'active' ">
         <p></p>
         <dl>
           <dt><img src="/images/studio_icon04.png" alt="" title="" /></dt>
@@ -69,36 +69,22 @@
         </dl>
       </li>
 
-      <!-- <modal :clickToClose="false"
-               class="modal-area-type"
-               name="changedStage"
-               width="90%" height="auto" :maxWidth="380"
-               :adaptive="true"
-               :scrollable="true">
-            <div class="modal-alert">
-                <dl class="ma-header">
-                    <dt>{{ $t('information') }}</dt>
-                    <dd>
-                        <button @click="$modal.hide('changedStage')"><i class="uil uil-times"></i></button>
-                    </dd>
-                </dl>
-                <div class="ma-content">
-                    <h2>{{ $t('selectStage.alert') }}<br/> {{ $t('selectStage.alert.confirm') }}
-                        </h2>
+    </ul>
 
-                    <div>
-                        <button class="btn-default w48p" @click="changedStage()">{{ $t('yes') }}</button>
-                        <button class="btn-gray w48p" @click="$modal.hide('changedStage')">{{ $t('no') }}</button>
-                    </div>
-                </div>
-            </div>
-        </modal> -->
+    <ul class="sui-btn">
+          <li>
+            <a @click="prevPage" class="btn-line w150"
+              ><i class="uil uil-angle-left-b"></i>
+              {{ $t('previous') }}
+            </a>
+          </li>
+         
     </ul>
   </dd>
 </template>
 
 <script setup lang="ts">
-import { eGameStage } from '~~/types/index'
+import { eGameCategory, eGameStage } from '~~/types/index'
 
 const stage = computed(() => useProject().editProject.value.info.stage)
 
@@ -106,52 +92,24 @@ const router = useRouter()
 
 function selectStage(stage: number) {
   useProject().setStageOnEdit(stage)
-  useProject().setStepTwoOnEdit()
+  useProject().setStepThreeOnEdit()
 }
-// @Prop() projectInfo !: any;
-// uploadStage = eGameStage;
 
-// selectedStage:number = 0;
 
-// mounted() {
-//     this.$store.commit("gameStage", null);
-// }
-
-// selectStage(selectedStage: number) {
-//     if (this.projectInfo) {
-//         const {projectVersions, stage} = this.projectInfo;
-
-//         if (selectedStage === eGameStage.Dev) {
-//             if (projectVersions.length > 0) {
-//                 this.$modal.show('changedStage')
-//                 this.selectedStage = selectedStage;
-//             }
-//             else {
-//                 this.saveStage(selectedStage);
-//             }
-//         }
-//         else {
-//             this.saveStage(selectedStage);
-
-//         }
-//     }else{
-//         this.saveStage(selectedStage);
-//     }
-
-// }
-
-// changedStage() {
-//     this.saveStage(this.selectedStage);
-//     this.$modal.hide('changedStage')
-// }
-
-// saveStage(stage:number){
-//     this.$emit('stage', stage)
-//     this.$store.commit("gameStage", stage);
-// }
+function prevPage(){
+  useProject().setStepOneOnEdit()
+  useProject().setStepOne()
+  useProject().setPurpose(eGameCategory.NONE)
+}
 </script>
 
 <style scoped lang="scss">
+.sui-btn{
+  li{
+    margin-top: 30px;
+  }
+}
+
 input[type='radio'] {
   display: none;
 }

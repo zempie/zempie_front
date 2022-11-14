@@ -216,7 +216,7 @@
             <span>|</span> Email : support@fromthered.com
             <br />
             <br />
-            Copyright ⓒ Fromthered Inc. All rights reserved.
+            ⓒ Fromthered Inc. All rights reserved.
           </div>
         </div>
       </div>
@@ -286,78 +286,6 @@ definePageMeta({
   layout: 'header-only',
 })
 
-// import {Vue, Component, Watch} from 'vue-property-decorator';
-// import '@/script/js/anime.min'
-// // import '@/script/js/common'
-// import '@/script/js/easing'
-// import '@/script/js/fittext'
-// // @ts-ignore
-// import gsap from '@/script/js/gsap.min'
-// import '@/script/js/lettering'
-// import LocomotiveScroll from '@/script/js/locomotive-scroll'
-// import '@/script/js/nice-select'
-// // @ts-ignore
-// import ScrollTrigger from '@/script/js/ScrollTrigger.min'
-// import MetaSetting from "@/script/metaSetting";
-
-// @Component
-// export default class ZemJam extends Vue {
-//     scroller: any = null;
-//     metaSetting !: MetaSetting;
-
-//     mounted() {
-
-//         });
-
-//         this.$nextTick(() => {
-//             this.initLocoScroll();
-//         })
-//     }
-
-//     initLocoScroll() {
-
-//         //@ts-ignore
-//         this.scroller = new LocomotiveScroll({
-//             el: (this.$refs['eventRef'] as HTMLElement),
-//             smooth: true,
-//             smoothMobile: true,
-//             mobile: {
-//                 getDirection: true,
-//                 smooth: true
-//             },
-//             tablet: {
-//                 getDirection: true,
-//                 smooth: true
-//             },
-//             lerp: 0.05,
-//             smartphone: {
-//                 smooth: false,
-//                 // direction: "vertical"
-//             },
-//         });
-
-//         this.scroller.update()
-//     }
-
-//     neverOpen() {
-//         localStorage.setItem('zj-popup-open', 'false')
-//         this.$modal.hide('openEventPopup')
-//     }
-
-//     openApplyForm() {
-//         if (this.$i18n.locale === 'ko') {
-//             window.open('https://forms.gle/TmuUzjtK6o8bahqA7', "_blank")
-//         }
-//         else {
-//             window.open('https://forms.gle/X2ZhXzUE7aV41xRT9', "_blank")
-//         }
-//     }
-
-//     beforeDestroy() {
-//         this.scroller.destroy()
-//     }
-
-// }
 </script>
 <style lang="scss" scoped>
 @import '/assets/css/animate.css';

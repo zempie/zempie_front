@@ -12,7 +12,7 @@
       class="xi-heart like-icon"
       style="font-size: 22px; color: #ff6e17; cursor: pointer"
     ></i>
-    <span :class="likeCnt >= 1 && 'like-list'" @click="showLikeHistory">
+    <span :class="likeCnt >= 1 && 'like-list'" @click="showLikeFetch">
       {{ likeCnt }}</span
     >
   </li>
@@ -24,14 +24,15 @@
     >
       <div class="modal-alert">
         <dl class="ma-header">
-          <dt>Like</dt>
+       
+          <dt>Like </dt>
           <dd>
-            <button @click="isLikeHistoryOpen = false">
+            <button @click="closeHistory">
               <i class="uil uil-times"></i>
             </button>
           </dd>
         </dl>
-        <ul class="ma-content">
+        <ul class="ma-content" ref="likeEl">
           <li v-for="like in likeList" :key="like.id">
             <div @click="moveUserChannel(like.user.channel_id)">
               <UserAvatar :user="like.user" style="width: 40px; height: 40px" />
@@ -58,25 +59,44 @@
 
 <script setup lang="ts">
 import _ from 'lodash'
+import { useInfiniteScroll } from '@vueuse/core'
 import { ElDialog } from 'element-plus'
 const { $localePath } = useNuxtApp()
+const router = useRouter()
 
 const props = defineProps({
   feed: Object,
 })
 const emit = defineEmits(['refresh'])
-const router = useRouter()
+
+const LIKE_LIMIT = 5
 
 const isLiked = ref(props.feed.liked)
 const likeCnt = ref(props.feed.like_cnt)
 
 const isLikeHistoryOpen = ref(false)
 const likeList = ref()
+const likeEl = ref<HTMLElement | null>()
+const isAddData = ref(false)
+const limit = ref(LIKE_LIMIT)
+const offset = ref(0)
 
 const isLogin = computed(() => useUser().user.value.isLogin)
 
 let likeAcceessableCount = 2
 let unlikeAcceessableCount = 2
+
+
+useInfiniteScroll(
+  likeEl,
+  async () => {
+    if (isAddData.value) {
+      offset.value += limit.value
+      await showLikeFetch()
+    }
+  },
+  { distance: 10 }
+)
 
 async function setLike() {
   if (!isLogin.value) {
@@ -110,23 +130,47 @@ async function unsetLike() {
   unlikeAcceessableCount = unlikeAcceessableCount + 1
 }
 
-async function showLikeHistory() {
+async function showLikeFetch() {
   if (likeCnt.value < 1) return
+
+  const query = {
+    offset: offset.value,
+    limit: limit.value,
+  }
 
   isLikeHistoryOpen.value = true
 
-  const { data, error, refresh } = await useCustomFetch(
-    `/post/${props.feed.id}/like/list`,
-    getComFetchOptions('get', false)
+  const { data, error, refresh } = await useCustomFetch<[]>(
+    createQueryUrl(`/post/${props.feed.id}/like/list`, query),  
+    getComFetchOptions('get', true)
   )
 
   if (data.value) {
-    likeList.value = data.value
+    if (isAddData.value) {
+      if (data.value.length > 0) {
+        likeList.value = [...likeList.value, ...data.value]
+      } else {
+        isAddData.value = false
+      }
+    }
+    else{
+    likeList.value= data.value
+    isAddData.value = true
+    }
   }
 }
 
 function moveUserChannel(channel_id: string) {
   router.push($localePath(`/channel/${channel_id}`))
+}
+
+function closeHistory(){
+  isLikeHistoryOpen.value = false
+
+  offset.value = 0;
+  likeList.value = []
+
+
 }
 </script>
 
@@ -140,8 +184,13 @@ function moveUserChannel(channel_id: string) {
 
 .modal-alert {
   min-height: 100px;
+  padding-right: 10px;
   .ma-content {
     padding: 0px;
+    overflow-y: auto;
+    max-height: 400px;
+    
+
     li {
       display: flex;
       padding: 10px 20px 10px 20px;

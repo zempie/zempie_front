@@ -1,114 +1,24 @@
 <template>
   <dl class="studio-upload-area">
-    <ProjectSelectStage v-if="uploadStage === eGameStage.NONE" />
+    <!-- 목적 선택 안 한 경우-->
+    <ProjectSelectPurpose v-if="uploadPurpose === eGameCategory.NONE" />    
+    <!-- 스테이지 선택 안 한 경우-->
+    <ProjectSelectStage v-else-if="uploadStage === eGameStage.NONE" />
+    <!-- 둘 다 선택했으면 게임 업로드 창 -->
     <ProjectAddGameInfo v-else />
+
   </dl>
 </template>
 
 <script setup lang="ts">
-import { eGameStage } from "~~/types"
+import { eGameCategory, eGameStage } from "~~/types"
 
 const { uploadProject } = useProject();
 const readyToUpload = ref(false)
 
 const uploadStage = computed(() => uploadProject.value.form.stage)
+const uploadPurpose = computed(()=>uploadProject.value.purpose)
 
-// watch(
-//   () => uploadStage.value,
-//   (newVal) => {
-//     console.log(newVal)
-//   }
-// )
-
-//     toast = new Toast();
-
-//     isClickActive: boolean = false;
-//     stage: number | null = null;
-
-//     isGameInfoFilled: boolean = false;
-
-//     isActivePublishBtn: boolean = false;
-
-//     //프로젝트 수정
-//     isEditProject: boolean = false;
-//     isUpdateProject: boolean = false;
-//     projectInfo: any = null;
-
-
-//     mounted() {
-//         //프로젝트 업데이트 경우
-//         if (this.$route.params.id) {
-//             this.infoFetch()
-//         }
-
-//     }
-
-//     updateProjectInfo() {
-
-//     }
-
-//     infoFetch() {
-//         this.$api.getProject(this.$route.params.id)
-//             .then((res: any) => {
-//                 this.projectInfo = res;
-//                 this.stage = res.stage;
-//                 this.$store.commit("gameStage", this.stage);
-//                 this.$store.commit('projectInfo', res);
-//                 this.isEditProject = true;
-//             })
-//     }
-
-
-//     updateProject() {
-//         this.isUpdateProject = true;
-// console.log("here?")
-//         // const option: any = {
-//         //     id: this.projectInfo.id,
-//         //     name: localStorage.getItem('title'),
-//         //     description: localStorage.getItem('description'),
-//         //     hashtags: localStorage.getItem('hashtagsArr'),
-//         //     stage: this.$store.getters.gameStage
-//         // };
-//         //
-//         //
-//         // this.$api.updateProject(option, this.$store.getters.thumbFile)
-//         //     .then((res) => {
-//         //         this.toast.successToast("업데이트 되었습니다.");
-//         //         this.$router.push('/projectList')
-//         //     })
-//         //     .catch((err) => {
-//         //
-//         //     })
-//     }
-
-//     stepOne() {
-//         return !this.stage ? true : false;
-//     }
-
-//     stepTwo() {
-//         return this.stage && !this.isGameInfoFilled ? true : false;
-//     }
-
-//     stepThree() {
-//         return this.stage && this.isGameInfoFilled
-//         // && (this.$store.getters.gameStage !== eGameStage.Dev)
-//             ? true : false;
-
-//     }
-
-//     getStage(stage: number) {
-//         this.stage = stage;
-//     }
-
-//     getGameInfo(state: boolean) {
-//         this.isUpdateProject = false;
-//         this.isGameInfoFilled = state;
-//     }
-
-//     getPublishState(state: boolean) {
-//         console.log('isActivePublish', state)
-//         this.isActivePublishBtn = state;
-//     }
 </script>
 
 <style scoped lang="scss">
