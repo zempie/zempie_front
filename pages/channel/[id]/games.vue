@@ -28,7 +28,7 @@
       </transition>
       <div class="no-result" v-else>
         <h1>{{ $t('no.game') }}</h1>
-        <img src="/images/not-found.png" width="100px" height="100px" />
+        <img src="/images/not-found.png" width="100px" height="100px" alt="no result" />
       </div>
     </div>
   </NuxtLayout>

@@ -161,6 +161,7 @@
       <ul class="ta-post" v-else  >
         <li class="tap-list">
           <dl class="tapl-title">
+            <ClientOnly>
             <dt>
               <dl>
                 <dt>
@@ -177,7 +178,7 @@
                
               </dl>
             </dt>
-          
+          </ClientOnly>
           </dl>
 
           <div  class="tapl-content grey-text skeleton-animation"
@@ -247,6 +248,9 @@ const {
   `/post/${feedId.value}`,
   getComFetchOptions('get', true)
 )
+if (!feed.value) {
+  throw createError({ statusCode: 404, statusMessage: 'Page Not Found' })
+}
 
 watch(
   () => feed.value,

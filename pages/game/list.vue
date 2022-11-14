@@ -2,7 +2,9 @@
   <div class="content">
     <div
       :class="
-        category === AllGameCategory ? 'visual-title' : 'jam-visual-title'
+        category === AllGameCategory ? 'visual-title' :
+        category === `${eGameCategory.GJ}` ? 'game-gam-plus':
+        'jam-visual-title'
       "
     >
       <h1><span>Games</span></h1>
@@ -39,17 +41,18 @@
     <!-- <dl class="area-title">
       <dt>Games <span>{{ games.length }}</span></dt>
     </dl> -->
+  
     <ul class="card-game">
-      <!--  -->
       <GameCardSk v-if="isPending" v-for="game in 16" :key="game" />
 
-      <TransitionGroup name="fade" v-else>
-        <GameCard
-          v-for="(game, index) in games"
-          :gameInfo="game"
-          :key="game.id"
-        />
+      <TransitionGroup name="fade" >
+          <GameCard   
+            v-for="(game, index) in games"
+            :gameInfo="game"
+            :key="game.id"
+          />
       </TransitionGroup>
+     
     </ul>
     <div ref="triggerDiv"></div>
   </div>
@@ -57,7 +60,7 @@
 
 <script setup lang="ts">
 import _ from 'lodash'
-import { eGameCategory } from '~~/types'
+import { eGameCategory, IGame } from '~~/types'
 import { useI18n } from 'vue-i18n'
 
 const { t, locale } = useI18n()
@@ -162,11 +165,7 @@ async function handleIntersection(target) {
 }
 
 async function fetch() {
-  const payload = {
-    limit: limit.value,
-    offset: offset.value,
-    category: category.value,
-  }
+ 
 
   const { data, pending, refresh } = await useCustomFetch<{
     result: { games: [] }
@@ -177,7 +176,6 @@ async function fetch() {
     getZempieFetchOptions('get', false)
   )
 
-  // await game.list(payload)
 
   if (data.value) {
     const { games: gameList } = data.value.result
@@ -195,6 +193,7 @@ async function fetch() {
     }
   }
   isPending.value = false
+  
 }
 
 const clickCategory = _.debounce((selected: string) => {
@@ -227,6 +226,24 @@ function initData() {
 }
 .jam-visual-title {
   background-position: center;
+
+  h1 {
+    visibility: hidden;
+  }
+}
+
+.game-gam-plus{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1200px;
+  height: 150px;
+  margin: 0 auto;
+  border-radius: 15px;
+  background: url('/images/gj_banner.png');
+  background-size: cover;
+  box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 
   h1 {
     visibility: hidden;
@@ -272,6 +289,11 @@ function initData() {
       }
     }
   }
+
+  .game-gam-plus{
+    width: 100%; 
+      background-position: center;
+  }
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
@@ -285,5 +307,22 @@ function initData() {
       }
     }
   }
+  .game-gam-plus{
+    width: 470px;
+    background-position: center;
+  }
 }
+@media all and (min-width: 768px) and (max-width: 991px) {
+  .game-gam-plus{
+    width: 750px;
+    background-position: center;
+  }
+}
+@media all and (min-width: 992px) and (max-width: 1199px) {
+  .game-gam-plus{
+    width: 970px;  
+    background-position: center;
+  }
+}
+
 </style>

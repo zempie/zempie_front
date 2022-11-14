@@ -100,42 +100,6 @@ const {
   totalCount: number
 }>(`/community/${communityId.value}/members`, getComFetchOptions('get', true))
 
-//     metaSetting !: MetaSetting;
-//     communityId = this.$route.params.community_id;
-//     totalMembers: number = 0;
-//     memberList: User[] = [];
-//     user!: User;
-//     limit: number = 10;
-//     offset: number = 0;
-
-//     mounted() {
-//         this.fetch();
-//     }
-
-//     fetch() {
-//         const obj = {
-//             limit: this.limit,
-//             offset: this.offset
-//         }
-//         this.$api.communityMembers(this.communityId, obj)
-//             .then((res: any) => {
-//                 this.totalMembers = res.totalCount;
-//                 this.memberList = res.result;
-//             })
-//             .catch((err: AxiosError) => {
-
-//             })
-
-//     }
-
-//     reFetch(){
-//         this.limit = 10;
-//         this.offset = 0;
-//         this.memberList = [];
-//         this.$store.dispatch('reloadUserInfo');
-//         this.fetch();
-
-//     }
 </script>
 
 <style lang="scss" scoped></style>

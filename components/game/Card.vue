@@ -118,6 +118,10 @@ function moveUserPage() {
         text-overflow: ellipsis;
         white-space: nowrap;
         width: 180px;
+        text-align: left;
+      }
+      p{
+        text-align: left;
       }
       ul{
         li{
