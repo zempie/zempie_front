@@ -60,11 +60,13 @@ const isEditProject = computed(() => {
 onBeforeMount(() => {
   let date = new Date()
   let GJ_END: Date | number = new Date(2022, 10, 20, 23, 59, 59)
+  let GJ_START: Date | number = new Date(2022, 10, 18 , 23, 59, 59)
 
   GJ_END = GJ_END.setTime(GJ_END.getTime())
+  GJ_START = GJ_START.setTime(GJ_START.getTime())
 
   //오늘날짜가 게임젬끝나는 날 보다 큰경우 게임젬 비활성화
-  if (date.setTime(date.getTime()) > GJ_END) {
+  if (date.setTime(date.getTime()) > GJ_END || date.setTime(date.getTime()) < GJ_START) {
     isInactive.value = true
   }
 })
