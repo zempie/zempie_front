@@ -59,6 +59,7 @@
         </dd>
       </dl>
     </div>
+  
   </ClientOnly>
 </template>
 
@@ -68,6 +69,7 @@ const config = useRuntimeConfig()
 </script>
 
 <style scoped lang="scss">
+
 .insta-icon:hover {
   color: #c13584;
 }

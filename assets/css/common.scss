@@ -286,3 +286,20 @@
 
 @media all and (min-width: 1200px) {
 }
+
+
+
+// event popup
+.event-dialog{
+  background-color: #0d0c13 !important;
+  header{
+    padding: 8px 35px 0px 0px;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .el-dialog__body{
+    padding: 0px;
+  }
+}

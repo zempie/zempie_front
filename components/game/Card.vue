@@ -114,6 +114,10 @@ function moveUserPage() {
       h2{
         font-size: 16px;
         color: #000;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 180px;
       }
       ul{
         li{
@@ -146,15 +150,51 @@ function moveUserPage() {
 
 @media all and (max-width: 479px) {
   li {
-    padding-bottom: 0px;
-    
+    padding-bottom: 0px; 
   }
+  .game-info {
+      dl{
+        dd{
+          h2{
+            width:100px
+          }   
+        }
+     }
+    }
 }
 @media all and (min-width: 480px) and (max-width: 767px) {
   li {
     padding-bottom: 0px;
-    .game-info {
-      
+  }
+  .game-info {
+      dl{
+        dd{
+          h2{
+            width:160px
+          }   
+        }
+     }
+    }
+}
+@media all and (min-width: 768px) and (max-width: 991px) {
+  .game-info {
+    dl{
+      dd{
+        h2{
+          width:150px
+        }   
+      }
+    }
+  }
+}
+@media all and (min-width: 992px) and (max-width: 1199px) {
+  .game-info {
+    dl{
+      dd{
+        h2{
+          width:200px
+        }   
+      }
     }
   }
 }

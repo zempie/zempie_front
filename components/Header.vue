@@ -403,17 +403,14 @@ import {
   ElDialog,
 } from 'element-plus'
 
+const config = useRuntimeConfig()
 const { $localePath } = useNuxtApp()
-
 const { t, locale } = useI18n()
-
 const switchLocalePath = useSwitchLocalePath()
 
 const router = useRouter()
 const route = useRoute()
 
-const { $firebaseAuth, $cookies } = useNuxtApp()
-const config = useRuntimeConfig()
 
 const isLogin = computed(() => useUser().user.value.isLogin)
 const user = computed(() => useUser().user.value.info)

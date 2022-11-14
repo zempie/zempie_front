@@ -853,5 +853,7 @@
   "global.game.zem.info": "Be Our Plus One! Join in Game Jam event and become one of us",
   "zempie.gamejam.info": "Join in Zempie's Game Jam and Test yourself",
   "finish": "Finish",
-  "select.purpose": "Choose your Purporse"
+  "select.purpose": "Choose your Purporse",
+  "now.show.today": "Do now show it today",
+  "do.now.show": "Do now show it again"
 }

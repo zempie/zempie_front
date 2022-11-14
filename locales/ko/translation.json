@@ -853,5 +853,7 @@
   "global.game.zem.info": "Be Our Plus One! 게임젬과 함께 게임 크리에이터가 되어보세요!",
   "zempie.gamejam.info": "실력을 시험해볼 수 있는 젬파이 게임잼 이벤트에 참여해보세요.",
   "finish": "종료",
-  "select.purpose": "목적 선택"
+  "select.purpose": "목적 선택",
+  "now.show.today": "오늘 하루 보지않기",
+  "do.now.show": "다시 보지 않기"
 }

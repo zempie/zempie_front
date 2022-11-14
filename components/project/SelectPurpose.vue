@@ -1,5 +1,5 @@
 <template>
-<ProjectStepMenu>
+  <ProjectStepMenu>
     <template #uploadGameBtn>
       <li>
         <h4>{{ $t('publishing') }}</h4>
@@ -8,9 +8,7 @@
   </ProjectStepMenu>
   <dd>
     <ul class="studio-game-step">
-      <li @click="selectPurpose(eGameCategory.Challenge)"
-      :class="purpose === eGameCategory.Challenge && 'active' "
-       >
+      <li @click="selectPurpose(eGameCategory.Challenge)" :class="purpose === eGameCategory.Challenge && 'active'">
         <dl id="basicUpload">
           <dt><img src="/images/zempie_logo_154_155.png" width="70" :alt="$t('devLog')" title="" /></dt>
           <dd>
@@ -20,9 +18,9 @@
           </dd>
         </dl>
       </li>
-      <li @click="selectPurpose(eGameCategory.GJ)"
-      :class="purpose === eGameCategory.GJ&& 'active' "
-      >
+      <li @click="selectPurpose(eGameCategory.GJ)" :class="[purpose === eGameCategory.GJ && 'active',
+      isInactive && 'inactive'
+      ]">
         <dl id="GJ">
           <dt><img src="/images/GJ_transparent.png" width="70" :alt="$t('earlyAccess')" title="" /></dt>
           <dd>
@@ -30,11 +28,11 @@
             <div>{{ $t('global.game.zem.info') }}
             </div>
             <small>2022/11/18 ~ 2022/11/20</small>
-            
+
           </dd>
         </dl>
       </li>
-      <li >
+      <li>
         <dl>
           <dt><img src="/images/zemjam_logo_1.png" :alt="$t('seo.zemjam.title')" width="100" title="" /></dt>
           <dd>
@@ -49,54 +47,76 @@
 
 </template>
 <script setup lang="ts">
-import {eGameCategory} from '~/types'
+import { eGameCategory } from '~/types'
 
 const route = useRoute()
 const purpose = computed(() => useProject().editProject.value.info.game?.category)
+const isInactive = ref(false)
 
-const isEditProject = computed(()=>{
+const isEditProject = computed(() => {
   return route.params.id ? true : false
 })
 
+onBeforeMount(() => {
+  let date = new Date()
+  let GJ_END: Date | number = new Date(2022, 10, 20, 23, 59, 59)
 
-function selectPurpose(purpose:number){
-  if(isEditProject.value){
+  GJ_END = GJ_END.setTime(GJ_END.getTime())
+
+  //오늘날짜가 게임젬끝나는 날 보다 큰경우 게임젬 비활성화
+  if (date.setTime(date.getTime()) > GJ_END) {
+    isInactive.value = true
+  }
+})
+
+
+function selectPurpose(purpose: number) {
+  if(isInactive.value &&( purpose === eGameCategory.GJ)) return  
+  if (isEditProject.value) {
     useProject().setStepTwoOnEdit()
     useProject().setEditPurpose(purpose)
 
-  }else{
+  } else {
     useProject().setPurpose(purpose)
     useProject().setStepTwo()
   }
 }
 </script>
 <style scoped lang="scss">
-.studio-game-step{
-  li{
+.studio-game-step {
+  li {
     font-size: 16px;
-    dd{
-      small{
+    &.inactive{
+      opacity: 0.5;
+    }
+    dd {
+      small {
         font-size: 14px;
 
       }
     }
-    small{
+
+    small {
       color: #FF6E17;
     }
   }
-  li:not(:last-child){
+
+  li:not(:last-child) {
     cursor: pointer;
-    &:hover{
+
+    &:hover {
       box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.2);
     }
+
     .active {
       border: 2px solid #FF6E17;
     }
   }
-  li:last-child{
+
+  li:last-child {
     opacity: 0.5;
-    
-   
+
+
   }
 }
 </style>
