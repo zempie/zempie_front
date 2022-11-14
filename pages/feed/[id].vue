@@ -161,6 +161,7 @@
       <ul class="ta-post" v-else  >
         <li class="tap-list">
           <dl class="tapl-title">
+            <ClientOnly>
             <dt>
               <dl>
                 <dt>
@@ -177,7 +178,7 @@
                
               </dl>
             </dt>
-          
+          </ClientOnly>
           </dl>
 
           <div  class="tapl-content grey-text skeleton-animation"
