@@ -248,7 +248,7 @@ const {
   `/post/${feedId.value}`,
   getComFetchOptions('get', true)
 )
-if (!feed.value) {
+if (!feed.value || error.value) {
   throw createError({ statusCode: 404, statusMessage: 'Page Not Found' })
 }
 
