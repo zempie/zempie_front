@@ -249,6 +249,10 @@ const {
   getComFetchOptions('get', true)
 )
 
+if(error.value){
+  alert(error.value)
+}
+
 watch(
   () => feed.value,
   (feed) => {
