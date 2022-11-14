@@ -113,7 +113,7 @@
         <li>발표 제출 / 11월 18일 00:00 ~ 11월 22일 23:59</li>
       </ul>
       <div>
-        <NuxtLink :to="$localePath('/project/upload')">게임 업로드하기</NuxtLink>
+        <a @click="uploadGame">게임 업로드하기</a>
       </div>
 
       <h3 style="color:#54b5ff">[자주 묻는 질문]</h3>
@@ -149,7 +149,10 @@ import { useI18n } from 'vue-i18n'
 const { $localePath } = useNuxtApp()
 const { t, locale } = useI18n()
 const route = useRoute()
+const router = useRouter()
 const config = useRuntimeConfig()
+
+const isLogin = computed(() => useUser().user.value.isLogin)
 
 useHead({
   title: `Game Jam Plus | Zempie`,
@@ -202,6 +205,14 @@ useHead({
   ],
 })
 
+function uploadGame(){
+  console.log('?')
+  if (!isLogin.value) {
+    useModal().openLoginModal()
+    return
+  }
+  router.push($localePath('/project/upload'))
+}
 </script>
 <style scoped lang="scss">
 @font-face {

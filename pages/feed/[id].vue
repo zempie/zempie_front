@@ -132,7 +132,7 @@
               <PostDropdown
                 :feed="feed"
                 @deletePost="$router.back()"
-                @refresh="refresh"
+                @refresh="fetch"
               />
             </li>
           </ul>
@@ -238,19 +238,19 @@ const feedId = computed(() => route.params.id as string)
 const observer = ref<IntersectionObserver>(null)
 const triggerDiv = ref<Element>()
 const isAddData = ref(false)
-
-const {
-  data: feed,
-  error,
-  pending,
-  refresh,
-} = await useCustomFetch<any>(
-  `/post/${feedId.value}`,
-  getComFetchOptions('get', true)
-)
-if (!feed.value || error.value) {
-  throw createError({ statusCode: 404, statusMessage: 'Page Not Found' })
-}
+const feed = ref()
+// const {
+//   data: feed,
+//   error,
+//   pending,
+//   refresh,
+// } = await useCustomFetch<any>(
+//   `/post/${feedId.value}`,
+//   getComFetchOptions('get', true)
+// )
+// if (!feed.value || error.value) {
+//   throw createError({ statusCode: 404, statusMessage: 'Page Not Found' })
+// }
 
 watch(
   () => feed.value,
@@ -259,7 +259,20 @@ watch(
   }
 )
 
+async function fetch(){
+  try{
+    const response = await $fetch<any>(
+    `/post/${feedId.value}`,
+    getComFetchOptions('get', true)
+  )
+    feed.value = response
+  }catch(error){
+    alert(error)
+  }
+
+}
 onMounted(async () => {
+  await fetch()
   if (feed.value) {
     Prism.highlightAll()
 
