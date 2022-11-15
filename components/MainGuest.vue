@@ -12,18 +12,20 @@
     </div>
 
     <!-- GJ plus event -->
-    <div class="main-visual">
+    <div class="main-visual game-jam-plus">
       <h2>
         <span style="font: 36px/46px 'Jalnan'">Event</span>
       </h2>
-      </div>
-      <div style="text-align:center; color:#fff;margin-top:30px">
-        <img src="/images/gj_whit_text_logo.png" width="300"/>
-        <h3 style="font-size:30px; margin-top:30px; font-weight: bold;">2022/2023 {{$t('game.jam.plus.title')}}</h3>
+      
+      <div class="info" style="text-align:center; color:#fff;margin-top:30px">
+        <img src="/images/gj_whit_text_logo.png" width="300" style="display: block; margin: 0 auto 30px auto"/>
+        <span class="year" style="font-size:30px; margin-top:30px; font-weight: bold;">
+          2022/2023</span><span style="font-size:30px; margin-top:30px; font-weight: bold;"> {{$t('game.jam.plus.title')}}</span>
         <div style="font-size:20px; margin-top:16px;"><strong>{{$t('game.jam.plus.plan')}} : </strong> <span>{{$t('game.jam.plus.date')}}</span></div>
         <p style="font-size:20px; margin-top:16px;margin-bottom: 30px;">{{$t('game.jam.plus.info')}}</p>
         <NuxtLink :to="$localePath('/game-jam-plus')" class="detail-button"> {{$t('details')}} </NuxtLink>
       </div>
+    </div>
     <!-- GJ plus event -->
     <div class="main-visual">
       <h2>
@@ -230,9 +232,15 @@ const {
   padding-bottom: 100px;
 }
 
-.main-visual > h3 {
-  background: none !important;
-  height: auto !important;
+.main-visual  {
+  h3{
+    background: none !important;
+    height: auto !important;
+  }
+  .game-jam-plus{
+
+  }
+  
 }
 
 .post-container {
@@ -281,6 +289,16 @@ const {
     .card-game {
       margin: 0 auto;
     }
+    &.game-jam-plus{
+      div {
+        .year{
+        display: block;
+        margin-bottom: 30px;
+        }
+      }
+        
+    }
+   
   }
 
   .post-container {
@@ -301,6 +319,11 @@ const {
     .thumbmail {
       width: 48%;
       margin: 1%;
+    }
+  }
+
+  .main-visual {
+    &.game-jam-plus{
     }
   }
 }
