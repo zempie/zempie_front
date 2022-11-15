@@ -364,7 +364,7 @@ async function joinZempie() {
   }
 
   .login-agreement-container .lam-title>p {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 14px;
   }
 
@@ -399,7 +399,7 @@ async function joinZempie() {
   }
 
   .login-agreement-container .lam-title>p {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 14px;
   }
 

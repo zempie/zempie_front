@@ -716,7 +716,7 @@ definePageMeta({
   }
 
   .slogan > div div a {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 14px;
   }
 }
@@ -748,7 +748,7 @@ definePageMeta({
   }
 
   .slogan > div div a {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 14px;
   }
 }

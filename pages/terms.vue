@@ -1372,7 +1372,7 @@ p {
   margin-block-end: 1em;
   margin-inline-start: 0px;
   margin-inline-end: 0px;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 ol {
@@ -1390,7 +1390,7 @@ li {
   display: list-item;
   text-align: -webkit-match-parent;
   color: #333;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 ol ol {

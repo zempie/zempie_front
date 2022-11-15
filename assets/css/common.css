@@ -132,7 +132,7 @@
   height: 22px;
   padding-top: 1px;
   margin-right: 10px;
-  font-size: 14px;
+  font-size: 16px;
   border-radius: 50%;
   background: #f97316;
 }
@@ -144,7 +144,7 @@
   padding-top: 1px;
   margin-right: 10px;
   font-style: normal;
-  font-size: 14px;
+  font-size: 16px;
   border-radius: 50%;
   background: #333;
 }
@@ -547,7 +547,7 @@
   width: 100%;
   padding: 25px 0 20px 0;
   text-align: center;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 14px;
   border-bottom: #fff 3px solid;
 }
@@ -1038,7 +1038,7 @@
   }
 
   .sort-default a {
-    font-size: 12px;
+    font-size: 14px;
   }
 
   .sort-default span {
@@ -1053,7 +1053,7 @@
   }
 
   .sort-default a {
-    font-size: 12px;
+    font-size: 14px;
   }
 
   .sort-default span {
@@ -1100,7 +1100,7 @@
 
 .tab-menu-swiper .swiper-area .swiper-slide h2 {
   margin-top: 15px;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 14px;
 }
 
@@ -1149,7 +1149,7 @@
 
   .tab-menu-swiper .swiper-area .swiper-slide h2 {
     margin-top: 5px;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 12px;
   }
 
@@ -1182,7 +1182,7 @@
 
   .tab-menu-swiper .swiper-area .swiper-slide h2 {
     margin-top: 5px;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 12px;
   }
 
@@ -1261,7 +1261,7 @@
   width: 100%;
   padding: 25px 0 22px 0;
   text-align: center;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 14px;
   border-bottom: #fff 3px solid;
 }
@@ -1512,7 +1512,7 @@
 
 .info-input .ii-form dl dt {
   width: 10%;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 14px;
   color: #333;
 }
@@ -2173,7 +2173,7 @@
   margin-top: 15px;
   text-align: center;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 14px;
   color: #333;
 }
@@ -2587,7 +2587,7 @@
 .card-comunity>li>div.cc-info>p {
   margin-top: 5px;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
   color: #333;
 }
 
@@ -2750,7 +2750,7 @@
 
 .card-comunity2>li>div.cc-info>p {
   margin-top: 5px;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .card-comunity2>li>div.cc-info>div {
@@ -2763,7 +2763,7 @@
 .card-comunity2>li>div.cc-info>h4 {
   margin-top: 35px;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 14px;
   color: #333;
 }
@@ -2943,7 +2943,7 @@
 
 .card-game>li>dl>dd>p {
   margin-top: 5px;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 14px;
 }
 
@@ -2982,7 +2982,7 @@
   margin-top: 15px;
   text-align: center;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 14px;
   color: #333;
 }
@@ -3275,7 +3275,7 @@
 
 .modal-post .mp-midi ul li:nth-child(1) {
   width: 12%;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 14px;
   color: #333;
 }
@@ -3295,7 +3295,7 @@
 .modal-post .mp-midi ul li:nth-child(3) {
   width: 15%;
   text-align: right;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 14px;
   color: #333;
 }
@@ -3363,7 +3363,7 @@
   display: inline-block;
   margin-left: 7px;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .mpc-more-dropdown .v-dropdown-menu__container {
@@ -3389,7 +3389,7 @@
   }
 
   .modal-dm .md-list>ul>li>dl>dt>dl dd p {
-    font-size: 12px;
+    font-size: 14px;
     line-height: 12px;
   }
 
@@ -3403,7 +3403,7 @@
 
   .modal-post .mp-midi ul li:nth-child(1) {
     width: 17%;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 12px;
   }
 
@@ -3413,7 +3413,7 @@
 
   .modal-post .mp-midi ul li:nth-child(3) {
     width: 20%;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 12px;
   }
 
@@ -3423,7 +3423,7 @@
   }
 
   .modal-post .mp-category dt a {
-    font-size: 12px;
+    font-size: 14px;
     line-height: 12px;
   }
 
@@ -3433,7 +3433,7 @@
   }
 
   .modal-post .mp-category dd .swiper-area .swiper-slide a {
-    font-size: 12px;
+    font-size: 14px;
     line-height: 12px;
   }
 }
@@ -3453,7 +3453,7 @@
   }
 
   .modal-dm .md-list>ul>li>dl>dt>dl dd p {
-    font-size: 12px;
+    font-size: 14px;
     line-height: 12px;
   }
 
@@ -3513,7 +3513,7 @@
 .modal-report .mr-content>ul li span {
   display: inline-block;
   margin-left: 7px;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .modal-report .mr-content>ul li div {
@@ -3694,7 +3694,7 @@
   }
 
   .modal-dm .md-list>ul>li>dl>dt>dl dd p {
-    font-size: 12px;
+    font-size: 14px;
     line-height: 12px;
   }
 }
@@ -3714,7 +3714,7 @@
   }
 
   .modal-dm .md-list>ul>li>dl>dt>dl dd p {
-    font-size: 12px;
+    font-size: 14px;
     line-height: 12px;
   }
 }
