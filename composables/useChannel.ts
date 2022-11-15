@@ -13,6 +13,7 @@ export default function () {
 
       const { data: communities, error } = await useCustomFetch<[]>(`/user/${info.id}/list/community`, getComFetchOptions('get', true))
 
+
       info.games.map((game) => {
         game.user = {
           name: info.name,
@@ -23,6 +24,11 @@ export default function () {
           picture: info.picture,
         }
       })
+
+      info.games.sort((a, b) => {
+        return new Date(b.created_at).valueOf() - new Date(a.created_at).valueOf();
+      })
+
       info.communities = communities.value
       userChannel.value.info = info;
     }
@@ -34,7 +40,8 @@ export default function () {
 
     if (data) {
       const { target } = data.result;
-      setUserChannel(target)
+
+      await setUserChannel(target)
     }
   }
 
