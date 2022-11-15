@@ -272,6 +272,8 @@ function uploadGame(){
       font-size: 60px;
       justify-content: center;
       margin: 75px 0px 30px 0px;
+      text-align: center;
+      line-height: 50px;
     }
 
     h2 {
@@ -279,6 +281,9 @@ function uploadGame(){
       display: flex;
       justify-content: center;
       margin: 50px 0px 50px 0px;
+      text-align: center;
+      line-height: 40px;
+
     }
 
     h3 {
