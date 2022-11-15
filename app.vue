@@ -36,7 +36,7 @@ const route = useRoute()
 const router = useRouter()
 const { $cookies } = useNuxtApp()
 
-const isOpen = ref(true)
+const isOpen = ref(false)
 const showOneDay = ref(false)
 const showNever = ref(false)
 

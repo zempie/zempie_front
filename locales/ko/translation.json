@@ -855,5 +855,11 @@
   "finish": "종료",
   "select.purpose": "목적 선택",
   "now.show.today": "오늘 하루 보지않기",
-  "do.now.show": "다시 보지 않기"
+  "do.now.show": "다시 보지 않기",
+  "game.jam.plus.title": "게임잼플러스 한국 예선",
+  "game.jam.plus.plan": "일정",
+  "game.jam.plus.date": "11월 18일 00:00 ~ 11월 22일 23:59",
+  "game.jam.plus.info": "현재 참가자 모집 중!",
+  "details":"자세히 보기"
+
 }
