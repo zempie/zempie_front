@@ -18,6 +18,7 @@
     <div class="studio-upload-input">
       <template v-if="!isFormDone">
         <div class="sui-input">
+          <div v-if="uploadStage === eGameStage.DEV" class="dev-warning" >개발 로그는 내 프로필의 게임 리스트에서 확인이 가능합니다.</div>
           <div class="suii-title">{{ $t('addGameInfo.title') }}</div>
           <dl class="suii-content">
             <dt>
@@ -764,6 +765,21 @@ async function deleteProject() {
 </script>
 
 <style scoped lang="scss">
+.studio-upload-input{
+  .dev-warning{
+    height:45px;
+     background-color:#fffdc1;
+    border-bottom: 1px solid #ededed;
+    border-top:1px solid #ededed;
+    font-size: 14px;
+    text-align: center;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    color:#888;
+  }
+}
 .input-errors {
   font-size: 12px;
   color: #c5292a;
