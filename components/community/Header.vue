@@ -39,7 +39,7 @@
         <h1>
           <span><i class="uil uil-unlock-alt"></i></span>
           <!-- <em><i class="uil uil-unlock-alt"></i></em> -->
-          {{ communityInfo?.name }}
+         {{ communityInfo?.name }}
           <p style="width: 50px"></p>
         </h1>
         <h3>{{ communityInfo?.description }}</h3>

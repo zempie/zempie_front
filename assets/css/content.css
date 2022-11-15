@@ -151,13 +151,13 @@
 
 .main-visual .mv-card dl dd h2 {
   font-weight: 700;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 14px;
 }
 
 .main-visual .mv-card dl dd h3 {
   margin-top: 5px;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .main-visual .mv-card div {
@@ -168,7 +168,7 @@
   display: inline-block;
   padding: 10px 30px;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 14px;
   color: #000;
   border: #000 2px solid;
@@ -808,17 +808,17 @@
 
 .main-boast .mb-area .mba-best>li>div>dl>dt>dl>dd>h3 {
   font-weight: 700;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 20px;
 }
 
 .main-boast .mb-area .mba-best>li>div>dl>dt>dl>dd>p {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .main-boast .mb-area .mba-best>li>div>dl>dd {
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
   color: #333;
 }
 
@@ -893,12 +893,12 @@
 
 .main-boast .mb-area .mba-list>li>div>dl>dd>h3 {
   font-weight: 700;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 20px;
 }
 
 .main-boast .mb-area .mba-list>li>div>dl>dd>p {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .main-boast .mb-area .mba-list>li:hover>div>div {
@@ -1252,7 +1252,7 @@
 }
 
 .login-area .la-bottom>dl>dd {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .login-area .la-bottom>ul {
@@ -1290,7 +1290,7 @@
   }
 
   .login-area .la-title>p {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 14px;
   }
 
@@ -1316,7 +1316,7 @@
   }
 
   .login-area .la-bottom>dl>dd {
-    font-size: 12px;
+    font-size: 14px;
   }
 
   .login-area .la-bottom>ul>li img {
@@ -1345,7 +1345,7 @@
   }
 
   .login-area .la-title>p {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 14px;
   }
 
@@ -1371,7 +1371,7 @@
   }
 
   .login-area .la-bottom>dl>dd {
-    font-size: 12px;
+    font-size: 14px;
   }
 
   .login-area .la-bottom>ul>li img {
@@ -1473,7 +1473,7 @@
 }
 
 .login-join .lj-content>dl>dd {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .login-join .lj-bottom {
@@ -1499,7 +1499,7 @@
 
 .login-join .lj-bottom>dl>dd {
   font-weight: 500;
-  font-size: 14px;
+  font-size: 16px;
   color: #333;
 }
 
@@ -1526,7 +1526,7 @@
   }
 
   .login-join .lj-title>p {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 14px;
   }
 
@@ -1547,7 +1547,7 @@
   }
 
   .login-join .lj-content>dl>dd {
-    font-size: 12px;
+    font-size: 14px;
   }
 
   .login-join .lj-content>dl>dt {
@@ -1576,7 +1576,7 @@
   }
 
   .login-join .lj-title>p {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 14px;
   }
 
@@ -1597,7 +1597,7 @@
   }
 
   .login-join .lj-content>dl>dd {
-    font-size: 12px;
+    font-size: 14px;
   }
 
   .login-join .lj-content>dl>dt {
@@ -1713,7 +1713,7 @@
   }
 
   .login-agreement .lam-title>p {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 14px;
   }
 
@@ -1748,7 +1748,7 @@
   }
 
   .login-agreement .lam-title>p {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 14px;
   }
 
@@ -2338,7 +2338,7 @@
   display: inline-block;
   padding: 6px 10px;
   text-align: center;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 14px;
   color: #f97316;
   border: #f97316 1px solid;
@@ -2369,7 +2369,7 @@
 .ta-game-list>ul li h2 {
   padding: 15px 0 10px 0;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 14px;
 }
 
@@ -2647,7 +2647,7 @@
 
 .ta-who-follow>dl>dt dl dd h2 {
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 14px;
   color: #333;
   letter-spacing: -0.5px;
@@ -2729,7 +2729,7 @@
 
 .ta-groups>div dl dd h2 {
   font-weight: 500;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 14px;
   color: #333;
   letter-spacing: -0.5px;
@@ -2781,6 +2781,7 @@
 
 .ta-about>div {
   padding: 20px;
+  font-size: 16px;
 }
 
 .ta-about>dl {
@@ -2793,21 +2794,49 @@
 .ta-about>dl>dt {
   width: 30%;
   padding: 5px;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .ta-about>dl>dd {
   width: 65%;
   padding: 5px;
-  font-size: 14px;
+  font-size: 16px;
   color: #333;
 }
 
-@media all and (max-width: 479px) {}
+@media all and (max-width: 479px) {
+  .ta-about div {
+    font-size: 14px;
+  }
 
-@media all and (min-width: 480px) and (max-width: 767px) {}
+  .ta-about>dl>dt {
+    font-size: 14px;
+  }
+
+  .ta-about>dl>dd {
+    font-size: 14px;
+  }
+}
+
+@media all and (min-width: 480px) and (max-width: 767px) {
+  .ta-about div {
+    font-size: 14px;
+  }
+
+  .ta-about>dl>dt {
+    font-size: 14px;
+  }
+
+  .ta-about>dl>dd {
+    font-size: 14px;
+  }
+}
 
 @media all and (min-width: 768px) and (max-width: 991px) {
+  .ta-about div {
+    font-size: 16px;
+  }
+
   .ta-about>dl>dt {
     width: 15%;
   }
@@ -2817,7 +2846,12 @@
   }
 }
 
-@media all and (min-width: 992px) and (max-width: 1199px) {}
+@media all and (min-width: 992px) and (max-width: 1199px) {
+  .ta-about>div {
+    font-size: 16px;
+  }
+
+}
 
 @media all and (min-width: 1200px) {}
 
@@ -2996,7 +3030,7 @@
 }
 
 .ta-post .tap-list .tapl-comment>h2 {
-  font-size: 14px;
+  font-size: 16px;
   color: #333;
 }
 
@@ -3244,7 +3278,7 @@
   }
 
   .ta-post-none>h3 {
-    font-size: 12px;
+    font-size: 14px;
   }
 }
 
@@ -3255,7 +3289,7 @@
   }
 
   .ta-post-none>h3 {
-    font-size: 12px;
+    font-size: 14px;
   }
 }
 
@@ -3468,7 +3502,7 @@
 
 .studio-dashboard-info>li>dl>dd>p {
   margin-top: 7px;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 14px;
   color: rgba(255, 255, 255, 0.6);
 }
@@ -4781,7 +4815,7 @@
   display: flex;
   justify-content: flex-end;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .studio-pagination>dl>dt>select {
@@ -4915,7 +4949,7 @@
 .notice-detail>ul>li>dl>dd>h3 {
   width: 100%;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 14px;
   color: #333;
   white-space: nowrap;
@@ -5250,7 +5284,7 @@
 
 .dl-content>dd>ul>li>dl>dd>h4 {
   margin-bottom: 5px;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .dl-content>dd>ul>li>dl>dd>span {
@@ -5342,7 +5376,7 @@
 }
 
 .dl-content>dt .dlc-chat-content>div>h4 {
-  font-size: 14px;
+  font-size: 16px;
   line-height: 25px;
 }
 
@@ -5789,7 +5823,7 @@
 
 .delete-account>ul>li>p {
   margin-top: 20px;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 20px;
 }
 
@@ -5812,7 +5846,7 @@
 .delete-account>ul>li>div {
   display: flex;
   align-items: center;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 18px;
   color: #333;
 }
@@ -5926,7 +5960,7 @@
     margin: 0 1% 8px 1%;
     padding: 15px 10px;
     text-align: center;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 16px;
   }
 }
@@ -5942,7 +5976,7 @@
     margin: 0 1% 8px 1%;
     padding: 15px 10px;
     text-align: center;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 16px;
   }
 }

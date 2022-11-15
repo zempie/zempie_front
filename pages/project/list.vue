@@ -505,7 +505,7 @@ function sortDescListByGame(key: string) {
 
       li {
         font-weight: 500;
-        font-size: 14px;
+        font-size: 16px;
       }
     }
   }
@@ -516,21 +516,22 @@ function sortDescListByGame(key: string) {
     width: 90%;
     margin: 20px auto;
     padding: 0 15px;
+    dl{
+      flex-wrap: wrap;
+      padding: 20px;
+      dt{
+        width: 100%;
+      }
+      dd{
+        width: 100%;
+        margin-top: 10px;
+        .btn-default{
+          margin-left: 0px !important;
+        }
+      }
+    }
   }
 
-  .studio-all-game > dl {
-    flex-wrap: wrap;
-    padding: 20px;
-  }
-
-  .studio-all-game > dl dt {
-    width: 100%;
-  }
-
-  .studio-all-game > dl dd {
-    width: 100%;
-    margin-top: 10px;
-  }
 
   .studio-all-game > dl dd a {
     width: 100%;
@@ -577,25 +578,26 @@ function sortDescListByGame(key: string) {
     width: 470px;
     margin: 20px auto;
     padding: 0 20px;
+    dl{
+      flex-wrap: wrap;
+      padding: 20px;
+      dt{
+        width: 100%;
+      }
+      dd{
+        width: 100%;
+        margin-top: 10px;
+        .btn-default{
+          margin-left: 0px !important;
+        }
+      }
+    }
 
     .ag-title {
       font-size: 12px;
     }
   }
 
-  .studio-all-game > dl {
-    flex-wrap: wrap;
-    padding: 20px;
-  }
-
-  .studio-all-game > dl dt {
-    width: 100%;
-  }
-
-  .studio-all-game > dl dd {
-    width: 100%;
-    margin-top: 10px;
-  }
 
   .studio-all-game > dl dd a {
     width: 100%;

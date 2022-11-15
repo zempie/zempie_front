@@ -93,7 +93,7 @@ function selectPurpose(purpose: number) {
     }
     dd {
       small {
-        font-size: 14px;
+        font-size: 16px;
 
       }
     }

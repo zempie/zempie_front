@@ -35,17 +35,20 @@
       </h3>
       <ul>
         <li>
-
-          <strong> STEP 1)</strong>&nbsp; 안내 페이지 하단의 참가 신청 폼 링크&nbsp;<p style="color:#d64dd8; font-weight: bold;"> CLICK
-          </p>
+        <span>
+          <strong> STEP 1)</strong>&nbsp; 안내 페이지 하단의 참가 신청 폼 링크&nbsp;<span style="color:#d64dd8; font-weight: bold;"> CLICK
+          </span></span>
 
         </li>
         <li>
+          <span>
           <strong> STEP 2)</strong>&nbsp; 신청서(구글폼) 작성 및 제출
-
+        </span>
         </li>
         <li>
+          <span>
           <strong> STEP 3)</strong>&nbsp; 젬파이 및 젬파이 디스코드에 가입하면 준비 완료!<br />
+        </span>
         </li><br />
         <li>※ 디스코드 가입 후 젬파이에서 사용 중인 아이디를 알려주시기 바랍니다.</li>
         <li>※ 게임 제출 작업 관리를 위해 젬파이에 &nbsp; <strong> 가입, 게임 스튜디오 </strong>를 이용해주실 것을 부탁드립니다.</li>
@@ -58,16 +61,19 @@
         [준비사항]</h3>
       <ul>
         <li>
+          <span>
           <strong> 1)</strong>&nbsp; 젬파이 ID (내 계정 정보에서 확인)
-
+        </span>
         </li>
         <li>
+          <span>
           <strong> 2)</strong>&nbsp; 본인의 개발 공간 & 개발 장비
-
+        </span>
         </li>
         <li>
+          <span>
           <strong> 3)</strong>&nbsp; 본인 소속 팀 내 커뮤니케이션을 위한 장비
-
+        </span>
         </li>
       </ul>
 
@@ -85,20 +91,21 @@
           <ul style="text-align: center;">
             <p style="font-size:20px">제출 방식</p>
             <li>
-              <strong>
-                1)</strong>&nbsp; 게임 개발 일지 & 게임 프로토타입 빌드 :
-              젬파이 게임잼플러스 이벤트 페이지 > 게임 제출 CLICK
+             <span> <strong>1)</strong>&nbsp; 게임 개발 일지 & 게임 프로토타입 빌드 :&nbsp;</span>
+              <span>젬파이 게임잼플러스 이벤트 페이지 > 게임 제출 CLICK</span>
             </li>
             <li>
-              <strong> 2)</strong>&nbsp; 발표 영상 자료 :
-              유튜브에 해당 영상 업로드 > 젬파이 디스코드를 통해 영상 링크 공유
+              <span>
+              <strong> 2)</strong>&nbsp; 발표 영상 자료 :&nbsp;
+              <span> 유튜브에 해당 영상 업로드 > 젬파이 디스코드를 통해 영상 링크 공유</span>
+            </span>
             </li>
           </ul>
 
         </li>
       </ul>
 
-      <p style="font-size:20px; text-align: center; margin-bottom: 25px;">
+      <p style="font-size:20px; text-align: center; margin-bottom: 25px; line-height: 30px;">
         22/23 게임잼플러스 게임잼은 1년 단위로 진행되며 자세한 내용 및 모집 안내는 젬파이 커뮤니티 게시판 및 디스코드를 통해 안내됩니다.
       </p>
 
@@ -265,6 +272,8 @@ function uploadGame(){
       font-size: 60px;
       justify-content: center;
       margin: 75px 0px 30px 0px;
+      text-align: center;
+      line-height: 50px;
     }
 
     h2 {
@@ -272,6 +281,9 @@ function uploadGame(){
       display: flex;
       justify-content: center;
       margin: 50px 0px 50px 0px;
+      text-align: center;
+      line-height: 40px;
+
     }
 
     h3 {
@@ -279,6 +291,8 @@ function uploadGame(){
       display: flex;
       justify-content: center;
       margin: 30px 0px 30px 0px;
+      text-align: center;
+      line-height: 30px;
     }
 
     h4 {
@@ -286,6 +300,8 @@ function uploadGame(){
       display: flex;
       justify-content: center;
       margin: 15px 0px 15px 0px;
+      text-align: center;
+      line-height: 30px;
     }
 
     div {
@@ -322,7 +338,37 @@ function uploadGame(){
         font-size: 16px;
         display: flex;
         justify-content: center;
+        text-align: center;
+        line-height: 30px;
+        
       }
+    }
+  }
+}
+@media all and (max-width: 479px) {
+  .wrap {
+    .container{
+      ul {
+        li {
+          flex-direction: column;
+          span{
+        }
+      }
+    }
+    }
+  }
+}
+@media all and (min-width: 480px) and (max-width: 767px) {
+  .wrap {
+    .container{
+      ul {
+        li {
+          flex-direction: column;
+          strong{
+            display: inline;
+          }
+      }
+    }
     }
   }
 }

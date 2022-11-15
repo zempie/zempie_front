@@ -317,7 +317,7 @@ async function deleteOneVersion() {
 
   .studio-version > div > ul > li > span {
     display: inline-block;
-    font-size: 14px;
+    font-size: 16px;
   }
 
   .studio-version > div > ul > li > p {
@@ -399,7 +399,7 @@ async function deleteOneVersion() {
 
   .studio-version > div > ul > li {
     padding: 10px 0px;
-    font-size: 14px;
+    font-size: 16px;
     text-align: left;
   }
 
