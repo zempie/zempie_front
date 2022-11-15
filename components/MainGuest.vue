@@ -11,6 +11,20 @@
       </h1>
     </div>
 
+    <!-- GJ plus event -->
+    <div class="main-visual">
+      <h2>
+        <span style="font: 36px/46px 'Jalnan'">Event</span>
+      </h2>
+      </div>
+      <div style="text-align:center; color:#fff;margin-top:30px">
+        <img src="/images/gj_whit_text_logo.png" width="300"/>
+        <h3 style="font-size:30px; margin-top:30px; font-weight: bold;">2022/2023 {{$t('game.jam.plus.title')}}</h3>
+        <div style="font-size:20px; margin-top:16px;"><strong>{{$t('game.jam.plus.plan')}} : </strong> <span>{{$t('game.jam.plus.date')}}</span></div>
+        <p style="font-size:20px; margin-top:16px;margin-bottom: 30px;">{{$t('game.jam.plus.info')}}</p>
+        <NuxtLink :to="$localePath('/game-jam-plus')" class="detail-button"> {{$t('details')}} </NuxtLink>
+      </div>
+    <!-- GJ plus event -->
     <div class="main-visual">
       <h2>
         <span style="font: 36px/46px 'Jalnan'">Recent games</span>
@@ -182,6 +196,26 @@ const {
 </script>
 
 <style scoped lang="scss">
+.detail-button{
+  
+      display: inline-block;
+      padding: 20px 30px;
+      font-size: 20px;
+      line-height: 16px;
+      color: #fff;
+      border: #fff 1px solid;
+      border-radius: 10px;
+      width: 300px;
+      text-align: center;
+      margin-bottom:30px;
+
+      &:hover {
+        color: #fff;
+        border: #d64dd8 1px solid;
+        background: #d64dd8;
+      }
+    
+}
 .mv-animal02 {
   z-index: 998 !important;
 }
