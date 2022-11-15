@@ -243,7 +243,7 @@ const setLike = _.debounce(async () => {
     game_id: gameInfo.value.id,
     on: true,
   }
-  const { data, error, refresh } = await useCustomFetch(
+  const { data, error, refresh } = await useCustomAsyncFetch(
     `/game/heart`,
     getZempieFetchOptions('post', true, payload)
   )
@@ -259,7 +259,7 @@ const unsetLike = _.debounce(async () => {
     game_id: gameInfo.value.id,
     on: false,
   }
-  const { data, error, refresh } = await useCustomFetch(
+  const { data, error, refresh } = await useCustomAsyncFetch(
     `/game/heart`,
     getZempieFetchOptions('post', true, payload)
   )
@@ -330,7 +330,7 @@ async function updateBannerImg() {
     formData.append('game_id', String(gameInfo.value.id))
     formData.append('file', file)
 
-    const { data, error, pending } = await useCustomFetch<{ result: any }>(
+    const { data, error, pending } = await useCustomAsyncFetch<{ result: any }>(
       '/game/banner',
       getZempieFetchOptions('put', true, formData)
     )
@@ -344,7 +344,7 @@ async function updateBannerImg() {
 }
 
 async function deleteBanner() {
-  const { data, error, pending } = await useCustomFetch(
+  const { data, error, pending } = await useCustomAsyncFetch(
     '/game/banner',
     getZempieFetchOptions('delete', true, { game_id: gameInfo.value.id })
   )
@@ -364,7 +364,7 @@ function saveBannerImg() {
     formData.append('game_id', String(gameInfo.value.id))
     formData.append('file', file)
 
-    const { data, error, pending } = await useCustomFetch<{ result: any }>(
+    const { data, error, pending } = await useCustomAsyncFetch<{ result: any }>(
       '/game/banner',
       getZempieFetchOptions('post', true, formData)
     )

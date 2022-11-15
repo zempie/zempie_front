@@ -109,7 +109,10 @@ const isMine = computed(() => {
   return route.params.id === useUser().user.value.info?.channel_id
 })
 
-await useChannel().getChannelInfo(channelId.value)
+useChannel().getChannelInfo(channelId.value)
+.catch((error)=>{
+console.log(error)
+})
 </script>
 
 <style lang="scss" scoped>

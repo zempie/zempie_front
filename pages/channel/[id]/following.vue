@@ -105,7 +105,7 @@ onMounted(async () => {
 })
 
 async function fetch() {
-  const { data, error, pending } = await useCustomFetch<{
+  const { data, error, pending } = await useCustomAsyncFetch<{
     totalCount: number
     result: []
     pageInfo: {}

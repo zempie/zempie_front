@@ -226,7 +226,7 @@ async function register() {
     
     const { message } = error
     if (message.includes('auth/email-already-in-use')) {
-      // const { result } = await useCustomFetch<{result:any}>('/user/has-email', getZempieFetchOptions('post', false, { email: form.email }))
+      // const { result } = await useCustomAsyncFetch<{result:any}>('/user/has-email', getZempieFetchOptions('post', false, { email: form.email }))
 
       ElMessage.error(`${t('fb.using.email')}`)
     } 
@@ -251,7 +251,7 @@ async function joinZempie() {
     name: form.username,
   }
 
-    const { data,error } = await useCustomFetch<{result:any}>('/user/sign-up',getZempieFetchOptions('post', true, payload))
+    const { data,error } = await useCustomAsyncFetch<{result:any}>('/user/sign-up',getZempieFetchOptions('post', true, payload))
     if(data.value){
     const { user } = data.value.result;
 

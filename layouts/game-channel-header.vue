@@ -67,7 +67,7 @@ watch(
   }
 )
 
-useCustomFetch<any>(
+useCustomAsyncFetch<any>(
   `/launch/game/${gamePath.value}`,
   getZempieFetchOptions('get', true)
 )

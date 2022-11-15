@@ -182,7 +182,7 @@ function refresh(content: string) {
 //     }
 
 const setLike = _.debounce(async () => {
-  const { data, pending, error } = await useCustomFetch(
+  const { data, pending, error } = await useCustomAsyncFetch(
     `/post/${props.comment.post_id}/comment/${props.comment.id}/like`,
     getComFetchOptions('post', true)
   )
@@ -194,7 +194,7 @@ const setLike = _.debounce(async () => {
 }, 300)
 
 const unsetLike = _.debounce(async () => {
-  const { data, pending, error } = await useCustomFetch(
+  const { data, pending, error } = await useCustomAsyncFetch(
     `/post/${props.comment.post_id}/comment/${props.comment.id}/unlike`,
     getComFetchOptions('post', true)
   )
@@ -208,7 +208,7 @@ const unsetLike = _.debounce(async () => {
 function editComment() {}
 
 async function deleteComment() {
-  const { data, pending, error } = await useCustomFetch(
+  const { data, pending, error } = await useCustomAsyncFetch(
     `/post/${props.comment.post_id}/comment/${props.comment.id}`,
     getComFetchOptions('delete', true)
   )

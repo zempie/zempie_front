@@ -161,7 +161,7 @@ async function fetch() {
     offset: offset.value,
     sort: sort.value,
   }
-  const { data, pending } = await useCustomFetch(
+  const { data, pending } = await useCustomAsyncFetch(
     createQueryUrl('/community/list', query),
     getComFetchOptions('get', true)
   )

@@ -4,7 +4,7 @@ import { IUser } from "~~/types";
 const DAYSTOSEC_30 = 60 * 60 * 24 * 30;
 
 
-export const useCustomFetch = async <T>(url: string, options?: FetchOptions) => {
+export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions) => {
 
   colorLog(`start fetcch:  ${url}`, 'success')
 
@@ -58,6 +58,60 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions) => 
   })
 }
 
+
+
+export const useCustomFetch = async <T>(url: string, options?: FetchOptions) => {
+
+  colorLog(`start fetcch:  ${url}`, 'success')
+
+  const config = useRuntimeConfig()
+  const accessToken = useCookie(config.COOKIE_NAME).value
+  let result = null;
+
+  if (accessToken) {
+    result = await getRefreshToken()
+  }
+
+  return await $fetch<T>(url, {
+    ...options,
+    async onResponse({ request, response, options }) {
+
+      useCommon().setLoadingDone()
+
+      console.log('[fetch response]')
+
+    },
+    async onResponseError({ request, response, options }) {
+      console.log('[fetch response error]', response)
+      const { status } = response
+      switch (status) {
+        case 401:
+          console.log('unauth')
+          break;
+        case 500:
+          // useUser().logout()
+          break;
+
+        default:
+          break;
+      }
+    },
+
+    async onRequest({ request, options }) {
+
+      options.headers = options.headers || {}
+
+      if (accessToken) options.headers['Authorization'] = result && `Bearer ${result.access_token}`
+
+      useCommon().setLoading()
+      console.log('[fetch request]')
+    },
+    async onRequestError({ request, options, error }) {
+      console.log('[fetch request error]')
+    }
+  })
+
+}
 
 export async function getRefreshToken() {
   const config = useRuntimeConfig();

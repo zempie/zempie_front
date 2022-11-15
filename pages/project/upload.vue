@@ -1,6 +1,5 @@
 <template>
   <NuxtLayout name="studio">
-    <div style="color:red; height:30px; width:100vw;"></div>
     <div class="content-studio">
       <div class="studio-banner bg02">
         <h2>{{ $t('uploadGame.selectStage.text') }}</h2>

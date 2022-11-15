@@ -1,5 +1,5 @@
 <template>
-  <div :key="$route.name">
+  <div >
     <Header />
     <slot />
     <Footer />
