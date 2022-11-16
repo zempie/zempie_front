@@ -220,7 +220,7 @@ async function fetch() {
         }
       )
       if (channelName.value) {
-        const { data, error, refresh } = await useCustomFetch<{
+        const { data, error, refresh } = await useCustomAsyncFetch<{
           result: []
           totalCount: number
         }>(
@@ -236,7 +236,7 @@ async function fetch() {
         isPending.value = false
         return isAddData.value
       } else {
-        const { data, error, refresh } = await useCustomFetch<{
+        const { data, error, refresh } = await useCustomAsyncFetch<{
           result: []
           totalCount: number
         }>(
@@ -252,7 +252,7 @@ async function fetch() {
 
     case 'user':
       console.log('user')
-      const { data: userPostData } = await useCustomFetch<{
+      const { data: userPostData } = await useCustomAsyncFetch<{
         result: IFeed[]
         totalCount: number
       }>(
@@ -266,7 +266,7 @@ async function fetch() {
       isPending.value = false
       return isAddData.value
     case 'userAll':
-      const { data: userAllPostData } = await useCustomFetch<{
+      const { data: userAllPostData } = await useCustomAsyncFetch<{
         result: IFeed[]
         totalCount: number
       }>(
@@ -281,7 +281,7 @@ async function fetch() {
       return isAddData.value
 
     case 'game':
-      const { data: gamePostData, error: gameError } = await useCustomFetch<{
+      const { data: gamePostData, error: gameError } = await useCustomAsyncFetch<{
         result: []
         totalCount: number
       }>(

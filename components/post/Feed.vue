@@ -349,7 +349,7 @@ async function commentFetch() {
     sort: sort.value,
   }
 
-  const { data, pending, error } = await useCustomFetch<{ result: [] }>(
+  const { data, pending, error } = await useCustomAsyncFetch<{ result: [] }>(
     createQueryUrl(`/post/${props.feed.id}/comment/list`, query),
     getComFetchOptions('get', true)
   )

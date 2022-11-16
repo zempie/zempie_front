@@ -2,7 +2,7 @@ import { IUserChannel } from "~~/types"
 
 export default function () {
   const userChannel = useState('userChannel', () => ({
-    info: null as IUserChannel,
+    info: {} as IUserChannel,
     isLoading: true
   }))
 
@@ -11,7 +11,7 @@ export default function () {
 
     if (info) {
 
-      const { data: communities, error } = await useCustomFetch<[]>(`/user/${info.id}/list/community`, getComFetchOptions('get', true))
+      const response = await useCustomFetch<[]>(`/user/${info.id}/list/community`, getComFetchOptions('get', true))
 
       info.games.map((game) => {
         game.user = {
@@ -23,7 +23,12 @@ export default function () {
           picture: info.picture,
         }
       })
-      info.communities = communities.value
+
+      info.games.sort((a, b) => {
+        return new Date(b.created_at).valueOf() - new Date(a.created_at).valueOf();
+      })
+
+      info.communities = response
       userChannel.value.info = info;
     }
     userChannel.value.isLoading = false;
@@ -34,7 +39,8 @@ export default function () {
 
     if (data) {
       const { target } = data.result;
-      setUserChannel(target)
+
+      await setUserChannel(target)
     }
   }
 

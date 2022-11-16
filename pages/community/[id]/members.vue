@@ -95,7 +95,7 @@ const {
   data: communities,
   pending,
   refresh,
-} = await useCustomFetch<{
+} = await useCustomAsyncFetch<{
   result: IUser[]
   totalCount: number
 }>(`/community/${communityId.value}/members`, getComFetchOptions('get', true))

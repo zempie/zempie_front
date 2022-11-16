@@ -53,7 +53,7 @@ async function follow() {
     return
   }
 
-  const { data, error } = await useCustomFetch(
+  const { data, error } = await useCustomAsyncFetch(
     `/user/${props.user.id}/follow`,
     getComFetchOptions('post', true)
   )
@@ -68,7 +68,7 @@ async function follow() {
 }
 
 async function unfollow() {
-  const { data, error } = await useCustomFetch(
+  const { data, error } = await useCustomAsyncFetch(
     `/user/${props.user.id}/unfollow`,
     getComFetchOptions('post', true)
   )

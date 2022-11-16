@@ -74,7 +74,7 @@ onBeforeUnmount(() => {
 })
 
 async function fetch() {
-  const { data, error, pending } = await useCustomFetch<{
+  const { data, error, pending } = await useCustomAsyncFetch<{
     result: { game: {}; my_emotions: {}; my_heart: boolean }
   }>(`/game/${gamePath.value}`, getZempieFetchOptions('get', false))
 

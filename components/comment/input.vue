@@ -44,7 +44,7 @@ async function editComment() {
     post_id: props.postId,
     content: content.value,
   }
-  const { data, error, pending } = await useCustomFetch(
+  const { data, error, pending } = await useCustomAsyncFetch(
     `/post/${props.postId}/comment/${props.comment.id}`,
     getComFetchOptions('post', true, payload)
   )
@@ -63,7 +63,7 @@ const sendComment = _.debounce(async () => {
     is_private: isPrivate.value,
   }
 
-  const { data, error } = await useCustomFetch(
+  const { data, error } = await useCustomAsyncFetch(
     `/post/${props.postId}/comment`,
     getComFetchOptions('post', true, payload)
   )

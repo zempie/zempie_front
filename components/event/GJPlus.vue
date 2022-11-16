@@ -147,6 +147,9 @@
         </li>
       </ul>
 
+      <h4 style="margin-top:100px;">If you are a non-Korean but want to hop on, please check on this link for more details of GAMEJAMPLUS 22/23</h4>
+      <h4><a href="https://gamejamplus.com/" target="_blank">GAME JAM PLUS</a></h4>
+
     </div>
   </div>
 </template>
@@ -308,6 +311,7 @@ function uploadGame(){
       display: flex;
       justify-content: center;
     }
+
 
     a {
       display: inline-block;

@@ -11,7 +11,7 @@ export default function () {
     const config = useRuntimeConfig()
     const accessToken = useCookie(config.COOKIE_NAME).value
 
-    const { data, pending, error } = await useCustomFetch<any>(`/community/${id}`,
+    const { data, pending, error } = await useCustomAsyncFetch<any>(`/community/${id}`,
       getComFetchOptions('get', true))
     community.value.info = data.value
   }

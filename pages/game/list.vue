@@ -167,7 +167,7 @@ async function handleIntersection(target) {
 async function fetch() {
  
 
-  const { data, pending, refresh } = await useCustomFetch<{
+  const { data, pending, refresh } = await useCustomAsyncFetch<{
     result: { games: [] }
   }>(
     `/games?_=${Date.now()}&limit=${limit.value}&offset=${

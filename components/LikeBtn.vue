@@ -140,7 +140,7 @@ async function showLikeFetch() {
 
   isLikeHistoryOpen.value = true
 
-  const { data, error, refresh } = await useCustomFetch<[]>(
+  const { data, error, refresh } = await useCustomAsyncFetch<[]>(
     createQueryUrl(`/post/${props.feed.id}/like/list`, query),  
     getComFetchOptions('get', true)
   )

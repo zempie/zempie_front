@@ -321,7 +321,7 @@ onMounted(async () => {
 })
 
 async function fetch() {
-  const { data, pending } = await useCustomFetch<{ result: IProject[] }>(
+  const { data, pending } = await useCustomAsyncFetch<{ result: IProject[] }>(
     '/studio/project',
     getStudioFetchOptions('get', true)
   )

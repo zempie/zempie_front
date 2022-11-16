@@ -96,7 +96,7 @@ const {
   error,
   pending,
   refresh,
-} = await useCustomFetch<any>(
+} = await useCustomAsyncFetch<any>(
   `/search?q=${keyword.value}`,
   getComFetchOptions('get', true)
 )

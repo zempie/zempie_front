@@ -52,7 +52,7 @@ export default function () {
 
   const login = async () => {
     const router = useRouter();
-    const { data, error } = await useCustomFetch<{ result: any }>('/user/info', getZempieFetchOptions('get', true))
+    const { data, error } = await useCustomAsyncFetch<{ result: any }>('/user/info', getZempieFetchOptions('get', true))
 
     if (data.value) {
       const { user } = data.value.result
