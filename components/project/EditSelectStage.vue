@@ -85,14 +85,23 @@
 
 <script setup lang="ts">
 import { eGameCategory, eGameStage } from '~~/types/index'
-
+import { ElMessage } from 'element-plus'
 const stage = computed(() => useProject().editProject.value.info.stage)
 
 const router = useRouter()
+const { t, locale } = useI18n()
+
 
 function selectStage(stage: number) {
+  if(!useProject().editProject.value.info.game.url_game){
+    ElMessage({
+      message: t('game.file.deploy.first'),
+      type: 'warning',
+    })
+    return
+  }
   useProject().setStageOnEdit(stage)
-  useProject().setStepThreeOnEdit()
+  useProject().setStepThreeOnEdit()  
 }
 
 

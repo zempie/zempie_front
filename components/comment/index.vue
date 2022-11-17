@@ -34,7 +34,8 @@
         ref="feedMenu"
         popper-class="tapl-more-dropdown"
       >
-        <a slot="trigger"><i class="uil uil-ellipsis-h font25"></i></a>
+       
+        <a slot="trigger"><i class="uil uil-ellipsis-h font25" ></i></a>
         <template #dropdown>
           <div slot="body" class="more-list">
             <a @click="isCommentEdit = !isCommentEdit">{{

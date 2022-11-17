@@ -99,10 +99,12 @@
       
         <el-cascader 
           class="mp-category"
+          id="cascader"
           :props="props"
           v-model="selectedGroup"        
           placeholder="Select cagetory"
           :options="categoryList" 
+          :popper-class="'categories'"
         />
 
         

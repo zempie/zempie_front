@@ -2,12 +2,12 @@
   <ClientOnly>
     <el-dropdown trigger="click" ref="feedMenu" popper-class="feed-menu">
       <a class="btn-circle-none pt6" slot="trigger"
-        ><i class="uil uil-ellipsis-h font25"></i
+        ><i class="uil uil-ellipsis-h font25" id="feedMenu"></i
       ></a>
       <template #dropdown>
         <div slot="body" class="more-list fixed" style="min-width: 150px">
           <template v-if="user && user.id === (feed?.user && feed?.user.id)">
-            <a @click="isTextEditorOpen = true">{{ t('feed.edit') }}</a>
+            <a @click="isTextEditorOpen = true" id="editFeed">{{ t('feed.edit') }}</a>
             <a @click="showDeletePostModal = true">{{ t('feed.delete') }}</a>
           </template>
           <template v-else>

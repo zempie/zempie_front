@@ -38,7 +38,7 @@
             @click="
               router.push($localePath(`/game/${postedAt?.game.pathname}`))
             "
-            >{{ postedAt?.game.title }}</span
+            >{{ postedAt?.game?.title }}</span
           >
         </div>
       </div>
