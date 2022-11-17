@@ -860,5 +860,6 @@
   "game.jam.plus.plan": "Period",
   "game.jam.plus.date": " 11.18 00:00 ~ 11.20 23:59 GMT+9",
   "game.jam.plus.info": "Open for Application Now",
-  "details":"Details"
+  "details":"Details",
+  "dev.log.warning":"You may check on the Development Log at the game list of your profile."
 }

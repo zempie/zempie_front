@@ -215,7 +215,8 @@ export interface IFeed {
     id: string,
     posts_id: string,
     channel_id: string,
-    game_id: number
+    game_id?: number,
+    game: IGame[]
   }
 
 }

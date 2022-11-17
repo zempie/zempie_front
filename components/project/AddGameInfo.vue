@@ -18,7 +18,7 @@
     <div class="studio-upload-input">
       <template v-if="!isFormDone">
         <div class="sui-input">
-          <div v-if="uploadStage === eGameStage.DEV" class="dev-warning" >개발 로그는 내 프로필의 게임 리스트에서 확인이 가능합니다.</div>
+          <div v-if="uploadStage === eGameStage.DEV" class="dev-warning" >{{$t('dev.log.warning')}}</div>
           <div class="suii-title">{{ $t('addGameInfo.title') }}</div>
           <dl class="suii-content">
             <dt>

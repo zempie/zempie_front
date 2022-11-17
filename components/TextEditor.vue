@@ -96,7 +96,17 @@
         </div>
       </template>
       <ClientOnly>
-        <div
+      
+        <el-cascader 
+          class="mp-category"
+          :props="props"
+          v-model="selectedGroup"        
+          placeholder="Select cagetory"
+          :options="categoryList" 
+        />
+
+        
+        <!-- <div
           class="mp-category"
           :style="
             snsAttachFiles.img?.length
@@ -173,7 +183,7 @@
               </div>
             </swiper-slide>
           </swiper>
-        </div>
+        </div> -->
       </ClientOnly>
 
       <dl class="mp-type">
@@ -307,22 +317,20 @@
 </template>
 
 <script setup lang="ts">
+import { PropType } from 'vue'
 import _ from 'lodash'
 import BeatLoader from 'vue-spinner/src/BeatLoader.vue'
-import { PropType } from 'vue'
-import { IFeed } from '~~/types'
+import { IComChannel, ICommunity, IFeed, IGame } from '~~/types'
 import { Pagination } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import dayjs from 'dayjs'
-
 import { Editor } from '@tiptap/vue-3'
 import {
-  ElDropdown,
   ElMessageBox,
   ElLoading,
-  ElPopover,
   ElMessage,
   ElDialog,
+  ElCascader
 } from 'element-plus'
 
 import { useI18n } from 'vue-i18n'
@@ -336,10 +344,6 @@ interface IDraft {
 }
 
 const { t, locale } = useI18n()
-
-const route = useRoute()
-const popover = ref()
-
 const isVideoUploading = ref(false)
 const isAudioUploading = ref(false)
 
@@ -354,6 +358,11 @@ const props = defineProps({
   feed: Object as PropType<IFeed>,
   channelInfo: Object,
   isFullScreen: Boolean,
+  multiple:{
+    type: Boolean,
+    default: true,
+  },
+  
 })
 
 const initFiles = _.cloneDeep(props.feed?.attatchment_files)
@@ -381,10 +390,10 @@ const audio = ref<HTMLElement>()
 
 const editor = ref<Editor>()
 
-const communityList = ref([])
+const categoryList = ref([])
 const isCommunityListOpen = ref(true)
 const isChannelListOpen = ref(false)
-const selectedGroup = ref()
+const selectedGroup = ref([])
 const channels = ref()
 const postingChannels = ref([])
 const isCommunityListVisible = ref(false)
@@ -411,6 +420,13 @@ const textInterval = ref()
 const prevText = ref()
 const saveId = ref(Date.now())
 
+watch(
+  ()=>selectedGroup.value, 
+  (type) =>{
+    console.log(type)
+  }
+)
+
 onBeforeMount(() => {
   getDraftList()
   autoSave()
@@ -434,18 +450,79 @@ onBeforeMount(() => {
 })
 
 onMounted(async () => {
+  const community = useCommunity().community.value.info 
   //새로고침 시 알람
   window.addEventListener('beforeunload', refreshPage)
+
   await communityFetch()
+
+  if(useGame().game.value.info){
+    
+    //방문한 페이지가 게임페이지인 경우 해당 게임찾아서 리턴
+    const game = categoryList.value.find((elem)=>{
+      if(elem.value.type === 'game'){
+        return elem.value.game.id === useGame().game.value.info.id
+      }
+    }) 
+
+    if(game){
+      selectedGroup.value = [
+        ...selectedGroup.value,
+        [{
+          type:'game',
+          game:game.value.game,
+        }]
+      ]
+    }
+  }
+
+
+  if( community ){ 
+
+    //general 채널 디폴트 카테고리로 설정
+    const generalChannel = community.channels.find(channel => {
+      return channel.title === 'general'
+    })
+
+    if(community){
+      selectedGroup.value = [
+        ...selectedGroup.value,
+        [{
+          type:'community',
+          community:{
+              id:community.id,
+              is_certificated:community.is_certificated,
+              name:community.name,
+              profile_img:community.profile_img,
+              url:community.url
+          }
+        },{
+          type:'channel',
+          channel:generalChannel
+        }]
+      ]
+    }
+  }
+
   if (props.isEdit) {
+
     if (props.feed?.posted_at?.community) {
+      
       for (const community of props.feed.posted_at.community) {
-        postingChannels.value.push({
-          group: community.community,
-          channel: community.channel,
-        })
+             selectedGroup.value = [
+             ...selectedGroup.value,
+             {
+                type:"community",
+                community:community.community
+             },
+             {
+                type:"channel",
+                channel:community.channel
+             }
+          ]
       }
     }
+
     if (activeTab.value === 'SNS') {
       if (attachFileArr.value?.length) {
         snsAttachFiles.value = {
@@ -529,17 +606,14 @@ async function onSubmit() {
     post_state: activeTab.value,
     hashtags: [],
     community: [],
+    game:[]
   }
 
-  if (postingChannels.value.length) {
-    for (const element of postingChannels.value) {
-      payload.community.push({
-        id: element.group.id,
-        community: element.group,
-        channel_id: element.channel.id,
-        channel: element.channel,
-      })
-    }
+
+  if (selectedGroup.value) {
+   const pl = setCategoryPayload(payload)
+   payload.community = pl.community;
+   payload.game = pl.game
   }
 
   const loading = ElLoading.service({
@@ -900,24 +974,16 @@ async function onUpdatePost() {
     post_state: activeTab.value,
     attatchment_files: attatchment_files,
     post_contents: form.post_contents,
-    // visibility: this.isPrivate ? "PRIVATE" : "PUBLIC",
     hashtags: [],
-    // game_id:  this.$store.getters.currPage?.game_id,
     channel_id: useUser().user.value.info.channel_id,
     community: [],
-    // portfolio_ids: [""],
-    // scheduled_for: null
+    game:[],
   }
 
-  if (postingChannels.value.length) {
-    for (const element of postingChannels.value) {
-      payload.community.push({
-        id: element.group.id,
-        community: element.group,
-        channel_id: element.channel.id,
-        channel: element.channel,
-      })
-    }
+  if (selectedGroup.value) {
+    const pl = setCategoryPayload(payload)
+    payload.community = pl.community;
+    payload.game = pl.game
   }
 
   const dom = htmlToDomElem(form.post_contents)
@@ -1181,6 +1247,31 @@ async function onUpdatePost() {
   loading.close()
 }
 
+function setCategoryPayload(payload) {
+  selectedGroup.value.map((selected) => {
+      const postTarget = selected[0].type
+
+      switch(postTarget){
+        case 'community':
+        payload.community.push({
+          id:selected[0].community.id,
+          group:selected[0].community,
+          channel_id:selected[1].channel.id,
+          channel:selected[1].channel
+        })
+          break;
+        case 'game':
+          payload.game = [...payload.game, {game:selected[0].game, id:selected[0].game.id}];
+          break;
+        default:
+          break;
+          
+      }
+    })
+
+    return payload
+}
+
 function closeTextEditor() {
   snsAttachFiles.value.img = _.cloneDeep(initFiles)
 
@@ -1214,43 +1305,54 @@ async function communityFetch() {
   )
 
   if (data.value) {
-    communityList.value = data.value
+    categoryList.value = data.value.map((elem : ICommunity) => {
+      return {
+        value:{
+          type:"community",
+          community:{
+            id:elem.id,
+            is_certificated:elem.is_certificated,
+            name:elem.name,
+            profile_img:elem.profile_img,
+            url:elem.url
+          },
+        },
+        label:elem.name,
+        children:elem.channels.map((channel:IComChannel) =>{
+          return {
+            value:{
+              type:"channel",
+              channel:channel
+            },
+            label:channel.title
+          }
+        })
+      }
+    })
   }
-  isCommunityListVisible.value = true
-}
-
-function openChannel(community: any) {
-  selectedGroup.value = community
-  isCommunityListOpen.value = !isCommunityListOpen.value
-  isChannelListOpen.value = !isChannelListOpen.value
-  channels.value = community.channels
-}
-
-function backToCommunityList() {
-  isCommunityListOpen.value = !isCommunityListOpen.value
-  isChannelListOpen.value = !isChannelListOpen.value
-}
-
-async function selectChannel(channel: any) {
-  postingChannels.value = _.uniqBy(
-    [
-      ...postingChannels.value,
-      {
-        group: selectedGroup.value,
-        channel: channel,
+  categoryList.value.push({
+    value:"game",
+    label:'Games',
+    disabled:true,
+  })
+  const gameList = useUser().user.value.info.games.map((game:IGame)=>{
+    return {
+      value:{
+        type:'game',    
+        game:game,
       },
-    ],
-    'channel.id'
-  )
+      label:game.title
+    }
+  })
+  categoryList.value = [...categoryList.value, ...gameList]
 
-  isCommunityListVisible.value = false
-  isCommunityListOpen.value = !isCommunityListOpen.value
-  isChannelListOpen.value = !isChannelListOpen.value
-  showCommunity.value = false
-}
+  categoryList.value.unshift({
+    value:'community',
+    label:'Community',
+    disabled:true
+  })
 
-function deletePostingChannel(idx: number) {
-  postingChannels.value.splice(idx, 1)
+  isCommunityListVisible.value = true
 }
 
 //임시저장 후 모달 종료
@@ -1284,8 +1386,6 @@ function onSavePost(time = Date.now()) {
   }
 
   saveOnLocal(time)
-  console.log('save', saveId.value)
-  console.log('draftList.value: ', draftList.value)
 
   const draftItem = draftList.value.find((draft) => {
     return draft.saveId === saveId.value
@@ -1364,8 +1464,7 @@ function onLoadPost() {
 }
 
 function deleteDraft(draft: IDraft, index: number) {
-  //
-  //
+ 
   ElMessageBox.confirm(`${t('ask.delete.draft')}`, {
     confirmButtonText: 'YES',
     cancelButtonText: 'Cancel',
@@ -1381,11 +1480,6 @@ function deleteDraft(draft: IDraft, index: number) {
     })
     .catch(() => {})
     .finally(() => {})
-
-  // ElMessage({
-  //   message: t('delete.draft.done'),
-  //   type: 'success',
-  // })
 }
 
 function selectDraft(draft: IDraft, index: number) {

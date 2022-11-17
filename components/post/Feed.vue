@@ -121,7 +121,7 @@
         <div class="swiper-pagination" slot="pagination"></div>
       </swiper>
     </template>
-    <CommunityTarget :communities="feed?.posted_at?.community" />
+    <CommunityTarget :communities="feed?.posted_at?.community" :games="feed?.posted_at?.game" />
 
     <ul class="tapl-option">
       <li>

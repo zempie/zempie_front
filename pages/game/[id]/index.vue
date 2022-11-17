@@ -149,6 +149,10 @@ onMounted(async () => {
   if (game.value) await gameListFetch()
 })
 
+onBeforeUnmount(()=>{
+  useGame().resetGame()
+})
+
 async function gameListFetch() {
   const response = await $fetch<{
     result: any
