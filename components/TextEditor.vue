@@ -504,10 +504,9 @@ onMounted(async () => {
     }
   }
 
+  //기존 카테고리 추가
   if (props.isEdit) {
-
-    if (props.feed?.posted_at?.community) {
-      
+    if (props.feed?.posted_at?.community) {      
       for (const community of props.feed.posted_at.community) {
              selectedGroup.value = [
              ...selectedGroup.value,
@@ -518,6 +517,18 @@ onMounted(async () => {
              {
                 type:"channel",
                 channel:community.channel
+             }
+          ]
+      }
+    }
+
+    if (props.feed?.posted_at?.game) {      
+      for (const game of props.feed.posted_at.game) {
+             selectedGroup.value = [
+             ...selectedGroup.value,
+             {
+                type:"game",
+                game:game.game
              }
           ]
       }
