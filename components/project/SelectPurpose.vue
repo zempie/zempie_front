@@ -66,7 +66,7 @@ onBeforeMount(() => {
   GJ_START = GJ_START.setTime(GJ_START.getTime())
 
   //오늘날짜가 게임젬끝나는 날 보다 큰경우 게임젬 비활성화
-  if (date.setTime(date.getTime()) > GJ_END || date.setTime(date.getTime()) < GJ_START) {
+  if (date.setTime(date.getTime()) > GJ_END && date.setTime(date.getTime()) < GJ_START) {
     isInactive.value = true
   }
 })
