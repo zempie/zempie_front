@@ -73,7 +73,7 @@ onBeforeMount(() => {
 
 
 function selectPurpose(purpose: number) {
-  if(isInactive.value &&( purpose === eGameCategory.GJ)) return  
+  if(!isInactive.value && ( purpose === eGameCategory.GJ)) return  
   if (isEditProject.value) {
     useProject().setStepTwoOnEdit()
     useProject().setEditPurpose(purpose)
