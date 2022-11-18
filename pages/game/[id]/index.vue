@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { IUserChannel } from '~~/types'
+import { eGameCategory, eGameType, IUserChannel } from '~~/types'
 import { execCommandCopy } from '~/scripts/utils'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
@@ -207,7 +207,14 @@ async function gameListFetch() {
 // }
 
 function copyUrl() {
-  const url = `${config.BASE_API}/game/${game.value.pathname}`
+  let url = ''
+  
+  if(game.value.game_type === eGameType.Download){
+    url = `${config.ZEMPIE_URL}/game/${game.value.pathname}`
+  }else{
+    url = `${config.ZEMPIE_URL}/play/${game.value.pathname}`
+  }
+  
   execCommandCopy(url)
   ElMessage.closeAll()
   ElMessage({
