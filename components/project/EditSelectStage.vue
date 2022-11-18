@@ -77,8 +77,7 @@
               ><i class="uil uil-angle-left-b"></i>
               {{ $t('previous') }}
             </a>
-          </li>
-         
+          </li>         
     </ul>
   </dd>
 </template>
@@ -93,7 +92,7 @@ const { t, locale } = useI18n()
 
 
 function selectStage(stage: number) {
-  if(!useProject().editProject.value.info.game.url_game){
+  if(!useProject().editProject.value.info.game.url_game  && stage !== eGameStage.DEV){
     ElMessage({
       message: t('game.file.deploy.first'),
       type: 'warning',

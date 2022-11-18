@@ -17,7 +17,8 @@
         <h3>{{ $t('game.info') }}</h3>
 
       </li>
-      <li :class="[uploadProject.step === 4 &&  'active' , 'step']">
+      
+      <li v-if="$route.meta.name !== 'projectId'" :class="[uploadProject.step === 4 &&  'active' , 'step']">
         <p>STEP 04</p>
         <h3>{{ $t('file.upload') }}</h3>
 
