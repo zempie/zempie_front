@@ -18,9 +18,7 @@
           </dd>
         </dl>
       </li>
-      <li @click="selectPurpose(eGameCategory.GJ)" :class="[purpose === eGameCategory.GJ && 'active',
-      isInactive && 'inactive'
-      ]">
+      <li class="inActive">
         <dl id="GJ">
           <dt><img src="/images/GJ_transparent.png" width="70" :alt="$t('earlyAccess')" title="" /></dt>
           <dd>
@@ -32,7 +30,7 @@
           </dd>
         </dl>
       </li>
-      <li>
+      <li class="inActive">
         <dl>
           <dt><img src="/images/zemjam_logo_1.png" :alt="$t('seo.zemjam.title')" width="100" title="" /></dt>
           <dd>
@@ -115,8 +113,9 @@ function selectPurpose(purpose: number) {
     }
   }
 
-  li:last-child {
-    opacity: 0.5;
+  
+    .inActive{
+         opacity: 0.5;
 
 
   }
