@@ -224,7 +224,7 @@
   "member.count.unit": "명",
   "comment": "댓글",
   "comment.count.unit": " 개",
-  "isSubscribing": "가입 중",
+  "isSubscribing": "가입함",
   "subscribe.btn": "가입하기",
   "join.text1": "젬파이 회원가입으로 다양한 혜택을 누려보세요!",
   "join.name": "이름",
@@ -860,6 +860,8 @@
   "game.jam.plus.plan": "일정",
   "game.jam.plus.date": "11월 18일 00:00 ~ 11월 22일 23:59",
   "game.jam.plus.info": "현재 참가자 모집 중!",
-  "details":"자세히 보기"
-
+  "details": "자세히 보기",
+  "dev.log.warning": "개발 로그는 내 프로필의 게임 리스트에서 확인이 가능합니다.",
+  "game.file.deploy.first": "게임 파일을 먼저 업로드 후 배포를 진행해주세요",
+  "ended.event":"종료된 이벤트"
 }

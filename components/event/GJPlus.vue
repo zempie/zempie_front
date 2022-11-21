@@ -55,7 +55,7 @@
 
       </ul>
       <div>
-        <a href="https://forms.gle/8NXazCYicG1c3NkQ9" target="_blank">게임잼 플러스 신청하기 </a>
+        <a  target="_blank">{{$t('ended.event')}} </a>
       </div>
       <h3 style="color:#54b5ff">
         [준비사항]</h3>

@@ -160,6 +160,10 @@ onMounted(async () => {
   await fetch()
 })
 
+onBeforeUnmount(()=>{
+  useCommunity().resetCommunity()
+})
+
 async function fetch() {
   const query = {
     limit: limit.value,

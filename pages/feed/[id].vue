@@ -104,7 +104,7 @@
               </div>
             </div>
           </template>
-          <CommunityTarget :communities="feed?.posted_at[0].community"/>
+          <CommunityTarget :communities="feed?.posted_at[0].community" :games="feed?.posted_at[0].game"/>
          
           <ul class="tapl-option">
             <li>

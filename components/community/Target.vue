@@ -27,15 +27,36 @@
         </div>
       </div>
     </div>
+    <div
+      class="community-slide"
+      v-for="postedAt in games"
+      :key="postedAt.id"
+    >
+      <div class="category-select-finish">
+        <div style="margin-left:0px">
+          <span
+            @click="
+              router.push($localePath(`/game/${postedAt?.game.pathname}`))
+            "
+            >{{ postedAt?.game?.title }}</span
+          >
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
+import { PropType } from 'vue'
+import { IGame } from '~~/types';
+
 const router = useRouter()
 const { $localePath } = useNuxtApp()
 
 const props = defineProps({
   communities: Object,
+  games: Array as PropType<{id:number, game:IGame}[]>
 })
+
 </script>
 <style scoped lang="scss">
 .swiper-area {

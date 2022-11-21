@@ -20,7 +20,7 @@ export default function () {
   }
 
   const resetCommunity = () => {
-    community.value.info = null as ICommunity
+    community.value.info = null
   }
 
   return {

@@ -65,13 +65,13 @@
           <li v-if="options.length">
             <select name="" title="" class="w100p" v-model="selectVersion">
               <option v-for="option in options" :value="option">
-                {{ option }}
+                {{ option.version }}
               </option>
             </select>
           </li>
           <li v-else>
             <select name="" title="" class="w100p">
-              <option value="배포할 버전이 없습니다.">
+              <option :value="$t('deployManage.changeDeploy.noVersion')">
                 {{ $t('deployManage.changeDeploy.noVersion') }}
               </option>
             </select>
@@ -176,6 +176,7 @@
 import { ElMessage, ElDialog, ElLoading } from 'element-plus'
 import { eGameStage, IProject, IVersion } from '~~/types'
 import { useI18n } from 'vue-i18n'
+import { value } from 'dom7';
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -237,7 +238,7 @@ useHead({
 })
 
 const options = ref([])
-const selectVersion = ref('')
+const selectVersion = ref()
 const showUndeployModal = ref(false)
 const deployVersion = ref<IVersion>()
 const showSelectStageModal = ref(false)
@@ -275,7 +276,11 @@ function setVersionInfo(info: IProject) {
     return version.state === 'passed'
   })
 
-  options.value = passedList.map((version: IVersion) => version.version)
+  options.value = passedList.map((version: IVersion) => {
+    return {
+      id: version.id,
+      version: version.version}})
+  
   if (options.value.length) selectVersion.value = options.value[0]
 }
 
@@ -298,6 +303,8 @@ async function undeploy() {
 }
 
 async function deploy() {
+
+
   if (editProject.value.info.stage === eGameStage.DEV) {
     showSelectStageModal.value = true
     return
@@ -310,10 +317,11 @@ async function deploy() {
       }
     )
 
+    
   const formData = new FormData()
 
   formData.append('id', String(projectId.value))
-  formData.append('deploy_version_id', String(deployVersion.id))
+  formData.append('deploy_version_id', String(selectVersion.value.id))
 
   const { data, refresh, error } = await useCustomAsyncFetch(
     `/studio/project/${projectId.value}`,
