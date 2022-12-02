@@ -862,5 +862,6 @@
   "game.jam.plus.info": "Open for Application Now",
   "details": "Details",
   "dev.log.warning": "You may check on the Development Log at the game list of your profile.",
-  "game.file.deploy.first": "Please distribute your game after finish uploading the game's file."
+  "game.file.deploy.first": "Please distribute your game after finish uploading the game's file.",
+  "ended.event": "Ended evnet"
 }

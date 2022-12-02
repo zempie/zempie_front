@@ -12,7 +12,7 @@
     </div>
 
     <!-- GJ plus event -->
-    <div class="main-visual game-jam-plus">
+    <!-- <div class="main-visual game-jam-plus" >
       <h2>
         <span style="font: 36px/46px 'Jalnan'">Event</span>
       </h2>
@@ -25,7 +25,7 @@
         <p style="font-size:20px; margin-top:16px;margin-bottom: 30px;">{{$t('game.jam.plus.info')}}</p>
         <NuxtLink :to="$localePath('/game-jam-plus')" class="detail-button"> {{$t('details')}} </NuxtLink>
       </div>
-    </div>
+    </div> -->
     <!-- GJ plus event -->
     <div class="main-visual">
       <h2>
