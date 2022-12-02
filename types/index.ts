@@ -14,9 +14,19 @@ export interface IUser {
   is_developer?: boolean,
   picture?: string,
   profile?: any,
-  setting?: any,
+  setting?: {
+    alarm: boolean,
+    battle: boolean,
+    beat: boolean,
+    language: number,
+    like: boolean,
+    reply: boolean,
+    theme: number,
+    theme_extra: any
+  },
   url_banner?: string,
   profile_img?: string,
+  new_noti_count: number
 }
 
 
@@ -259,6 +269,19 @@ export interface IComChannel {
   user_id: number,
 }
 
+export interface INotification {
+  id: number,
+  user_id: number,
+  target_id: string,
+  is_read: boolean,
+  content: string,
+  type: number,
+  created_at: string,
+  user: IUser
+  updated_at?: string,
+  type_text?: string
+}
+
 
 
 
@@ -291,9 +314,13 @@ export enum ePlatformType {
   Ios
 }
 
-// export enum eGamePurpose {
-//   NONE = -1,
-//   Normal = 0,
-//   Gamejam = 3,
-//   GJ = 4,
-// }
+export enum eNotificationType {
+  notice = 1,
+  post,
+  post_like,
+  comment,
+  comment_like,
+  report,
+  retweet,
+  follow
+}

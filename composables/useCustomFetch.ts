@@ -1,21 +1,30 @@
 import { FetchOptions } from "ohmyfetch"
 import dayjs from "dayjs";
 import { IUser } from "~~/types";
+
 const DAYSTOSEC_30 = 60 * 60 * 24 * 30;
 
+let isTokenProcessingDone = true; //2번 호출 방지
+
+interface IRefreshToken {
+  access_token: string,
+  expires_in: string,
+  id_token: string,
+  project_id: string,
+  refresh_token: string,
+  token_type: string,
+  user_id: string
+}
 
 export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions) => {
 
-  colorLog(`start fetcch:  ${url}`, 'success')
-
   const config = useRuntimeConfig()
-  const accessToken = useCookie(config.COOKIE_NAME).value
+  const accessToken = useCookie(config.COOKIE_NAME)
   let result = null;
 
-  if (accessToken) {
+  if (accessToken.value && isTokenProcessingDone) {
     result = await getRefreshToken()
   }
-
 
   return await useFetch<T>(url, {
     initialCache: false,
@@ -47,7 +56,7 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
 
       options.headers = options.headers || {}
 
-      if (accessToken) options.headers['Authorization'] = result && `Bearer ${result.access_token}`
+      // if (accessToken) options.headers['Authorization'] = result && `Bearer ${result.access_token}`
 
       useCommon().setLoading()
       console.log('[fetch request]')
@@ -62,16 +71,16 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
 
 export const useCustomFetch = async <T>(url: string, options?: FetchOptions) => {
 
-  colorLog(`start fetcch:  ${url}`, 'success')
 
   const config = useRuntimeConfig()
-  const accessToken = useCookie(config.COOKIE_NAME).value
+  const accessToken = useCookie(config.COOKIE_NAME)
   let result = null;
 
-  if (accessToken) {
+  if (accessToken.value && isTokenProcessingDone) {
     result = await getRefreshToken()
   }
 
+  console.log('options:', options)
   return await $fetch<T>(url, {
     ...options,
     async onResponse({ request, response, options }) {
@@ -101,8 +110,7 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions) => 
 
       options.headers = options.headers || {}
 
-      if (accessToken) options.headers['Authorization'] = result && `Bearer ${result.access_token}`
-
+      // if (accessToken.value) options.headers['Authorization'] = result && `Bearer ${result.access_token}`
       useCommon().setLoading()
       console.log('[fetch request]')
     },
@@ -114,6 +122,7 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions) => 
 }
 
 export async function getRefreshToken() {
+  isTokenProcessingDone = false;
   const config = useRuntimeConfig();
   const { $cookies, $firebaseAuth } = useNuxtApp()
 
@@ -132,21 +141,22 @@ export async function getRefreshToken() {
   /**
    * 토큰 리프레시 해야되는 경우
    * 1. api 실행하기 전에 유효기간 확인하고 유효기간 끝났으면 리프레시 해야함
-   * 2. 리프레시 토큰이 있는데 useState 값 사라졋을 때 유효기간 끝났으면 다시 리프레시 해야함
+   * 2. 리프레시 토큰이 있는데 useState 값 사라졋을 때 
    */
 
-  if ((!useUser().user.value.fUser && useCookie(config.COOKIE_NAME).value)) {
-    colorLog('case 2', 'yellow')
+
+  if ((!useUser().user.value.info && useCookie(config.COOKIE_NAME).value)) {
+    colorLog('case 2 no useState', 'yellow')
     isContinue = true
-  } else if (useUser().user.value.fUser && (dayjs().isSame(expirationTime) || dayjs().isAfter(expirationTime))) {
-    colorLog('case 1', 'pink')
+  } else if (useUser().user.value.info && (dayjs().isSame(expirationTime) || dayjs().isAfter(expirationTime))) {
+    colorLog('case 1 expiration', 'pink')
     isContinue = true
   }
 
   //토큰 리프레시 없이 기존 토큰으로 api 실행
   if (!isContinue) {
     return {
-      access_token: useUser().user.value.fUser.stsTokenManager.accessToken
+      access_token: useCookie(config.COOKIE_NAME).value
     };
   }
 
@@ -154,8 +164,6 @@ export async function getRefreshToken() {
     'grant_type': 'refresh_token',
     'refresh_token': refreshToken,
   };
-
-
 
   let formBody = [];
   for (var property in body) {
@@ -165,10 +173,7 @@ export async function getRefreshToken() {
   }
   const formBody2 = formBody.join("&");
 
-
-
-
-  const result = await $fetch<{ access_token: string, expires_in: string, id_token: string, project_id: string, refresh_token: string, token_type: string, user_id: string }>(config.GOOGLE_REFRESH_TOKEN_URL, {
+  const result = await $fetch<IRefreshToken>(config.GOOGLE_REFRESH_TOKEN_URL, {
     method: 'post',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
@@ -188,19 +193,12 @@ export async function getRefreshToken() {
       domain: config.COOKIE_DOMAIN
     });
 
-    if (!useUser().user.value.fUser) {
-      const user = $firebaseAuth.currentUser;
-      console.log('user: ', user)
-
-
-      const response = await $fetch<{ result: { user: IUser } }>('/user/info', getZempieFetchOptions('get', true))
-      console.log('result: ', result)
-      if (response) {
-        const { user } = response.result
-        useUser().setUser(user)
-      }
+    if (!useUser().user.value.info) {
+      colorLog("refresh token and no info", 'yellow')
+      await useUser().setUserInfo()
     }
   }
 
+  isTokenProcessingDone = true;
   return result
 }

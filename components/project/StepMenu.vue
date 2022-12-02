@@ -21,14 +21,12 @@
       <li v-if="$route.meta.name !== 'projectId'" :class="[uploadProject.step === 4 &&  'active' , 'step']">
         <p>STEP 04</p>
         <h3>{{ $t('file.upload') }}</h3>
-
       </li>
       <slot name="uploadGameBtn"></slot>
     </ul>
   </dt>
 </template>
 <script setup lang="ts">
-import { eGameStage } from '~~/types'
 
 const { uploadProject } = useProject()
 

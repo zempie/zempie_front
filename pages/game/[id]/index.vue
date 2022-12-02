@@ -154,7 +154,7 @@ onBeforeUnmount(()=>{
 })
 
 async function gameListFetch() {
-  const response = await $fetch<{
+  const response = await useCustomFetch<{
     result: any
   }>(
     `/channel/${game.value?.user.channel_id}`,
@@ -175,37 +175,6 @@ async function gameListFetch() {
   }
 }
 
-// gameListFetch() {
-//     this.$api.userChannel(this.user.channel_id)
-//         .then((res: any) => {
-//             const {target} = res;
-//             const {games} = target;
-//             this.$store.commit('gameList', games)
-//             if (games.length > 0) {
-//                 this.totalGameCnt = games.length;
-//             }
-//             this.games = games.slice(0, 5)
-//         })
-//         .catch((err: AxiosError) => {
-//             // this.$router.push(`/${this.$i18n.locale}`)
-//             // console.log('err', err)
-//         })
-
-// }
-
-// beforeDestroy() {
-//     this.$store.commit('currPage', null)
-// }
-
-// openImgModal(imgSrc: string) {
-//     this.imgSrc = imgSrc;
-//     (this.$refs.originScreenShootImgModal as any).show();
-// }
-
-// closeImgModal() {
-//     (this.$refs.originScreenShootImgModal as any).hide();
-// }
-
 function copyUrl() {
   let url = ''
   
@@ -223,11 +192,6 @@ function copyUrl() {
   })
 }
 
-// @Watch('$route.params.gamePath')
-// watchParams() {
-//     this.gamePath = this.$route.params.gamePath
-//     this.fetch();
-// }
 </script>
 
 <style scoped lang="scss">

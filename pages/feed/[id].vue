@@ -1,8 +1,6 @@
 <template>
   <div class="content">
-
     <div class="area-view">
-     
       <ul class="ta-post" v-if="feed">
         <li class="tap-list">
           <dl class="tapl-title">
@@ -104,7 +102,7 @@
               </div>
             </div>
           </template>
-          <CommunityTarget :communities="feed?.posted_at[0].community" :games="feed?.posted_at[0].game"/>
+          <CommunityTarget :communities="postedAt" :games="feed?.posted_at[0].game"/>
          
           <ul class="tapl-option">
             <li>
@@ -239,18 +237,7 @@ const observer = ref<IntersectionObserver>(null)
 const triggerDiv = ref<Element>()
 const isAddData = ref(false)
 const feed = ref()
-// const {
-//   data: feed,
-//   error,
-//   pending,
-//   refresh,
-// } = await useCustomAsyncFetch<any>(
-//   `/post/${feedId.value}`,
-//   getComFetchOptions('get', true)
-// )
-// if (!feed.value || error.value) {
-//   throw createError({ statusCode: 404, statusMessage: 'Page Not Found' })
-// }
+const postedAt = ref()
 
 watch(
   () => feed.value,
@@ -259,18 +246,6 @@ watch(
   }
 )
 
-async function fetch(){
-  try{
-    const response = await $fetch<any>(
-    `/post/${feedId.value}`,
-    getComFetchOptions('get', true)
-  )
-    feed.value = response
-  }catch(error){
-    alert(error)
-  }
-
-}
 onMounted(async () => {
   await fetch()
   if (feed.value) {
@@ -289,6 +264,31 @@ onMounted(async () => {
   await commentFetch()
 })
 
+async function fetch(){
+  try{
+    const response = await useCustomFetch<any>(
+    `/post/${feedId.value}`,
+    getComFetchOptions('get', true)
+  )
+    if(response){
+      feed.value = response
+      postedAt.value = response.posted_at[0]
+      postedAt.value = postedAt.value.community.map((com)=>{
+        return {
+          channel:com.channel,
+          channel_id:com.channel_id,
+          community:com?.group || com.community,
+          id:com.id
+        }
+      })
+      console.log( postedAt.value)
+
+    }
+  }catch(error){
+    alert(error)
+  }
+
+}
 async function handleIntersection(target: any) {
   if (target.isIntersecting) {
     if (isAddData.value) {

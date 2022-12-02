@@ -96,15 +96,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  ElDropdown,
-  ElMessageBox,
-  ElDropdownItem,
-  ElLoading,
-  ElPopover,
-  ElMessage,
-  ElDialog,
-} from 'element-plus'
+import {  ElMessage } from 'element-plus'
 import useVuelidate from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
 import { useI18n } from 'vue-i18n'
@@ -127,7 +119,8 @@ const route = useRoute()
 const config = useRuntimeConfig()
 
 definePageMeta({
-  layout: false,
+  layout: 'layout-none',
+  middleware:'guest-only'
 })
 useHead({
   title: `${t('seo.login.title')} | Zempie`,
@@ -213,7 +206,6 @@ async function onSubmit() {
         .then(async (result) => {
           const { user } = result
           useUser().setFirebaseUser(user)
-          // router.push($localePath('/'))
         })
         .catch((err: any) => {
           const errorCode = err.code
@@ -268,6 +260,7 @@ async function socialLogin(provider: AuthProvider) {
     }
   }
 }
+
 </script>
 
 <style scoped lang="scss">

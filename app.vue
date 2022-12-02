@@ -26,15 +26,14 @@
     </el-dialog>
 </template>
 <script setup lang="ts">
-import {ElDialog, ID_INJECTION_KEY } from 'element-plus'
-
+import { ElDialog, ID_INJECTION_KEY } from 'element-plus'
 import { useI18n } from 'vue-i18n'
+
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
 const switchLocalePath = useSwitchLocalePath()
 const route = useRoute()
 const router = useRouter()
-const { $cookies } = useNuxtApp()
 
 const isOpen = ref(false)
 const showOneDay = ref(false)
@@ -98,7 +97,7 @@ provide(ID_INJECTION_KEY, {
   current: 0,
 })
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
   let date = new Date()
   //게임젬플러스 종료 날짜
   let endDate : Date | number= new Date(2022, 10, 20, 23, 59, 59)
@@ -114,7 +113,7 @@ onBeforeMount(() => {
 
   //유효 기간이 더 크면 팝업 안보이게
   //다시 안보기인 경우 팝업 안보이게
-  if((parseInt(localStorage.getItem('GJ_POPUP_ONE') ) >  now)|| Boolean(localStorage.getItem('GJ_POPUP_NEVER'))){
+  if((parseInt(localStorage.getItem('GJ_POPUP_ONE') ) >  now) || Boolean(localStorage.getItem('GJ_POPUP_NEVER'))){
     isOpen.value = false
   }
 
@@ -130,6 +129,10 @@ onBeforeMount(() => {
   useCommon().setLang(locale.value)
 
   router.replace(route.fullPath)
+
+  //로그인 확인 처리
+  await getRefreshToken()
+  
 })
 
 

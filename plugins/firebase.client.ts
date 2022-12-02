@@ -1,10 +1,12 @@
 import { defineNuxtPlugin } from '#app'
 import * as firebase from 'firebase/app'
 import { getAuth, onIdTokenChanged, } from 'firebase/auth'
-
-
-// import * as firebaseAuth from '@firebase/auth'
 import { IUser } from '~~/types';
+import * as fbFcm from '~~/scripts/firebase-fcm'
+
+import { getMessaging, onMessage, getToken } from "firebase/messaging";
+import { onBackgroundMessage } from "firebase/messaging/sw";
+import { resigterFcmToken } from '~~/scripts/firebase-fcm';
 
 
 const DAYSTOSEC_30 = 60 * 60 * 24 * 30;
@@ -29,7 +31,6 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   const app = firebase.initializeApp(firebaseConfig);
 
-
   let auth = null
 
   try {
@@ -38,10 +39,9 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   } catch (error) {
     useUser().setLoadDone()
   }
-  console.log('auth', auth)
 
-  onIdTokenChanged(auth, (user) => {
-    console.log(2, user)
+  onIdTokenChanged(auth, async (user) => {
+
     if (user) {
       $cookies.set(config.COOKIE_NAME, (user as any).accessToken, {
         maxAge: DAYSTOSEC_30,
@@ -57,11 +57,23 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       useUser().setFirebaseUser(user);
 
       if (!useUser().user.value.isSignUp) {
-        setUserInfo()
+        await setUserInfo()
+        routerToHome()
       }
     }
     useUser().setLoadDone()
+
   })
+
+
+  const messaging = getMessaging(app);
+
+  onMessage(messaging, (payload) => {
+    console.log('Message received. ', payload);
+    useAlarm().setNewNoti(payload)
+    // ...
+  });
+
 
   nuxtApp.provide('firebaseApp', app);
   nuxtApp.provide('firebaseAuth', auth);
@@ -70,15 +82,25 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
 async function setUserInfo() {
   const router = useRouter()
-
+  const config = useRuntimeConfig();
 
   try {
-    const response = await $fetch<{ result: { user: IUser } }>('/user/info', getZempieFetchOptions('get', true))
-    if (response) {
-      const { user } = response.result
-      useUser().setLogin()
-      useUser().setUser(user)
-      routerToHome()
+    //TODO: 2번 부르는거
+    colorLog("firebase token", 'yellow')
+
+    await useUser().setUserInfo()
+
+    //fcm token 등록
+    const { token } = await fbFcm.getFcmToken(useUser().user.value.info.id)
+    if (!token) {
+
+      // const { $firebaseApp } = useNuxtApp()
+      // const messaging = getMessaging($firebaseApp);
+
+      // const token = await getToken(messaging, { vapidKey: config.fCM_KEY })
+
+      await resigterFcmToken(useUser().user.value.info.id)
+
     }
   }
   catch (error: any) {
@@ -104,7 +126,7 @@ async function routerToHome() {
   const route = useRoute();
   const router = useRouter();
   if (route.name?.toString().includes('login')) {
-    router.push(`/${useCommon().setting.value.lang}/timeline`)
+    router.push(`/${useCommon().setting.value.lang}/channel/${useUser().user.value.info.channel_id}`)
 
   }
 }

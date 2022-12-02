@@ -2,7 +2,7 @@
   <ClientOnly>
     <ul class="ta-post">
       <dd>
-        <div class="ta-message-send">
+        <div class="ta-message-send mt20">
           <p>
             <UserAvatarSk style="width:40px; height:40px" />
           </p>

@@ -1,5 +1,6 @@
 <template>
   <li @click="$router.push($localePath(`/channel/${user.channel_id}`))">
+
     <div
       class="cf-img"
       :style="
@@ -8,7 +9,7 @@
           : `background-color:orange; background-size:cover`
       "
     ></div>
-    <UserAvatar :user="userObj" :tag="'p'"></UserAvatar>
+    <UserAvatar :user="userObj" :tag="'p'" :hasRouter="true" ></UserAvatar>
     <div class="cf-info">
       <h3>{{ user.name }}</h3>
       <dl>
@@ -42,6 +43,7 @@ const props = defineProps({
 const bannerImg = computed(() =>
   props.user.url_banner ? props.user.url_banner + `?_=${Date.now()}` : null
 )
+
 const userObj = computed(() => {
   return {
     name: props.user.name,

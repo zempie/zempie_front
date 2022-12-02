@@ -35,13 +35,15 @@ export default function () {
   }
 
   const getChannelInfo = async (channelId: string) => {
-    const data = await $fetch<{ result: { target: IUserChannel } }>(`/channel/${channelId}`, getZempieFetchOptions('get', false))
+
+    const data = await useCustomFetch<{ result: { target: IUserChannel } }>(`/channel/${channelId}`, getZempieFetchOptions('get', false))
 
     if (data) {
       const { target } = data.result;
 
       await setUserChannel(target)
     }
+
   }
 
   const resetUserChannel = () => {

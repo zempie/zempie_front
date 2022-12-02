@@ -29,9 +29,9 @@ export default defineNuxtConfig({
 
     }
   },
-  experimental: {
-    writeEarlyHints: false,
-  },
+  // experimental: {
+  //   writeEarlyHints: false,
+  // },
 
   hooks: {
     'pages:extend'(routes) {
@@ -87,7 +87,6 @@ export default defineNuxtConfig({
     'cookie-universal-nuxt',
     ['@nuxtjs/i18n', i18n],
     '@vueuse/nuxt',
-    '@nuxt/image-edge',
   ],
 
   publicRuntimeConfig: {
@@ -114,7 +113,8 @@ export default defineNuxtConfig({
     GA_TAG: process.env.GA_TAG,
     GOOGLE_REFRESH_TOKEN_URL: process.env.GOOGLE_REFRESH_TOKEN_URL,
     REFRESH_TOKEN: process.env.REFRESH_TOKEN_COOKIE,
-    GAME_JAM_PLUS: process.env.GAME_JAM_PLUS
+    GAME_JAM_PLUS: process.env.GAME_JAM_PLUS,
+    fCM_KEY: process.env.FCM_KEY,
   },
 
 })

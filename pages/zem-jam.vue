@@ -46,7 +46,7 @@
             style="font-family: 'Russo One'"
           >
             <a style="font-family: 'Russo One', 'NeoDunggeunmo'"
-              >종료된 게임젬</a
+              >{{$t('ended.event')}}</a
             >
             <!-- <router-link :to="`/${$i18n.locale}/uploadGame`" style=" font-family:'Russo One'">UPLOAD GAME
                         </router-link> -->
