@@ -19,6 +19,7 @@
             </NuxtLink>
           </p>
           <button
+            v-if="isMobile"
             class="btn-circle-none mobile"
             @click="isHeaderSideMobile = true"
           >
@@ -496,7 +497,7 @@ const hasNewNoti = ref()
 
 const isMobile = computed(() =>{
   if(process.client){
-    window.matchMedia('screen and (max-width: 479px)')
+    return window.matchMedia('screen and (max-width: 479px)')
   }
 }
 )
