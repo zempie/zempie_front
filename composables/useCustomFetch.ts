@@ -135,6 +135,8 @@ export async function getRefreshToken() {
 
   if (!refreshToken) {
     useUser().logout()
+    isTokenProcessingDone = true;
+
     return
   };
 
@@ -155,6 +157,7 @@ export async function getRefreshToken() {
 
   //토큰 리프레시 없이 기존 토큰으로 api 실행
   if (!isContinue) {
+    isTokenProcessingDone = true;
     return {
       access_token: useCookie(config.COOKIE_NAME).value
     };
