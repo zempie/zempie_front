@@ -494,10 +494,12 @@ const needAlarmRefresh = ref(false)
 const hasNewNoti = ref()
 
 
-const isMobile = computed(() =>
-  window.matchMedia('screen and (max-width: 479px)')
+const isMobile = computed(() =>{
+  if(process.client){
+    window.matchMedia('screen and (max-width: 479px)')
+  }
+}
 )
-
 const options = [
   { code: 'ko', label: '한국어' },
   { code: 'en', label: 'English' },
