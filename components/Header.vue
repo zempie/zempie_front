@@ -6,7 +6,7 @@
           <p>
             <NuxtLink :to="$localePath('/')">
               <img
-                v-if="isMobile"
+                v-if="showMobileLogo"
                 class="mobile-logo"
                 src="/images/zempie_logo_154_155.png"
                 alt="zempie-logo"
@@ -20,7 +20,6 @@
             </NuxtLink>
           </p>
           <button
-            v-if="isMobile"
             class="btn-circle-none mobile"
             @click="isHeaderSideMobile = true"
           >
@@ -63,9 +62,9 @@
           </el-dropdown>
         </ClientOnly>
           <li class="uppercase">
-            <NuxtLink id="zempieWorldMenu" :to="$localePath('/game/list')" >
+            <a id="zempieWorldMenu" :href="config.ZEMPIE_METAVERSE" target="_blank">
                 Zempie world
-            </NuxtLink>
+            </a>
           </li>
           </ul>
         </div>
@@ -380,22 +379,20 @@
                 @click.native="isHeaderSideMobile = false"
                 ><i class="uil uil-robot"></i> Games
               </NuxtLink>
-              <NuxtLink
-                :to="$localePath('/game-jam-plus')"
-                @click.native="isHeaderSideMobile = false"
-                ><i class="uil uil-comment"></i>
-                Zempie World
-              </NuxtLink>
+              <a id="zempieWorldMenu" :href="config.ZEMPIE_METAVERSE" target="_blank">
+                <i class="uil uil-globe"></i>
+                Zempie world
+            </a>
               <NuxtLink
                 :to="$localePath('/zem-jam')"
                 @click.native="isHeaderSideMobile = false"
-                ><i class="uil uil-comment"></i>
+                ><i class="uil uil-play"></i>
                 ZEMJAM
               </NuxtLink>
               <NuxtLink
                 :to="$localePath('/game-jam-plus')"
                 @click.native="isHeaderSideMobile = false"
-                ><i class="uil uil-comment"></i>
+                ><i class="uil uil-keyboard"></i>
                 GJ+
               </NuxtLink>
              
@@ -485,7 +482,6 @@ const gameList = ref([])
 const communityList = ref([])
 const hasResearchResult = ref(false)
 const isHeaderSideMobile = ref(false)
-const isOpenSearch = ref(false)
 const isHeaderSideBgMobile = ref(false)
 
 
@@ -495,8 +491,11 @@ const isNotiLoading = ref(false)
 const needAlarmRefresh = ref(false)
 const hasNewNoti = ref()
 
+const isMobile = computed(() =>
+  window.matchMedia('screen and (max-width: 479px)')
+)
+const showMobileLogo = ref(false)
 
-const isMobile = ref()
 const options = [
   { code: 'ko', label: '한국어' },
   { code: 'en', label: 'English' },
@@ -543,10 +542,24 @@ watch(
 
 onMounted(()=>{
   nextTick(() => {
-      isMobile.value = window.matchMedia('screen and (max-width: 479px)').matches
+    onResize()
   })
+  window.addEventListener('resize', onResize)
 })
 
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', onResize)
+})
+
+
+function onResize() {
+  if (isMobile.value.matches) {
+    showMobileLogo.value = true
+  } else {
+    showMobileLogo.value = false
+  }
+}
 
 function switchLangauge() {
   switchLocalePath(selectedLang.value)

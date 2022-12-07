@@ -115,6 +115,7 @@ export default defineNuxtConfig({
     REFRESH_TOKEN: process.env.REFRESH_TOKEN_COOKIE,
     GAME_JAM_PLUS: process.env.GAME_JAM_PLUS,
     fCM_KEY: process.env.FCM_KEY,
+    ZEMPIE_METAVERSE: process.env.ZEMPIE_METAVERSE
   },
 
 })
