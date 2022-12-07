@@ -11,6 +11,7 @@
                 alt="zempie-logo"
               />
               <img
+                v-if="isMobile"
                 class="mobile-logo"
                 src="/images/zempie_logo_154_155.png"
                 alt="zempie-logo"
@@ -343,7 +344,7 @@
           </div>
           <div
             class="header-side-mobile"
-            :style="isHeaderSideMobile ? 'left:0px;' : ''"
+            :style="isHeaderSideMobile && 'left:0px;'"
             id="headerSideMobile"
             v-on-click-outside="clickOutside"
           >
@@ -447,7 +448,6 @@
 
 <script setup lang="ts">
 import _ from 'lodash'
-//TODO: 모바일 메뉴 다른 곳 클릭하면 닫히게
 import { vOnClickOutside } from '@vueuse/components'
 import { useI18n } from 'vue-i18n'
 import {
@@ -492,6 +492,11 @@ const notiList = ref<INotification[]>()
 const isNotiLoading = ref(false)
 const needAlarmRefresh = ref(false)
 const hasNewNoti = ref()
+
+
+const isMobile = computed(() =>
+  window.matchMedia('screen and (max-width: 479px)')
+)
 
 const options = [
   { code: 'ko', label: '한국어' },
