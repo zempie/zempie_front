@@ -104,7 +104,7 @@
         </ol> -->
         <ol>
           <li>Alarm</li>
-          <li>오른쪽의 토글을 틀릭하시면 알림이 비활성화됩니다. 언제든지 다시 활성화하실 수 있습니다. </li>
+          <li>{{ $t('userSetting.alarm.info') }} </li>
           <li>
             <el-switch v-model="isAlarmOn" size="large"  active-color="#ff6e17" @click="setAlarmStatus"/>
           </li>

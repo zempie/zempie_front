@@ -104,8 +104,7 @@ async function setUserInfo() {
     }
   }
   catch (error: any) {
-    const { error: err } = (error.value as any).data;
-    console.log(err)
+    const { error: err } = (error.value as any)?.data || error.value;
 
     switch (err.code) {
       case 20001:

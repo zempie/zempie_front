@@ -37,30 +37,33 @@
                 id="gameMenu"
                 :to="$localePath('/game/list')"
                 :class="
-                  $route.name.toString().includes('game-list') && 'active' 
-                "
-              >
+                  $route.name.toString().includes('game-list') && 'active'"
+>
                 games
               </NuxtLink>
             </li>
-            <li class="uppercase">
-              <NuxtLink
-                :to="$localePath('/zem-jam')"
-                :class="
-                  $route.name.toString().includes('zem-jam') && 'active'"
-              >
+            <ClientOnly>
+            <el-dropdown trigger="click" class="menu-dropdown uppercase">            
+              <span class="el-dropdown-link">
+              GameJam
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item class="header-menu" @click="router.push($localePath('/zem-jam'))"> 
                 ZEMJAM
-              </NuxtLink>
-            </li>
-            <li class="uppercase">
-              <NuxtLink
-                :to="$localePath('/game-jam-plus')"
-                :class="
-                  $route.name.toString().includes('game-jam-plus') && 'active'"
-              >
+              </el-dropdown-item>
+                <el-dropdown-item class="header-menu" @click="router.push($localePath('/game-jam-plus'))">              
                 GJ+
-              </NuxtLink>
-            </li>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </ClientOnly>
+          <li class="uppercase">
+            <NuxtLink id="zempieWorldMenu" :to="$localePath('/game/list')" >
+                Zempie world
+            </NuxtLink>
+          </li>
           </ul>
         </div>
       </dt>
@@ -198,7 +201,7 @@
                   <dl>
                     <dt>Notifications</dt>
                     <dd>
-                      <a @click="readAll"><i class="uil uil-comment-alt"></i><em>전부읽음</em></a>
+                      <a @click="readAll"><i class="uil uil-comment-alt"></i><em>{{ t('mark.all') }}</em></a>
                     </dd>
                   </dl>
                   <ul>
@@ -215,22 +218,29 @@
                         </dd>
                       </dl>
                     </li>
-                    <li v-else v-for="noti in notiList" :key="noti.id" :class="!noti.is_read && 'is-read-active'" >
-                      <dl @click.stop="moveAlarm(noti)">
-                        <dd>
-                            <UserAvatar :user="noti.user" :tag="'span'" :hasRouter="true" />
-                        </dd>
-                        <dt>
-                          <h3><span @click.stop="$router.push($localePath(`/channel/${noti.user.channel_id}`))">{{noti.user.name}}&nbsp;</span>{{noti.type_text}}</h3>
-                          <h4>{{noti.content.slice(0,40)}}</h4>
-                          <p><i class="uis uis-clock" style="color:#c1c1c1;"></i>{{dateFormat(noti.created_at)}}</p>
-                        </dt>
-                        <dd>
-                        </dd>
-                      </dl>
-                    </li>
+                    <template v-else>
+                      <li v-if="notiList?.length" v-for="noti in notiList" :key="noti.id" :class="!noti.is_read && 'is-read-active'" >
+                        <dl @click.stop="moveAlarm(noti)">
+                          <dd>
+                              <UserAvatar :user="noti.user" :tag="'span'" :hasRouter="true" />
+                          </dd>
+                          <dt>
+                            <h3><span @click.stop="$router.push($localePath(`/channel/${noti.user.channel_id}`))">{{noti.user.name}}&nbsp;</span>{{noti.type_text}}</h3>
+                            <h4>{{noti.content.slice(0,40)}}</h4>
+                            <p><i class="uis uis-clock" style="color:#c1c1c1;"></i>{{dateFormat(noti.created_at)}}</p>
+                          </dt>
+                          <dd>
+                          </dd>
+                        </dl>
+                      </li>
+                      <li v-else>
+                        <dl>
+                          {{ t('no.alarm') }}
+                        </dl>
+                      </li>
+                  </template>
                   </ul>
-                  <p class="view-all"><a @click="goNotiList">전체보기</a></p>
+                  <p class="view-all"><a @click="goNotiList">{{ t('view.all') }}</a></p>
                   </div>
               </template>
             </el-dropdown>
@@ -368,6 +378,12 @@
                 ><i class="uil uil-robot"></i> Games
               </NuxtLink>
               <NuxtLink
+                :to="$localePath('/game-jam-plus')"
+                @click.native="isHeaderSideMobile = false"
+                ><i class="uil uil-comment"></i>
+                Zempie World
+              </NuxtLink>
+              <NuxtLink
                 :to="$localePath('/zem-jam')"
                 @click.native="isHeaderSideMobile = false"
                 ><i class="uil uil-comment"></i>
@@ -379,6 +395,7 @@
                 ><i class="uil uil-comment"></i>
                 GJ+
               </NuxtLink>
+             
             </div>
           </div>
           <div
@@ -655,13 +672,25 @@ async function readAll(){
 
 <style lang="scss" scoped>
 .header{
-  .mobile-logo {
-   display: none;
-  }
+  
   .header-info{
     display: flex;
     align-items: center;
   }
+  .menu-dropdown{
+    display: inline-block;
+    padding: 20px 35px 20px 0;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 14px;
+    color: #333;
+    &:hover{
+      cursor: pointer;
+      color:#f97316;
+      
+    }  
+  }
+ 
 }
 
 
@@ -793,8 +822,8 @@ async function readAll(){
   }
 
   .mobile-logo {
-    display: block;
-    width: 32px;
+    display: block !important;
+    width: 32px; 
     height: 32px;
   }
 
@@ -817,6 +846,10 @@ async function readAll(){
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
+
+  .mobile-logo {
+   display: none;
+  }
   .btn-circle-none {
     &.mobile {
       display: block;
@@ -836,6 +869,9 @@ async function readAll(){
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
+  .mobile-logo{
+    display: none;
+  }
   .header > dl {
     width: 90%;
   }
@@ -850,6 +886,9 @@ async function readAll(){
 }
 
 @media all and (min-width: 992px) and (max-width: 1199px) {
+   .mobile-logo{
+    display: none;
+  }
   .header-login {
     display: block !important;
 
@@ -863,5 +902,8 @@ async function readAll(){
 }
 
 @media all and (min-width: 1200px) {
+  .mobile-logo{
+    display: none;
+  }
 }
 </style>

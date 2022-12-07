@@ -16,10 +16,6 @@ export default defineNuxtPlugin(() => {
         useRouter().replace('/game/list')
         break;
     }
-
-    if (process.client) {
-      window.scrollTo(0, 0);
-    }
   },
     { global: true }
   )

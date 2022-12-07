@@ -364,39 +364,10 @@
 .el-checkbox.is-disabled + .el-cascader-node__label{
   color:#f97316 !important
 }
-// .el-cascader-menu__list {
-//   .el-cascader-node{
-//     margin:10px;
-//     &:focus{
-//       background-color: #fff !important;
-//     }
-//     &:hover:not(.is-disabled){
-//       background-color: #f97316;
-//       color:#fff;     
-//       border-radius: 5px;
-//     }
-//     &.in-active-path{
-//       color: #f97316 !important;
-//       font-weight: 400;
-//       &:hover{
-//         // color:#fff !important;
-//       }
-//     }
-//     &.is-active{
-//       color: #606266 !important;
-//       font-weight: 400;
-//       &:hover{
-//         color:#fff !important;
-//         .el-checkbox__inner{
-//           background-color: #fff !important;
-//           &::before{
-//             background-color: #f97316 !important;
-//             border-color: #f97316 !important;
-//           }
-//         }
-//       }
-      
-//     }
-//   }
-  
-// }
+
+// header
+.header-menu{
+    &:hover{
+      background-color: transparent !important;
+    }
+  }

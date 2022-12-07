@@ -6,8 +6,9 @@
       </h1>
     </div>
     <!-- DM 리스트 -->
-    <div v-if="useAlarm().alarm.value.newNoti"  class="noti-toast"
-    ><p >새로운 메세지가 도착했습니다. 새로고침 해주세요&nbsp;<i class="uil uil-sync" @click="fetch"></i></p>
+    <!-- v-if="useAlarm().alarm.value.newNoti"  -->
+    <div  class="noti-toast"
+    ><p >{{ t('new.msg') }}  {{ t('need.refresh') }}&nbsp;<i class="uil uil-sync"></i></p>
       </div>
     <div class="dm-list"
     :style="useAlarm().alarm.value.newNoti ? 'border-top-left-radius: 0;border-top-right-radius: 0;' :  'border-top-left-radius: 10px;border-top-right-radius: 10px;'"
@@ -19,8 +20,8 @@
           <p>프로필 사진은 Zempie가 제공하는 커뮤니티를 나타내는 위치에 표시됩니다.</p> -->
         </div>
         <p>
-          <a @click="readAll"><i class="uil uil-comment-alt"></i> <em>전부 읽음</em></a>
-          <NuxtLink :to="$localePath(`/myaccount`)"><i class="uil uil-setting"></i> <em>세팅</em></NuxtLink>
+          <a @click="readAll"><i class="uil uil-comment-alt"></i> <em> {{ t('mark.all') }} </em></a>
+          <NuxtLink :to="$localePath(`/myaccount`)"><i class="uil uil-setting"></i> <em>{{ t('setting') }}</em></NuxtLink>
         </p>
       </div>
 
@@ -33,7 +34,7 @@
           </div> -->
           <ul ref="listEl">
             <TransitionGroup name="list">
-              <li v-for="noti in list" :key="noti.id" :class="!noti.is_read &&'is-read-active'" @click.stop="clickNoti(noti)">
+              <li  v-for="noti in list" :key="noti.id" :class="!noti.is_read &&'is-read-active'" @click.stop="clickNoti(noti)">
                 <dl>
                   <dd>
                     <UserAvatar :tag="'p'" :user="noti.user" :hasRouter="true"/>
@@ -46,8 +47,12 @@
                   </dt>
                 </dl>
               </li>
-             <BeatLoader v-if="isLoading" :color="'#ff6e17'" size="20px" />
+                
+              <BeatLoader v-if="isLoading" :color="'#ff6e17'" size="20px" />
             </TransitionGroup>
+            <li v-if="(!isLoading && !list.length)">
+                <dl>{{ t('no.alarm') }}</dl>
+              </li>
           </ul>
       
       </dl>
@@ -185,6 +190,8 @@ async function readAll(){
   background: white;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
+  margin:0 auto;
+
 
 }
 .dm-list{
@@ -292,9 +299,10 @@ async function readAll(){
     margin: 0px auto;
     p{
       width:100%;
-
-
     }
+  }
+  .dm-list{   
+    margin: 0px auto;
   }
 
 }
@@ -307,13 +315,11 @@ async function readAll(){
 
   .noti-toast{
     width: 470px;
-    margin: 0px auto;
     p{
       width:100%;
     }
   }
-  .dm-list{
-   
+  .dm-list{   
     padding-top: 0px;
   }
 
@@ -323,11 +329,25 @@ async function readAll(){
   .noti-visual-title {
     width: 750px;
   }
+
+  .noti-toast{
+    width: 750px;
+    p{
+      width:100%;
+    }
+  }
 }
 
 @media all and (min-width: 992px) and (max-width: 1199px) {
   .noti-visual-title {
     width: 970px;
+  }
+
+  .noti-toast{
+    width: 970px;
+    p{
+      width:100%;
+    }
   }
 }
 @media all and (min-width: 1200px) {}

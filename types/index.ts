@@ -82,7 +82,7 @@ export interface IGame {
   game_jam: any,
   is_like?: boolean,
   game_type: number,
-  support_platform: number
+  support_platform: number | string
 }
 
 

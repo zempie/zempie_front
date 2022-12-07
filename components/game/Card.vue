@@ -70,7 +70,7 @@ const props = defineProps({
   gameInfo: Object as PropType<IGame>,
   })
   const support_platforms = computed(() => {
-    return props.gameInfo.support_platform.split(',')
+    return props.gameInfo.support_platform?.split(',')
   })
 
 const thumbnail = ref(
