@@ -104,9 +104,10 @@ async function setUserInfo() {
     }
   }
   catch (error: any) {
-    const { error: err } = (error.value as any)?.data || error.value;
 
-    switch (err.code) {
+    const err = (error.value as any)?.data || error.value;
+
+    switch (err?.code) {
       case 20001:
         router.push(`/${useCommon().setting.value.lang}/join`)
         break;
