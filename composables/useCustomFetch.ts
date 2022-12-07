@@ -71,17 +71,17 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
 
 export const useCustomFetch = async <T>(url: string, options?: FetchOptions) => {
 
-
   const config = useRuntimeConfig()
   const accessToken = useCookie(config.COOKIE_NAME)
   let result = null;
 
+  console.log('isTokenProcessingDone', isTokenProcessingDone)
+
   if (accessToken.value && isTokenProcessingDone) {
     result = await getRefreshToken()
   }
-
-  console.log('options:', options)
-  return await $fetch<T>(url, {
+  console.log('fetch user', result)
+  if (result) return await $fetch<T>(url, {
     ...options,
     async onResponse({ request, response, options }) {
 
