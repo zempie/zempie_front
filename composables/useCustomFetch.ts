@@ -22,9 +22,12 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
   const accessToken = useCookie(config.COOKIE_NAME)
   let result = null;
 
+
   if (accessToken.value && isTokenProcessingDone) {
+
     result = await getRefreshToken()
   }
+
 
   return await useFetch<T>(url, {
     initialCache: false,
@@ -67,6 +70,18 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
   })
 }
 
+function waitFor(conditionFunction) {
+
+  const poll = resolve => {
+    if (conditionFunction()) resolve();
+    else {
+      console.log('timoeput')
+      setTimeout(_ => poll(resolve), 400);
+    }
+  }
+
+  return new Promise(poll);
+}
 
 
 export const useCustomFetch = async <T>(url: string, options?: FetchOptions) => {
@@ -75,13 +90,11 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions) => 
   const accessToken = useCookie(config.COOKIE_NAME)
   let result = null;
 
-  console.log('isTokenProcessingDone', isTokenProcessingDone)
-
   if (accessToken.value && isTokenProcessingDone) {
     result = await getRefreshToken()
   }
-  console.log('fetch user', result)
-  if (result) return await $fetch<T>(url, {
+
+  return await $fetch<T>(url, {
     ...options,
     async onResponse({ request, response, options }) {
 
@@ -136,7 +149,6 @@ export async function getRefreshToken() {
   if (!refreshToken) {
     useUser().logout()
     isTokenProcessingDone = true;
-
     return
   };
 
@@ -205,6 +217,8 @@ export async function getRefreshToken() {
     }
   }
 
+
   isTokenProcessingDone = true;
+  console.log('running...', isTokenProcessingDone)
   return result
 }
