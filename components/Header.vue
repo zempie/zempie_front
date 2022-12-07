@@ -541,9 +541,11 @@ watch(
 )
 
 onMounted(()=>{
-  if(process.client){
-    isMobile.value = window.matchMedia('screen and (max-width: 479px)')
-  }
+  nextTick(() => {
+    if(process.client){
+      isMobile.value = window.matchMedia('screen and (max-width: 479px)')
+    }
+  })
 })
 
 
