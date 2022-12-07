@@ -181,7 +181,10 @@ export async function getRefreshToken() {
     body: formBody2
   })
 
+  console.log(result)
+
   if (result) {
+
     $cookies.set(config.COOKIE_NAME, result.access_token, {
       maxAge: DAYSTOSEC_30,
       path: '/',
