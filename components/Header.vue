@@ -495,12 +495,7 @@ const needAlarmRefresh = ref(false)
 const hasNewNoti = ref()
 
 
-const isMobile = computed(() =>{
-  if(process.client){
-    return window.matchMedia('screen and (max-width: 479px)')
-  }
-}
-)
+const isMobile = ref()
 const options = [
   { code: 'ko', label: '한국어' },
   { code: 'en', label: 'English' },
@@ -544,6 +539,12 @@ watch(
     if( val.new_noti_count ) hasNewNoti.value = true
   }
 )
+
+onMounted(()=>{
+  if(process.client){
+    isMobile.value = window.matchMedia('screen and (max-width: 479px)')
+  }
+})
 
 
 function switchLangauge() {
