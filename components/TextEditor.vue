@@ -1606,6 +1606,8 @@ function getFirstPostContent(content: string) {
     }
   }
   .mp-midi {
+    max-height: 315px;
+    
     .delete-video-btn {
       display: flex;
       justify-content: flex-end;

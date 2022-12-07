@@ -6,14 +6,15 @@
           <p>
             <NuxtLink :to="$localePath('/')">
               <img
-                class="logo"
-                src="/images/zempie-logo-black.png"
-                alt="zempie-logo"
-              />
-              <img
                 v-if="isMobile"
                 class="mobile-logo"
                 src="/images/zempie_logo_154_155.png"
+                alt="zempie-logo"
+              />
+              <img
+                v-else
+                class="logo"
+                src="/images/zempie-logo-black.png"
                 alt="zempie-logo"
               />
             </NuxtLink>
@@ -542,9 +543,7 @@ watch(
 
 onMounted(()=>{
   nextTick(() => {
-    if(process.client){
-      isMobile.value = window.matchMedia('screen and (max-width: 479px)')
-    }
+      isMobile.value = window.matchMedia('screen and (max-width: 479px)').matches
   })
 })
 

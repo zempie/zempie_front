@@ -200,6 +200,7 @@ function copyUrl() {
   border-radius: 10px;
   background: #fff;
   box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.1);
+  margin-bottom:20px;
 }
 
 .ta-screenshot .swiper-button-next {
