@@ -51,14 +51,13 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
               .catch(() => {
                 if (count > 2) {
                   useUser().logout()
+                  return
                 } else {
                   count += 1
                   fetch()
                 }
               })
           }
-          fetch();
-
           console.log('unauth', count)
           break;
         case 500:
@@ -137,8 +136,6 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions) => 
                 }
               })
           }
-          fetch();
-
           console.log('unauth', count)
           break;
         case 500:
