@@ -45,17 +45,20 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
       switch (status) {
         case 401:
           let count = 0
-          while (count > 2) {
+
+          const fetch = function () {
             $fetch<T>(url, options)
-              .then(() => {
-                return
-              }).catch(() => {
-                count += 1
+              .catch(() => {
+                if (count > 2) {
+                  useUser().logout()
+                } else {
+                  count += 1
+                  fetch()
+                }
               })
           }
-          if (count > 2) {
-            useUser().logout()
-          }
+          fetch();
+
           console.log('unauth', count)
           break;
         case 500:
@@ -122,18 +125,20 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions) => 
       switch (status) {
         case 401:
           let count = 0
-          while (count < 3) {
-            console.log('count', count)
+
+          const fetch = function () {
             $fetch<T>(url, options)
-              .then(() => {
-                return
-              }).catch(() => {
-                count += 1
+              .catch(() => {
+                if (count > 2) {
+                  useUser().logout()
+                } else {
+                  count += 1
+                  fetch()
+                }
               })
           }
-          if (count > 2) {
-            useUser().logout()
-          }
+          fetch();
+
           console.log('unauth', count)
           break;
         case 500:
