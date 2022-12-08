@@ -695,7 +695,7 @@ async function moveZemWorld(){
   if(isLogin.value){
     const {result} = await useCustomFetch<{result:{token: string}}>('/create/token', getZempieFetchOptions('post', true))
     if( result ){
-      window.open(`${config.ZEMPIE_METAVERSE}?token=${result.token}`, '_blank');
+      window.open(`${config.ZEMPIE_METAVERSE}?key=${result.token}`, '_blank');
     }
   }else{
     router.push($localePath('/login'))
