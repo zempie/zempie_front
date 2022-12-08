@@ -20,13 +20,6 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
 
   const config = useRuntimeConfig()
   const accessToken = useCookie(config.COOKIE_NAME)
-  let result = null;
-
-
-  if (accessToken.value) {
-
-    result = await getRefreshToken()
-  }
 
 
   return await useFetch<T>(url, {
@@ -48,7 +41,8 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
 
           if (retryCount < 3) {
             console.log('error run')
-            useCustomAsyncFetch(url, options, ++retryCount)
+            await getRefreshToken()
+            await useCustomAsyncFetch(url, options, ++retryCount)
           } else {
             console.log('remove cookie')
 
@@ -87,9 +81,6 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
   const config = useRuntimeConfig()
   const accessToken = useCookie(config.COOKIE_NAME)
 
-  if (accessToken.value) {
-    await getRefreshToken()
-  }
 
   return await $fetch<T>(url, {
     ...options,
@@ -102,7 +93,6 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
     },
     async onResponseError({ request, response, options }) {
       console.log('[fetch response error]', response)
-
       const { status } = response
       switch (status) {
         case 401:
@@ -110,11 +100,11 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
 
           if (retryCount < 3) {
             console.log('error run2', retryCount)
+            await getRefreshToken()
             useCustomFetch(url, options, ++retryCount)
           } else {
             console.log('remove cookie')
             useUser().removeUserState()
-
             shared.removeCookies()
 
           }
@@ -149,8 +139,6 @@ export async function getRefreshToken() {
   isTokenProcessing += 1
   const config = useRuntimeConfig();
   const { $cookies, $firebaseAuth } = useNuxtApp()
-
-  console.log('COOKIE_NAME', useCookie(config.COOKIE_NAME))
 
 
   //5분 빨리 refresh
