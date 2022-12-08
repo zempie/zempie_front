@@ -47,6 +47,8 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
           let count = 0
 
           const fetch = function () {
+            console.log(url, options)
+
             $fetch<T>(url, options)
               .catch(() => {
                 if (count > 2) {
@@ -126,6 +128,7 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions) => 
           let count = 0
 
           const fetch = function () {
+            console.log(url, options)
             $fetch<T>(url, options)
               .catch(() => {
                 if (count > 2) {
