@@ -50,6 +50,9 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
             console.log('error run')
             useCustomAsyncFetch(url, options, ++retryCount)
           } else {
+            console.log('remove cookie')
+
+            useUser().removeUserState()
             shared.removeCookies()
           }
           console.log('unauth', retryCount)
@@ -76,19 +79,6 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
       console.log('[fetch request error]')
     }
   })
-}
-
-function waitFor(conditionFunction) {
-
-  const poll = resolve => {
-    if (conditionFunction()) resolve();
-    else {
-      console.log('timoeput')
-      setTimeout(_ => poll(resolve), 400);
-    }
-  }
-
-  return new Promise(poll);
 }
 
 
@@ -122,6 +112,9 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
             console.log('error run2', retryCount)
             useCustomFetch(url, options, ++retryCount)
           } else {
+            console.log('remove cookie')
+            useUser().removeUserState()
+
             shared.removeCookies()
 
           }
