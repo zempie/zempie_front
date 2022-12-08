@@ -122,7 +122,8 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions) => 
       switch (status) {
         case 401:
           let count = 0
-          while (count > 2) {
+          while (count < 3) {
+            console.log('count', count)
             $fetch<T>(url, options)
               .then(() => {
                 return
