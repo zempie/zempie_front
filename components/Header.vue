@@ -61,8 +61,8 @@
             </template>
           </el-dropdown>
         </ClientOnly>
-          <li class="uppercase">
-            <a id="zempieWorldMenu" :href="config.ZEMPIE_METAVERSE" target="_blank">
+          <li class="uppercase pointer">
+            <a id="zempieWorldMenu" @click="moveZemWorld">
                 Zempie world
             </a>
           </li>
@@ -379,7 +379,7 @@
                 @click.native="isHeaderSideMobile = false"
                 ><i class="uil uil-robot"></i> Games
               </NuxtLink>
-              <a id="zempieWorldMenu" :href="config.ZEMPIE_METAVERSE" target="_blank">
+              <a class="pointer" id="zempieWorldMenu"  @click="moveZemWorld">
                 <i class="uil uil-globe"></i>
                 Zempie world
             </a>
@@ -689,6 +689,16 @@ async function readAll(){
     })
   })
    
+}
+
+async function moveZemWorld(){
+  if(isLogin.value){
+    const {result} = await useCustomFetch<{result:{token: string}}>('/create/token', getZempieFetchOptions('post', true))
+    window.open(`${config.ZEMPIE_METAVERSE}?token=${result.token}`, '_blank');
+  }else{
+    router.push($localePath('/login'))
+  }
+
 }
 
 </script>
