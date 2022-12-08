@@ -1,10 +1,10 @@
 import { FetchOptions } from "ohmyfetch"
 import dayjs from "dayjs";
-import { IUser } from "~~/types";
+import shared from "~~/scripts/shared";
 
-const DAYSTOSEC_30 = 60 * 60 * 24 * 30;
+const HOURTOSEC = 60 * 60;
 
-let isTokenProcessingDone = true; //2번 호출 방지
+let isTokenProcessing = 0
 
 interface IRefreshToken {
   access_token: string,
@@ -23,7 +23,7 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
   let result = null;
 
 
-  if (accessToken.value && isTokenProcessingDone) {
+  if (accessToken.value) {
 
     result = await getRefreshToken()
   }
@@ -44,7 +44,19 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
       const { status } = response
       switch (status) {
         case 401:
-          console.log('unauth')
+          let count = 0
+          while (count > 2) {
+            $fetch<T>(url, options)
+              .then(() => {
+                return
+              }).catch(() => {
+                count += 1
+              })
+          }
+          if (count > 2) {
+            useUser().logout()
+          }
+          console.log('unauth', count)
           break;
         case 500:
           // useUser().logout()
@@ -84,14 +96,14 @@ function waitFor(conditionFunction) {
 }
 
 
+// $fetch interceptor
 export const useCustomFetch = async <T>(url: string, options?: FetchOptions) => {
 
   const config = useRuntimeConfig()
   const accessToken = useCookie(config.COOKIE_NAME)
-  let result = null;
 
-  if (accessToken.value && isTokenProcessingDone) {
-    result = await getRefreshToken()
+  if (accessToken.value) {
+    await getRefreshToken()
   }
 
   return await $fetch<T>(url, {
@@ -105,10 +117,23 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions) => 
     },
     async onResponseError({ request, response, options }) {
       console.log('[fetch response error]', response)
+
       const { status } = response
       switch (status) {
         case 401:
-          console.log('unauth')
+          let count = 0
+          while (count > 2) {
+            $fetch<T>(url, options)
+              .then(() => {
+                return
+              }).catch(() => {
+                count += 1
+              })
+          }
+          if (count > 2) {
+            useUser().logout()
+          }
+          console.log('unauth', count)
           break;
         case 500:
           // useUser().logout()
@@ -135,20 +160,31 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions) => 
 }
 
 export async function getRefreshToken() {
-  isTokenProcessingDone = false;
+  if (isTokenProcessing > 0) return
+  isTokenProcessing += 1
   const config = useRuntimeConfig();
   const { $cookies, $firebaseAuth } = useNuxtApp()
 
+  console.log('COOKIE_NAME', useCookie(config.COOKIE_NAME))
+
 
   //5분 빨리 refresh
-  const expirationTime = dayjs(useUser().user.value.fUser && useUser().user.value.fUser.stsTokenManager?.expirationTime).subtract(5, 'minutes')
+  // const expirationTime = dayjs(useUser().user.value.fUser && useUser().user.value.fUser.stsTokenManager?.expirationTime).subtract(5, 'minutes')
 
   const refreshToken = useCookie(config.REFRESH_TOKEN).value
   let isContinue = false;
 
   if (!refreshToken) {
-    useUser().logout()
-    isTokenProcessingDone = true;
+    useUser().removeUserState();
+    $cookies.remove(config.COOKIE_NAME, {
+      path: '/',
+      domain: config.COOKIE_DOMAIN
+    })
+
+    $cookies.remove(config.REFRESH_TOKEN, {
+      path: '/',
+      domain: config.COOKIE_DOMAIN
+    })
     return
   };
 
@@ -162,14 +198,14 @@ export async function getRefreshToken() {
   if ((!useUser().user.value.info && useCookie(config.COOKIE_NAME).value)) {
     colorLog('case 2 no useState', 'yellow')
     isContinue = true
-  } else if (useUser().user.value.info && (dayjs().isSame(expirationTime) || dayjs().isAfter(expirationTime))) {
-    colorLog('case 1 expiration', 'pink')
-    isContinue = true
   }
+  // else if (useUser().user.value.info && (dayjs().isSame(expirationTime) || dayjs().isAfter(expirationTime))) {
+  //   colorLog('case 1 expiration', 'pink')
+  //   isContinue = true
+  // }
 
   //토큰 리프레시 없이 기존 토큰으로 api 실행
   if (!isContinue) {
-    isTokenProcessingDone = true;
     return {
       access_token: useCookie(config.COOKIE_NAME).value
     };
@@ -199,17 +235,7 @@ export async function getRefreshToken() {
   console.log(result)
 
   if (result) {
-
-    $cookies.set(config.COOKIE_NAME, result.access_token, {
-      maxAge: DAYSTOSEC_30,
-      path: '/',
-      domain: config.COOKIE_DOMAIN
-    });
-    $cookies.set(config.REFRESH_TOKEN, result.refresh_token, {
-      maxAge: DAYSTOSEC_30,
-      path: '/',
-      domain: config.COOKIE_DOMAIN
-    });
+    shared.setTokens(result.access_token, result.refresh_token)
 
     if (!useUser().user.value.info) {
       colorLog("refresh token and no info", 'yellow')
@@ -217,8 +243,7 @@ export async function getRefreshToken() {
     }
   }
 
-
-  isTokenProcessingDone = true;
-  console.log('running...', isTokenProcessingDone)
+  isTokenProcessing = 0
+  console.log('running...', isTokenProcessing)
   return result
 }

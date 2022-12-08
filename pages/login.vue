@@ -205,7 +205,6 @@ async function onSubmit() {
       signInWithEmailAndPassword($firebaseAuth, form.email, form.password)
         .then(async (result) => {
           const { user } = result
-          useUser().setFirebaseUser(user)
         })
         .catch((err: any) => {
           const errorCode = err.code
@@ -249,7 +248,7 @@ async function facebookLogin() {
 async function socialLogin(provider: AuthProvider) {
   try {
     const res = await signInWithPopup($firebaseAuth, provider)
-    useUser().setFirebaseUser(res.user)
+    // useUser().setFirebaseUser(res.user)
   } catch (err) {
     console.error('socialLogin err', err)
 

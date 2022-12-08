@@ -58,7 +58,6 @@ export default function () {
 
 
   const logout = async () => {
-
     signOut($firebaseAuth)
       .then(() => {
         removeFcmToken(user.value.info.id)
@@ -117,16 +116,5 @@ export default function () {
     setLoadDone,
     setUserInfo,
     updateUserKey
-  }
-}
-
-
-async function routerToHome() {
-  const route = useRoute();
-  const router = useRouter();
-  if (route.name?.toString().includes('login')) {
-    router.push(`/${useCommon().setting.value.lang}/timeline`)
-
-
   }
 }

@@ -220,7 +220,6 @@ async function register() {
     const result = await createUserWithEmailAndPassword($firebaseAuth, form.email, form.password)
     const { user } = result;
     await joinZempie();
-    // useUser().setFirebaseUser(user);
 
   } catch (error: any) {
     
@@ -252,6 +251,7 @@ async function joinZempie() {
   }
 
     const { data,error } = await useCustomAsyncFetch<{result:any}>('/user/sign-up',getZempieFetchOptions('post', true, payload))
+   
     if(data.value){
     const { user } = data.value.result;
 

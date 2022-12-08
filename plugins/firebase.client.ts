@@ -1,19 +1,19 @@
 import { defineNuxtPlugin } from '#app'
 import * as firebase from 'firebase/app'
 import { getAuth, onIdTokenChanged, } from 'firebase/auth'
-import { IUser } from '~~/types';
 import * as fbFcm from '~~/scripts/firebase-fcm'
-
+import shared from '~~/scripts/shared'
 import { getMessaging, onMessage, getToken } from "firebase/messaging";
 import { onBackgroundMessage } from "firebase/messaging/sw";
 import { resigterFcmToken } from '~~/scripts/firebase-fcm';
 
 
-const DAYSTOSEC_30 = 60 * 60 * 24 * 30;
+const HOURTOSEC = 60 * 60;
 
 export default defineNuxtPlugin(async (nuxtApp) => {
-  const { $cookies } = useNuxtApp()
 
+  const route = useRoute();
+  const router = useRouter();
   const config = useRuntimeConfig();
 
   if (firebase.getApps().length !== 0) {
@@ -40,27 +40,24 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     useUser().setLoadDone()
   }
 
-  onIdTokenChanged(auth, async (user) => {
+  onIdTokenChanged(auth, async (user: any) => {
+    colorLog('login 1', 'red')
 
     if (user) {
-      $cookies.set(config.COOKIE_NAME, (user as any).accessToken, {
-        maxAge: DAYSTOSEC_30,
-        path: '/',
-        domain: config.COOKIE_DOMAIN
-      });
-
-      $cookies.set(config.REFRESH_TOKEN, (user as any).stsTokenManager.refreshToken, {
-        maxAge: DAYSTOSEC_30,
-        path: '/',
-        domain: config.COOKIE_DOMAIN
-      });
+      shared.setTokens(user.accessToken, user.stsTokenManager.refreshToken)
       useUser().setFirebaseUser(user);
 
+      // 회원가입중인 경우 회원가입 로직에서 처리
       if (!useUser().user.value.isSignUp) {
         await setUserInfo()
-        routerToHome()
+
+        // 로그인 페이지인 경우에만 유저 채널로 이동
+        if (route.name?.toString().includes('login')) {
+          router.push(`/${useCommon().setting.value.lang}/channel/${useUser().user.value.info.channel_id}`)
+        }
       }
     }
+
     useUser().setLoadDone()
 
   })
@@ -71,7 +68,6 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   onMessage(messaging, (payload) => {
     console.log('Message received. ', payload);
     useAlarm().setNewNoti(payload)
-    // ...
   });
 
 
@@ -85,7 +81,6 @@ async function setUserInfo() {
   const config = useRuntimeConfig();
 
   try {
-    //TODO: 2번 부르는거
     colorLog("firebase token", 'yellow')
 
     await useUser().setUserInfo()
@@ -121,13 +116,3 @@ async function setUserInfo() {
   }
 
 }
-
-async function routerToHome() {
-  const route = useRoute();
-  const router = useRouter();
-  if (route.name?.toString().includes('login')) {
-    router.push(`/${useCommon().setting.value.lang}/channel/${useUser().user.value.info.channel_id}`)
-
-  }
-}
-
