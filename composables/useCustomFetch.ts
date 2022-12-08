@@ -50,7 +50,7 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
             console.log('error run')
             useCustomAsyncFetch(url, options, ++retryCount)
           } else {
-            useUser().logout()
+            shared.removeCookies()
           }
           console.log('unauth', retryCount)
           break;
@@ -94,7 +94,6 @@ function waitFor(conditionFunction) {
 
 // $fetch interceptor
 export const useCustomFetch = async <T>(url: string, options?: FetchOptions, retryCount: number = 0) => {
-
   const config = useRuntimeConfig()
   const accessToken = useCookie(config.COOKIE_NAME)
 
@@ -123,7 +122,8 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
             console.log('error run2', retryCount)
             useCustomFetch(url, options, ++retryCount)
           } else {
-            useUser().logout()
+            shared.removeCookies()
+
           }
           console.log('unauth', retryCount)
           break;

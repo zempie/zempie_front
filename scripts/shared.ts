@@ -30,8 +30,20 @@ export default {
       path: '/',
       domain: config.COOKIE_DOMAIN
     });
+  },
+  removeCookies: function () {
+    const { $cookies } = useNuxtApp()
+    const config = useRuntimeConfig()
 
+    $cookies.remove(config.COOKIE_NAME, {
+      path: '/',
+      domain: config.COOKIE_DOMAIN
+    })
 
+    $cookies.remove(config.REFRESH_TOKEN, {
+      path: '/',
+      domain: config.COOKIE_DOMAIN
+    })
   },
   moveNoti: function (type: number, target_id: string) {
     const router = useRouter()
