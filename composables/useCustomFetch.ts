@@ -44,14 +44,15 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
       const { status } = response
       switch (status) {
         case 401:
-          let count = 0
+          console.log('error run', retryCount)
 
           if (retryCount < 3) {
+            console.log('error run')
             useCustomAsyncFetch(url, options, ++retryCount)
           } else {
             useUser().logout()
           }
-          console.log('unauth', count)
+          console.log('unauth', retryCount)
           break;
         case 500:
           // useUser().logout()
@@ -116,14 +117,15 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
       const { status } = response
       switch (status) {
         case 401:
-          let count = 0
+          console.log('error run1', retryCount)
 
           if (retryCount < 3) {
-            useCustomAsyncFetch(url, options, ++retryCount)
+            console.log('error run2', retryCount)
+            useCustomFetch(url, options, ++retryCount)
           } else {
             useUser().logout()
           }
-          console.log('unauth', count)
+          console.log('unauth', retryCount)
           break;
         case 500:
           // useUser().logout()
