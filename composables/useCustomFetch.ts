@@ -16,7 +16,7 @@ interface IRefreshToken {
   user_id: string
 }
 
-export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions) => {
+export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions, retryCount: number = 0) => {
 
   const config = useRuntimeConfig()
   const accessToken = useCookie(config.COOKIE_NAME)
@@ -46,19 +46,10 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
         case 401:
           let count = 0
 
-          const fetch = function () {
-            console.log(url, options)
-
-            $fetch<T>(url, options)
-              .catch(() => {
-                if (count > 2) {
-                  useUser().logout()
-                  return
-                } else {
-                  count += 1
-                  fetch()
-                }
-              })
+          if (retryCount < 3) {
+            useCustomAsyncFetch(url, options, ++retryCount)
+          } else {
+            useUser().logout()
           }
           console.log('unauth', count)
           break;
@@ -101,7 +92,7 @@ function waitFor(conditionFunction) {
 
 
 // $fetch interceptor
-export const useCustomFetch = async <T>(url: string, options?: FetchOptions) => {
+export const useCustomFetch = async <T>(url: string, options?: FetchOptions, retryCount: number = 0) => {
 
   const config = useRuntimeConfig()
   const accessToken = useCookie(config.COOKIE_NAME)
@@ -127,17 +118,10 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions) => 
         case 401:
           let count = 0
 
-          const fetch = function () {
-            console.log(url, options)
-            $fetch<T>(url, options)
-              .catch(() => {
-                if (count > 2) {
-                  useUser().logout()
-                } else {
-                  count += 1
-                  fetch()
-                }
-              })
+          if (retryCount < 3) {
+            useCustomAsyncFetch(url, options, ++retryCount)
+          } else {
+            useUser().logout()
           }
           console.log('unauth', count)
           break;
