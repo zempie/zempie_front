@@ -18,7 +18,7 @@ export default {
     const { $cookies } = useNuxtApp()
     const config = useRuntimeConfig()
 
-    console.log(config)
+    console.log('setTokens')
 
     $cookies.set(config.COOKIE_NAME, token, {
       maxAge: HOURTOSEC,
@@ -34,6 +34,7 @@ export default {
   removeCookies: function () {
     const { $cookies } = useNuxtApp()
     const config = useRuntimeConfig()
+    console.log('remove token')
 
     $cookies.remove(config.COOKIE_NAME, {
       path: '/',

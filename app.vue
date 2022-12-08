@@ -132,7 +132,6 @@ onBeforeMount(async () => {
 
   //로그인 확인 처리
   if (useCookie(config.COOKIE_NAME).value){
-
     await getRefreshToken()
   }
   
