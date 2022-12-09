@@ -48,7 +48,7 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
 
             useUser().removeUserState()
             shared.removeCookies()
-            console.log('check', config.env === 'development', config.env == 'development')
+            console.log('check', config, 'env:', config.env === 'development', config.env == 'development')
             if (config.env === 'development') {
               console.log('==dev==')
 
@@ -121,7 +121,7 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
             console.log('remove cookie')
             useUser().removeUserState()
             shared.removeCookies()
-            console.log('check', config.env === 'development', config.env == 'development')
+            console.log('check', config, 'env:', config.env === 'development', config.env == 'development')
 
             if (config.env === 'development') {
               console.log('==dev==')
