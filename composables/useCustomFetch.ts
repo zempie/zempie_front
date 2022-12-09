@@ -35,32 +35,6 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
     async onResponseError({ request, response, options }) {
       console.log('[fetch response error]', response)
 
-
-      if (retryCount < 3) {
-        console.log('error run')
-        await getRefreshToken()
-        await useCustomAsyncFetch(url, options, ++retryCount)
-      } else {
-        console.log('remove cookie')
-
-        useUser().removeUserState()
-        shared.removeCookies()
-        console.log('check', config.public.ENV, 'env:', config.env === 'development', config.env == 'development')
-        if (config.public.ENV === 'development') {
-          console.log('==dev==')
-
-          $cookies.remove(config.COOKIE_NAME, {
-            path: '/',
-            domain: '.zempie.com'
-          })
-          $cookies.remove(config.REFRESH_TOKEN, {
-            path: '/',
-            domain: '.zempie.com'
-          })
-
-        }
-      }
-
       //사용자 uid error
       const errorCode = response._data?.error?.code
       console.log('errorCode', errorCode)
@@ -87,6 +61,32 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
           }
           break;
       }
+      if (retryCount < 3) {
+        console.log('error run', retryCount)
+        await getRefreshToken()
+        await useCustomAsyncFetch(url, options, ++retryCount)
+      } else {
+        console.log('remove cookie')
+
+        useUser().removeUserState()
+        shared.removeCookies()
+        console.log('check', config.public.ENV, 'env:', config.env === 'development', config.env == 'development')
+        if (config.public.ENV === 'development') {
+          console.log('==dev==')
+
+          $cookies.remove(config.COOKIE_NAME, {
+            path: '/',
+            domain: '.zempie.com'
+          })
+          $cookies.remove(config.REFRESH_TOKEN, {
+            path: '/',
+            domain: '.zempie.com'
+          })
+
+        }
+      }
+
+
       // switch (status) {
       //   case 401:
       //     console.log('error run', retryCount)
@@ -162,31 +162,6 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
       console.log('[fetch response error]', response)
 
 
-
-      if (retryCount < 3) {
-        console.log('error run')
-        await getRefreshToken()
-        await useCustomAsyncFetch(url, options, ++retryCount)
-      } else {
-        console.log('remove cookie')
-
-        useUser().removeUserState()
-        shared.removeCookies()
-        console.log('check', config.public.ENV, 'env:', config.env === 'development', config.env == 'development')
-        if (config.public.ENV === 'development') {
-          console.log('==dev==')
-
-          $cookies.remove(config.COOKIE_NAME, {
-            path: '/',
-            domain: '.zempie.com'
-          })
-          $cookies.remove(config.REFRESH_TOKEN, {
-            path: '/',
-            domain: '.zempie.com'
-          })
-
-        }
-      }
       //사용자 uid error
       const errorCode = response._data?.error?.code
       console.log('errorCode', errorCode)
@@ -212,6 +187,33 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
           }
           break;
       }
+
+
+      if (retryCount < 3) {
+        console.log('error run')
+        await getRefreshToken()
+        await useCustomAsyncFetch(url, options, ++retryCount)
+      } else {
+        console.log('remove cookie')
+
+        useUser().removeUserState()
+        shared.removeCookies()
+        console.log('check', config.public.ENV, 'env:', config.env === 'development', config.env == 'development')
+        if (config.public.ENV === 'development') {
+          console.log('==dev==')
+
+          $cookies.remove(config.COOKIE_NAME, {
+            path: '/',
+            domain: '.zempie.com'
+          })
+          $cookies.remove(config.REFRESH_TOKEN, {
+            path: '/',
+            domain: '.zempie.com'
+          })
+
+        }
+      }
+
       // const { status } = response
       // switch (status) {
       //   case 401:
