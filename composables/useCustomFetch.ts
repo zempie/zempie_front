@@ -17,7 +17,7 @@ interface IRefreshToken {
 }
 
 export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions, retryCount: number = 0) => {
-
+  const { $cookies } = useNuxtApp()
   const config = useRuntimeConfig()
   const accessToken = useCookie(config.COOKIE_NAME)
 
@@ -48,6 +48,17 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
 
             useUser().removeUserState()
             shared.removeCookies()
+            if (config.env === 'development') {
+              $cookies.remove(config.COOKIE_NAME, {
+                path: '/',
+                domain: '.zempie.dev'
+              })
+              $cookies.remove(config.REFRESH_TOKEN, {
+                path: '/',
+                domain: '.zempie.dev'
+              })
+
+            }
           }
           console.log('unauth', retryCount)
           break;
@@ -80,6 +91,7 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
 export const useCustomFetch = async <T>(url: string, options?: FetchOptions, retryCount: number = 0) => {
   const config = useRuntimeConfig()
   const accessToken = useCookie(config.COOKIE_NAME)
+  const { $cookies } = useNuxtApp()
 
 
   return await $fetch<T>(url, {
@@ -106,6 +118,18 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
             console.log('remove cookie')
             useUser().removeUserState()
             shared.removeCookies()
+
+            if (config.env === 'development') {
+              $cookies.remove(config.COOKIE_NAME, {
+                path: '/',
+                domain: '.zempie.dev'
+              })
+              $cookies.remove(config.REFRESH_TOKEN, {
+                path: '/',
+                domain: '.zempie.dev'
+              })
+
+            }
 
           }
           console.log('unauth', retryCount)
