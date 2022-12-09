@@ -49,13 +49,15 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
             useUser().removeUserState()
             shared.removeCookies()
             if (config.env === 'development') {
+              console.log('==dev==')
+
               $cookies.remove(config.COOKIE_NAME, {
                 path: '/',
-                domain: '.zempie.dev'
+                domain: '.zempie.com'
               })
               $cookies.remove(config.REFRESH_TOKEN, {
                 path: '/',
-                domain: '.zempie.dev'
+                domain: '.zempie.com'
               })
 
             }
@@ -120,13 +122,14 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
             shared.removeCookies()
 
             if (config.env === 'development') {
+              console.log('==dev==')
               $cookies.remove(config.COOKIE_NAME, {
                 path: '/',
-                domain: '.zempie.dev'
+                domain: '.zempie.com'
               })
               $cookies.remove(config.REFRESH_TOKEN, {
                 path: '/',
-                domain: '.zempie.dev'
+                domain: '.zempie.com'
               })
 
             }
