@@ -63,6 +63,10 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
 
       //사용자 uid error
       const errorCode = response._data?.error?.code
+      console.log('errorCode', errorCode)
+      console.log('config', config)
+
+
       switch (errorCode) {
         case 20001:
         case 10001:
@@ -185,6 +189,9 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
       }
       //사용자 uid error
       const errorCode = response._data?.error?.code
+      console.log('errorCode', errorCode)
+      console.log('config', config)
+
       switch (errorCode) {
         case 20001:
         case 10001:
