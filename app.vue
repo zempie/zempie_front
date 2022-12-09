@@ -98,6 +98,8 @@ provide(ID_INJECTION_KEY, {
 })
 
 onBeforeMount(async () => {
+  console.log(config.ENV)
+
   let date = new Date()
   //게임젬플러스 종료 날짜
   let endDate : Date | number= new Date(2022, 10, 20, 23, 59, 59)
