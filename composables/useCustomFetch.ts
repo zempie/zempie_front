@@ -34,6 +34,25 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
     },
     async onResponseError({ request, response, options }) {
       console.log('[fetch response error]', response)
+      //사용자 uid error
+      if (response._data?.error?.code === 20001) {
+        console.log('uid error')
+        useUser().removeUserState()
+        shared.removeCookies()
+        if (config.public.ENV === 'development') {
+          console.log('==dev==')
+
+          $cookies.remove(config.COOKIE_NAME, {
+            path: '/',
+            domain: '.zempie.com'
+          })
+          $cookies.remove(config.REFRESH_TOKEN, {
+            path: '/',
+            domain: '.zempie.com'
+          })
+
+        }
+      }
       const { status } = response
       if (retryCount < 3) {
         console.log('error run')
@@ -132,6 +151,27 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
     },
     async onResponseError({ request, response, options }) {
       console.log('[fetch response error]', response)
+
+      //사용자 uid error
+      if (response._data?.error?.code === 20001) {
+        console.log('uid error')
+        useUser().removeUserState()
+        shared.removeCookies()
+        if (config.public.ENV === 'development') {
+          console.log('==dev==')
+
+          $cookies.remove(config.COOKIE_NAME, {
+            path: '/',
+            domain: '.zempie.com'
+          })
+          $cookies.remove(config.REFRESH_TOKEN, {
+            path: '/',
+            domain: '.zempie.com'
+          })
+
+        }
+      }
+
       if (retryCount < 3) {
         console.log('error run')
         await getRefreshToken()
