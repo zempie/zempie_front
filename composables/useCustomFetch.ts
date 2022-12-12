@@ -43,7 +43,25 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
 
       switch (errorCode) {
         case 20001:
-        //없는 유저 
+          //없는 유저 
+          await useUser().logout()
+          useUser().removeUserState()
+          shared.removeCookies()
+          if (config.public.ENV === 'development') {
+            console.log('==dev==')
+
+            $cookies.remove(config.COOKIE_NAME, {
+              path: '/',
+              domain: '.zempie.com'
+            })
+            $cookies.remove(config.REFRESH_TOKEN, {
+              path: '/',
+              domain: '.zempie.com'
+            })
+
+          }
+
+          break;
 
         case 10001:
           useUser().removeUserState()
@@ -171,8 +189,22 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
 
       switch (errorCode) {
         case 20001:
+          await useUser().logout()
           useUser().removeUserState()
           shared.removeCookies()
+          if (config.public.ENV === 'development') {
+            console.log('==dev==')
+
+            $cookies.remove(config.COOKIE_NAME, {
+              path: '/',
+              domain: '.zempie.com'
+            })
+            $cookies.remove(config.REFRESH_TOKEN, {
+              path: '/',
+              domain: '.zempie.com'
+            })
+
+          }
           //없는 유저 
           // router.push('/join')
           break;
