@@ -43,6 +43,8 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
 
       switch (errorCode) {
         case 20001:
+        //없는 유저 
+
         case 10001:
           useUser().removeUserState()
           shared.removeCookies()
@@ -147,7 +149,7 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
   const config = useRuntimeConfig()
   const accessToken = useCookie(config.COOKIE_NAME)
   const { $cookies } = useNuxtApp()
-
+  const router = useRouter()
 
   return await $fetch<T>(url, {
     ...options,
@@ -169,10 +171,16 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
 
       switch (errorCode) {
         case 20001:
-        case 10001:
           useUser().removeUserState()
           shared.removeCookies()
+          //없는 유저 
+          // router.push('/join')
+          break;
+        case 10001:
+          await useUser().logout()
+          shared.removeCookies()
           if (config.public.ENV === 'development') {
+            await useUser().logout()
             console.log('==dev==')
 
             $cookies.remove(config.COOKIE_NAME, {
@@ -195,11 +203,11 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
         await useCustomAsyncFetch(url, options, ++retryCount)
       } else {
         console.log('remove cookie')
-
-        useUser().removeUserState()
+        await useUser().logout()
         shared.removeCookies()
         console.log('check', config.public.ENV, 'env:', config.env === 'development', config.env == 'development')
         if (config.public.ENV === 'development') {
+
           console.log('==dev==')
 
           $cookies.remove(config.COOKIE_NAME, {
