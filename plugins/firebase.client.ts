@@ -41,21 +41,22 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   }
 
   onIdTokenChanged(auth, async (user: any) => {
+    console.log(user)
     colorLog('login 1', 'red')
 
     if (user) {
       shared.setTokens(user.accessToken, user.stsTokenManager.refreshToken)
       useUser().setFirebaseUser(user);
 
-      // 회원가입중인 경우 회원가입 로직에서 처리
-      if (!useUser().user.value.isSignUp) {
-        await setUserInfo()
+      // // 회원가입중인 경우 회원가입 로직에서 처리
+      // if (!useUser().user.value.isSignUp) {
+      //   await setUserInfo()
 
-        // 로그인 페이지인 경우에만 유저 채널로 이동
-        if (route.name?.toString().includes('login')) {
-          router.push(`/${useCommon().setting.value.lang}/channel/${useUser().user.value.info.channel_id}`)
-        }
-      }
+      //   // 로그인 페이지인 경우에만 유저 채널로 이동
+      //   if (route.name?.toString().includes('login')) {
+      //     router.push(`/${useCommon().setting.value.lang}/channel/${useUser().user.value.info.channel_id}`)
+      //   }
+      // }
     }
 
     useUser().setLoadDone()

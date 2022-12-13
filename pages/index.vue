@@ -19,12 +19,12 @@ definePageMeta({
 })
 
 onBeforeMount(async()=>{
-  if(userCookie.value && !useUser().user.value.isLogin){
-    colorLog("index page", 'yellow')
+  // if(userCookie.value && !useUser().user.value.isLogin){
+  //   colorLog("index page", 'yellow')
 
-    await useUser().setUserInfo()
+  //   await useUser().setUserInfo()
    
-    }
+  //   }
 })
 </script>
 

@@ -31,10 +31,9 @@ export default {
       domain: config.COOKIE_DOMAIN
     });
   },
-  removeCookies: function () {
+  removeCookies: async function () {
     const { $cookies } = useNuxtApp()
     const config = useRuntimeConfig()
-    console.log('remove token')
 
     $cookies.remove(config.COOKIE_NAME, {
       path: '/',
@@ -45,6 +44,20 @@ export default {
       path: '/',
       domain: config.COOKIE_DOMAIN
     })
+
+    if (config.public.ENV === 'development') {
+      console.log('==dev==')
+
+      $cookies.remove(config.COOKIE_NAME, {
+        path: '/',
+        domain: '.zempie.com'
+      })
+      $cookies.remove(config.REFRESH_TOKEN, {
+        path: '/',
+        domain: '.zempie.com'
+      })
+
+    }
   },
   moveNoti: function (type: number, target_id: string) {
     const router = useRouter()

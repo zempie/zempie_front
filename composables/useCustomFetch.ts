@@ -43,107 +43,29 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
 
       switch (errorCode) {
         case 20001:
-          //없는 유저 
-          await useUser().logout()
-          useUser().removeUserState()
-          shared.removeCookies()
-          if (config.public.ENV === 'development') {
-            console.log('==dev==')
-
-            $cookies.remove(config.COOKIE_NAME, {
-              path: '/',
-              domain: '.zempie.com'
-            })
-            $cookies.remove(config.REFRESH_TOKEN, {
-              path: '/',
-              domain: '.zempie.com'
-            })
-
-          }
-
           break;
-
         case 10001:
           useUser().removeUserState()
           shared.removeCookies()
-          if (config.public.ENV === 'development') {
-            console.log('==dev==')
+          break;
+        default:
+          if (retryCount < 3) {
+            console.log('error run', retryCount)
+            await getRefreshToken()
+            await useCustomAsyncFetch(url, options, ++retryCount)
+          } else {
+            console.log('remove cookie')
 
-            $cookies.remove(config.COOKIE_NAME, {
-              path: '/',
-              domain: '.zempie.com'
-            })
-            $cookies.remove(config.REFRESH_TOKEN, {
-              path: '/',
-              domain: '.zempie.com'
-            })
+            useUser().removeUserState()
+            shared.removeCookies()
+            console.log('check', config.public.ENV, 'env:', config.env === 'development', config.env == 'development')
 
           }
+
           break;
       }
-      if (retryCount < 3) {
-        console.log('error run', retryCount)
-        await getRefreshToken()
-        await useCustomAsyncFetch(url, options, ++retryCount)
-      } else {
-        console.log('remove cookie')
-
-        useUser().removeUserState()
-        shared.removeCookies()
-        console.log('check', config.public.ENV, 'env:', config.env === 'development', config.env == 'development')
-        if (config.public.ENV === 'development') {
-          console.log('==dev==')
-
-          $cookies.remove(config.COOKIE_NAME, {
-            path: '/',
-            domain: '.zempie.com'
-          })
-          $cookies.remove(config.REFRESH_TOKEN, {
-            path: '/',
-            domain: '.zempie.com'
-          })
-
-        }
-      }
 
 
-      // switch (status) {
-      //   case 401:
-      //     console.log('error run', retryCount)
-
-      //     if (retryCount < 3) {
-      //       console.log('error run')
-      //       await getRefreshToken()
-      //       await useCustomAsyncFetch(url, options, ++retryCount)
-      //     } else {
-      //       console.log('remove cookie')
-
-      //       useUser().removeUserState()
-      //       shared.removeCookies()
-      //       console.log('check', config.public.ENV, 'env:', config.env === 'development', config.env == 'development')
-      //       if (config.public.ENV === 'development') {
-      //         console.log('==dev==')
-
-      //         $cookies.remove(config.COOKIE_NAME, {
-      //           path: '/',
-      //           domain: '.zempie.com'
-      //         })
-      //         $cookies.remove(config.REFRESH_TOKEN, {
-      //           path: '/',
-      //           domain: '.zempie.com'
-      //         })
-
-      //       }
-      //     }
-      //     console.log('unauth', retryCount)
-      //     break;
-      //   case 500:
-      //     // useUser().logout()
-      //     break;
-
-      //   default:
-      //     break;
-      // }
     },
 
     async onRequest({ request, options }) {
@@ -166,7 +88,7 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
 export const useCustomFetch = async <T>(url: string, options?: FetchOptions, retryCount: number = 0) => {
   const config = useRuntimeConfig()
   const accessToken = useCookie(config.COOKIE_NAME)
-  const { $cookies } = useNuxtApp()
+  const { $cookies, $localePath } = useNuxtApp()
   const router = useRouter()
 
   return await $fetch<T>(url, {
@@ -181,117 +103,33 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
     async onResponseError({ request, response, options }) {
       console.log('[fetch response error]', response)
 
-
       //사용자 uid error
       const errorCode = response._data?.error?.code
-      console.log('errorCode', errorCode)
-      console.log('config', config)
 
       switch (errorCode) {
         case 20001:
-          await useUser().logout()
-          useUser().removeUserState()
-          shared.removeCookies()
-          if (config.public.ENV === 'development') {
-            console.log('==dev==')
-
-            $cookies.remove(config.COOKIE_NAME, {
-              path: '/',
-              domain: '.zempie.com'
-            })
-            $cookies.remove(config.REFRESH_TOKEN, {
-              path: '/',
-              domain: '.zempie.com'
-            })
-
-          }
-          //없는 유저 
-          // router.push('/join')
+          router.push($localePath('/join'))
           break;
         case 10001:
           await useUser().logout()
           shared.removeCookies()
-          if (config.public.ENV === 'development') {
+          break;
+        default:
+          if (retryCount < 3) {
+            console.log('error run')
+            await getRefreshToken()
+            await useCustomAsyncFetch(url, options, ++retryCount)
+          } else {
+            console.log('remove cookie')
             await useUser().logout()
-            console.log('==dev==')
-
-            $cookies.remove(config.COOKIE_NAME, {
-              path: '/',
-              domain: '.zempie.com'
-            })
-            $cookies.remove(config.REFRESH_TOKEN, {
-              path: '/',
-              domain: '.zempie.com'
-            })
+            shared.removeCookies()
 
           }
           break;
       }
 
 
-      if (retryCount < 3) {
-        console.log('error run')
-        await getRefreshToken()
-        await useCustomAsyncFetch(url, options, ++retryCount)
-      } else {
-        console.log('remove cookie')
-        await useUser().logout()
-        shared.removeCookies()
-        console.log('check', config.public.ENV, 'env:', config.env === 'development', config.env == 'development')
-        if (config.public.ENV === 'development') {
 
-          console.log('==dev==')
-
-          $cookies.remove(config.COOKIE_NAME, {
-            path: '/',
-            domain: '.zempie.com'
-          })
-          $cookies.remove(config.REFRESH_TOKEN, {
-            path: '/',
-            domain: '.zempie.com'
-          })
-
-        }
-      }
-
-      // const { status } = response
-      // switch (status) {
-      //   case 401:
-      //     console.log('error run1', retryCount)
-
-      //     if (retryCount < 3) {
-      //       console.log('error run2', retryCount)
-      //       await getRefreshToken()
-      //       useCustomFetch(url, options, ++retryCount)
-      //     } else {
-      //       console.log('remove cookie')
-      //       useUser().removeUserState()
-      //       shared.removeCookies()
-      //       console.log('check', config.public.ENV, 'env:', config.env === 'development', config.env == 'development')
-
-      //       if (config.public.ENV === 'development') {
-      //         console.log('==dev==')
-      //         $cookies.remove(config.COOKIE_NAME, {
-      //           path: '/',
-      //           domain: '.zempie.com'
-      //         })
-      //         $cookies.remove(config.REFRESH_TOKEN, {
-      //           path: '/',
-      //           domain: '.zempie.com'
-      //         })
-
-      //       }
-
-      //     }
-      //     console.log('unauth', retryCount)
-      //     break;
-      //   case 500:
-      //     // useUser().logout()
-      //     break;
-
-      //   default:
-      //     break;
-      // }
     },
 
     async onRequest({ request, options }) {
@@ -343,10 +181,10 @@ export async function getRefreshToken() {
    */
 
 
-  if ((!useUser().user.value.info && useCookie(config.COOKIE_NAME).value)) {
-    colorLog('case 2 no useState', 'yellow')
-    isContinue = true
-  }
+  // if ((!useUser().user.value.info && useCookie(config.COOKIE_NAME).value)) {
+  //   colorLog('case 2 no useState', 'yellow')
+  //   isContinue = true
+  // }
   // else if (useUser().user.value.info && (dayjs().isSame(expirationTime) || dayjs().isAfter(expirationTime))) {
   //   colorLog('case 1 expiration', 'pink')
   //   isContinue = true
@@ -385,10 +223,10 @@ export async function getRefreshToken() {
   if (result) {
     shared.setTokens(result.access_token, result.refresh_token)
 
-    if (!useUser().user.value.info) {
-      colorLog("refresh token and no info", 'yellow')
-      await useUser().setUserInfo()
-    }
+    // if (!useUser().user.value.info) {
+    //   colorLog("refresh token and no info", 'yellow')
+    //   await useUser().setUserInfo()
+    // }
   }
 
   isTokenProcessing = 0

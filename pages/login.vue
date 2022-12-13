@@ -195,6 +195,15 @@ const rules = computed(() => {
   return formRule
 })
 const v$ = useVuelidate(rules, form)
+const isLogin = computed(() => useUser().user.value.isLogin)
+
+watch(isLogin, (val) => {
+  console.log('isLogin', val)
+  if (val) {
+   router.push($localePath('/'))
+  }
+})
+
 
 async function onSubmit() {
   const isValid = await v$.value.$validate()
@@ -248,6 +257,7 @@ async function facebookLogin() {
 async function socialLogin(provider: AuthProvider) {
   try {
     const res = await signInWithPopup($firebaseAuth, provider)
+    //회원가입 정보 없는 경우 ??? 
     // useUser().setFirebaseUser(res.user)
   } catch (err) {
     console.error('socialLogin err', err)

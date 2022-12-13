@@ -26,7 +26,7 @@ export default function () {
   }
 
   const setLogin = () => {
-    user.value.isLogin = true;
+    user.value.isLogin = !!user.value.info;
     user.value.isLoading = false;
   }
   const setLogout = () => {

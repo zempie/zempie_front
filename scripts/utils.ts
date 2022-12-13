@@ -82,8 +82,9 @@ export const numToKMB = (num: number) => {
 
 export const emailRegex = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/
 
-export const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,20}$/
-// /^(?=.*[a-zA-Z])((?=.*\d)|(?=.*\W)).{6,20}$/
+export const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[~!@#$%^&*()+|=_-])[A-Za-z\d~!@#$%^&*()+|=_-]{6,20}$/
+// (?=.*[A-Za-z])(?=.*\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\d~!@#$%^&*()+|=]{8,16
+//[a-zA-Z0-9`~!@#$%^&*()-_=+\|[]{};:'",.<>/?]{8,24}
 
 export const randomString = (count: number = 11) => {
     let str = Math.random().toString(36).substr(2, 11);

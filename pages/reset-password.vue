@@ -15,6 +15,7 @@
             style="font-size: 16px; line-height: 24px"
           ></i
           >&nbsp;&nbsp;{{ $t('find.pwd.input.text') }}
+          <p style="margin-left:22px">{{ $t('find.pwd.input.info') }}메일이 오지 않는 경우 스팸함을 확인해주세요</p>
         </div>
         <ul>
           <li>
@@ -32,6 +33,7 @@
               </h3>
             </div>
           </li>
+         
         </ul>
         <p>
           <button @click="sendEmail" class="btn-default-big">
