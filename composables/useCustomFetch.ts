@@ -191,11 +191,11 @@ export async function getRefreshToken() {
   // }
 
   //토큰 리프레시 없이 기존 토큰으로 api 실행
-  if (!isContinue) {
-    return {
-      access_token: useCookie(config.COOKIE_NAME).value
-    };
-  }
+  // if (!isContinue) {
+  //   return {
+  //     access_token: useCookie(config.COOKIE_NAME).value
+  //   };
+  // }
 
   let body = {
     'grant_type': 'refresh_token',
@@ -223,10 +223,10 @@ export async function getRefreshToken() {
   if (result) {
     shared.setTokens(result.access_token, result.refresh_token)
 
-    // if (!useUser().user.value.info) {
-    //   colorLog("refresh token and no info", 'yellow')
-    //   await useUser().setUserInfo()
-    // }
+    if (!useUser().user.value.info) {
+      colorLog("refresh token and no info", 'yellow')
+      await useUser().setUserInfo()
+    }
   }
 
   isTokenProcessing = 0
