@@ -210,26 +210,32 @@ export async function getRefreshToken() {
   }
   const formBody2 = formBody.join("&");
 
-  const result = await $fetch<IRefreshToken>(config.GOOGLE_REFRESH_TOKEN_URL, {
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: formBody2
-  })
 
-  console.log(result)
+  try {
+    const result = await $fetch<IRefreshToken>(config.GOOGLE_REFRESH_TOKEN_URL, {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: formBody2
+    })
 
-  if (result) {
-    shared.setTokens(result.access_token, result.refresh_token)
+    console.log(result)
 
-    if (!useUser().user.value.info) {
-      colorLog("refresh token and no info", 'yellow')
-      await useUser().setUserInfo()
+    if (result) {
+      shared.setTokens(result.access_token, result.refresh_token)
+
+      if (!useUser().user.value.info) {
+        colorLog("refresh token and no info", 'yellow')
+        await useUser().setUserInfo()
+      }
     }
-  }
 
-  isTokenProcessing = 0
-  console.log('running...', isTokenProcessing)
-  return result
+    isTokenProcessing = 0
+    console.log('running...', isTokenProcessing)
+    return result
+
+  } catch (error: any) {
+    shared.removeCookies()
+  }
 }
