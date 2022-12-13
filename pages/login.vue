@@ -198,7 +198,6 @@ const v$ = useVuelidate(rules, form)
 const isLogin = computed(() => useUser().user.value.isLogin)
 
 watch(isLogin, (val) => {
-  console.log('isLogin', val)
   if (val) {
    router.push($localePath('/'))
   }
