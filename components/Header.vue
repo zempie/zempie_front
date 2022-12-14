@@ -338,7 +338,7 @@
               <i class="uil uil-user-circle"></i>
             </p>
             <NuxtLink v-else :to="$localePath('/login')">
-              <button class="btn-default" id="loginBtn">
+              <button class="btn-default" id="loginBtn" style="display: flex;">
                 <i class="uil uil-user"></i>{{ t('login') }}
               </button>
             </NuxtLink>
@@ -712,9 +712,16 @@ async function moveZemWorld(){
     display: flex;
     align-items: center;
   }
+  .menu {
+    li{
+      .active {
+        color: #f97316;
+      }
+    }
+  }
   .menu-dropdown{
     display: inline-block;
-    padding: 20px 35px 20px 0;
+    padding: 20px 20px 20px 0;
     font-weight: 700;
     font-size: 16px;
     line-height: 14px;
@@ -722,24 +729,18 @@ async function moveZemWorld(){
     &:hover{
       cursor: pointer;
       color:#f97316;
-      
     }  
+  } 
+  .btn-circle-none {
+    padding-top: 5px;
+
+    &.mobile {
+      display: none;
+    }
   }
  
 }
 
-
-.btn-circle-none {
-  padding-top: 5px;
-
-  &.mobile {
-    display: none;
-  }
-}
-
-.menu li .active {
-  color: #f97316;
-}
 
 .hl-select-box:deep(.el-input, .is-focus) {
   .el-input__wrapper {
@@ -931,14 +932,18 @@ async function moveZemWorld(){
       display: none;
     }
   }
-  .header > dl {
-    width: 90%;
-  }
+  
 }
 
 @media all and (min-width: 1200px) {
   .mobile-logo{
     display: none;
+  }
+  .btn-circle-none {
+  padding-top: 5px;
+    &.mobile {
+      display: none;
+    }
   }
 }
 </style>

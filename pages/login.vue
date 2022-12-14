@@ -96,6 +96,7 @@
 </template>
 
 <script setup lang="ts">
+import * as fbFcm from '~~/scripts/firebase-fcm'
 import {  ElMessage } from 'element-plus'
 import useVuelidate from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
@@ -197,12 +198,18 @@ const rules = computed(() => {
 const v$ = useVuelidate(rules, form)
 const isLogin = computed(() => useUser().user.value.isLogin)
 
-watch(isLogin, (val) => {
+watch( isLogin,
+ async (val) => {
   if (val) {
    router.push($localePath('/'))
+   const { token } = await fbFcm.getFcmToken(useUser().user.value.info.id)
+   if (!token) {
+    await fbFcm.resigterFcmToken(useUser().user.value.info.id)
+   }
   }
 })
 
+console.log(useUser().user.value.isLogin)
 
 async function onSubmit() {
   const isValid = await v$.value.$validate()

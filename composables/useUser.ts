@@ -64,6 +64,7 @@ export default function () {
       })
       .then(() => {
         removeUserState();
+        setLogout()
         $cookies.remove(config.COOKIE_NAME, {
           path: '/',
           domain: config.COOKIE_DOMAIN

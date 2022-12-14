@@ -237,5 +237,6 @@ export async function getRefreshToken() {
 
   } catch (error: any) {
     shared.removeCookies()
+
   }
 }

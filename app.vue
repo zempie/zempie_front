@@ -44,17 +44,10 @@ const userInfo = useUser().user.value.info
 watch(
   ()=> useUser().user.value.fUser,
   async (fUser)=>{
-    console.log('????', useCookie(config.COOKIE_NAME).value )
-    // if (useUser().user.value.isSignUp) {
-      
-    // }else
-    
+   
     if(useCookie(config.COOKIE_NAME).value && !userInfo){
       await useUser().setUserInfo()
-    }else{
     }
-
-    console.log('watch in app', fUser)
 })
 
 useHead({
