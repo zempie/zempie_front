@@ -84,7 +84,7 @@ useHead({
     },
     {
       name: 'og:image',
-      content: '/images/sns-thumbnail.png',
+      content: config.OG_IMG,
     },
     {
       name: 'og:type',

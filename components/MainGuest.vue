@@ -133,7 +133,7 @@ useHead({
     {
       hid: 'og:image',
       property: 'og:image',
-      content: '/images/sns-thumbnail.png',
+      content: config.OG_IMG,
     },
     {
       property: 'og:type',
