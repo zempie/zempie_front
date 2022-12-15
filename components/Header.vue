@@ -666,7 +666,7 @@ async function moveAlarm(noti:INotification){
 
   await shared.commonTryCatch( async () =>{ return await useCustomFetch('/notification', getComFetchOptions('put', true, {id:noti.id}))})
   .then(()=>{
-    shared.moveNoti(noti.type, noti.target_id)
+    shared.moveNoti(noti)
     notiDropdown.value.handleClose()
     needAlarmRefresh.value = true
   })

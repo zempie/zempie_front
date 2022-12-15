@@ -2,7 +2,7 @@
  * 2개 이상의 컴포넌트에서 쓰는 method
  */
 
-import { eNotificationType } from '~~/types'
+import { eNotificationType, INotification } from '~~/types'
 import { ElMessage } from 'element-plus'
 const HOURTOSEC = 60 * 60;
 
@@ -59,16 +59,19 @@ export default {
 
     }
   },
-  moveNoti: function (type: number, target_id: string) {
+  moveNoti: function (noti: INotification) {
     const router = useRouter()
     const { $localePath } = useNuxtApp()
-    switch (type) {
+    console.log(noti)
+    switch (noti.type) {
       case eNotificationType.comment:
+        router.push($localePath(`/feed/${noti.target_id}`))
         break;
       case eNotificationType.comment_like:
+        router.push($localePath(`/feed/${noti.target_id}`))
         break;
       case eNotificationType.post_like:
-        router.push($localePath(`/feed/${target_id}`))
+        router.push($localePath(`/feed/${noti.target_id}`))
         break;
       case eNotificationType.post:
         console.log('post')
@@ -79,6 +82,10 @@ export default {
       case eNotificationType.notice:
         console.log('notice')
         break;
+      case eNotificationType.follow:
+        router.push($localePath(`/channel/${noti.user.channel_id}`))
+        break;
+
 
     }
   },
@@ -103,6 +110,8 @@ export default {
         break;
       case eNotificationType.follow:
         return 'follows you'
+      default:
+        break;
 
 
     }

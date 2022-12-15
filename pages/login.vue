@@ -205,6 +205,7 @@ watch( isLogin,
    const { token } = await fbFcm.getFcmToken(useUser().user.value.info.id)
    console.log('token', token)
    if (!token) {
+    console.log('regi token')
     await fbFcm.resigterFcmToken(useUser().user.value.info.id)
    }
   }

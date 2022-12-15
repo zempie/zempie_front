@@ -6,8 +6,7 @@
       </h1>
     </div>
     <!-- DM 리스트 -->
-    <!-- v-if="useAlarm().alarm.value.newNoti"  -->
-    <div  class="noti-toast"
+    <div v-if="useAlarm().alarm.value.newNoti" class="noti-toast"
     ><p >{{ t('new.msg') }}  {{ t('need.refresh') }}&nbsp;<i class="uil uil-sync"></i></p>
       </div>
     <div class="dm-list"
@@ -126,7 +125,7 @@ async function fetch(){
 async function clickNoti(noti:INotification){
   await shared.commonTryCatch( async () =>{ return await useCustomFetch('/notification', getComFetchOptions('put', true, {id:noti.id}))})
   .then(()=>{
-     shared.moveNoti(noti.type, noti.target_id)
+     shared.moveNoti(noti)
   })
 }
 
