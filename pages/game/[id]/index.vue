@@ -129,7 +129,7 @@ watch(
             content: `${info.title}`,
           },
           {
-            
+            hid:'og:description',
             property: 'og:description',
             content: `${info.description}`,
           },
