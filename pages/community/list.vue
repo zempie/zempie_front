@@ -128,7 +128,7 @@ useHead({
     },
     {
       name: 'og:image',
-      content: config.OG_IMG,
+      content: `${config.OG_IMG}`,
     },
   ],
 })

@@ -126,14 +126,8 @@ useHead({
       content: 'index, follow',
     },
     {
-      hid: 'og:url',
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`,
-    },
-    {
-      hid: 'og:image',
       property: 'og:image',
-      content: config.OG_IMG,
+      content: `${config.OG_IMG}`,
     },
     {
       property: 'og:type',
