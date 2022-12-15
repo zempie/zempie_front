@@ -37,10 +37,22 @@
         </div>
       </div>
     </div>
-    <!-- TODO: 게임 갯수 표현: 게임 100개 이상일때 주석 제거 -->
-    <!-- <dl class="area-title">
-      <dt>Games <span>{{ games.length }}</span></dt>
-    </dl> -->
+  
+    <dl class="area-title">
+      <!-- TODO: 게임 갯수 표현: 게임 100개 이상일때 주석 제거 -->  
+      <!-- <dt>Games <span>{{ games.length }}</span></dt> -->
+      <dt>
+         <el-select v-model="selectedFilter" class="m-2" placeholder="All">
+          <el-option
+            v-for="item in stageOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+            @click="handleGameFilter"
+          />
+        </el-select>
+      </dt>
+    </dl>
   
     <ul class="card-game">
       <GameCardSk v-if="isPending" v-for="game in 16" :key="game" />
@@ -62,6 +74,7 @@
 import _ from 'lodash'
 import { eGameCategory, IGame } from '~~/types'
 import { useI18n } from 'vue-i18n'
+import { ElSelect, ElOption } from 'element-plus';
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -128,15 +141,28 @@ const AllGameCategory = `${eGameCategory.Challenge}, ${eGameCategory.Certified},
 const category = ref(AllGameCategory)
 const limit = ref(LIMIT_SIZE)
 const offset = ref(0)
-// sort: string = 'c';
-// dir: string = 'asc'
-
 const triggerDiv = ref<Element>()
 const observer = ref<IntersectionObserver>(null)
 const isAddData = ref(false)
 
 const games = ref<any[]>([])
 const isPending = ref(true)
+
+const stageOptions = [
+    {
+      value:'',
+      label:'All'
+    },
+    {
+      value: 2,
+      label: 'Early',
+    },
+    {
+      value: 3,
+      label: 'Compleate',
+    }   
+  ]
+const selectedFilter = ref('')
 
 onMounted(async () => {
   createObserver()
@@ -165,14 +191,13 @@ async function handleIntersection(target) {
 }
 
 async function fetch() {
- 
 
   const { data, pending, refresh } = await useCustomAsyncFetch<{
     result: { games: [] }
   }>(
     `/games?_=${Date.now()}&limit=${limit.value}&offset=${
       offset.value
-    }&category=${category.value}`,
+    }&category=${category.value}${selectedFilter.value  ? '&filter=' + selectedFilter.value : ''}`,
     getZempieFetchOptions('get', false)
   )
 
@@ -209,44 +234,58 @@ function initData() {
   isAddData.value = false
   games.value = []
 }
+
+async function handleGameFilter(){
+  initData()
+  await fetch()
+
+}
 </script>
 
 <style scoped lang="scss">
-.visual-title {
-  h1 {
-    font-weight: 600;
-    font-size: 30px;
-    line-height: 30px;
-    color: #fff;
-    span {
+
+.content{
+  .visual-title {
+    h1 {
+      font-weight: 600;
       font-size: 30px;
-      font-weight: 700;
+      line-height: 30px;
+      color: #fff;
+      span {
+        font-size: 30px;
+        font-weight: 700;
+      }
     }
   }
-}
-.jam-visual-title {
-  background-position: center;
+  .game-gam-plus{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1200px;
+    height: 150px;
+    margin: 0 auto;
+    border-radius: 15px;
+    background: url('/images/gj_banner.png');
+    background-size: cover;
+    box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 
-  h1 {
-    visibility: hidden;
+    h1 {
+      visibility: hidden;
+    }
   }
-}
+  .jam-visual-title {
+    background-position: center;
 
-.game-gam-plus{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 1200px;
-  height: 150px;
-  margin: 0 auto;
-  border-radius: 15px;
-  background: url('/images/gj_banner.png');
-  background-size: cover;
-  box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-
-  h1 {
-    visibility: hidden;
+    h1 {
+      visibility: hidden;
+    }
+  }
+  .area-title{
+    display: flex;
+    justify-content: flex-end;
+    padding:0px;
+   
   }
 }
 
