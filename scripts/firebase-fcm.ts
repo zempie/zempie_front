@@ -32,7 +32,12 @@ export const resigterFcmToken = async (user_id: number) => {
   const { $firebaseApp } = useNuxtApp()
   const messaging = getMessaging($firebaseApp);
 
+  console.log('== resigeter fcm token start ==')
+
+
   const token = await getToken(messaging, { vapidKey: config.fCM_KEY })
+
+  console.log('fcn token', token)
 
   return await axios(`/fcm/${user_id}?token=${token}`,
     {
