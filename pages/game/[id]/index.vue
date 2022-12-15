@@ -120,7 +120,6 @@ watch(
             content: 'index, follow',
           },
           {
-            hid:'description',
             name: 'description',
             content: `${info.description}`,
           },
@@ -129,7 +128,6 @@ watch(
             content: `${info.title}`,
           },
           {
-            hid:'og:description',
             property: 'og:description',
             content: `${info.description}`,
           },
@@ -138,7 +136,6 @@ watch(
             content: `${config.ZEMPIE_URL}${route.path}`,
           },
           {
-            hid:'og:image',
             property: 'og:image',
             content: `${game.value?.url_thumb}`,
           },
