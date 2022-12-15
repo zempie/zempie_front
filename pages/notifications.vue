@@ -265,6 +265,7 @@ async function readAll(){
             }
           }
           dt{
+            width: 80%;
             h3 {
               width: 100%;
               font-weight: 500;
@@ -279,6 +280,12 @@ async function readAll(){
                   color:#ff6e17
                 }
               }
+            }
+            p{
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              width: 100%;
             }
           }
         }

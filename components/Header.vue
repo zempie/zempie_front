@@ -242,7 +242,7 @@
                       </li>
                   </template>
                   </ul>
-                  <p class="view-all"><a @click="goNotiList">{{ t('view.all') }}</a></p>
+                  <p class="view-all" @click="goNotiList"><a>{{ t('view.all') }}</a></p>
                   </div>
               </template>
             </el-dropdown>
