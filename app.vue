@@ -63,10 +63,6 @@ useHead({
       content: 'Zempie',
     },
     {
-      name: 'og:type',
-      content: 'website',
-    },
-    {
       name: 'description',
       content: `${t('seo.landing.desc')}`,
     },
@@ -83,11 +79,11 @@ useHead({
       content: `${config.ZEMPIE_URL}${route.path}`,
     },
     {
-      name: 'og:image',
-      content: config.OG_IMG,
+      property: 'og:image',
+      content: `${config.OG_IMG}`,
     },
     {
-      name: 'og:type',
+      property: 'og:type',
       content: 'website',
     },
   ],

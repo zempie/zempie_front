@@ -127,7 +127,7 @@ useHead({
     },
     {
       property: 'og:image',
-      content: config.OG_IMG,
+      content: `${config.OG_IMG}`,
     },
     {
       property: 'og:type',
