@@ -46,7 +46,7 @@
             <h3 class="input-errors" v-for="error of v$.username.$errors" :key="error.$uid">
               <i class="uil uil-check"></i>{{  error.$message  }}
             </h3>
-          </li>         
+          </li>
         </ul>
         <div class="login-agreement-container">
 
@@ -60,7 +60,7 @@
 
                     <label for="agree"><i class="uil uil-check"></i></label>
                     <span><label for="agree" style="text-decoration:underline;">{{  $t('terms')  }} ({{
-                         $t('required') 
+                         $t('required')
                         }})</label></span>
                   </dt>
                   <dd>
@@ -145,10 +145,12 @@ watch(isLogin,
  async (val) => {
   if (val) {
    router.push($localePath('/'))
-   const { token } = await fbFcm.getFcmToken(useUser().user.value.info.id)
-   if (!token) {
-    await fbFcm.resigterFcmToken(useUser().user.value.info.id)
-   }
+
+  //  const { token } = await fbFcm.getFcmToken(useUser().user.value.info.id)
+  //  if (!token) {
+  //   await fbFcm.resigterFcmToken(useUser().user.value.info.id)
+  //  }
+
   }
 })
 
@@ -207,7 +209,7 @@ useHead({
 
 onBeforeRouteLeave((to, from, next)=>{
   console.log('leave', useUser().user.value.fUser)
-  
+
   if(fUser.value && !isLogin.value){
     console.log('here?')
     shared.removeCookies()
@@ -216,7 +218,7 @@ onBeforeRouteLeave((to, from, next)=>{
     .then(()=>{
       useUser().removeUserState();
     })
-   
+
   }
 
   next()
@@ -243,22 +245,22 @@ async function register() {
     if (!result) return;
   }
   try {
-    
+
     const result = await createUserWithEmailAndPassword($firebaseAuth, form.email, form.password)
     const { user } = result;
     await joinZempie();
 
   } catch (error: any) {
-    
+
     const { message } = error
     if (message.includes('auth/email-already-in-use')) {
       // const { result } = await useCustomAsyncFetch<{result:any}>('/user/has-email', getZempieFetchOptions('post', false, { email: form.email }))
 
       ElMessage.error(`${t('fb.using.email')}`)
-    } 
+    }
     // else if (message.includes('auth/weak-password')) {
 
-    // } 
+    // }
     else if (message.includes('EMAIL_EXISTS')) {
       ElMessage.error(`${t('fb.using.email')}`)
 
@@ -278,7 +280,7 @@ async function joinZempie() {
   }
 
     const { data,error } = await useCustomAsyncFetch<{result:any}>('/user/sign-up',getZempieFetchOptions('post', true, payload))
-   
+
     if(data.value){
     const { user } = data.value.result;
 

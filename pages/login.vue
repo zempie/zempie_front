@@ -202,12 +202,12 @@ watch( isLogin,
  async (val) => {
   if (val) {
    router.push($localePath('/'))
-   const { token } = await fbFcm.getFcmToken(useUser().user.value.info.id)
-   console.log('token', token)
-   if (!token) {
-    console.log('regi token')
-    await fbFcm.resigterFcmToken(useUser().user.value.info.id)
-   }
+  //  const { token } = await fbFcm.getFcmToken(useUser().user.value.info.id)
+  //  console.log('token', token)
+  //  if (!token) {
+  //   console.log('regi token')
+  //   await fbFcm.resigterFcmToken(useUser().user.value.info.id)
+  //  }
   }
 })
 
@@ -265,7 +265,7 @@ async function facebookLogin() {
 async function socialLogin(provider: AuthProvider) {
   try {
     const res = await signInWithPopup($firebaseAuth, provider)
-    //회원가입 정보 없는 경우 ??? 
+    //회원가입 정보 없는 경우 ???
     // useUser().setFirebaseUser(res.user)
   } catch (err) {
     console.error('socialLogin err', err)

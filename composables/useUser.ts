@@ -59,9 +59,9 @@ export default function () {
 
   const logout = async () => {
     signOut($firebaseAuth)
-      .then(() => {
-        removeFcmToken(user.value.info.id)
-      })
+      // .then(() => {
+      //   removeFcmToken(user.value.info.id)
+      // })
       .then(() => {
         removeUserState();
         setLogout()

@@ -45,16 +45,16 @@
               </NuxtLink>
             </li>
             <ClientOnly>
-            <el-dropdown trigger="click" class="menu-dropdown uppercase">            
+            <el-dropdown trigger="click" class="menu-dropdown uppercase">
               <span class="el-dropdown-link">
               GameJam
             </span>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item class="header-menu" @click="router.push($localePath('/zem-jam'))"> 
+                <el-dropdown-item class="header-menu" @click="router.push($localePath('/zem-jam'))">
                 ZEMJAM
               </el-dropdown-item>
-                <el-dropdown-item class="header-menu" @click="router.push($localePath('/game-jam-plus'))">              
+                <el-dropdown-item class="header-menu" @click="router.push($localePath('/game-jam-plus'))">
                 GJ+
               </el-dropdown-item>
             </el-dropdown-menu>
@@ -189,10 +189,10 @@
             </el-select>
           </div>
           <div  class="header-info ml0" v-if="isLogin">
-            <el-dropdown
+            <!-- <el-dropdown
                   ref="notiDropdown"
                   id="notiList"
-                  trigger="click"                  
+                  trigger="click"
                 >
               <button class="btn-circle-icon ml10" @click="showAlarmList">
                   <i class="uil uil-bell" style="font-size:21px;"></i>
@@ -245,8 +245,8 @@
                   <p class="view-all" @click="goNotiList"><a>{{ t('view.all') }}</a></p>
                   </div>
               </template>
-            </el-dropdown>
-          <div           
+            </el-dropdown> -->
+          <div
             class="ml10"
             id="userMenu"
           >
@@ -287,7 +287,7 @@
                         ><i class="uil uil-user"></i>
                         {{ t('myChannel') }}
                       </NuxtLink>
-                      <NuxtLink 
+                      <NuxtLink
                         id="gameStudio"
                         :to="$localePath('/project/list')"
                         ><i class="uil uil-robot"></i>
@@ -395,7 +395,7 @@
                 ><i class="uil uil-keyboard"></i>
                 GJ+
               </NuxtLink>
-             
+
             </div>
           </div>
           <div
@@ -440,8 +440,8 @@
         </div>
       </div>
     </el-dialog>
-    
-    
+
+
   </div>
 </template>
 
@@ -638,14 +638,14 @@ function clickOutside() {
 }
 
 async function showAlarmList(){
- 
-  if(notiList.value && !hasNewNoti.value) return 
+
+  if(notiList.value && !hasNewNoti.value) return
   if(needAlarmRefresh.value) return
-  
+
   isNotiLoading.value = true
 
   const { count, result } = await useCustomFetch<{count:number, result:INotification[]}>(  createQueryUrl('/notification', {offset:0, limit:NOTI_LIMIT}), getComFetchOptions('get', true))
-  
+
   notiList.value = result.map((noti:INotification)=>{
     return {
       ...noti,
@@ -688,7 +688,7 @@ async function readAll(){
       return noti.is_read = true
     })
   })
-   
+
 }
 
 async function moveZemWorld(){
@@ -707,7 +707,7 @@ async function moveZemWorld(){
 
 <style lang="scss" scoped>
 .header{
-  
+
   .header-info{
     display: flex;
     align-items: center;
@@ -729,8 +729,8 @@ async function moveZemWorld(){
     &:hover{
       cursor: pointer;
       color:#f97316;
-    }  
-  } 
+    }
+  }
   .btn-circle-none {
     padding-top: 5px;
 
@@ -738,7 +738,7 @@ async function moveZemWorld(){
       display: none;
     }
   }
- 
+
 }
 
 
@@ -838,7 +838,7 @@ async function moveZemWorld(){
           }
         }
       }
-      h4{    
+      h4{
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
@@ -859,7 +859,7 @@ async function moveZemWorld(){
 
   .mobile-logo {
     display: block !important;
-    width: 32px; 
+    width: 32px;
     height: 32px;
   }
 
@@ -932,7 +932,7 @@ async function moveZemWorld(){
       display: none;
     }
   }
-  
+
 }
 
 @media all and (min-width: 1200px) {

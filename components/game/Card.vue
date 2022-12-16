@@ -12,26 +12,26 @@
       alt="zem-jam-winner"
       style="position: absolute; right: 10px; top: 10px"
     />
-    <GameStageTag :stage="gameInfo.stage"/>
+    <!-- <GameStageTag :stage="gameInfo.stage"/> -->
 
     <div
       @click="moveGamePage"
       class="thumbnail"
       :style="`background: url( ${thumbnail} ) center center / cover no-repeat; background-size: cover;`"
     ></div>
-   
+
     <dl>
       <dt @click="moveUserPage" >
         <UserAvatar :user="gameInfo.user" :tag="'p'"></UserAvatar>
       </dt>
       <dd>
-        
+
         <h2 @click="playGame">
           {{ gameInfo.title }}
         </h2>
         <p @click="moveUserPage">{{ gameInfo.user?.name }}</p>
         <ul>
-          <template  v-for="platform in support_platforms"> 
+          <template  v-for="platform in support_platforms">
             <li v-if="Number(platform) === ePlatformType.Android">
               <i class="uil uil-android"></i>
             </li>
@@ -49,7 +49,7 @@
           <li v-if="gameInfo.game_type === eGameType.Download"  style="margin-top: 2px;">
             <i class="uil uil-file-download"></i>
           </li>
-         
+
           <li v-if="gameInfo.game_type === eGameType.Html" style="margin-top: 2px;">
             <i class="uil uil-html5-alt"></i>
           </li>
@@ -106,7 +106,7 @@ function moveUserPage() {
 
 <style scoped lang="scss">
 .game-info {
-  
+
   dl{
     dt{
       margin-top:8px
@@ -145,7 +145,7 @@ function moveUserPage() {
       }
     }
   }
-  
+
 }
 .thumbnail:hover,
 .thumbnail {
@@ -155,14 +155,14 @@ function moveUserPage() {
 
 @media all and (max-width: 479px) {
   li {
-    padding-bottom: 0px; 
+    padding-bottom: 0px;
   }
   .game-info {
       dl{
         dd{
           h2{
             width:100px
-          }   
+          }
         }
      }
     }
@@ -176,7 +176,7 @@ function moveUserPage() {
         dd{
           h2{
             width:160px
-          }   
+          }
         }
      }
     }
@@ -187,7 +187,7 @@ function moveUserPage() {
       dd{
         h2{
           width:150px
-        }   
+        }
       }
     }
   }
@@ -198,7 +198,7 @@ function moveUserPage() {
       dd{
         h2{
           width:200px
-        }   
+        }
       }
     }
   }
