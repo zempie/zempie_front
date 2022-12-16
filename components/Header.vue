@@ -62,11 +62,11 @@
             </template>
           </el-dropdown>
         </ClientOnly>
-          <li class="uppercase pointer">
+          <!-- <li class="uppercase pointer">
             <a id="zempieWorldMenu" @click="moveZemWorld">
                 Zempie world
             </a>
-          </li>
+          </li> -->
           </ul>
         </div>
       </dt>
@@ -380,10 +380,10 @@
                 @click.native="isHeaderSideMobile = false"
                 ><i class="uil uil-robot"></i> Games
               </NuxtLink>
-              <a class="pointer" id="zempieWorldMenu"  @click="moveZemWorld">
+              <!-- <a class="pointer" id="zempieWorldMenu"  @click="moveZemWorld">
                 <i class="uil uil-globe"></i>
                 Zempie world
-            </a>
+            </a> -->
               <NuxtLink
                 :to="$localePath('/zem-jam')"
                 @click.native="isHeaderSideMobile = false"
