@@ -12,6 +12,7 @@
       alt="zem-jam-winner"
       style="position: absolute; right: 10px; top: 10px"
     />
+    <GameStageTag :stage="gameInfo.stage"/>
 
     <div
       @click="moveGamePage"
@@ -65,12 +66,11 @@ const { $localePath } = useNuxtApp()
 
 const router = useRouter()
 
-
 const props = defineProps({
   gameInfo: Object as PropType<IGame>,
   })
   const support_platforms = computed(() => {
-    return props.gameInfo.support_platform.split(',')
+    return props.gameInfo.support_platform?.split(',')
   })
 
 const thumbnail = ref(
@@ -106,6 +106,7 @@ function moveUserPage() {
 
 <style scoped lang="scss">
 .game-info {
+  
   dl{
     dt{
       margin-top:8px

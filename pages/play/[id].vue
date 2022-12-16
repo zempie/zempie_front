@@ -19,7 +19,7 @@
 import { getIdToken } from 'firebase/auth'
 import { useI18n } from 'vue-i18n'
 
-const DAYSTOSEC_30 = 60 * 60 * 24 * 30
+const HOURTOSEC = 60 * 60
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -163,7 +163,7 @@ async function onMessage(msg: MessageEvent) {
         getIdToken(useUser().user.value.fUser, true).then((idToken) => {
           if (idToken) {
             $cookies.set(config.COOKIE_NAME, idToken, {
-              maxAge: DAYSTOSEC_30,
+              maxAge: HOURTOSEC,
               path: '/',
               domain: config.COOKIE_DOMAIN,
             })

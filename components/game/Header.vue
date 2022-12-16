@@ -10,6 +10,7 @@
         : 'background-color: #f973165c'
     "
   >
+  <GameStageTag :stage="gameInfo.stage"/>
     <div
       v-if="isMine"
       style="display: flex; justify-content: flex-end; margin: 20px"
@@ -190,7 +191,7 @@
 import _ from 'lodash'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
-import { ElMessage, ElMessageBox, ElLoading, ElDialog } from 'element-plus'
+import { ElMessage, ElMessageBox, ElTag, ElDialog } from 'element-plus'
 import { IGame, eGameStage, eGameType } from '~~/types'
 
 import { PropType } from 'vue'

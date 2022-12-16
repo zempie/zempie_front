@@ -96,15 +96,8 @@
 </template>
 
 <script setup lang="ts">
-import {
-  ElDropdown,
-  ElMessageBox,
-  ElDropdownItem,
-  ElLoading,
-  ElPopover,
-  ElMessage,
-  ElDialog,
-} from 'element-plus'
+import * as fbFcm from '~~/scripts/firebase-fcm'
+import {  ElMessage } from 'element-plus'
 import useVuelidate from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
 import { useI18n } from 'vue-i18n'
@@ -127,7 +120,8 @@ const route = useRoute()
 const config = useRuntimeConfig()
 
 definePageMeta({
-  layout: false,
+  layout: 'layout-none',
+  middleware:'guest-only'
 })
 useHead({
   title: `${t('seo.login.title')} | Zempie`,
@@ -202,6 +196,22 @@ const rules = computed(() => {
   return formRule
 })
 const v$ = useVuelidate(rules, form)
+const isLogin = computed(() => useUser().user.value.isLogin)
+
+watch( isLogin,
+ async (val) => {
+  if (val) {
+   router.push($localePath('/'))
+   const { token } = await fbFcm.getFcmToken(useUser().user.value.info.id)
+   console.log('token', token)
+   if (!token) {
+    console.log('regi token')
+    await fbFcm.resigterFcmToken(useUser().user.value.info.id)
+   }
+  }
+})
+
+console.log(useUser().user.value.isLogin)
 
 async function onSubmit() {
   const isValid = await v$.value.$validate()
@@ -212,8 +222,6 @@ async function onSubmit() {
       signInWithEmailAndPassword($firebaseAuth, form.email, form.password)
         .then(async (result) => {
           const { user } = result
-          useUser().setFirebaseUser(user)
-          // router.push($localePath('/'))
         })
         .catch((err: any) => {
           const errorCode = err.code
@@ -257,7 +265,8 @@ async function facebookLogin() {
 async function socialLogin(provider: AuthProvider) {
   try {
     const res = await signInWithPopup($firebaseAuth, provider)
-    useUser().setFirebaseUser(res.user)
+    //회원가입 정보 없는 경우 ??? 
+    // useUser().setFirebaseUser(res.user)
   } catch (err) {
     console.error('socialLogin err', err)
 
@@ -268,6 +277,7 @@ async function socialLogin(provider: AuthProvider) {
     }
   }
 }
+
 </script>
 
 <style scoped lang="scss">

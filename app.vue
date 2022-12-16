@@ -26,19 +26,29 @@
     </el-dialog>
 </template>
 <script setup lang="ts">
-import {ElDialog, ID_INJECTION_KEY } from 'element-plus'
-
+import { ElDialog, ID_INJECTION_KEY } from 'element-plus'
 import { useI18n } from 'vue-i18n'
+
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
 const switchLocalePath = useSwitchLocalePath()
 const route = useRoute()
 const router = useRouter()
-const { $cookies } = useNuxtApp()
 
 const isOpen = ref(false)
 const showOneDay = ref(false)
 const showNever = ref(false)
+
+const userInfo = useUser().user.value.info
+
+watch(
+  ()=> useUser().user.value.fUser,
+  async (fUser)=>{
+   
+    if(useCookie(config.COOKIE_NAME).value && !userInfo){
+      await useUser().setUserInfo()
+    }
+})
 
 useHead({
   title: `${t('seo.landing.title')} | Zempie`,
@@ -70,18 +80,18 @@ useHead({
       property: 'og:title',
       content: `${t('seo.landing.title')}`,
     },
-    {
-      property: 'og:description',
-      content: `${t('seo.landing.description')}`,
-    },
+    // {
+    //   property: 'og:description',
+    //   content: `${t('seo.landing.description')}`,
+    // },
     {
       property: 'og:url',
       content: `${config.ZEMPIE_URL}${route.path}`,
     },
-    {
-      property: 'og:image',
-      content: `${config.OG_IMG}`,
-    },
+    // {
+    //   property: 'og:image',
+    //   content: `${config.OG_IMG}`,
+    // },
     {
       property: 'og:type',
       content: 'website',
@@ -94,7 +104,9 @@ provide(ID_INJECTION_KEY, {
   current: 0,
 })
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
+  console.log(config.ENV)
+
   let date = new Date()
   //게임젬플러스 종료 날짜
   let endDate : Date | number= new Date(2022, 10, 20, 23, 59, 59)
@@ -110,7 +122,7 @@ onBeforeMount(() => {
 
   //유효 기간이 더 크면 팝업 안보이게
   //다시 안보기인 경우 팝업 안보이게
-  if((parseInt(localStorage.getItem('GJ_POPUP_ONE') ) >  now)|| Boolean(localStorage.getItem('GJ_POPUP_NEVER'))){
+  if((parseInt(localStorage.getItem('GJ_POPUP_ONE') ) >  now) || Boolean(localStorage.getItem('GJ_POPUP_NEVER'))){
     isOpen.value = false
   }
 
@@ -126,6 +138,12 @@ onBeforeMount(() => {
   useCommon().setLang(locale.value)
 
   router.replace(route.fullPath)
+
+  //로그인 확인 처리
+  if (useCookie(config.COOKIE_NAME).value){
+    await getRefreshToken()
+  }
+  
 })
 
 

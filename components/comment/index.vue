@@ -264,11 +264,6 @@ function untranslatedText(originText: string) {
 
 //     }
 
-//     moveUserChannel(channel_id: string) {
-//         this.$router.push(`/${this.$i18n.locale}/channel/${channel_id}/timeline`)
-//     }
-
-// }
 </script>
 
 <style lang="scss" scoped>

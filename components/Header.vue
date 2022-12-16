@@ -1,76 +1,76 @@
 <template>
-  <ClientOnly>
-    <!-- 상단영역 -->
-    <div class="header">
-      <dl>
-        <dt>
-          <div class="header-logo-menu">
-            <p>
-              <NuxtLink :to="$localePath('/')">
-                <nuxt-img
-                  class="logo"
-                  src="/images/zempie-logo-black.png"
-                  alt="zempie-logo"
-                />
-                <nuxt-img
-                  class="mobile-logo"
-                  src="/images/zempie_logo_154_155.png"
-                  alt="zempie-logo"
-                />
+  <div class="header">
+    <dl>
+      <dt>
+        <div class="header-logo-menu">
+          <p>
+            <NuxtLink :to="$localePath('/')">
+              <img
+                v-if="showMobileLogo"
+                class="mobile-logo"
+                src="/images/zempie_logo_154_155.png"
+                alt="zempie-logo"
+              />
+              <img
+                v-else
+                class="logo"
+                src="/images/zempie-logo-black.png"
+                alt="zempie-logo"
+              />
+            </NuxtLink>
+          </p>
+          <button
+            class="btn-circle-none mobile"
+            @click="isHeaderSideMobile = true"
+          >
+            <i class="uil uil-bars"></i>
+          </button>
+          <ul class="menu">
+            <li class="uppercase">
+              <NuxtLink
+                :to="$localePath('/community/list')"
+                :class="$route.name.toString().includes('community-list') && 'active'"
+              >
+                community
               </NuxtLink>
-            </p>
-            <button
-              class="btn-circle-none mobile"
-              @click="isHeaderSideMobile = true"
-            >
-              <i class="uil uil-bars"></i>
-            </button>
-            <!-- <i class="uil uil-bars" v-on:click="headerSideOpenMobile"></i> -->
-            <ul class="menu">
-              <li class="uppercase">
-                <NuxtLink
-                  :to="$localePath('/community/list')"
-                  :class="
-                    $route.name.toString().includes('community-list') && 'active'"
-                >
-                  community
-                </NuxtLink>
-              </li>
-              <li class="uppercase">
-                <NuxtLink
-                  id="gameMenu"
-                  :to="$localePath('/game/list')"
-                  :class="
-                    $route.name.toString().includes('game-list') && 'active' 
-                  "
-                >
-                  games
-                </NuxtLink>
-              </li>
-              <li class="uppercase">
-                <NuxtLink
-                  :to="$localePath('/zem-jam')"
-                  :class="
-                    $route.name.toString().includes('zem-jam') && 'active' 
-                  "
-                >
-                  ZEMJAM
-                </NuxtLink>
-              </li>
-              <li class="uppercase">
-                <NuxtLink
-                  :to="$localePath('/game-jam-plus')"
-                  :class="
-                    $route.name.toString().includes('game-jam-plus') && 'active' 
-                  "
-                >
-                  GJ+
-                </NuxtLink>
-              </li>
-            </ul>
-          </div>
-        </dt>
+            </li>
+            <li class="uppercase">
+              <NuxtLink
+                id="gameMenu"
+                :to="$localePath('/game/list')"
+                :class="
+                  $route.name.toString().includes('game-list') && 'active'"
+>
+                games
+              </NuxtLink>
+            </li>
+            <ClientOnly>
+            <el-dropdown trigger="click" class="menu-dropdown uppercase">            
+              <span class="el-dropdown-link">
+              GameJam
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item class="header-menu" @click="router.push($localePath('/zem-jam'))"> 
+                ZEMJAM
+              </el-dropdown-item>
+                <el-dropdown-item class="header-menu" @click="router.push($localePath('/game-jam-plus'))">              
+                GJ+
+              </el-dropdown-item>
+            </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </ClientOnly>
+          <li class="uppercase pointer">
+            <a id="zempieWorldMenu" @click="moveZemWorld">
+                Zempie world
+            </a>
+          </li>
+          </ul>
+        </div>
+      </dt>
 
+      <ClientOnly>
         <dd>
           <div class="header-search">
             <div class="input-search-line">
@@ -106,10 +106,7 @@
                             <div @click="moveUserPage(user.channel_id)">
                               <dl>
                                 <dt>
-                                  <UserAvatarSk v-if="isPending" />
-
                                   <UserAvatar
-                                    v-else
                                     :user="user"
                                     :tag="'span'"
                                   />
@@ -175,9 +172,7 @@
               </div>
             </div>
           </div>
-
           <!-- FIXME: popper-class: css수정 -->
-
           <div class="header-language">
             <el-select
               class="hl-select-box"
@@ -193,10 +188,66 @@
               />
             </el-select>
           </div>
-          <div
-            v-if="isLogin"
-            class="header-info ml10"
-            style="display: flex"
+          <div  class="header-info ml0" v-if="isLogin">
+            <el-dropdown
+                  ref="notiDropdown"
+                  id="notiList"
+                  trigger="click"                  
+                >
+              <button class="btn-circle-icon ml10" @click="showAlarmList">
+                  <i class="uil uil-bell" style="font-size:21px;"></i>
+                  <span v-if="hasNewNoti" ></span>
+              </button>
+              <template #dropdown>
+                  <div slot="body" class="header-message">
+                  <dl>
+                    <dt>Notifications</dt>
+                    <dd>
+                      <a @click="readAll"><i class="uil uil-comment-alt"></i><em>{{ t('mark.all') }}</em></a>
+                    </dd>
+                  </dl>
+                  <ul>
+                    <li v-if="isNotiLoading" v-for="noti in 4">
+                      <dl>
+                        <dd>
+                          <UserAvatarSk style="width:50px; height:50px;"/>
+                        </dd>
+                        <dt>
+                          <h3 class="grey-text skeleton-animation" style="height:20px"></h3>
+                          <p class="grey-text skeleton-animation" style="height:20px; width: 300px;"></p>
+                        </dt>
+                        <dd>
+                        </dd>
+                      </dl>
+                    </li>
+                    <template v-else>
+                      <li v-if="notiList?.length" v-for="noti in notiList" :key="noti.id" :class="!noti.is_read && 'is-read-active'" >
+                        <dl @click.stop="moveAlarm(noti)">
+                          <dd>
+                              <UserAvatar :user="noti.user" :tag="'span'" :hasRouter="true" />
+                          </dd>
+                          <dt>
+                            <h3><span @click.stop="$router.push($localePath(`/channel/${noti.user.channel_id}`))">{{noti.user.name}}&nbsp;</span>{{noti.type_text}}</h3>
+                            <h4>{{noti.content.slice(0,40)}}</h4>
+                            <p><i class="uis uis-clock" style="color:#c1c1c1;"></i>{{dateFormat(noti.created_at)}}</p>
+                          </dt>
+                          <dd>
+                          </dd>
+                        </dl>
+                      </li>
+                      <li v-else>
+                        <dl>
+                          {{ t('no.alarm') }}
+                        </dl>
+                      </li>
+                  </template>
+                  </ul>
+                  <p class="view-all" @click="goNotiList"><a>{{ t('view.all') }}</a></p>
+                  </div>
+              </template>
+            </el-dropdown>
+          <div           
+            class="ml10"
             id="userMenu"
           >
             <el-dropdown trigger="click" ref="userMenu" id="userMenu">
@@ -271,6 +322,7 @@
               </template>
             </el-dropdown>
           </div>
+        </div>
           <div v-else class="header-login">
             <p
               v-if="useUser().user.value.isLoading"
@@ -286,14 +338,14 @@
               <i class="uil uil-user-circle"></i>
             </p>
             <NuxtLink v-else :to="$localePath('/login')">
-              <button class="btn-default" id="loginBtn">
+              <button class="btn-default" id="loginBtn" style="display: flex;">
                 <i class="uil uil-user"></i>{{ t('login') }}
               </button>
             </NuxtLink>
           </div>
           <div
             class="header-side-mobile"
-            :style="isHeaderSideMobile ? 'left:0px;' : ''"
+            :style="isHeaderSideMobile && 'left:0px;'"
             id="headerSideMobile"
             v-on-click-outside="clickOutside"
           >
@@ -327,73 +379,75 @@
                 @click.native="isHeaderSideMobile = false"
                 ><i class="uil uil-robot"></i> Games
               </NuxtLink>
+              <a class="pointer" id="zempieWorldMenu"  @click="moveZemWorld">
+                <i class="uil uil-globe"></i>
+                Zempie world
+            </a>
               <NuxtLink
                 :to="$localePath('/zem-jam')"
                 @click.native="isHeaderSideMobile = false"
-                ><i class="uil uil-comment"></i>
+                ><i class="uil uil-play"></i>
                 ZEMJAM
               </NuxtLink>
               <NuxtLink
                 :to="$localePath('/game-jam-plus')"
                 @click.native="isHeaderSideMobile = false"
-                ><i class="uil uil-comment"></i>
+                ><i class="uil uil-keyboard"></i>
                 GJ+
               </NuxtLink>
+             
             </div>
           </div>
           <div
             class="header-side-bg-mobile"
             :style="isHeaderSideBgMobile ? 'display:block;' : ''"
             id="headerSideBgMobile"
-            v-on:click="headerSideCloseMobile"
           >
             &nbsp;
           </div>
         </dd>
-      </dl>
+    </ClientOnly>
+    </dl>
 
-      <el-dialog
-        v-model="isOpen"
-        append-to-body
-        class="modal-area-type"
-        :show-close="false"
-        width="380px"
-      >
-        <div class="modal-alert">
-          <dl class="ma-header">
-            <dt>{{ t('information') }}</dt>
-            <dd>
-              <button @click="useModal().closeLoginModal()">
-                <i class="uil uil-times"></i>
-              </button>
-            </dd>
-          </dl>
+    <el-dialog
+      v-model="isOpen"
+      append-to-body
+      class="modal-area-type"
+      :show-close="false"
+      width="380px"
+    >
+      <div class="modal-alert">
+        <dl class="ma-header">
+          <dt>{{ t('information') }}</dt>
+          <dd>
+            <button @click="useModal().closeLoginModal()">
+              <i class="uil uil-times"></i>
+            </button>
+          </dd>
+        </dl>
 
-          <div class="ma-content">
-            <h2>{{ t('needLogin.text1') }}<br />{{ t('needLogin.text2') }}</h2>
-            <div>
-              <button
-                class="btn-default"
-                style="width: 100%"
-                @click="$router.push($localePath('/login'))"
-              >
-                {{ t('login') }}
-              </button>
-            </div>
+        <div class="ma-content">
+          <h2>{{ t('needLogin.text1') }}<br />{{ t('needLogin.text2') }}</h2>
+          <div>
+            <button
+              class="btn-default"
+              style="width: 100%"
+              @click="$router.push($localePath('/login'))"
+            >
+              {{ t('login') }}
+            </button>
           </div>
         </div>
-      </el-dialog>
-     
-      
-    </div>
-  </ClientOnly>
+      </div>
+    </el-dialog>
+    
+    
+  </div>
 </template>
 
 <script setup lang="ts">
 import _ from 'lodash'
-//TODO: 모바일 메뉴 다른 곳 클릭하면 닫히게
 import { vOnClickOutside } from '@vueuse/components'
-
 import { useI18n } from 'vue-i18n'
 import {
   ElDropdown,
@@ -404,8 +458,11 @@ import {
   ElMessage,
   ElDialog,
 } from 'element-plus'
+import { INotification, eNotificationType } from '~~/types';
+import { dateFormat } from '~/scripts/utils'
+import shared from '~/scripts/shared'
 
-const alwaysTrue = ref(true)
+const NOTI_LIMIT = 5
 const config = useRuntimeConfig()
 const { $localePath } = useNuxtApp()
 const { t, locale } = useI18n()
@@ -414,10 +471,8 @@ const switchLocalePath = useSwitchLocalePath()
 const router = useRouter()
 const route = useRoute()
 
-
 const isLogin = computed(() => useUser().user.value.isLogin)
 const user = computed(() => useUser().user.value.info)
-const isPending = ref(true)
 const userMenu = ref()
 const searchDropdown = ref()
 
@@ -426,10 +481,20 @@ const userList = ref([])
 const gameList = ref([])
 const communityList = ref([])
 const hasResearchResult = ref(false)
-const isOpenMessage = ref(false)
 const isHeaderSideMobile = ref(false)
-const isOpenSearch = ref(false)
 const isHeaderSideBgMobile = ref(false)
+
+
+const notiDropdown = ref()
+const notiList = ref<INotification[]>()
+const isNotiLoading = ref(false)
+const needAlarmRefresh = ref(false)
+const hasNewNoti = ref()
+
+const isMobile = computed(() =>
+  window.matchMedia('screen and (max-width: 479px)')
+)
+const showMobileLogo = ref(false)
 
 const options = [
   { code: 'ko', label: '한국어' },
@@ -460,11 +525,41 @@ watch(
   { immediate: true }
 )
 
-nuxt.hook('page:finish', () => {
-  isPending.value = false
+watch(
+  () => useAlarm().alarm.value.newNoti,
+  (val) => {
+    if( val ) hasNewNoti.value = true
+  }
+)
+
+
+watch(
+  () => useUser().user.value.info,
+  (val) => {
+    if( val.new_noti_count ) hasNewNoti.value = true
+  }
+)
+
+onMounted(()=>{
+  nextTick(() => {
+    onResize()
+  })
+  window.addEventListener('resize', onResize)
 })
 
-function headerSideCloseMobile() {}
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', onResize)
+})
+
+
+function onResize() {
+  if (isMobile.value.matches) {
+    showMobileLogo.value = true
+  } else {
+    showMobileLogo.value = false
+  }
+}
 
 function switchLangauge() {
   switchLocalePath(selectedLang.value)
@@ -541,24 +636,111 @@ function clickOutside() {
     isHeaderSideMobile.value = false
   }
 }
+
+async function showAlarmList(){
+ 
+  if(notiList.value && !hasNewNoti.value) return 
+  if(needAlarmRefresh.value) return
+  
+  isNotiLoading.value = true
+
+  const { count, result } = await useCustomFetch<{count:number, result:INotification[]}>(  createQueryUrl('/notification', {offset:0, limit:NOTI_LIMIT}), getComFetchOptions('get', true))
+  
+  notiList.value = result.map((noti:INotification)=>{
+    return {
+      ...noti,
+      type_text: shared.notiText(noti.type)
+    }
+
+  })
+  isNotiLoading.value = false
+  needAlarmRefresh.value = false
+
+  useAlarm().resetNewNoti()
+  useUser().updateUserKey('new_noti_count', 0)
+
+  hasNewNoti.value = false
+}
+
+async function moveAlarm(noti:INotification){
+
+  await shared.commonTryCatch( async () =>{ return await useCustomFetch('/notification', getComFetchOptions('put', true, {id:noti.id}))})
+  .then(()=>{
+    shared.moveNoti(noti)
+    notiDropdown.value.handleClose()
+    needAlarmRefresh.value = true
+  })
+}
+
+function goNotiList(){
+  router.push($localePath('/notifications'))
+  notiDropdown.value.handleClose()
+
+}
+
+
+
+
+async function readAll(){
+  await shared.commonTryCatch( async() => { return await useCustomFetch('/notification/read-all', getComFetchOptions('put', true))})
+  .then(()=>{
+    notiList.value.map((noti)=>{
+      return noti.is_read = true
+    })
+  })
+   
+}
+
+async function moveZemWorld(){
+  if(isLogin.value){
+    const {result} = await useCustomFetch<{result:{token: string}}>('/create/token', getZempieFetchOptions('post', true))
+    if( result ){
+      window.open(`${config.ZEMPIE_METAVERSE}?key=${result.token}`, '_blank');
+    }
+  }else{
+    router.push($localePath('/login'))
+  }
+
+}
+
 </script>
 
 <style lang="scss" scoped>
-.mobile-logo {
-  display: none;
-}
-
-.btn-circle-none {
-  padding-top: 5px;
-
-  &.mobile {
-    display: none;
+.header{
+  
+  .header-info{
+    display: flex;
+    align-items: center;
   }
+  .menu {
+    li{
+      .active {
+        color: #f97316;
+      }
+    }
+  }
+  .menu-dropdown{
+    display: inline-block;
+    padding: 20px 20px 20px 0;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 14px;
+    color: #333;
+    &:hover{
+      cursor: pointer;
+      color:#f97316;
+    }  
+  } 
+  .btn-circle-none {
+    padding-top: 5px;
+
+    &.mobile {
+      display: none;
+    }
+  }
+ 
 }
 
-.menu li .active {
-  color: #f97316;
-}
 
 .hl-select-box:deep(.el-input, .is-focus) {
   .el-input__wrapper {
@@ -642,14 +824,42 @@ function clickOutside() {
   font-size: 16px;
 }
 
+.header-message{
+  ul{
+    li{
+      width: 400px;
+      &.is-read-active{
+        border-left: 3px solid #ff6e17;
+      }
+      h3{
+        span{
+          &:hover{
+            color:#ff6e17
+          }
+        }
+      }
+      h4{    
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+    }
+  }
+  .view-all{
+    &:hover{
+      cursor: pointer;
+    }
+  }
+}
+
 @media all and (max-width: 479px) {
   .logo {
     display: none;
   }
 
   .mobile-logo {
-    display: block;
-    width: 32px;
+    display: block !important;
+    width: 32px; 
     height: 32px;
   }
 
@@ -672,6 +882,10 @@ function clickOutside() {
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
+
+  .mobile-logo {
+   display: none;
+  }
   .btn-circle-none {
     &.mobile {
       display: block;
@@ -691,6 +905,9 @@ function clickOutside() {
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
+  .mobile-logo{
+    display: none;
+  }
   .header > dl {
     width: 90%;
   }
@@ -705,6 +922,9 @@ function clickOutside() {
 }
 
 @media all and (min-width: 992px) and (max-width: 1199px) {
+   .mobile-logo{
+    display: none;
+  }
   .header-login {
     display: block !important;
 
@@ -712,15 +932,18 @@ function clickOutside() {
       display: none;
     }
   }
-  .header > dl {
-    width: 90%;
-  }
-
-  .header-info-mobile {
-    display: none;
-  }
+  
 }
 
 @media all and (min-width: 1200px) {
+  .mobile-logo{
+    display: none;
+  }
+  .btn-circle-none {
+  padding-top: 5px;
+    &.mobile {
+      display: none;
+    }
+  }
 }
 </style>

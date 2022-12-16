@@ -341,11 +341,11 @@ async function deploy() {
 async function changeStage() {
   const deployVersion: IVersion =
     useProject().editProject.value.info.projectVersions.find((project: any) => {
-      return project.version === selectVersion.value
+      return project.version === selectVersion.value.version
     })
 
   const formData = new FormData()
-
+  
   formData.append('id', String(projectId.value))
   formData.append('stage', String(selectedStage.value))
   formData.append('deploy_version_id', String(deployVersion.id))

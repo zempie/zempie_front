@@ -135,6 +135,10 @@ watch(
             property: 'og:url',
             content: `${config.ZEMPIE_URL}${route.path}`,
           },
+          {
+            property: 'og:image',
+            content: `${info.url_thumb}`,
+          },
         ],
       })
     }
@@ -154,7 +158,7 @@ onBeforeUnmount(()=>{
 })
 
 async function gameListFetch() {
-  const response = await $fetch<{
+  const response = await useCustomFetch<{
     result: any
   }>(
     `/channel/${game.value?.user.channel_id}`,
@@ -175,46 +179,15 @@ async function gameListFetch() {
   }
 }
 
-// gameListFetch() {
-//     this.$api.userChannel(this.user.channel_id)
-//         .then((res: any) => {
-//             const {target} = res;
-//             const {games} = target;
-//             this.$store.commit('gameList', games)
-//             if (games.length > 0) {
-//                 this.totalGameCnt = games.length;
-//             }
-//             this.games = games.slice(0, 5)
-//         })
-//         .catch((err: AxiosError) => {
-//             // this.$router.push(`/${this.$i18n.locale}`)
-//             // console.log('err', err)
-//         })
-
-// }
-
-// beforeDestroy() {
-//     this.$store.commit('currPage', null)
-// }
-
-// openImgModal(imgSrc: string) {
-//     this.imgSrc = imgSrc;
-//     (this.$refs.originScreenShootImgModal as any).show();
-// }
-
-// closeImgModal() {
-//     (this.$refs.originScreenShootImgModal as any).hide();
-// }
-
 function copyUrl() {
   let url = ''
-  
+
   if(game.value.game_type === eGameType.Download){
     url = `${config.ZEMPIE_URL}/game/${game.value.pathname}`
   }else{
     url = `${config.ZEMPIE_URL}/play/${game.value.pathname}`
   }
-  
+
   execCommandCopy(url)
   ElMessage.closeAll()
   ElMessage({
@@ -223,11 +196,6 @@ function copyUrl() {
   })
 }
 
-// @Watch('$route.params.gamePath')
-// watchParams() {
-//     this.gamePath = this.$route.params.gamePath
-//     this.fetch();
-// }
 </script>
 
 <style scoped lang="scss">
@@ -236,6 +204,7 @@ function copyUrl() {
   border-radius: 10px;
   background: #fff;
   box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.1);
+  margin-bottom:20px;
 }
 
 .ta-screenshot .swiper-button-next {

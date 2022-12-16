@@ -143,7 +143,6 @@ const config = useRuntimeConfig()
 const nuxt = useNuxtApp()
 
 const route = useRoute()
-const isPending = ref(true)
 const channelInfo = computed(() => useChannel().userChannel.value.info)
 const isLoading = computed(() => useChannel().userChannel.value.isLoading)
 const games = computed(() => channelInfo.value.games)
@@ -152,9 +151,6 @@ const isMine = computed(() => {
   return channelId.value === useUser().user.value.info?.channel_id
 })
 
-nuxt.hook('page:finish', () => {
-  isPending.value = false
-})
 watch(
   () => channelInfo.value,
   (info) => {

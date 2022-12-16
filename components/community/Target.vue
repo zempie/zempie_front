@@ -11,7 +11,7 @@
             @click="
               router.push($localePath(`/community/${postedAt?.community.id}`))
             "
-            >{{ postedAt?.community.name }}</span
+            >{{ postedAt?.community?.name }}</span
           >
           /
           <em
@@ -22,7 +22,7 @@
                 )
               )
             "
-            >{{ postedAt?.channel.title }}</em
+            >{{ postedAt?.channel?.title }}</em
           >
         </div>
       </div>

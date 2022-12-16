@@ -1,23 +1,14 @@
-// import EX from '~/plugins/example'
-import { ICommunityPayload } from '~~/types';
-
-const delay = (ms: number) => new Promise((_) => setTimeout(_, ms))
-
-// const BASE_API = process.env.BASE_API
-// const COMMUNITY_API = process.env.COMMUNITY_API
-
-
-
 function baseOption(method: string, withCredentials: boolean, body?: object) {
   const config = useRuntimeConfig();
-  const accessToken = useCookie(config.COOKIE_NAME).value
+  const accessToken = useCookie(config.COOKIE_NAME)
 
   const options = {
     key: `${Date.now()}`,
     method: method,
-    headers: accessToken && withCredentials ? { 'Authorization': `Bearer ${accessToken}` } : {},
+    headers: (accessToken.value && withCredentials) && { 'Authorization': `Bearer ${accessToken.value}` },
     initialCache: false,
   }
+
   if (method === 'post' || method === 'put' || method === 'delete') {
     options['body'] = body;
   }
@@ -153,9 +144,6 @@ const studioFetch = async (method: string, url: string, data = null, withCredent
 
 export const auth = {
 
-  login() {
-    return useFetchData('get', '/user/info', undefined, true)
-  },
 
   signUp(obj: { name: string; nickname?: string }) {
     return useFetchData('post', '/user/sign-up', obj, true)
@@ -172,9 +160,9 @@ export const user = {
   unfollow(userId: number) {
     return communityFetch('post', `/user/${userId}/unfollow`, undefined, true);
   },
-  joinedCommunity(userId: number) {
-    return communityFetch('get', `/user/${userId}/list/community`, undefined, true)
-  },
+  // joinedCommunity(userId: number) {
+  //   return communityFetch('get', `/user/${userId}/list/community`, undefined, true)
+  // },
   followingList(obj: any, userId: number) {
     return communityFetch('get', `/user/${userId}/list/following`, obj, true);
   },

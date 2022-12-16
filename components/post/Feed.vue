@@ -121,6 +121,7 @@
         <div class="swiper-pagination" slot="pagination"></div>
       </swiper>
     </template>
+
     <CommunityTarget :communities="feed?.posted_at?.community" :games="feed?.posted_at?.game" />
 
     <ul class="tapl-option">
@@ -293,33 +294,8 @@ const initFiles = _.cloneDeep(attatchment_files.value)
 
 onMounted(() => {
   Prism.highlightAll()
-  // hljs.configure({
-  //   ignoreUnescapedHTML: true,
-  // })
-  // document.querySelectorAll('pre').forEach((block) => {
-  //   hljs.highlightElement(block)
-  // })
   const dom = props.feed?.content && htmlToDomElem(props.feed.content)
-  // const linkTag = dom.getElementsByTagName('a')
-  // for (const link of linkTag) {
-  //   const url = link.href;
-  //   getMetaData(url).then((res) => {
-  //     console.log(res)
-  //   })
-  // }
 })
-
-//     mounted() {
-//         this.attachedFile = Array.isArray(this.feed.attatchment_files) ? this.feed.attatchment_files : JSON.parse(this.feed.attatchment_files)
-//         this.hashtags = this.feed.hashtags;
-//         this.checkOverflow()
-//         this.commentCnt = this.feed?.comment_cnt;
-//         // this.likeListFetch();
-//     }
-
-//     dateFormat(date: number) {
-//         return dateFormat(date);
-//     }
 
 async function commentRefresh() {
   commentInit()

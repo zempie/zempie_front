@@ -2,7 +2,7 @@
   <div class="main-bg">
     <div class="main-copy">
       <h1>
-        <NuxtImg
+        <img
           src="/images/main_copy.svg"
           width="500"
           alt="zempie"
@@ -73,7 +73,7 @@
           :key="post.id"
           @click="$router.push($localePath(`/feed/${post?.id}`))"
         >
-          <NuxtImg :src="post.attatchment_files[0]?.url" />
+          <img :src="post.attatchment_files[0]?.url" />
         </li>
       </ul>
     </div>

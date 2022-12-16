@@ -1,6 +1,7 @@
 import { IUser } from "~~/types"
 import { signOut } from 'firebase/auth'
 import { ElMessage, ElDialog } from "element-plus";
+import { removeFcmToken } from "~~/scripts/firebase-fcm";
 
 export default function () {
   const { $firebaseAuth, $cookies } = useNuxtApp()
@@ -25,7 +26,7 @@ export default function () {
   }
 
   const setLogin = () => {
-    user.value.isLogin = true;
+    user.value.isLogin = !!user.value.info;
     user.value.isLoading = false;
   }
   const setLogout = () => {
@@ -50,34 +51,20 @@ export default function () {
     user.value.isLogin = false;
   }
 
-  const login = async () => {
-    const router = useRouter();
-    const { data, error } = await useCustomAsyncFetch<{ result: any }>('/user/info', getZempieFetchOptions('get', true))
-
-    if (data.value) {
-      const { user } = data.value.result
-      user.value.isLogin = true;
-      user.value.info = { ...user }
-      routerToHome()
-    } else if (error.value) {
-
-      const { error: err } = (error.value as any).data;
-
-      if (err.code === 20001) {
-
-        alert('회원가입이 완료되지않았습니다. 회원가입을 진행해주세요')
-
-        router.push(`/${useCommon().setting.value.lang}/join`)
-      }
-    }
+  const updateUserKey = (key: string, value?: any) => {
+    user.value.info[key] = value
 
   }
 
-  const logout = () => {
 
+  const logout = async () => {
     signOut($firebaseAuth)
       .then(() => {
+        removeFcmToken(user.value.info.id)
+      })
+      .then(() => {
         removeUserState();
+        setLogout()
         $cookies.remove(config.COOKIE_NAME, {
           path: '/',
           domain: config.COOKIE_DOMAIN
@@ -87,8 +74,6 @@ export default function () {
           path: '/',
           domain: config.COOKIE_DOMAIN
         })
-
-        // window.location.href = `/${useCommon().setting.value.lang}`
 
       })
       .catch((error: any) => {
@@ -104,6 +89,17 @@ export default function () {
     user.value.isLoading = false;
   }
 
+  const setUserInfo = async () => {
+    colorLog(`===set user info===`, '#ed1cdc')
+    const response = await useCustomFetch<{ result: { user: IUser } }>('/user/info', getZempieFetchOptions('get', true))
+
+    if (response) {
+      const { user: userResult } = response.result
+      user.value.info = { ...userResult }
+      setLogin()
+    }
+
+  }
 
 
   return {
@@ -115,21 +111,11 @@ export default function () {
     setProfileImg,
     removeUserState,
     logout,
-    login,
     setSignup,
     unsetSignup,
     setBannerImg,
-    setLoadDone
-  }
-}
-
-
-async function routerToHome() {
-  const route = useRoute();
-  const router = useRouter();
-  if (route.name?.toString().includes('login')) {
-    router.push(`/${useCommon().setting.value.lang}/timeline`)
-
-
+    setLoadDone,
+    setUserInfo,
+    updateUserKey
   }
 }

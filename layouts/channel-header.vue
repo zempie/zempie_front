@@ -6,11 +6,7 @@
           <div class="swiper-area uppercase">
             <div class="swiper-slide" style="width: 25%; cursor: pointer">
               <NuxtLink
-                :to="
-                  isMine
-                    ? $localePath(`/timeline`)
-                    : $localePath(`/channel/${channelId}`)
-                "
+                :to="$localePath(`/channel/${channelId}`) "
                 :class="route.meta.name === 'userChannel' ? 'active' : ''"
               >
                 <p class="mobile">
@@ -71,10 +67,6 @@ const userInfo = ref<IUserChannel>()
 
 const channelId = computed(() => route.params.id as string)
 const routeQuery = computed(() => route.query.media)
-
-const isMine = computed(() => {
-  return channelId.value === useUser().user.value.info?.channel_id
-})
 
 
 useChannel().getChannelInfo(channelId.value)

@@ -92,11 +92,13 @@ const route = useRoute()
 const config = useRuntimeConfig()
 const { t, locale } = useI18n()
 const router = useRouter()
+const { $localePath } = useNuxtApp()
+
 
 definePageMeta({
   title: 'leave-account',
   name: 'leaveAccount',
-  //middleware: 'auth',
+  middleware: 'auth',
 })
 
 useHead({
@@ -174,6 +176,8 @@ async function leave() {
         type: 'success',
       })
       useUser().logout()
+      router.push($localePath('/'))
+
     }, 1000)
   } else {
     ElMessage({

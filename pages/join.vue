@@ -16,7 +16,7 @@
         <ul>
           <li>
             <input type="text" name="register-email" v-model="v$.email.$model"
-              :placeholder="$t('login.email.placeholder')" class="w100p h60" :readonly="fUser?.email" />
+              :placeholder="$t('login.email.placeholder')" class="w100p h60" :readonly="fUser ? true: false" />
 
             <h3 class="input-errors" v-for="error of v$.email.$errors" :key="error.$uid">
               <i class="uil uil-check"></i>{{  error.$message  }}
@@ -83,6 +83,7 @@
 </template>
 
 <script setup lang="ts">
+import * as fbFcm from '~~/scripts/firebase-fcm'
 import useVuelidate from '@vuelidate/core'
 import { ElMessage } from 'element-plus'
 import { required, helpers, maxLength } from '@vuelidate/validators'
@@ -90,6 +91,9 @@ import { emailRegex, passwordRegex } from '~/scripts/utils'
 import { useI18n } from 'vue-i18n';
 import { createUserWithEmailAndPassword} from 'firebase/auth'
 import { onBeforeRouteLeave } from 'vue-router';
+import shared from '~~/scripts/shared';
+import { signOut } from 'firebase/auth'
+
 
 const { t, locale } = useI18n()
 const route = useRoute();
@@ -120,9 +124,6 @@ const rules = computed(() => {
       required: helpers.withMessage(t('login.empty.pwd'), required),
       pwdValidator: helpers.withMessage(t('login.pwd.format.err'), pwdValidator)
     },
-    // repeatPassword: {
-
-    // },
     nickname: {
 
     },
@@ -137,7 +138,19 @@ const rules = computed(() => {
   return formRule
 })
 
-const fUser = ref(computed(() => useUser().user.value.fUser))
+const fUser = computed(() => useUser().user.value.fUser)
+const isLogin = computed(() => useUser().user.value.isLogin)
+
+watch(isLogin,
+ async (val) => {
+  if (val) {
+   router.push($localePath('/'))
+   const { token } = await fbFcm.getFcmToken(useUser().user.value.info.id)
+   if (!token) {
+    await fbFcm.resigterFcmToken(useUser().user.value.info.id)
+   }
+  }
+})
 
 definePageMeta({
   layout: 'layout-none',
@@ -193,11 +206,24 @@ useHead({
 })
 
 onBeforeRouteLeave((to, from, next)=>{
-  useUser().logout()
+  console.log('leave', useUser().user.value.fUser)
+  
+  if(fUser.value && !isLogin.value){
+    console.log('here?')
+    shared.removeCookies()
+
+    signOut($firebaseAuth)
+    .then(()=>{
+      useUser().removeUserState();
+    })
+   
+  }
+
   next()
 })
 
 onMounted(() => {
+
   if (fUser.value) form.email = fUser.value.email;
 
 })
@@ -205,6 +231,7 @@ onMounted(() => {
 const v$ = useVuelidate(rules, form)
 
 async function register() {
+
 
   if (fUser.value) { await joinZempie(); return; }
   const result = await v$.value.$validate()
@@ -216,11 +243,10 @@ async function register() {
     if (!result) return;
   }
   try {
-    useUser().setSignup()
+    
     const result = await createUserWithEmailAndPassword($firebaseAuth, form.email, form.password)
     const { user } = result;
     await joinZempie();
-    // useUser().setFirebaseUser(user);
 
   } catch (error: any) {
     
@@ -252,18 +278,16 @@ async function joinZempie() {
   }
 
     const { data,error } = await useCustomAsyncFetch<{result:any}>('/user/sign-up',getZempieFetchOptions('post', true, payload))
+   
     if(data.value){
     const { user } = data.value.result;
 
     if (user) {
       useUser().setUser(user);
       useUser().setLogin();
-      useUser().unsetSignup()
+      // useUser().unsetSignup()
     }
 
-    window.location.href = $localePath('/')
-    //FIXME: router.push가 왜 안되는지 모르겠음 => blank page
-    // router.push(localePath('/'))
   } else if(error.value) {
     ElMessage.error((error.value as any).data.error)
   }

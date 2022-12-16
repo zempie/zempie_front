@@ -29,9 +29,9 @@ export default defineNuxtConfig({
 
     }
   },
-  experimental: {
-    writeEarlyHints: false,
-  },
+  // experimental: {
+  //   writeEarlyHints: false,
+  // },
 
   hooks: {
     'pages:extend'(routes) {
@@ -87,7 +87,6 @@ export default defineNuxtConfig({
     'cookie-universal-nuxt',
     ['@nuxtjs/i18n', i18n],
     '@vueuse/nuxt',
-    '@nuxt/image-edge',
   ],
 
   publicRuntimeConfig: {

@@ -1,20 +1,6 @@
 <template>
   <div class="wrap is-ready event-popup">
     <div class="container" ref="eventRef">
-      <!-- HEADER -->
-      <!-- <div class="header" v-if="$route.name !== 'ZemJam'">
-                <div>
-                    <dl>
-                        <dt class="click-text" @click="neverOpen">
-                            <span style=" font-family:'Russo One'"> Don’t Show Again </span>
-                        </dt>
-                        <dd class="click-text">
-                            <span @click="$modal.hide('openEventPopup')" style=" font-family:'Russo One'">Close</span>
-            </dd>
-            </dl>
-        </div>
-    </div> -->
-
       <div class="slogan">
         <div style="font-family: 'Press Start 2P'">
           <h1
@@ -46,16 +32,11 @@
             style="font-family: 'Russo One'"
           >
             <a style="font-family: 'Russo One', 'NeoDunggeunmo'"
-              >종료된 게임젬</a
+              >{{$t('ended.event')}}</a
             >
-            <!-- <router-link :to="`/${$i18n.locale}/uploadGame`" style=" font-family:'Russo One'">UPLOAD GAME
-                        </router-link> -->
           </div>
         </div>
       </div>
-      <!-- SLOGAN END -->
-
-      <!-- ZEM JAM Is -->
       <div class="zemjam-is">
         <div>
           <h2 data-scroll data-scroll-speed="1" data-scroll-delay="0.05">
@@ -96,9 +77,6 @@
           </div>
         </div>
       </div>
-      <!-- ZEM JAM Is END -->
-
-      <!-- GAME SUBMISSION -->
       <div class="game-submission">
         <div>
           <h2 data-scroll data-scroll-speed="1" data-scroll-delay="0.05">
@@ -125,9 +103,6 @@
           </div>
         </div>
       </div>
-      <!-- GAME SUBMISSION END -->
-
-      <!-- OUR MISSION -->
       <div class="out-mission">
         <div>
           <dl>
@@ -184,9 +159,6 @@
           </ul>
         </div>
       </div>
-      <!-- OUR MISSION END -->
-
-      <!-- OUR PARTNER -->
       <div class="out-partner">
         <div>
           <h2 data-scroll data-scroll-speed="1" data-scroll-delay="0.05">
@@ -202,9 +174,6 @@
           </h3>
         </div>
       </div>
-      <!-- OUR PARTNER END -->
-
-      <!-- Footer -->
       <div class="footer">
         <div>
           <p></p>

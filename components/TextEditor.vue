@@ -1606,6 +1606,8 @@ function getFirstPostContent(content: string) {
     }
   }
   .mp-midi {
+    max-height: 315px;
+    
     .delete-video-btn {
       display: flex;
       justify-content: flex-end;
@@ -1785,6 +1787,15 @@ function getFirstPostContent(content: string) {
   }
 }
 
+.mp-type {
+    dd {
+      button {
+        padding: 0px;
+        width: 70px !important;
+      }
+    }
+  }
+
 @media all and (max-width: 479px) {
   .mp-category {
     .btn-line-small {
@@ -1834,5 +1845,6 @@ function getFirstPostContent(content: string) {
 }
 
 @media all and (min-width: 1200px) {
+ 
 }
 </style>

@@ -86,6 +86,33 @@
       </a>
       <a v-else @click="onSubmit" class="btn-default w250">{{ $t('save') }}</a>
     </div>
+
+    <div class="info-input">
+      <div class="ii-title">
+        <h2>Notifications</h2>
+      </div>
+      <div class="ii-form">
+        <!-- <ol>
+          <li>Comments</li>
+          <li>누군가가 내 게시물에 댓글을 달거나 댓글에 답글을 달면 알림이 전송됩니다.</li>
+          <li>
+            <label class="switch-button">
+              <input type="checkbox" name="" />
+              <span class="onoff-switch"></span>
+            </label>
+          </li>
+        </ol> -->
+        <ol>
+          <li>Alarm</li>
+          <li>{{ $t('userSetting.alarm.info') }} </li>
+          <li>
+            <el-switch v-model="isAlarmOn" size="large"  active-color="#ff6e17" @click="setAlarmStatus"/>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+
     <div class="delete-account" v-if="signUpType === 'password'">
       <h2>{{ $t('userSetting.pwd.change') }}</h2>
       <div>
@@ -119,18 +146,21 @@
 
 <script setup lang="ts">
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
-import { ElMessage, ElLoading } from 'element-plus'
+import { ElMessage, ElLoading, ElSwitch } from 'element-plus'
 
 import { useI18n } from 'vue-i18n'
+import { removeFcmToken, resigterFcmToken } from '~~/scripts/firebase-fcm';
 
 const { t, locale } = useI18n()
 const route = useRoute()
 const config = useRuntimeConfig()
 const { $localePath } = useNuxtApp()
+
+
 definePageMeta({
   title: 'my-account',
   name: 'myAccount',
-  //middleware: 'auth',
+  // middleware: 'auth',
 })
 
 useHead({
@@ -194,19 +224,21 @@ const bannerImg = ref<HTMLElement>()
 const bannerFileName = ref('')
 const updateBannerFile = ref<File | null>()
 
+
 const signUpType = computed(
   () => useUser().user.value.fUser?.providerData[0].providerId
 )
 const userInfo = computed(() => useUser().user.value.info)
 
 const prevProfile = ref<string | ArrayBuffer>(
-  userInfo.value?.picture ? userInfo.value.picture + `?_=${Date.now()}` : ''
+  userInfo.value?.picture && userInfo.value.picture + `?_=${Date.now()}`
 )
 const prevBanner = ref<string | ArrayBuffer>(
-  userInfo.value?.url_banner
-    ? userInfo.value.url_banner + `?_=${Date.now()}`
-    : ''
+  userInfo.value?.url_banner && userInfo.value.url_banner + `?_=${Date.now()}`
 )
+
+const isAlarmOn = ref(useUser().user.value.info.setting.alarm)
+
 watch(
   () => userInfo.value,
   (val) => {
@@ -328,6 +360,21 @@ async function onSubmit() {
   }
 
   isUpdating.value = false
+}
+
+async function setAlarmStatus() {
+  const userId = useUser().user.value.info.id
+  const response = await useCustomFetch<{result: string}>('/alarm', getZempieFetchOptions('put', true, {alarm_state: isAlarmOn.value}))
+  // 해제 했으면 fcm도 같이 제거 해줘야함
+   
+  if(response.result === 'success'){
+    if(isAlarmOn.value ){
+      await resigterFcmToken(userId)
+    }else{
+      await removeFcmToken(userId)
+    }
+  }
+  
 }
 </script>
 
