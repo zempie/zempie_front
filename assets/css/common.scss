@@ -230,7 +230,6 @@
     background-color: transparent;
     color: #f97316 !important;
     font-weight: bold;
-
     padding: 0px !important;
     &.unfollow {
       background-color: transparent !important;
@@ -311,7 +310,7 @@
 //cascader
 .el-cascader{
   width: 100%;
-  
+
   .el-input__inner{
     border: none;
     &:focus{
@@ -326,7 +325,7 @@
   .el-cascader__tags{
    margin-left: 25px;
   }
-  
+
 }
 .el-cascader-menu{
   .el-cascader-node.is-active,.in-active-path{
@@ -348,13 +347,13 @@
     border-color: #f97316 !important;
   }
 
-  
+
 }
 .el-cascader-node{
   .el-checkbox .is-disabled{
-    visibility: hidden !important; 
+    visibility: hidden !important;
   }
- 
+
 }
 .el-cascader-menu__wrap.el-scrollbar__wrap{
   min-height: 150px !important;
@@ -405,5 +404,5 @@
       }
     }
   }
-  
+
 }

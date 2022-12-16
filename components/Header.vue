@@ -740,7 +740,9 @@ async function moveZemWorld(){
   }
 
 }
-
+.btn-circle-none .mobile {
+  display: none !important;
+}
 
 .hl-select-box:deep(.el-input, .is-focus) {
   .el-input__wrapper {
