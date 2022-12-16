@@ -137,7 +137,7 @@ watch(
           },
           {
             property: 'og:image',
-            content: `${game.value?.url_thumb}`,
+            content: `${info.url_thumb}`,
           },
         ],
       })
@@ -181,13 +181,13 @@ async function gameListFetch() {
 
 function copyUrl() {
   let url = ''
-  
+
   if(game.value.game_type === eGameType.Download){
     url = `${config.ZEMPIE_URL}/game/${game.value.pathname}`
   }else{
     url = `${config.ZEMPIE_URL}/play/${game.value.pathname}`
   }
-  
+
   execCommandCopy(url)
   ElMessage.closeAll()
   ElMessage({
