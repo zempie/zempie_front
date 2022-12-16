@@ -20,7 +20,7 @@
             </NuxtLink>
           </p>
           <button
-            class="btn-circle-none mobile"
+            class="btn-circle-none"
             @click="isHeaderSideMobile = true"
             v-if="showHamburger"
           >
