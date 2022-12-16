@@ -2,8 +2,9 @@
   <dt>
     <div class="ta-channel-list">
       <div>
-        <h2>Channel</h2>
+        <h2 style="padding: 20px; font-weight: 600; font-size: 18px; line-height: 18px;color: #333;">Channel</h2>
         <i
+          style="font-size: 20px; padding: 20px;"
           @click="showChannelList = !showChannelList"
           :class="showChannelList ? 'uil uil-angle-up' : 'uil uil-angle-down'"
         ></i>
@@ -100,11 +101,11 @@ function onResize() {
 
     justify-content: space-between;
     h2 {
-      padding: 20px;
-      font-weight: 600;
-      font-size: 18px;
-      line-height: 18px;
-      color: #333;
+      padding: 20px !important;
+      font-weight: 600 !important;
+      font-size: 18px !important;
+      line-height: 18px !important;
+      color: #333 !important;
     }
     i {
       font-size: 20px;

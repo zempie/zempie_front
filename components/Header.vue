@@ -22,6 +22,7 @@
           <button
             class="btn-circle-none mobile"
             @click="isHeaderSideMobile = true"
+            v-if="showHamburger"
           >
             <i class="uil uil-bars"></i>
           </button>
@@ -494,8 +495,13 @@ const hasNewNoti = ref()
 const isMobile = computed(() =>
   window.matchMedia('screen and (max-width: 479px)')
 )
-const showMobileLogo = ref(false)
 
+const isTablet = computed(() =>
+  window.matchMedia('screen and (max-width: 767px)')
+)
+
+const showMobileLogo = ref(false)
+const showHamburger = ref(false)
 const options = [
   { code: 'ko', label: '한국어' },
   { code: 'en', label: 'English' },
@@ -558,6 +564,12 @@ function onResize() {
     showMobileLogo.value = true
   } else {
     showMobileLogo.value = false
+  }
+
+  if(isTablet.value.matches){
+    showHamburger.value = true
+  }else{
+    showHamburger.value = false
   }
 }
 
