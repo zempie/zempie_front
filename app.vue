@@ -170,6 +170,8 @@ function clickNever(e:Event){
 <style lang="scss">
 @import 'https://unicons.iconscout.com/release/v3.0.3/css/line.css';
 @import '/assets/css/common.scss';
+@import '/assets/css/editor.scss';
+
 
 
 body {

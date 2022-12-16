@@ -735,7 +735,7 @@ async function moveZemWorld(){
     padding-top: 5px;
 
     &.mobile {
-      display: none;
+      display: none !important;
     }
   }
 
