@@ -44,7 +44,7 @@ const userInfo = useUser().user.value.info
 watch(
   ()=> useUser().user.value.fUser,
   async (fUser)=>{
-   
+
     if(useCookie(config.COOKIE_NAME).value && !userInfo){
       await useUser().setUserInfo()
     }
@@ -112,7 +112,7 @@ onBeforeMount(async () => {
   let endDate : Date | number= new Date(2022, 10, 20, 23, 59, 59)
   endDate = endDate.setTime(endDate.getTime())
   const now = date.setTime(date.getTime())
-  
+
 
   if( now > endDate ){
     isOpen.value = false;
@@ -143,13 +143,13 @@ onBeforeMount(async () => {
   if (useCookie(config.COOKIE_NAME).value){
     await getRefreshToken()
   }
-  
+
 })
 
 
 function clickOneDay(e:Event){
   const isChecked = (e.target as HTMLInputElement).checked
-  if(isChecked){    
+  if(isChecked){
     const date = new Date()
     //다음날 00:00:00 까지
     const expiredTime = new Date(2022, 10,  date.getDate() + 1, 0, 0,0).getTime()
@@ -160,7 +160,7 @@ function clickOneDay(e:Event){
 
 function clickNever(e:Event){
   const isChecked = (e.target as HTMLInputElement).checked
-  if(isChecked){    
+  if(isChecked){
     localStorage.setItem('GJ_POPUP_NEVER', 'true')
     isOpen.value = false;
   }
@@ -169,6 +169,8 @@ function clickNever(e:Event){
 
 <style lang="scss">
 @import 'https://unicons.iconscout.com/release/v3.0.3/css/line.css';
+@import '/assets/css/common.scss';
+
 
 body {
   margin: 0px !important;
@@ -183,7 +185,7 @@ body {
     li{
       &:not(:last-child){
         margin-right: 10px;
-      }  
+      }
       input[type='checkbox'] + label{
         color: #0d0c13 !important;
       }
