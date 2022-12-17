@@ -491,20 +491,20 @@ function untranslatedText(originText: string) {
 </script>
 
 <style lang="scss" scoped>
-.tapl-title {
-  dt {
-    width: 100%;
+// .tapl-title {
+//   dt {
+//     width: 100%;
 
-    dl {
-      dt {
-        width: 15%;
-      }
-      dd {
-        width: 80%;
-      }
-    }
-  }
-}
+//     dl {
+//       dt {
+//         width: 15%;
+//       }
+//       dd {
+//         width: 80%;
+//       }
+//     }
+//   }
+// }
 
 // transition
 

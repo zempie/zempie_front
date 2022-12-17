@@ -117,7 +117,11 @@ onMounted(async () => {
 })
 
 async function fetch() {
-  const { data } = await user.joinedCommunity(Number(userInfo.value.id))
+
+  const { data, error, pending } = await useCustomAsyncFetch<[]>(
+    `/user/${userInfo.value.id}/list/community`,
+    getComFetchOptions('get', true)
+  )
 
   communities.value = data.value.map((community: ICommunity) => {
     return (community = { ...community, is_subscribed: true })
