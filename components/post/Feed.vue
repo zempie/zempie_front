@@ -533,38 +533,38 @@ function untranslatedText(originText: string) {
 // /transition
 
 // 더보기
-.gradient {
-  background: linear-gradient(to top, #fff, #ededed00);
-  height: 50px;
-  width: 100%;
-  position: relative;
-  bottom: 50px;
-}
+// .gradient {
+//   background: linear-gradient(to top, #fff, #ededed00);
+//   height: 50px;
+//   width: 100%;
+//   position: relative;
+//   bottom: 50px;
+// }
 
-.more-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px 20px 0 20px;
+// .more-container {
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   padding: 20px 20px 0 20px;
 
-  span,
-  a {
-    flex: 1;
-  }
+//   span,
+//   a {
+//     flex: 1;
+//   }
 
-  a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+//   a {
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//   }
 
-  .dot-line {
-    border-top: 1px dashed;
-  }
-}
-.tapl-content {
-  max-height: 500px;
-}
+//   .dot-line {
+//     border-top: 1px dashed;
+//   }
+// }
+// .tapl-content {
+//   max-height: 500px;
+// }
 // /더보기
 
 .tapl-comment {
