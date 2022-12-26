@@ -44,19 +44,19 @@ export default defineNuxtConfig({
   },
 
   build: {
-    // html: {
-    //   minify: {
-    //     collapseBooleanAttributes: true,
-    //     decodeEntities: true,
-    //     minifyCSS: true,
-    //     minifyJS: true,
-    //     processConditionalComments: true,
-    //     removeEmptyAttributes: true,
-    //     removeRedundantAttributes: true,
-    //     trimCustomFragments: true,
-    //     useShortDoctype: true,
-    //   }
-    // }
+    html: {
+      minify: {
+        collapseBooleanAttributes: true,
+        decodeEntities: true,
+        minifyCSS: true,
+        minifyJS: true,
+        processConditionalComments: true,
+        removeEmptyAttributes: true,
+        removeRedundantAttributes: true,
+        trimCustomFragments: true,
+        useShortDoctype: true,
+      }
+    }
   },
 
   generate: {
@@ -69,17 +69,17 @@ export default defineNuxtConfig({
     '@/assets/css/animate.css',
     '@/assets/css/jquery-ui.css',
     '@/assets/css/fonts-jam.css',
-    // '@/assets/css/common.css',
-    // '@/assets/css/content.css',
+    '@/assets/css/common.css',
+    '@/assets/css/content.css',
     '@/assets/css/layout.css',
     '@/assets/css/style.css',
     '@/assets/css/fonts.css',
-    // '@/assets/css/common.scss',
-    // '@/assets/css/editor.scss',
+    '@/assets/css/common.scss',
+    '@/assets/css/editor.scss',
     'element-plus/dist/index.css',
     'swiper/css',
     'swiper/css/pagination',
-    // '@/assets/css/prism.css'
+    '@/assets/css/prism.css'
   ],
 
 
