@@ -174,7 +174,7 @@ function clickNever(e:Event){
 @import '~/assets/css/common.css';
 @import '~/assets/css/content.css';
 @import '~/assets/css/swiper.scss';
-
+@import '~/assets/css/pagination.scss'
 
 
 body {
