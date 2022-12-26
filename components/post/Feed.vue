@@ -583,9 +583,6 @@ function untranslatedText(originText: string) {
   cursor: pointer;
 }
 
-.feed-img {
-  max-width: 100%;
-}
 
 .content-grid {
   transform: translate(199.5px, 0px);
@@ -654,9 +651,10 @@ function untranslatedText(originText: string) {
   }
 }
 
-.feed-img {
-  padding: 20px 20px 0 20px;
-}
+// .feed-img {
+//   padding: 20px 20px 0 20px;
+//   max-width: 100%;
+// }
 
 .video {
   width: 100%;
