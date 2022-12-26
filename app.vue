@@ -29,6 +29,9 @@
 import { ElDialog, ID_INJECTION_KEY } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 
+import 'swiper/css/pagination';
+import 'swiper/css';
+
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
 const switchLocalePath = useSwitchLocalePath()

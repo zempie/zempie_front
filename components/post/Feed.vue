@@ -120,7 +120,7 @@
             class="feed-img mt-3"
           />
         </swiper-slide>
-        <div class="swiper-pagination" slot="pagination"></div>
+        <div class="swiper-pagination" style="bottom: 10px; left: 0; width: 100%;" slot="pagination"></div>
       </swiper>
     </template>
 
