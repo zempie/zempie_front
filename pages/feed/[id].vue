@@ -4,7 +4,7 @@
       <ul class="ta-post" v-if="feed">
         <li class="tap-list">
           <dl class="tapl-title">
-            <dt>
+            <dt class="w50p">
               <dl>
                 <dt>
                   <NuxtLink :to="$localePath(`/channel/${feed.user?.channel_id}`)">
@@ -65,6 +65,7 @@
               <swiper
                 class="swiper"
                 :options="swiperOption"
+                :modules="[Pagination]"
                 style="height: 350px"
               >
                 <template v-for="file in feed?.attatchment_files">
@@ -103,7 +104,7 @@
             </div>
           </template>
           <CommunityTarget :communities="postedAt" :games="feed?.posted_at[0].game"/>
-         
+
           <ul class="tapl-option">
             <li>
               <ul>
@@ -126,7 +127,7 @@
             </li>
 
             <li>
-              
+
               <PostDropdown
                 :feed="feed"
                 @deletePost="$router.back()"
@@ -169,11 +170,11 @@
                   <h2 class="grey-text skeleton-animation"
                  style="width: 300px; margin-bottom: 10px">
                   </h2>
-                 
+
                  <p class="grey-text skeleton-animation"
                    style="width: 150px; margin-bottom: 10px"></p>
                  </dd>
-               
+
               </dl>
             </dt>
           </ClientOnly>
@@ -210,8 +211,10 @@ import Prism from '~/plugins/prism'
 import _ from 'lodash'
 import { ElMessage, ElDropdown, ElDialog } from 'element-plus'
 import { useI18n } from 'vue-i18n'
-
+import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/vue'
+import 'swiper/css/pagination';
+import 'swiper/css';
 import { dateFormat, execCommandCopy, stringToDomElem } from '~~/scripts/utils'
 
 const COMMENT_LIMIT = 10

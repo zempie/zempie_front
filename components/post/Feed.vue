@@ -109,14 +109,10 @@
         :modules="[Pagination]"
         style="height: 350px"
         :pagination="{ clickable: true }"
+        :options="swiperOption"
+
       >
-        <swiper-slide v-for="file in initFiles" style=";position: relative;
-              width: 100%;
-              height: 100%;
-              z-index: 1;
-              display: flex;
-              transition-property: transform;
-              box-sizing: content-box;">
+        <swiper-slide v-for="file in initFiles">
           <img
             v-if="file.type === 'image'"
             style="height: 88%; margin: 0 auto; display: flex"
@@ -223,6 +219,9 @@ import { Pagination } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { ElMessage, ElDialog } from 'element-plus'
 
+import 'swiper/css/pagination';
+import 'swiper/css';
+
 import {
   dateFormat,
   execCommandCopy,
@@ -278,6 +277,12 @@ const props = defineProps({
   feed: Object as PropType<IFeed>,
 })
 
+
+const swiperOption = ref({
+  pagination: {
+    el: '.swiper-pagination',
+  },
+})
 const user = ref(props.feed?.user)
 
 const feedContent = ref(props.feed?.content || '')
