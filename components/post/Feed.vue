@@ -1,7 +1,7 @@
 <template>
   <li class="tap-list" v-if="feed">
     <dl class="tapl-title">
-      <dt>
+      <dt class="w100p">
         <dl>
           <dt>
             <NuxtLink :to="$localePath(`/channel/${feed.user?.channel_id}`)">
@@ -680,15 +680,15 @@ function untranslatedText(originText: string) {
   }
 }
 
-.swiper-button-next,
-.swiper-button-prev {
-  --swiper-navigation-color: #999;
-  --swiper-navigation-size: 20px;
+// .swiper-button-next,
+// .swiper-button-prev {
+//   --swiper-navigation-color: #999;
+//   --swiper-navigation-size: 20px;
 
-  &:hover {
-    --swiper-navigation-color: #ff6216;
-  }
-}
+//   &:hover {
+//     --swiper-navigation-color: #ff6216;
+//   }
+// }
 
 .tapl-comment.close {
   animation: fade-out 1s;
