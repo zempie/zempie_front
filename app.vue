@@ -28,10 +28,6 @@
 <script setup lang="ts">
 import { ElDialog, ID_INJECTION_KEY } from 'element-plus'
 import { useI18n } from 'vue-i18n'
-
-import 'swiper/css/pagination';
-import 'swiper/css';
-
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
 const switchLocalePath = useSwitchLocalePath()
@@ -177,9 +173,7 @@ function clickNever(e:Event){
 @import '~/assets/css/editor.scss';
 @import '~/assets/css/common.css';
 @import '~/assets/css/content.css';
-
-
-
+@import '~/assets/css/swiper.scss';
 
 
 
