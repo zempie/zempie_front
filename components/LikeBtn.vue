@@ -22,9 +22,9 @@
       class="modal-area-type"
       width="500px"
     >
-      <div class="modal-alert">
+      <div class="modal-alert modal-like">
         <dl class="ma-header">
-       
+
           <dt>Like </dt>
           <dd>
             <button @click="closeHistory">
@@ -141,7 +141,7 @@ async function showLikeFetch() {
   isLikeHistoryOpen.value = true
 
   const { data, error, refresh } = await useCustomAsyncFetch<[]>(
-    createQueryUrl(`/post/${props.feed.id}/like/list`, query),  
+    createQueryUrl(`/post/${props.feed.id}/like/list`, query),
     getComFetchOptions('get', true)
   )
 
@@ -182,45 +182,6 @@ function closeHistory(){
   }
 }
 
-.modal-alert {
-  min-height: 100px;
-  padding-right: 10px;
-  .ma-content {
-    padding: 0px;
-    overflow-y: auto;
-    max-height: 400px;
-    
-
-    li {
-      display: flex;
-      padding: 10px 20px 10px 20px;
-
-      &:not(:last-child) {
-        border-bottom: #e9e9e9 1px solid;
-      }
-      div {
-        margin-top: 0px;
-      }
-
-      div:nth-child(1) {
-        width: 20%;
-        display: flex;
-        align-items: center;
-      }
-      div:nth-child(2) {
-        width: 50%;
-        cursor: pointer;
-        h2 {
-          text-align: left;
-          width: 100%;
-        }
-      }
-      div:nth-child(3) {
-        width: 140px;
-      }
-    }
-  }
-}
 // @media all and (max-width: 479px) {
 // }
 
