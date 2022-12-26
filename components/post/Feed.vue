@@ -110,7 +110,13 @@
         style="height: 350px"
         :pagination="{ clickable: true }"
       >
-        <swiper-slide v-for="file in initFiles">
+        <swiper-slide v-for="file in initFiles" style=";position: relative;
+              width: 100%;
+              height: 100%;
+              z-index: 1;
+              display: flex;
+              transition-property: transform;
+              box-sizing: content-box;">
           <img
             v-if="file.type === 'image'"
             style="height: 88%; margin: 0 auto; display: flex"
