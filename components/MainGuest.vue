@@ -16,7 +16,7 @@
       <h2>
         <span style="font: 36px/46px 'Jalnan'">Event</span>
       </h2>
-      
+
       <div class="info" style="text-align:center; color:#fff;margin-top:30px">
         <img src="/images/gj_whit_text_logo.png" width="300" style="display: block; margin: 0 auto 30px auto"/>
         <span class="year" style="font-size:30px; margin-top:30px; font-weight: bold;">
@@ -90,10 +90,6 @@ const { t, locale } = useI18n()
 const config = useRuntimeConfig()
 const route = useRoute()
 const router = useRouter()
-
-// definePageMeta({
-//   layout: 'default',
-// })
 
 useHead({
   title: `${t('seo.landing.title')} | Zempie`,
@@ -193,7 +189,7 @@ const {
 
 <style scoped lang="scss">
 .detail-button{
-  
+
       display: inline-block;
       padding: 20px 30px;
       font-size: 20px;
@@ -210,7 +206,7 @@ const {
         border: #d64dd8 1px solid;
         background: #d64dd8;
       }
-    
+
 }
 .mv-animal02 {
   z-index: 998 !important;
@@ -234,7 +230,7 @@ const {
   .game-jam-plus{
 
   }
-  
+
 }
 
 .post-container {
@@ -290,9 +286,9 @@ const {
         margin-bottom: 30px;
         }
       }
-        
+
     }
-   
+
   }
 
   .post-container {
