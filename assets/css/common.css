@@ -903,6 +903,7 @@
   .area-title {
     width: 90%;
     padding: 15px 0;
+    margin: 0 0 0 auto;
   }
 
   .area-title dt {
@@ -914,7 +915,6 @@
 @media all and (min-width: 480px) and (max-width: 767px) {
   .area-title {
     width: 470px;
-    margin: 0 0 0 auto;
   }
 
   .area-title dt {
