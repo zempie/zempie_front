@@ -1,7 +1,7 @@
 <template>
   <li class="tap-list" v-if="feed">
     <dl class="tapl-title">
-      <dt>
+      <dt class="w100p">
         <dl>
           <dt>
             <NuxtLink :to="$localePath(`/channel/${feed.user?.channel_id}`)">
@@ -109,6 +109,8 @@
         :modules="[Pagination]"
         style="height: 350px"
         :pagination="{ clickable: true }"
+        :options="swiperOption"
+
       >
         <swiper-slide v-for="file in initFiles">
           <img
@@ -118,7 +120,7 @@
             class="feed-img mt-3"
           />
         </swiper-slide>
-        <div class="swiper-pagination" slot="pagination"></div>
+        <div class="swiper-pagination" style="bottom: 10px; left: 0; width: 100%;" slot="pagination"></div>
       </swiper>
     </template>
 
@@ -217,6 +219,9 @@ import { Pagination } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { ElMessage, ElDialog } from 'element-plus'
 
+import 'swiper/css/pagination';
+import 'swiper/css';
+
 import {
   dateFormat,
   execCommandCopy,
@@ -272,6 +277,12 @@ const props = defineProps({
   feed: Object as PropType<IFeed>,
 })
 
+
+const swiperOption = ref({
+  pagination: {
+    el: '.swiper-pagination',
+  },
+})
 const user = ref(props.feed?.user)
 
 const feedContent = ref(props.feed?.content || '')
@@ -491,20 +502,20 @@ function untranslatedText(originText: string) {
 </script>
 
 <style lang="scss" scoped>
-.tapl-title {
-  dt {
-    width: 100%;
+// .tapl-title {
+//   dt {
+//     width: 100%;
 
-    dl {
-      dt {
-        width: 15%;
-      }
-      dd {
-        width: 80%;
-      }
-    }
-  }
-}
+//     dl {
+//       dt {
+//         width: 15%;
+//       }
+//       dd {
+//         width: 80%;
+//       }
+//     }
+//   }
+// }
 
 // transition
 
@@ -533,38 +544,38 @@ function untranslatedText(originText: string) {
 // /transition
 
 // 더보기
-.gradient {
-  background: linear-gradient(to top, #fff, #ededed00);
-  height: 50px;
-  width: 100%;
-  position: relative;
-  bottom: 50px;
-}
+// .gradient {
+//   background: linear-gradient(to top, #fff, #ededed00);
+//   height: 50px;
+//   width: 100%;
+//   position: relative;
+//   bottom: 50px;
+// }
 
-.more-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px 20px 0 20px;
+// .more-container {
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   padding: 20px 20px 0 20px;
 
-  span,
-  a {
-    flex: 1;
-  }
+//   span,
+//   a {
+//     flex: 1;
+//   }
 
-  a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+//   a {
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//   }
 
-  .dot-line {
-    border-top: 1px dashed;
-  }
-}
-.tapl-content {
-  max-height: 500px;
-}
+//   .dot-line {
+//     border-top: 1px dashed;
+//   }
+// }
+// .tapl-content {
+//   max-height: 500px;
+// }
 // /더보기
 
 .tapl-comment {
@@ -583,9 +594,6 @@ function untranslatedText(originText: string) {
   cursor: pointer;
 }
 
-.feed-img {
-  max-width: 100%;
-}
 
 .content-grid {
   transform: translate(199.5px, 0px);
@@ -654,9 +662,10 @@ function untranslatedText(originText: string) {
   }
 }
 
-.feed-img {
-  padding: 20px 20px 0 20px;
-}
+// .feed-img {
+//   padding: 20px 20px 0 20px;
+//   max-width: 100%;
+// }
 
 .video {
   width: 100%;
@@ -682,15 +691,15 @@ function untranslatedText(originText: string) {
   }
 }
 
-.swiper-button-next,
-.swiper-button-prev {
-  --swiper-navigation-color: #999;
-  --swiper-navigation-size: 20px;
+// .swiper-button-next,
+// .swiper-button-prev {
+//   --swiper-navigation-color: #999;
+//   --swiper-navigation-size: 20px;
 
-  &:hover {
-    --swiper-navigation-color: #ff6216;
-  }
-}
+//   &:hover {
+//     --swiper-navigation-color: #ff6216;
+//   }
+// }
 
 .tapl-comment.close {
   animation: fade-out 1s;

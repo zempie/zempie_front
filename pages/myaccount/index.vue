@@ -87,21 +87,11 @@
       <a v-else @click="onSubmit" class="btn-default w250">{{ $t('save') }}</a>
     </div>
 
-    <div class="info-input">
+    <!-- <div class="info-input">
       <div class="ii-title">
         <h2>Notifications</h2>
       </div>
       <div class="ii-form">
-        <!-- <ol>
-          <li>Comments</li>
-          <li>누군가가 내 게시물에 댓글을 달거나 댓글에 답글을 달면 알림이 전송됩니다.</li>
-          <li>
-            <label class="switch-button">
-              <input type="checkbox" name="" />
-              <span class="onoff-switch"></span>
-            </label>
-          </li>
-        </ol> -->
         <ol>
           <li>Alarm</li>
           <li>{{ $t('userSetting.alarm.info') }} </li>
@@ -110,7 +100,7 @@
           </li>
         </ol>
       </div>
-    </div>
+    </div> -->
 
 
     <div class="delete-account" v-if="signUpType === 'password'">
@@ -366,7 +356,7 @@ async function setAlarmStatus() {
   const userId = useUser().user.value.info.id
   const response = await useCustomFetch<{result: string}>('/alarm', getZempieFetchOptions('put', true, {alarm_state: isAlarmOn.value}))
   // 해제 했으면 fcm도 같이 제거 해줘야함
-   
+
   if(response.result === 'success'){
     if(isAlarmOn.value ){
       await resigterFcmToken(userId)
@@ -374,7 +364,7 @@ async function setAlarmStatus() {
       await removeFcmToken(userId)
     }
   }
-  
+
 }
 </script>
 

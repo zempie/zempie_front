@@ -64,12 +64,12 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   })
 
 
-  const messaging = getMessaging(app);
+  // const messaging = getMessaging(app);
 
-  onMessage(messaging, (payload) => {
-    console.log('Message received. ', payload);
-    useAlarm().setNewNoti(payload)
-  });
+  // onMessage(messaging, (payload) => {
+  //   console.log('Message received. ', payload);
+  //   useAlarm().setNewNoti(payload)
+  // });
 
 
   nuxtApp.provide('firebaseApp', app);
