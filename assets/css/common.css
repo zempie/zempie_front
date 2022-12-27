@@ -627,7 +627,7 @@
   overflow: hidden;
 }
 
-/* 
+/*
 .visual-title h2 {
   font-weight: 600;
   font-size: 30px;
@@ -657,7 +657,7 @@
     height: 120px;
   }
 
-  /* 
+  /*
   .visual-title h2 {
     font-size: 20px;
     line-height: 20px;
@@ -680,7 +680,7 @@
     height: 120px;
   }
 
-  /* 
+  /*
   .visual-title h2 {
     font-size: 20px;
     line-height: 20px;
@@ -914,6 +914,7 @@
 @media all and (min-width: 480px) and (max-width: 767px) {
   .area-title {
     width: 470px;
+    margin: 0 0 0 auto;
   }
 
   .area-title dt {
