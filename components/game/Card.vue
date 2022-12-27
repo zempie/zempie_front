@@ -12,7 +12,7 @@
       alt="zem-jam-winner"
       style="position: absolute; right: 10px; top: 10px"
     />
-    <GameStageTag :stage="gameInfo.stage"/>
+    <GameStageTag v-if="gameInfo.stage" :stage="gameInfo.stage"/>
 
     <div
       @click="moveGamePage"

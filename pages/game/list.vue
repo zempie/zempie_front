@@ -329,8 +329,8 @@ async function handleGameFilter(){
   }
 
   .game-gam-plus{
-    width: 100%;
-      background-position: center;
+    width: 100% !important;
+    background-position: center !important;
   }
 }
 
@@ -346,20 +346,20 @@ async function handleGameFilter(){
     }
   }
   .game-gam-plus{
-    width: 470px;
-    background-position: center;
+    width: 470px !important;
+    background-position: center !important;
   }
 }
 @media all and (min-width: 768px) and (max-width: 991px) {
   .game-gam-plus{
-    width: 750px;
-    background-position: center;
+    width: 750px !important;
+    background-position: center !important;
   }
 }
 @media all and (min-width: 992px) and (max-width: 1199px) {
   .game-gam-plus{
-    width: 970px;
-    background-position: center;
+    width: 970px !important;
+    background-position: center !important;
   }
 }
 
