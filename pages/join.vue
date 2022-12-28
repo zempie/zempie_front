@@ -146,10 +146,10 @@ watch(isLogin,
   if (val) {
    router.push($localePath('/'))
 
-  //  const { token } = await fbFcm.getFcmToken(useUser().user.value.info.id)
-  //  if (!token) {
-  //   await fbFcm.resigterFcmToken(useUser().user.value.info.id)
-  //  }
+   const { token } = await fbFcm.getFcmToken(useUser().user.value.info.id)
+   if (!token) {
+    await fbFcm.resigterFcmToken(useUser().user.value.info.id)
+   }
 
   }
 })

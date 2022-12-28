@@ -1,10 +1,10 @@
 <template>
-  <div v-if="useUser().user.value.isLoading" class="content"></div>
+  <div v-if="(useUser().user.value.isLoading || !useRender().state.value.isDone)" class="content"></div>
   <div v-else>
     <MyTimeline
-      v-if="userCookie"
+      v-if="userCookie && useUser().user.value.isLogin"
     />
-    <MainGuest  v-else/>
+    <MainGuest v-else/>
   </div>
 </template>
 
