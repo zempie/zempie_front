@@ -4,8 +4,6 @@ import { getAuth, onIdTokenChanged, } from 'firebase/auth'
 import * as fbFcm from '~~/scripts/firebase-fcm'
 import shared from '~~/scripts/shared'
 import { getMessaging, onMessage, getToken } from "firebase/messaging";
-import { onBackgroundMessage } from "firebase/messaging/sw";
-
 
 const HOURTOSEC = 60 * 60;
 

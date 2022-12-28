@@ -20,16 +20,16 @@ const config = {
 }
 firebase.initializeApp(config)
 
-// const messaging = firebase.messaging()
+const messaging = firebase.messaging()
 
-// messaging.onBackgroundMessage(function (payload) {
-//   console.log('onBackgroundMessage', payload)
+messaging.onBackgroundMessage(function (payload) {
+  console.log(payload)
 
-//   const notificationTitle = 'Background Message Title'
-//   const notificationOptions = {
-//     body: 'Background Message body.',
-//     icon: './images/zempie-logo.png',
-//   }
+  const notificationTitle = 'ZEMPIE NOTIFICATION'
+  const notificationOptions = {
+    body: payload.data.body,
+    icon: './images/favicon.ico',
+  }
 
-//   self.registration.showNotification(notificationTitle, notificationOptions)
-// })
+  self.registration.showNotification(notificationTitle, notificationOptions)
+})
