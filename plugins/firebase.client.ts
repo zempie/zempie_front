@@ -39,6 +39,8 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     useUser().setLoadDone()
   }
 
+
+
   onIdTokenChanged(auth, async (user: any) => {
     console.log(user)
     colorLog('login 1', 'red')
@@ -61,7 +63,6 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   })
 
-
   const messaging = getMessaging(app);
 
   console.log('messaging', messaging)
@@ -70,6 +71,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     console.log('Message received. ', payload);
     useAlarm().setNewNoti(payload)
   });
+
 
 
   nuxtApp.provide('firebaseApp', app);
