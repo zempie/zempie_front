@@ -1,19 +1,30 @@
 <template>
-  <div v-if="(useUser().user.value.isLoading || !useRender().state.value.isDone)" class="content"></div>
-  <div v-else>
+  <div v-if="loading" class="content"></div>
+  <div >
+
     <MyTimeline
-      v-if="userCookie && useUser().user.value.isLogin"
+      v-if="!isEmpty(userCookie)"
     />
     <MainGuest v-else/>
   </div>
 </template>
 
-<script setup lang="ts" >
-
+<script setup lang="ts">
+import {isEmpty} from '~~/scripts/utils'
 const config = useRuntimeConfig()
+const userCookie = computed( () =>  useCookie(config.COOKIE_NAME).value )
+const nuxtApp = useNuxtApp();
+const loading = ref(false);
 
-const userCookie = useCookie(config.COOKIE_NAME)
-
+nuxtApp.hook("page:start", () => {
+  if(!useCookie(config.COOKIE_NAME).value && useCookie(config.REFRESH_TOKEN).value){
+    getRefreshToken()
+  }
+  loading.value = true;
+});
+nuxtApp.hook("page:finish", () => {
+  loading.value = false;
+});
 
 </script>
 
