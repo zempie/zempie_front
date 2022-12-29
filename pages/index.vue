@@ -16,6 +16,7 @@ const loading = ref(false);
 
 nuxtApp.hook("page:start", () => {
   if( isEmpty( useCookie(config.COOKIE_NAME).value ) && useCookie(config.REFRESH_TOKEN).value){
+    console.log('?')
     getRefreshToken()
   }
   loading.value = true;
