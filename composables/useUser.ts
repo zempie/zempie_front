@@ -74,7 +74,6 @@ export default function () {
           path: '/',
           domain: config.COOKIE_DOMAIN
         })
-
       })
       .catch((error: any) => {
         ElMessage({
