@@ -1,6 +1,6 @@
 <template>
   <div v-if="useUser().user.value.isLoading" class="content"></div>
-  <div v-else>
+  <div v-else :key="useUser().user.value.isLogin">
     <MyTimeline
       v-if="userCookie && useUser().user.value.isLogin"
     />
