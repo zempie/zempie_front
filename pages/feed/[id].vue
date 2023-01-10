@@ -37,7 +37,7 @@
             </dd>
           </dl>
 
-          <div class="tapl-content" v-html="feed?.content"></div>
+          <div class="tapl-content" style="max-height:none" v-html="feed?.content"></div>
           <template
             v-if="
               feed?.post_type === 'SNS' &&
