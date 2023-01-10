@@ -1,30 +1,31 @@
 <template>
-  <div v-if="loading" class="content"></div>
-  <div :key="String(useUser().user.value.isLogin)">
-      <MyTimeline
-      v-if="!isEmpty(useCookie(config.COOKIE_NAME).value)"
+  <div v-if="useUser().user.value.isLoading" class="content"></div>
+  <div v-else>
+    <MyTimeline
+      v-if="userCookie"
     />
-    <MainGuest v-else/>
+    <MainGuest  v-else/>
   </div>
 </template>
 
-<script setup lang="ts">
-import {isEmpty} from '~~/scripts/utils'
+<script setup lang="ts" >import { IUser } from '~~/types';
+
 const config = useRuntimeConfig()
-const nuxtApp = useNuxtApp();
-const loading = ref(false);
 
-nuxtApp.hook("page:start", () => {
-  if( isEmpty( useCookie(config.COOKIE_NAME).value ) && useCookie(config.REFRESH_TOKEN).value){
-    console.log('?')
-    getRefreshToken()
-  }
-  loading.value = true;
-});
-nuxtApp.hook("page:finish", () => {
-  loading.value = false;
-});
+const userCookie = useCookie(config.COOKIE_NAME)
+definePageMeta({
+  title: 'main',
+  name: 'main',
+})
 
+onBeforeMount(async()=>{
+  // if(userCookie.value && !useUser().user.value.isLogin){
+  //   colorLog("index page", 'yellow')
+
+  //   await useUser().setUserInfo()
+
+  //   }
+})
 </script>
 
 <style scoped lang="scss"></style>
