@@ -2,7 +2,7 @@
   <div v-if="useUser().user.value.isLoading" class="content"></div>
   <div v-else>
     <MyTimeline
-      v-if="userCookie && useUser().user.value.isLogin"
+      v-if="userCookie"
     />
     <MainGuest  v-else/>
   </div>
@@ -23,7 +23,7 @@ onBeforeMount(async()=>{
   //   colorLog("index page", 'yellow')
 
   //   await useUser().setUserInfo()
-   
+
   //   }
 })
 </script>
