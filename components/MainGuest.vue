@@ -156,33 +156,28 @@ const GAME_COUNT = 8
 const COMMUNITY_COUNT = 4
 const POST_COUNT = 12
 
-const { data, pending, error } = await useAsyncData<any>('games', () =>
-  $fetch(
+
+const { data, pending, error } = await useCustomAsyncFetch<any>(
     createQueryUrl('/games', { limit: GAME_COUNT }),
     getZempieFetchOptions('get', false)
-  )
 )
 
 const {
   data: communities,
   pending: cPending,
   error: cError,
-} = await useAsyncData<any>('community', () =>
-  $fetch(
+} = await useCustomAsyncFetch<any>(
     createQueryUrl('/community/list', { limit: COMMUNITY_COUNT }),
     getComFetchOptions('get', false)
-  )
 )
 
 const {
   data: posts,
   pending: pPending,
   error: pError,
-} = await useAsyncData<any>('posts', () =>
-  $fetch(
+} = await useCustomAsyncFetch<any>(
     createQueryUrl('/timeline/posts/img', { limit: POST_COUNT }),
     getComFetchOptions('get', false)
-  )
 )
 
 </script>
