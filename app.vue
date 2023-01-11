@@ -104,7 +104,6 @@ provide(ID_INJECTION_KEY, {
 })
 
 onBeforeMount(async () => {
-  console.log(config.ENV)
 
   let date = new Date()
   //게임젬플러스 종료 날짜
@@ -139,7 +138,7 @@ onBeforeMount(async () => {
   router.replace(route.fullPath)
 
   //로그인 확인 처리
-  if (useCookie(config.COOKIE_NAME).value){
+  if (useCookie(config.REFRESH_TOKEN).value){
     await getRefreshToken()
   }
 
