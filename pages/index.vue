@@ -1,11 +1,14 @@
 <template>
-  <div v-if="useUser().user.value.isLoading" class="content"></div>
-  <div v-else>
-    <MyTimeline
-      v-if="userCookie "
-    />
-    <MainGuest v-else/>
-  </div>
+  <ClientOnly>
+    <div v-if="useUser().user.value.isLoading" class="content"></div>
+    <div v-if="userCookie">
+      <MyTimeline/>
+    </div>
+    <div v-else>
+      <MainGuest/>
+    </div>
+  </ClientOnly>
+
 </template>
 
 <script setup lang="ts" >
