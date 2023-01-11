@@ -1,7 +1,7 @@
 <template>
   <ClientOnly>
     <div v-if="useUser().user.value.isLoading" class="content"></div>
-    <div v-if="userCookie">
+    <div v-if="userCookie || useCookie(config.REFRESH_TOKEN)">
       <MyTimeline/>
     </div>
     <div v-else>
