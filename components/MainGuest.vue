@@ -73,7 +73,12 @@
           :key="post.id"
           @click="$router.push($localePath(`/feed/${post?.id}`))"
         >
-          <img :src="post.attatchment_files[0]?.url" />
+          <img :src="post.attatchment_files[0]?.url" style="width: 100%;
+    height: 100%;
+    cursor: pointer;
+    border-radius: 10px;
+    -o-object-fit: cover;
+    object-fit: cover;" />
         </li>
       </ul>
     </div>
