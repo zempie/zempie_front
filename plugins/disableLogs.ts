@@ -6,7 +6,5 @@ export default defineNuxtPlugin(() => {
     console.log = () => { };
   }
 
-  console.log('process.env', process.env.NODE_ENV)
-
-  // process.env.NODE_ENV === "production" ? disableLogs() : null;
+  process.env.NODE_ENV === "production" ? disableLogs() : null;
 })
