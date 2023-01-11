@@ -190,7 +190,7 @@
             </el-select>
           </div>
           <div  class="header-info ml0" v-if="(!loading && isLogin)">
-            <el-dropdown
+            <!-- <el-dropdown
                   ref="notiDropdown"
                   id="notiList"
                   trigger="click"
@@ -246,7 +246,7 @@
                   <p class="view-all" @click="goNotiList"><a>{{ t('view.all') }}</a></p>
                   </div>
               </template>
-            </el-dropdown>
+            </el-dropdown> -->
           <div
             class="ml10"
             id="userMenu"
