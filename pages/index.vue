@@ -2,7 +2,7 @@
   <div>
       <ClientOnly>
       <div v-if="useUser().user.value.isLoading" class="content"></div>
-      <div v-if="useCookie(config.COOKIE_NAME).value || useCookie(config.REFRESH_TOKEN).value ">
+      <div v-if="useCookie(config.COOKIE_NAME).value || useCookie(config.REFRESH_TOKEN).value" :key="useUser().user.value.info">
         <MyTimeline/>
       </div>
       <div v-else>

@@ -73,12 +73,7 @@
           :key="post.id"
           @click="$router.push($localePath(`/feed/${post?.id}`))"
         >
-          <img :src="post.attatchment_files[0]?.url" style="width: 100%;
-    height: 100%;
-    cursor: pointer;
-    border-radius: 10px;
-    -o-object-fit: cover;
-    object-fit: cover;" />
+          <img :src="post.attatchment_files[0]?.url" />
         </li>
       </ul>
     </div>
@@ -233,110 +228,4 @@ const {
 
 }
 
-.post-container {
-  display: flex;
-  flex-wrap: wrap;
-  width: 1225px;
-  margin: auto;
-  justify-content: center;
-
-  .thumbmail {
-    box-shadow: 0px 10px 50px rgb(0 0 0 / 10%);
-    border-radius: 10px;
-
-    &.skeleton {
-      background-color: #ededed;
-    }
-
-    height: 240px;
-    margin: 1%;
-    width: 23%;
-    transition: all 0.4s ease-in-out;
-
-    img {
-      width: 100%;
-      height: 100%;
-      cursor: pointer;
-      border-radius: 10px;
-      object-fit: cover;
-    }
-  }
-}
-
-.card-timeline {
-  margin: 40px 0px;
-}
-
-@media all and (max-width: 479px) {
-  .main-visual {
-    width: 100%;
-
-    .card-timeline {
-      width: 40px auto;
-      width: 100%;
-    }
-
-    .card-game {
-      margin: 0 auto;
-    }
-    &.game-jam-plus{
-      div {
-        .year{
-        display: block;
-        margin-bottom: 30px;
-        }
-      }
-
-    }
-
-  }
-
-  .post-container {
-    width: 100%;
-    margin: 0 auto;
-
-    .thumbmail {
-      width: 48%;
-      margin: 1%;
-    }
-  }
-}
-
-@media all and (min-width: 480px) and (max-width: 767px) {
-  .post-container {
-    width: 470px;
-
-    .thumbmail {
-      width: 48%;
-      margin: 1%;
-    }
-  }
-
-  .main-visual {
-    &.game-jam-plus{
-    }
-  }
-}
-
-@media all and (min-width: 768px) and (max-width: 991px) {
-  .post-container {
-    width: 770px;
-
-    .thumbmail {
-      width: 31.333%;
-      margin: 1%;
-    }
-  }
-}
-
-@media all and (min-width: 992px) and (max-width: 1199px) {
-  .post-container {
-    width: 993px;
-
-    .thumbmail {
-      width: 31.333%;
-      margin: 1%;
-    }
-  }
-}
 </style>
