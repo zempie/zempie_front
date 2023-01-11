@@ -111,7 +111,7 @@
                                     :user="user"
                                     :tag="'span'"
                                   />
-                                  {{ user.name }}
+                                  {{ user?.name }}
                                 </dt>
                                 <dd><i class="uil uil-user"></i></dd>
                               </dl>
@@ -156,7 +156,7 @@
                                   <span
                                     :style="`background:url(${community.profile_img}) center center / cover no-repeat; background-size:cover;`"
                                   ></span>
-                                  {{ community.name }}
+                                  {{ community?.name }}
                                 </dt>
                                 <dd><i class="uil uil-comments"></i></dd>
                               </dl>
@@ -189,8 +189,8 @@
               />
             </el-select>
           </div>
-          <div  class="header-info ml0" v-if="isLogin">
-            <!-- <el-dropdown
+          <div  class="header-info ml0" v-if="(!loading && isLogin)">
+            <el-dropdown
                   ref="notiDropdown"
                   id="notiList"
                   trigger="click"
@@ -246,7 +246,7 @@
                   <p class="view-all" @click="goNotiList"><a>{{ t('view.all') }}</a></p>
                   </div>
               </template>
-            </el-dropdown> -->
+            </el-dropdown>
           <div
             class="ml10"
             id="userMenu"
@@ -275,7 +275,7 @@
                       <NuxtLink
                         :to="$localePath(`/channel/${user?.channel_id}`)"
                       >
-                        <h2>{{ user.name }}</h2>
+                        <h2>{{ user?.name }}</h2>
                       </NuxtLink>
                     </dd>
                   </dl>
@@ -284,7 +284,7 @@
                     <div>
                       <NuxtLink
                         id="myChannel"
-                        :to="$localePath(`/channel/${user.channel_id}`)"
+                        :to="$localePath(`/channel/${user?.channel_id}`)"
                         ><i class="uil uil-user"></i>
                         {{ t('myChannel') }}
                       </NuxtLink>
@@ -492,6 +492,17 @@ const isNotiLoading = ref(false)
 const needAlarmRefresh = ref(false)
 const hasNewNoti = ref()
 
+const nuxtApp = useNuxtApp();
+const loading = ref(false);
+
+nuxtApp.hook("page:start", () => {
+  loading.value = true;
+});
+nuxtApp.hook("page:finish", () => {
+  loading.value = false;
+});
+
+
 const isMobile = computed(() =>
   window.matchMedia('screen and (max-width: 479px)')
 )
@@ -676,12 +687,16 @@ async function showAlarmList(){
 
 async function moveAlarm(noti:INotification){
 
-  await shared.commonTryCatch( async () =>{ return await useCustomFetch('/notification', getComFetchOptions('put', true, {id:noti.id}))})
-  .then(()=>{
-    shared.moveNoti(noti)
-    notiDropdown.value.handleClose()
-    needAlarmRefresh.value = true
+  await useCustomFetch('/notification', getComFetchOptions('put', true, {id:noti.id}))
+
+  notiList.value.map((elem)=>{
+    if( elem.id === noti.id ){
+      return elem.is_read = true
+    }
   })
+  shared.moveNoti(noti)
+  notiDropdown.value.handleClose()
+  needAlarmRefresh.value = true
 }
 
 function goNotiList(){
@@ -690,15 +705,10 @@ function goNotiList(){
 
 }
 
-
-
-
 async function readAll(){
-  await shared.commonTryCatch( async() => { return await useCustomFetch('/notification/read-all', getComFetchOptions('put', true))})
-  .then(()=>{
-    notiList.value.map((noti)=>{
+  await useCustomFetch('/notification/read-all', getComFetchOptions('put', true))
+  notiList.value.map((noti)=>{
       return noti.is_read = true
-    })
   })
 
 }

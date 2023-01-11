@@ -12,7 +12,7 @@
     <div class="dm-list"
     :style="useAlarm().alarm.value.newNoti ? 'border-top-left-radius: 0;border-top-right-radius: 0;' :  'border-top-left-radius: 10px;border-top-right-radius: 10px;'"
     >
-      
+
       <div class="dl-title">
         <div>
           <!-- <h2>Notifications</h2>
@@ -46,18 +46,18 @@
                   </dt>
                 </dl>
               </li>
-                
+
               <BeatLoader v-if="isLoading" :color="'#ff6e17'" size="20px" />
             </TransitionGroup>
             <li v-if="(!isLoading && !list.length)">
                 <dl>{{ t('no.alarm') }}</dl>
               </li>
           </ul>
-      
+
       </dl>
     </div>
     <!-- DM 리스트 끝 -->
-      
+
 
   </div>
 </template>
@@ -123,22 +123,18 @@ async function fetch(){
 }
 
 async function clickNoti(noti:INotification){
-  await shared.commonTryCatch( async () =>{ return await useCustomFetch('/notification', getComFetchOptions('put', true, {id:noti.id}))})
-  .then(()=>{
-     shared.moveNoti(noti)
-  })
+  await useCustomFetch('/notification', getComFetchOptions('put', true, {id:noti.id}))
+  shared.moveNoti(noti)
+
 }
 
 
 
 async function readAll(){
-  await shared.commonTryCatch( async() => { return await useCustomFetch('/notification/read-all', getComFetchOptions('put', true))})
-  .then(()=>{
-    list.value.map((noti)=>{
-      return noti.is_read = true
-    })
+  await useCustomFetch('/notification/read-all', getComFetchOptions('put', true))
+  list.value.map((noti)=>{
+    return noti.is_read = true
   })
-   
 }
 
 
@@ -176,7 +172,7 @@ async function readAll(){
     font-size: 30px;
     line-height: 30px;
     color: #fff;
-    
+
   }
 }
 .noti-toast{
@@ -227,7 +223,7 @@ async function readAll(){
 
           border-left: 3px solid #ff6e17;
         }
-        
+
         &:hover {
         background-color: #f1f1f1;
         }
@@ -255,7 +251,7 @@ async function readAll(){
             }
             h4{
               margin-bottom: 5px;
-              font-size: 16px;  
+              font-size: 16px;
             }
             span {
               padding: 3px 8.5px;
@@ -307,7 +303,7 @@ async function readAll(){
       width:100%;
     }
   }
-  .dm-list{   
+  .dm-list{
     margin: 0px auto;
   }
 
@@ -325,7 +321,7 @@ async function readAll(){
       width:100%;
     }
   }
-  .dm-list{   
+  .dm-list{
     padding-top: 0px;
   }
 

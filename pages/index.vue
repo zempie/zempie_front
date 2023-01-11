@@ -1,14 +1,17 @@
 <template>
-  <div v-if="useUser().user.value.isLoading" class="content"></div>
-  <div v-else>
-    <MyTimeline
-      v-if="userCookie"
-    />
-    <MainGuest  v-else/>
-  </div>
+  <ClientOnly>
+    <div v-if="useUser().user.value.isLoading" class="content"></div>
+    <div v-if="useCookie(config.COOKIE_NAME).value || useCookie(config.REFRESH_TOKEN).value ">
+      <MyTimeline/>
+    </div>
+    <div v-else>
+      <MainGuest/>
+    </div>
+  </ClientOnly>
 </template>
 
-<script setup lang="ts" >import { IUser } from '~~/types';
+<script setup lang="ts" >
+import { IUser } from '~~/types';
 
 const config = useRuntimeConfig()
 
@@ -16,15 +19,6 @@ const userCookie = useCookie(config.COOKIE_NAME)
 definePageMeta({
   title: 'main',
   name: 'main',
-})
-
-onBeforeMount(async()=>{
-  // if(userCookie.value && !useUser().user.value.isLogin){
-  //   colorLog("index page", 'yellow')
-
-  //   await useUser().setUserInfo()
-
-  //   }
 })
 </script>
 

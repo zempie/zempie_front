@@ -37,10 +37,9 @@
         </div>
       </div>
     </div>
-
-    <!-- <dl class="area-title">
-      TODO: 게임 갯수 표현: 게임 100개 이상일때 주석 제거
-      <dt>Games <span>{{ games.length }}</span></dt>
+<!--  TODO: 게임 갯수 표현: 게임 100개 이상일때 주석 제거
+      <dt>Games <span>{{ games.length }}</span></dt> -->
+    <dl class="area-title">
       <dt>
          <el-select v-model="selectedFilter" class="m-2" placeholder="All">
           <el-option
@@ -52,7 +51,7 @@
           />
         </el-select>
       </dt>
-    </dl> -->
+    </dl>
 
     <ul class="card-game">
       <GameCardSk v-if="isPending" v-for="game in 16" :key="game" />
@@ -330,8 +329,8 @@ async function handleGameFilter(){
   }
 
   .game-gam-plus{
-    width: 100%;
-      background-position: center;
+    width: 100% !important;
+    background-position: center !important;
   }
 }
 
@@ -347,20 +346,20 @@ async function handleGameFilter(){
     }
   }
   .game-gam-plus{
-    width: 470px;
-    background-position: center;
+    width: 470px !important;
+    background-position: center !important;
   }
 }
 @media all and (min-width: 768px) and (max-width: 991px) {
   .game-gam-plus{
-    width: 750px;
-    background-position: center;
+    width: 750px !important;
+    background-position: center !important;
   }
 }
 @media all and (min-width: 992px) and (max-width: 1199px) {
   .game-gam-plus{
-    width: 970px;
-    background-position: center;
+    width: 970px !important;
+    background-position: center !important;
   }
 }
 

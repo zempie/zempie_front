@@ -388,27 +388,34 @@ function setProjectInfo(id: number) {
 }
 
 function sortAscList(key: string) {
-  projects.value.sort((a, b) => {
+  originProjects.value.sort((a, b) => {
     return a[key] < b[key] ? -1 : a[key] > b[key] ? 1 : 0
   })
+  pagingByClient()
+
 }
 
 function sortDescList(key: string) {
-  projects.value.sort((a, b) => {
+  originProjects.value.sort((a, b) => {
     return a[key] > b[key] ? -1 : a[key] < b[key] ? 1 : 0
   })
+  pagingByClient()
+
 }
 
 function sortAscListByGame(key: string) {
-  projects.value.sort((a, b) => {
+  originProjects.value.sort((a, b) => {
     return a.game[key] < b.game[key] ? -1 : a.game[key] > b.game[key] ? 1 : 0
   })
+  pagingByClient()
+
 }
 
 function sortDescListByGame(key: string) {
-  projects.value.sort((a, b) => {
+  originProjects.value.sort((a, b) => {
     return a.game[key] > b.game[key] ? -1 : a.game[key] < b.game[key] ? 1 : 0
   })
+  pagingByClient()
 }
 </script>
 

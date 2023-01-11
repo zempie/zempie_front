@@ -37,9 +37,6 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
 
       //사용자 uid error
       const errorCode = response._data?.error?.code
-      console.log('errorCode', errorCode)
-      console.log('config', config)
-
 
       switch (errorCode) {
         case 20001:
@@ -177,7 +174,7 @@ export async function getRefreshToken() {
   /**
    * 토큰 리프레시 해야되는 경우
    * 1. api 실행하기 전에 유효기간 확인하고 유효기간 끝났으면 리프레시 해야함
-   * 2. 리프레시 토큰이 있는데 useState 값 사라졋을 때 
+   * 2. 리프레시 토큰이 있는데 useState 값 사라졋을 때
    */
 
 

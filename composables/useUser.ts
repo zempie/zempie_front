@@ -26,8 +26,8 @@ export default function () {
   }
 
   const setLogin = () => {
-    user.value.isLogin = !!user.value.info;
     user.value.isLoading = false;
+    user.value.isLogin = !!user.value.info;
   }
   const setLogout = () => {
     user.value.isLogin = false;
@@ -59,9 +59,9 @@ export default function () {
 
   const logout = async () => {
     signOut($firebaseAuth)
-      // .then(() => {
-      //   removeFcmToken(user.value.info.id)
-      // })
+      .then(() => {
+        removeFcmToken(user.value.info.id)
+      })
       .then(() => {
         removeUserState();
         setLogout()
@@ -74,7 +74,6 @@ export default function () {
           path: '/',
           domain: config.COOKIE_DOMAIN
         })
-
       })
       .catch((error: any) => {
         ElMessage({

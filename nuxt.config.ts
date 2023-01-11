@@ -87,6 +87,7 @@ export default defineNuxtConfig({
     'cookie-universal-nuxt',
     ['@nuxtjs/i18n', i18n],
     '@vueuse/nuxt',
+
   ],
 
   publicRuntimeConfig: {
