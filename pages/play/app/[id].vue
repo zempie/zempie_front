@@ -10,7 +10,6 @@
 </template>
 
 <script setup lang="ts">
-import { getIdToken } from 'firebase/auth'
 import { useI18n } from 'vue-i18n'
 import { ZempieSdk } from '~/scripts/zempieSdk'
 
@@ -29,24 +28,34 @@ const userInfo = computed(() => useUser().user.value.info)
 definePageMeta({
   layout: 'layout-none',
 })
-const result = await $fetch<any>(
-  `/launch/game/${gamePath.value}`,
-  getZempieFetchOptions('get', false)
-)
 
-if (result) {
-  url.value = result?.result?.game.url_game
-}
+// watch(
+//   () => result,
+//   (data) => {
+//     if (data) {
+//       url.value = result.result.game.url_game
+//     }
+//   }
+// )
+
 watch(
-  () => result,
-  (data) => {
-    if (data) {
-      url.value = result.result.game.url_game
+  () => userInfo.value,
+  (info) => {
+    if (info) {
+      onChangedToken()
     }
   }
 )
-
 onMounted(async () => {
+  const result = await useCustomFetch<any>(
+    `/launch/game/${gamePath.value}`,
+    getZempieFetchOptions('get', false)
+  )
+
+  if (result) {
+    console.log(result)
+    url.value = result?.result?.game.url_game
+  }
   if (process.client) {
     ZempieSdk.useCtrl()
     ZempieSdk.useLading()
@@ -85,17 +94,8 @@ function onLoad() {
 }
 
 function toGameFrame(type) {
-  console.log(type)
   game.value.contentWindow.postMessage({ type: type }, '*')
 }
-watch(
-  () => userInfo.value,
-  (info) => {
-    if (info) {
-      onChangedToken()
-    }
-  }
-)
 
 function onChangedToken() {
   toMessage({
