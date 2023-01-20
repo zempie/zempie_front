@@ -1,12 +1,14 @@
 <template>
-  <iframe
-    height="90%"
-    id="gamePage"
-    ref="game"
-    class="iframe"
-    :style="`height:${iframeHeight};`"
-    :src="url"
-  />
+  <ClientOnly>
+    <iframe
+      height="90%"
+      id="gamePage"
+      ref="game"
+      class="iframe"
+      :style="`height:${iframeHeight};`"
+      :src="url"
+    />
+  </ClientOnly>
 </template>
 
 <script setup lang="ts">
@@ -28,15 +30,6 @@ const userInfo = computed(() => useUser().user.value.info)
 definePageMeta({
   layout: 'layout-none',
 })
-
-// watch(
-//   () => result,
-//   (data) => {
-//     if (data) {
-//       url.value = result.result.game.url_game
-//     }
-//   }
-// )
 
 watch(
   () => userInfo.value,
@@ -64,12 +57,17 @@ onMounted(async () => {
     window.ZempieSdk = ZempieSdk
     window.addEventListener('message', onMessage)
     window.addEventListener('load', onLoad)
+    window.addEventListener('resize', onResize)
+    onResize()
+
   }
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('message', onMessage)
   window.removeEventListener('load', onLoad)
+  window.removeEventListener('resize', onResize)
+
 })
 
 function onLoad() {
@@ -97,6 +95,9 @@ function toGameFrame(type) {
   game.value.contentWindow.postMessage({ type: type }, '*')
 }
 
+function onResize() {
+  iframeHeight.value = `${window.innerHeight}px`
+}
 function onChangedToken() {
   toMessage({
     type: '@updateToken',
