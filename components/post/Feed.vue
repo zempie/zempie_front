@@ -66,7 +66,7 @@
     <template v-if="isOverflow">
       <div v-if="!isMoreView" class="more-container">
         <span> <hr class="dot-line" /> </span
-        ><a @click="moreView"> {{ t('moreView') }} </a
+        ><a class="pointer" @click="moreView"> {{ t('moreView') }} </a
         ><span>
           <hr class="dot-line" />
         </span>
@@ -139,7 +139,7 @@
           </li>
           <li>
             <a @click="copyUrl"
-              ><i class="uil uil-share-alt" style="font-size: 20px"></i
+              ><i class="uil uil-share-alt pointer" style="font-size: 20px"></i
             ></a>
           </li>
         </ul>

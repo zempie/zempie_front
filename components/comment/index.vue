@@ -34,18 +34,18 @@
         ref="feedMenu"
         popper-class="tapl-more-dropdown"
       >
-       
+
         <a slot="trigger"><i class="uil uil-ellipsis-h font25" ></i></a>
         <template #dropdown>
           <div slot="body" class="more-list">
-            <a @click="isCommentEdit = !isCommentEdit">{{
+            <a @click="isCommentEdit = !isCommentEdit" class="pointer">{{
               $t('comment.edit')
             }}</a>
             <!-- <slot name="commentEdit"></slot> -->
 
             <!-- <a @click="$modal.show('deleteComment', { commentId: comment.id, postId: postId })">{{ $t('comment.delete')
           }}</a> -->
-            <a @click="showDeleteModal = true">
+            <a @click="showDeleteModal = true" class="pointer">
               {{ $t('comment.delete') }}
             </a>
           </div>

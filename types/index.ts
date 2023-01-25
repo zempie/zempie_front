@@ -299,7 +299,8 @@ export enum eGameCategory {
   Certified,
   Affiliated,
   ZemJam,
-  GJ
+  GJ,
+  GGJ
 }
 
 export enum eGameType {

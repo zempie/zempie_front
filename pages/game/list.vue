@@ -1,12 +1,6 @@
 <template>
   <div class="content">
-    <div
-      :class="
-        category === AllGameCategory ? 'visual-title' :
-        category === `${eGameCategory.GJ}` ? 'game-gam-plus':
-        'jam-visual-title'
-      "
-    >
+  <div :class="headerImgClass">
       <h1><span>Games</span></h1>
     </div>
     <div class="tab-search-swiper">
@@ -21,7 +15,7 @@
         </div>
         <div class="swiper-slide">
           <a
-            @click="clickCategory('3')"
+          @click="clickCategory(String(eGameCategory.ZemJam))"
             :class="category === `${eGameCategory.ZemJam}` && 'active'"
           >
             zem
@@ -29,10 +23,18 @@
         </div>
         <div class="swiper-slide">
           <a
-            @click="clickCategory('4')"
+          @click="clickCategory(String(eGameCategory.GJ))"
             :class="category === `${eGameCategory.GJ}` && 'active'"
           >
           GJ+
+          </a>
+        </div>
+         <div class="swiper-slide">
+          <a
+            @click="clickCategory(String(eGameCategory.GGJ))"
+            :class="category === `${eGameCategory.GGJ}` && 'active'"
+          >
+          GGJ
           </a>
         </div>
       </div>
@@ -41,6 +43,7 @@
       <dt>Games <span>{{ games.length }}</span></dt> -->
     <dl class="area-title">
       <dt>
+        <ClientOnly>
          <el-select v-model="selectedFilter" class="m-2" placeholder="All">
           <el-option
             v-for="item in stageOptions"
@@ -50,12 +53,11 @@
             @click="handleGameFilter"
           />
         </el-select>
+      </ClientOnly>
       </dt>
     </dl>
-
     <ul class="card-game">
       <GameCardSk v-if="isPending" v-for="game in 16" :key="game" />
-
       <TransitionGroup name="fade" >
           <GameCard
             v-for="(game, index) in games"
@@ -63,7 +65,6 @@
             :key="game.id"
           />
       </TransitionGroup>
-
     </ul>
     <div ref="triggerDiv"></div>
   </div>
@@ -74,69 +75,25 @@ import _ from 'lodash'
 import { eGameCategory, IGame } from '~~/types'
 import { useI18n } from 'vue-i18n'
 import { ElSelect, ElOption } from 'element-plus';
+import shared from '~~/scripts/shared';
 
 const { t, locale } = useI18n()
-const route = useRoute()
-const config = useRuntimeConfig()
 
 definePageMeta({
   layout: 'default',
 })
 
-useHead({
-  title: `${t('seo.game.list.title')} | Zempie`,
-  link: [
-    {
-      rel: 'alternate',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-      hreflang: locale,
-    },
-    {
-      rel: 'canonical',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-  ],
-  meta: [
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-    {
-      property: 'og:site_name',
-      content: 'Zempie',
-    },
-    {
-      name: 'og:type',
-      content: 'website',
-    },
-    {
-      name: 'robots',
-      content: 'index, follow',
-    },
-    {
-      name: 'description',
-      content: `${t('seo.game.list.desc')}`,
-    },
-    {
-      property: 'og:title',
-      content: `${t('seo.game.list.title')}`,
-    },
-    {
-      property: 'og:description',
-      content: `${t('seo.game.list.desc')}`,
-    },
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`,
-    },
-  ],
-})
+shared.createHeadMeta(
+  t('seo.game.list.title'),
+  t('seo.game.list.desc')
+)
+
 
 const LIMIT_SIZE = 20
 const el = ref<HTMLElement>(null)
 
 //기존 카테고리가 0 : 공식게임 1 : 도전 게임 으로 나뉘어져있던걸 합쳐서 0,1 둘다 호출 해야함
-const AllGameCategory = `${eGameCategory.Challenge}, ${eGameCategory.Certified},${eGameCategory.GJ} `
+const AllGameCategory = `${eGameCategory.Challenge}, ${eGameCategory.Certified}, ${eGameCategory.GJ} `
 const category = ref(AllGameCategory)
 const limit = ref(LIMIT_SIZE)
 const offset = ref(0)
@@ -153,20 +110,43 @@ const stageOptions = [
       label:'All'
     },
     {
+      value: 3,
+      label: 'Complete',
+    },
+    {
       value: 2,
       label: 'Early',
     },
-    {
-      value: 3,
-      label: 'Compleate',
-    }
+
   ]
 const selectedFilter = ref('')
+const headerImgClass= ref()
 
 onMounted(async () => {
+   setHeaderClass()
   createObserver()
   await fetch()
 })
+
+function setHeaderClass() {
+  switch(category.value){
+    case AllGameCategory:
+      headerImgClass.value = 'visual-title'
+      break;
+    case String(eGameCategory.GJ):
+      headerImgClass.value = 'game-gam-plus'
+      break;
+    case String(eGameCategory.ZemJam):
+      headerImgClass.value = 'jam-visual-title'
+      break;
+    case String(eGameCategory.GGJ):
+      headerImgClass.value = 'global-game-jam'
+      break;
+    default:
+      headerImgClass.value = 'visual-title'
+      break
+  }
+}
 
 function createObserver() {
   observer.value = new IntersectionObserver(
@@ -223,6 +203,7 @@ async function fetch() {
 const clickCategory = _.debounce((selected: string) => {
   category.value = selected
   observer.value.unobserve(triggerDiv.value)
+  setHeaderClass()
   createObserver()
   initData()
 }, 300)
@@ -273,6 +254,27 @@ async function handleGameFilter(){
       visibility: hidden;
     }
   }
+
+  .global-game-jam{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1200px;
+    height: 150px;
+    margin: 0 auto;
+    border-radius: 15px;
+    background: url('/images/GGJ.png');
+    background-size: cover;
+    box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+
+    h1 {
+      visibility: hidden;
+    }
+
+
+
+  }
   .jam-visual-title {
     background-position: center;
 
@@ -290,7 +292,7 @@ async function handleGameFilter(){
 
 .swiper-slide {
   cursor: pointer;
-  width: 33.3% !important;
+  width: 25% !important;
 }
 
 //transition

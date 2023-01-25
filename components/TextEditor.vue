@@ -96,18 +96,18 @@
         </div>
       </template>
       <ClientOnly>
-      
-        <el-cascader 
+
+        <el-cascader
           class="mp-category"
           id="cascader"
           :props="props"
-          v-model="selectedGroup"        
+          v-model="selectedGroup"
           placeholder="Select cagetory"
-          :options="categoryList" 
+          :options="categoryList"
           :popper-class="'categories'"
         />
 
-        
+
         <!-- <div
           class="mp-category"
           :style="
@@ -191,21 +191,21 @@
       <dl class="mp-type">
         <dt>
           <div style="width: 30px" @click="uploadImageFile">
-            <a><i class="uil uil-image"></i></a>
+            <a><i class="uil uil-image pointer"></i></a>
             <div style="height: 0px; overflow: hidden">
               <input type="file" @change="onSelectImageFile" multiple
               id="image-selector" accept=image/* ref="image" />
             </div>
           </div>
           <div style="width: 30px" @click="uploaVideoFile">
-            <a><i class="uil uil-play-circle"></i></a>
+            <a><i class="uil uil-play-circle pointer"></i></a>
             <div style="height: 0px; overflow: hidden">
               <input type="file" @change="onSelectVideoFile" accept=video/*
               ref="video" />
             </div>
           </div>
           <div style="width: 30px" @click="uploadAudioFile">
-            <a><i class="uil uil-music"></i></a>
+            <a><i class="uil uil-music pointer"></i></a>
             <div style="height: 0px; overflow: hidden">
               <input
                 type="file"
@@ -217,7 +217,7 @@
             </div>
           </div>
         </dt>
-        <!-- 
+        <!--
            1분마다 자동 저장
          -->
         <Transition name="component-fade" mode="out-in">
@@ -364,7 +364,7 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  
+
 })
 
 const initFiles = _.cloneDeep(props.feed?.attatchment_files)
@@ -423,7 +423,7 @@ const prevText = ref()
 const saveId = ref(Date.now())
 
 watch(
-  ()=>selectedGroup.value, 
+  ()=>selectedGroup.value,
   (type) =>{
     console.log(type)
   }
@@ -452,20 +452,20 @@ onBeforeMount(() => {
 })
 
 onMounted(async () => {
-  const community = useCommunity().community.value.info 
+  const community = useCommunity().community.value.info
   //새로고침 시 알람
   window.addEventListener('beforeunload', refreshPage)
 
   await communityFetch()
 
   if(useGame().game.value.info){
-    
+
     //방문한 페이지가 게임페이지인 경우 해당 게임찾아서 리턴
     const game = categoryList.value.find((elem)=>{
       if(elem.value.type === 'game'){
         return elem.value.game.id === useGame().game.value.info.id
       }
-    }) 
+    })
 
     if(game){
       selectedGroup.value = [
@@ -479,7 +479,7 @@ onMounted(async () => {
   }
 
 
-  if( community ){ 
+  if( community ){
 
     //general 채널 디폴트 카테고리로 설정
     const generalChannel = community.channels.find(channel => {
@@ -508,7 +508,7 @@ onMounted(async () => {
 
   //기존 카테고리 추가
   if (props.isEdit) {
-    if (props.feed?.posted_at?.community) {      
+    if (props.feed?.posted_at?.community) {
       for (const community of props.feed.posted_at.community) {
              selectedGroup.value = [
              ...selectedGroup.value,
@@ -524,7 +524,7 @@ onMounted(async () => {
       }
     }
 
-    if (props.feed?.posted_at?.game) {      
+    if (props.feed?.posted_at?.game) {
       for (const game of props.feed.posted_at.game) {
              selectedGroup.value = [
              ...selectedGroup.value,
@@ -1278,7 +1278,7 @@ function setCategoryPayload(payload) {
           break;
         default:
           break;
-          
+
       }
     })
 
@@ -1351,7 +1351,7 @@ async function communityFetch() {
   const gameList = useUser().user.value.info.games.map((game:IGame)=>{
     return {
       value:{
-        type:'game',    
+        type:'game',
         game:game,
       },
       label:game.title
@@ -1477,7 +1477,7 @@ function onLoadPost() {
 }
 
 function deleteDraft(draft: IDraft, index: number) {
- 
+
   ElMessageBox.confirm(`${t('ask.delete.draft')}`, {
     confirmButtonText: 'YES',
     cancelButtonText: 'Cancel',
@@ -1607,7 +1607,7 @@ function getFirstPostContent(content: string) {
   }
   .mp-midi {
     max-height: 315px;
-    
+
     .delete-video-btn {
       display: flex;
       justify-content: flex-end;
@@ -1845,6 +1845,6 @@ function getFirstPostContent(content: string) {
 }
 
 @media all and (min-width: 1200px) {
- 
+
 }
 </style>

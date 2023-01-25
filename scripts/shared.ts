@@ -10,7 +10,7 @@ export default {
 
 
   /**
-   * 
+   *
    * @param token access token
    * @param refreshToken refresh token
    */
@@ -59,6 +59,10 @@ export default {
 
     }
   },
+  /**
+   * 해당 메세지(notification)으로 이동
+   * @param noti notification 객체
+   */
   moveNoti: function (noti: INotification) {
     const router = useRouter()
     const { $localePath } = useNuxtApp()
@@ -90,6 +94,11 @@ export default {
     }
   },
 
+  /**
+   *
+   * @param type notification type(eNotificationType) 입력
+   * @returns 보여줄 알람메세지 text
+   */
   notiText: function (type: number) {
 
     switch (type) {
@@ -112,21 +121,81 @@ export default {
         return 'follows you'
       default:
         break;
-
-
     }
   },
 
-  commonTryCatch: async function (tryfn: any) {
-    try {
-      return await tryfn()
-    } catch (error: any) {
-      ElMessage({
-        message: error || "Please try again a bit later.",
-        type: 'error',
-      })
-      throw error;
-    }
+  /**
+   * head에 넣을 메타 태그(og tag)
+   * @param title meta tag title
+   * @param desc meta tag description
+   * @param image 메타 태그로 보여줄 이미지가 다른 경우 이미지 입력 없는 경우 기본 이미지 출력
+   */
+  createHeadMeta: (
+    title: string,
+    desc: string,
+    image?: string
+
+  ) => {
+
+    const route = useRoute()
+    const config = useRuntimeConfig()
+    const { t, locale } = useI18n()
+
+    useHead({
+      title: `${title} | Zempie`,
+      link: [
+        {
+          rel: 'alternate',
+          href: `${config.ZEMPIE_URL}${route.fullPath}`,
+          hreflang: locale,
+        },
+        {
+          rel: 'canonical',
+          href: `${config.ZEMPIE_URL}${route.fullPath}`,
+        },
+      ],
+      meta: [
+        {
+          property: 'og:site_name',
+          content: 'Zempie',
+        },
+        {
+          name: 'og:type',
+          content: 'website',
+        },
+        {
+          name: 'robots',
+          content: 'index, follow',
+        },
+        {
+          name: 'description',
+          content: `${desc}`,
+        },
+        {
+          property: 'og:title',
+          content: `${title}`,
+        },
+        {
+          property: 'og:description',
+          content: `${desc}`,
+        },
+        {
+          property: 'og:url',
+          content: `${config.ZEMPIE_URL}${route.path}`,
+        },
+        {
+          property: 'og:image',
+          content: image ? `${image}` : `${config.OG_IMG}`,
+        },
+        {
+          property: 'og:image:alt',
+          content: `${title}`,
+        }
+      ],
+    })
+
   }
+
+
 
 }
