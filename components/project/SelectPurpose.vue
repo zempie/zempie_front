@@ -111,37 +111,5 @@ function isNotOpen(event:IEvent){
 }
 </script>
 <style scoped lang="scss">
-.studio-game-step {
-  li {
-    font-size: 16px;
-    cursor: pointer;
 
-    dd {
-      small {
-        font-size: 16px;
-
-      }
-    }
-    small {
-      color: #FF6E17;
-    }
-
-    &:hover:not(.inActive) {
-      box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.2);
-    }
-
-    .active {
-      border: 2px solid #FF6E17;
-    }
-  }
-
-  .inActive{
-    opacity: 0.5;
-
-
-    cursor:auto;
-    pointer-events: none;
-  }
-
-}
 </style>
