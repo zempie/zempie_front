@@ -1,10 +1,10 @@
 <template>
   <div class="content">
-  <div :class="headerImgClass">
+  <div :class="headerImgClass" style="height:150px">
       <h1><span>Games</span></h1>
     </div>
     <div class="tab-search-swiper">
-      <div class="swiper-area uppercase">
+      <div class="swiper-area uppercase" >
         <div class="swiper-slide">
           <a
             @click="clickCategory(AllGameCategory)"
@@ -242,7 +242,6 @@ async function handleGameFilter(){
     justify-content: center;
     align-items: center;
     width: 1200px;
-    height: 150px;
     margin: 0 auto;
     border-radius: 15px;
     background: url('/images/gj_banner.png');
@@ -260,7 +259,6 @@ async function handleGameFilter(){
     justify-content: center;
     align-items: center;
     width: 1200px;
-    height: 150px;
     margin: 0 auto;
     border-radius: 15px;
     background: url('/images/GGJ.png');
@@ -334,6 +332,12 @@ async function handleGameFilter(){
     width: 100% !important;
     background-position: center !important;
   }
+  .global-game-jam{
+    width: 100% !important;
+    background: url('/images/GGJ_header.png') !important;
+    background-position: center !important;
+
+  }
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
@@ -351,9 +355,18 @@ async function handleGameFilter(){
     width: 470px !important;
     background-position: center !important;
   }
+  .global-game-jam{
+    width: 470px !important;
+    background: url('/images/GGJ_header.png') !important;
+    background-position: center !important;
+  }
 }
 @media all and (min-width: 768px) and (max-width: 991px) {
   .game-gam-plus{
+    width: 750px !important;
+    background-position: center !important;
+  }
+  .global-game-jam{
     width: 750px !important;
     background-position: center !important;
   }
@@ -362,6 +375,11 @@ async function handleGameFilter(){
   .game-gam-plus{
     width: 970px !important;
     background-position: center !important;
+  }
+  .global-game-jam{
+    width: 970px !important;
+    background-position: center !important;
+
   }
 }
 
