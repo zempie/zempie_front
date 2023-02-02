@@ -18,34 +18,13 @@
           </dd>
         </dl>
       </li>
-      <!-- <li @click="selectPurpose(eGameCategory.GGJ)" :class="purpose === eGameCategory.GGJ && 'active'">
+      <li v-for="event in events" @click="selectPurpose(Number(event.category))" :class="purpose === Number(event.category) && 'active'">
         <dl id="GGJ">
-          <dt><img src="/images/GGJ00_Logo_Dark.png" width="100" alt="Global game jam" title="GGJ" /></dt>
+          <dt><img :src="event.url_img" width="100" :alt="event?.title" :title="event?.title" /></dt>
           <dd>
-            <h3>GGJ</h3>
-            <div>{{ $t('global.game.jam.info') }}</div>
-            <small>2023/02/03 ~ 2023/02/05</small>
-          </dd>
-        </dl>
-      </li> -->
-      <li class="inActive">
-        <dl id="GJ">
-          <dt><img src="/images/GJ_transparent.png" width="70" alt="Game jam Plus" title="GJ+" /></dt>
-          <dd>
-            <h3>GJ+</h3>
-            <div>{{ $t('global.game.zem.info') }}
-            </div>
-            <small>2022/11/18 ~ 2022/11/20</small>
-          </dd>
-        </dl>
-      </li>
-      <li class="inActive">
-        <dl>
-          <dt><img src="/images/zemjam_logo_1.png" :alt="$t('seo.zemjam.title')" width="100" title="zemjam" /></dt>
-          <dd>
-            <h3>ZemJam</h3>
-            <div>{{ $t('zempie.gamejam.info') }}</div>
-            <small>{{ $t('finish') }}</small>
+            <h3>{{ event?.title }}</h3>
+            <div>{{event?.desc}}</div>
+            <small>{{dayjs(event?.start_date).format('YYYY/MM/DD')}}~ {{dayjs(event?.end_date).format('YYYY/MM/DD')}}</small>
           </dd>
         </dl>
       </li>
@@ -54,28 +33,32 @@
 
 </template>
 <script setup lang="ts">
-import { eGameCategory } from '~/types'
+import { eGameCategory, IEvent } from '~/types'
+import dayjs from 'dayjs';
 
 const route = useRoute()
 const purpose = computed(() => useProject().editProject.value.info.game?.category)
 const isInactive = ref(false)
+const events = ref<IEvent[]>()
 
 const isEditProject = computed(() => {
   return route.params.id ? true : false
 })
 
+const {data, pending, error} = await useCustomAsyncFetch<{result:[]}>(
+  `/events`,
+    getStudioFetchOptions('get', true)
+)
+
+
 onBeforeMount(() => {
-  let date = new Date()
-  let GJ_END: Date | number = new Date(2022, 10, 20, 23, 59, 59)
-  let GJ_START: Date | number = new Date(2022, 10, 18 , 23, 59, 59)
-
-  GJ_END = GJ_END.setTime(GJ_END.getTime())
-  GJ_START = GJ_START.setTime(GJ_START.getTime())
-
-  //오늘날짜가 게임젬끝나는 날 보다 큰경우 게임젬 비활성화
-  if (date.setTime(date.getTime()) > GJ_END && date.setTime(date.getTime()) < GJ_START) {
-    isInactive.value = true
-  }
+  events.value = data.value.result
+  .filter((event:IEvent)=>{
+    return new Date(event.end_date) > new Date()
+  })
+  .sort((a:IEvent, b:IEvent)=>{
+    return new Date(a.start_date).getTime() - new Date(b.start_date).getTime()
+  })
 })
 
 

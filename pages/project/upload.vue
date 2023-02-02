@@ -5,7 +5,7 @@
         <h2>{{ $t('uploadGame.selectStage.text') }}</h2>
         <p>{{ $t('uploadGame.selectStage.info') }}</p>
       </div>
-      <ProjectUpload />
+    <ProjectUpload />
     </div>
   </NuxtLayout>
 </template>
@@ -18,7 +18,7 @@ const route = useRoute()
 const config = useRuntimeConfig()
 
 definePageMeta({
-  middleware: 'auth',
+  // middleware: 'auth',
 })
 
 useHead({
