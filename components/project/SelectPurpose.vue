@@ -18,7 +18,7 @@
           </dd>
         </dl>
       </li>
-      <li @click="selectPurpose(eGameCategory.GGJ)" :class="purpose === eGameCategory.GGJ && 'active'">
+      <!-- <li @click="selectPurpose(eGameCategory.GGJ)" :class="purpose === eGameCategory.GGJ && 'active'">
         <dl id="GGJ">
           <dt><img src="/images/GGJ00_Logo_Dark.png" width="100" alt="Global game jam" title="GGJ" /></dt>
           <dd>
@@ -27,7 +27,7 @@
             <small>2023/02/03 ~ 2023/02/05</small>
           </dd>
         </dl>
-      </li>
+      </li> -->
       <li class="inActive">
         <dl id="GJ">
           <dt><img src="/images/GJ_transparent.png" width="70" alt="Game jam Plus" title="GJ+" /></dt>
