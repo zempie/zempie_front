@@ -19,14 +19,20 @@
           </dd>
         </dl>
       </li>
-      <li v-for="event in events" @click="selectPurpose(Number(event.category))" :class="[purpose === Number(event.category) && 'active', isPassed(event) && 'inActive']">
-        <dl id="GGJ">
+
+      <li v-for="event in events" @click="selectPurpose(Number(event.category))" :class="[purpose === Number(event.category) && 'active', isPassed(event) && 'inActive', isNotOpen(event) && 'not-open']">
+        <dl id="GGJ" >
           <dt><img :src="event.url_img" width="100" :alt="event?.title" :title="event?.title" /></dt>
           <dd>
             <h3>{{ event?.title }}</h3>
             <div>{{event?.desc}}</div>
             <small>{{dayjs(event?.start_date).format('YYYY/MM/DD')}}~ {{dayjs(event?.end_date).format('YYYY/MM/DD')}}</small>
           </dd>
+        </dl>
+        <dl v-if="isNotOpen(event)" class="not-open-float">
+          <dd >
+          NOT OPEN
+        </dd>
         </dl>
       </li>
       <li class="inActive">
@@ -99,6 +105,10 @@ function isPassed(event:IEvent) {
   const end_date = dayjs(event.end_date)
   return dayjs().isAfter(end_date)
 }
+function isNotOpen(event:IEvent){
+  const start_date = dayjs(event.start_date)
+  return dayjs().isBefore(start_date)
+}
 </script>
 <style scoped lang="scss">
 .studio-game-step {
@@ -125,9 +135,40 @@ function isPassed(event:IEvent) {
     }
   }
 
-    .inActive{
-         opacity: 0.5;
-         cursor:auto;
+  .inActive{
+    opacity: 0.5;
+
+
+    cursor:auto;
+    pointer-events: none;
+  }
+  .not-open{
+    pointer-events: none;
+    .not-open-float{
+      position: absolute;
+      font-weight: bold;
+      font-size: 30px;
+      z-index: inherit;
+      opacity: 1 !important;
+      color: #000;
+      text-transform: uppercase;
+      justify-content: center;
+      z-index: 9999;
+      top : 50%;
+      left: 50%;
+      text-align:center;
+      transform: translate(-50%,-50%);
+    }
+  }
+  .not-open:before {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    content: "";
+    top: 0;
+    left: 0;
+    opacity: 0.5;
+    background: #ffffff;
   }
 }
 </style>
