@@ -66,7 +66,7 @@
     <template v-if="isOverflow">
       <div v-if="!isMoreView" class="more-container">
         <span> <hr class="dot-line" /> </span
-        ><a @click="moreView"> {{ t('moreView') }} </a
+        ><a class="pointer" @click="moreView"> {{ t('moreView') }} </a
         ><span>
           <hr class="dot-line" />
         </span>
@@ -139,7 +139,7 @@
           </li>
           <li>
             <a @click="copyUrl"
-              ><i class="uil uil-share-alt" style="font-size: 20px"></i
+              ><i class="uil uil-share-alt pointer" style="font-size: 20px"></i
             ></a>
           </li>
         </ul>
@@ -152,7 +152,7 @@
         v-show="isOpenedComments"
         :class="['tapl-comment', isOpenedComments ? 'open' : 'close']"
       >
-        <ul ref="commentEl">
+        <ul ref="commentEl" >
           <li v-for="comment in comments" :key="comment.id">
             <Comment
               :comment="comment"
@@ -579,9 +579,9 @@ function untranslatedText(originText: string) {
 // /더보기
 
 .tapl-comment {
-  max-height: 500px;
-  overflow-y: scroll;
   ul {
+    max-height: 500px;
+    overflow-y: scroll;
     li:nth-child(1) {
       border-top: none;
       margin-top: 0px;

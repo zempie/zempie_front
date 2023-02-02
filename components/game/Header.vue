@@ -10,7 +10,7 @@
         : 'background-color: #f973165c'
     "
   >
-  <GameStageTag :stage="gameInfo.stage"/>
+  <GameStageTag v-if="gameInfo.stage" :stage="gameInfo.stage"/>
     <div
       v-if="isMine"
       style="display: flex; justify-content: flex-end; margin: 20px"

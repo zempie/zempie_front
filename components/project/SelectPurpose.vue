@@ -10,7 +10,7 @@
     <ul class="studio-game-step">
       <li @click="selectPurpose(eGameCategory.Challenge)" :class="purpose === eGameCategory.Challenge && 'active'">
         <dl id="basicUpload">
-          <dt><img src="/images/zempie_logo_154_155.png" width="70" :alt="$t('devLog')" title="" /></dt>
+          <dt><img src="/images/zempie_logo_154_155.png" width="70" :alt="$t('zempie.upload')" :title="$t('zempie.upload')" /></dt>
           <dd>
             <h3>{{ $t('zempie.upload') }}</h3>
             <div>{{ $t('zempie.upload.info') }}
@@ -18,21 +18,30 @@
           </dd>
         </dl>
       </li>
+      <li @click="selectPurpose(eGameCategory.GGJ)" :class="purpose === eGameCategory.GGJ && 'active'">
+        <dl id="GGJ">
+          <dt><img src="/images/GGJ00_Logo_Dark.png" width="100" alt="Global game jam" title="GGJ" /></dt>
+          <dd>
+            <h3>GGJ</h3>
+            <div>{{ $t('global.game.jam.info') }}</div>
+            <small>2023/02/03 ~ 2023/02/05</small>
+          </dd>
+        </dl>
+      </li>
       <li class="inActive">
         <dl id="GJ">
-          <dt><img src="/images/GJ_transparent.png" width="70" :alt="$t('earlyAccess')" title="" /></dt>
+          <dt><img src="/images/GJ_transparent.png" width="70" alt="Game jam Plus" title="GJ+" /></dt>
           <dd>
             <h3>GJ+</h3>
             <div>{{ $t('global.game.zem.info') }}
             </div>
             <small>2022/11/18 ~ 2022/11/20</small>
-
           </dd>
         </dl>
       </li>
       <li class="inActive">
         <dl>
-          <dt><img src="/images/zemjam_logo_1.png" :alt="$t('seo.zemjam.title')" width="100" title="" /></dt>
+          <dt><img src="/images/zemjam_logo_1.png" :alt="$t('seo.zemjam.title')" width="100" title="zemjam" /></dt>
           <dd>
             <h3>ZemJam</h3>
             <div>{{ $t('zempie.gamejam.info') }}</div>
@@ -71,7 +80,7 @@ onBeforeMount(() => {
 
 
 function selectPurpose(purpose: number) {
-  if(isInactive.value ) return  
+  if(isInactive.value ) return
   if (isEditProject.value) {
     useProject().setStepTwoOnEdit()
     useProject().setEditPurpose(purpose)
@@ -113,7 +122,7 @@ function selectPurpose(purpose: number) {
     }
   }
 
-  
+
     .inActive{
          opacity: 0.5;
 

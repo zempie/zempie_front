@@ -7,8 +7,8 @@
       <template #dropdown>
         <div slot="body" class="more-list fixed" style="min-width: 150px">
           <template v-if="user && user.id === (feed?.user && feed?.user.id)">
-            <a @click="isTextEditorOpen = true" id="editFeed">{{ t('feed.edit') }}</a>
-            <a @click="showDeletePostModal = true">{{ t('feed.delete') }}</a>
+            <a @click="isTextEditorOpen = true" id="editFeed" class="pointer">{{ t('feed.edit') }}</a>
+            <a @click="showDeletePostModal = true" class="pointer">{{ t('feed.delete') }}</a>
           </template>
           <template v-else>
             <NuxtLink
