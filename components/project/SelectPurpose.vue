@@ -7,6 +7,7 @@
     </template>
   </ProjectStepMenu>
   <dd>
+    <ClientOnly>
     <ul class="studio-game-step">
       <li @click="selectPurpose(eGameCategory.Challenge)" :class="purpose === eGameCategory.Challenge && 'active'">
         <dl id="basicUpload">
@@ -18,7 +19,7 @@
           </dd>
         </dl>
       </li>
-      <li v-for="event in events" @click="selectPurpose(Number(event.category))" :class="purpose === Number(event.category) && 'active'">
+      <li v-for="event in events" @click="selectPurpose(Number(event.category))" :class="[purpose === Number(event.category) && 'active', isPassed(event) && 'inActive']">
         <dl id="GGJ">
           <dt><img :src="event.url_img" width="100" :alt="event?.title" :title="event?.title" /></dt>
           <dd>
@@ -28,9 +29,30 @@
           </dd>
         </dl>
       </li>
+      <li class="inActive">
+        <dl id="GJ">
+          <dt><img src="/images/GJ_transparent.png" width="70" alt="Game jam Plus" title="GJ+" /></dt>
+          <dd>
+            <h3>GJ+</h3>
+            <div>{{ $t('global.game.zem.info') }}
+            </div>
+            <small>2022/11/18 ~ 2022/11/20</small>
+          </dd>
+        </dl>
+      </li>
+      <li class="inActive">
+        <dl>
+          <dt><img src="/images/zemjam_logo_1.png" :alt="$t('seo.zemjam.title')" width="100" title="zemjam" /></dt>
+          <dd>
+            <h3>ZemJam</h3>
+            <div>{{ $t('zempie.gamejam.info') }}</div>
+            <small>{{ $t('finish') }}</small>
+          </dd>
+        </dl>
+      </li>
     </ul>
+  </ClientOnly>
   </dd>
-
 </template>
 <script setup lang="ts">
 import { eGameCategory, IEvent } from '~/types'
@@ -53,9 +75,9 @@ const {data, pending, error} = await useCustomAsyncFetch<{result:[]}>(
 
 onBeforeMount(() => {
   events.value = data.value.result
-  .filter((event:IEvent)=>{
-    return new Date(event.end_date) > new Date()
-  })
+  // .filter((event:IEvent)=>{
+  //   return new Date(event.end_date) > new Date()
+  // })
   .sort((a:IEvent, b:IEvent)=>{
     return new Date(a.start_date).getTime() - new Date(b.start_date).getTime()
   })
@@ -73,30 +95,28 @@ function selectPurpose(purpose: number) {
     useProject().setStepTwo()
   }
 }
+function isPassed(event:IEvent) {
+  const end_date = dayjs(event.end_date)
+  return dayjs().isAfter(end_date)
+}
 </script>
 <style scoped lang="scss">
 .studio-game-step {
   li {
     font-size: 16px;
-    &.inactive{
-      opacity: 0.5;
-    }
+    cursor: pointer;
+
     dd {
       small {
         font-size: 16px;
 
       }
     }
-
     small {
       color: #FF6E17;
     }
-  }
 
-  li:not(:last-child) {
-    cursor: pointer;
-
-    &:hover {
+    &:hover:not(.inActive) {
       box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.2);
     }
 
@@ -105,11 +125,9 @@ function selectPurpose(purpose: number) {
     }
   }
 
-
     .inActive{
          opacity: 0.5;
-
-
+         cursor:auto;
   }
 }
 </style>
