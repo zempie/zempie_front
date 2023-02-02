@@ -142,33 +142,6 @@ function isNotOpen(event:IEvent){
     cursor:auto;
     pointer-events: none;
   }
-  .not-open{
-    pointer-events: none;
-    .not-open-float{
-      position: absolute;
-      font-weight: bold;
-      font-size: 30px;
-      z-index: inherit;
-      opacity: 1 !important;
-      color: #000;
-      text-transform: uppercase;
-      justify-content: center;
-      z-index: 9999;
-      top : 50%;
-      left: 50%;
-      text-align:center;
-      transform: translate(-50%,-50%);
-    }
-  }
-  .not-open:before {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    content: "";
-    top: 0;
-    left: 0;
-    opacity: 0.5;
-    background: #ffffff;
-  }
+
 }
 </style>
