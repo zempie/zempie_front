@@ -152,7 +152,7 @@
         v-show="isOpenedComments"
         :class="['tapl-comment', isOpenedComments ? 'open' : 'close']"
       >
-        <ul ref="commentEl" >
+        <ul ref="commentEl" style="overflow-y: scroll;max-height: 500px;">
           <li v-for="comment in comments" :key="comment.id">
             <Comment
               :comment="comment"

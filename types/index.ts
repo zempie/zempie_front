@@ -282,6 +282,17 @@ export interface INotification {
   type_text?: string
 }
 
+export interface IEvent {
+  id: number,
+  start_date: string,
+  desc: string,
+  title: string,
+  end_date: string,
+  type: number,
+  url_img: string,
+  category: eGameCategory
+}
+
 
 
 

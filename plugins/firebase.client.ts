@@ -61,14 +61,14 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   })
 
-  const messaging = getMessaging(app);
+  // const messaging = getMessaging(app);
 
-  console.log('messaging', messaging)
+  // console.log('messaging', messaging)
 
-  onMessage(messaging, (payload) => {
-    console.log('Message received. ', payload);
-    useAlarm().setNewNoti(payload)
-  });
+  // onMessage(messaging, (payload) => {
+  //   console.log('Message received. ', payload);
+  //   useAlarm().setNewNoti(payload)
+  // });
 
 
 

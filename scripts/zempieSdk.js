@@ -1,5 +1,5 @@
 export const ZempieSdk = {
-  
+
   event: {},
   isProduction: false,
 
@@ -26,7 +26,7 @@ export const ZempieSdk = {
   },
 
   postMessage(message) {
-    window.ReactNativeWebView.postMessage(JSON.stringify({ event: message }))
+    window.ReactNativeWebView?.postMessage(JSON.stringify({ event: message }))
 
     if (window.parent !== window) {
       window.parent.postMessage(message, '*')

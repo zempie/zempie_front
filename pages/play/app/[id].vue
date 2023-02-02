@@ -1,16 +1,17 @@
 <template>
-  <iframe
-    height="90%"
-    id="gamePage"
-    ref="game"
-    class="iframe"
-    :style="`height:${iframeHeight};`"
-    :src="url"
-  />
+  <ClientOnly>
+    <iframe
+      height="90%"
+      id="gamePage"
+      ref="game"
+      class="iframe"
+      :style="`height:${iframeHeight};`"
+      :src="url"
+    />
+  </ClientOnly>
 </template>
 
 <script setup lang="ts">
-import { getIdToken } from 'firebase/auth'
 import { useI18n } from 'vue-i18n'
 import { ZempieSdk } from '~/scripts/zempieSdk'
 
@@ -29,24 +30,25 @@ const userInfo = computed(() => useUser().user.value.info)
 definePageMeta({
   layout: 'layout-none',
 })
-const result = await $fetch<any>(
-  `/launch/game/${gamePath.value}`,
-  getZempieFetchOptions('get', false)
-)
 
-if (result) {
-  url.value = result?.result?.game.url_game
-}
 watch(
-  () => result,
-  (data) => {
-    if (data) {
-      url.value = result.result.game.url_game
+  () => userInfo.value,
+  (info) => {
+    if (info) {
+      onChangedToken()
     }
   }
 )
-
 onMounted(async () => {
+  const result = await useCustomFetch<any>(
+    `/launch/game/${gamePath.value}`,
+    getZempieFetchOptions('get', false)
+  )
+
+  if (result) {
+    console.log(result)
+    url.value = result?.result?.game.url_game
+  }
   if (process.client) {
     ZempieSdk.useCtrl()
     ZempieSdk.useLading()
@@ -55,12 +57,17 @@ onMounted(async () => {
     window.ZempieSdk = ZempieSdk
     window.addEventListener('message', onMessage)
     window.addEventListener('load', onLoad)
+    window.addEventListener('resize', onResize)
+    onResize()
+
   }
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('message', onMessage)
   window.removeEventListener('load', onLoad)
+  window.removeEventListener('resize', onResize)
+
 })
 
 function onLoad() {
@@ -85,18 +92,12 @@ function onLoad() {
 }
 
 function toGameFrame(type) {
-  console.log(type)
   game.value.contentWindow.postMessage({ type: type }, '*')
 }
-watch(
-  () => userInfo.value,
-  (info) => {
-    if (info) {
-      onChangedToken()
-    }
-  }
-)
 
+function onResize() {
+  iframeHeight.value = `${window.innerHeight}px`
+}
 function onChangedToken() {
   toMessage({
     type: '@updateToken',

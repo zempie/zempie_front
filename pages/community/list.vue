@@ -37,7 +37,7 @@
       </dd>
     </dl>
     <div class="result-container">
-      <div class="card-timeline">
+      <div class="card-timeline" style="margin: 0 auto;">
         <CommunityCardSk v-if="isPending" v-for="com in 4" />
         <TransitionGroup v-else name="fade">
           <CommunityCard
