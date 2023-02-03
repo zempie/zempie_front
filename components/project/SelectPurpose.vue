@@ -20,7 +20,7 @@
         </dl>
       </li>
 
-      <li v-for="event in events" @click="selectPurpose(Number(event.category))" :class="[purpose === Number(event.category) && 'active', isPassed(event) && 'inActive', isNotOpen(event) && 'not-open']">
+      <li v-for="event in events" @click="selectPurpose(Number(event.category))" :class="[purpose === Number(event.category) && 'active', isPassed(event) && 'inActive']">
         <dl id="GGJ" >
           <dt><img :src="event.url_img" width="100" :alt="event?.title" :title="event?.title" /></dt>
           <dd>
@@ -29,11 +29,11 @@
             <small>{{dayjs(event?.start_date).format('YYYY/MM/DD')}}~ {{dayjs(event?.end_date).format('YYYY/MM/DD')}}</small>
           </dd>
         </dl>
-        <dl v-if="isNotOpen(event)" class="not-open-float">
+        <!-- <dl v-if="isNotOpen(event)" class="not-open-float">
           <dd >
           NOT OPEN
         </dd>
-        </dl>
+        </dl> -->
       </li>
       <li class="inActive">
         <dl id="GJ">
@@ -53,7 +53,7 @@
             <h3>ZemJam</h3>
             <div>{{ $t('zempie.gamejam.info') }}</div>
             <small>{{ $t('finish') }}</small>
-          </dd>
+          </dd>``
         </dl>
       </li>
     </ul>

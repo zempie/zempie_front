@@ -336,7 +336,7 @@ import {
 } from 'element-plus'
 
 import { useI18n } from 'vue-i18n'
-import { htmlToDomElem, stringToDomElem } from '~~/scripts/utils'
+import { htmlToDomElem, stringToDomElem, isObjEmpty } from '~~/scripts/utils'
 
 interface IDraft {
   time: number
@@ -1019,6 +1019,7 @@ async function onUpdatePost() {
       const audioFiles = []
       //블로그 수정 시 이미지가 있는 경우
       for (const img of imgArr.value) {
+
         //s3 업로드가 필요한 경우
         if (img.src.search('blob:') !== -1 || img.src.search('data:') !== -1) {
           const formData = new FormData()
@@ -1039,11 +1040,20 @@ async function onUpdatePost() {
         }
         //필요없는 경우
         else {
-          //기존 파일에서 찾아서 push
-          const file = attatchment_files.find((file) => {
-            return file.url === img.src
+          if( !attatchment_files ){
+            //기존 파일에서 찾아서 push
+            const file = attatchment_files.find((file) => {
+              return file.url === img.src
+            })
+            imgFiles.push(file)
+          }
+
+          imgFiles.push({
+            url:img.src,
+            type:'image',
+            priority:0
           })
-          imgFiles.push(file)
+
         }
       }
       attachedFile.push(...imgFiles)
@@ -1071,6 +1081,7 @@ async function onUpdatePost() {
           }
         } else {
           //기존 파일에서 찾아서 push
+
           const file = attatchment_files.find((file) => {
             return file.url === video.src
           })
@@ -1111,6 +1122,7 @@ async function onUpdatePost() {
         }
       }
       attachedFile.push(...audioFiles)
+
 
       break
 
@@ -1235,8 +1247,12 @@ async function onUpdatePost() {
 
   Array.isArray(attachedFile) ? attachedFile : JSON.parse(attatchment_files)
 
+
+  console.log('attachedFile', attachedFile)
+  console.log('attatchment_files', attatchment_files)
+
   attachedFile?.filter((file) => {
-    return file.size
+    return file?.size
   })
 
   payload.attatchment_files = attachedFile
