@@ -132,8 +132,8 @@
           <LikeBtn :feed="feed" />
           <li @click="openComments">
             <i
-              class="uil uil-comment-alt-dots comment-icon"
-              style="font-size: 22px"
+              class="uil uil-comment-alt-dots pointer"
+              style="font-size: 22px;"
             ></i>
             {{ feed.comment_cnt }}
           </li>
