@@ -103,3 +103,11 @@ export const isEmpty = (str: string) => {
     return false;
   }
 }
+
+export const isObjEmpty = (obj: Record<string, any>): Boolean => {
+  for (var prop in obj) {
+    if (obj.hasOwnProperty(prop))
+      return false;
+  }
+  return true;
+}

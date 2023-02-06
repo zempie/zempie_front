@@ -19,23 +19,15 @@
             </a>
             {{ $t('like') }} {{ likeCnt }}{{ $t('like.unit') }}
           </p>
-          <TranslateBtn
-            :text="commentContent"
-            @translatedText="translate"
-            @untranslatedText="untranslatedText"
-          />
+          <TranslateBtn :text="commentContent" @translatedText="translate" @untranslatedText="untranslatedText" />
         </dd>
       </dl>
     </dt>
 
     <dd v-if="comment.user?.uid === user?.uid">
-      <el-dropdown
-        trigger="click"
-        ref="feedMenu"
-        popper-class="tapl-more-dropdown"
-      >
+      <el-dropdown trigger="click" ref="feedMenu" popper-class="tapl-more-dropdown">
 
-        <a slot="trigger"><i class="uil uil-ellipsis-h font25" ></i></a>
+        <a slot="trigger"><i class="uil uil-ellipsis-h font25"></i></a>
         <template #dropdown>
           <div slot="body" class="more-list">
             <a @click="isCommentEdit = !isCommentEdit" class="pointer">{{
@@ -54,12 +46,7 @@
     </dd>
 
     <ClientOnly>
-      <el-dialog
-        v-model="showDeleteModal"
-        append-to-body
-        class="modal-area-type"
-        width="380px"
-      >
+      <el-dialog v-model="showDeleteModal" append-to-body class="modal-area-type" width="380px">
         <div class="modal-alert">
           <dl class="ma-header">
             <dt>{{ $t('information') }}</dt>
@@ -84,18 +71,14 @@
       </el-dialog>
     </ClientOnly>
   </dl>
-  <CommentInput
-    v-if="isCommentEdit"
-    @refresh="refresh"
-    :postId="comment.post_id"
-    :comment="comment"
-    :isEdit="true"
-  />
+  <CommentInput v-if="isCommentEdit" @refresh="refresh" @editComment="editComment" :postId="comment.post_id"
+    :comment="comment" :isEdit="true" />
 </template>
 
 <script setup lang="ts">
 import _ from 'lodash'
 import { ElDropdown, ElDialog } from 'element-plus'
+import { IComment } from '~~/types';
 
 const showDeleteModal = ref(false)
 const isCommentEdit = ref(false)
@@ -109,7 +92,7 @@ const props = defineProps({
 
 const commentContent = ref(props.comment?.content || '')
 
-const emit = defineEmits(['refresh'])
+const emit = defineEmits(['refresh', 'editComment', 'deleteComment'])
 const isLiked = ref(props.comment.is_liked)
 const likeCnt = ref(props.comment.like_cnt)
 
@@ -121,67 +104,11 @@ function refresh(content: string) {
 
   emit('refresh', content)
 }
-// import {Component, Prop, Vue} from "vue-property-decorator";
 
-// import {dateFormat} from "@/script/moment";
-// import {AxiosError, AxiosResponse} from "axios";
-// import {mapGetters} from "vuex";
-// import UserAvatar from "@/components/user/_userAvatar.vue";
-// import CommentInput from "@/components/comment/_commentInput.vue";
-// import {User} from "@/types";
-// import ClickManager from "@/script/clickManager";
-
-// @Component({
-//     computed: {...mapGetters(["user"])},
-//     components: {UserAvatar, CommentInput},
-// })
-// export default class Comment extends Vue {
-//     @Prop() comment!: any;
-//     @Prop() postId!: any;
-//     userInfo: any = [];
-//     content: string = this.comment.content;
-//     isEditing: boolean = false;
-//     parentId: number = -1;
-//     modalTitle: string = "Report Comment";
-//     createdDate: string = "";
-//     updatedContent: string = '';
-
-//     showModal: boolean = false;
-//     user!: User;
-//     clickManager: ClickManager = new ClickManager();
-//     isLiked: boolean = this.comment.is_liked;
-//     likeCnt: number = this.comment.like_cnt
-
-//     mounted() {
-//         this.init();
-//         this.createdDate = dateFormat(this.comment.createdAt);
-//         this.updatedContent = this.comment.content
-//     }
-
-//     async init() {
-//         const result = await this.$api.channel(this.comment.user.channel_id);
-//         this.userInfo = result.target;
-//     }
-
-//     editPost() {
-//         this.isEditing = true;
-//         (this.$refs.dropbox as HTMLElement).click();
-//     }
-
-//     editDone() {
-//         this.isEditing = false;
-//         this.$emit('editDone')
-//     }
-//     updateDone(comment:any) {
-//         this.isEditing = false;
-//         this.updatedContent = comment.content
-//         // this.$emit('updateDone')
-//     }
-
-//     editComment() {
-//         this.isEditing = true;
-//     }
-
+function editComment(comment: IComment) {
+  isCommentEdit.value = !isCommentEdit.value
+  emit('editComment', comment)
+}
 const setLike = _.debounce(async () => {
   const { data, pending, error } = await useCustomAsyncFetch(
     `/post/${props.comment.post_id}/comment/${props.comment.id}/like`,
@@ -206,16 +133,15 @@ const unsetLike = _.debounce(async () => {
   }
 }, 300)
 
-function editComment() {}
-
 async function deleteComment() {
   const { data, pending, error } = await useCustomAsyncFetch(
     `/post/${props.comment.post_id}/comment/${props.comment.id}`,
     getComFetchOptions('delete', true)
   )
+  console.log(data.value)
 
   if (!error.value) {
-    emit('refresh')
+    emit('deleteComment', props.comment.id)
   }
   showDeleteModal.value = false
 }
@@ -227,42 +153,6 @@ async function translate(text: string) {
 function untranslatedText(originText: string) {
   commentContent.value = originText
 }
-
-//     sendLike(state: boolean) {
-//         if (this.user) {
-//             if (state) {
-//                 if (!this.clickManager.doubleClickCheck()) {
-//                     this.$api.unlikeComment(this.postId, this.comment.id)
-//                         .then((res: AxiosResponse) => {
-//                             this.isLiked = false;
-//                             this.likeCnt--;
-//                             // this.$emit('editDone')
-
-//                         })
-//                         .catch((err: AxiosError) => {
-
-//                         })
-//                 }
-//             }
-//             else {
-//                 if (!this.clickManager.doubleClickCheck()) {
-//                     this.$api.likeComment(this.postId, this.comment.id)
-//                         .then((res: AxiosResponse) => {
-//                             this.isLiked = true;
-//                             this.likeCnt++;
-//                             // this.$emit('editDone')
-//                         })
-//                         .catch((err: AxiosError) => {
-
-//                         })
-//                 }
-//             }
-//         }
-//         else {
-//             this.$modal.show('needLogin')
-//         }
-
-//     }
 
 </script>
 
@@ -309,6 +199,7 @@ function untranslatedText(originText: string) {
   0% {
     transform: scale(1.4);
   }
+
   100% {
     transform: scale(1);
   }

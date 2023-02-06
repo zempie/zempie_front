@@ -11,20 +11,16 @@
 
           <dd v-if="feed.user?.name">
             <h2 class="user-name">
-              {{ feed.user?.name
+              {{
+                feed.user?.name
               }}<span> uploaded a {{ feed.post_type }} post </span>
             </h2>
             <p>
               <i class="uis uis-clock" style="color: #c1c1c1"></i>
               <span v-if="locale === 'ko'">
-                {{ dateFormat(feed.created_at) }}</span
-              >
+                {{ dateFormat(feed.created_at) }}</span>
               <span v-else> {{ enDateFormat(feed.created_at) }}</span>
-              <TranslateBtn
-                :text="feedContent"
-                @translatedText="translate"
-                @untranslatedText="untranslatedText"
-              />
+              <TranslateBtn :text="feedContent" @translatedText="translate" @untranslatedText="untranslatedText" />
             </p>
           </dd>
           <dd v-else>
@@ -44,81 +40,50 @@
         </dl>
       </dt>
       <dd v-if="feed.user?.name">
-        <PostDropdown
-          :feed="feed"
-          @deletePost="emit('refresh')"
-          @refresh="emit('refresh')"
-        />
+        <PostDropdown :feed="feed" @deletePost="emit('refresh')" @refresh="emit('refresh')" />
       </dd>
     </dl>
 
     <div>
-      <div
-        ref="feedDiv"
-        class="tapl-content"
-        v-html="feedContent"
-        @click="$router.push($localePath(`/feed/${feed.id}`))"
-      ></div>
+      <div ref="feedDiv" class="tapl-content" v-html="feedContent"
+        @click="$router.push($localePath(`/feed/${feed.id}`))"></div>
 
       <div v-if="isOverflow" :class="isMoreView ? '' : 'gradient'"></div>
     </div>
 
     <template v-if="isOverflow">
       <div v-if="!isMoreView" class="more-container">
-        <span> <hr class="dot-line" /> </span
-        ><a class="pointer" @click="moreView"> {{ t('moreView') }} </a
-        ><span>
+        <span>
+          <hr class="dot-line" />
+        </span><a class="pointer" @click="moreView"> {{ t('moreView') }} </a><span>
           <hr class="dot-line" />
         </span>
       </div>
 
       <div v-else class="more-container">
-        <span> <hr class="dot-line" /> </span
-        ><a @click="closeView">{{ t('closeView') }} </a
-        ><span>
+        <span>
+          <hr class="dot-line" />
+        </span><a @click="closeView">{{ t('closeView') }} </a><span>
           <hr class="dot-line" />
         </span>
       </div>
     </template>
     <template v-if="initFiles?.length && feed.post_type === 'SNS'">
       <div class="video" v-if="initFiles[0].type === 'video'">
-        <video
-          style="width: 100%; height: auto"
-          controls
-          :src="initFiles[0].url"
-        ></video>
+        <video style="width: 100%; height: auto" controls :src="initFiles[0].url"></video>
       </div>
-      <div
-        v-else-if="initFiles[0].type === 'sound'"
-        v-for="file in initFiles"
-        class="audio"
-      >
+      <div v-else-if="initFiles[0].type === 'sound'" v-for="file in initFiles" class="audio">
         <audio controls :src="file.url"></audio>
         <p>{{ file.name }}</p>
       </div>
-      <img
-        v-else-if="initFiles?.length === 1"
-        style="width: 100%; margin: 0 auto; display: flex"
-        :src="initFiles[0].url"
-        class="feed-img mt-3"
-      />
+      <img v-else-if="initFiles?.length === 1" style="width: 100%; margin: 0 auto; display: flex"
+        :src="initFiles[0].url" class="feed-img mt-3" />
 
-      <swiper
-        v-else
-        class="swiper"
-        :modules="[Pagination]"
-        style="height: 350px"
-        :pagination="{ clickable: true }"
-        :options="swiperOption"
-
-      >
+      <swiper v-else class="swiper" :modules="[Pagination]" style="height: 350px" :pagination="{ clickable: true }"
+        :options="swiperOption">
         <swiper-slide v-for="file in initFiles">
-          <img
-            v-if="file.type === 'image'"
-            style="height: 88%; margin: 0 auto; display: flex"
-            :src="file.url"
-            class="feed-img mt-3"
-          />
+          <img v-if="file.type === 'image'" style="height: 88%; margin: 0 auto; display: flex" :src="file.url"
+            class="feed-img mt-3" />
         </swiper-slide>
         <div class="swiper-pagination" style="bottom: 10px; left: 0; width: 100%;" slot="pagination"></div>
       </swiper>
@@ -131,16 +96,11 @@
         <ul>
           <LikeBtn :feed="feed" />
           <li @click="openComments">
-            <i
-              class="uil uil-comment-alt-dots comment-icon"
-              style="font-size: 22px"
-            ></i>
+            <i class="uil uil-comment-alt-dots pointer" style="font-size: 22px;"></i>
             {{ feed.comment_cnt }}
           </li>
           <li>
-            <a @click="copyUrl"
-              ><i class="uil uil-share-alt pointer" style="font-size: 20px"></i
-            ></a>
+            <a @click="copyUrl"><i class="uil uil-share-alt pointer" style="font-size: 20px"></i></a>
           </li>
         </ul>
       </li>
@@ -148,35 +108,18 @@
 
     <!-- TODO: mobile: 댓글만 보기 -->
     <ClientOnly>
-      <div
-        v-show="isOpenedComments"
-        :class="['tapl-comment', isOpenedComments ? 'open' : 'close']"
-      >
+      <div v-show="isOpenedComments" :class="['tapl-comment', isOpenedComments ? 'open' : 'close']">
         <ul ref="commentEl" style="overflow-y: scroll;max-height: 500px;">
           <li v-for="comment in comments" :key="comment.id">
-            <Comment
-              :comment="comment"
-              :isEdit="isCommentEdit"
-              @refresh="commentRefresh"
-            >
-              <!-- <template #commentEdit>
-              <a @click="isCommentEdit = !isCommentEdit">{{ t('comment.edit') }}</a>
-            </template> -->
-            </Comment>
+            <Comment :comment="comment" :isEdit="isCommentEdit" @refresh="commentRefresh" @editComment="editComment"
+              @deleteComment="deleteComment" :key="comment.content" />
           </li>
         </ul>
-        <!-- <CommentInput :postId="feed.id" @sendComment="editDone" @updateComment="updateDone" /> -->
-
-        <CommentInput :postId="feed.id" @refresh="commentRefresh" />
+        <CommentInput :postId="feed.id" @addComment="addComment" />
       </div>
     </ClientOnly>
     <ClientOnly>
-      <el-dialog
-        v-model="showDeletePostModal"
-        append-to-body
-        class="modal-area-type"
-        width="380px"
-      >
+      <el-dialog v-model="showDeletePostModal" append-to-body class="modal-area-type" width="380px">
         <div class="modal-alert">
           <dl class="ma-header">
             <dt>{{ t('information') }}</dt>
@@ -196,10 +139,7 @@
               <button class="btn-default w48p" @click="deletePost">
                 {{ t('delete') }}
               </button>
-              <button
-                class="btn-gray w48p"
-                @click="showDeletePostModal = false"
-              >
+              <button class="btn-gray w48p" @click="showDeletePostModal = false">
                 {{ t('no') }}
               </button>
             </div>
@@ -214,7 +154,7 @@
 import Prism from '~/plugins/prism'
 import _ from 'lodash'
 import { PropType } from 'vue'
-import { IFeed } from '~~/types'
+import { IComment, IFeed } from '~~/types'
 import { Pagination } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { ElMessage, ElDialog } from 'element-plus'
@@ -233,6 +173,7 @@ import { useI18n } from 'vue-i18n'
 
 // import hljs from 'highlight.js'
 import { useWindowScroll, useInfiniteScroll } from '@vueuse/core'
+import { comment } from 'postcss'
 
 const { $localePath } = useNuxtApp()
 const { x, y } = useWindowScroll()
@@ -308,11 +249,40 @@ onMounted(() => {
   const dom = props.feed?.content && htmlToDomElem(props.feed.content)
 })
 
-async function commentRefresh() {
-  commentInit()
+async function commentRefresh(comment?: any) {
   isCommentEdit.value = !isCommentEdit.value
+  commentInit()
   await commentFetch()
 }
+
+function addComment(comment: IComment) {
+  if (comment) {
+    comments.value = [comment, ...comments.value]
+  }
+}
+
+function editComment(comment: IComment) {
+  comments.value.map((elem: IComment) => {
+    if (elem.id === comment.id) {
+      elem.content = comment.content
+    }
+    return elem;
+  })
+}
+async function deleteComment(commentId: string) {
+  comments.value = comments.value.filter((elem: IComment) => {
+    console.log(elem.id, commentId)
+    return elem.id !== commentId
+  })
+
+  if (comments.value.length < COMMENT_LIMIT) {
+
+    offset.value = comments.value.length
+    await commentFetch()
+  }
+
+}
+
 async function openComments() {
   commentInit()
   isOpenedComments.value = !isOpenedComments.value
@@ -350,10 +320,11 @@ async function commentFetch() {
       }
     } else {
       comments.value = data.value.result
-
       isAddData.value = true
     }
   }
+
+
 
   // async comments(post_id: string, obj: any) {
   //     return await this.request('get', `${communityApi}post/${post_id}/comment/list`, obj, false)
@@ -537,7 +508,8 @@ function untranslatedText(originText: string) {
 .fade-enter,
 .fade-leave-to
 
-/* .fade-leave-active below version 2.1.8 */ {
+/* .fade-leave-active below version 2.1.8 */
+  {
   opacity: 0;
 }
 
@@ -582,6 +554,7 @@ function untranslatedText(originText: string) {
   ul {
     max-height: 500px;
     overflow-y: scroll;
+
     li:nth-child(1) {
       border-top: none;
       margin-top: 0px;
@@ -619,8 +592,8 @@ function untranslatedText(originText: string) {
   z-index: 999999;
 }
 
-.checkbox-wrap input[type='checkbox']:checked + .checkbox-box .icon-check,
-.checkbox-wrap input[type='radio']:checked + .checkbox-box .icon-check {
+.checkbox-wrap input[type='checkbox']:checked+.checkbox-box .icon-check,
+.checkbox-wrap input[type='radio']:checked+.checkbox-box .icon-check {
   fill: #ffffff;
 }
 
