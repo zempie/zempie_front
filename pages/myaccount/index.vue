@@ -8,25 +8,20 @@
 
       <dl class="ii-card">
         <dt>
-          <div
-            :style="
-              prevBanner
-                ? `background: url(${prevBanner}) center center / cover no-repeat; background-size: cover;`
-                : `background-color:orange; background-size:cover`
-            "
-          ></div>
-          <p
-            :style="
-              prevProfile
-                ? `background: url(${prevProfile}) center center / cover no-repeat; background-size: cover;`
-                : `background: url(/images/300_300_default_profile.png) center center / cover no-repeat; background-size: cover;`
-            "
-          ></p>
+          <div :style="
+            prevBanner
+              ? `background: url(${prevBanner}) center center / cover no-repeat; background-size: cover;`
+              : `background-color:orange; background-size:cover`
+          "></div>
+          <p :style="
+            prevProfile
+              ? `background: url(${prevProfile}) center center / cover no-repeat; background-size: cover;`
+              : `background: url(/images/300_300_default_profile.png) center center / cover no-repeat; background-size: cover;`
+          "></p>
         </dt>
         <dd @click="uploadProfileFile">
           <div style="height: 0px; overflow: hidden">
-            <input type="file" @change="onProfileFileChange" accept=image/*
-            ref="profileImg" name="fileInput" />
+            <input type="file" @change="onProfileFileChange" accept=image/* ref="profileImg" name="fileInput" />
           </div>
           <p><i class="uil uil-image-plus"></i></p>
           <h2>Change Profile</h2>
@@ -37,8 +32,7 @@
         </dd>
         <dd @click="uploadBannerFile">
           <div style="height: 0px; overflow: hidden">
-            <input type="file" @change="onBannerFileChange" accept=image/*
-            ref="bannerImg" name="fileInput" />
+            <input type="file" @change="onBannerFileChange" accept=image/* ref="bannerImg" name="fileInput" />
           </div>
           <p><i class="uil uil-image-plus"></i></p>
           <h2>Change Banner</h2>
@@ -52,29 +46,14 @@
         <ol>
           <li>Email</li>
           <li>
-            <input
-              type="text"
-              name=""
-              title=""
-              placeholder=""
-              class="w100p"
-              readonly
-              :value="userInfo?.email"
-            />
+            <input type="text" class="w100p" readonly :value="userInfo?.email" />
           </li>
           <li>&nbsp;</li>
         </ol>
         <ol>
           <li>{{ $t('userSetting.name') }}</li>
           <li>
-            <input
-              type="text"
-              name=""
-              title=""
-              readonly
-              class="w100p"
-              :value="userInfo?.name"
-            />
+            <input type="text" readonly class="w100p" :value="userInfo?.name" />
           </li>
         </ol>
       </div>
@@ -87,7 +66,7 @@
       <a v-else @click="onSubmit" class="btn-default w250">{{ $t('save') }}</a>
     </div>
 
-    <!-- <div class="info-input">
+    <div class="info-input">
       <div class="ii-title">
         <h2>Notifications</h2>
       </div>
@@ -96,11 +75,11 @@
           <li>Alarm</li>
           <li>{{ $t('userSetting.alarm.info') }} </li>
           <li>
-            <el-switch v-model="isAlarmOn" size="large"  active-color="#ff6e17" @click="setAlarmStatus"/>
+            <el-switch v-model="isAlarmOn" size="large" active-color="#ff6e17" @click="setAlarmStatus" />
           </li>
         </ol>
       </div>
-    </div> -->
+    </div>
 
 
     <div class="delete-account" v-if="signUpType === 'password'">
@@ -110,8 +89,7 @@
           {{ $t('userSetting.pwd.change.info1') }}
           <span>
             <NuxtLink :to="$localePath(`/myaccount/change-password`)">
-              {{ $t('click') }}</NuxtLink
-            >
+              {{ $t('click') }}</NuxtLink>
           </span>
           {{ $t('userSetting.pwd.change.info2') }}
         </p>
@@ -123,8 +101,7 @@
         <p>
           {{ $t('userSetting.account.leave.info1') }}
           <span>
-            <NuxtLink :to="$localePath(`/myaccount/leave`)"
-              >{{ $t('click') }}
+            <NuxtLink :to="$localePath(`/myaccount/leave`)">{{ $t('click') }}
             </NuxtLink>
           </span>
           {{ $t('userSetting.pwd.change.info2') }}
@@ -227,7 +204,7 @@ const prevBanner = ref<string | ArrayBuffer>(
   userInfo.value?.url_banner && userInfo.value.url_banner + `?_=${Date.now()}`
 )
 
-const isAlarmOn = ref(useUser().user.value.info.setting.alarm)
+const isAlarmOn = ref(useUser().user.value.info?.setting.alarm)
 
 watch(
   () => userInfo.value,
@@ -354,13 +331,13 @@ async function onSubmit() {
 
 async function setAlarmStatus() {
   const userId = useUser().user.value.info.id
-  const response = await useCustomFetch<{result: string}>('/alarm', getZempieFetchOptions('put', true, {alarm_state: isAlarmOn.value}))
+  const response = await useCustomFetch<{ result: string }>('/alarm', getZempieFetchOptions('put', true, { alarm_state: isAlarmOn.value }))
   // 해제 했으면 fcm도 같이 제거 해줘야함
 
-  if(response.result === 'success'){
-    if(isAlarmOn.value ){
+  if (response.result === 'success') {
+    if (isAlarmOn.value) {
       await resigterFcmToken(userId)
-    }else{
+    } else {
       await removeFcmToken(userId)
     }
   }
@@ -392,16 +369,19 @@ async function setAlarmStatus() {
     dt {
       width: 30%;
     }
+
     dd {
       width: 30%;
     }
   }
 }
+
 @media all and (min-width: 992px) and (max-width: 1199px) {
   .ii-card {
     dt {
       width: 30%;
     }
+
     dd {
       width: 30%;
     }
