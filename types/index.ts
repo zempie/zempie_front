@@ -293,7 +293,25 @@ export interface IEvent {
   category: eGameCategory
 }
 
-
+export interface IComment {
+  attatchment_files: [],
+  content: string,
+  created_at: string,
+  deleted_att: string,
+  dislike_cntt: number,
+  id: string,
+  is_liked: boolean,
+  is_pinned: boolean,
+  is_private: boolean,
+  is_read: boolean,
+  like_cnt: number,
+  post_id: string,
+  type: string,
+  updated_at: string,
+  user: IUser,
+  user_id: number,
+  user_uid: string,
+}
 
 
 export enum eGameStage {

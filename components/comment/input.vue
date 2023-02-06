@@ -2,18 +2,12 @@
   <dl @click="isLogin || useModal().openLoginModal()">
     <UserAvatar :user="user" :tag="'p'" class="user" />
     <dt>
-      <input
-        type="text"
-        v-model="content"
-        :placeholder="$t('comment.input.placeholder')"
-        :readonly="!isLogin"
-        @keyup.enter="!content || sendComment()"
-      />
+      <input type="text" v-model="content" :placeholder="$t('comment.input.placeholder')" :readonly="!isLogin"
+        @keyup.enter="isEdit ? editComment() : sendComment()" />
     </dt>
     <dd>
-      <a @click="!content || isEdit ? editComment() : sendComment()">
-        <i class="uil uil-message"></i
-      ></a>
+      <a @click="isEdit ? editComment() : sendComment()">
+        <i class="uil uil-message"></i></a>
     </dd>
   </dl>
 </template>
@@ -36,9 +30,11 @@ const user = computed(() => useUser().user.value.info)
 
 const isLogin = computed(() => useUser().user.value.isLogin)
 
-const emit = defineEmits(['refresh'])
+const emit = defineEmits(['addComment', 'editComment'])
 
 async function editComment() {
+  if (!content.value) return
+
   const payload = {
     comment_id: props.comment.id,
     post_id: props.postId,
@@ -49,13 +45,15 @@ async function editComment() {
     getComFetchOptions('post', true, payload)
   )
   if (!error.value) {
-    emit('refresh', content.value)
+    emit('editComment', data.value)
   }
 }
 
 const isPrivate = ref(false)
 
 const sendComment = _.debounce(async () => {
+  if (!content.value) return
+
   const payload = {
     type: 'COMMENT',
     post_id: props.postId,
@@ -70,7 +68,7 @@ const sendComment = _.debounce(async () => {
 
   if (!error.value) {
     content.value = null
-    emit('refresh')
+    emit('addComment', data.value)
   }
 }, 300)
 </script>
@@ -138,14 +136,14 @@ dl {
   margin-top: 8px;
 }
 
-.checkbox-wrap input[type='checkbox']:checked + .checkbox-box,
-.checkbox-wrap input[type='radio']:checked + .checkbox-box {
+.checkbox-wrap input[type='checkbox']:checked+.checkbox-box,
+.checkbox-wrap input[type='radio']:checked+.checkbox-box {
   background-color: rgb(0 0 0 / 10%);
   border-color: #3f485f;
 }
 
-.checkbox-wrap input[type='checkbox']:checked + .checkbox-box .icon-check,
-.checkbox-wrap input[type='radio']:checked + .checkbox-box .icon-check {
+.checkbox-wrap input[type='checkbox']:checked+.checkbox-box .icon-check,
+.checkbox-wrap input[type='radio']:checked+.checkbox-box .icon-check {
   fill: #ffffff;
 }
 

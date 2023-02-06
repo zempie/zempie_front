@@ -5,10 +5,7 @@
         <h4 class="active" @click="updateGame">{{ $t('update') }}</h4>
       </li>
       <li v-else class="publish-btn">
-        <h4
-          :class="uploadStage === eGameStage.DEV && 'active'"
-          @click="uploadGame"
-        >
+        <h4 :class="uploadStage === eGameStage.DEV && 'active'" @click="uploadGame">
           {{ $t('publishing') }}
         </h4>
       </li>
@@ -18,7 +15,7 @@
     <div class="studio-upload-input">
       <template v-if="!isFormDone">
         <div class="sui-input">
-          <div v-if="uploadStage === eGameStage.DEV" class="dev-warning" >{{$t('dev.log.warning')}}</div>
+          <div v-if="uploadStage === eGameStage.DEV" class="dev-warning">{{ $t('dev.log.warning') }}</div>
           <div class="suii-title">{{ $t('addGameInfo.title') }}</div>
           <dl class="suii-content">
             <dt>
@@ -26,21 +23,10 @@
               <span style="color: red">*</span>
             </dt>
             <dd>
-              <input
-                v-model="v$.name.$model"
-                type="text"
-                name="title"
-                title="game title"
-                id="gameTitle"
-                :placeholder="$t('addGameInfo.game.title')"
-                class="w100p"
-              />
+              <input v-model="v$.name.$model" type="text" name="title" title="game title" id="gameTitle"
+                :placeholder="$t('addGameInfo.game.title')" class="w100p" />
               <TransitionGroup name="fade">
-                <p
-                  class="input-errors"
-                  v-for="error of v$.name.$errors"
-                  :key="error.$uid"
-                >
+                <p class="input-errors" v-for="error of v$.name.$errors" :key="error.$uid">
                   <i class="uil uil-check"></i>{{ error.$message }}
                 </p>
               </TransitionGroup>
@@ -52,21 +38,11 @@
               {{ $t('addGameInfo.game.desc') }}<span style="color: red">*</span>
             </dt>
             <dd>
-              <textarea
-                v-model="v$.description.$model"
-                name="description"
-                title="game description"
-                id="gameDesc"
-                :placeholder="$t('addGameInfo.game.desc')"
-                class="w100p h100"
-              ></textarea>
+              <textarea v-model="v$.description.$model" name="description" title="game description" id="gameDesc"
+                :placeholder="$t('addGameInfo.game.desc')" class="w100p h100"></textarea>
 
               <TransitionGroup name="fade">
-                <p
-                  class="input-errors"
-                  v-for="error of v$.description.$errors"
-                  :key="error.$uid"
-                >
+                <p class="input-errors" v-for="error of v$.description.$errors" :key="error.$uid">
                   <i class="uil uil-check"></i>{{ error.$message }}
                 </p>
               </TransitionGroup>
@@ -78,29 +54,16 @@
             </dt>
             <dd>
               <div class="chip-container">
-                <div
-                  class="chip"
-                  v-for="(chip, i) of hashtagsArr"
-                  :key="chip.id"
-                >
+                <div class="chip" v-for="(chip, i) of hashtagsArr" :key="chip.id">
                   {{ chip }}
                   <i class="uil uil-times" @click="deleteChip(i)"></i>
                 </div>
 
-                <input
-                  id="gameTag"
-                  v-model="chipInput"
-                  @blur="saveChip"
-                  @keyup.enter="saveChip"
-                  @keydown.delete="backspaceDelete"
-                />
+                <input id="gameTag" v-model="chipInput" @blur="saveChip" @keyup.enter="saveChip"
+                  @keydown.delete="backspaceDelete" />
               </div>
               <TransitionGroup name="fade">
-                <p
-                  class="input-errors"
-                  v-for="error of v$.hashtags.$errors"
-                  :key="error.$uid"
-                >
+                <p class="input-errors" v-for="error of v$.hashtags.$errors" :key="error.$uid">
                   <i class="uil uil-check"></i>{{ error.$message }}
                 </p>
               </TransitionGroup>
@@ -118,27 +81,20 @@
             <dd>
               <ul class="image-upload">
                 <li>
-                  <div
-                    :style="
-                      prevThumbnail && {
-                        background:
-                          'url(' +
-                          prevThumbnail +
-                          ') center center / cover no-repeat',
-                        'background-size': 'cover',
-                        border: '#e9e9e9 2px solid',
-                      }
-                    "
-                  >
+                  <div :style="
+                    prevThumbnail && {
+                      background:
+                        'url(' +
+                        prevThumbnail +
+                        ') center center / cover no-repeat',
+                      'background-size': 'cover',
+                      border: '#e9e9e9 2px solid',
+                    }
+                  ">
                     <div style="height: 0px; overflow: hidden">
-                      <input
-                        id="image-selector"
-                        type="file"
-                        @change="onImgChange"
-                        accept="image/jpeg, image/png, image/svg, image/jpg, image/webp, image/bmp,"
-                        ref="thumbnail"
-                        name="fileInput"
-                      />
+                      <input id="image-selector" type="file" @change="onImgChange"
+                        accept="image/jpeg, image/png, image/svg, image/jpg, image/webp, image/bmp," ref="thumbnail"
+                        name="fileInput" />
                     </div>
                     <template v-if="!prevThumbnail">
                       <p><i class="uil uil-image-v"></i></p>
@@ -154,22 +110,16 @@
                       {{ $t('addGameInfo.game.thumbnail.err') }}
                     </p>
                   </transition>
-                  <p
-                    style="
+                  <p style="
                       width: 100%;
                       display: flex;
                       justify-content: space-around;
-                    "
-                  >
+                    ">
                     <button class="btn-gray" @click="uploadThumbnail">
                       <i class="uil uil-upload"></i>&nbsp;
                       {{ $t('addGameInfo.game.thumbnail') }}
                     </button>
-                    <button
-                      v-if="prevThumbnail"
-                      class="btn-circle-icon"
-                      @click="deleteThumbnail"
-                    >
+                    <button v-if="prevThumbnail" class="btn-circle-icon" @click="deleteThumbnail">
                       <i class="uil uil-trash-alt"></i>
                     </button>
                   </p>
@@ -180,11 +130,7 @@
           <dl class="suii-content">
             <dt>
               {{ $t('previewImage.title') }}
-              <el-tooltip
-                effect="customized"
-                :content="$t('studio.preview.info')"
-                placement="bottom"
-              >
+              <el-tooltip effect="customized" :content="$t('studio.preview.info')" placement="bottom">
                 <i class="uil uil-question-circle" style="color: #999"></i>
               </el-tooltip>
             </dt>
@@ -192,21 +138,18 @@
             <dd>
               <ul class="image-upload">
                 <li>
-                  <div
-                    :style="
-                      prevGif && {
-                        background:
-                          'url(' +
-                          prevGif +
-                          ') center center / cover no-repeat',
-                        'background-size': 'cover',
-                        border: '#e9e9e9 2px solid',
-                      }
-                    "
-                  >
+                  <div :style="
+                    prevGif && {
+                      background:
+                        'url(' +
+                        prevGif +
+                        ') center center / cover no-repeat',
+                      'background-size': 'cover',
+                      border: '#e9e9e9 2px solid',
+                    }
+                  ">
                     <div style="height: 0px; overflow: hidden">
-                      <input type="file" @change="onGifChange" accept=image/gif
-                      ref="gifThumbnail" name="fileInput" />
+                      <input type="file" @change="onGifChange" accept=image/gif ref="gifThumbnail" name="fileInput" />
                     </div>
                     <template v-if="!prevGif">
                       <p><i class="uil uil-image-v"></i></p>
@@ -216,22 +159,16 @@
                       </h2>
                     </template>
                   </div>
-                  <p
-                    style="
+                  <p style="
                       width: 100%;
                       display: flex;
                       justify-content: space-around;
-                    "
-                  >
+                    ">
                     <button class="btn-gray" @click="uploadGif">
                       <i class="uil uil-upload"></i>
                       {{ $t('addGameInfo.game.thumbnail') }}
                     </button>
-                    <button
-                      v-if="prevGif"
-                      class="btn-circle-icon"
-                      @click="deleteGif"
-                    >
+                    <button v-if="prevGif" class="btn-circle-icon" @click="deleteGif">
                       <i class="uil uil-trash-alt"></i>
                     </button>
                   </p>
@@ -255,20 +192,10 @@
                 {{ $t('addGameInfo.game.id') }}
               </dt>
               <dd>
-                <input
-                  v-model="v$.pathname.$model"
-                  type="text"
-                  name=""
-                  class="game-id-input w90p"
-                  title=""
-                  :placeholder="$t('addGameInfo.game.id')"
-                />
+                <input v-model="v$.pathname.$model" type="text" name="" class="game-id-input w90p" title=""
+                  :placeholder="$t('addGameInfo.game.id')" />
               </dd>
-              <ClipLoader
-                v-if="waitGamePath"
-                :color="'#ff6e17'"
-                :size="'20px'"
-              ></ClipLoader>
+              <ClipLoader v-if="waitGamePath" :color="'#ff6e17'" :size="'20px'"></ClipLoader>
               <a @click="checkPathName" class="btn-default w150">
                 {{ $t('addGameInfo.game.id.check') }}
               </a>
@@ -277,8 +204,7 @@
         </div>
         <ul class="sui-btn">
           <li>
-            <a @click="prevPage" class="btn-line w150"
-              ><i class="uil uil-angle-left-b"></i>
+            <a @click="prevPage" class="btn-line w150"><i class="uil uil-angle-left-b"></i>
               {{ $t('previous') }}
             </a>
           </li>
@@ -286,24 +212,15 @@
             <a v-if="isEditInfo" @click="updateGame" class="btn-default w150">
               {{ $t('update') }}
             </a>
-            <a
-              v-else-if="uploadProject.form.stage === eGameStage.DEV"
-              @click="uploadGame"
-              class="btn-default w150"
-            >
+            <a v-else-if="uploadProject.form.stage === eGameStage.DEV" @click="uploadGame" class="btn-default w150">
               {{ $t('upload') }}
             </a>
             <a v-else @click="save" class="btn-default w150">
               {{ $t('next') }}
-              <i class="uil uil-angle-right-b"></i
-            ></a>
+              <i class="uil uil-angle-right-b"></i></a>
           </li>
         </ul>
-        <div
-          v-if="editProject.info?.id"
-          class="sui-input"
-          style="margin-top: 100px"
-        >
+        <div v-if="editProject.info?.id" class="sui-input" style="margin-top: 100px">
           <dl class="suii-content delete-area">
             <dt>
               {{ $t('addGameInfo.delete.game') }}
@@ -317,18 +234,10 @@
         </div>
       </template>
 
-      <ProjectAddGameFile
-      v-else-if="isFormDone && uploadProject.form.stage !== 1"
-      @cancelFormDone="isFormDone = false"
-        @uploadDone="isUploadDone = true"
-      />
+      <ProjectAddGameFile v-else-if="isFormDone && uploadProject.form.stage !== 1" @cancelFormDone="isFormDone = false"
+        @uploadDone="isUploadDone = true" />
     </div>
-    <el-dialog
-      v-model="isDeleteModalOpen"
-      append-to-body
-      class="modal-area-type"
-      width="380px"
-    >
+    <el-dialog v-model="isDeleteModalOpen" append-to-body class="modal-area-type" width="380px">
       <div class="modal-alert">
         <dl class="ma-header">
           <dt>
@@ -532,11 +441,11 @@ function prevPage() {
   form.hashtags = hashtagsArr?.value.toString()
   form.project_picture = thumbFile?.value
   form.project_picture2 = gifThumFile?.value
-  
-  setForm(form)  
+
+  setForm(form)
   resetStage()
   setStepTwo()
-  if (editProject.value.info?.id)  useProject().setStepTwoOnEdit()
+  if (editProject.value.info?.id) useProject().setStepTwoOnEdit()
 }
 
 async function checkPathName() {
@@ -765,21 +674,22 @@ async function deleteProject() {
 </script>
 
 <style scoped lang="scss">
-.studio-upload-input{
-  .dev-warning{
-    height:45px;
-     background-color:#fffdc1;
+.studio-upload-input {
+  .dev-warning {
+    height: 45px;
+    background-color: #fffdc1;
     border-bottom: 1px solid #ededed;
-    border-top:1px solid #ededed;
+    border-top: 1px solid #ededed;
     font-size: 14px;
     text-align: center;
     display: flex;
     align-content: center;
     align-items: center;
     justify-content: center;
-    color:#888;
+    color: #888;
   }
 }
+
 .input-errors {
   font-size: 12px;
   color: #c5292a;
@@ -835,7 +745,8 @@ async function deleteProject() {
 .component-fade-enter,
 .component-fade-leave-to
 
-/* .component-fade-leave-active below version 2.1.8 */ {
+/* .component-fade-leave-active below version 2.1.8 */
+  {
   opacity: 0;
 }
 
