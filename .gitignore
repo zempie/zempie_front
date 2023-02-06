@@ -696,3 +696,4 @@ api.http
 .output/public/_nuxt/zem-jam-6f061500.mjs
 .vscode/launch.json
 plugins/disableLogs.ts
+.vscode/settings.json
