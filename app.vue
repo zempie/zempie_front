@@ -79,18 +79,19 @@ useHead({
       property: 'og:title',
       content: `${t('seo.landing.title')}`,
     },
-    // {
-    //   property: 'og:description',
-    //   content: `${t('seo.landing.description')}`,
-    // },
+
     {
       property: 'og:url',
       content: `${config.ZEMPIE_URL}${route.path}`,
     },
-    // {
-    //   property: 'og:image',
-    //   content: `${config.OG_IMG}`,
-    // },
+    {
+      name: 'apple-touch-icon',
+      href: '/apple-touch-icon.png',
+    },
+    {
+      name: 'apple-touch-icon-precomposed',
+      href: '/apple-touch-icon.png',
+    },
     {
       property: 'og:type',
       content: 'website',
