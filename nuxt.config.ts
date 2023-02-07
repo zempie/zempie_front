@@ -25,8 +25,8 @@ export default defineNuxtConfig({
         { rel: 'stylesheet', href: 'https://fonts.googleapis.com/icon?family=Material+Icons' },
         { rel: 'stylesheet', href: 'https://unicons.iconscout.com/release/v3.0.3/css/line.css' },
         { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0' },
-        { rel: "apple-touch-icon", type: 'image/png', href: 'https://s3.ap-northeast-2.amazonaws.com/zempie.com/img/apple-touch-icon.png' },
-        { rel: "apple-touch-icon-precomposed", type: 'image/png', href: 'https://s3.ap-northeast-2.amazonaws.com/zempie.com/img/apple-touch-icon.png' },
+        { rel: "apple-touch-icon", type: 'image/png', href: 'https://s3.ap-northeast-2.amazonaws.com/zempie.com/icons/favicon-32x32.png' },
+        { rel: "apple-touch-icon-precomposed", type: 'image/png', href: 'https://s3.ap-northeast-2.amazonaws.com/zempie.com/icons/favicon-32x32.png' },
       ],
 
     }
