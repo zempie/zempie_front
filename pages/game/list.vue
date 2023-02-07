@@ -1,69 +1,49 @@
 <template>
   <div class="content">
-  <div :class="headerImgClass" style="height:150px">
+    <div :class="headerImgClass" style="height:150px">
       <h1><span>Games</span></h1>
     </div>
     <div class="tab-search-swiper">
-      <div class="swiper-area uppercase" >
+      <div class="swiper-area uppercase">
         <div class="swiper-slide">
-          <a
-            @click="clickCategory(AllGameCategory)"
-            :class="category === AllGameCategory && 'active'"
-          >
+          <a @click="clickCategory(AllGameCategory)" :class="category === AllGameCategory && 'active'">
             game
           </a>
         </div>
         <div class="swiper-slide">
-          <a
-          @click="clickCategory(String(eGameCategory.ZemJam))"
-            :class="category === `${eGameCategory.ZemJam}` && 'active'"
-          >
+          <a @click="clickCategory(String(eGameCategory.ZemJam))"
+            :class="category === `${eGameCategory.ZemJam}` && 'active'">
             zem
           </a>
         </div>
         <div class="swiper-slide">
-          <a
-          @click="clickCategory(String(eGameCategory.GJ))"
-            :class="category === `${eGameCategory.GJ}` && 'active'"
-          >
-          GJ+
+          <a @click="clickCategory(String(eGameCategory.GJ))" :class="category === `${eGameCategory.GJ}` && 'active'">
+            GJ+
           </a>
         </div>
-         <div class="swiper-slide">
-          <a
-            @click="clickCategory(String(eGameCategory.GGJ))"
-            :class="category === `${eGameCategory.GGJ}` && 'active'"
-          >
-          GGJ
+        <div class="swiper-slide">
+          <a @click="clickCategory(String(eGameCategory.GGJ))" :class="category === `${eGameCategory.GGJ}` && 'active'">
+            GGJ
           </a>
         </div>
       </div>
     </div>
-<!--  TODO: 게임 갯수 표현: 게임 100개 이상일때 주석 제거
+    <!--  TODO: 게임 갯수 표현: 게임 100개 이상일때 주석 제거
       <dt>Games <span>{{ games.length }}</span></dt> -->
     <dl class="area-title">
       <dt>
         <ClientOnly>
-         <el-select v-model="selectedFilter" class="m-2" placeholder="All">
-          <el-option
-            v-for="item in stageOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-            @click="handleGameFilter"
-          />
-        </el-select>
-      </ClientOnly>
+          <el-select v-model="selectedFilter" class="m-2" placeholder="All">
+            <el-option v-for="item in stageOptions" :key="item.value" :label="item.label" :value="item.value"
+              @click="handleGameFilter" />
+          </el-select>
+        </ClientOnly>
       </dt>
     </dl>
     <ul class="card-game">
       <GameCardSk v-if="isPending" v-for="game in 16" :key="game" />
-      <TransitionGroup name="fade" >
-          <GameCard
-            v-for="(game, index) in games"
-            :gameInfo="game"
-            :key="game.id"
-          />
+      <TransitionGroup name="fade">
+        <GameCard v-for="(game, index) in games" :gameInfo="game" :key="game.id" />
       </TransitionGroup>
     </ul>
     <div ref="triggerDiv"></div>
@@ -93,7 +73,7 @@ const LIMIT_SIZE = 20
 const el = ref<HTMLElement>(null)
 
 //기존 카테고리가 0 : 공식게임 1 : 도전 게임 으로 나뉘어져있던걸 합쳐서 0,1 둘다 호출 해야함
-const AllGameCategory = `${eGameCategory.Challenge}, ${eGameCategory.Certified}, ${eGameCategory.GJ} `
+const AllGameCategory = `${eGameCategory.Challenge}, ${eGameCategory.Certified}, ${eGameCategory.GJ}, ${eGameCategory.GGJ} `
 const category = ref(AllGameCategory)
 const limit = ref(LIMIT_SIZE)
 const offset = ref(0)
@@ -105,31 +85,31 @@ const games = ref<any[]>([])
 const isPending = ref(true)
 
 const stageOptions = [
-    {
-      value:'',
-      label:'All'
-    },
-    {
-      value: 3,
-      label: 'Complete',
-    },
-    {
-      value: 2,
-      label: 'Early',
-    },
+  {
+    value: '',
+    label: 'All'
+  },
+  {
+    value: 3,
+    label: 'Complete',
+  },
+  {
+    value: 2,
+    label: 'Early',
+  },
 
-  ]
+]
 const selectedFilter = ref('')
-const headerImgClass= ref()
+const headerImgClass = ref()
 
 onMounted(async () => {
-   setHeaderClass()
+  setHeaderClass()
   createObserver()
   await fetch()
 })
 
 function setHeaderClass() {
-  switch(category.value){
+  switch (category.value) {
     case AllGameCategory:
       headerImgClass.value = 'visual-title'
       break;
@@ -174,9 +154,8 @@ async function fetch() {
   const { data, pending, refresh } = await useCustomAsyncFetch<{
     result: { games: [] }
   }>(
-    `/games?_=${Date.now()}&limit=${limit.value}&offset=${
-      offset.value
-    }&category=${category.value}${selectedFilter.value  ? '&filter=' + selectedFilter.value : ''}`,
+    `/games?_=${Date.now()}&limit=${limit.value}&offset=${offset.value
+    }&category=${category.value}${selectedFilter.value ? '&filter=' + selectedFilter.value : ''}`,
     getZempieFetchOptions('get', false)
   )
 
@@ -215,7 +194,7 @@ function initData() {
   games.value = []
 }
 
-async function handleGameFilter(){
+async function handleGameFilter() {
   initData()
   await fetch()
 
@@ -223,21 +202,22 @@ async function handleGameFilter(){
 </script>
 
 <style scoped lang="scss">
-
-.content{
+.content {
   .visual-title {
     h1 {
       font-weight: 600;
       font-size: 30px;
       line-height: 30px;
       color: #fff;
+
       span {
         font-size: 30px;
         font-weight: 700;
       }
     }
   }
-  .game-gam-plus{
+
+  .game-gam-plus {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -254,7 +234,7 @@ async function handleGameFilter(){
     }
   }
 
-  .global-game-jam{
+  .global-game-jam {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -273,6 +253,7 @@ async function handleGameFilter(){
 
 
   }
+
   .jam-visual-title {
     background-position: center;
 
@@ -280,10 +261,11 @@ async function handleGameFilter(){
       visibility: hidden;
     }
   }
-  .area-title{
+
+  .area-title {
     display: flex;
     justify-content: flex-end;
-    padding:0px;
+    padding: 0px;
 
   }
 }
@@ -302,7 +284,8 @@ async function handleGameFilter(){
 .component-fade-enter,
 .component-fade-leave-to
 
-/* .component-fade-leave-active below version 2.1.8 */ {
+/* .component-fade-leave-active below version 2.1.8 */
+  {
   opacity: 0;
 }
 
@@ -321,6 +304,7 @@ async function handleGameFilter(){
     h1 {
       font-size: 30px;
       line-height: 30px;
+
       span {
         font-size: 30px;
         line-height: 30px;
@@ -328,11 +312,12 @@ async function handleGameFilter(){
     }
   }
 
-  .game-gam-plus{
+  .game-gam-plus {
     width: 100% !important;
     background-position: center !important;
   }
-  .global-game-jam{
+
+  .global-game-jam {
     width: 100% !important;
     background: url('/images/GGJ_header.png') !important;
     background-position: center !important;
@@ -345,42 +330,48 @@ async function handleGameFilter(){
     h1 {
       font-size: 30px;
       line-height: 30px;
+
       span {
         font-size: 30px;
         line-height: 30px;
       }
     }
   }
-  .game-gam-plus{
+
+  .game-gam-plus {
     width: 470px !important;
     background-position: center !important;
   }
-  .global-game-jam{
+
+  .global-game-jam {
     width: 470px !important;
     background: url('/images/GGJ_header.png') !important;
     background-position: center !important;
   }
 }
+
 @media all and (min-width: 768px) and (max-width: 991px) {
-  .game-gam-plus{
+  .game-gam-plus {
     width: 750px !important;
     background-position: center !important;
   }
-  .global-game-jam{
+
+  .global-game-jam {
     width: 750px !important;
     background-position: center !important;
   }
 }
+
 @media all and (min-width: 992px) and (max-width: 1199px) {
-  .game-gam-plus{
+  .game-gam-plus {
     width: 970px !important;
     background-position: center !important;
   }
-  .global-game-jam{
+
+  .global-game-jam {
     width: 970px !important;
     background-position: center !important;
 
   }
 }
-
 </style>
