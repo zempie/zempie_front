@@ -697,3 +697,4 @@ api.http
 .vscode/launch.json
 plugins/disableLogs.ts
 .vscode/settings.json
+public/firebase-messaging-sw.js

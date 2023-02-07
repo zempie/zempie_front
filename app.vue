@@ -2,32 +2,28 @@
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
-  <el-dialog
-        v-model="isOpen"
-        append-to-body
-        :fullscreen="true"
-        class="event-dialog"
-      >
-      <template #header="{ close, titleId, titleClass }">
-        <ul class="my-header">
-          <li>
-            <input type="checkbox" id="oneDay" :value="showOneDay" @click="clickOneDay"  >
-            <label for="oneDay"><i class="uil uil-check"></i></label>
-            <span><label for="oneDay">{{$t('now.show.today')}}</label></span>
-          </li>
-          <li>
-            <input type="checkbox" id="never" :value="showNever"  @click="clickNever"   >
-            <label for="never"><i class="uil uil-check"></i></label>
-            <span><label for="never">{{$t('do.now.show')}}</label></span>
-          </li>
-        </ul>
-      </template>
-      <EventGJPlus/>
-    </el-dialog>
+  <el-dialog v-model="isOpen" append-to-body :fullscreen="true" class="event-dialog">
+    <template #header="{ close, titleId, titleClass }">
+      <ul class="my-header">
+        <li>
+          <input type="checkbox" id="oneDay" :value="showOneDay" @click="clickOneDay">
+          <label for="oneDay"><i class="uil uil-check"></i></label>
+          <span><label for="oneDay">{{ $t('now.show.today') }}</label></span>
+        </li>
+        <li>
+          <input type="checkbox" id="never" :value="showNever" @click="clickNever">
+          <label for="never"><i class="uil uil-check"></i></label>
+          <span><label for="never">{{ $t('do.now.show') }}</label></span>
+        </li>
+      </ul>
+    </template>
+    <EventGJPlus />
+  </el-dialog>
 </template>
 <script setup lang="ts">
 import { ElDialog, ID_INJECTION_KEY } from 'element-plus'
 import { useI18n } from 'vue-i18n'
+import shared from './scripts/shared';
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
 const switchLocalePath = useSwitchLocalePath()
@@ -40,64 +36,20 @@ const showNever = ref(false)
 
 const userInfo = useUser().user.value.info
 
-watch(
-  ()=> useUser().user.value.fUser,
-  async (fUser)=>{
 
-    if(useCookie(config.COOKIE_NAME).value && !userInfo){
+watch(
+  () => useUser().user.value.fUser,
+  async (fUser) => {
+
+    if (useCookie(config.COOKIE_NAME).value && !userInfo) {
       await useUser().setUserInfo()
     }
-})
+  })
 
-useHead({
-  title: `${t('seo.landing.title')} | Zempie`,
-  link: [
-    {
-      rel: 'alternate',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-      hreflang: locale,
-    },
-    {
-      rel: 'canonical',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-  ],
-  meta: [
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-    {
-      property: 'og:site_name',
-      content: 'Zempie',
-    },
-    {
-      name: 'description',
-      content: `${t('seo.landing.desc')}`,
-    },
-    {
-      property: 'og:title',
-      content: `${t('seo.landing.title')}`,
-    },
-
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`,
-    },
-    // {
-    //   name: 'apple-touch-icon',
-    //   href: '/apple-touch-icon.png',
-    // },
-    // {
-    //   name: 'apple-touch-icon-precomposed',
-    //   href: '/apple-touch-icon.png',
-    // },
-    {
-      property: 'og:type',
-      content: 'website',
-    },
-  ],
-})
+shared.createHeadMeta(
+  t('seo.landing.title'),
+  t('seo.landing.desc')
+)
 
 provide(ID_INJECTION_KEY, {
   prefix: 100,
@@ -108,12 +60,12 @@ onBeforeMount(async () => {
 
   let date = new Date()
   //게임젬플러스 종료 날짜
-  let endDate : Date | number= new Date(2022, 10, 20, 23, 59, 59)
+  let endDate: Date | number = new Date(2022, 10, 20, 23, 59, 59)
   endDate = endDate.setTime(endDate.getTime())
   const now = date.setTime(date.getTime())
 
 
-  if( now > endDate ){
+  if (now > endDate) {
     isOpen.value = false;
     localStorage.removeItem('GJ_POPUP_ONE')
     localStorage.removeItem('GJ_POPUP_NEVER')
@@ -121,7 +73,7 @@ onBeforeMount(async () => {
 
   //유효 기간이 더 크면 팝업 안보이게
   //다시 안보기인 경우 팝업 안보이게
-  if((parseInt(localStorage.getItem('GJ_POPUP_ONE') ) >  now) || Boolean(localStorage.getItem('GJ_POPUP_NEVER'))){
+  if ((parseInt(localStorage.getItem('GJ_POPUP_ONE')) > now) || Boolean(localStorage.getItem('GJ_POPUP_NEVER'))) {
     isOpen.value = false
   }
 
@@ -139,27 +91,27 @@ onBeforeMount(async () => {
   router.replace(route.fullPath)
 
   //로그인 확인 처리
-  if (useCookie(config.REFRESH_TOKEN).value){
+  if (useCookie(config.REFRESH_TOKEN).value) {
     await getRefreshToken()
   }
 
 })
 
 
-function clickOneDay(e:Event){
+function clickOneDay(e: Event) {
   const isChecked = (e.target as HTMLInputElement).checked
-  if(isChecked){
+  if (isChecked) {
     const date = new Date()
     //다음날 00:00:00 까지
-    const expiredTime = new Date(2022, 10,  date.getDate() + 1, 0, 0,0).getTime()
-    localStorage.setItem('GJ_POPUP_ONE', expiredTime +'')
+    const expiredTime = new Date(2022, 10, date.getDate() + 1, 0, 0, 0).getTime()
+    localStorage.setItem('GJ_POPUP_ONE', expiredTime + '')
     isOpen.value = false;
   }
 }
 
-function clickNever(e:Event){
+function clickNever(e: Event) {
   const isChecked = (e.target as HTMLInputElement).checked
-  if(isChecked){
+  if (isChecked) {
     localStorage.setItem('GJ_POPUP_NEVER', 'true')
     isOpen.value = false;
   }
@@ -185,13 +137,15 @@ body {
   }
 
 
-  .my-header{
+  .my-header {
     display: inline-flex;
-    li{
-      &:not(:last-child){
+
+    li {
+      &:not(:last-child) {
         margin-right: 10px;
       }
-      input[type='checkbox'] + label{
+
+      input[type='checkbox']+label {
         color: #0d0c13 !important;
       }
     }
