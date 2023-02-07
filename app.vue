@@ -84,14 +84,14 @@ useHead({
       property: 'og:url',
       content: `${config.ZEMPIE_URL}${route.path}`,
     },
-    {
-      name: 'apple-touch-icon',
-      href: '/apple-touch-icon.png',
-    },
-    {
-      name: 'apple-touch-icon-precomposed',
-      href: '/apple-touch-icon.png',
-    },
+    // {
+    //   name: 'apple-touch-icon',
+    //   href: '/apple-touch-icon.png',
+    // },
+    // {
+    //   name: 'apple-touch-icon-precomposed',
+    //   href: '/apple-touch-icon.png',
+    // },
     {
       property: 'og:type',
       content: 'website',

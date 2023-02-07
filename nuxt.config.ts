@@ -25,8 +25,8 @@ export default defineNuxtConfig({
         { rel: 'stylesheet', href: 'https://fonts.googleapis.com/icon?family=Material+Icons' },
         { rel: 'stylesheet', href: 'https://unicons.iconscout.com/release/v3.0.3/css/line.css' },
         { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0' },
-        { name: "apple-touch-icon", href: '~/static/apple-touch-icon.png' },
-        { name: "apple-touch-icon-precomposed", href: '~/static/apple-touch-icon.png' },
+        { rel: "apple-touch-icon", type: 'image/png', href: '/apple-touch-icon.png' },
+        { rel: "apple-touch-icon-precomposed", type: 'image/png', href: '/apple-touch-icon.png' },
       ],
 
     }
