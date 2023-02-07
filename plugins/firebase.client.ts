@@ -61,16 +61,17 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   })
 
-  const messaging = getMessaging(app);
+  if (!window.navigator.userAgent.toLowerCase().includes('kakao') && window.location.protocol === 'https:') {
 
-  console.log('messaging', messaging)
-
-  onMessage(messaging, (payload) => {
-    console.log('Message received. ', payload);
-    useAlarm().setNewNoti(payload)
-  });
+    const messaging = getMessaging(app);
 
 
+    onMessage(messaging, (payload) => {
+      console.log('Message received. ', payload);
+      useAlarm().setNewNoti(payload)
+    });
+
+  }
 
   nuxtApp.provide('firebaseApp', app);
   nuxtApp.provide('firebaseAuth', auth);
