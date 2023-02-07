@@ -25,8 +25,8 @@ export default defineNuxtConfig({
         { rel: 'stylesheet', href: 'https://fonts.googleapis.com/icon?family=Material+Icons' },
         { rel: 'stylesheet', href: 'https://unicons.iconscout.com/release/v3.0.3/css/line.css' },
         { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0' },
-        { rel: "apple-touch-icon", type: 'image/png', href: '/images/apple-touch-icon.png' },
-        { rel: "apple-touch-icon-precomposed", type: 'image/png', href: '/images/apple-touch-icon.png' },
+        { rel: "apple-touch-icon", type: 'image/png', href: process.env.APPLE_TOUCH_ICON },
+        { rel: "apple-touch-icon-precomposed", type: 'image/png', href: process.env.APPLE_TOUCH_ICON },
       ],
 
     }
@@ -119,7 +119,8 @@ export default defineNuxtConfig({
     GAME_JAM_PLUS: process.env.GAME_JAM_PLUS,
     fCM_KEY: process.env.FCM_KEY,
     ZEMPIE_METAVERSE: process.env.ZEMPIE_METAVERSE,
-    OG_IMG: process.env.OG_IMG
+    OG_IMG: process.env.OG_IMG,
+    APPLE_TOUCH_ICON: process.env.APPLE_TOUCH_ICON
   },
 
 })
