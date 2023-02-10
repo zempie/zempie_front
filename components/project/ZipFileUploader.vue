@@ -1,17 +1,9 @@
 <template>
   <dd>
     <p class="upload-file-container">
-      <label for="game-file"
-        ><i class="uil uil-file-plus" style="font-size: 18px"></i> &nbsp;
-        {{ $t('fileUpload') }}</label
-      >
-      <input
-        @change="onFileChange"
-        type="file"
-        ref="gameFile"
-        id="game-file"
-        accept=".zip"
-      />
+      <label for="game-file"><i class="uil uil-file-plus" style="font-size: 18px"></i> &nbsp;
+        {{ $t('fileUpload') }}</label>
+      <input @change="onFileChange" type="file" ref="gameFile" id="game-file" accept=".zip" />
 
       <ClipLoader v-if="isLoadingFile" :color="'#ff6e17'" :size="'20px'" />
       <button class="btn-circle-icon" @click="deleteFile" v-if="fileName">
@@ -21,10 +13,9 @@
     <Transition name="component-fade" mode="out-in">
       <div v-if="fileName">
         <p class="file-size">
-          {{ totalSize < 1 ? `${totalSize * 1000} KB` : `${totalSize} MB` }}
-        </p>
+          {{ totalSize< 1? `${totalSize * 1000} KB` : `${totalSize} MB` }} </p>
 
-        <p class="file-name">{{ $t('file.name') }} : {{ fileName }}</p>
+            <p class="file-name">{{ $t('file.name') }} : {{ fileName }}</p>
       </div>
     </Transition>
     <Transition name="component-fade" mode="out-in">
@@ -33,7 +24,9 @@
       </h2>
     </Transition>
     <h2>
-      {{ $t('addGameFile.selectFile.text2') }} <br />
+      <span v-if="editProject.info.game?.game_type === eGameType.Html">{{
+        $t('addGameFile.selectFile.text2')
+      }}<br /></span>
       {{ $t('addGameFile.selectFile.text3') }}
     </h2>
   </dd>
@@ -44,6 +37,7 @@ import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
 import ZipUtil from '~~/scripts/zipUtil'
 import { ElMessage, ElLoading } from 'element-plus'
 import { useI18n } from 'vue-i18n'
+import { eGameType } from '~~/types';
 
 const { t, locale } = useI18n()
 
@@ -63,7 +57,29 @@ const isFileEmpty = ref(true)
 
 const emit = defineEmits(['sendZipFile'])
 
+const { editProject } = useProject()
+
+
 async function onFileChange(e: any) {
+  if (useProject().editProject.value.info.game.game_type === eGameType.Download) {
+    const downloadFile = e.target.files[0]
+
+    const size = downloadFile.size
+
+    uploadGameFiles.value = downloadFile
+
+    const gameFileInfo = {
+      size: size,
+      gameFiles: downloadFile,
+    }
+    emit('sendZipFile', gameFileInfo)
+    totalSize.value = Number((size / (1024 * 1000)).toFixed(2))
+    fileName.value = e.target.files[0].name
+
+    e.target.value = ''
+
+    return
+  }
   zipFile.value = e.target.files[0]
 
   isLoadingFile.value = true
