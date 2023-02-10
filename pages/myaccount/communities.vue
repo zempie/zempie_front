@@ -6,18 +6,10 @@
 
     <Transition name="component-fade" mode="out-in">
       <ul class="card-timeline">
-        <CommunityCardSk
-          v-if="isPending"
-          v-for="community in 4"
-          :key="community"
-        />
+        <CommunityCardSk v-if="isPending" v-for="community in 4" :key="community" />
         <template v-else>
-          <CommunityCard
-            v-if="communities.length"
-            v-for="community in communities"
-            :key="community?.id"
-            :community="community"
-          >
+          <CommunityCard v-if="communities.length" v-for="community in communities" :key="community?.id"
+            :community="community">
             <template v-slot:subBtn>
               <CommunitySubscribeBtn :community="community" @refresh="fetch" />
             </template>
@@ -149,6 +141,10 @@ async function fetch() {
   img {
     margin: 0 auto;
   }
+}
+
+.card-timeline {
+  margin: 0 auto;
 }
 
 .component-fade-enter-active,

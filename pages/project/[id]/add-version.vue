@@ -8,14 +8,9 @@
             <dt>{{ $t('gameUpload') }}</dt>
             <ProjectZipFileUploader @sendZipFile="setZipFile" />
           </dl>
-          <div
-            class="suii-open"
-            :class="isAdvancedOpen ? 'open' : 'close'"
-            @click="isAdvancedOpen = !isAdvancedOpen"
-          >
-            <span> {{ $t('advanced.setting') }}</span> &nbsp;<i
-              class="uil uil-sliders-v-alt"
-            ></i>
+          <div v-if="editProject.info.game?.game_type === eGameType.Html" class="suii-open"
+            :class="isAdvancedOpen ? 'open' : 'close'" @click="isAdvancedOpen = !isAdvancedOpen">
+            <span> {{ $t('advanced.setting') }}</span> &nbsp;<i class="uil uil-sliders-v-alt"></i>
           </div>
           <transition name="component-fade" mode="out-in">
             <div v-show="isAdvancedOpen">
@@ -51,19 +46,13 @@
                 <dt>{{ $t('version') }}</dt>
                 <dd>
                   <input v-model="version" type="text" class="w100p" />
-                  <p
-                    v-if="isVersionError"
-                    style="color: red; margin: 10px 10px 0px 10px"
-                  >
+                  <p v-if="isVersionError" style="color: red; margin: 10px 10px 0px 10px">
                     {{ $t('projectAddVersion.error.lowVersion') }}
                   </p>
                 </dd>
               </dl>
               <div class="suii-close">
-                <button
-                  class="btn-line"
-                  @click="isAdvancedOpen = !isAdvancedOpen"
-                >
+                <button class="btn-line" @click="isAdvancedOpen = !isAdvancedOpen">
                   {{ $t('close') }} &nbsp;&nbsp;<i class="uil uil-angle-up"></i>
                 </button>
               </div>
@@ -84,7 +73,7 @@
 
 <script setup lang="ts">
 import { ElMessage, ElMessageBox, ElLoading } from 'element-plus'
-import { IVersion, eGameStage } from '~~/types'
+import { IVersion, eGameStage, eGameType } from '~~/types'
 import Version from '~~/scripts/version'
 import { useI18n } from 'vue-i18n'
 
@@ -196,11 +185,12 @@ function createVersionNum() {
 }
 
 function setZipFile(gameFile: {
-  startFileList: []
-  startFile: string
+  startFileList?: []
+  startFile?: string
   size: number
   gameFiles: File[]
 }) {
+  console.log(gameFile)
   uploadGameFiles.value = gameFile.gameFiles
   startFileOptions.value = gameFile.startFileList
   startFile.value = gameFile.startFile
@@ -208,6 +198,47 @@ function setZipFile(gameFile: {
 }
 
 async function upload() {
+  if (useProject().editProject.value.info.game.game_type === eGameType.Download) {
+    if (editProject.value.info.stage === eGameStage.DEV) {
+      autoDeploy.value = false
+    }
+
+    const loading = ElLoading.service({
+      lock: true,
+      text: 'Loading',
+      customClass: 'loading-spinner',
+      background: 'rgba(0, 0, 0, 0.7)',
+    })
+
+    const formData = new FormData()
+    formData.append('project_id', String(editProject.value.info.id))
+    formData.append('version', version.value)
+    formData.append('autoDeploy', String(autoDeploy.value))
+    formData.append('description', editProject.value.info.description)
+    formData.append('stage', String(editProject.value.info.stage))
+
+    if (fileSize.value) {
+      formData.append('size', fileSize.value.toFixed(2))
+    }
+
+    const file = uploadGameFiles.value
+    formData.append(`file`, file)
+    console.log(file)
+
+    const { data, pending, error } = await useCustomAsyncFetch(
+      '/studio/version',
+      getStudioFetchOptions('post', true, formData)
+    )
+
+    loading.close()
+
+    if (!error.value) {
+      useProject().getProjectInfo(projectId.value)
+      router.push($localePath(`/project/${projectId.value}/version-manage`))
+    }
+    return
+  }
+
   if (!startFile.value) {
     return
   }
@@ -299,6 +330,7 @@ async function upload() {
 }
 
 @media all and (max-width: 479px) {
+
   .studio-upload-input,
   .sui-btn {
     width: 90%;
@@ -308,6 +340,7 @@ async function upload() {
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
+
   .studio-upload-input,
   .sui-btn {
     width: 470px;
@@ -317,6 +350,7 @@ async function upload() {
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
+
   .studio-upload-input,
   .sui-btn {
     width: 750px;
@@ -324,6 +358,7 @@ async function upload() {
 }
 
 @media all and (min-width: 992px) and (max-width: 1199px) {
+
   .studio-upload-input,
   .sui-btn {
     width: 970px;
@@ -354,7 +389,8 @@ async function upload() {
 .component-fade-enter,
 .component-fade-leave-to
 
-/* .component-fade-leave-active below version 2.1.8 */ {
+/* .component-fade-leave-active below version 2.1.8 */
+  {
   opacity: 0;
 }
 </style>
