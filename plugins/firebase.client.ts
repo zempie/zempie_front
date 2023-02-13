@@ -61,10 +61,9 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   })
 
-  if (!window.navigator.userAgent.toLowerCase().includes('kakao') && window.location.protocol === 'https:') {
+  if (!window.navigator.userAgent.toLowerCase().includes('naver') && !window.navigator.userAgent.toLowerCase().includes('kakao') && window.location.protocol === 'https:') {
 
     const messaging = getMessaging(app);
-
 
     onMessage(messaging, (payload) => {
       console.log('Message received. ', payload);
