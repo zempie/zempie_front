@@ -4,50 +4,25 @@
       <li v-if="isFullScreen" @click="closeTextEditor" style="width: 50px">
         <i class="uil uil-angle-left-b"></i>
       </li>
-      <li
-        :class="activeTab === 'SNS' ? 'active' : ''"
-        @click="postingType('SNS')"
-      >
+      <li :class="activeTab === 'SNS' ? 'active' : ''" @click="postingType('SNS')">
         <i class="uil uil-file-landscape"></i>
         SNS
       </li>
-      <li
-        :class="activeTab === 'BLOG' ? 'active' : ''"
-        @click="postingType('BLOG')"
-      >
+      <li :class="activeTab === 'BLOG' ? 'active' : ''" @click="postingType('BLOG')">
         <i class="uil uil-files-landscapes"></i> Blog
       </li>
     </ul>
     <div>
-      <Tiptap
-        @editorContent="getEditorContent"
-        :postType="activeTab"
-        :feed="feed"
-        :key="activeTab"
-      />
+      <Tiptap @editorContent="getEditorContent" :postType="activeTab" :feed="feed" :key="activeTab" />
 
       <template v-if="activeTab === 'SNS'">
-        <div
-          v-if="snsAttachFiles.img?.length"
-          class="mp-image"
-          style="padding-bottom: 0px"
-        >
+        <div v-if="snsAttachFiles.img?.length" class="mp-image" style="padding-bottom: 0px">
           <dd style="width: 100%">
-            <swiper
-              :modules="[Pagination]"
-              class="swiper-area"
-              :slides-per-view="3"
-              :space-between="10"
-              :pagination="{ clickable: true }"
-            >
-              <swiper-slide
-                v-for="(img, idx) in snsAttachFiles.img"
-                :key="idx"
-                :style="`padding-bottom: 43px; background: url(${img.url}) center center / cover no-repeat; background-size:cover;`"
-              >
-                <span @click="deleteImg(idx)"
-                  ><i class="uil uil-times-circle"></i
-                ></span>
+            <swiper :modules="[Pagination]" class="swiper-area" :slides-per-view="3" :space-between="10"
+              :pagination="{ clickable: true }">
+              <swiper-slide v-for="(img, idx) in snsAttachFiles.img" :key="idx"
+                :style="`padding-bottom: 43px; background: url(${img.url}) center center / cover no-repeat; background-size:cover;`">
+                <span @click="deleteImg(idx)"><i class="uil uil-times-circle"></i></span>
               </swiper-slide>
               <div class="swiper-pagination" slot="pagination"></div>
             </swiper>
@@ -56,40 +31,22 @@
         <div v-if="isVideoUploading" class="video-loading">
           <BeatLoader :color="'#ff6e17'" size="20px" />
         </div>
-        <div
-          v-else-if="!isVideoUploading && snsAttachFiles.video?.url"
-          class="mp-midi"
-        >
-          <span @click="deleteVideo" class="delete-video-btn"
-            ><i class="uis uis-times-circle"></i
-          ></span>
+        <div v-else-if="!isVideoUploading && snsAttachFiles.video?.url" class="mp-midi">
+          <span @click="deleteVideo" class="delete-video-btn"><i class="uis uis-times-circle"></i></span>
 
-          <video
-            style="width: 100%"
-            :src="snsAttachFiles.video?.url"
-            title="YouTube video player"
-            frameborder="0"
+          <video style="width: 100%" :src="snsAttachFiles.video?.url" title="YouTube video player" frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-          ></video>
+            allowfullscreen></video>
         </div>
         <div v-if="isAudioUploading" class="video-loading">
           <BeatLoader :color="'#ff6e17'" size="20px" />
         </div>
 
-        <div
-          v-if="!isAudioUploading && snsAttachFiles.audio?.length"
-          class="mp-midi"
-        >
-          <ul
-            v-for="(audio, idx) in snsAttachFiles.audio"
-            class="audio-wrapper"
-          >
+        <div v-if="!isAudioUploading && snsAttachFiles.audio?.length" class="mp-midi">
+          <ul v-for="(audio, idx) in snsAttachFiles.audio" class="audio-wrapper">
             <div class="btn-container">
               <audio controls :src="audio.url"></audio>
-              <span class="delete-audio-btn" @click="deleteAudio(idx)"
-                ><i class="uis uis-times-circle"></i
-              ></span>
+              <span class="delete-audio-btn" @click="deleteAudio(idx)"><i class="uis uis-times-circle"></i></span>
             </div>
             <p>{{ audio.name || audio.file.name }}</p>
           </ul>
@@ -97,15 +54,8 @@
       </template>
       <ClientOnly>
 
-        <el-cascader
-          class="mp-category"
-          id="cascader"
-          :props="props"
-          v-model="selectedGroup"
-          placeholder="Select cagetory"
-          :options="categoryList"
-          :popper-class="'categories'"
-        />
+        <el-cascader class="mp-category" id="cascader" :props="props" v-model="selectedGroup"
+          placeholder="Select cagetory" :options="categoryList" :popper-class="'categories'" />
 
 
         <!-- <div
@@ -193,27 +143,19 @@
           <div style="width: 30px" @click="uploadImageFile">
             <a><i class="uil uil-image pointer"></i></a>
             <div style="height: 0px; overflow: hidden">
-              <input type="file" @change="onSelectImageFile" multiple
-              id="image-selector" accept=image/* ref="image" />
+              <input type="file" @change="onSelectImageFile" multiple id="image-selector" accept=image/* ref="image" />
             </div>
           </div>
           <div style="width: 30px" @click="uploaVideoFile">
             <a><i class="uil uil-play-circle pointer"></i></a>
             <div style="height: 0px; overflow: hidden">
-              <input type="file" @change="onSelectVideoFile" accept=video/*
-              ref="video" />
+              <input type="file" @change="onSelectVideoFile" accept=video/* ref="video" />
             </div>
           </div>
           <div style="width: 30px" @click="uploadAudioFile">
             <a><i class="uil uil-music pointer"></i></a>
             <div style="height: 0px; overflow: hidden">
-              <input
-                type="file"
-                @change="onSelectAudioFile"
-                multiple
-                accept=".mp3"
-                ref="audio"
-              />
+              <input type="file" @change="onSelectAudioFile" multiple accept=".mp3" ref="audio" />
             </div>
           </div>
         </dt>
@@ -221,61 +163,33 @@
            1분마다 자동 저장
          -->
         <Transition name="component-fade" mode="out-in">
-          <small class="auto-save" v-if="showSavedTime" style="color: #999"
-            >{{ t('autosave') }} <span> {{ savedTime }}</span></small
-          >
+          <small class="auto-save" v-if="showSavedTime" style="color: #999">{{ t('autosave') }} <span> {{
+            savedTime
+          }}</span></small>
         </Transition>
         <dd>
-          <button
-            v-if="draftList.length > 0"
-            class="btn-line-small w100 mr10"
-            id="loadPostBtn"
-            @click="onLoadPost"
-          >
+          <button v-if="draftList.length > 0" class="btn-line-small w100 mr10" id="loadPostBtn" @click="onLoadPost">
             Load
           </button>
-          <button
-            class="btn-green-small w100 mr10"
-            id="draftPostBtn"
-            @click="saveDraftCloseModal()"
-          >
+          <button class="btn-green-small w100 mr10" id="draftPostBtn" @click="saveDraftCloseModal()">
             Draft
           </button>
-          <button
-            v-if="!isFullScreen"
-            class="btn-default-samll w100 cancel-btn"
-            id="cancelPostBtn"
-            @click="closeTextEditor"
-          >
+          <button v-if="!isFullScreen" class="btn-default-samll w100 cancel-btn" id="cancelPostBtn"
+            @click="closeTextEditor">
             Cancel
           </button>
 
-          <button
-            v-if="isEdit"
-            class="btn-default-samll w100"
-            id="updatePostBtn"
-            @click="onUpdatePost"
-          >
+          <button v-if="isEdit" class="btn-default-samll w100" id="updatePostBtn" @click="onUpdatePost">
             Update
           </button>
-          <button
-            v-else
-            id="submitPostBtn"
-            class="btn-default-samll w100"
-            @click="onSubmit"
-          >
+          <button v-else id="submitPostBtn" class="btn-default-samll w100" @click="onSubmit">
             Post
           </button>
         </dd>
       </dl>
     </div>
 
-    <el-dialog
-      v-model="showDraftList"
-      append-to-body
-      class="modal-area-type"
-      width="380px"
-    >
+    <el-dialog v-model="showDraftList" append-to-body class="modal-area-type" width="380px">
       <div class="modal-alert">
         <dl class="ma-header">
           <dt>{{ t('draft') }}</dt>
@@ -287,11 +201,7 @@
         </dl>
         <div class="ma-content">
           <ul>
-            <li
-              v-for="(draft, index) in draftList"
-              class="draft"
-              @click="selectDraft(draft, index)"
-            >
+            <li v-for="(draft, index) in draftList" class="draft" @click="selectDraft(draft, index)">
               <div>
                 <p>
                   {{ getFirstPostContent(draft.post_contents) }}
@@ -301,10 +211,7 @@
                 }}</small>
               </div>
               <div>
-                <i
-                  @click.stop="deleteDraft(draft, index)"
-                  class="uil uil-trash-alt"
-                ></i>
+                <i @click.stop="deleteDraft(draft, index)" class="uil uil-trash-alt"></i>
               </div>
             </li>
 
@@ -360,12 +267,13 @@ const props = defineProps({
   feed: Object as PropType<IFeed>,
   channelInfo: Object,
   isFullScreen: Boolean,
-  multiple:{
+  multiple: {
     type: Boolean,
     default: true,
   },
 
 })
+console.log(props.feed)
 
 const initFiles = _.cloneDeep(props.feed?.attatchment_files)
 
@@ -422,12 +330,12 @@ const textInterval = ref()
 const prevText = ref()
 const saveId = ref(Date.now())
 
-watch(
-  ()=>selectedGroup.value,
-  (type) =>{
-    console.log(type)
-  }
-)
+// watch(
+//   () => selectedGroup.value,
+//   (type) => {
+//     console.log(type)
+//   }
+// )
 
 onBeforeMount(() => {
   getDraftList()
@@ -443,7 +351,7 @@ onBeforeMount(() => {
       .then(() => {
         insertContet(draftList.value[0])
       })
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => {
         localStorage.removeItem(draftList.value[0].key)
         draftList.value.splice(0, 1)
@@ -458,49 +366,49 @@ onMounted(async () => {
 
   await communityFetch()
 
-  if(useGame().game.value.info){
+  if (useGame().game.value.info) {
 
     //방문한 페이지가 게임페이지인 경우 해당 게임찾아서 리턴
-    const game = categoryList.value.find((elem)=>{
-      if(elem.value.type === 'game'){
+    const game = categoryList.value.find((elem) => {
+      if (elem.value.type === 'game') {
         return elem.value.game.id === useGame().game.value.info.id
       }
     })
 
-    if(game){
+    if (game) {
       selectedGroup.value = [
         ...selectedGroup.value,
         [{
-          type:'game',
-          game:game.value.game,
+          type: 'game',
+          game: game.value.game,
         }]
       ]
     }
   }
 
 
-  if( community ){
+  if (community) {
 
     //general 채널 디폴트 카테고리로 설정
     const generalChannel = community.channels.find(channel => {
       return channel.title === 'general'
     })
 
-    if(community){
+    if (community) {
       selectedGroup.value = [
         ...selectedGroup.value,
         [{
-          type:'community',
-          community:{
-              id:community.id,
-              is_certificated:community.is_certificated,
-              name:community.name,
-              profile_img:community.profile_img,
-              url:community.url
+          type: 'community',
+          community: {
+            id: community.id,
+            is_certificated: community.is_certificated,
+            name: community.name,
+            profile_img: community.profile_img,
+            url: community.url
           }
-        },{
-          type:'channel',
-          channel:generalChannel
+        }, {
+          type: 'channel',
+          channel: generalChannel
         }]
       ]
     }
@@ -510,29 +418,29 @@ onMounted(async () => {
   if (props.isEdit) {
     if (props.feed?.posted_at?.community) {
       for (const community of props.feed.posted_at.community) {
-             selectedGroup.value = [
-             ...selectedGroup.value,
-             {
-                type:"community",
-                community:community.community
-             },
-             {
-                type:"channel",
-                channel:community.channel
-             }
-          ]
+        selectedGroup.value = [
+          ...selectedGroup.value,
+          [{
+            type: "community",
+            community: community.community
+          },
+          {
+            type: "channel",
+            channel: community.channel
+          }]
+        ]
       }
     }
 
     if (props.feed?.posted_at?.game) {
       for (const game of props.feed.posted_at.game) {
-             selectedGroup.value = [
-             ...selectedGroup.value,
-             {
-                type:"game",
-                game:game.game
-             }
-          ]
+        selectedGroup.value = [
+          ...selectedGroup.value,
+          [{
+            type: "game",
+            game: game.game
+          }]
+        ]
       }
     }
 
@@ -619,14 +527,14 @@ async function onSubmit() {
     post_state: activeTab.value,
     hashtags: [],
     community: [],
-    game:[]
+    game: []
   }
 
 
   if (selectedGroup.value) {
-   const pl = setCategoryPayload(payload)
-   payload.community = pl.community;
-   payload.game = pl.game
+    const pl = setCategoryPayload(payload)
+    payload.community = pl.community;
+    payload.game = pl.game
   }
 
   const loading = ElLoading.service({
@@ -990,7 +898,7 @@ async function onUpdatePost() {
     hashtags: [],
     channel_id: useUser().user.value.info.channel_id,
     community: [],
-    game:[],
+    game: [],
   }
 
   if (selectedGroup.value) {
@@ -1040,7 +948,7 @@ async function onUpdatePost() {
         }
         //필요없는 경우
         else {
-          if( !attatchment_files ){
+          if (!attatchment_files) {
             //기존 파일에서 찾아서 push
             const file = attatchment_files.find((file) => {
               return file.url === img.src
@@ -1049,9 +957,9 @@ async function onUpdatePost() {
           }
 
           imgFiles.push({
-            url:img.src,
-            type:'image',
-            priority:0
+            url: img.src,
+            type: 'image',
+            priority: 0
           })
 
         }
@@ -1277,28 +1185,30 @@ async function onUpdatePost() {
 }
 
 function setCategoryPayload(payload) {
+  console.log(selectedGroup.value)
   selectedGroup.value.map((selected) => {
-      const postTarget = selected[0].type
+    console.log('selected', selected)
+    const postTarget = selected.length ? selected[0].type : selected.type
 
-      switch(postTarget){
-        case 'community':
+    switch (postTarget) {
+      case 'community':
         payload.community.push({
-          id:selected[0].community.id,
-          group:selected[0].community,
-          channel_id:selected[1].channel.id,
-          channel:selected[1].channel
+          id: selected[0].community.id,
+          group: selected[0].community,
+          channel_id: selected[1].channel.id,
+          channel: selected[1].channel
         })
-          break;
-        case 'game':
-          payload.game = [...payload.game, {game:selected[0].game, id:selected[0].game.id}];
-          break;
-        default:
-          break;
+        break;
+      case 'game':
+        payload.game = [...payload.game, { game: selected[0].game, id: selected[0].game.id }];
+        break;
+      default:
+        break;
 
-      }
-    })
+    }
+  })
 
-    return payload
+  return payload
 }
 
 function closeTextEditor() {
@@ -1321,7 +1231,7 @@ function closeTextEditor() {
         )
         emit('closeModal')
       })
-      .finally(() => {})
+      .finally(() => { })
   } else {
     emit('closeModal')
   }
@@ -1334,51 +1244,51 @@ async function communityFetch() {
   )
 
   if (data.value) {
-    categoryList.value = data.value.map((elem : ICommunity) => {
+    categoryList.value = data.value.map((elem: ICommunity) => {
       return {
-        value:{
-          type:"community",
-          community:{
-            id:elem.id,
-            is_certificated:elem.is_certificated,
-            name:elem.name,
-            profile_img:elem.profile_img,
-            url:elem.url
+        value: {
+          type: "community",
+          community: {
+            id: elem.id,
+            is_certificated: elem.is_certificated,
+            name: elem.name,
+            profile_img: elem.profile_img,
+            url: elem.url
           },
         },
-        label:elem.name,
-        children:elem.channels.map((channel:IComChannel) =>{
+        label: elem.name,
+        children: elem.channels.map((channel: IComChannel) => {
           return {
-            value:{
-              type:"channel",
-              channel:channel
+            value: {
+              type: "channel",
+              channel: channel
             },
-            label:channel.title
+            label: channel.title
           }
         })
       }
     })
   }
   categoryList.value.push({
-    value:"game",
-    label:'Games',
-    disabled:true,
+    value: "game",
+    label: 'Games',
+    disabled: true,
   })
-  const gameList = useUser().user.value.info.games.map((game:IGame)=>{
+  const gameList = useUser().user.value.info.games.map((game: IGame) => {
     return {
-      value:{
-        type:'game',
-        game:game,
+      value: {
+        type: 'game',
+        game: game,
       },
-      label:game.title
+      label: game.title
     }
   })
   categoryList.value = [...categoryList.value, ...gameList]
 
   categoryList.value.unshift({
-    value:'community',
-    label:'Community',
-    disabled:true
+    value: 'community',
+    label: 'Community',
+    disabled: true
   })
 
   isCommunityListVisible.value = true
@@ -1507,8 +1417,8 @@ function deleteDraft(draft: IDraft, index: number) {
         type: 'success',
       })
     })
-    .catch(() => {})
-    .finally(() => {})
+    .catch(() => { })
+    .finally(() => { })
 }
 
 function selectDraft(draft: IDraft, index: number) {
@@ -1525,8 +1435,8 @@ function selectDraft(draft: IDraft, index: number) {
         localStorage.removeItem(draft.key)
         draftList.value.splice(index, 1)
       })
-      .catch(() => {})
-      .finally(() => {})
+      .catch(() => { })
+      .finally(() => { })
   } else {
     insertContet(draft)
     showDraftList.value = false
@@ -1610,17 +1520,20 @@ function getFirstPostContent(content: string) {
     background-color: #ededed;
     margin: 20px;
     border-radius: 10px;
+
     div {
       display: flex;
       height: 100%;
       align-items: center;
       justify-content: center;
+
       .v-clip {
         height: 50px !important;
         width: 50px !important;
       }
     }
   }
+
   .mp-midi {
     max-height: 315px;
 
@@ -1767,28 +1680,34 @@ function getFirstPostContent(content: string) {
 
 .ma-content {
   padding: 10px 20px 10px 20px !important;
+
   div {
     margin-top: 0px !important;
   }
+
   ul {
     li {
       display: flex;
       justify-content: space-between;
       min-height: 50px;
       margin: 10px 0px 10px 0px;
+
       div {
         text-align: left;
         justify-content: center !important;
         flex-direction: column;
+
         i {
           font-size: 20px;
         }
       }
     }
+
     li:not(:last-child) {
       border-bottom: 1px solid #999;
     }
   }
+
   .draft {
     div {
       p {
@@ -1804,13 +1723,13 @@ function getFirstPostContent(content: string) {
 }
 
 .mp-type {
-    dd {
-      button {
-        padding: 0px;
-        width: 70px !important;
-      }
+  dd {
+    button {
+      padding: 0px;
+      width: 70px !important;
     }
   }
+}
 
 @media all and (max-width: 479px) {
   .mp-category {
@@ -1820,11 +1739,13 @@ function getFirstPostContent(content: string) {
       }
     }
   }
+
   .auto-save {
     span {
       display: block;
     }
   }
+
   .mp-type {
     dd {
       button {
@@ -1854,13 +1775,9 @@ function getFirstPostContent(content: string) {
   }
 }
 
-@media all and (min-width: 768px) and (max-width: 991px) {
-}
+@media all and (min-width: 768px) and (max-width: 991px) {}
 
-@media all and (min-width: 992px) and (max-width: 1199px) {
-}
+@media all and (min-width: 992px) and (max-width: 1199px) {}
 
-@media all and (min-width: 1200px) {
-
-}
+@media all and (min-width: 1200px) {}
 </style>
