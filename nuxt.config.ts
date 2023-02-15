@@ -43,6 +43,8 @@ export default defineNuxtConfig({
       })
     }
   },
+  vite: {
+  },
 
   build: {
     html: {
@@ -69,7 +71,7 @@ export default defineNuxtConfig({
   css: [
     '@/assets/css/animate.css',
     '@/assets/css/jquery-ui.css',
-    '@/assets/css/fonts-jam.css',
+    // '@/assets/css/fonts-jam.css',
     // '@/assets/css/common.css',
     // '@/assets/css/content.css',
     '@/assets/css/layout.css',
