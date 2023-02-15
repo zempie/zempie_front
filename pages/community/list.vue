@@ -1,12 +1,9 @@
 <template>
   <div class="content">
-    <div
-      class="visual-img"
-      style="
-        background: url('/images/visual_top_img.png') center no-repeat;
+    <div class="visual-img" style="
+        background: url('/images/com_list_banner.jpeg') center no-repeat;
         background-size: cover;
-      "
-    >
+      ">
       <div class="title">
         <h1>Communities</h1>
         <!-- TODO: 커뮤니티 전체 개수 -->
@@ -19,18 +16,15 @@
       <dt></dt>
       <dd>
         <div class="sort-default">
-          <a @click="sortGroups(0)" :class="filter === 0 && 'active'"
-            ><i class="uis uis-check"></i>
+          <a @click="sortGroups(0)" :class="filter === 0 && 'active'"><i class="uis uis-check"></i>
             {{ t('filter.recent') }}
           </a>
           <span>·</span>
-          <a @click="sortGroups(1)" :class="filter === 1 && 'active'"
-            ><i class="uis uis-check"></i>
+          <a @click="sortGroups(1)" :class="filter === 1 && 'active'"><i class="uis uis-check"></i>
             {{ t('filter.subscribe') }}
           </a>
           <span>·</span>
-          <a @click="sortGroups(2)" :class="filter === 2 && 'active'"
-            ><i class="uis uis-check"></i>
+          <a @click="sortGroups(2)" :class="filter === 2 && 'active'"><i class="uis uis-check"></i>
             {{ t('filter.alphabet') }}
           </a>
         </div>
@@ -40,11 +34,7 @@
       <div class="card-timeline" style="margin: 0 auto;">
         <CommunityCardSk v-if="isPending" v-for="com in 4" />
         <TransitionGroup v-else name="fade">
-          <CommunityCard
-            v-for="community in communities"
-            :community="community"
-            :key="community.id"
-          >
+          <CommunityCard v-for="community in communities" :community="community" :key="community.id">
             <template v-slot:subBtn>
               <CommunitySubscribeBtn :community="community" @refresh="fetch" />
             </template>
@@ -57,6 +47,7 @@
 </template>
 
 <script setup lang="ts">
+import shared from '~~/scripts/shared';
 import _ from 'lodash'
 import { useI18n } from 'vue-i18n'
 
@@ -80,58 +71,8 @@ definePageMeta({
   layout: 'default',
 })
 
-useHead({
-  title: `${t('communityList')} | Zempie`,
-  link: [
-    {
-      rel: 'alternate',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-      hreflang: locale,
-    },
-    {
-      rel: 'canonical',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-  ],
-  meta: [
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-    {
-      property: 'og:site_name',
-      content: 'Zempie',
-    },
-    {
-      name: 'og:type',
-      content: 'website',
-    },
-    {
-      name: 'robots',
-      content: 'index, follow',
-    },
-    {
-      name: 'description',
-      content: `${t('communityList.desc')}`,
-    },
-    {
-      property: 'og:title',
-      content: `${t('communityList')}`,
-    },
-    {
-      property: 'og:description',
-      content: `${t('communityList.desc')}`,
-    },
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`,
-    },
-    {
-      name: 'og:image',
-      content: `${config.OG_IMG}`,
-    },
-  ],
-})
+shared.createHeadMeta(t('communityList'), t('communityList.desc'))
+
 
 onMounted(async () => {
   observer.value = new IntersectionObserver(
@@ -211,7 +152,8 @@ svg {
 .list-complete-enter,
 .list-complete-leave-to
 
-/* .list-complete-leave-active below version 2.1.8 */ {
+/* .list-complete-leave-active below version 2.1.8 */
+  {
   opacity: 0;
   transform: translateY(30px);
 }
@@ -269,7 +211,7 @@ svg {
     width: 100%;
   }
 
-  .card-timeline > li {
+  .card-timeline>li {
     width: 100%;
     margin: 2% 0 2% 0;
   }
@@ -302,7 +244,8 @@ svg {
 .component-fade-enter,
 .component-fade-leave-to
 
-/* .component-fade-leave-active below version 2.1.8 */ {
+/* .component-fade-leave-active below version 2.1.8 */
+  {
   opacity: 0;
 }
 

@@ -21,6 +21,20 @@ export const stringToDomElem = (string: string) => {
   return new DOMParser().parseFromString(string, 'text/html')
 }
 
+/**
+ *
+ * @param string : HTML 태그가 포함된 스트링
+ * @returns 첫번째 돔 리턴
+ */
+export const getFirstDomElement = (string: string) => {
+  if (!string.length) {
+    throw 'Please, send a string with more than one character'
+  }
+  const div = document.createElement('div');
+  div.innerHTML = string
+  return div.firstElementChild
+}
+
 export const blobToFile = (blob: Blob, fileName?: string, fileType?: string) => {
 
   return new File([blob], fileName ?? 'no_file_name' + new Date().getTime(), {

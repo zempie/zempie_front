@@ -17,11 +17,7 @@
                     <i class="uis uis-clock" style="color: #c1c1c1"></i>
                     {{ dateFormat(feed?.created_at) }}
                   </span>
-                  <TranslateBtn
-                    :text="feed.content"
-                    @translatedText="translate"
-                    @untranslatedText="untranslatedText"
-                  />
+                  <TranslateBtn :text="feed.content" @translatedText="translate" @untranslatedText="untranslatedText" />
                 </dd>
                 <dd v-else>
                   <h2>{{ $t('feed.noUser.post') }}</h2>
@@ -38,44 +34,25 @@
           </dl>
 
           <div class="tapl-content" style="max-height:none" v-html="feed?.content"></div>
-          <template
-            v-if="
-              feed?.post_type === 'SNS' &&
-              feed?.attatchment_files?.length === 1 &&
-              feed?.attatchment_files[0].type === 'image'
-            "
-          >
-            <img
-              style="height: 88%; margin: 0 auto; display: flex"
-              :src="feed?.attatchment_files[0].url"
-              class="feed-img mt-3"
-            />
+          <template v-if="
+            feed?.post_type === 'SNS' &&
+            feed?.attatchment_files?.length === 1 &&
+            feed?.attatchment_files[0].type === 'image'
+          ">
+            <img style="height: 88%; margin: 0 auto; display: flex" :src="feed?.attatchment_files[0].url"
+              class="feed-img mt-3" />
           </template>
-          <template
-            v-else-if="
-              feed?.post_type === 'SNS' &&
-              feed?.attatchment_files &&
-              feed?.attatchment_files.length > 0
-            "
-          >
-            <div
-              class="tapl-movie-img"
-              v-if="feed?.attatchment_files[0].type === 'image'"
-            >
-              <swiper
-                class="swiper"
-                :options="swiperOption"
-                :modules="[Pagination]"
-                style="height: 350px"
-              >
+          <template v-else-if="
+            feed?.post_type === 'SNS' &&
+            feed?.attatchment_files &&
+            feed?.attatchment_files.length > 0
+          ">
+            <div class="tapl-movie-img" v-if="feed?.attatchment_files[0].type === 'image'">
+              <swiper class="swiper" :options="swiperOption" :modules="[Pagination]" style="height: 350px">
                 <template v-for="file in feed?.attatchment_files">
                   <swiper-slide>
-                    <img
-                      style="height: 88%; margin: 0 auto; display: flex"
-                      v-if="file.type === 'image'"
-                      :src="file.url"
-                      class="feed-img mt-3"
-                    />
+                    <img style="height: 88%; margin: 0 auto; display: flex" v-if="file.type === 'image'" :src="file.url"
+                      class="feed-img mt-3" />
                   </swiper-slide>
                 </template>
                 <div class="swiper-pagination" slot="pagination"></div>
@@ -83,19 +60,9 @@
             </div>
             <div class="tapl-movie-img" v-else>
               <div v-for="file in feed?.attatchment_files" :key="file.id">
-                <video
-                  class="sns-img"
-                  v-if="file.type === 'video'"
-                  width="320"
-                  height="240"
-                  controls
-                  :src="file.url"
-                ></video>
-                <audio
-                  v-else-if="file.type === 'sound'"
-                  controls
-                  :src="file.url"
-                ></audio>
+                <video class="sns-img" v-if="file.type === 'video'" width="320" height="240" controls
+                  :src="file.url"></video>
+                <audio v-else-if="file.type === 'sound'" controls :src="file.url"></audio>
                 <div class="audio" v-else-if="file.type === 'sound'">
                   <audio controls :src="file.url"></audio>
                   <p>{{ file?.name }}</p>
@@ -103,24 +70,19 @@
               </div>
             </div>
           </template>
-          <CommunityTarget :communities="postedAt" :games="feed?.posted_at[0].game"/>
+          <CommunityTarget :communities="postedAt" :games="feed?.posted_at[0].game" />
 
           <ul class="tapl-option">
             <li>
               <ul>
                 <LikeBtn v-if="feed" :feed="feed" />
                 <li>
-                  <i
-                    class="uil uil-comment-alt-dots"
-                    style="font-size: 22px"
-                  ></i
-                  >&nbsp;
+                  <i class="uil uil-comment-alt-dots" style="font-size: 22px"></i>&nbsp;
                   {{ feed?.comment_cnt }}
                 </li>
 
                 <li @click="copyUrl">
-                  <a
-                    ><i class="uil uil-share-alt" style="font-size: 20px"></i>
+                  <a><i class="uil uil-share-alt" style="font-size: 20px"></i>
                   </a>
                 </li>
               </ul>
@@ -128,26 +90,19 @@
 
             <li>
 
-              <PostDropdown
-                :feed="feed"
-                @deletePost="$router.back()"
-                @refresh="fetch"
-              />
+              <PostDropdown :feed="feed" @deletePost="$router.back()" @refresh="fetch" />
             </li>
           </ul>
           <div class="tapl-comment" v-if="comments">
             <p>
-              {{ $t('comment') }} {{ feed?.comment_cnt
+              {{ $t('comment') }} {{
+                feed?.comment_cnt
               }}{{ $t('comment.count.unit') }}
             </p>
             <CommentInput :postId="feed?.id" @refresh="commentFetch" />
             <ul>
               <TransitionGroup name="fade">
-                <li
-                  v-for="comment in comments"
-                  :key="comment.id"
-                  class="comment"
-                >
+                <li v-for="comment in comments" :key="comment.id" class="comment">
                   <Comment :comment="comment" @refresh="commentFetch" />
                 </li>
               </TransitionGroup>
@@ -157,44 +112,38 @@
         </li>
       </ul>
 
-      <ul class="ta-post" v-else  >
+      <ul class="ta-post" v-else>
         <li class="tap-list">
           <dl class="tapl-title">
             <ClientOnly>
-            <dt>
-              <dl>
-                <dt>
-                  <dt><UserAvatarSk style="width: 40px; height: 40px" /></dt>
-                </dt>
-                <dd>
-                  <h2 class="grey-text skeleton-animation"
-                 style="width: 300px; margin-bottom: 10px">
-                  </h2>
+              <dt>
+                <dl>
+                  <dt>
+                  <dt>
+                    <UserAvatarSk style="width: 40px; height: 40px" />
+                  </dt>
+              </dt>
+              <dd>
+                <h2 class="grey-text skeleton-animation" style="width: 300px; margin-bottom: 10px">
+                </h2>
 
-                 <p class="grey-text skeleton-animation"
-                   style="width: 150px; margin-bottom: 10px"></p>
-                 </dd>
+                <p class="grey-text skeleton-animation" style="width: 150px; margin-bottom: 10px"></p>
+              </dd>
 
-              </dl>
-            </dt>
+          </dl>
+          </dt>
           </ClientOnly>
           </dl>
 
-          <div  class="tapl-content grey-text skeleton-animation"
-        style="margin: 20px; padding: 20px" ></div>
-           <ul class="tapl-option">
+          <div class="tapl-content grey-text skeleton-animation" style="margin: 20px; padding: 20px"></div>
+          <ul class="tapl-option">
             <li>
               <ul>
                 <li>
-                  <i
-                    class="uil uil-comment-alt-dots"
-                    style="font-size: 22px"
-                  ></i
-                  >&nbsp;
+                  <i class="uil uil-comment-alt-dots" style="font-size: 22px"></i>&nbsp;
                 </li>
                 <li>
-                  <a
-                    ><i class="uil uil-share-alt" style="font-size: 20px"></i>
+                  <a><i class="uil uil-share-alt" style="font-size: 20px"></i>
                   </a>
                 </li>
               </ul>
@@ -215,7 +164,8 @@ import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/css/pagination';
 import 'swiper/css';
-import { dateFormat, execCommandCopy, stringToDomElem } from '~~/scripts/utils'
+import { dateFormat, execCommandCopy, stringToDomElem, getFirstDomElement } from '~~/scripts/utils'
+import shared from '~/scripts/shared'
 
 const COMMENT_LIMIT = 10
 const { $localePath } = useNuxtApp()
@@ -242,6 +192,7 @@ const isAddData = ref(false)
 const feed = ref()
 const postedAt = ref()
 
+
 watch(
   () => feed.value,
   (feed) => {
@@ -267,27 +218,27 @@ onMounted(async () => {
   await commentFetch()
 })
 
-async function fetch(){
-  try{
+async function fetch() {
+  try {
     const response = await useCustomFetch<any>(
-    `/post/${feedId.value}`,
-    getComFetchOptions('get', true)
-  )
-    if(response){
+      `/post/${feedId.value}`,
+      getComFetchOptions('get', true)
+    )
+    if (response) {
       feed.value = response
       postedAt.value = response.posted_at[0]
-      postedAt.value = postedAt.value.community.map((com)=>{
+      postedAt.value = postedAt.value.community.map((com) => {
         return {
-          channel:com.channel,
-          channel_id:com.channel_id,
-          community:com?.group || com.community,
-          id:com.id
+          channel: com.channel,
+          channel_id: com.channel_id,
+          community: com?.group || com.community,
+          id: com.id
         }
       })
-      console.log( postedAt.value)
+      console.log(postedAt.value)
 
     }
-  }catch(error){
+  } catch (error) {
     alert(error)
   }
 
@@ -332,68 +283,25 @@ async function commentFetch() {
 
 async function setHead() {
   if (feed.value) {
-    let descText = ''
+    let title = ''
+    let desc = ''
 
-    if (stringToDomElem(feed.value.content).getElementsByTagName('p')[0]) {
-      descText = stringToDomElem(feed.value.content).getElementsByTagName(
-        'p'
-      )[0].innerText
-    } else if (
-      stringToDomElem(feed.value.content).getElementsByTagName('pre')[0]
-    ) {
-      descText = stringToDomElem(feed.value.content).getElementsByTagName(
-        'pre'
-      )[0].innerText
+    // 타이틀 처리
+    const [h1Tag] = stringToDomElem(feed.value.content).getElementsByTagName('h1')
+    const [h2Tag] = stringToDomElem(feed.value.content).getElementsByTagName('h2')
+    const [h3Tag] = stringToDomElem(feed.value.content).getElementsByTagName('h3')
+
+    title = (h1Tag || h2Tag || h3Tag)?.innerText
+
+    const firstDom = getFirstDomElement(feed.value.content)
+    desc = (firstDom as HTMLElement).innerText.slice(0, 20)
+
+    if (!title) {
+      title = desc
     }
 
-    useHead({
-      title: `${feed.value?.user.name}${t('seo.feed.title')} | Zempie`,
-      link: [
-        {
-          rel: 'alternate',
-          href: `${config.ZEMPIE_URL}${route.fullPath}`,
-          hreflang: locale,
-        },
-        {
-          rel: 'canonical',
-          href: `${config.ZEMPIE_URL}${route.fullPath}`,
-        },
-      ],
-      meta: [
-        {
-          property: 'og:url',
-          content: `${config.ZEMPIE_URL}${route.fullPath}`,
-        },
-        {
-          property: 'og:site_name',
-          content: 'Zempie',
-        },
-        {
-          name: 'og:type',
-          content: 'website',
-        },
-        {
-          name: 'robots',
-          content: 'index, follow',
-        },
-        {
-          name: 'description',
-          content: `${descText.slice(0, 20)}`,
-        },
-        {
-          property: 'og:title',
-          content: `${feed.value?.user.name}${t('seo.feed.title')}`,
-        },
-        {
-          property: 'og:description',
-          content: `${descText.slice(0, 20)}`,
-        },
-        {
-          property: 'og:url',
-          content: `${config.ZEMPIE_URL}${route.path}`,
-        },
-      ],
-    })
+    shared.createHeadMeta(title, desc)
+
   }
 }
 
@@ -415,12 +323,12 @@ function copyUrl() {
 </script>
 
 <style lang="scss" scoped>
-
 @use 'sass:math';
 
 .tapl-content {
   width: calc(100% - 40px);
 }
+
 .fade-move,
 .fade-enter-active,
 .fade-leave-active {
@@ -487,7 +395,7 @@ function copyUrl() {
   }
 }
 
-input[type='radio'] + label {
+input[type='radio']+label {
   display: inline-block;
   width: 22px;
   height: 22px;
@@ -499,7 +407,7 @@ input[type='radio'] + label {
   cursor: pointer;
 }
 
-input[type='radio']:checked + label {
+input[type='radio']:checked+label {
   color: #fff;
   background: #ff6e17;
   border-color: #ff6e17;
@@ -514,6 +422,4 @@ input[type='radio'] {
     border-top: 0px;
   }
 }
-
-
 </style>

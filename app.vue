@@ -40,7 +40,7 @@ const userInfo = useUser().user.value.info
 watch(
   () => useUser().user.value.fUser,
   async (fUser) => {
-
+    console.log('???')
     if (useCookie(config.COOKIE_NAME).value && !userInfo) {
       await useUser().setUserInfo()
     }
@@ -57,25 +57,6 @@ provide(ID_INJECTION_KEY, {
 })
 
 onBeforeMount(async () => {
-
-  let date = new Date()
-  //게임젬플러스 종료 날짜
-  let endDate: Date | number = new Date(2022, 10, 20, 23, 59, 59)
-  endDate = endDate.setTime(endDate.getTime())
-  const now = date.setTime(date.getTime())
-
-
-  if (now > endDate) {
-    isOpen.value = false;
-    localStorage.removeItem('GJ_POPUP_ONE')
-    localStorage.removeItem('GJ_POPUP_NEVER')
-  }
-
-  //유효 기간이 더 크면 팝업 안보이게
-  //다시 안보기인 경우 팝업 안보이게
-  if ((parseInt(localStorage.getItem('GJ_POPUP_ONE')) > now) || Boolean(localStorage.getItem('GJ_POPUP_NEVER'))) {
-    isOpen.value = false
-  }
 
   const lang = navigator.language.split('-')[0]
 
