@@ -46,10 +46,10 @@ watch(
     }
   })
 
-shared.createHeadMeta(
-  t('seo.landing.title'),
-  t('seo.landing.description')
-)
+// shared.createHeadMeta(
+//   t('seo.landing.title'),
+//   t('seo.landing.description')
+// )
 
 provide(ID_INJECTION_KEY, {
   prefix: 100,
