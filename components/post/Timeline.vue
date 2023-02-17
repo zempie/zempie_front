@@ -7,17 +7,11 @@
         </p>
         <dl>
           <dt>
-            <input
-              v-if="isSubscribed"
-              type="text"
-              :placeholder="t('postModalInput')"
-              readonly
-              @click="
-                isLogin
-                  ? (isTextEditorOpen = true)
-                  : useModal().openLoginModal()
-              "
-            />
+            <input v-if="isSubscribed" type="text" :placeholder="t('postModalInput')" readonly @click="
+              isLogin
+                ? (isTextEditorOpen = true)
+                : useModal().openLoginModal()
+            " />
             <slot v-else name="inputBox" />
           </dt>
           <dd>
@@ -26,10 +20,7 @@
         </dl>
       </div>
 
-      <div
-        v-if="$route.meta.name === 'userChannel'"
-        class="tab-search-swiper mobile"
-      >
+      <div v-if="$route.meta.name === 'userChannel'" class="tab-search-swiper mobile">
         <div class="swiper-area uppercase">
           <div class="swiper-slide" style="width: 50%; cursor: pointer">
             <a :class="media ?? 'active'">
@@ -37,10 +28,7 @@
             </a>
           </div>
           <div class="swiper-slide" style="width: 50%; cursor: pointer">
-            <NuxtLink
-              :to="$localePath(`/channel/${paramId}/games`)"
-              :class="media === 'game' ? 'active' : ''"
-            >
+            <NuxtLink :to="$localePath(`/channel/${paramId}/games`)" :class="media === 'game' ? 'active' : ''">
               <p><i class="uil uil-map-pin-alt"></i>GAME</p>
             </NuxtLink>
           </div>
@@ -55,19 +43,10 @@
       <ul class="ta-post">
         <PostFeedSk v-if="isPending" v-for="feed in 6" :key="feed" />
         <TransitionGroup name="fade" v-else-if="!isPending && feeds?.length">
-          <PostFeed
-            v-for="feed in feeds"
-            :feed="feed"
-            :key="feed.id"
-            @refresh="refresh"
-          >
+          <PostFeed v-for="feed in feeds" :feed="feed" :key="feed.id" @refresh="refresh">
             <template #followBtn>
-              <UserFollowBtn
-                :user="feed.user"
-                :key="`${feed.user.is_following}`"
-                class="follow-btn-feed"
-                @refresh="refreshFollow"
-              />
+              <UserFollowBtn :user="feed.user" :key="`${feed.user.is_following}`" class="follow-btn-feed"
+                @refresh="refreshFollow" />
             </template>
           </PostFeed>
         </TransitionGroup>
@@ -83,12 +62,8 @@
 
     <PostModal :isTextEditorOpen="isTextEditorOpen">
       <template #textEditor>
-        <TextEditor
-          @closeModal="isTextEditorOpen = false"
-          :type="type"
-          @refresh="refresh"
-          :isFullScreen="usePost().post.value.isFullScreen"
-        />
+        <TextEditor @closeModal="isTextEditorOpen = false" :type="type" @refresh="refresh"
+          :isFullScreen="usePost().post.value.isFullScreen" />
         <!-- :channelInfo="channelInfo" -->
       </template>
     </PostModal>
@@ -219,7 +194,7 @@ async function fetch() {
           return channel.title === channelName.value
         }
       )
-      if (channelName.value) {
+      if (channel) {
         const { data, error, refresh } = await useCustomAsyncFetch<{
           result: []
           totalCount: number
@@ -364,7 +339,7 @@ function refreshFollow(user_id: number) {
   padding-top: 44px !important;
 }
 
-.pw-reset .pr-content > p {
+.pw-reset .pr-content>p {
   display: flex !important;
   justify-content: space-between !important;
 }
@@ -414,7 +389,7 @@ textarea {
   justify-content: center;
 }
 
-input[type='radio'] + label {
+input[type='radio']+label {
   display: inline-block;
   width: 22px;
   height: 22px;
@@ -426,7 +401,7 @@ input[type='radio'] + label {
   cursor: pointer;
 }
 
-input[type='radio']:checked + label {
+input[type='radio']:checked+label {
   color: #fff;
   background: #ff6e17;
   border-color: #ff6e17;
@@ -484,6 +459,5 @@ input[type='radio'] {
   }
 }
 
-@media all and (min-width: 992px) and (max-width: 1199px) {
-}
+@media all and (min-width: 992px) and (max-width: 1199px) {}
 </style>

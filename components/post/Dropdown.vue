@@ -1,9 +1,7 @@
 <template>
   <ClientOnly>
     <el-dropdown trigger="click" ref="feedMenu" popper-class="feed-menu">
-      <a class="btn-circle-none pt6" slot="trigger"
-        ><i class="uil uil-ellipsis-h font25" id="feedMenu"></i
-      ></a>
+      <a class="btn-circle-none pt6" slot="trigger"><i class="uil uil-ellipsis-h font25" id="feedMenu"></i></a>
       <template #dropdown>
         <div slot="body" class="more-list fixed" style="min-width: 150px">
           <template v-if="user && user.id === (feed?.user && feed?.user.id)">
@@ -11,9 +9,7 @@
             <a @click="showDeletePostModal = true" class="pointer">{{ t('feed.delete') }}</a>
           </template>
           <template v-else>
-            <NuxtLink
-              :to="$localePath(`/channel/${feed.user && feed.user.channel_id}`)"
-            >
+            <NuxtLink :to="$localePath(`/channel/${feed.user && feed.user.channel_id}`)">
               {{ t('visit.userChannel') }}
             </NuxtLink>
             <!-- <a v-if="user" @click="report">{{ t('post.report') }}</a>
@@ -23,12 +19,7 @@
       </template>
     </el-dropdown>
 
-    <el-dialog
-      v-model="showDeletePostModal"
-      append-to-body
-      class="modal-area-type"
-      width="380px"
-    >
+    <el-dialog v-model="showDeletePostModal" append-to-body class="modal-area-type" width="380px">
       <div class="modal-alert">
         <dl class="ma-header">
           <dt>{{ t('information') }}</dt>
@@ -59,14 +50,8 @@
 
   <PostModal :isTextEditorOpen="isTextEditorOpen">
     <template #textEditor>
-      <TextEditor
-        @closeModal="closeEditor"
-        :isEdit="true"
-        :feed="feed"
-        @refresh="emit('refresh')"
-        :isFullScreen="usePost().post.value.isFullScreen"
-        :key="editorKey"
-      />
+      <TextEditor @closeModal="closeEditor" :isEdit="true" :feed="feed" @refresh="emit('refresh')"
+        :isFullScreen="usePost().post.value.isFullScreen" :key="editorKey" />
     </template>
   </PostModal>
 </template>
@@ -75,10 +60,6 @@ import { PropType } from 'vue'
 import { IFeed } from '~~/types'
 import {
   ElDropdown,
-  ElDropdownMenu,
-  ElDropdownItem,
-  ElSelect,
-  ElOption,
   ElMessage,
   ElDialog,
 } from 'element-plus'
@@ -95,6 +76,7 @@ const editorKey = ref(0)
 const props = defineProps({
   feed: Object as PropType<IFeed>,
 })
+
 const emit = defineEmits(['refresh', 'deletePost'])
 
 const user = computed(() => useUser().user.value.info)
@@ -118,4 +100,6 @@ async function closeEditor() {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+
+</style>

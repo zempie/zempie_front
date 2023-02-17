@@ -48,7 +48,7 @@ watch(
 
 shared.createHeadMeta(
   t('seo.landing.title'),
-  t('seo.landing.desc')
+  t('seo.landing.description')
 )
 
 provide(ID_INJECTION_KEY, {

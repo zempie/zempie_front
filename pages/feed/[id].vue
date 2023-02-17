@@ -70,7 +70,7 @@
               </div>
             </div>
           </template>
-          <CommunityTarget :communities="postedAt" :games="feed?.posted_at[0].game" />
+          <CommunityTarget :communities="postedAt" :games="feed?.posted_at?.game" />
 
           <ul class="tapl-option">
             <li>
@@ -225,9 +225,22 @@ async function fetch() {
       getComFetchOptions('get', true)
     )
     if (response) {
-      feed.value = response
-      postedAt.value = response.posted_at[0]
-      postedAt.value = postedAt.value.community.map((com) => {
+
+      const [postedTarget] = response.posted_at
+
+      postedTarget.community = postedTarget.community
+        .filter(com => 'group' in com)
+        .map((com) => ({
+          community_id: com.id,
+          channel: com.channel,
+          channel_id: com.channel_id,
+          community: com.group
+        })
+        )
+
+      feed.value = { ...response, posted_at: postedTarget }
+
+      postedAt.value = postedTarget.community.map((com: { channel: any; channel_id: any; group?: any; community: any; id: any; }) => {
         return {
           channel: com.channel,
           channel_id: com.channel_id,
@@ -235,7 +248,6 @@ async function fetch() {
           id: com.id
         }
       })
-      console.log(postedAt.value)
 
     }
   } catch (error) {
@@ -283,21 +295,16 @@ async function commentFetch() {
 
 async function setHead() {
   if (feed.value) {
-    let title = ''
-    let desc = ''
-
     // 타이틀 처리
-    const [h1Tag] = stringToDomElem(feed.value.content).getElementsByTagName('h1')
-    const [h2Tag] = stringToDomElem(feed.value.content).getElementsByTagName('h2')
-    const [h3Tag] = stringToDomElem(feed.value.content).getElementsByTagName('h3')
+    const [h1Tag, h2Tag, h3Tag] = stringToDomElem(feed.value.content).querySelectorAll('h1, h2, h3')
 
-    title = (h1Tag || h2Tag || h3Tag)?.innerText
+    let title = (<HTMLElement>(h1Tag || h2Tag || h3Tag))?.innerText
 
     const firstDom = getFirstDomElement(feed.value.content)
-    desc = (firstDom as HTMLElement).innerText.slice(0, 20)
+    let desc = (firstDom as HTMLElement).innerText.slice(0, 50)
 
     if (!title) {
-      title = desc
+      title = desc.slice(0, 20)
     }
 
     shared.createHeadMeta(title, desc)

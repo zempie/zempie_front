@@ -274,6 +274,7 @@ onBeforeMount(() => {
 
 onMounted(async () => {
 
+  colorLog('text editor', 'pink')
   //새로고침 시 알람
   window.addEventListener('beforeunload', refreshPage)
 
@@ -294,6 +295,7 @@ onMounted(async () => {
       ]
     }
   }
+
 
   if (communityInfo.value) {
 
@@ -323,26 +325,35 @@ onMounted(async () => {
     }
   }
 
-  const postCommunities = props.feed?.posted_at?.community
+  const postCommunities = props.feed?.posted_at?.community || props.feed?.posted_at[0].community
 
   //기존 카테고리 추가
   if (props.isEdit) {
     if (postCommunities) {
-      console.log('selectedGroup.value', selectedGroup.value)
       for (const community of postCommunities) {
-        console.log('community', community)
+        const index = selectedGroup.value
+          .findIndex((elem: [{ type: "community", community: ICommunity }, { type: 'channel', channel: IComChannel }]) => {
+            const [com, chan] = elem
+            return chan.channel.id === community.channel.id
+          })
 
-        selectedGroup.value = [
-          ...selectedGroup.value,
-          [{
-            type: "community",
-            community: community.community
-          },
-          {
-            type: "channel",
-            channel: community.channel
-          }]
-        ]
+        if (index === -1) {
+          selectedGroup.value = [
+            ...selectedGroup.value,
+            [{
+              type: "community",
+              community: community.community
+            },
+            {
+              type: "channel",
+              channel: community.channel
+            }]
+          ]
+        } else {
+          selectedGroup.value = [
+            ...selectedGroup.value]
+        }
+
 
       }
     }
@@ -352,15 +363,9 @@ onMounted(async () => {
     if (postGame) {
       for (const game of postGame) {
         const index = selectedGroup.value
-          // .filter((elem) => {
-          //   if ('game' in elem) {
-          //     return elem
-          //   }
-          // })
           .findIndex((elem: { type: string, game: IGame }) => {
             return elem?.game?.id === game.id
           })
-
 
         if (index === -1) {
           selectedGroup.value = [
