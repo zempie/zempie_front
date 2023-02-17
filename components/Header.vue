@@ -126,7 +126,7 @@
           </div>
           <div class="header-info ml0" v-if="useCookie(config.COOKIE_NAME).value" :key="user">
             <NotificationHeaderButton />
-            <!-- <DmHeaderButton /> -->
+            <DmHeaderButton />
             <div class="ml10" id="userMenu">
               <el-dropdown trigger="click" ref="userMenu" id="userMenu">
                 <UserAvatar style="width: 30px; height: 30px" :user="user" :key="user?.picture" />
