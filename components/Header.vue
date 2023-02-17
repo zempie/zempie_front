@@ -57,16 +57,15 @@
             <div class="input-search-line">
               <i class="uil uil-search"></i>
               <div>
-                <el-dropdown ref="searchDropdown" trigger="click" @command="movePage">
-                  <input type="text" name="" title="keywords" :placeholder="t('needSearchInput')" v-model="searchInput"
-                    @input="search" @keyup.enter="moveSearchPage" />
+                <el-dropdown ref="searchDropdown" trigger="click">
+                  <input type="text" title="keywords" :placeholder="t('needSearchInput')" v-model="searchInput"
+                    @input="search" @keyup.enter="moveSearchPage" autocomplete="off" />
                   <template #dropdown>
                     <el-dropdown-menu class="header-search-list" style="min-width: 260px">
-                      <div :class="hasResearchResult ? '' : 'no-result'">
+                      <div :class="hasResearchResult || 'no-result'">
                         <template v-if="userList?.length">
                           <h2>{{ t('user.name') }}</h2>
-                          <el-dropdown-item v-for="user in userList" :key="user.id"
-                            :command="[(user['isUser'] = true), user]">
+                          <el-dropdown-item v-for="user in userList" :key="user.id">
                             <div @click="moveUserPage(user.channel_id)">
                               <dl>
                                 <dt>
@@ -80,8 +79,7 @@
                         </template>
                         <template v-if="gameList?.length">
                           <h2>{{ t('addGameInfo.game.name') }}</h2>
-                          <el-dropdown-item v-for="game in gameList" :key="game.id"
-                            :command="[(game['isGame'] = true), game]">
+                          <el-dropdown-item v-for="game in gameList" :key="game.id">
                             <div @click="moveGamePage(game.pathname)">
                               <dl>
                                 <dt>
@@ -96,10 +94,7 @@
                         </template>
                         <template v-if="communityList?.length">
                           <h2>{{ t('community.name') }}</h2>
-                          <el-dropdown-item v-for="community in communityList" :key="community.id" :command="[
-                            (community['isCommunity'] = true),
-                            community,
-                          ]">
+                          <el-dropdown-item v-for="community in communityList" :key="community.id">
                             <div @click="moveCommunityPage(community.id)">
                               <dl>
                                 <dt>
@@ -129,8 +124,9 @@
                 @click="switchLangauge" />
             </el-select>
           </div>
-          <div class="header-info ml0" v-if="(!loading && isLogin)">
+          <div class="header-info ml0" v-if="useCookie(config.COOKIE_NAME).value" :key="user">
             <NotificationHeaderButton />
+            <!-- <DmHeaderButton /> -->
             <div class="ml10" id="userMenu">
               <el-dropdown trigger="click" ref="userMenu" id="userMenu">
                 <UserAvatar style="width: 30px; height: 30px" :user="user" :key="user?.picture" />
@@ -184,24 +180,14 @@
             </div>
           </div>
           <div v-else class="header-login">
-            <p v-if="useUser().user.value.isLoading" style="
-                font-size: 35px;
-                display: flex;
-                align-items: center;
-                border-radius: 50%;
-                width: 30px;
-                justify-content: center;
-              ">
-              <i class="uil uil-user-circle"></i>
-            </p>
-            <NuxtLink v-else :to="$localePath('/login')">
+            <NuxtLink :to="$localePath('/login')">
               <button class="btn-default" id="loginBtn" style="display: flex;">
                 <i class="uil uil-user"></i>{{ t('login') }}
               </button>
             </NuxtLink>
           </div>
-          <div class="header-side-mobile" :style="isHeaderSideMobile && 'left:0px;'" id="headerSideMobile"
-            v-on-click-outside="clickOutside">
+          <div v-if="showHamburger" class="header-side-mobile" :style="isHeaderSideMobile && 'left:0px;'"
+            id="headerSideMobile" v-on-click-outside="clickOutside">
             <div class="hsm-close">
               <i class="uil uil-times" @click="isHeaderSideMobile = false"></i>
             </div>
@@ -234,7 +220,6 @@
                   class="uil uil-keyboard"></i>
                 GJ+
               </NuxtLink>
-
             </div>
           </div>
           <div class="header-side-bg-mobile" :style="isHeaderSideBgMobile ? 'display:block;' : ''"
@@ -305,18 +290,6 @@ const hasResearchResult = ref(false)
 const isHeaderSideMobile = ref(false)
 const isHeaderSideBgMobile = ref(false)
 
-
-const nuxtApp = useNuxtApp();
-const loading = ref(false);
-
-nuxtApp.hook("page:start", () => {
-  loading.value = true;
-});
-nuxtApp.hook("page:finish", () => {
-  loading.value = false;
-});
-
-
 const isMobile = computed(() =>
   window.matchMedia('screen and (max-width: 479px)')
 )
@@ -335,7 +308,6 @@ const selectedLang = ref(locale.value)
 
 const isOpen = ref(false)
 const { loginModal } = useModal()
-const nuxt = useNuxtApp()
 
 watch(
   () => loginModal.value.isOpen,
@@ -369,19 +341,14 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', onResize)
 })
 
+function handleKeyDown() {
+  console.log('handleKeyDown')
+  searchDropdown.value.handleOpen()
+}
 
 function onResize() {
-  if (isMobile.value.matches) {
-    showMobileLogo.value = true
-  } else {
-    showMobileLogo.value = false
-  }
-
-  if (isTablet.value.matches) {
-    showHamburger.value = true
-  } else {
-    showHamburger.value = false
-  }
+  showMobileLogo.value = isMobile.value.matches ? true : false
+  showHamburger.value = isTablet.value.matches ? true : false
 }
 
 function switchLangauge() {
@@ -391,6 +358,9 @@ function switchLangauge() {
 }
 
 function logout() {
+  if (route.meta.middleware === 'auth') {
+    router.replace($localePath('/'))
+  }
   useUser().logout()
 }
 
@@ -422,6 +392,10 @@ function moveSearchPage() {
 }
 
 function movePage(command: any) {
+
+  console.log('command', command)
+
+  return
   const searchObj = command[1]
   if (searchObj.isUser) {
     moveUserPage(searchObj.channel_id)
