@@ -352,13 +352,13 @@ onMounted(async () => {
     if (postGame) {
       for (const game of postGame) {
         const index = selectedGroup.value
-          .filter((elem) => {
-            if ('game' in elem) {
-              return elem
-            }
-          })
+          // .filter((elem) => {
+          //   if ('game' in elem) {
+          //     return elem
+          //   }
+          // })
           .findIndex((elem: { type: string, game: IGame }) => {
-            return elem.game.id === game.id
+            return elem?.game?.id === game.id
           })
 
 
@@ -376,11 +376,11 @@ onMounted(async () => {
 
 
     if (activeTab.value === 'SNS') {
-      const attFileFilter = (type: string) => attachFileArr.value.filter((file: { type: string, name: string, priority: number, size: number, url: string }) => file.type === type)
+      const attFileFilter = (type: string) => attachFileArr.value?.filter((file: { type: string, name: string, priority: number, size: number, url: string }) => file.type === type)
 
       snsAttachFiles.value = {
         img: attFileFilter('image'),
-        video: attachFileArr.value.find((file: { type: string, name: string, priority: number, size: number, url: string }) => file.type === 'video') || null,
+        video: attachFileArr.value?.find((file: { type: string, name: string, priority: number, size: number, url: string }) => file.type === 'video') || null,
         audio: attFileFilter('sounc'),
       }
     }
