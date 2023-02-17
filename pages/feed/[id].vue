@@ -192,6 +192,7 @@ const isAddData = ref(false)
 const feed = ref()
 const postedAt = ref()
 
+setHead()
 
 watch(
   () => feed.value,
@@ -205,7 +206,6 @@ onMounted(async () => {
   if (feed.value) {
     Prism.highlightAll()
 
-    setHead()
     observer.value = new IntersectionObserver(
       (entries) => {
         handleIntersection(entries[0])
