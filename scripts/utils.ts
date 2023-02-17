@@ -21,6 +21,11 @@ export const stringToDomElem = (string: string) => {
   return new DOMParser().parseFromString(string, 'text/html')
 }
 
+export const isImageUrl = (url: string): boolean => {
+  const imageExtensions = /\.(jpg|jpeg|png|gif|webp)$/i;
+  return imageExtensions.test(url);
+}
+
 /**
  *
  * @param string : HTML 태그가 포함된 스트링

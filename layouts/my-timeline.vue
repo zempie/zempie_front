@@ -14,12 +14,12 @@ const userInfo = ref<IUserChannel>()
 const isPending = ref(true)
 const channelId = computed(() => route.params.id as string)
 
-watch(
-  () => useUser().user.value.info,
-  async (userInfo) => {
-    await getChannelHeaderInfo()
-  }
-)
+// watch(
+//   () => useUser().user.value.info,
+//   async (userInfo) => {
+//     await getChannelHeaderInfo()
+//   }
+// )
 
 onMounted(async () => {
   await getChannelHeaderInfo()
@@ -96,9 +96,7 @@ async function getChannelHeaderInfo() {
   }
 }
 
-@media all and (min-width: 768px) and (max-width: 991px) {
-}
+@media all and (min-width: 768px) and (max-width: 991px) {}
 
-@media all and (min-width: 992px) and (max-width: 1199px) {
-}
+@media all and (min-width: 992px) and (max-width: 1199px) {}
 </style>

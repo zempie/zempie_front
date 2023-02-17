@@ -220,7 +220,7 @@ export interface IFeed {
     created_at: string,
     updated_at: string,
     deleted_at: string,
-    community: [],
+    community: { comminity: ICommunity, channel: IComChannel }[],
     portfolio_ids: number,
     id: string,
     posts_id: string,
