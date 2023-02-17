@@ -192,6 +192,7 @@ const isAddData = ref(false)
 const feed = ref()
 const postedAt = ref()
 
+fetch()
 setHead()
 
 watch(
@@ -202,7 +203,6 @@ watch(
 )
 
 onMounted(async () => {
-  await fetch()
   if (feed.value) {
     Prism.highlightAll()
 
@@ -218,12 +218,12 @@ onMounted(async () => {
   await commentFetch()
 })
 
-async function fetch() {
-  try {
-    const response = await useCustomFetch<any>(
-      `/post/${feedId.value}`,
-      getComFetchOptions('get', true)
-    )
+function fetch() {
+
+  useCustomFetch<any>(
+    `/post/${feedId.value}`,
+    getComFetchOptions('get', true)
+  ).then((response) => {
     if (response) {
 
       const [postedTarget] = response.posted_at
@@ -250,9 +250,10 @@ async function fetch() {
       })
 
     }
-  } catch (error) {
-    alert(error)
-  }
+  }).catch((err) => {
+    console.error(err)
+  })
+
 
 }
 async function handleIntersection(target: any) {
