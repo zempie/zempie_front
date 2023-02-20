@@ -197,6 +197,10 @@ const { data: feed, error, pending } = await useCustomAsyncFetch<any>(
   getComFetchOptions('get', true)
 )
 
+useHead({
+  title: `timeline | Zempie`,
+})
+
 setHead()
 
 watch(
