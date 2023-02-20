@@ -334,8 +334,65 @@ async function setHead() {
     if (!title) {
       title = desc.slice(0, 20)
     }
+    useHead({
+      title: `${title} | Zempie`,
+      link: [
+        {
+          rel: 'alternate',
+          href: `${config.ZEMPIE_URL}${route.fullPath}`,
+          hreflang: 'ko',
+        },
+        {
+          rel: 'alternate',
+          href: `${config.ZEMPIE_URL}${route.fullPath}`,
+          hreflang: 'en',
+        },
+        {
+          rel: 'canonical',
+          href: `${config.ZEMPIE_URL}${route.fullPath}`,
+        },
+      ],
+      meta: [
+        {
+          property: 'og:site_name',
+          content: 'Zempie',
+        },
+        {
+          name: 'og:type',
+          content: 'website',
+        },
+        {
+          name: 'robots',
+          content: 'index, follow',
+        },
+        {
+          name: 'description',
+          content: `${desc}`,
+        },
+        {
+          property: 'og:title',
+          content: `${title}`,
+        },
+        {
+          property: 'og:description',
+          content: `${desc}`,
+        },
+        {
+          property: 'og:url',
+          content: `${config.ZEMPIE_URL}${route.path}`,
+        },
+        // {
+        //   property: 'og:image',
+        //   content: image ? `${image}` : `${config.OG_IMG}`,
+        // },
+        {
+          property: 'og:image:alt',
+          content: `${title}`,
+        }
+      ],
+    })
 
-    shared.createHeadMeta(title, desc)
+    // shared.createHeadMeta(title, desc)
 
   }
 }
