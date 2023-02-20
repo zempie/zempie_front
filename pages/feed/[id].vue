@@ -197,8 +197,10 @@ const { data: feed, error, pending } = await useCustomAsyncFetch<any>(
   getComFetchOptions('get', true)
 )
 
+console.log('feed', feed.value)
+
 useHead({
-  title: `timeline | Zempie`,
+  title: computed(() => `${setTitle(feed.value)} | Zempie`)
 })
 
 setHead()
@@ -325,6 +327,19 @@ async function commentFetch() {
   return
 }
 
+function setTitle(str: string) {
+  const [h1Tag, h2Tag, h3Tag] = stringToDomElem(str).querySelectorAll('h1, h2, h3')
+
+  let title = (<HTMLElement>(h1Tag || h2Tag || h3Tag))?.innerText
+
+  const firstDom = getFirstDomElement(str)
+  let desc = (firstDom as HTMLElement).innerText.slice(0, 50)
+
+  if (!title) {
+    title = desc.slice(0, 20)
+  }
+  return title
+}
 async function setHead() {
   if (feed.value) {
     // 타이틀 처리
