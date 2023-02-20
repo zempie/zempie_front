@@ -2,7 +2,7 @@
   <div class="content">
     <div class="area-view">
 
-      <ul class="ta-post" v-if="!pending">
+      <ul class="ta-post" v-if="feed" :key="feedId">
         <ClientOnly>
           <li class="tap-list">
             <dl class="tapl-title">
@@ -167,6 +167,7 @@ import 'swiper/css/pagination';
 import 'swiper/css';
 import { dateFormat, execCommandCopy, stringToDomElem, getFirstDomElement } from '~~/scripts/utils'
 import shared from '~/scripts/shared'
+import { useTitle } from '@vueuse/core';
 
 const COMMENT_LIMIT = 10
 const { $localePath } = useNuxtApp()
@@ -191,28 +192,32 @@ const observer = ref<IntersectionObserver>(null)
 const triggerDiv = ref<Element>()
 const isAddData = ref(false)
 const postedAt = ref()
+const feed = ref()
 
-const { data: feed, error, pending } = await useCustomAsyncFetch<any>(
+useCustomFetch<any>(
   `/post/${feedId.value}`,
   getComFetchOptions('get', true)
 )
+  .then((res) => {
+    feed.value = res
+    useMetaTag().setPageTitle(feed.value.content)
+    console.log('useMetaTag().pageTitle.value', useMetaTag().pageTitle.value)
 
-console.log('feed', feed.value)
-
-useHead({
-  title: computed(() => `${setTitle(feed.value)} | Zempie`)
-})
-
-setHead()
+  })
+  .catch((err) => {
+    console.log(err)
+  })
 
 watch(
   () => feed.value,
   (feed) => {
-    setHead()
+    // const pageTitle = useState('pageTitle')
+    // pageTitle.value = feed.value?.content && setTitle(feed.value.content)
   }
 )
 
 onMounted(async () => {
+
   if (feed.value) {
     Prism.highlightAll()
 

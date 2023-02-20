@@ -58,6 +58,7 @@
     "i18next-scanner": "^4.0.0",
     "lodash": "^4.17.21",
     "lowlight": "^2.7.0",
+    "node-html-parser": "^6.1.4",
     "prismjs": "^1.29.0",
     "swiper": "^8.3.1",
     "vue-infinite-loading": "^2.4.5",

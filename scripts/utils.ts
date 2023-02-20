@@ -1,5 +1,6 @@
 
 import dayjs from 'dayjs';
+import { parse } from 'node-html-parser'
 
 export const execCommandCopy = (text: string) => {
   const input = document.createElement('input') as HTMLInputElement;
@@ -21,6 +22,14 @@ export const stringToDomElem = (string: string) => {
   return new DOMParser().parseFromString(string, 'text/html')
 }
 
+
+export const stringToDomElemByServer = (string: string) => {
+  const root = parse(string)
+  return root
+}
+
+
+
 export const isImageUrl = (url: string): boolean => {
   const imageExtensions = /\.(jpg|jpeg|png|gif|webp)$/i;
   return imageExtensions.test(url);
@@ -38,6 +47,15 @@ export const getFirstDomElement = (string: string) => {
   const div = document.createElement('div');
   div.innerHTML = string
   return div.firstElementChild
+}
+
+export const getFirstDomElementByServer = (string: string) => {
+  if (!string.length) {
+    throw 'Please, send a string with more than one character'
+  }
+  const root = parse(string)
+  const firstElement = root.querySelector('*')
+  return firstElement
 }
 
 export const blobToFile = (blob: Blob, fileName?: string, fileType?: string) => {
