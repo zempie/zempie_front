@@ -1,155 +1,156 @@
 <template>
   <div class="content">
     <div class="area-view">
-      <ul class="ta-post" v-if="feed">
-        <li class="tap-list">
-          <dl class="tapl-title">
-            <dt class="w50p">
-              <dl>
-                <dt>
-                  <NuxtLink :to="$localePath(`/channel/${feed.user?.channel_id}`)">
-                    <UserAvatar :user="feed?.user" :tag="'span'" />
-                  </NuxtLink>
-                </dt>
-                <dd v-if="feed?.user">
-                  <h2>{{ feed?.user?.name }}</h2>
-                  <span>
-                    <i class="uis uis-clock" style="color: #c1c1c1"></i>
-                    {{ dateFormat(feed?.created_at) }}
-                  </span>
-                  <TranslateBtn :text="feed.content" @translatedText="translate" @untranslatedText="untranslatedText" />
-                </dd>
-                <dd v-else>
-                  <h2>{{ $t('feed.noUser.post') }}</h2>
-                  <p>
-                    <i class="uis uis-clock" style="color: #c1c1c1"></i>
-                    {{ dateFormat(feed?.created_at) }}
-                  </p>
-                </dd>
-              </dl>
-            </dt>
-            <dd>
-              <UserFollowBtn :user="feed.user" class="follow-btn-feed" />
-            </dd>
-          </dl>
 
-          <div class="tapl-content" style="max-height:none" v-html="feed?.content"></div>
-          <template v-if="
-            feed?.post_type === 'SNS' &&
-            feed?.attatchment_files?.length === 1 &&
-            feed?.attatchment_files[0].type === 'image'
-          ">
-            <img style="height: 88%; margin: 0 auto; display: flex" :src="feed?.attatchment_files[0].url"
-              class="feed-img mt-3" />
-          </template>
-          <template v-else-if="
-            feed?.post_type === 'SNS' &&
-            feed?.attatchment_files &&
-            feed?.attatchment_files.length > 0
-          ">
-            <div class="tapl-movie-img" v-if="feed?.attatchment_files[0].type === 'image'">
-              <swiper class="swiper" :options="swiperOption" :modules="[Pagination]" style="height: 350px">
-                <template v-for="file in feed?.attatchment_files">
-                  <swiper-slide>
-                    <img style="height: 88%; margin: 0 auto; display: flex" v-if="file.type === 'image'" :src="file.url"
-                      class="feed-img mt-3" />
-                  </swiper-slide>
-                </template>
-                <div class="swiper-pagination" slot="pagination"></div>
-              </swiper>
-            </div>
-            <div class="tapl-movie-img" v-else>
-              <div v-for="file in feed?.attatchment_files" :key="file.id">
-                <video class="sns-img" v-if="file.type === 'video'" width="320" height="240" controls
-                  :src="file.url"></video>
-                <audio v-else-if="file.type === 'sound'" controls :src="file.url"></audio>
-                <div class="audio" v-else-if="file.type === 'sound'">
-                  <audio controls :src="file.url"></audio>
-                  <p>{{ file?.name }}</p>
+      <ul class="ta-post" v-if="!pending">
+        <ClientOnly>
+          <li class="tap-list">
+            <dl class="tapl-title">
+              <dt class="w50p">
+                <dl>
+                  <dt>
+                    <NuxtLink :to="$localePath(`/channel/${feed?.user?.channel_id}`)">
+                      <UserAvatar :user="feed?.user" :tag="'span'" />
+                    </NuxtLink>
+                  </dt>
+                  <dd v-if="feed?.user">
+                    <h2>{{ feed?.user?.name }}</h2>
+                    <span>
+                      <i class="uis uis-clock" style="color: #c1c1c1"></i>
+                      {{ dateFormat(feed?.created_at) }}
+                    </span>
+                    <TranslateBtn :text="feed.content" @translatedText="translate"
+                      @untranslatedText="untranslatedText" />
+                  </dd>
+                  <dd v-else>
+                    <h2>{{ $t('feed.noUser.post') }}</h2>
+                    <p>
+                      <i class="uis uis-clock" style="color: #c1c1c1"></i>
+                      {{ dateFormat(feed?.created_at) }}
+                    </p>
+                  </dd>
+                </dl>
+              </dt>
+              <dd>
+                <UserFollowBtn :user="feed?.user" class="follow-btn-feed" />
+              </dd>
+            </dl>
+
+            <div class="tapl-content" style="max-height:none" v-html="feed?.content"></div>
+            <template v-if="
+              feed?.post_type === 'SNS' &&
+              feed?.attatchment_files?.length === 1 &&
+              feed?.attatchment_files[0].type === 'image'
+            ">
+              <img style="height: 88%; margin: 0 auto; display: flex" :src="feed?.attatchment_files[0].url"
+                class="feed-img mt-3" />
+            </template>
+            <template v-else-if="
+              feed?.post_type === 'SNS' &&
+              feed?.attatchment_files &&
+              feed?.attatchment_files.length > 0
+            ">
+              <div class="tapl-movie-img" v-if="feed?.attatchment_files[0].type === 'image'">
+                <swiper class="swiper" :options="swiperOption" :modules="[Pagination]" style="height: 350px">
+                  <template v-for="file in feed?.attatchment_files">
+                    <swiper-slide>
+                      <img style="height: 88%; margin: 0 auto; display: flex" v-if="file.type === 'image'"
+                        :src="file.url" class="feed-img mt-3" />
+                    </swiper-slide>
+                  </template>
+                  <div class="swiper-pagination" slot="pagination"></div>
+                </swiper>
+              </div>
+              <div class="tapl-movie-img" v-else>
+                <div v-for="file in feed?.attatchment_files" :key="file.id">
+                  <video class="sns-img" v-if="file.type === 'video'" width="320" height="240" controls
+                    :src="file.url"></video>
+                  <audio v-else-if="file.type === 'sound'" controls :src="file.url"></audio>
+                  <div class="audio" v-else-if="file.type === 'sound'">
+                    <audio controls :src="file.url"></audio>
+                    <p>{{ file?.name }}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          </template>
-          <CommunityTarget :communities="postedAt" :games="feed?.posted_at?.game" />
+            </template>
+            <CommunityTarget :communities="postedTarget(feed?.posted_at)" :games="feed?.posted_at?.game" />
 
-          <ul class="tapl-option">
-            <li>
-              <ul>
-                <LikeBtn v-if="feed" :feed="feed" />
-                <li>
-                  <i class="uil uil-comment-alt-dots" style="font-size: 22px"></i>&nbsp;
-                  {{ feed?.comment_cnt }}
-                </li>
+            <ul class="tapl-option">
+              <li>
+                <ul>
+                  <LikeBtn v-if="feed" :feed="feed" />
+                  <li>
+                    <i class="uil uil-comment-alt-dots" style="font-size: 22px"></i>&nbsp;
+                    {{ feed?.comment_cnt }}
+                  </li>
 
-                <li @click="copyUrl">
-                  <a><i class="uil uil-share-alt" style="font-size: 20px"></i>
-                  </a>
-                </li>
-              </ul>
-            </li>
+                  <li @click="copyUrl">
+                    <a><i class="uil uil-share-alt" style="font-size: 20px"></i>
+                    </a>
+                  </li>
+                </ul>
+              </li>
 
-            <li>
+              <li>
 
-              <PostDropdown :feed="feed" @deletePost="$router.back()" @refresh="fetch" />
-            </li>
-          </ul>
-          <div class="tapl-comment" v-if="comments">
-            <p>
-              {{ $t('comment') }} {{
-                feed?.comment_cnt
-              }}{{ $t('comment.count.unit') }}
-            </p>
-            <CommentInput :postId="feed?.id" @refresh="commentFetch" />
-            <ul>
-              <TransitionGroup name="fade">
-                <li v-for="comment in comments" :key="comment.id" class="comment">
-                  <Comment :comment="comment" @refresh="commentFetch" />
-                </li>
-              </TransitionGroup>
+                <PostDropdown :feed="feed" @deletePost="$router.back()" @refresh="fetch" />
+              </li>
             </ul>
-          </div>
-          <div ref="triggerDiv"></div>
-        </li>
+            <div class="tapl-comment" v-if="comments">
+              <p>
+                {{ $t('comment') }} {{
+                  feed?.comment_cnt
+                }}{{ $t('comment.count.unit') }}
+              </p>
+              <CommentInput :postId="feed?.id" @refresh="commentFetch" />
+              <ul>
+                <TransitionGroup name="fade">
+                  <li v-for="comment in comments" :key="comment.id" class="comment">
+                    <Comment :comment="comment" @refresh="commentFetch" />
+                  </li>
+                </TransitionGroup>
+              </ul>
+            </div>
+          </li>
+        </ClientOnly>
+        <div ref="triggerDiv"></div>
       </ul>
 
       <ul class="ta-post" v-else>
-        <li class="tap-list">
-          <dl class="tapl-title">
-            <ClientOnly>
+        <ClientOnly>
+          <li class="tap-list">
+            <dl class="tapl-title">
               <dt>
                 <dl>
                   <dt>
-                  <dt>
                     <UserAvatarSk style="width: 40px; height: 40px" />
                   </dt>
+                  <dd>
+                    <h2 class="grey-text skeleton-animation" style="width: 300px; margin-bottom: 10px">
+                    </h2>
+
+                    <p class="grey-text skeleton-animation" style="width: 150px; margin-bottom: 10px"></p>
+                  </dd>
+                </dl>
               </dt>
-              <dd>
-                <h2 class="grey-text skeleton-animation" style="width: 300px; margin-bottom: 10px">
-                </h2>
+            </dl>
 
-                <p class="grey-text skeleton-animation" style="width: 150px; margin-bottom: 10px"></p>
-              </dd>
-
-          </dl>
-          </dt>
-          </ClientOnly>
-          </dl>
-
-          <div class="tapl-content grey-text skeleton-animation" style="margin: 20px; padding: 20px"></div>
-          <ul class="tapl-option">
-            <li>
-              <ul>
-                <li>
-                  <i class="uil uil-comment-alt-dots" style="font-size: 22px"></i>&nbsp;
-                </li>
-                <li>
-                  <a><i class="uil uil-share-alt" style="font-size: 20px"></i>
-                  </a>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </li>
+            <div class="tapl-content grey-text skeleton-animation" style="margin: 20px; padding: 20px"></div>
+            <ul class="tapl-option">
+              <li>
+                <ul>
+                  <li>
+                    <i class="uil uil-comment-alt-dots" style="font-size: 22px"></i>&nbsp;
+                  </li>
+                  <li>
+                    <a><i class="uil uil-share-alt" style="font-size: 20px"></i>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ClientOnly>
       </ul>
     </div>
   </div>
@@ -189,10 +190,13 @@ const feedId = computed(() => route.params.id as string)
 const observer = ref<IntersectionObserver>(null)
 const triggerDiv = ref<Element>()
 const isAddData = ref(false)
-const feed = ref()
 const postedAt = ref()
 
-fetch()
+const { data: feed, error, pending } = await useCustomAsyncFetch<any>(
+  `/post/${feedId.value}`,
+  getComFetchOptions('get', true)
+)
+
 setHead()
 
 watch(
@@ -218,15 +222,37 @@ onMounted(async () => {
   await commentFetch()
 })
 
-function fetch() {
+const postedTarget = (posted_at) => {
+  if (posted_at) {
+    const [postedTarget] = posted_at
 
-  useCustomFetch<any>(
+    return postedTarget.community
+      .filter(com => 'group' in com)
+      .map((com) => ({
+        community_id: com.id,
+        channel: com.channel,
+        channel_id: com.channel_id,
+        community: com.group
+      })
+      )
+  }
+}
+
+async function fetch() {
+
+  console.log('fetch', feedId.value)
+  useCustomAsyncFetch<any>(
     `/post/${feedId.value}`,
     getComFetchOptions('get', true)
-  ).then((response) => {
-    if (response) {
+  ).then(({ data, error }) => {
+    // if (data.value === null) {
+    //   fetch()
+    //   return
+    // }
 
-      const [postedTarget] = response.posted_at
+    if (data.value) {
+
+      const [postedTarget] = data.value.posted_at
 
       postedTarget.community = postedTarget.community
         .filter(com => 'group' in com)
@@ -238,7 +264,7 @@ function fetch() {
         })
         )
 
-      feed.value = { ...response, posted_at: postedTarget }
+      feed.value = { ...data.value, posted_at: postedTarget }
 
       postedAt.value = postedTarget.community.map((com: { channel: any; channel_id: any; group?: any; community: any; id: any; }) => {
         return {
@@ -250,6 +276,7 @@ function fetch() {
       })
 
     }
+    return data.value
   }).catch((err) => {
     console.error(err)
   })
