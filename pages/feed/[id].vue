@@ -223,6 +223,7 @@ onMounted(async () => {
   if (feed.value) {
     Prism.highlightAll()
 
+    setHead()
     observer.value = new IntersectionObserver(
       (entries) => {
         handleIntersection(entries[0])
