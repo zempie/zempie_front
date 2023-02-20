@@ -327,7 +327,7 @@ async function commentFetch() {
   return
 }
 
-function setTitle(str: string) {
+function setTitle(str: string = '') {
   const [h1Tag, h2Tag, h3Tag] = stringToDomElem(str).querySelectorAll('h1, h2, h3')
 
   let title = (<HTMLElement>(h1Tag || h2Tag || h3Tag))?.innerText
