@@ -275,18 +275,44 @@ async function commentFetch() {
 async function setHead() {
 
   if (feed.value) {
-    const [h1Tag, h2Tag, h3Tag] = stringToDomElemByServer(feed.value.content).querySelectorAll('h1, h2, h3')
-    const [img] = stringToDomElemByServer(feed.value.content).querySelectorAll('img')
+    const content = stringToDomElemByServer(feed.value.content);
 
-    let title = h1Tag?.innerText || h2Tag?.innerText || h3Tag?.innerText
+    const h1Tag = content.querySelector('h1');
+    const h2Tag = content.querySelector('h2');
+    const h3Tag = content.querySelector('h3');
+    const img = content.querySelector('img');
+    const video = content.querySelector('video');
+    const audio = content.querySelector('audio');
+
+    const [attr] = feed.value.attatchment_files || []
+
+
+    let imgMeta = img?.attrs.src || attr?.type === 'image' && attr?.url
+
+    let title = h1Tag?.innerText || h2Tag?.innerText || h3Tag?.innerText;
 
     const firstDom = getFirstDomElementByServer(feed.value.content)
     let desc = firstDom?.innerText.slice(0, 50)
 
-    if (!title) {
-      title = desc.slice(0, 20)
+    if (!desc) {
+      if (img) {
+        desc = img.attrs?.title || img.attrs?.alt || '이미지'
+      }
+      else if (video) {
+        desc = '동영상'
+      }
+      else if (audio) {
+        desc = audio.attrs?.title || '오디오'
+      }
+      else if (attr) {
+        desc = attr.name
+      }
     }
-    shared.createHeadMeta(title, desc, img?.attrs.src)
+    if (!title) {
+      title = desc.length ? desc.slice(0, 20) : feed.value?.user.name
+    }
+
+    shared.createHeadMeta(title, desc, imgMeta)
 
   }
 }
