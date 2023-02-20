@@ -200,8 +200,8 @@ useCustomFetch<any>(
 )
   .then((res) => {
     feed.value = res
-    useMetaTag().setPageTitle(feed.value.content)
-    console.log('useMetaTag().pageTitle.value', useMetaTag().pageTitle.value)
+    setHead()
+
 
   })
   .catch((err) => {
@@ -211,6 +211,8 @@ useCustomFetch<any>(
 watch(
   () => feed.value,
   (feed) => {
+    setHead()
+
     // const pageTitle = useState('pageTitle')
     // pageTitle.value = feed.value?.content && setTitle(feed.value.content)
   }
