@@ -177,7 +177,7 @@ export default {
         },
         {
           property: 'og:title',
-          content: `${title}`,
+          content: `${title} | Zempie`,
         },
         {
           property: 'og:description',
