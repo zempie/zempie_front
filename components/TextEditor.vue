@@ -331,18 +331,18 @@ onMounted(async () => {
   if (props.isEdit) {
     if (postCommunities) {
       for (const community of postCommunities) {
-        const index = selectedGroup.value
-          .findIndex((elem: [{ type: "community", community: ICommunity }, { type: 'channel', channel: IComChannel }]) => {
+        const index = selectedGroup.value.findIndex((elem) => {
+          if (elem.type !== 'game') {
             const [com, chan] = elem
             return chan.channel.id === community.channel.id
-          })
-
+          }
+        })
         if (index === -1) {
           selectedGroup.value = [
             ...selectedGroup.value,
             [{
               type: "community",
-              community: community.community
+              community: community.community || community.group
             },
             {
               type: "channel",
@@ -357,8 +357,8 @@ onMounted(async () => {
 
       }
     }
+    const postGame = props.feed?.posted_at?.game || props.feed?.posted_at[0].game
 
-    const postGame = props.feed?.posted_at?.game
 
     if (postGame) {
       for (const game of postGame) {

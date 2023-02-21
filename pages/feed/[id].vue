@@ -70,7 +70,8 @@
               </div>
             </div>
           </template>
-          <CommunityTarget :communities="postedTarget(feed?.posted_at)" :games="feed?.posted_at?.game" />
+
+          <CommunityTarget :communities="postedCommunity(feed?.posted_at)" :games="postedGame(feed?.posted_at)" />
 
           <ul class="tapl-option">
             <li>
@@ -198,7 +199,7 @@ const {
 )
 setHead()
 
-const postedTarget = (posted_at) => {
+const postedCommunity = (posted_at) => {
   if (posted_at) {
     const [postedTarget] = posted_at
 
@@ -213,6 +214,21 @@ const postedTarget = (posted_at) => {
       )
   }
 }
+
+const postedGame = (posted_at) => {
+  if (posted_at) {
+    const [postedTarget] = posted_at
+
+    return postedTarget.game
+      .map((game) =>
+      ({
+        id: game.id,
+        game: game.game
+      })
+      )
+  }
+}
+
 onMounted(async () => {
   hljs.configure({
     ignoreUnescapedHTML: true,
