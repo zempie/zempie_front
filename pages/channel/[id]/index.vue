@@ -33,14 +33,11 @@
           <ul v-for="game in 4">
             <li>
               <p style="background-color: #d5d5d5"></p>
-              <h2
-                class="grey-text"
-                style="
+              <h2 class="grey-text" style="
                   text-overflow: ellipsis;
                   overflow: hidden;
                   margin: 15px 0 10px 0;
-                "
-              ></h2>
+                "></h2>
             </li>
           </ul>
           <div></div>
@@ -48,7 +45,7 @@
       </dt>
       <dt v-else-if="channelInfo" :key="channelInfo.id">
         <div class="ta-myinfo">
-          <UserAvatar :user="channelInfo" :tag="'p'"></UserAvatar>
+          <UserAvatar :user="channelInfo" tag="p"></UserAvatar>
           <h1>{{ channelInfo.name }}</h1>
           <ul>
             <li>
@@ -86,15 +83,9 @@
           </dl>
           <template v-if="games?.length">
             <ul>
-              <li
-                v-for="game in games?.slice(0, 5)"
-                @click="$router.push($localePath(`/game/${game.pathname}`))"
-              >
-                <p
-                  :style="`background:url(${
-                    game.url_thumb_webp || '/images/default.png'
-                  }) center; background-size:cover;`"
-                ></p>
+              <li v-for="game in games?.slice(0, 5)" @click="$router.push($localePath(`/game/${game.pathname}`))">
+                <p :style="`background:url(${game.url_thumb_webp || '/images/default.png'
+                }) center; background-size:cover;`"></p>
                 <h2 style="text-overflow: ellipsis; overflow: hidden">
                   {{ game.title }}
                 </h2>
@@ -102,10 +93,9 @@
             </ul>
 
             <div v-if="games?.length > 5">
-              <NuxtLink
-                :to="$localePath(`/channel/${channelId}/games`)"
-                class="btn-default-samll w100p"
-                >{{ $t('moreView') }}
+              <NuxtLink :to="$localePath(`/channel/${channelId}/games`)" class="btn-default-samll w100p">{{
+                $t('moreView')
+              }}
               </NuxtLink>
             </div>
           </template>
@@ -127,7 +117,8 @@
               <CommunityListItemSk />
             </dl>
           </div>
-          <CommunityList v-else :communities="channelInfo?.communities" />
+          <CommunityList v-else :communities="communityList" />
+
         </div>
       </dt>
     </dl>
@@ -136,89 +127,49 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import shared from '~~/scripts/shared';
+import { IUserChannel } from '~~/types';
+
 const { $localePath } = useNuxtApp()
-const { t, locale } = useI18n()
-
-const config = useRuntimeConfig()
-const nuxt = useNuxtApp()
-
+const { t } = useI18n()
 const route = useRoute()
-const channelInfo = computed(() => useChannel().userChannel.value.info)
+
 const isLoading = computed(() => useChannel().userChannel.value.isLoading)
-const games = computed(() => channelInfo.value.games)
+const games = computed(() => channelInfo.games)
 const channelId = computed(() => route.params.id as string)
+const communityList = computed(() => useChannel().userChannel.value.info.communities)
+
 const isMine = computed(() => {
   return channelId.value === useUser().user.value.info?.channel_id
 })
 
-watch(
-  () => channelInfo.value,
-  (info) => {
-    useHead({
-      title: `${info.name}${t('seo.channel.title')} | Zempie`,
-      link: [
-        {
-          rel: 'alternate',
-          href: `${config.ZEMPIE_URL}${route.fullPath}`,
-          hreflang: locale,
-        },
-        {
-          rel: 'canonical',
-          href: `${config.ZEMPIE_URL}${route.fullPath}`,
-        },
-      ],
-      meta: [
-        {
-          property: 'og:url',
-          content: `${config.ZEMPIE_URL}${route.fullPath}`,
-        },
-        {
-          property: 'og:site_name',
-          content: 'Zempie',
-        },
-        {
-          name: 'og:type',
-          content: 'website',
-        },
-        {
-          name: 'robots',
-          content: 'index, follow',
-        },
-        {
-          name: 'description',
-          content: `${info.name}${t('seo.channel.desc')}`,
-        },
-        {
-          property: 'og:title',
-          content: `${info.name}${t('seo.channel.title')}`,
-        },
-        {
-          property: 'og:description',
-          content: `${info.name}${t('seo.channel.desc')}`,
-        },
-        {
-          property: 'og:url',
-          content: `${config.ZEMPIE_URL}${route.path}`,
-        },
-        {
-          name: 'og:image',
-          content: `${info.picture}`,
-        },
-      ],
-    })
-  }
-)
 
 definePageMeta({
   title: 'user-channel',
   name: 'userChannel',
 })
+
+
+/**
+ * seo 반영은 함수안에서 되지 않으므로 최상단에서 진행함
+ */
+const { data } = await useAsyncData<{ result: { target: IUserChannel } }>('channelInfo', () =>
+  $fetch(`/channel/${channelId.value}`, getZempieFetchOptions('get', true)),
+  {
+    initialCache: false
+  }
+)
+
+const { target: channelInfo } = data.value?.result;
+shared.createHeadMeta(`${channelInfo.name}${t('seo.channel.title')}`, `${channelInfo.name}${t('seo.channel.desc')}`, channelInfo.picture)
+
 </script>
 
 <style lang="scss" scoped>
 .ta-myinfo {
   margin-bottom: 20px;
 }
+
 .swiper-slide {
   display: inline-block;
 }
@@ -244,6 +195,7 @@ definePageMeta({
   .ta-myinfo {
     margin-bottom: 0px;
   }
+
   .ta-game-list {
     display: none;
   }
@@ -253,6 +205,7 @@ definePageMeta({
   .ta-myinfo {
     margin-bottom: 0px;
   }
+
   .ta-game-list {
     display: none;
   }
@@ -267,14 +220,13 @@ definePageMeta({
   .ta-myinfo {
     margin-bottom: 0px;
   }
+
   .ta-game-list {
     display: none;
   }
 }
 
-@media all and (min-width: 992px) and (max-width: 1199px) {
-}
+@media all and (min-width: 992px) and (max-width: 1199px) {}
 
-@media all and (min-width: 1200px) {
-}
+@media all and (min-width: 1200px) {}
 </style>

@@ -1,8 +1,8 @@
 <template>
   <div class="content">
-    
+
     <h1> {{ $t('term.private') }}</h1>
-      
+
     <p>
       <strong>{{ $t('term.private.title1') }}</strong>
     </p>
@@ -102,11 +102,8 @@
       </li>
     </ol>
     <p>
-      &nbsp;&nbsp; – {{ $t('term.private.title5.info4') }} [(<a
-        href="http://www.spayment.org"
-        data-card-appearance="inline"
-        >http://www.spayment.org</a
-      >
+      &nbsp;&nbsp; – {{ $t('term.private.title5.info4') }} [(<a href="http://www.spayment.org"
+        data-card-appearance="inline">http://www.spayment.org</a>
       )]
     </p>
     <p>
@@ -290,7 +287,7 @@
         <p>{{ $t('term.private.title13.info8') }}</p>
       </li>
     </ol>
-    
+
     <p>{{ $t('term.start') }}</p>
     <p>&nbsp;</p>
   </div>
@@ -298,59 +295,15 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import shared from '~/scripts/shared'
 
 const { t, locale } = useI18n()
 const route = useRoute()
 const config = useRuntimeConfig()
 
-useHead({
-  title: `${t('term.private')} | Zempie`,
-  link: [
-    {
-      rel: 'alternate',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-      hreflang: locale,
-    },
-    {
-      rel: 'canonical',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-  ],
-  meta: [
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-    {
-      property: 'og:site_name',
-      content: 'Zempie',
-    },
-    {
-      name: 'og:type',
-      content: 'website',
-    },
-    {
-      name: 'description',
-      content: `Zempie ${t('term.private')}`,
-    },
-    {
-      name: 'robots',
-      content: 'noindex, nofollow',
-    },
-    {
-      property: 'og:title',
-      content: `Zempie ${t('term.private')}`,
-    },
-    {
-      property: 'og:description',
-      content: `Zempie ${t('term.private')}`,
-    },
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`,
-    },
-  ],
-})
+
+shared.createHeadMeta(`${t('term.private')}`, `Zempie ${t('term.private')}`)
+
 </script>
 
 <style scoped lang="scss">
@@ -361,6 +314,7 @@ useHead({
 .content {
   padding-left: 30px;
 }
+
 h1 {
   display: block;
   font-size: 2em;
@@ -370,6 +324,7 @@ h1 {
   margin-right: 0;
   font-weight: bold;
 }
+
 h2 {
   margin-block-start: 0.83em;
   margin-block-end: 0.83em;

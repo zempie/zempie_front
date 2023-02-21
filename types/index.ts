@@ -26,7 +26,7 @@ export interface IUser {
   },
   url_banner?: string,
   profile_img?: string,
-  new_noti_count: number
+  new_noti_count?: number
 }
 
 

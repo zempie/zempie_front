@@ -25,8 +25,12 @@ onMounted(async () => {
   await getChannelHeaderInfo()
 })
 
+
+
 async function getChannelHeaderInfo() {
+
   if (useUser().user.value.info?.channel_id) {
+
     const { data, pending } = await user.getUserInfo(
       useUser().user.value.info.channel_id
     )

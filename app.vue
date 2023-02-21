@@ -41,46 +41,16 @@ const userInfo = useUser().user.value.info
 watch(
   () => useUser().user.value.fUser,
   async (fUser) => {
-    console.log('???')
     if (useCookie(config.COOKIE_NAME).value && !userInfo) {
       await useUser().setUserInfo()
     }
   })
 
-const pageTitle = ref(useMetaTag().pageTitle.value)
 
-// useHead({
-//   title: computed(() => `${pageTitle.value ? setTitle(pageTitle.value as string) : '젬파이'} | Zempie`)
-// })
-
-
-watch(
-  () => useMetaTag().pageTitle.value,
-  (title) => {
-    pageTitle.value = title
-
-    useHead({
-      title: computed(() => `${pageTitle.value ? setTitle(pageTitle.value as string) : '젬파이'} | Zempie`)
-    })
-  })
-
-// shared.createHeadMeta(
-//   t('seo.landing.title'),
-//   t('seo.landing.description')
-// )
-function setTitle(str: string = '') {
-  const [h1Tag, h2Tag, h3Tag] = stringToDomElemByServer(str).querySelectorAll('h1, h2, h3')
-
-  let title = h1Tag?.innerText || h2Tag?.innerText || h3Tag?.innerText
-
-  const firstDom = getFirstDomElementByServer(str)
-  let desc = firstDom.innerText.slice(0, 50)
-
-  if (!title) {
-    title = desc.slice(0, 20)
-  }
-  return title
-}
+shared.createHeadMeta(
+  t('seo.landing.title'),
+  t('seo.landing.description')
+)
 provide(ID_INJECTION_KEY, {
   prefix: 100,
   current: 0,

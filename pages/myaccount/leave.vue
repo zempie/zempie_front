@@ -26,14 +26,9 @@
         </li>
         <li>
           <div>
-            <input
-              @click="isAgree ? (isAgreeError = true) : (isAgreeError = false)"
-              type="checkbox"
-              v-model="isAgree"
-              id="agree"
-            />
-            <label for="agree"><i class="uil uil-check"></i></label
-            ><span>{{ $t('leave.account.agreement') }}</span>
+            <input @click="isAgree ? (isAgreeError = true) : (isAgreeError = false)" type="checkbox" v-model="isAgree"
+              id="agree" />
+            <label for="agree"><i class="uil uil-check"></i></label><span>{{ $t('leave.account.agreement') }}</span>
           </div>
           <p class="mt10" v-if="isAgreeError" style="color: red">
             {{ $t('agreement.leave.text') }}
@@ -48,12 +43,7 @@
     </div>
 
     <ClientOnly>
-      <el-dialog
-        v-model="openModal"
-        append-to-body
-        class="modal-area-type"
-        :show-close="false"
-      >
+      <el-dialog v-model="openModal" append-to-body class="modal-area-type" :show-close="false">
         <div class="modal-alert">
           <dl class="ma-header">
             <dt>{{ $t('information') }}</dt>
@@ -87,12 +77,16 @@
 <script setup lang="ts">
 import { ElDialog, ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
+import shared from '~~/scripts/shared';
 
-const route = useRoute()
-const config = useRuntimeConfig()
-const { t, locale } = useI18n()
+const { t } = useI18n()
 const router = useRouter()
 const { $localePath } = useNuxtApp()
+
+const reason = ref('')
+const isAgree = ref(false)
+const isAgreeError = ref(false)
+const openModal = ref(false)
 
 
 definePageMeta({
@@ -101,59 +95,7 @@ definePageMeta({
   middleware: 'auth',
 })
 
-useHead({
-  title: `${t('seo.leave.title')} | Zempie`,
-  link: [
-    {
-      rel: 'alternate',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-      hreflang: locale,
-    },
-    {
-      rel: 'canonical',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-  ],
-  meta: [
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-    {
-      property: 'og:site_name',
-      content: 'Zempie',
-    },
-    {
-      name: 'og:type',
-      content: 'website',
-    },
-    {
-      name: 'robots',
-      content: 'noindex, nofollow',
-    },
-    {
-      name: 'description',
-      content: `${t('seo.leave.desc')}`,
-    },
-    {
-      property: 'og:title',
-      content: `${t('seo.leave.title')}`,
-    },
-    {
-      property: 'og:description',
-      content: `${t('seo.leave.description')}`,
-    },
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`,
-    },
-  ],
-})
-
-const reason = ref('')
-const isAgree = ref(false)
-const isAgreeError = ref(false)
-const openModal = ref(false)
+shared.createHeadMeta(t('seo.leave.title'), t('seo.leave.desc'))
 
 async function openConfirnModal() {
   if (!isAgree.value) {
@@ -181,7 +123,7 @@ async function leave() {
     }, 1000)
   } else {
     ElMessage({
-      message: error.error.message,
+      message: (error as any).error.message,
       type: 'error',
     })
   }

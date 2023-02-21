@@ -877,5 +877,6 @@
   "need.refresh": "Please refresh the page",
   "setting": "Settings",
   "userSetting.alarm.info": "Click the toggle on the right to disable notifications. You can change it at any time.",
-  "global.game.jam.info":"Show us your talent for GGJ 2023"
+  "global.game.jam.info":"Show us your talent for GGJ 2023",
+  "members":"Members"
 }

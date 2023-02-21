@@ -8,46 +8,25 @@
         <ul>
           <li>{{ $t('deployManage.show.version') }}</li>
           <li>
-            <input
-              readonly
-              v-model="deployVersion.number"
-              type="text"
-              name=""
-              title=""
-              placeholder=""
-              class="w100p"
-            />
+            <input readonly v-model="deployVersion.number" type="text" name="" title="" placeholder="" class="w100p" />
           </li>
         </ul>
         <ul>
           <li>{{ $t('deployManage.show.detailed.version') }}</li>
           <li>
-            <input
-              readonly
-              v-model="deployVersion.version"
-              type="text"
-              name=""
-              title=""
-              placeholder=""
-              class="w100p"
-            />
+            <input readonly v-model="deployVersion.version" type="text" name="" title="" placeholder="" class="w100p" />
           </li>
         </ul>
         <ol>
           <li>{{ $t('deployManage.undeploy.title') }}</li>
           <li>{{ $t('deployManage.undeploy.info') }}</li>
           <li>
-            <a
-              class="btn-gray w100p"
-              style="
+            <a class="btn-gray w100p" style="
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 padding: 0px;
-              "
-              @click="showUndeployModal = true"
-              >{{ $t('deployManage.undeploy.title') }}</a
-            >
+              " @click="showUndeployModal = true">{{ $t('deployManage.undeploy.title') }}</a>
           </li>
         </ol>
       </div>
@@ -87,12 +66,7 @@
         </ol>
       </div>
       <ClientOnly>
-        <el-dialog
-          v-model="showUndeployModal"
-          append-to-body
-          class="modal-area-type"
-          width="500px"
-        >
+        <el-dialog v-model="showUndeployModal" append-to-body class="modal-area-type" width="500px">
           <div class="modal-alert">
             <dl class="ma-header">
               <dt>{{ $t('information') }}</dt>
@@ -108,22 +82,14 @@
                 <button class="btn-default w48p" @click="undeploy">
                   {{ $t('undeploy') }}
                 </button>
-                <button
-                  class="btn-gray w48p"
-                  @click="showUndeployModal = false"
-                >
+                <button class="btn-gray w48p" @click="showUndeployModal = false">
                   {{ $t('no') }}
                 </button>
               </div>
             </div>
           </div>
         </el-dialog>
-        <el-dialog
-          v-model="showSelectStageModal"
-          append-to-body
-          class="modal-area-type"
-          width="500px"
-        >
+        <el-dialog v-model="showSelectStageModal" append-to-body class="modal-area-type" width="500px">
           <div class="modal-alert">
             <dl class="ma-header">
               <dt>{{ $t('information') }}</dt>
@@ -142,12 +108,7 @@
                 <h2 style="margin-right: 10px">
                   {{ $t('deployManage.changeStage.modal.title') }}
                 </h2>
-                <select
-                  name=""
-                  title=""
-                  class="stage-select-box"
-                  v-model="selectedStage"
-                >
+                <select name="" title="" class="stage-select-box" v-model="selectedStage">
                   <option v-for="option in stageOptions" :value="option.stage">
                     {{ option.name }}
                   </option>
@@ -157,10 +118,7 @@
                 <button class="btn-default w48p" @click="changeStage">
                   {{ $t('change') }}
                 </button>
-                <button
-                  class="btn-gray w48p"
-                  @click="showSelectStageModal = false"
-                >
+                <button class="btn-gray w48p" @click="showSelectStageModal = false">
                   {{ $t('cancel') }}
                 </button>
               </div>
@@ -176,66 +134,10 @@
 import { ElMessage, ElDialog, ElLoading } from 'element-plus'
 import { eGameStage, IProject, IVersion } from '~~/types'
 import { useI18n } from 'vue-i18n'
-import { value } from 'dom7';
+import shared from '~~/scripts/shared';
 
-const { t, locale } = useI18n()
+const { t } = useI18n()
 const route = useRoute()
-const config = useRuntimeConfig()
-
-definePageMeta({
-  title: 'Distribution Mgmt.',
-  name: 'deployManage',
-  middleware: 'auth',
-})
-
-useHead({
-  title: `${t('seo.project.deploy.manage.title')} | Zempie Studio`,
-  link: [
-    {
-      rel: 'alternate',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-      hreflang: locale,
-    },
-    {
-      rel: 'canonical',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-  ],
-  meta: [
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-    {
-      property: 'og:site_name',
-      content: 'Zempie',
-    },
-    {
-      name: 'og:type',
-      content: 'website',
-    },
-    {
-      name: 'robots',
-      content: 'noindex, nofollow',
-    },
-    {
-      name: 'description',
-      content: `${t('seo.project.deploy.manage.desc')}`,
-    },
-    {
-      property: 'og:title',
-      content: `${t('seo.project.deploy.manage.title')}`,
-    },
-    {
-      property: 'og:description',
-      content: `${t('seo.project.deploy.manage.description')}`,
-    },
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`,
-    },
-  ],
-})
 
 const options = ref([])
 const selectVersion = ref()
@@ -253,6 +155,15 @@ const projectId = computed(() => route.params.id as string)
 const emit = defineEmits(['refresh'])
 
 const { editProject, getProjectInfo } = useProject()
+
+definePageMeta({
+  title: 'Distribution Mgmt.',
+  name: 'deployManage',
+  middleware: 'auth',
+})
+
+
+shared.createHeadMeta(t('seo.project.deploy.manage.title'), t('seo.project.deploy.manage.desc'))
 
 watch(
   () => editProject.value.info,
@@ -279,8 +190,10 @@ function setVersionInfo(info: IProject) {
   options.value = passedList.map((version: IVersion) => {
     return {
       id: version.id,
-      version: version.version}})
-  
+      version: version.version
+    }
+  })
+
   if (options.value.length) selectVersion.value = options.value[0]
 }
 
@@ -317,7 +230,7 @@ async function deploy() {
       }
     )
 
-    
+
   const formData = new FormData()
 
   formData.append('id', String(projectId.value))
@@ -345,7 +258,7 @@ async function changeStage() {
     })
 
   const formData = new FormData()
-  
+
   formData.append('id', String(projectId.value))
   formData.append('stage', String(selectedStage.value))
   formData.append('deploy_version_id', String(deployVersion.id))

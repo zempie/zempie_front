@@ -801,7 +801,7 @@
   "seo.reset.pwd.title": "비밀번호 초기화",
   "seo.reset.pwd.desc": "비밀번호 초기화",
   "seo.reset.pwd.description": "비밀번호 초기화",
-  "seo.search.title": "젬파이 검색 결과",
+  "seo.search.title": "검색 결과",
   "seo.search.desc1": "젬파이 내에서 ",
   "seo.search.desc2": "로 검색한 결과입니다.",
   "seo.zemjam.title": "젬잼",
@@ -875,5 +875,6 @@
   "need.refresh": "새로고침 해주세요",
   "setting": "세팅",
   "userSetting.alarm.info": "오른쪽의 토글을 틀릭하시면 알림이 비활성화됩니다. 언제든지 다시 활성화하실 수 있습니다.",
-  "global.game.jam.info":"젬파이와 함께 2023 GGJ를 위해 여러분의 재능을 뽐내보세요"
+  "global.game.jam.info":"젬파이와 함께 2023 GGJ를 위해 여러분의 재능을 뽐내보세요",
+  "members":"멤버"
 }

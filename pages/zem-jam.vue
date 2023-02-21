@@ -3,37 +3,21 @@
     <div class="container" ref="eventRef">
       <div class="slogan">
         <div style="font-family: 'Press Start 2P'">
-          <h1
-            style="font-family: 'Press Start 2P'"
-            data-scroll
-            data-scroll-speed="1"
-            data-scroll-delay="0.05"
-          >
+          <h1 style="font-family: 'Press Start 2P'" data-scroll data-scroll-speed="1" data-scroll-delay="0.05">
             WELCOME TO ZEM JAM
           </h1>
           <h2 data-scroll data-scroll-speed="1.3" data-scroll-delay="0.05">
             [ONLINE]
           </h2>
-          <h3
-            data-scroll
-            data-scroll-speed="1.6"
-            data-scroll-delay="0.05"
-            style="font-family: 'Russo One', 'NeoDunggeunmo'"
-          >
+          <h3 data-scroll data-scroll-speed="1.6" data-scroll-delay="0.05"
+            style="font-family: 'Russo One', 'NeoDunggeunmo'">
             {{ t('zemjam.info1') }}
             <br /><br />
             {{ t('zemjam.info2') }}
           </h3>
-          <div
-            data-scroll
-            data-scroll-speed="1.9"
-            data-scroll-delay="0.05"
-            data-scroll-direction=""
-            style="font-family: 'Russo One'"
-          >
-            <a style="font-family: 'Russo One', 'NeoDunggeunmo'"
-              >{{$t('ended.event')}}</a
-            >
+          <div data-scroll data-scroll-speed="1.9" data-scroll-delay="0.05" data-scroll-direction=""
+            style="font-family: 'Russo One'">
+            <a style="font-family: 'Russo One', 'NeoDunggeunmo'">{{ $t('ended.event') }}</a>
           </div>
         </div>
       </div>
@@ -42,37 +26,17 @@
           <h2 data-scroll data-scroll-speed="1" data-scroll-delay="0.05">
             ZEM JAM Is
           </h2>
-          <h3
-            data-scroll
-            data-scroll-speed="1.3"
-            data-scroll-delay="0.05"
-            style="font-family: 'Russo One', 'NeoDunggeunmo'"
-          >
+          <h3 data-scroll data-scroll-speed="1.3" data-scroll-delay="0.05"
+            style="font-family: 'Russo One', 'NeoDunggeunmo'">
             {{ t('zemjam.info3') }}
           </h3>
           <div>
             <p data-scroll data-scroll-speed="1.6" style="max-width: 100%">
-              <img
-                style="max-width: 100%"
-                class="picnic-pic"
-                src="/images/illust_zampie_picnic.png"
-                alt="zemjam_picnic_picture"
-                title=""
-              />
+              <img style="max-width: 100%" class="picnic-pic" src="/images/illust_zampie_picnic.png"
+                alt="zemjam_picnic_picture" title="" />
             </p>
-            <div
-              data-scroll
-              data-scroll-direction="horizontal"
-              data-scroll-speed="-0.5"
-            >
-              <img
-                class="zem-title"
-                src="/images/zemjam_logo_1.png"
-                alt=""
-                title=""
-                width="450"
-                height="400"
-              />
+            <div data-scroll data-scroll-direction="horizontal" data-scroll-speed="-0.5">
+              <img class="zem-title" src="/images/zemjam_logo_1.png" alt="" title="" width="450" height="400" />
             </div>
           </div>
         </div>
@@ -82,47 +46,30 @@
           <h2 data-scroll data-scroll-speed="1" data-scroll-delay="0.05">
             GAME SUBMISSION IS OPEN
           </h2>
-          <h3
-            data-scroll
-            data-scroll-speed="1.3"
-            data-scroll-delay="0.05"
-            style="font-family: 'Russo One', 'NeoDunggeunmo'"
-          >
+          <h3 data-scroll data-scroll-speed="1.3" data-scroll-delay="0.05"
+            style="font-family: 'Russo One', 'NeoDunggeunmo'">
             FROM APRIL 1 TO APRIL 11!
           </h3>
           <div data-scroll data-scroll-speed="1.6" data-scroll-delay="0.05">
-            <iframe
-              width="100%"
-              height="615"
-              src="https://www.youtube.com/embed/8oLBJ5fp_Rk"
-              title="YouTube video player"
-              frameborder="0"
+            <iframe width="100%" height="615" src="https://www.youtube.com/embed/8oLBJ5fp_Rk"
+              title="YouTube video player" frameborder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-            ></iframe>
+              allowfullscreen></iframe>
           </div>
         </div>
       </div>
       <div class="out-mission">
         <div>
           <dl>
-            <dt
-              data-scroll
-              data-scroll-direction="horizontal"
-              data-scroll-speed="-0.1"
-            >
+            <dt data-scroll data-scroll-direction="horizontal" data-scroll-speed="-0.1">
               <img src="/images/mission_icon01.png" alt="" title="" />
             </dt>
             <dd>
               <h2 data-scroll data-scroll-speed="1" data-scroll-delay="0.05">
                 OUR MISSION
               </h2>
-              <h3
-                data-scroll
-                data-scroll-speed="1"
-                data-scroll-delay="0.05"
-                style="font-family: 'Russo One', 'NeoDunggeunmo'"
-              >
+              <h3 data-scroll data-scroll-speed="1" data-scroll-delay="0.05"
+                style="font-family: 'Russo One', 'NeoDunggeunmo'">
                 {{ t('zemjam.info4') }}
 
                 <br /><br />
@@ -135,23 +82,14 @@
               <h2 data-scroll data-scroll-speed="1" data-scroll-delay="0.05">
                 ABOUT PARTICIPATING
               </h2>
-              <h3
-                data-scroll
-                data-scroll-speed="1"
-                data-scroll-delay="0.05"
-                style="font-family: 'Russo One'"
-              >
+              <h3 data-scroll data-scroll-speed="1" data-scroll-delay="0.05" style="font-family: 'Russo One'">
                 {{ t('zemjam.info6') }}
 
                 <br /><br />
                 {{ t('zemjam.info7') }}
               </h3>
             </li>
-            <li
-              data-scroll
-              data-scroll-direction="horizontal"
-              data-scroll-speed="0.1"
-            >
+            <li data-scroll data-scroll-direction="horizontal" data-scroll-speed="0.1">
               <img src="/images/mission_icon02.png" alt="" title="" />
               <br />
               <img src="/images/mission_icon03.png" alt="" title="" />
@@ -164,12 +102,8 @@
           <h2 data-scroll data-scroll-speed="1" data-scroll-delay="0.05">
             WANT TO BECOME OUR PARTNER?
           </h2>
-          <h3
-            data-scroll
-            data-scroll-speed="1"
-            data-scroll-delay="0.05"
-            style="font-family: 'Russo One', 'NeoDunggeunmo'"
-          >
+          <h3 data-scroll data-scroll-speed="1" data-scroll-delay="0.05"
+            style="font-family: 'Russo One', 'NeoDunggeunmo'">
             {{ t('zemjam.info8') }}
           </h3>
         </div>
@@ -195,61 +129,11 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import shared from '~/scripts/shared'
 
-const { t, locale } = useI18n()
-const route = useRoute()
-const config = useRuntimeConfig()
+const { t } = useI18n()
 
-useHead({
-  title: `${t('seo.zemjam.title')} | Zempie`,
-  link: [
-    {
-      rel: 'alternate',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-      hreflang: locale,
-    },
-    {
-      rel: 'canonical',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-  ],
-  meta: [
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-    {
-      property: 'og:site_name',
-      content: 'Zempie',
-    },
-
-    {
-      name: 'og:type',
-      content: 'website',
-    },
-    {
-      name: 'robots',
-      content: 'index, follow',
-    },
-    {
-      name: 'description',
-      content: `${t('seo.zemjam.desc')}`,
-    },
-
-    {
-      property: 'og:title',
-      content: `${t('seo.zemjam.title')}`,
-    },
-    {
-      property: 'og:description',
-      content: `${t('seo.zemjam.description')}`,
-    },
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`,
-    },
-  ],
-})
+shared.createHeadMeta(t('seo.zemjam.title'), t('seo.zemjam.desc'))
 
 definePageMeta({
   layout: 'header-only',
@@ -284,12 +168,12 @@ definePageMeta({
   position: fixed;
 }
 
-.header > div {
+.header>div {
   width: 100%;
   background: #01071f;
 }
 
-.header > div > dl {
+.header>div>dl {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -298,7 +182,7 @@ definePageMeta({
   padding: 10px 0;
 }
 
-.header > div > dl dd a {
+.header>div>dl dd a {
   display: inline-block;
   width: 30px;
   height: 30px;
@@ -310,12 +194,12 @@ definePageMeta({
   border-radius: 50%;
 }
 
-.header > div > dl dd a:hover {
+.header>div>dl dd a:hover {
   border: #d64dd8 1px solid;
   background: #d64dd8;
 }
 
-.header > ul {
+.header>ul {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -325,39 +209,39 @@ definePageMeta({
   border-bottom: rgba(255, 255, 255, 0.3) 1px solid;
 }
 
-.header > ul > li:nth-child(1) {
+.header>ul>li:nth-child(1) {
   width: 40%;
 }
 
-.header > ul > li:nth-child(1) a {
+.header>ul>li:nth-child(1) a {
   display: inline-block;
   margin-right: 30px;
   font-size: 16px;
   color: #fff;
 }
 
-.header > ul > li:nth-child(1) a:hover {
+.header>ul>li:nth-child(1) a:hover {
   color: #d64dd8;
 }
 
-.header > ul > li:nth-child(2) {
+.header>ul>li:nth-child(2) {
   width: 20%;
   text-align: center;
 }
 
-.header > ul > li:nth-child(3) {
+.header>ul>li:nth-child(3) {
   width: 40%;
   text-align: right;
 }
 
-.header > ul > li:nth-child(3) a {
+.header>ul>li:nth-child(3) a {
   display: inline-block;
   margin-left: 10px;
   font-size: 22px;
   color: #fff;
 }
 
-.header > ul > li:nth-child(3) a:hover {
+.header>ul>li:nth-child(3) a:hover {
   color: #d64dd8;
 }
 
@@ -380,17 +264,16 @@ definePageMeta({
 }
 
 @media all and (min-width: 992px) and (max-width: 1199px) {
-  .header > div > dl {
+  .header>div>dl {
     width: 970px;
   }
 
-  .header > ul {
+  .header>ul {
     width: 970px;
   }
 }
 
-@media all and (min-width: 1200px) {
-}
+@media all and (min-width: 1200px) {}
 
 /* 상단영역 - 모바일 */
 .header-mobile {
@@ -402,13 +285,13 @@ definePageMeta({
   z-index: 999;
 }
 
-.header-mobile > .gnb-header {
+.header-mobile>.gnb-header {
   margin: 0 20px;
   padding: 11px 0 11px 0;
   overflow: hidden;
 }
 
-.header-mobile > .gnb-header > dt {
+.header-mobile>.gnb-header>dt {
   float: left;
   width: 25%;
   padding-top: 4px;
@@ -417,28 +300,28 @@ definePageMeta({
   color: #333;
 }
 
-.header-mobile > .gnb-header > dt:first-child {
+.header-mobile>.gnb-header>dt:first-child {
   text-align: left;
 }
 
-.header-mobile > .gnb-header > dt i {
+.header-mobile>.gnb-header>dt i {
   color: #333;
   cursor: pointer;
   transition: 0.3s;
 }
 
-.header-mobile > .gnb-header > dt i:hover {
+.header-mobile>.gnb-header>dt i:hover {
   color: #2d75d9;
 }
 
-.header-mobile > .gnb-header > dd {
+.header-mobile>.gnb-header>dd {
   float: left;
   width: 50%;
   padding-top: 3px;
   text-align: center;
 }
 
-.header-mobile > .gnbMenu {
+.header-mobile>.gnbMenu {
   position: fixed;
   top: 0;
   width: 300px;
@@ -449,7 +332,7 @@ definePageMeta({
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
 }
 
-.header-mobile > .gnbMenu > dl {
+.header-mobile>.gnbMenu>dl {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -457,54 +340,51 @@ definePageMeta({
   border-bottom: #e5e5e5 1px solid;
 }
 
-.header-mobile > .gnbMenu > dl > dt {
+.header-mobile>.gnbMenu>dl>dt {
   font-size: 18px;
   line-height: 18px;
   color: #333;
 }
 
-.header-mobile > .gnbMenu > dl > dd {
+.header-mobile>.gnbMenu>dl>dd {
   font-size: 22px;
   line-height: 22px;
   color: #333;
 }
 
-.header-mobile > .gnbMenu > ul {
+.header-mobile>.gnbMenu>ul {
   padding: 20px;
 }
 
-.header-mobile > .gnbMenu > ul > li {
+.header-mobile>.gnbMenu>ul>li {
   padding: 15px 0;
 }
 
-.header-mobile > .gnbMenu > ul > li > a {
+.header-mobile>.gnbMenu>ul>li>a {
   font-size: 16px;
   line-height: 16px;
   color: #333;
 }
 
-.header-mobile > .gnbMenu > ul > li ul {
+.header-mobile>.gnbMenu>ul>li ul {
   padding: 15px 10px 0 10px;
 }
 
-.header-mobile > .gnbMenu > ul > li ul li {
+.header-mobile>.gnbMenu>ul>li ul li {
   padding: 5px 0;
 }
 
-.header-mobile > .gnbMenu > ul > li ul li a {
+.header-mobile>.gnbMenu>ul>li ul li a {
   font-size: 13px;
   line-height: 16px;
   color: #333;
 }
 
-@media all and (max-width: 479px) {
-}
+@media all and (max-width: 479px) {}
 
-@media all and (min-width: 480px) and (max-width: 767px) {
-}
+@media all and (min-width: 480px) and (max-width: 767px) {}
 
-@media all and (min-width: 768px) and (max-width: 991px) {
-}
+@media all and (min-width: 768px) and (max-width: 991px) {}
 
 @media all and (min-width: 992px) and (max-width: 1199px) {
   .header-mobile {
@@ -520,66 +400,65 @@ definePageMeta({
 
 /* 하단영역 */
 
-.footer > div {
+.footer>div {
   width: 1200px;
   margin: 0 auto;
   padding: 300px 0 300px 0;
   text-align: center;
 }
 
-.footer > div p a {
+.footer>div p a {
   color: #fff;
 }
 
-.footer > div p a:hover {
+.footer>div p a:hover {
   color: #d64dd8;
 }
 
-.footer > div p span {
+.footer>div p span {
   display: inline-block;
   padding: 0 15px;
   font-family: 'Open Sans';
 }
 
-.footer > div div {
+.footer>div div {
   margin-top: 40px;
 }
 
-.footer > div div span {
+.footer>div div span {
   display: inline-block;
   padding: 0 15px;
   font-family: 'Open Sans';
 }
 
 @media all and (max-width: 479px) {
-  .footer > div {
+  .footer>div {
     width: 90%;
     padding: 190px 0 70px 0;
   }
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
-  .footer > div {
+  .footer>div {
     width: 470px;
     padding: 190px 0 70px 0;
   }
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
-  .footer > div {
+  .footer>div {
     width: 750px;
     padding: 190px 0 70px 0;
   }
 }
 
 @media all and (min-width: 992px) and (max-width: 1199px) {
-  .footer > div {
+  .footer>div {
     width: 970px;
   }
 }
 
-@media all and (min-width: 1200px) {
-}
+@media all and (min-width: 1200px) {}
 
 /* 상단영역 - PC */
 .container {
@@ -599,14 +478,11 @@ definePageMeta({
   }
 }
 
-@media all and (min-width: 768px) and (max-width: 991px) {
-}
+@media all and (min-width: 768px) and (max-width: 991px) {}
 
-@media all and (min-width: 992px) and (max-width: 1199px) {
-}
+@media all and (min-width: 992px) and (max-width: 1199px) {}
 
-@media all and (min-width: 1200px) {
-}
+@media all and (min-width: 1200px) {}
 
 /* 메인  //////////////////////////////////////////////////*/
 /* SLOGAN */
@@ -614,24 +490,24 @@ definePageMeta({
   width: 100%;
 }
 
-.slogan > div {
+.slogan>div {
   width: 1200px;
   margin: 0 auto;
   padding: 150px 400px 100px 0;
 }
 
-.slogan > div h1 {
+.slogan>div h1 {
   font: 75px/85px 'Press Start 2P';
   color: #fff;
 }
 
-.slogan > div h2 {
+.slogan>div h2 {
   margin-top: 50px;
   font: 50px/65px 'Press Start 2P';
   color: #fff;
 }
 
-.slogan > div h3 {
+.slogan>div h3 {
   margin-top: 50px;
   padding-right: 300px;
   font-size: 20px;
@@ -639,11 +515,11 @@ definePageMeta({
   color: #fff;
 }
 
-.slogan > div div {
+.slogan>div div {
   margin-top: 80px;
 }
 
-.slogan > div div a {
+.slogan>div div a {
   display: inline-block;
   padding: 20px 50px;
   font-size: 16px;
@@ -652,130 +528,129 @@ definePageMeta({
   border: #fff 1px solid;
 }
 
-.slogan > div div a:hover {
+.slogan>div div a:hover {
   color: #fff;
   border: #d64dd8 1px solid;
   background: #d64dd8;
 }
 
 @media all and (max-width: 479px) {
-  .slogan > div {
+  .slogan>div {
     width: 90%;
     padding: 120px 0 100px 0;
   }
 
-  .slogan > div h1 {
+  .slogan>div h1 {
     font: 40px/50px 'Press Start 2P';
   }
 
-  .slogan > div h2 {
+  .slogan>div h2 {
     margin-top: 30px;
     font: 30px/35px 'Press Start 2P';
   }
 
-  .slogan > div h3 {
+  .slogan>div h3 {
     margin-top: 30px;
     padding-right: 100px;
     font-size: 16px;
     line-height: 26px;
   }
 
-  .slogan > div div {
+  .slogan>div div {
     margin-top: 50px;
   }
 
-  .slogan > div div a {
+  .slogan>div div a {
     font-size: 16px;
     line-height: 14px;
   }
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
-  .slogan > div {
+  .slogan>div {
     width: 470px;
     padding: 120px 0 100px 0;
   }
 
-  .slogan > div h1 {
+  .slogan>div h1 {
     font: 40px/50px 'Press Start 2P';
   }
 
-  .slogan > div h2 {
+  .slogan>div h2 {
     margin-top: 30px;
     font: 30px/35px 'Press Start 2P';
   }
 
-  .slogan > div h3 {
+  .slogan>div h3 {
     margin-top: 30px;
     padding-right: 100px;
     font-size: 16px;
     line-height: 26px;
   }
 
-  .slogan > div div {
+  .slogan>div div {
     margin-top: 50px;
   }
 
-  .slogan > div div a {
+  .slogan>div div a {
     font-size: 16px;
     line-height: 14px;
   }
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
-  .slogan > div {
+  .slogan>div {
     width: 750px;
     padding: 150px 0 100px 0;
   }
 
-  .slogan > div h1 {
+  .slogan>div h1 {
     font: 55px/65px 'Press Start 2P';
   }
 
-  .slogan > div h2 {
+  .slogan>div h2 {
     margin-top: 40px;
     font: 40px/45px 'Press Start 2P';
   }
 
-  .slogan > div h3 {
+  .slogan>div h3 {
     margin-top: 40px;
     padding-right: 100px;
     font-size: 18px;
     line-height: 28px;
   }
 
-  .slogan > div div {
+  .slogan>div div {
     margin-top: 60px;
   }
 }
 
 @media all and (min-width: 992px) and (max-width: 1199px) {
-  .slogan > div {
+  .slogan>div {
     width: 970px;
   }
 }
 
-@media all and (min-width: 1200px) {
-}
+@media all and (min-width: 1200px) {}
 
 /* ZEM JAM Is */
 .zemjam-is {
   width: 100%;
 }
 
-.zemjam-is > div {
+.zemjam-is>div {
   width: 1200px;
   margin: 0 auto;
   padding: 150px 0 150px 0;
 }
 
-.zemjam-is > div h2 {
+.zemjam-is>div h2 {
   margin-top: 50px;
   font: 50px/65px 'Press Start 2P';
   color: #fff;
 }
 
-.zemjam-is > div h3 {
+.zemjam-is>div h3 {
   margin-top: 50px;
   padding-right: 400px;
   font-size: 20px;
@@ -783,12 +658,12 @@ definePageMeta({
   color: #fff;
 }
 
-.zemjam-is > div > div {
+.zemjam-is>div>div {
   position: relative;
   margin-top: 80px;
 }
 
-.zemjam-is > div > div div {
+.zemjam-is>div>div div {
   position: absolute;
   top: 100px;
   right: 0;
@@ -796,143 +671,142 @@ definePageMeta({
 }
 
 @media all and (max-width: 479px) {
-  .zemjam-is > div {
+  .zemjam-is>div {
     width: 90%;
     padding: 50px 0 100px 0;
   }
 
-  .zemjam-is > div h2 {
+  .zemjam-is>div h2 {
     margin-top: 30px;
     font: 30px/35px 'Press Start 2P';
   }
 
-  .zemjam-is > div h3 {
+  .zemjam-is>div h3 {
     margin-top: 30px;
     padding-right: 100px;
     font-size: 16px;
     line-height: 26px;
   }
 
-  .zemjam-is > div > div {
+  .zemjam-is>div>div {
     margin-top: 50px;
   }
 
-  .zemjam-is > div > div p img {
+  .zemjam-is>div>div p img {
     width: 85%;
   }
 
-  .zemjam-is > div > div div {
+  .zemjam-is>div>div div {
     top: 120px;
     right: 0;
     margin-left: 350px;
   }
 
-  .zemjam-is > div > div div img {
+  .zemjam-is>div>div div img {
     width: 150px;
   }
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
-  .zemjam-is > div {
+  .zemjam-is>div {
     width: 470px;
     padding: 50px 0 100px 0;
   }
 
-  .zemjam-is > div h2 {
+  .zemjam-is>div h2 {
     margin-top: 30px;
     font: 30px/35px 'Press Start 2P';
   }
 
-  .zemjam-is > div h3 {
+  .zemjam-is>div h3 {
     margin-top: 30px;
     padding-right: 100px;
     font-size: 16px;
     line-height: 26px;
   }
 
-  .zemjam-is > div > div {
+  .zemjam-is>div>div {
     margin-top: 50px;
   }
 
-  .zemjam-is > div > div p img {
+  .zemjam-is>div>div p img {
     width: 85%;
   }
 
-  .zemjam-is > div > div div {
+  .zemjam-is>div>div div {
     top: 120px;
     right: 0;
     margin-left: 350px;
   }
 
-  .zemjam-is > div > div div img {
+  .zemjam-is>div>div div img {
     width: 150px;
   }
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
-  .zemjam-is > div {
+  .zemjam-is>div {
     width: 750px;
     padding: 80px 0 100px 0;
   }
 
-  .zemjam-is > div h2 {
+  .zemjam-is>div h2 {
     margin-top: 40px;
     font: 40px/45px 'Press Start 2P';
   }
 
-  .zemjam-is > div h3 {
+  .zemjam-is>div h3 {
     margin-top: 40px;
     padding-right: 100px;
     font-size: 18px;
     line-height: 28px;
   }
 
-  .zemjam-is > div > div {
+  .zemjam-is>div>div {
     margin-top: 60px;
   }
 
-  .zemjam-is > div > div p img {
+  .zemjam-is>div>div p img {
     width: 85%;
   }
 
-  .zemjam-is > div > div div {
+  .zemjam-is>div>div div {
     top: 120px;
     right: 0;
     margin-left: 350px;
   }
 
-  .zemjam-is > div > div div img {
+  .zemjam-is>div>div div img {
     width: 250px;
   }
 }
 
 @media all and (min-width: 992px) and (max-width: 1199px) {
-  .zemjam-is > div {
+  .zemjam-is>div {
     width: 970px;
   }
 }
 
-@media all and (min-width: 1200px) {
-}
+@media all and (min-width: 1200px) {}
 
 /* ZEM JAM Is */
 .game-submission {
   width: 100%;
 }
 
-.game-submission > div {
+.game-submission>div {
   width: 1200px;
   margin: 0 auto;
   padding: 100px 0 150px 0;
 }
 
-.game-submission > div h2 {
+.game-submission>div h2 {
   margin-top: 50px;
   font: 50px/65px 'Press Start 2P';
   color: #fff;
 }
 
-.game-submission > div h3 {
+.game-submission>div h3 {
   margin-top: 50px;
   padding-right: 400px;
   font-size: 20px;
@@ -940,23 +814,23 @@ definePageMeta({
   color: #d64dd8;
 }
 
-.game-submission > div > div {
+.game-submission>div>div {
   margin-top: 80px;
 }
 
 @media all and (max-width: 479px) {
-  .game-submission > div {
+  .game-submission>div {
     width: 90%;
     padding: 50px 0 100px 0;
   }
 
-  .game-submission > div h2 {
+  .game-submission>div h2 {
     margin-top: 30px;
     font: 30px/35px 'Press Start 2P';
     color: #fff;
   }
 
-  .game-submission > div h3 {
+  .game-submission>div h3 {
     margin-top: 30px;
     padding-right: 100px;
     font-size: 16px;
@@ -964,28 +838,28 @@ definePageMeta({
     color: #d64dd8;
   }
 
-  .game-submission > div > div {
+  .game-submission>div>div {
     margin-top: 50px;
   }
 
-  .game-submission > div > div iframe {
+  .game-submission>div>div iframe {
     height: 260px;
   }
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
-  .game-submission > div {
+  .game-submission>div {
     width: 470px;
     padding: 50px 0 100px 0;
   }
 
-  .game-submission > div h2 {
+  .game-submission>div h2 {
     margin-top: 30px;
     font: 30px/35px 'Press Start 2P';
     color: #fff;
   }
 
-  .game-submission > div h3 {
+  .game-submission>div h3 {
     margin-top: 30px;
     padding-right: 100px;
     font-size: 16px;
@@ -993,28 +867,28 @@ definePageMeta({
     color: #d64dd8;
   }
 
-  .game-submission > div > div {
+  .game-submission>div>div {
     margin-top: 50px;
   }
 
-  .game-submission > div > div iframe {
+  .game-submission>div>div iframe {
     height: 260px;
   }
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
-  .game-submission > div {
+  .game-submission>div {
     width: 750px;
     padding: 80px 0 100px 0;
   }
 
-  .game-submission > div h2 {
+  .game-submission>div h2 {
     margin-top: 40px;
     font: 40px/45px 'Press Start 2P';
     color: #fff;
   }
 
-  .game-submission > div h3 {
+  .game-submission>div h3 {
     margin-top: 40px;
     padding-right: 100px;
     font-size: 18px;
@@ -1022,23 +896,22 @@ definePageMeta({
     color: #d64dd8;
   }
 
-  .game-submission > div > div {
+  .game-submission>div>div {
     margin-top: 60px;
   }
 
-  .game-submission > div > div iframe {
+  .game-submission>div>div iframe {
     height: 420px;
   }
 }
 
 @media all and (min-width: 992px) and (max-width: 1199px) {
-  .game-submission > div {
+  .game-submission>div {
     width: 970px;
   }
 }
 
-@media all and (min-width: 1200px) {
-}
+@media all and (min-width: 1200px) {}
 
 /* OUR MISSION */
 .out-mission {
@@ -1046,60 +919,60 @@ definePageMeta({
   background: url('/images/mission_bg.png') center bottom no-repeat, #00030e;
 }
 
-.out-mission > div {
+.out-mission>div {
   width: 1200px;
   margin: 0 auto;
   padding: 200px 0 550px 0;
 }
 
-.out-mission > div dl {
+.out-mission>div dl {
   display: flex;
   align-items: flex-end;
 }
 
-.out-mission > div dl dt {
+.out-mission>div dl dt {
   width: 30%;
 }
 
-.out-mission > div dl dd {
+.out-mission>div dl dd {
   width: 65%;
   text-align: right;
 }
 
-.out-mission > div dl dd h2 {
+.out-mission>div dl dd h2 {
   font: 50px/65px 'Press Start 2P';
   color: #fff;
 }
 
-.out-mission > div dl dd h3 {
+.out-mission>div dl dd h3 {
   margin-top: 50px;
   font-size: 22px;
   line-height: 34px;
 }
 
-.out-mission > div ul {
+.out-mission>div ul {
   display: flex;
   align-items: flex-end;
   margin-top: 150px;
 }
 
-.out-mission > div ul li:nth-child(1) {
+.out-mission>div ul li:nth-child(1) {
   width: 65%;
 }
 
-.out-mission > div ul li:nth-child(1) h2 {
+.out-mission>div ul li:nth-child(1) h2 {
   font: 50px/65px 'Press Start 2P';
   color: #fff;
   word-break: break-all;
 }
 
-.out-mission > div ul li:nth-child(1) h3 {
+.out-mission>div ul li:nth-child(1) h3 {
   margin-top: 50px;
   font-size: 22px;
   line-height: 34px;
 }
 
-.out-mission > div ul li:nth-child(2) {
+.out-mission>div ul li:nth-child(2) {
   width: 30%;
   text-align: right;
 }
@@ -1108,76 +981,77 @@ definePageMeta({
   .zem-title {
     max-height: 200px;
   }
+
   .out-mission {
     background-size: 150%;
   }
 
-  .out-mission > div {
+  .out-mission>div {
     width: 90%;
     padding: 100px 0 250px 0;
   }
 
-  .out-mission > div dl {
+  .out-mission>div dl {
     flex-wrap: wrap;
   }
 
-  .out-mission > div dl dt {
+  .out-mission>div dl dt {
     width: 100%;
     text-align: center;
   }
 
-  .out-mission > div dl dt img {
+  .out-mission>div dl dt img {
     width: 45%;
   }
 
-  .out-mission > div dl dd {
+  .out-mission>div dl dd {
     width: 100%;
     margin-top: 60px;
     text-align: left;
   }
 
-  .out-mission > div dl dd h2 {
+  .out-mission>div dl dd h2 {
     font: 30px/35px 'Press Start 2P';
   }
 
-  .out-mission > div dl dd h3 {
+  .out-mission>div dl dd h3 {
     margin-top: 30px;
     font-size: 16px;
     line-height: 26px;
   }
 
-  .out-mission > div ul {
+  .out-mission>div ul {
     flex-wrap: wrap;
     flex-direction: column-reverse;
     margin-top: 100px;
   }
 
-  .out-mission > div ul li:nth-child(1) {
+  .out-mission>div ul li:nth-child(1) {
     width: 100%;
     margin-top: 60px;
   }
 
-  .out-mission > div ul li:nth-child(1) h2 {
+  .out-mission>div ul li:nth-child(1) h2 {
     font: 30px/35px 'Press Start 2P';
     color: #fff;
   }
 
-  .out-mission > div ul li:nth-child(1) h3 {
+  .out-mission>div ul li:nth-child(1) h3 {
     margin-top: 30px;
     font-size: 16px;
     line-height: 26px;
   }
 
-  .out-mission > div ul li:nth-child(2) {
+  .out-mission>div ul li:nth-child(2) {
     width: 100%;
     text-align: center;
   }
 
-  .out-mission > div ul li:nth-child(2) img {
+  .out-mission>div ul li:nth-child(2) img {
     width: 45%;
   }
 
-  .out-mission > div ul li:nth-child(2) img:nth-child(1) {
+  .out-mission>div ul li:nth-child(2) img:nth-child(1) {
     display: none;
   }
 }
@@ -1186,76 +1060,77 @@ definePageMeta({
   .zem-title {
     max-height: 250px;
   }
+
   .out-mission {
     background-size: 150%;
   }
 
-  .out-mission > div {
+  .out-mission>div {
     width: 470px;
     padding: 100px 0 250px 0;
   }
 
-  .out-mission > div dl {
+  .out-mission>div dl {
     flex-wrap: wrap;
   }
 
-  .out-mission > div dl dt {
+  .out-mission>div dl dt {
     width: 100%;
     text-align: center;
   }
 
-  .out-mission > div dl dt img {
+  .out-mission>div dl dt img {
     width: 40%;
   }
 
-  .out-mission > div dl dd {
+  .out-mission>div dl dd {
     width: 100%;
     margin-top: 60px;
     text-align: left;
   }
 
-  .out-mission > div dl dd h2 {
+  .out-mission>div dl dd h2 {
     font: 30px/35px 'Press Start 2P';
   }
 
-  .out-mission > div dl dd h3 {
+  .out-mission>div dl dd h3 {
     margin-top: 30px;
     font-size: 16px;
     line-height: 26px;
   }
 
-  .out-mission > div ul {
+  .out-mission>div ul {
     flex-wrap: wrap;
     flex-direction: column-reverse;
     margin-top: 100px;
   }
 
-  .out-mission > div ul li:nth-child(1) {
+  .out-mission>div ul li:nth-child(1) {
     width: 100%;
     margin-top: 60px;
   }
 
-  .out-mission > div ul li:nth-child(1) h2 {
+  .out-mission>div ul li:nth-child(1) h2 {
     font: 30px/35px 'Press Start 2P';
     color: #fff;
   }
 
-  .out-mission > div ul li:nth-child(1) h3 {
+  .out-mission>div ul li:nth-child(1) h3 {
     margin-top: 30px;
     font-size: 16px;
     line-height: 26px;
   }
 
-  .out-mission > div ul li:nth-child(2) {
+  .out-mission>div ul li:nth-child(2) {
     width: 100%;
     text-align: center;
   }
 
-  .out-mission > div ul li:nth-child(2) img {
+  .out-mission>div ul li:nth-child(2) img {
     width: 40%;
   }
 
-  .out-mission > div ul li:nth-child(2) img:nth-child(1) {
+  .out-mission>div ul li:nth-child(2) img:nth-child(1) {
     display: none;
   }
 }
@@ -1265,84 +1140,83 @@ definePageMeta({
     background-size: 150%;
   }
 
-  .out-mission > div {
+  .out-mission>div {
     width: 750px;
     padding: 150px 0 350px 0;
   }
 
-  .out-mission > div dl {
+  .out-mission>div dl {
     flex-wrap: wrap;
   }
 
-  .out-mission > div dl dt {
+  .out-mission>div dl dt {
     width: 100%;
     text-align: center;
   }
 
-  .out-mission > div dl dt img {
+  .out-mission>div dl dt img {
     width: 30%;
   }
 
-  .out-mission > div dl dd {
+  .out-mission>div dl dd {
     width: 100%;
     margin-top: 80px;
     text-align: left;
   }
 
-  .out-mission > div dl dd h2 {
+  .out-mission>div dl dd h2 {
     font: 40px/45px 'Press Start 2P';
   }
 
-  .out-mission > div dl dd h3 {
+  .out-mission>div dl dd h3 {
     margin-top: 40px;
     font-size: 18px;
     line-height: 28px;
   }
 
-  .out-mission > div ul {
+  .out-mission>div ul {
     flex-wrap: wrap;
     flex-direction: column-reverse;
     margin-top: 100px;
   }
 
-  .out-mission > div ul li:nth-child(1) {
+  .out-mission>div ul li:nth-child(1) {
     width: 100%;
     margin-top: 80px;
   }
 
-  .out-mission > div ul li:nth-child(1) h2 {
+  .out-mission>div ul li:nth-child(1) h2 {
     font: 40px/45px 'Press Start 2P';
     color: #fff;
   }
 
-  .out-mission > div ul li:nth-child(1) h3 {
+  .out-mission>div ul li:nth-child(1) h3 {
     margin-top: 40px;
     font-size: 18px;
     line-height: 28px;
   }
 
-  .out-mission > div ul li:nth-child(2) {
+  .out-mission>div ul li:nth-child(2) {
     width: 100%;
     text-align: center;
   }
 
-  .out-mission > div ul li:nth-child(2) img {
+  .out-mission>div ul li:nth-child(2) img {
     width: 30%;
   }
 
-  .out-mission > div ul li:nth-child(2) img:nth-child(1) {
+  .out-mission>div ul li:nth-child(2) img:nth-child(1) {
     display: none;
   }
 }
 
 @media all and (min-width: 992px) and (max-width: 1199px) {
-  .out-mission > div {
+  .out-mission>div {
     width: 970px;
   }
 }
 
-@media all and (min-width: 1200px) {
-}
+@media all and (min-width: 1200px) {}
 
 /* OUR PARTNER */
 .out-partner {
@@ -1350,18 +1224,18 @@ definePageMeta({
   background: url('/images/partner_bg.jpg') center top no-repeat, #01071f;
 }
 
-.out-partner > div {
+.out-partner>div {
   width: 1200px;
   margin: 0 auto;
   padding: 280px 600px 280px 0;
 }
 
-.out-partner > div h2 {
+.out-partner>div h2 {
   font: 50px/65px 'Press Start 2P';
   color: #fff;
 }
 
-.out-partner > div h3 {
+.out-partner>div h3 {
   margin-top: 50px;
   padding-right: 100px;
   font-size: 22px;
@@ -1374,17 +1248,17 @@ definePageMeta({
     background-size: cover;
   }
 
-  .out-partner > div {
+  .out-partner>div {
     width: 90%;
     padding: 150px 0 150px 0;
   }
 
-  .out-partner > div h2 {
+  .out-partner>div h2 {
     font: 30px/35px 'Press Start 2P';
     color: #fff;
   }
 
-  .out-partner > div h3 {
+  .out-partner>div h3 {
     margin-top: 50px;
     padding-right: 0;
     font-size: 16px;
@@ -1398,17 +1272,17 @@ definePageMeta({
     background-size: cover;
   }
 
-  .out-partner > div {
+  .out-partner>div {
     width: 470px;
     padding: 150px 0 150px 0;
   }
 
-  .out-partner > div h2 {
+  .out-partner>div h2 {
     font: 30px/35px 'Press Start 2P';
     color: #fff;
   }
 
-  .out-partner > div h3 {
+  .out-partner>div h3 {
     margin-top: 50px;
     padding-right: 0;
     font-size: 16px;
@@ -1417,17 +1291,17 @@ definePageMeta({
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
-  .out-partner > div {
+  .out-partner>div {
     width: 750px;
     padding: 280px 200px 280px 0;
   }
 
-  .out-partner > div h2 {
+  .out-partner>div h2 {
     font: 40px/45px 'Press Start 2P';
     color: #fff;
   }
 
-  .out-partner > div h3 {
+  .out-partner>div h3 {
     margin-top: 50px;
     padding-right: 0;
     font-size: 18px;
@@ -1436,13 +1310,12 @@ definePageMeta({
 }
 
 @media all and (min-width: 992px) and (max-width: 1199px) {
-  .out-partner > div {
+  .out-partner>div {
     width: 970px;
   }
 }
 
-@media all and (min-width: 1200px) {
-}
+@media all and (min-width: 1200px) {}
 
 .slogan {
   font-family: 'Press Start 2P' !important;

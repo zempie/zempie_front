@@ -117,6 +117,7 @@ import { ElMessage, ElLoading, ElSwitch } from 'element-plus'
 
 import { useI18n } from 'vue-i18n'
 import { removeFcmToken, resigterFcmToken } from '~~/scripts/firebase-fcm';
+import shared from '~/scripts/shared'
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -127,57 +128,10 @@ const { $localePath } = useNuxtApp()
 definePageMeta({
   title: 'my-account',
   name: 'myAccount',
-  // middleware: 'auth',
+  middleware: 'auth',
 })
 
-useHead({
-  title: `${t('seo.profile.info.title')} | Zempie`,
-  link: [
-    {
-      rel: 'alternate',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-      hreflang: locale,
-    },
-    {
-      rel: 'canonical',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-  ],
-  meta: [
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-    {
-      property: 'og:site_name',
-      content: 'Zempie',
-    },
-    {
-      name: 'og:type',
-      content: 'website',
-    },
-    {
-      name: 'robots',
-      content: 'noindex, nofollow',
-    },
-    {
-      name: 'description',
-      content: `${t('seo.profile.info.desc')}`,
-    },
-    {
-      property: 'og:title',
-      content: `${t('seo.profile.info.title')}`,
-    },
-    {
-      property: 'og:description',
-      content: `${t('seo.profile.info.description')}`,
-    },
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`,
-    },
-  ],
-})
+shared.createHeadMeta(t('seo.profile.info.title'), t('seo.profile.info.desc'))
 
 const MAX_FILE_SIZE = 3
 

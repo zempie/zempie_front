@@ -153,13 +153,11 @@
 <script setup lang="ts">
 import hljs from 'highlight.js'
 import _ from 'lodash'
-import { ElMessage, ElDropdown, ElDialog } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
-import { useLocalePath } from 'vue-i18n-routing'
 
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import { dateFormat, execCommandCopy, getFirstDomElement, getFirstDomElementByServer, stringToDomElem, stringToDomElemByServer } from '~~/scripts/utils'
-import { IFeed } from '~~/types'
+import { dateFormat, execCommandCopy, getFirstDomElementByServer, stringToDomElemByServer } from '~~/scripts/utils'
 import shared from '~~/scripts/shared'
 
 const { $localePath } = useNuxtApp()

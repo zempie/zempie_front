@@ -18,6 +18,7 @@
 <script setup lang="ts">
 import { IUser } from '~~/types'
 import { useI18n } from 'vue-i18n'
+import shared from '~/scripts/shared'
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -26,57 +27,11 @@ const config = useRuntimeConfig()
 definePageMeta({
   title: 'my-following',
   name: 'myFollowing',
-  //middleware: 'auth',
+  middleware: 'auth',
 })
 
-useHead({
-  title: `${t('seo.profile.following.title')} | Zempie`,
-  link: [
-    {
-      rel: 'alternate',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-      hreflang: locale,
-    },
-    {
-      rel: 'canonical',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-  ],
-  meta: [
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-    {
-      property: 'og:site_name',
-      content: 'Zempie',
-    },
-    {
-      name: 'og:type',
-      content: 'website',
-    },
-    {
-      name: 'robots',
-      content: 'noindex, nofollow',
-    },
-    {
-      name: 'description',
-      content: `${t('seo.profile.following.desc')}`,
-    },
-    {
-      property: 'og:title',
-      content: `${t('seo.profile.following.title')}`,
-    },
-    {
-      property: 'og:description',
-      content: `${t('seo.profile.following.description')}`,
-    },
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`,
-    },
-  ],
-})
+shared.createHeadMeta(t('seo.profile.following.title'), t('seo.profile.following.desc'))
+
 
 const MAX_PAGE_SIZE = 20
 

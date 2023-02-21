@@ -164,12 +164,12 @@ export default {
           content: 'Zempie',
         },
         {
-          name: 'og:type',
-          content: 'website',
-        },
-        {
           name: 'robots',
           content: 'index, follow',
+        },
+        {
+          property: 'og:type',
+          content: 'website',
         },
         {
           name: 'description',

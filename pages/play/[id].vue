@@ -1,16 +1,11 @@
 <template>
   <div id="gamePage">
     <ClientOnly>
-      <iframe
-        ref="game"
-        class="iframe"
-        :style="`height:${iframeHeight};`"
-        :src="
-          config.ENV === 'local' || config.ENV === 'development'
-            ? `${config.LAUNCHER_URL}/#/game/${gamePath}`
-            : `${config.LAUNCHER_URL}/game/${gamePath}`
-        "
-      ></iframe>
+      <iframe ref="game" class="iframe" :style="`height:${iframeHeight};`" :src="
+  config.ENV === 'local' || config.ENV === 'development'
+    ? `${config.LAUNCHER_URL}/#/game/${gamePath}`
+    : `${config.LAUNCHER_URL}/game/${gamePath}`
+      "></iframe>
     </ClientOnly>
   </div>
 </template>
@@ -18,6 +13,8 @@
 <script setup lang="ts">
 import { getIdToken } from 'firebase/auth'
 import { useI18n } from 'vue-i18n'
+import shared from '~~/scripts/shared';
+import { IGame } from '~~/types';
 
 const HOURTOSEC = 60 * 60
 
@@ -27,17 +24,30 @@ const router = useRouter()
 const config = useRuntimeConfig()
 const { $firebaseAuth, $localePath, $cookies } = useNuxtApp()
 
-const url = ref('')
 const iframeHeight = ref('')
 const game = ref<HTMLIFrameElement>()
-const gameData = ref()
 const initLauncher = ref(false)
+
+const gameData = computed(() => data.value.result.game)
 const gamePath = computed(() => route.params.id)
 const userInfo = computed(() => useUser().user.value.info)
 
 definePageMeta({
   layout: 'layout-none',
 })
+
+
+/**
+ * seo 반영은 함수안에서 되지 않으므로 최상단에서 진행함
+ */
+const { data } = await useAsyncData<{ result: { game: IGame; my_emotions: {}; my_heart: boolean } }>('gameInfo', () =>
+  $fetch(`/game/${gamePath.value}`, getZempieFetchOptions('get', true)),
+  {
+    initialCache: false
+  }
+)
+
+shared.createHeadMeta(data.value?.result?.game.title, data.value?.result?.game.description, data.value?.result?.game.url_thumb)
 
 watch(
   () => userInfo.value,
@@ -48,24 +58,13 @@ watch(
   }
 )
 
-watch(
-  () => gameData.value,
-  (info) => {
-    if (info) {
-      gameData.value = info
-      setHead()
-    }
-  }
-)
-
 onMounted(async () => {
   if (process.client) {
     window.addEventListener('message', onMessage)
     window.addEventListener('resize', onResize)
     onResize()
   }
-  setHead()
-  await fetch()
+  // await fetch()
 })
 
 onBeforeUnmount(() => {
@@ -80,60 +79,7 @@ async function fetch() {
 
   if (data.value) {
     const { game, my_emotions, my_heart } = data.value.result
-    gameData.value = game
-  }
-}
-
-function setHead() {
-  if (gameData.value) {
-    useHead({
-      title: `${gameData.value.title} | Zempie`,
-      link: [
-        {
-          rel: 'alternate',
-          href: `${config.ZEMPIE_URL}${route.fullPath}`,
-          hreflang: locale,
-        },
-      ],
-      meta: [
-        {
-          property: 'og:url',
-          content: `${config.ZEMPIE_URL}${route.fullPath}`,
-        },
-        {
-          property: 'og:site_name',
-          content: 'Zempie',
-        },
-        {
-          name: 'og:type',
-          content: 'website',
-        },
-        {
-          name: 'robots',
-          content: 'index, follow',
-        },
-        {
-          name: 'description',
-          content: `${gameData.value.title}`,
-        },
-        {
-          property: 'og:title',
-          content: `${gameData.value.description}`,
-        },
-        {
-          property: 'og:description',
-          content: `${gameData.value.description}`,
-        },
-        {
-          property: 'og:url',
-          content: `${config.ZEMPIE_URL}${route.path}`,
-        },
-        {
-          name: 'og:image',
-          content: `${gameData.value.url_thumb}`,
-        },
-      ],
-    })
+    // gameData.value = game
   }
 }
 

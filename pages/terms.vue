@@ -427,7 +427,7 @@
         <p>{{ $t('term.title18.info3') }}</p>
       </li>
     </ol>
-   
+
     <p>
       <strong>{{ $t('term.private.title6') }}</strong>
     </p>
@@ -1282,59 +1282,15 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import shared from '~/scripts/shared'
+
 
 const { t, locale } = useI18n()
 const route = useRoute()
 const config = useRuntimeConfig()
 
-useHead({
-  title: `${t('seo.terms.title')} | Zempie`,
-  link: [
-    {
-      rel: 'alternate',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-      hreflang: locale,
-    },
-    {
-      rel: 'canonical',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-  ],
-  meta: [
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-    {
-      property: 'og:site_name',
-      content: 'Zempie',
-    },
-    {
-      name: 'og:type',
-      content: 'website',
-    },
-    {
-      name: 'description',
-      content: `${t('seo.terms.desc')}`,
-    },
-    {
-      name: 'robots',
-      content: 'noindex, nofollow',
-    },
-    {
-      property: 'og:title',
-      content: `${t('seo.terms.title')}`,
-    },
-    {
-      property: 'og:description',
-      content: `${t('seo.terms.description')}`,
-    },
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`,
-    },
-  ],
-})
+shared.createHeadMeta(t('seo.terms.title'), t('seo.terms.desc'))
+
 </script>
 
 <style scoped lang="scss">
@@ -1345,6 +1301,7 @@ useHead({
 .content {
   padding-left: 30px;
 }
+
 h1 {
   display: block;
   font-size: 2em;
@@ -1354,6 +1311,7 @@ h1 {
   margin-right: 0;
   font-weight: bold;
 }
+
 h2 {
   margin-block-start: 0.83em;
   margin-block-end: 0.83em;

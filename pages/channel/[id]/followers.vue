@@ -7,99 +7,49 @@
         </dt>
       </dl>
       <UserList :users="users" :isPending="isPending" />
-      <ClientOnly>
-        <div v-if="!isPending && !users.length" class="no-result">
-          <h1>{{ $t('no.followers') }}</h1>
-          <img src="/images/not-found.png" />
-        </div>
-      </ClientOnly>
+      <div v-if="!isPending && !users.length" class="no-result">
+        <h1>{{ $t('no.followers') }}</h1>
+        <img src="/images/not-found.png" />
+      </div>
     </div>
   </NuxtLayout>
 </template>
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { IFollowUser } from '~~/types'
+import { IFollowUser, IUserChannel } from '~~/types'
+import shared from '~/scripts/shared'
 
-const { t, locale } = useI18n()
-const config = useRuntimeConfig()
-
-const userInfo = computed(() => useChannel().userChannel.value.info as any)
+const { t } = useI18n()
 const route = useRoute()
 
 const isPending = ref(true)
 const totalCount = ref(0)
 const users = ref([])
 
+const channelId = computed(() => route.params.id as string)
+
 definePageMeta({
   title: 'user-followers',
   name: 'userFollowers',
 })
 
-const isMine = computed(() => {
-  return route.params.id === useUser().user.value.info?.channel_id
-})
-watch(
-  () => userInfo.value,
-  async (info) => {
-    await fetch()
-    useHead({
-      title: `${userInfo.value.name}${t(
-        'seo.channel.followers.title'
-      )} | Zempie`,
-      link: [
-        {
-          rel: 'alternate',
-          href: `${config.ZEMPIE_URL}${route.fullPath}`,
-          hreflang: locale,
-        },
-        {
-          rel: 'canonical',
-          href: `${config.ZEMPIE_URL}${route.fullPath}`,
-        },
-      ],
-      meta: [
-        {
-          property: 'og:url',
-          content: `${config.ZEMPIE_URL}${route.fullPath}`,
-        },
-        {
-          property: 'og:site_name',
-          content: 'Zempie',
-        },
-        {
-          name: 'og:type',
-          content: 'website',
-        },
-        {
-          name: 'robots',
-          content: 'index, follow',
-        },
-        {
-          name: 'description',
-          content: `${userInfo.value.name}${t('seo.channel.followers.desc')}`,
-        },
-        {
-          property: 'og:title',
-          content: `${userInfo.value.name}${t('seo.channel.followers.title')}`,
-        },
-        {
-          property: 'og:description',
-          content: `${userInfo.value.name}${t(
-            'seo.channel.followers.description'
-          )}`,
-        },
-        {
-          property: 'og:url',
-          content: `${config.ZEMPIE_URL}${route.path}`,
-        },
-      ],
-    })
+/**
+ * seo 반영은 함수안에서 되지 않으므로 최상단에서 진행함
+ */
+const { data } = await useAsyncData<{ result: { target: IUserChannel } }>('channelInfo', () =>
+  $fetch(`/channel/${channelId.value}`, getZempieFetchOptions('get', true)),
+  {
+    initialCache: false
   }
 )
+const { target: channelInfo } = data.value?.result;
+
+shared.createHeadMeta(`${channelInfo.name}${t('seo.channel.followers.title')}`, `${channelInfo.name}${t('seo.channel.followers.desc')}`, channelInfo.picture)
+
 
 onMounted(async () => {
-  if (userInfo.value?.id) await fetch()
+  if (channelInfo.id) await fetch()
 })
 
 async function fetch() {
@@ -108,7 +58,7 @@ async function fetch() {
     result: []
     pageInfo: {}
   }>(
-    `/user/${userInfo.value.id}/list/follower`,
+    `/user/${channelInfo.id}/list/follower`,
     getComFetchOptions('get', true)
   )
 
@@ -133,82 +83,6 @@ async function fetch() {
   isPending.value = false
 }
 
-// const route = useRoute();
-
-// const userId = computed(() => route.params.id as number | string)
-
-// const payload = reactive({
-//   limit: MAX_PAGE_SIZE,
-//   offset: 0,
-//   search: ''
-// })
-
-// const totalCount = ref(0)
-// const isPending = ref(true)
-// const users = ref<IUser[]>([])
-
-// async function fetch() {
-//   const { data, pending, refresh, error } = await user.followerList(payload, userId.value as number)
-//   if (!error.value) {
-//     totalCount.value = data.value.totalCount
-//     users.value = data.value.result.map((user: any) => {
-//       return {
-//         name: user.name,
-//         id: user.id,
-//         channel_id: user.channel_id,
-//         email: user.email,
-//         uid: user.uid,
-//         followers_cnt: user.followers_cnt,
-//         followings_cnt: user.followings_cnt,
-//         is_following: user.is_following,
-//         picture: user.profile_img
-//       }
-//     })
-//   }
-
-//   isPending.value = false;
-// }
-// @Prop() userId!: any;
-// private followerList: any = [];
-// private totalCnt: number = 0;
-// private limit: number = 10;
-// private offset: number = 0;
-// private search: string = '';
-// private user !: any;
-
-// channel_id: string = '';
-
-// mounted() {
-//   if (this.$route.params.channel_id) {
-//     this.channel_id = this.$route.params.channel_id;
-//   }
-//   else {
-//     this.channel_id = this.userId;
-//   }
-//   this.fetch();
-// }
-
-// fetch() {
-//   const obj = {
-//     limit: this.limit,
-//     offset: this.offset,
-//     search: this.search
-//   }
-//   //userId로 넘기는 부분인데 params 이름이 channel_id임
-//   this.$api.followerList(obj, this.channel_id)
-//     .then((res: any) => {
-//       this.followerList = res.result;
-//       this.totalCnt = res.totalCount;
-
-//     })
-//     .catch((err: any) => {
-
-//     })
-// }
-// reFetch() {
-//   this.fetch();
-//   this.$store.dispatch('reloadUserInfo');
-// }
 </script>
 
 <style lang="scss" scoped>
