@@ -1,7 +1,13 @@
 <template>
   <div class="content">
-    <div :class="headerImgClass" style="height:150px">
-      <h1><span>Games</span></h1>
+    <div :class="[headerImgClass, 'bg-grey-1']"
+      style="height:150px; display: flex;justify-content: center;align-items: center;">
+      <h1 style="
+      text-align: center;
+      font-weight: 600;
+      font-size: 30px;
+      line-height: 30px;
+      color: #fff;"><span>Games</span></h1>
     </div>
     <div class="tab-search-swiper">
       <div class="swiper-area uppercase">
@@ -204,12 +210,9 @@ async function handleGameFilter() {
 <style scoped lang="scss">
 .content {
   .visual-title {
-    h1 {
-      font-weight: 600;
-      font-size: 30px;
-      line-height: 30px;
-      color: #fff;
+    background: url('/images/1200_150_game.jpeg');
 
+    h1 {
       span {
         font-size: 30px;
         font-weight: 700;
