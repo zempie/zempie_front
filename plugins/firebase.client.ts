@@ -42,9 +42,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     useUser().setLoadDone()
 
   })
-
-  if (!window.navigator.userAgent.toLowerCase().includes('naver') && !window.navigator.userAgent.toLowerCase().includes('kakao') && window.location.protocol === 'https:') {
-
+  if (!navigator.userAgent.match(/iPad/i) && !navigator.userAgent.match(/iPhone/i) && !window.navigator.userAgent.toLowerCase().includes('naver') && !window.navigator.userAgent.toLowerCase().includes('kakao') && window.location.protocol === 'https:') {
     const messaging = getMessaging(app);
 
     onMessage(messaging, (payload) => {
