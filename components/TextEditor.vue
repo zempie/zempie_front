@@ -495,25 +495,31 @@ async function onSubmit() {
     const audioFiles = []
     let payloadFiles = []
 
+
+
+
     for (const img of imgArr.value) {
-      const result = await fetch(img.src)
-      const blob = await result.blob()
-      const blobUrl = URL.createObjectURL(blob)
-      const isImage = blob.type.startsWith('image')
-      if (isImage) {
-        const formData = new FormData()
-        formData.append(img.title, blob)
-        const response = await useCustomFetch<{ result: { name: string, priority: number, size: number, type: string, url: string }[] }>('community/att', getZempieFetchOptions('post', true, formData))
 
-        if (response) {
-          const { result } = response
-          const [imgObj] = result
-          form.post_contents = form.post_contents.replace(
-            img.src,
-            imgObj.url
-          )
+      if (!isImageUrl(img.src)) {
+        const result = await fetch(img.src)
+        const blob = await result.blob()
+        const blobUrl = URL.createObjectURL(blob)
+        const isImage = blob.type.startsWith('image')
+        if (isImage) {
+          const formData = new FormData()
+          formData.append(img.title, blob)
+          const response = await useCustomFetch<{ result: { name: string, priority: number, size: number, type: string, url: string }[] }>('community/att', getZempieFetchOptions('post', true, formData))
+
+          if (response) {
+            const { result } = response
+            const [imgObj] = result
+            form.post_contents = form.post_contents.replace(
+              img.src,
+              imgObj.url
+            )
+          }
+
         }
-
       }
     }
     payload.post_contents = form.post_contents

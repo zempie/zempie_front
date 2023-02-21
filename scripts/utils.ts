@@ -31,7 +31,7 @@ export const stringToDomElemByServer = (string: string) => {
 
 
 export const isImageUrl = (url: string): boolean => {
-  const imageExtensions = /\.(jpg|jpeg|png|gif|webp)$/i;
+  const imageExtensions = /\.(jpg|jpeg|png|webp|avif|gif|svg)$/i;
   return imageExtensions.test(url);
 }
 
