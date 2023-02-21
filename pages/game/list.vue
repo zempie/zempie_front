@@ -69,10 +69,7 @@ definePageMeta({
   layout: 'default',
 })
 
-shared.createHeadMeta(
-  t('seo.game.list.title'),
-  t('seo.game.list.desc')
-)
+shared.createHeadMeta(t('seo.game.list.title'), t('seo.game.list.desc'))
 
 
 const LIMIT_SIZE = 20

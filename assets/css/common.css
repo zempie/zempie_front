@@ -2922,7 +2922,7 @@
   padding: 15px;
 }
 
-.card-game>li>dl>dt>p {
+.card-game>li>dl>dt>a>p {
   width: 55px;
   height: 55px;
   border-radius: 50%;
@@ -3035,7 +3035,7 @@
     margin-left: 5px;
   }
 
-  .card-game>li>dl>dt>p {
+  .card-game>li>dl>dt>a>p {
     width: 45px;
     height: 45px;
   }
