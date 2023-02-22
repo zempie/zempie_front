@@ -99,11 +99,12 @@
                 feed?.comment_cnt
               }}{{ $t('comment.count.unit') }}
             </p>
-            <CommentInput :postId="feed?.id" @refresh="commentFetch" />
+            <CommentInput :postId="feed?.id" @refresh="commentFetch" @addComment="addComment" />
             <ul>
               <TransitionGroup name="fade">
                 <li v-for="comment in comments" :key="comment.id" class="comment">
-                  <Comment :comment="comment" @refresh="commentFetch" />
+                  <Comment :comment="comment" @refresh="commentFetch" @deleteComment="deleteComment"
+                    @editComment="editComment" :key="comment.content" />
                 </li>
               </TransitionGroup>
             </ul>
@@ -160,6 +161,7 @@ import { useI18n } from 'vue-i18n'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { dateFormat, execCommandCopy, getFirstDomElementByServer, stringToDomElemByServer } from '~~/scripts/utils'
 import shared from '~~/scripts/shared'
+import { IComment } from '~~/types'
 
 const { $localePath } = useNuxtApp()
 
@@ -169,8 +171,7 @@ const route = useRoute()
 const router = useRouter()
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
-const comments = ref([])
-
+const comments = ref<IComment[]>()
 const limit = ref(COMMENT_LIMIT)
 const offset = ref(0)
 const sort = ref(null)
@@ -284,6 +285,30 @@ async function commentFetch() {
     }
   }
   return
+}
+
+function addComment(comment: IComment) {
+  comments.value = [comment, ...comments.value]
+
+}
+
+function deleteComment(commentId: string) {
+  comments.value = comments.value.filter((comment: IComment) => {
+    return comment.id !== commentId
+  })
+
+}
+
+function editComment(comment: IComment) {
+
+  const newComment = comments.value.map((cmt: IComment) => {
+    if (comment.id === cmt.id) {
+      return { ...cmt, content: comment.content }
+    }
+    return cmt
+  })
+  comments.value = newComment
+
 }
 
 async function setHead() {
