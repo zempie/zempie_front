@@ -206,7 +206,7 @@ const postedCommunity = (posted_at) => {
 
     return postedTarget.community
       .filter(com => 'group' in com)
-      .map((com) => ({
+      ?.map((com) => ({
         community_id: com.id,
         channel: com.channel,
         channel_id: com.channel_id,
@@ -221,7 +221,7 @@ const postedGame = (posted_at) => {
     const [postedTarget] = posted_at
 
     return postedTarget.game
-      .map((game) =>
+      ?.map((game) =>
       ({
         id: game.id,
         game: game.game
