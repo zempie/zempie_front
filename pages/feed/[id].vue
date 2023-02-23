@@ -33,7 +33,7 @@
             </dd>
           </dl>
 
-          <div class="tapl-content" v-html="feed?.content"></div>
+          <div class="tapl-content" v-html="feed?.content" style="max-height:none"></div>
           <template v-if="
             feed?.post_type === 'SNS' &&
             feed?.attatchment_files?.length === 1 &&
