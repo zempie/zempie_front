@@ -459,6 +459,48 @@ function postingType(type: string) {
 
 async function onSubmit() {
 
+  // const linkPreviewComponents = stringToDomElem(form.post_contents).querySelectorAll('vue-component')
+  // console.log('hasLinkComponent', linkPreviewComponents)
+
+  // if (linkPreviewComponents.length) {
+  //   for (const com of linkPreviewComponents) {
+  //     const title = com.title
+  //     const description = com.title
+  //     const favicon = com.favicon
+  //     const img_url = com.img_url
+  //     const domain = com.domain
+
+
+  //     `<el-card :body-style="{ padding: '0px' }">
+  //     <div :style="`background:url(${node.attrs.img_url});
+  //      width: 100%;
+  //      height: 150px;
+  //      background-size: cover;
+  //      background-position: center;
+  //     `"></div>
+  //     <div style="padding: 14px">
+  //       <span><strong> {{ node.attrs.title }}</strong></span>
+  //       <div class="bottom">
+  //         <div style="display:block">
+
+  //         </div>
+  //         <p> {{ node.attrs.description }}</p>
+  //         <div style=" margin:10px 0px 10px 0px ">
+  //           <p :style="`background:url(${node.attrs.favicon}); width:15px; height:15px;background-position: center;
+  //           background-size: cover; display:inline-block;`"></p><strong>{{
+  //             node.attrs.domain
+  //           }}</strong>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   </el-card>`
+
+  //   }
+  // }
+
+
+  return
+
   const payload = {
     post_contents: form.post_contents,
     post_state: activeTab.value,

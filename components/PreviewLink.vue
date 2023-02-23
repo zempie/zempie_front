@@ -1,28 +1,47 @@
 <template>
   <node-view-wrapper class="vue-component">
-    <span class="label">Vue Component</span>
+    <el-card :body-style="{ padding: '0px' }">
+      <div :style="`background:url(${node.attrs.img_url});
+       width: 100%;
+       height: 150px;
+       background-size: cover;
+       background-position: center;
+      `"></div>
+      <div style="padding: 14px">
+        <span><strong> {{ node.attrs.title }}</strong></span>
+        <div class="bottom">
+          <div style="display:block">
 
-    <div class="content">
-      <button>
-        This button has been clicked {{ node.attrs.count }} times.
-      </button>
-    </div>
+          </div>
+          <p> {{ node.attrs.description }}</p>
+          <div style=" margin:10px 0px 10px 0px ">
+            <p :style="`background:url(${node.attrs.favicon}); width:15px; height:15px;background-position: center;
+            background-size: cover; display:inline-block;`"></p><strong>{{
+              node.attrs.domain
+            }}</strong>
+          </div>
+        </div>
+      </div>
+    </el-card>
   </node-view-wrapper>
 </template>
+
 <script setup lang="ts">
-import { NodeViewWrapper, NodeViewContent, nodeViewProps } from '@tiptap/vue-3'
+import { nodeViewProps, NodeViewWrapper } from '@tiptap/vue-3'
+import { ElCard } from 'element-plus';
 
-const props = defineProps(nodeViewProps)
 
-onMounted(() => {
-  console.log('?')
+const props = defineProps({
+  node: Object
 })
+
+console.log(props.node)
 </script>
 
 <style lang="scss">
 .vue-component {
-  background: #faf594;
-  border: 3px solid #0d0d0d;
+  background: #ededed;
+  // border: 3px solid #0D0D0D;
   border-radius: 0.5rem;
   margin: 1rem 0;
   position: relative;
@@ -30,7 +49,7 @@ onMounted(() => {
 
 .label {
   margin-left: 1rem;
-  background-color: #0d0d0d;
+  background-color: #0D0D0D;
   font-size: 0.6rem;
   letter-spacing: 1px;
   font-weight: bold;

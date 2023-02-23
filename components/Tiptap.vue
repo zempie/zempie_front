@@ -32,7 +32,7 @@
       </ul>
     </BubbleMenu>
     <EditorContent :editor="editor" :class="['editor-container', postType === 'SNS' ? 'sns' : 'blog']"
-      @drop="dropEditor" @paste="pasteEditor" />
+      @drop="dropEditor" @paste="pasteEditor" @input="handleInput" />
 
     <div class="character-count">
       <p>{{ charCount }}/{{ limit }}</p>
@@ -71,7 +71,8 @@ import CustomAudio from '~~/scripts/tiptap/customAudio'
 import CustomVideo from '~~/scripts/tiptap/customVideo'
 
 import ResizableImage from './ResizableImage.vue'
-import PreviewLink from './PreviewLink.vue'
+// import PreviewLink from './PreviewLink.vue'
+import VueComponent from '~~/scripts/tiptap/extension'
 // import { Link } from '~~/scripts/tiptap/customLink'
 
 import CodeBlockComponent from './CodeBlockComponent.vue'
@@ -115,6 +116,7 @@ const editor = useEditor({
           limit: limit.value,
         }),
         Link,
+        VueComponent,
         Typography,
         Highlight,
       ]
@@ -136,6 +138,7 @@ const editor = useEditor({
           limit: limit.value,
         }),
         Link,
+        VueComponent,
         Table.configure({
           resizable: true,
         }),
@@ -246,8 +249,23 @@ function dropEditor(e: DragEvent) {
   addImage(e.dataTransfer)
 }
 
-function pasteEditor(e: ClipboardEvent) {
+async function pasteEditor(e: ClipboardEvent) {
   addImage(e.clipboardData)
+  const link = editor.value.getAttributes('link')
+  if (link?.href) {
+    const data = await $fetch<{ result: any }>(`/og-tag?url=${link.href}`, getZempieFetchOptions('get', true, { url: link.href }))
+
+
+    const { result } = data
+    const img = result.images[0]
+    const favicon = result.favicons[0]
+
+
+    const url = new URL(result.url);
+    let domain = url.hostname;
+    domain = domain.replace('www.', '');
+    editor.value.commands.insertContent(`<vue-component img_url=${img} title=${result.title} description="${result.description ?? ''}" favicon=${favicon} domain=${domain}></vue-component>`)
+  }
 }
 
 async function addImage(data: DataTransfer) {
@@ -278,6 +296,10 @@ async function addImage(data: DataTransfer) {
 
 function shouldShow() {
   return editor.value?.isActive('table')
+}
+
+function handleInput() {
+  console.log('handleInput', editor.value.getAttributes('link').href)
 }
 </script>
 
