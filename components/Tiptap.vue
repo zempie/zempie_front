@@ -1,10 +1,6 @@
 <template>
   <div style="min-height: 200px; max-height: 80vh">
-    <BubbleMenu
-      :editor="editor"
-      v-if="editor && shouldShow()"
-      class="table-bubble-menu"
-    >
+    <BubbleMenu :editor="editor" v-if="editor && shouldShow()" class="table-bubble-menu">
       <ul>
         <li @click="editor.chain().focus().addColumnBefore().run()">
           <p><i class="uil uil-plus"></i> add column before</p>
@@ -35,12 +31,8 @@
         </li>
       </ul>
     </BubbleMenu>
-    <EditorContent
-      :editor="editor"
-      :class="['editor-container', postType === 'SNS' ? 'sns' : 'blog']"
-      @drop="dropEditor"
-      @paste="pasteEditor"
-    />
+    <EditorContent :editor="editor" :class="['editor-container', postType === 'SNS' ? 'sns' : 'blog']"
+      @drop="dropEditor" @paste="pasteEditor" />
 
     <div class="character-count">
       <p>{{ charCount }}/{{ limit }}</p>
@@ -59,6 +51,7 @@ import {
   VueNodeViewRenderer,
   BubbleMenu,
 } from '@tiptap/vue-3'
+import Youtube from '@tiptap/extension-youtube'
 import Link from '@tiptap/extension-link'
 import StarterKit from '@tiptap/starter-kit'
 import CharacterCount from '@tiptap/extension-character-count'
@@ -105,90 +98,96 @@ const editor = useEditor({
   extensions:
     props.postType === 'SNS'
       ? [
-          StarterKit.configure({ codeBlock: false }),
-          CodeBlockLowlight.extend({
-            addNodeView() {
-              return VueNodeViewRenderer(CodeBlockComponent)
-            },
-          }).configure({ lowlight }),
-          Placeholder.configure({
-            emptyEditorClass: 'is-editor-empty',
-            placeholder: `${t('posting.placeholder')}`,
-          }),
-          CharacterCount.configure({
-            limit: limit.value,
-          }),
-          Link,
-          Typography,
-          Highlight,
-        ]
+        StarterKit.configure({ codeBlock: false }),
+        Youtube.configure({
+          controls: false,
+        }),
+        CodeBlockLowlight.extend({
+          addNodeView() {
+            return VueNodeViewRenderer(CodeBlockComponent)
+          },
+        }).configure({ lowlight }),
+        Placeholder.configure({
+          emptyEditorClass: 'is-editor-empty',
+          placeholder: `${t('posting.placeholder')}`,
+        }),
+        CharacterCount.configure({
+          limit: limit.value,
+        }),
+        Link,
+        Typography,
+        Highlight,
+      ]
       : [
-          StarterKit.configure({ codeBlock: false }),
-          CodeBlockLowlight.extend({
-            addNodeView() {
-              return VueNodeViewRenderer(CodeBlockComponent)
-            },
-          }).configure({ lowlight }),
-          Placeholder.configure({
-            emptyEditorClass: 'is-editor-empty',
-            placeholder: `${t('posting.placeholder')}`,
-          }),
-          CharacterCount.configure({
-            limit: limit.value,
-          }),
-          Link,
-          Table.configure({
-            resizable: true,
-          }),
-          TableRow,
-          TableHeader,
-          TableCell,
-          Typography,
-          Highlight,
-          Image.extend({
-            addAttributes() {
-              return {
-                ...this.parent?.(),
+        StarterKit.configure({ codeBlock: false }),
+        Youtube.configure({
+          controls: false,
+        }),
+        CodeBlockLowlight.extend({
+          addNodeView() {
+            return VueNodeViewRenderer(CodeBlockComponent)
+          },
+        }).configure({ lowlight }),
+        Placeholder.configure({
+          emptyEditorClass: 'is-editor-empty',
+          placeholder: `${t('posting.placeholder')}`,
+        }),
+        CharacterCount.configure({
+          limit: limit.value,
+        }),
+        Link,
+        Table.configure({
+          resizable: true,
+        }),
+        TableRow,
+        TableHeader,
+        TableCell,
+        Typography,
+        Highlight,
+        Image.extend({
+          addAttributes() {
+            return {
+              ...this.parent?.(),
 
-                src: {
-                  default: '',
+              src: {
+                default: '',
 
-                  renderHTML: (attributes) => {
-                    return {
-                      src: attributes.src,
-                    }
-                  },
+                renderHTML: (attributes) => {
+                  return {
+                    src: attributes.src,
+                  }
                 },
+              },
 
-                width: {
-                  default: 300,
-                  renderHTML: ({ width }) => ({ width }),
+              width: {
+                default: 300,
+                renderHTML: ({ width }) => ({ width }),
+              },
+              height: {
+                renderHTML: ({ height }) => ({ height }),
+              },
+              class: {
+                default: 'center',
+                renderHTML: (attributes) => {
+                  return {
+                    class: attributes.class,
+                  }
                 },
-                height: {
-                  renderHTML: ({ height }) => ({ height }),
-                },
-                class: {
-                  default: 'center',
-                  renderHTML: (attributes) => {
-                    return {
-                      class: attributes.class,
-                    }
-                  },
-                },
+              },
 
-                isDraggable: {
-                  default: true,
-                  renderHTML: (attributes) => {
-                    return {}
-                  },
+              isDraggable: {
+                default: true,
+                renderHTML: (attributes) => {
+                  return {}
                 },
-              }
-            },
-            addCommands() {
-              return {
-                ...this.parent?.(),
-                toggleResizable:
-                  () =>
+              },
+            }
+          },
+          addCommands() {
+            return {
+              ...this.parent?.(),
+              toggleResizable:
+                () =>
                   ({ tr }) => {
                     const { node } = tr?.selection
 
@@ -196,41 +195,41 @@ const editor = useEditor({
                       node.attrs.isDraggable = !node.attrs.isDraggable
                     }
                   },
-              }
-            },
-            addNodeView() {
-              return VueNodeViewRenderer(ResizableImage)
-            },
-            addOptions() {
-              return {
-                inline: true,
-                HTMLAttributes: {
-                  class: 'image-wrapper',
-                },
-              }
-            },
-          }),
-          CustomVideo.extend({
-            addOptions() {
-              return {
-                inline: true,
-                HTMLAttributes: {
-                  class: 'video-wrapper',
-                },
-              }
-            },
-          }),
-          CustomAudio.extend({
-            addOptions() {
-              return {
-                inline: true,
-                HTMLAttributes: {
-                  class: 'audio-wrapper',
-                },
-              }
-            },
-          }),
-        ],
+            }
+          },
+          addNodeView() {
+            return VueNodeViewRenderer(ResizableImage)
+          },
+          addOptions() {
+            return {
+              inline: true,
+              HTMLAttributes: {
+                class: 'image-wrapper',
+              },
+            }
+          },
+        }),
+        CustomVideo.extend({
+          addOptions() {
+            return {
+              inline: true,
+              HTMLAttributes: {
+                class: 'video-wrapper',
+              },
+            }
+          },
+        }),
+        CustomAudio.extend({
+          addOptions() {
+            return {
+              inline: true,
+              HTMLAttributes: {
+                class: 'audio-wrapper',
+              },
+            }
+          },
+        }),
+      ],
   onUpdate: (edit) => {
     charCount.value = editor.value.storage.characterCount.characters()
     emit('editorContent', editor.value)
@@ -299,6 +298,7 @@ function shouldShow() {
   padding: 10px;
   border-radius: 10px;
   border: 1px solid #888;
+
   ul {
     li {
       color: black;
@@ -314,6 +314,7 @@ function shouldShow() {
         border-radius: 10px;
       }
     }
+
     li:not(:last-child) {
       border-bottom: 1px solid #888;
     }

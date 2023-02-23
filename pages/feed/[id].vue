@@ -7,8 +7,8 @@
             <dt class="w50p">
               <dl>
                 <dt>
-                  <NuxtLink :to="$localePath(`/channel/${feed.user?.channel_id}`)">
-                    <UserAvatar :user="feed?.user" :tag="'span'" />
+                  <NuxtLink :to="$localePath(`/channel/${feed?.user?.channel_id}`)">
+                    <UserAvatar :user="feed?.user" tag='span' />
                   </NuxtLink>
                 </dt>
                 <dd v-if="feed?.user">
@@ -17,11 +17,7 @@
                     <i class="uis uis-clock" style="color: #c1c1c1"></i>
                     {{ dateFormat(feed?.created_at) }}
                   </span>
-                  <TranslateBtn
-                    :text="feed.content"
-                    @translatedText="translate"
-                    @untranslatedText="untranslatedText"
-                  />
+                  <TranslateBtn :text="feed.content" @translatedText="translate" @untranslatedText="untranslatedText" />
                 </dd>
                 <dd v-else>
                   <h2>{{ $t('feed.noUser.post') }}</h2>
@@ -37,45 +33,26 @@
             </dd>
           </dl>
 
-          <div class="tapl-content" style="max-height:none" v-html="feed?.content"></div>
-          <template
-            v-if="
-              feed?.post_type === 'SNS' &&
-              feed?.attatchment_files?.length === 1 &&
-              feed?.attatchment_files[0].type === 'image'
-            "
-          >
-            <img
-              style="height: 88%; margin: 0 auto; display: flex"
-              :src="feed?.attatchment_files[0].url"
-              class="feed-img mt-3"
-            />
+          <div class="tapl-content" v-html="feed?.content"></div>
+          <template v-if="
+            feed?.post_type === 'SNS' &&
+            feed?.attatchment_files?.length === 1 &&
+            feed?.attatchment_files[0].type === 'image'
+          ">
+            <img style="height: 88%; margin: 0 auto; display: flex" :src="feed?.attatchment_files[0].url"
+              class="feed-img mt-3" />
           </template>
-          <template
-            v-else-if="
-              feed?.post_type === 'SNS' &&
-              feed?.attatchment_files &&
-              feed?.attatchment_files.length > 0
-            "
-          >
-            <div
-              class="tapl-movie-img"
-              v-if="feed?.attatchment_files[0].type === 'image'"
-            >
-              <swiper
-                class="swiper"
-                :options="swiperOption"
-                :modules="[Pagination]"
-                style="height: 350px"
-              >
+          <template v-else-if="
+            feed?.post_type === 'SNS' &&
+            feed?.attatchment_files &&
+            feed?.attatchment_files.length > 0
+          ">
+            <div class="tapl-movie-img" v-if="feed?.attatchment_files[0].type === 'image'">
+              <swiper class="swiper" :options="swiperOption" style="height: 350px">
                 <template v-for="file in feed?.attatchment_files">
                   <swiper-slide>
-                    <img
-                      style="height: 88%; margin: 0 auto; display: flex"
-                      v-if="file.type === 'image'"
-                      :src="file.url"
-                      class="feed-img mt-3"
-                    />
+                    <img style="height: 88%; margin: 0 auto; display: flex" v-if="file.type === 'image'" :src="file.url"
+                      class="feed-img mt-3" />
                   </swiper-slide>
                 </template>
                 <div class="swiper-pagination" slot="pagination"></div>
@@ -83,19 +60,9 @@
             </div>
             <div class="tapl-movie-img" v-else>
               <div v-for="file in feed?.attatchment_files" :key="file.id">
-                <video
-                  class="sns-img"
-                  v-if="file.type === 'video'"
-                  width="320"
-                  height="240"
-                  controls
-                  :src="file.url"
-                ></video>
-                <audio
-                  v-else-if="file.type === 'sound'"
-                  controls
-                  :src="file.url"
-                ></audio>
+                <video class="sns-img" v-if="file.type === 'video'" width="320" height="240" controls
+                  :src="file.url"></video>
+                <audio v-else-if="file.type === 'sound'" controls :src="file.url"></audio>
                 <div class="audio" v-else-if="file.type === 'sound'">
                   <audio controls :src="file.url"></audio>
                   <p>{{ file?.name }}</p>
@@ -103,52 +70,41 @@
               </div>
             </div>
           </template>
-          <CommunityTarget :communities="postedAt" :games="feed?.posted_at[0].game"/>
+
+          <CommunityTarget :communities="postedCommunity(feed?.posted_at)" :games="postedGame(feed?.posted_at)" />
 
           <ul class="tapl-option">
             <li>
               <ul>
                 <LikeBtn v-if="feed" :feed="feed" />
                 <li>
-                  <i
-                    class="uil uil-comment-alt-dots"
-                    style="font-size: 22px"
-                  ></i
-                  >&nbsp;
+                  <i class="uil uil-comment-alt-dots" style="font-size: 22px"></i>&nbsp;
                   {{ feed?.comment_cnt }}
                 </li>
 
                 <li @click="copyUrl">
-                  <a
-                    ><i class="uil uil-share-alt" style="font-size: 20px"></i>
+                  <a><i class="uil uil-share-alt" style="font-size: 20px"></i>
                   </a>
                 </li>
               </ul>
             </li>
 
             <li>
-
-              <PostDropdown
-                :feed="feed"
-                @deletePost="$router.back()"
-                @refresh="fetch"
-              />
+              <PostDropdown :feed="feed" @deletePost="$router.back()" @refresh="refresh" />
             </li>
           </ul>
           <div class="tapl-comment" v-if="comments">
             <p>
-              {{ $t('comment') }} {{ feed?.comment_cnt
+              {{ $t('comment') }} {{
+                feed?.comment_cnt
               }}{{ $t('comment.count.unit') }}
             </p>
-            <CommentInput :postId="feed?.id" @refresh="commentFetch" />
+            <CommentInput :postId="feed?.id" @refresh="commentFetch" @addComment="addComment" />
             <ul>
               <TransitionGroup name="fade">
-                <li
-                  v-for="comment in comments"
-                  :key="comment.id"
-                  class="comment"
-                >
-                  <Comment :comment="comment" @refresh="commentFetch" />
+                <li v-for="comment in comments" :key="comment.id" class="comment">
+                  <Comment :comment="comment" @refresh="commentFetch" @deleteComment="deleteComment"
+                    @editComment="editComment" :key="comment.content" />
                 </li>
               </TransitionGroup>
             </ul>
@@ -156,75 +112,66 @@
           <div ref="triggerDiv"></div>
         </li>
       </ul>
+      <ul class="ta-post" v-else>
+        <ClientOnly>
+          <li class="tap-list">
+            <dl class="tapl-title">
+              <dt>
+                <dl>
+                  <dt>
+                    <UserAvatarSk style="width: 40px; height: 40px" />
+                  </dt>
+                  <dd>
+                    <h2 class="grey-text skeleton-animation" style="width: 300px; margin-bottom: 10px">
+                    </h2>
 
-      <ul class="ta-post" v-else  >
-        <li class="tap-list">
-          <dl class="tapl-title">
-            <ClientOnly>
-            <dt>
-              <dl>
-                <dt>
-                  <dt><UserAvatarSk style="width: 40px; height: 40px" /></dt>
-                </dt>
-                <dd>
-                  <h2 class="grey-text skeleton-animation"
-                 style="width: 300px; margin-bottom: 10px">
-                  </h2>
+                    <p class="grey-text skeleton-animation" style="width: 150px; margin-bottom: 10px"></p>
+                  </dd>
+                </dl>
+              </dt>
+            </dl>
 
-                 <p class="grey-text skeleton-animation"
-                   style="width: 150px; margin-bottom: 10px"></p>
-                 </dd>
-
-              </dl>
-            </dt>
-          </ClientOnly>
-          </dl>
-
-          <div  class="tapl-content grey-text skeleton-animation"
-        style="margin: 20px; padding: 20px" ></div>
-           <ul class="tapl-option">
-            <li>
-              <ul>
-                <li>
-                  <i
-                    class="uil uil-comment-alt-dots"
-                    style="font-size: 22px"
-                  ></i
-                  >&nbsp;
-                </li>
-                <li>
-                  <a
-                    ><i class="uil uil-share-alt" style="font-size: 20px"></i>
-                  </a>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </li>
+            <div class="tapl-content grey-text skeleton-animation" style="margin: 20px; padding: 20px"></div>
+            <ul class="tapl-option">
+              <li>
+                <ul>
+                  <li>
+                    <i class="uil uil-comment-alt-dots" style="font-size: 22px"></i>&nbsp;
+                  </li>
+                  <li>
+                    <a><i class="uil uil-share-alt" style="font-size: 20px"></i>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ClientOnly>
       </ul>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import Prism from '~/plugins/prism'
+import hljs from 'highlight.js'
 import _ from 'lodash'
-import { ElMessage, ElDropdown, ElDialog } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
-import { Pagination } from 'swiper';
+
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import 'swiper/css/pagination';
-import 'swiper/css';
-import { dateFormat, execCommandCopy, stringToDomElem } from '~~/scripts/utils'
+import { dateFormat, execCommandCopy, getFirstDomElementByServer, stringToDomElemByServer } from '~~/scripts/utils'
+import shared from '~~/scripts/shared'
+import { IComment } from '~~/types'
+
+const { $localePath } = useNuxtApp()
+
 
 const COMMENT_LIMIT = 10
-const { $localePath } = useNuxtApp()
 const route = useRoute()
 const router = useRouter()
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
-const comments = ref([])
-
+const comments = ref<IComment[]>()
 const limit = ref(COMMENT_LIMIT)
 const offset = ref(0)
 const sort = ref(null)
@@ -237,61 +184,71 @@ const swiperOption = ref({
 const feedId = computed(() => route.params.id as string)
 
 const observer = ref<IntersectionObserver>(null)
-const triggerDiv = ref<Element>()
+const triggerDiv = ref()
 const isAddData = ref(false)
-const feed = ref()
-const postedAt = ref()
 
-watch(
-  () => feed.value,
-  (feed) => {
-    setHead()
+const {
+  data: feed,
+  error,
+  pending,
+  refresh,
+} = await useAsyncData<any>('feed', () =>
+  $fetch(`/post/${feedId.value}`, getComFetchOptions('get', true)),
+  {
+    initialCache: false
   }
 )
+setHead()
+
+const postedCommunity = (posted_at) => {
+  if (posted_at) {
+    const [postedTarget] = posted_at
+
+    return postedTarget.community
+      .filter(com => 'group' in com)
+      .map((com) => ({
+        community_id: com.id,
+        channel: com.channel,
+        channel_id: com.channel_id,
+        community: com.group
+      })
+      )
+  }
+}
+
+const postedGame = (posted_at) => {
+  if (posted_at) {
+    const [postedTarget] = posted_at
+
+    return postedTarget.game
+      .map((game) =>
+      ({
+        id: game.id,
+        game: game.game
+      })
+      )
+  }
+}
 
 onMounted(async () => {
-  await fetch()
+  hljs.configure({
+    ignoreUnescapedHTML: true,
+  })
+  document.querySelectorAll('pre').forEach((block) => {
+    hljs.highlightElement(block)
+  })
   if (feed.value) {
-    Prism.highlightAll()
-
-    setHead()
     observer.value = new IntersectionObserver(
       (entries) => {
         handleIntersection(entries[0])
       },
       { root: null, threshold: 1 }
     )
-
     observer.value.observe(triggerDiv.value)
   }
   await commentFetch()
 })
 
-async function fetch(){
-  try{
-    const response = await useCustomFetch<any>(
-    `/post/${feedId.value}`,
-    getComFetchOptions('get', true)
-  )
-    if(response){
-      feed.value = response
-      postedAt.value = response.posted_at[0]
-      postedAt.value = postedAt.value.community.map((com)=>{
-        return {
-          channel:com.channel,
-          channel_id:com.channel_id,
-          community:com?.group || com.community,
-          id:com.id
-        }
-      })
-      console.log( postedAt.value)
-
-    }
-  }catch(error){
-    alert(error)
-  }
-
-}
 async function handleIntersection(target: any) {
   if (target.isIntersecting) {
     if (isAddData.value) {
@@ -308,7 +265,7 @@ async function commentFetch() {
     sort: sort.value,
   }
 
-  const { data, pending, refresh } = await useCustomAsyncFetch<{ result: [] }>(
+  const { data, pending, refresh } = await useFetch<{ result: [] }>(
     createQueryUrl(`/post/${feedId.value}/comment/list`, query),
     getComFetchOptions('get', true)
   )
@@ -330,70 +287,72 @@ async function commentFetch() {
   return
 }
 
-async function setHead() {
-  if (feed.value) {
-    let descText = ''
+function addComment(comment: IComment) {
+  comments.value = [comment, ...comments.value]
 
-    if (stringToDomElem(feed.value.content).getElementsByTagName('p')[0]) {
-      descText = stringToDomElem(feed.value.content).getElementsByTagName(
-        'p'
-      )[0].innerText
-    } else if (
-      stringToDomElem(feed.value.content).getElementsByTagName('pre')[0]
-    ) {
-      descText = stringToDomElem(feed.value.content).getElementsByTagName(
-        'pre'
-      )[0].innerText
+}
+
+function deleteComment(commentId: string) {
+  comments.value = comments.value.filter((comment: IComment) => {
+    return comment.id !== commentId
+  })
+
+}
+
+function editComment(comment: IComment) {
+
+  const newComment = comments.value.map((cmt: IComment) => {
+    if (comment.id === cmt.id) {
+      return { ...cmt, content: comment.content }
+    }
+    return cmt
+  })
+  comments.value = newComment
+
+}
+
+async function setHead() {
+
+  if (feed.value) {
+    const content = stringToDomElemByServer(feed.value.content);
+
+    const h1Tag = content.querySelector('h1');
+    const h2Tag = content.querySelector('h2');
+    const h3Tag = content.querySelector('h3');
+    const img = content.querySelector('img');
+    const video = content.querySelector('video');
+    const audio = content.querySelector('audio');
+
+    const [attr] = feed.value.attatchment_files || []
+
+
+    let imgMeta = img?.attrs.src || attr?.type === 'image' && attr?.url
+
+    let title = h1Tag?.innerText || h2Tag?.innerText || h3Tag?.innerText;
+
+    const firstDom = getFirstDomElementByServer(feed.value.content)
+    let desc = firstDom?.innerText.slice(0, 50)
+
+    if (!desc) {
+      if (img) {
+        desc = img.attrs?.title || img.attrs?.alt || '이미지'
+      }
+      else if (video) {
+        desc = '동영상'
+      }
+      else if (audio) {
+        desc = audio.attrs?.title || '오디오'
+      }
+      else if (attr) {
+        desc = attr.name
+      }
+    }
+    if (!title) {
+      title = desc.length ? desc.slice(0, 20) : feed.value?.user.name
     }
 
-    useHead({
-      title: `${feed.value?.user.name}${t('seo.feed.title')} | Zempie`,
-      link: [
-        {
-          rel: 'alternate',
-          href: `${config.ZEMPIE_URL}${route.fullPath}`,
-          hreflang: locale,
-        },
-        {
-          rel: 'canonical',
-          href: `${config.ZEMPIE_URL}${route.fullPath}`,
-        },
-      ],
-      meta: [
-        {
-          property: 'og:url',
-          content: `${config.ZEMPIE_URL}${route.fullPath}`,
-        },
-        {
-          property: 'og:site_name',
-          content: 'Zempie',
-        },
-        {
-          name: 'og:type',
-          content: 'website',
-        },
-        {
-          name: 'robots',
-          content: 'index, follow',
-        },
-        {
-          name: 'description',
-          content: `${descText.slice(0, 20)}`,
-        },
-        {
-          property: 'og:title',
-          content: `${feed.value?.user.name}${t('seo.feed.title')}`,
-        },
-        {
-          property: 'og:description',
-          content: `${descText.slice(0, 20)}`,
-        },
-        {
-          property: 'og:url',
-          content: `${config.ZEMPIE_URL}${route.path}`,
-        },
-      ],
-    })
+    shared.createHeadMeta(title, desc, imgMeta)
+
   }
 }
 
@@ -415,12 +374,6 @@ function copyUrl() {
 </script>
 
 <style lang="scss" scoped>
-
-@use 'sass:math';
-
-.tapl-content {
-  width: calc(100% - 40px);
-}
 .fade-move,
 .fade-enter-active,
 .fade-leave-active {
@@ -487,7 +440,7 @@ function copyUrl() {
   }
 }
 
-input[type='radio'] + label {
+input[type='radio']+label {
   display: inline-block;
   width: 22px;
   height: 22px;
@@ -499,7 +452,7 @@ input[type='radio'] + label {
   cursor: pointer;
 }
 
-input[type='radio']:checked + label {
+input[type='radio']:checked+label {
   color: #fff;
   background: #ff6e17;
   border-color: #ff6e17;
@@ -514,6 +467,4 @@ input[type='radio'] {
     border-top: 0px;
   }
 }
-
-
 </style>

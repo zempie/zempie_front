@@ -13,41 +13,17 @@
       </div>
       <div class="la-content">
         <form>
-          <input
-            type="email"
-            v-model="v$.email.$model"
-            name="login-email"
-            title=""
-            :placeholder="$t('login.email.placeholder')"
-            class="w100p h60"
-            style="margin-bottom: 10px"
-            autocomplete="user-email"
-            @keyup.enter="onSubmit"
-          />
-          <h2
-            class="input-errors"
-            v-for="error of v$.email.$errors"
-            :key="error.$uid"
-          >
+          <input type="email" v-model="v$.email.$model" name="login-email" title=""
+            :placeholder="$t('login.email.placeholder')" class="w100p h60" style="margin-bottom: 10px"
+            autocomplete="user-email" @keyup.enter="onSubmit" />
+          <h2 class="input-errors" v-for="error of v$.email.$errors" :key="error.$uid">
             <i class="uil uil-check"></i>{{ error.$message }}
           </h2>
-          <input
-            type="password"
-            v-model="v$.password.$model"
-            name="login-password"
-            title=""
-            autocomplete="current-password"
-            :placeholder="$t('login.pwd.placeholder')"
-            class="w100p h60"
-            style="margin-bottom: 10px"
-            @keyup.enter="onSubmit"
-          />
+          <input type="password" v-model="v$.password.$model" name="login-password" title=""
+            autocomplete="current-password" :placeholder="$t('login.pwd.placeholder')" class="w100p h60"
+            style="margin-bottom: 10px" @keyup.enter="onSubmit" />
 
-          <h2
-            class="input-errors"
-            v-for="error of v$.password.$errors"
-            :key="error.$uid"
-          >
+          <h2 class="input-errors" v-for="error of v$.password.$errors" :key="error.$uid">
             <i class="uil uil-check"></i>{{ error.$message }}
           </h2>
         </form>
@@ -82,12 +58,7 @@
           </li>
         </ul>
         <p>
-          <span
-            ><i
-              class="uil uil-info-circle"
-              style="font-size: 16px; line-height: 24px"
-            ></i
-          ></span>
+          <span><i class="uil uil-info-circle" style="font-size: 16px; line-height: 24px"></i></span>
           {{ $t('login.text4') }}
         </p>
       </div>
@@ -97,7 +68,7 @@
 
 <script setup lang="ts">
 import * as fbFcm from '~~/scripts/firebase-fcm'
-import {  ElMessage } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import useVuelidate from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
 import { useI18n } from 'vue-i18n'
@@ -111,6 +82,7 @@ import {
   setPersistence,
   browserSessionPersistence,
 } from 'firebase/auth'
+import shared from '~/scripts/shared'
 
 const { $firebaseAuth, $cookies, $localePath } = useNuxtApp()
 
@@ -121,56 +93,10 @@ const config = useRuntimeConfig()
 
 definePageMeta({
   layout: 'layout-none',
-  middleware:'guest-only'
+  middleware: 'guest-only'
 })
-useHead({
-  title: `${t('seo.login.title')} | Zempie`,
-  link: [
-    {
-      rel: 'alternate',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-      hreflang: locale,
-    },
-    {
-      rel: 'canonical',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-  ],
-  meta: [
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-    {
-      property: 'og:site_name',
-      content: 'Zempie',
-    },
-    {
-      name: 'og:type',
-      content: 'website',
-    },
-    {
-      name: 'robots',
-      content: 'noindex, nofollow',
-    },
-    {
-      name: 'description',
-      content: `${t('seo.login.desc')}`,
-    },
-    {
-      property: 'og:title',
-      content: `${t('seo.login.title')}`,
-    },
-    {
-      property: 'og:description',
-      content: `${t('seo.login.description')}`,
-    },
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`,
-    },
-  ],
-})
+
+shared.createHeadMeta(t('seo.login.title'), t('seo.login.desc'))
 
 const form = reactive({
   email: '',
@@ -198,18 +124,18 @@ const rules = computed(() => {
 const v$ = useVuelidate(rules, form)
 const isLogin = computed(() => useUser().user.value.isLogin)
 
-watch( isLogin,
- async (val) => {
-  if (val) {
-   router.push($localePath('/'))
-   const { token } = await fbFcm.getFcmToken(useUser().user.value.info.id)
-   console.log('token', token)
-   if (!token) {
-    console.log('regi token')
-    await fbFcm.resigterFcmToken(useUser().user.value.info.id)
-   }
-  }
-})
+watch(isLogin,
+  async (val) => {
+    if (val) {
+      router.push($localePath('/'))
+      const { token } = await fbFcm.getFcmToken(useUser().user.value.info.id)
+      console.log('token', token)
+      if (!token) {
+        console.log('regi token')
+        await fbFcm.resigterFcmToken(useUser().user.value.info.id)
+      }
+    }
+  })
 
 console.log(useUser().user.value.isLogin)
 
@@ -294,6 +220,7 @@ async function socialLogin(provider: AuthProvider) {
   .la-bottom {
     ul {
       flex-direction: column;
+
       li {
         img {
           width: 300px;

@@ -10,7 +10,7 @@ export default {
 
 
   /**
-   *
+   * 유저 토큰 저장
    * @param token access token
    * @param refreshToken refresh token
    */
@@ -136,10 +136,9 @@ export default {
     image?: string
 
   ) => {
-
     const route = useRoute()
     const config = useRuntimeConfig()
-    const { t, locale } = useI18n()
+
 
     useHead({
       title: `${title} | Zempie`,
@@ -147,7 +146,12 @@ export default {
         {
           rel: 'alternate',
           href: `${config.ZEMPIE_URL}${route.fullPath}`,
-          hreflang: locale,
+          hreflang: 'ko',
+        },
+        {
+          rel: 'alternate',
+          href: `${config.ZEMPIE_URL}${route.fullPath}`,
+          hreflang: 'en',
         },
         {
           rel: 'canonical',
@@ -160,12 +164,12 @@ export default {
           content: 'Zempie',
         },
         {
-          name: 'og:type',
-          content: 'website',
-        },
-        {
           name: 'robots',
           content: 'index, follow',
+        },
+        {
+          property: 'og:type',
+          content: 'website',
         },
         {
           name: 'description',
@@ -173,7 +177,7 @@ export default {
         },
         {
           property: 'og:title',
-          content: `${title}`,
+          content: `${title} | Zempie`,
         },
         {
           property: 'og:description',

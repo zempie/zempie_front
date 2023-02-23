@@ -35,45 +35,46 @@
       </h3>
       <ul>
         <li>
-        <span>
-          <strong> STEP 1)</strong>&nbsp; 안내 페이지 하단의 참가 신청 폼 링크&nbsp;<span style="color:#d64dd8; font-weight: bold;"> CLICK
-          </span></span>
+          <span>
+            <strong> STEP 1)</strong>&nbsp; 안내 페이지 하단의 참가 신청 폼 링크&nbsp;<span style="color:#d64dd8; font-weight: bold;">
+              CLICK
+            </span></span>
 
         </li>
         <li>
           <span>
-          <strong> STEP 2)</strong>&nbsp; 신청서(구글폼) 작성 및 제출
-        </span>
+            <strong> STEP 2)</strong>&nbsp; 신청서(구글폼) 작성 및 제출
+          </span>
         </li>
         <li>
           <span>
-          <strong> STEP 3)</strong>&nbsp; 젬파이 및 젬파이 디스코드에 가입하면 준비 완료!<br />
-        </span>
+            <strong> STEP 3)</strong>&nbsp; 젬파이 및 젬파이 디스코드에 가입하면 준비 완료!<br />
+          </span>
         </li><br />
         <li>※ 디스코드 가입 후 젬파이에서 사용 중인 아이디를 알려주시기 바랍니다.</li>
         <li>※ 게임 제출 작업 관리를 위해 젬파이에 &nbsp; <strong> 가입, 게임 스튜디오 </strong>를 이용해주실 것을 부탁드립니다.</li>
 
       </ul>
       <div>
-        <a  target="_blank">{{$t('ended.event')}} </a>
+        <a target="_blank">{{ $t('ended.event') }} </a>
       </div>
       <h3 style="color:#54b5ff">
         [준비사항]</h3>
       <ul>
         <li>
           <span>
-          <strong> 1)</strong>&nbsp; 젬파이 ID (내 계정 정보에서 확인)
-        </span>
+            <strong> 1)</strong>&nbsp; 젬파이 ID (내 계정 정보에서 확인)
+          </span>
         </li>
         <li>
           <span>
-          <strong> 2)</strong>&nbsp; 본인의 개발 공간 & 개발 장비
-        </span>
+            <strong> 2)</strong>&nbsp; 본인의 개발 공간 & 개발 장비
+          </span>
         </li>
         <li>
           <span>
-          <strong> 3)</strong>&nbsp; 본인 소속 팀 내 커뮤니케이션을 위한 장비
-        </span>
+            <strong> 3)</strong>&nbsp; 본인 소속 팀 내 커뮤니케이션을 위한 장비
+          </span>
         </li>
       </ul>
 
@@ -91,14 +92,14 @@
           <ul style="text-align: center;">
             <p style="font-size:20px">제출 방식</p>
             <li>
-             <span> <strong>1)</strong>&nbsp; 게임 개발 일지 & 게임 프로토타입 빌드 :&nbsp;</span>
+              <span> <strong>1)</strong>&nbsp; 게임 개발 일지 & 게임 프로토타입 빌드 :&nbsp;</span>
               <span>젬파이 게임잼플러스 이벤트 페이지 > 게임 제출 CLICK</span>
             </li>
             <li>
               <span>
-              <strong> 2)</strong>&nbsp; 발표 영상 자료 :&nbsp;
-              <span> 유튜브에 해당 영상 업로드 > 젬파이 디스코드를 통해 영상 링크 공유</span>
-            </span>
+                <strong> 2)</strong>&nbsp; 발표 영상 자료 :&nbsp;
+                <span> 유튜브에 해당 영상 업로드 > 젬파이 디스코드를 통해 영상 링크 공유</span>
+              </span>
             </li>
           </ul>
 
@@ -147,7 +148,8 @@
         </li>
       </ul>
 
-      <h4 style="margin-top:100px;">If you are a non-Korean but want to hop on, please check on this link for more details of GAMEJAMPLUS 22/23</h4>
+      <h4 style="margin-top:100px;">If you are a non-Korean but want to hop on, please check on this link for more
+        details of GAMEJAMPLUS 22/23</h4>
       <h4><a href="https://gamejamplus.com/" target="_blank">GAME JAM PLUS</a></h4>
 
     </div>
@@ -155,6 +157,7 @@
 </template>
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import shared from '~/scripts/shared'
 
 const { $localePath } = useNuxtApp()
 const { t, locale } = useI18n()
@@ -164,59 +167,11 @@ const config = useRuntimeConfig()
 
 const isLogin = computed(() => useUser().user.value.isLogin)
 
-useHead({
-  title: `Game Jam Plus | Zempie`,
-  link: [
-    {
-      rel: 'alternate',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-      hreflang: locale,
-    },
-    {
-      rel: 'canonical',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-  ],
-  meta: [
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-    {
-      property: 'og:site_name',
-      content: 'Zempie',
-    },
 
-    {
-      name: 'og:type',
-      content: 'website',
-    },
-    {
-      name: 'robots',
-      content: 'index, follow',
-    },
-    {
-      name: 'description',
-      content: `${t('global.game.zem.info')}`,
-    },
+shared.createHeadMeta('Game Jam Plus', t('global.game.zem.info'))
 
-    {
-      property: 'og:title',
-      content: `Game Jam Plus`,
-    },
-    {
-      property: 'og:description',
-      content: `${t('global.game.zem.info')}`,
-    },
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`,
-    },
-  ],
-})
 
-function uploadGame(){
-  console.log('?')
+function uploadGame() {
   if (!isLogin.value) {
     useModal().openLoginModal()
     return
@@ -344,35 +299,38 @@ function uploadGame(){
         justify-content: center;
         text-align: center;
         line-height: 30px;
-        
+
       }
     }
   }
 }
+
 @media all and (max-width: 479px) {
   .wrap {
-    .container{
+    .container {
       ul {
         li {
           flex-direction: column;
-          span{
+
+          span {}
         }
       }
     }
-    }
   }
 }
+
 @media all and (min-width: 480px) and (max-width: 767px) {
   .wrap {
-    .container{
+    .container {
       ul {
         li {
           flex-direction: column;
-          strong{
+
+          strong {
             display: inline;
           }
+        }
       }
-    }
     }
   }
 }

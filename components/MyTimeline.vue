@@ -10,14 +10,11 @@
           <ul v-for="game in 4">
             <li>
               <p style="background-color: #d5d5d5"></p>
-              <h2
-                class="grey-text"
-                style="
+              <h2 class="grey-text" style="
                   text-overflow: ellipsis;
                   overflow: hidden;
                   margin: 15px 0 10px 0;
-                "
-              ></h2>
+                "></h2>
             </li>
           </ul>
           <TimelineSk v-if="isPending" />
@@ -40,11 +37,9 @@
               </NuxtLink>
             </li>
             <li>
-              <NuxtLink
-                :to="
-                  $localePath(`/channel/${channelInfo?.channel_id}/followers`)
-                "
-              >
+              <NuxtLink :to="
+                $localePath(`/channel/${channelInfo?.channel_id}/followers`)
+              ">
                 <p style="background: #33e4ce; cursor: pointer">
                   <i class="uil uil-users-alt"></i>
                 </p>
@@ -53,11 +48,9 @@
               </NuxtLink>
             </li>
             <li>
-              <NuxtLink
-                :to="
-                  $localePath(`/channel/${channelInfo?.channel_id}/following`)
-                "
-              >
+              <NuxtLink :to="
+                $localePath(`/channel/${channelInfo?.channel_id}/following`)
+              ">
                 <p style="background: #5d5ffe; cursor: pointer">
                   <i class="uil uil-user-plus"></i>
                 </p>
@@ -73,15 +66,10 @@
           </dl>
 
           <ul v-if="channelInfo?.games?.length">
-            <li
-              v-for="game in channelInfo?.games?.slice(0, 5)"
-              @click="$router.push($localePath(`/game/${game.pathname}`))"
-            >
-              <p
-                :style="`background:url(${
-                  game.url_thumb_webp || '/images/default.png'
-                }) center; background-size:cover;`"
-              ></p>
+            <li v-for="game in channelInfo?.games?.slice(0, 5)"
+              @click="$router.push($localePath(`/game/${game.pathname}`))">
+              <p :style="`background:url(${game.url_thumb_webp || '/images/default.png'
+              }) center; background-size:cover;`"></p>
               <h2 style="text-overflow: ellipsis; overflow: hidden">
                 {{ game.title }}
               </h2>
@@ -91,10 +79,9 @@
             <li>{{ $t('no.game') }}</li>
           </ul>
           <div v-if="channelInfo?.games?.length > 5">
-            <NuxtLink
-              :to="$localePath(`/channel/${userInfo?.channel_id}/games`)"
-              class="btn-default-samll w100p"
-              >{{ $t('moreView') }}
+            <NuxtLink :to="$localePath(`/channel/${userInfo?.channel_id}/games`)" class="btn-default-samll w100p">{{
+              $t('moreView')
+            }}
             </NuxtLink>
           </div>
         </div>
@@ -141,65 +128,11 @@ watch(
     if (info?.id) {
       await useChannel().getChannelInfo(info.channel_id)
       games.value = info.games
-      createHead(info)
     }
   }
 )
 
-function createHead(info) {
-  useHead({
-    title: `${info.name}${t('seo.channel.title')} | Zempie`,
-
-    link: [
-      {
-        rel: 'alternate',
-        href: `${config.ZEMPIE_URL}${route.fullPath}`,
-        hreflang: locale,
-      },
-    ],
-    meta: [
-      {
-        property: 'og:url',
-        content: `${config.ZEMPIE_URL}${route.fullPath}`,
-      },
-      {
-        property: 'og:site_name',
-        content: 'Zempie',
-      },
-      {
-        name: 'og:type',
-        content: 'website',
-      },
-      {
-        name: 'robots',
-        content: 'index, follow',
-      },
-      {
-        name: 'description',
-        content: `${info.name}${t('seo.channel.desc')}`,
-      },
-      {
-        property: 'og:title',
-        content: `${info.name}${t('seo.channel.title')}`,
-      },
-      {
-        property: 'og:description',
-        content: `${info.name}${t('seo.channel.desc')}`,
-      },
-      {
-        property: 'og:url',
-        content: `${config.ZEMPIE_URL}${route.path}`,
-      },
-      {
-        name: 'og:image',
-        content: `${info.picture}`,
-      },
-    ],
-  })
-}
-
 onMounted(() => {
-  if (userInfo.value) createHead(userInfo.value)
   if (!useCookie(config.COOKIE_NAME).value) navigateTo('/')
 
   games.value = channelInfo.value?.games
@@ -211,6 +144,7 @@ onMounted(() => {
 .ta-myinfo {
   margin-bottom: 20px;
 }
+
 .swiper-slide {
   display: inline-block;
 }
@@ -236,6 +170,7 @@ onMounted(() => {
   .ta-myinfo {
     margin-bottom: 0px;
   }
+
   .ta-game-list {
     display: none;
   }
@@ -245,6 +180,7 @@ onMounted(() => {
   .ta-myinfo {
     margin-bottom: 0px;
   }
+
   .ta-game-list {
     display: none;
   }
@@ -259,14 +195,13 @@ onMounted(() => {
   .ta-myinfo {
     margin-bottom: 0px;
   }
+
   .ta-game-list {
     display: none;
   }
 }
 
-@media all and (min-width: 992px) and (max-width: 1199px) {
-}
+@media all and (min-width: 992px) and (max-width: 1199px) {}
 
-@media all and (min-width: 1200px) {
-}
+@media all and (min-width: 1200px) {}
 </style>

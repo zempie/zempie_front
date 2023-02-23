@@ -607,7 +607,7 @@
   height: 150px;
   margin: 0 auto;
   border-radius: 15px;
-  background: url('/images/1200_150_game.png');
+  /* background: url('/images/1200_150_game.jpeg'); */
   background-size: cover;
   box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -2922,7 +2922,7 @@
   padding: 15px;
 }
 
-.card-game>li>dl>dt>p {
+.card-game>li>dl>dt>a>p {
   width: 55px;
   height: 55px;
   border-radius: 50%;
@@ -3035,7 +3035,7 @@
     margin-left: 5px;
   }
 
-  .card-game>li>dl>dt>p {
+  .card-game>li>dl>dt>a>p {
     width: 45px;
     height: 45px;
   }

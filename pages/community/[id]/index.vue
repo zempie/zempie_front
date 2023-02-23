@@ -12,22 +12,13 @@
         <dl class="three-area" v-else>
           <CommunityChannelList :community="communityInfo" />
           <dd>
-            <PostTimeline
-              type="community"
-              :isSubscribed="communityInfo?.is_subscribed"
-              :key="communityInfo?.id"
-            >
+            <PostTimeline type="community" :isSubscribed="communityInfo?.is_subscribed" :key="communityInfo?.id">
               <template #inputBox>
-                <input
-                  type="text"
-                  :placeholder="t('postModalInput')"
-                  readonly
-                  @click="
-                    isLogin
-                      ? !communityInfo?.is_subscribed && (needSubscribe = true)
-                      : useModal().openLoginModal()
-                  "
-                />
+                <input type="text" :placeholder="t('postModalInput')" readonly @click="
+                  isLogin
+                    ? !communityInfo?.is_subscribed && (needSubscribe = true)
+                    : useModal().openLoginModal()
+                " />
               </template>
             </PostTimeline>
           </dd>
@@ -50,12 +41,7 @@
         </dl>
       </div>
 
-      <el-dialog
-        v-model="needSubscribe"
-        append-to-body
-        class="modal-area-type"
-        width="380px"
-      >
+      <el-dialog v-model="needSubscribe" append-to-body class="modal-area-type" width="380px">
         <div class="modal-alert">
           <dl class="ma-header">
             <dt>{{ t('information') }}</dt>
@@ -89,78 +75,52 @@
 import dayjs from 'dayjs'
 
 import { ElDialog } from 'element-plus'
-import { dateFormat } from '~/scripts/utils'
-import { IComChannel } from '~~/types'
+import { ICommunity } from '~~/types'
 import { useI18n } from 'vue-i18n'
-const { t, locale } = useI18n()
+import shared from '~~/scripts/shared'
+const { t } = useI18n()
 
 const MAX_LIST_SIZE = 5
 const route = useRoute()
-const router = useRouter()
-const nuxt = useNuxtApp()
-
 const config = useRuntimeConfig()
 const accessToken = useCookie(config.COOKIE_NAME).value
 
-const communityInfo = computed(() => useCommunity().community.value.info)
+const limit = ref(MAX_LIST_SIZE)
+const offset = ref(0)
+const communities = ref([])
+const isPending = ref(true)
+const needSubscribe = ref(false)
+
+const isLogin = computed(() => useUser().user.value.isLogin)
+const communityId = computed(() => route.params.id as string)
 const createdDate = computed(() =>
   dayjs(useCommunity().community.value.info?.created_at).format(
     'YYYY / MM / DD'
   )
 )
 
-const communities = ref([])
-const isPending = ref(true)
-const needSubscribe = ref(false)
-const isLogin = computed(() => useUser().user.value.isLogin)
-
-const communityId = computed(() => route.params.id as string)
-const channelId = computed(() => route.params.channel_id as string)
-
-const channelInfo = ref()
-
-const limit = ref(MAX_LIST_SIZE)
-const offset = ref(0)
-
 definePageMeta({
   title: 'community-channel',
   name: 'communityChannel',
 })
 
-watch(
-  () => communityInfo.value,
-  (info) => {
-    if (info) {
-      useHead({
-        title: `${info.name} | Zempie community`,
-        meta: [
-          {
-            name: 'description',
-            content: `${info.description}`,
-          },
-          {
-            name: 'og:title',
-            content: `${info.name}`,
-          },
-          {
-            name: 'og:description',
-            content: `${info.description}`,
-          },
-          {
-            name: 'og:url',
-            content: `${config.ZEMPIE_URL}${route.path}`,
-          },
-        ],
-      })
-    }
+/**
+ * seo 반영은 함수안에서 되지 않으므로 최상단에서 진행함
+ */
+const { data: communityInfo } = await useAsyncData<ICommunity>('communityInfo', () =>
+  $fetch(`/community/${communityId.value}`, getComFetchOptions('get', true)),
+  {
+    initialCache: false
   }
 )
+shared.createHeadMeta(`${communityInfo.value.name}`, `${communityInfo.value.description}`, `${communityInfo.value.profile_img}`)
+
 
 onMounted(async () => {
   await fetch()
 })
 
-onBeforeUnmount(()=>{
+onBeforeUnmount(() => {
   useCommunity().resetCommunity()
 })
 
@@ -170,13 +130,8 @@ async function fetch() {
     offset: offset.value,
   }
 
-  const { data, pending } = await useFetch<any>(
-    createQueryUrl(`/community/list`, query),
-    {
-      method: 'get',
-      baseURL: config.COMMUNITY_API,
-      headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
-    }
+  const { data } = await useFetch<any>(
+    createQueryUrl(`/community/list`, query), getComFetchOptions('get', true)
   )
 
   if (data.value.length) {
@@ -202,4 +157,6 @@ async function subscribe() {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+
+</style>

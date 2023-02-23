@@ -12,24 +12,14 @@
             <div class="input-search-default">
               <p><i class="uil uil-search"></i></p>
               <div>
-                <input
-                  type="text"
-                  name=""
-                  title="keywords"
-                  :placeholder="$t('needSearchInput')"
-                  @input="searchProject"
-                  v-model="searchKeyword"
-                />
+                <input type="text" name="" title="keywords" :placeholder="$t('needSearchInput')" @input="searchProject"
+                  v-model="searchKeyword" />
               </div>
             </div>
           </dt>
           <dd>
-            <NuxtLink
-              id="gameUploadBtn"
-              :to="$localePath('/project/upload')"
-              class="btn-default ml20"
-              ><i class="uil uil-plus"></i>{{ $t('gameUpload') }}</NuxtLink
-            >
+            <NuxtLink id="gameUploadBtn" :to="$localePath('/project/upload')" class="btn-default ml20"><i
+                class="uil uil-plus"></i>{{ $t('gameUpload') }}</NuxtLink>
           </dd>
         </dl>
 
@@ -37,133 +27,77 @@
           <li>{{ $t('game.thumbnail') }}</li>
           <li class="game-title">
             {{ $t('game.title') }}
-            <i
-              v-if="isTitleSortAsc"
-              class="uil uil-angle-up"
-              style="font-size: 20px; cursor: pointer"
-              @click="sortAscList('name'), (isTitleSortAsc = !isTitleSortAsc)"
-            ></i>
-            <i
-              v-else
-              class="uil uil-angle-down"
-              style="font-size: 20px; cursor: pointer"
-              @click="sortDescList('name'), (isTitleSortAsc = !isTitleSortAsc)"
-            ></i>
+            <i v-if="isTitleSortAsc" class="uil uil-angle-up" style="font-size: 20px; cursor: pointer"
+              @click="sortAscList('name'), (isTitleSortAsc = !isTitleSortAsc)"></i>
+            <i v-else class="uil uil-angle-down" style="font-size: 20px; cursor: pointer"
+              @click="sortDescList('name'), (isTitleSortAsc = !isTitleSortAsc)"></i>
           </li>
           <li>
             {{ $t('game.uploadDate') }}
-            <i
-              v-if="isDateSortAsc"
-              class="uil uil-angle-up"
-              style="font-size: 20px; cursor: pointer"
-              @click="
-                sortAscList('created_at'), (isDateSortAsc = !isDateSortAsc)
-              "
-            ></i>
-            <i
-              v-else
-              class="uil uil-angle-down"
-              style="font-size: 20px; cursor: pointer"
-              @click="
-                sortDescList('created_at'), (isDateSortAsc = !isDateSortAsc)
-              "
-            ></i>
+            <i v-if="isDateSortAsc" class="uil uil-angle-up" style="font-size: 20px; cursor: pointer" @click="
+              sortAscList('created_at'), (isDateSortAsc = !isDateSortAsc)
+            "></i>
+            <i v-else class="uil uil-angle-down" style="font-size: 20px; cursor: pointer" @click="
+              sortDescList('created_at'), (isDateSortAsc = !isDateSortAsc)
+            "></i>
           </li>
           <li>
             {{ $t('game.status') }}
-            <i
-              v-if="isStageSortAsc"
-              class="uil uil-angle-up"
-              style="font-size: 20px; cursor: pointer"
-              @click="sortAscList('stage'), (isStageSortAsc = !isStageSortAsc)"
-            ></i>
-            <i
-              v-else
-              class="uil uil-angle-down"
-              style="font-size: 20px; cursor: pointer"
-              @click="sortDescList('stage'), (isStageSortAsc = !isStageSortAsc)"
-            ></i>
+            <i v-if="isStageSortAsc" class="uil uil-angle-up" style="font-size: 20px; cursor: pointer"
+              @click="sortAscList('stage'), (isStageSortAsc = !isStageSortAsc)"></i>
+            <i v-else class="uil uil-angle-down" style="font-size: 20px; cursor: pointer"
+              @click="sortDescList('stage'), (isStageSortAsc = !isStageSortAsc)"></i>
           </li>
           <li>
             {{ $t('game.playCnt') }}
-            <i
-              v-if="isPlayCountSortAsc"
-              class="uil uil-angle-up"
-              style="font-size: 20px; cursor: pointer"
-              @click="
-                sortAscListByGame('count_start'),
-                  (isPlayCountSortAsc = !isPlayCountSortAsc)
-              "
-            ></i>
-            <i
-              v-else
-              class="uil uil-angle-down"
-              style="font-size: 20px; cursor: pointer"
-              @click="
-                sortDescListByGame('count_start'),
-                  (isPlayCountSortAsc = !isPlayCountSortAsc)
-              "
-            ></i>
+            <i v-if="isPlayCountSortAsc" class="uil uil-angle-up" style="font-size: 20px; cursor: pointer" @click="
+              sortAscListByGame('count_start'),
+              (isPlayCountSortAsc = !isPlayCountSortAsc)
+            "></i>
+            <i v-else class="uil uil-angle-down" style="font-size: 20px; cursor: pointer" @click="
+              sortDescListByGame('count_start'),
+              (isPlayCountSortAsc = !isPlayCountSortAsc)
+            "></i>
           </li>
           <li>
             {{ $t('game.likeCnt') }}
-            <i
-              v-if="isLikeCountSortAsc"
-              class="uil uil-angle-up"
-              style="font-size: 20px; cursor: pointer"
-              @click="
-                sortAscListByGame('count_heart'),
-                  (isLikeCountSortAsc = !isLikeCountSortAsc)
-              "
-            ></i>
-            <i
-              v-else
-              class="uil uil-angle-down"
-              style="font-size: 20px; cursor: pointer"
-              @click="
-                sortDescListByGame('count_heart'),
-                  (isLikeCountSortAsc = !isLikeCountSortAsc)
-              "
-            ></i>
+            <i v-if="isLikeCountSortAsc" class="uil uil-angle-up" style="font-size: 20px; cursor: pointer" @click="
+              sortAscListByGame('count_heart'),
+              (isLikeCountSortAsc = !isLikeCountSortAsc)
+            "></i>
+            <i v-else class="uil uil-angle-down" style="font-size: 20px; cursor: pointer" @click="
+              sortDescListByGame('count_heart'),
+              (isLikeCountSortAsc = !isLikeCountSortAsc)
+            "></i>
           </li>
         </ul>
 
         <div v-if="isPending">
           <ul>
-            <ClipLoader
-              :color="'#ff6e17'"
-              :size="'30px'"
-              style="
+            <ClipLoader :color="'#ff6e17'" :size="'30px'" style="
                 margin: 0 auto;
                 border-radius: 10px;
                 height: 100px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-              "
-            />
+              " />
           </ul>
         </div>
         <template v-else-if="projects.length">
           <div>
-            <ul
-              v-for="project in projects"
-              :key="project.id"
-              @click="goToProjectPage(project.id)"
-            >
+            <ul v-for="project in projects" :key="project.id" @click="goToProjectPage(project.id)">
               <li>
                 <span> {{ $t('game.thumbnail') }}: </span>
 
-                <p
-                  :style="`background: url(${
-                    project.picture_webp ||
-                    project.picture ||
-                    project.picture2 ||
-                    '/images/default.png'
-                  }?t=${Date.now()}) center center / cover no-repeat; background-size: cover;`"
-                ></p>
+                <p :style="`background: url(${project.picture_webp ||
+                project.picture ||
+                project.picture2 ||
+                '/images/default.png'
+                }?t=${Date.now()}) center center / cover no-repeat; background-size: cover;`"></p>
               </li>
               <li>
+                {{ eGameType[project.game?.game_type]}}
                 <span> {{ $t('game.title') }}: </span> &nbsp;&nbsp;{{
                   project.name
                 }}
@@ -177,6 +111,7 @@
                 <span> {{ $t('game.status') }}: </span> &nbsp;&nbsp;
                 {{ eGameStage[project.stage] }}
               </li>
+
               <li>
                 <span> {{ $t('game.playCnt') }}: </span> &nbsp;&nbsp;{{
                   project.game?.count_start
@@ -194,27 +129,14 @@
             <dl>
               <dd>{{ currPage }}-{{ totalPage }} of {{ totalCount }}</dd>
               <dd>
-                <span
-                  @click="firstPage()"
-                  :class="[currPage === 1 && 'disabled', 'prev-btn']"
-                >
+                <span @click="firstPage()" :class="[currPage === 1 && 'disabled', 'prev-btn']">
                   <i class="uil uil-angle-double-left"></i>
                 </span>
-                <span
-                  @click="prevPage()"
-                  :class="[currPage === 1 && 'disabled', 'prev-btn']"
-                  ><i class="uil uil-angle-left"></i></span
-                >&nbsp;&nbsp;
-                <span
-                  @click="nextPage()"
-                  :class="[currPage === totalPage && 'disabled', 'next-btn']"
-                >
-                  <i class="uil uil-angle-right"></i
-                ></span>
-                <span
-                  @click="lastPage()"
-                  :class="[currPage === totalPage && 'disabled', 'next-btn']"
-                >
+                <span @click="prevPage()" :class="[currPage === 1 && 'disabled', 'prev-btn']"><i
+                    class="uil uil-angle-left"></i></span>&nbsp;&nbsp;
+                <span @click="nextPage()" :class="[currPage === totalPage && 'disabled', 'next-btn']">
+                  <i class="uil uil-angle-right"></i></span>
+                <span @click="lastPage()" :class="[currPage === totalPage && 'disabled', 'next-btn']">
                   <i class="uil uil-angle-double-right"></i>
                 </span>
               </dd>
@@ -236,8 +158,9 @@
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
 import _ from 'lodash'
 import dayjs from 'dayjs'
-import { IProject, eGameStage } from '~~/types'
+import { IProject, eGameStage, eGameType } from '~~/types'
 import { useI18n } from 'vue-i18n'
+import shared from '~~/scripts/shared'
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -247,54 +170,6 @@ const { $localePath } = useNuxtApp()
 
 definePageMeta({
   middleware: 'auth',
-})
-useHead({
-  title: `${t('seo.project.list.title')} | Zempie Studio`,
-  link: [
-    {
-      rel: 'alternate',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-      hreflang: locale,
-    },
-    {
-      rel: 'canonical',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-  ],
-  meta: [
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-    {
-      property: 'og:site_name',
-      content: 'Zempie',
-    },
-    {
-      name: 'og:type',
-      content: 'website',
-    },
-    {
-      name: 'robots',
-      content: 'noindex, nofollow',
-    },
-    {
-      name: 'description',
-      content: `${t('seo.project.list.desc')}`,
-    },
-    {
-      property: 'og:title',
-      content: `${t('seo.project.list.title')}`,
-    },
-    {
-      property: 'og:description',
-      content: `${t('seo.project.list.description')}`,
-    },
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`,
-    },
-  ],
 })
 
 const projects = ref([])
@@ -314,9 +189,10 @@ const totalCount = ref(0)
 const originProjects = ref()
 const totalPage = computed(() => Math.ceil(totalCount.value / PAGE_SIZE))
 
+shared.createHeadMeta(t('seo.project.list.title'), t('seo.project.list.desc'))
+
 onMounted(async () => {
   fetch()
-
   isPending.value = false
 })
 
@@ -335,16 +211,14 @@ async function fetch() {
 }
 
 const searchProject = _.debounce(() => {
-  const { result } = data.value as any
 
   if (searchKeyword.value.length) {
-    const project = result.filter((project: IProject) => {
+    const project = projects.value.filter((project: IProject) => {
       return project.name?.includes(searchKeyword.value)
     })
     projects.value = project
     totalCount.value = project.length
   } else {
-    projects.value = (data.value as any).result
     pagingByClient()
   }
 }, 300)
@@ -424,6 +298,7 @@ function sortDescListByGame(key: string) {
 .next-btn {
   cursor: pointer;
 }
+
 .prev-btn.disabled,
 .next-btn.disabled {
   pointer-events: none;
@@ -444,11 +319,14 @@ function sortDescListByGame(key: string) {
         background-color: #f9f9f9;
         cursor: pointer;
       }
+
       li {
+
         &:nth-child(5),
         &:nth-child(6) {
           width: 10%;
         }
+
         p {
           width: 70px;
           height: 70px;
@@ -523,16 +401,20 @@ function sortDescListByGame(key: string) {
     width: 90%;
     margin: 20px auto;
     padding: 0 15px;
-    dl{
+
+    dl {
       flex-wrap: wrap;
       padding: 20px;
-      dt{
+
+      dt {
         width: 100%;
       }
-      dd{
+
+      dd {
         width: 100%;
         margin-top: 10px;
-        .btn-default{
+
+        .btn-default {
           margin-left: 0px !important;
         }
       }
@@ -540,15 +422,15 @@ function sortDescListByGame(key: string) {
   }
 
 
-  .studio-all-game > dl dd a {
+  .studio-all-game>dl dd a {
     width: 100%;
   }
 
-  .studio-all-game > ul.ag-title {
+  .studio-all-game>ul.ag-title {
     display: none;
   }
 
-  .studio-all-game > div > ul {
+  .studio-all-game>div>ul {
     display: block;
     margin-top: 10px;
     padding: 15px 30px;
@@ -558,7 +440,7 @@ function sortDescListByGame(key: string) {
     box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.05);
   }
 
-  .studio-all-game > div > ul > li {
+  .studio-all-game>div>ul>li {
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -566,15 +448,15 @@ function sortDescListByGame(key: string) {
     font-size: 13px;
   }
 
-  .studio-all-game > div > ul > li {
+  .studio-all-game>div>ul>li {
     width: 100% !important;
   }
 
-  .studio-all-game > div > ul > li > p {
+  .studio-all-game>div>ul>li>p {
     margin: 0 0 0 15px;
   }
 
-  .studio-all-game > div > ul > li > span {
+  .studio-all-game>div>ul>li>span {
     display: block;
     font-size: 14px;
   }
@@ -585,16 +467,20 @@ function sortDescListByGame(key: string) {
     width: 470px;
     margin: 20px auto;
     padding: 0 20px;
-    dl{
+
+    dl {
       flex-wrap: wrap;
       padding: 20px;
-      dt{
+
+      dt {
         width: 100%;
       }
-      dd{
+
+      dd {
         width: 100%;
         margin-top: 10px;
-        .btn-default{
+
+        .btn-default {
           margin-left: 0px !important;
         }
       }
@@ -606,15 +492,15 @@ function sortDescListByGame(key: string) {
   }
 
 
-  .studio-all-game > dl dd a {
+  .studio-all-game>dl dd a {
     width: 100%;
   }
 
-  .studio-all-game > ul.ag-title {
+  .studio-all-game>ul.ag-title {
     display: none;
   }
 
-  .studio-all-game > div > ul {
+  .studio-all-game>div>ul {
     display: block;
     margin-top: 15px;
     padding: 15px 30px;
@@ -624,7 +510,7 @@ function sortDescListByGame(key: string) {
     box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.05);
   }
 
-  .studio-all-game > div > ul > li {
+  .studio-all-game>div>ul>li {
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -632,15 +518,15 @@ function sortDescListByGame(key: string) {
     font-size: 14px;
   }
 
-  .studio-all-game > div > ul > li {
+  .studio-all-game>div>ul>li {
     width: 100% !important;
   }
 
-  .studio-all-game > div > ul > li > p {
+  .studio-all-game>div>ul>li>p {
     margin: 0 0 0 15px;
   }
 
-  .studio-all-game > div > ul > li > span {
+  .studio-all-game>div>ul>li>span {
     display: block;
     font-size: 15px;
   }
@@ -657,12 +543,12 @@ function sortDescListByGame(key: string) {
     }
   }
 
-  .studio-all-game > div > ul > li {
+  .studio-all-game>div>ul>li {
     padding: 20px 0px;
     font-size: 15px;
   }
 
-  .studio-all-game > div > ul > li > p {
+  .studio-all-game>div>ul>li>p {
     width: 60px;
     height: 60px;
   }
@@ -674,6 +560,5 @@ function sortDescListByGame(key: string) {
   }
 }
 
-@media all and (min-width: 1200px) {
-}
+@media all and (min-width: 1200px) {}
 </style>

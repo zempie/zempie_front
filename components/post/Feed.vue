@@ -5,7 +5,7 @@
         <dl>
           <dt>
             <NuxtLink :to="$localePath(`/channel/${feed.user?.channel_id}`)">
-              <UserAvatar :user="feed.user" :tag="'span'"></UserAvatar>
+              <UserAvatar :user="feed.user" tag='span'></UserAvatar>
             </NuxtLink>
           </dt>
 

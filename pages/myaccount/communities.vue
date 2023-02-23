@@ -1,7 +1,7 @@
 <template>
   <NuxtLayout name="user-setting">
     <dl class="area-title">
-      <dt>Manage Group</dt>
+      <dt>Manage Community</dt>
     </dl>
 
     <Transition name="component-fade" mode="out-in">
@@ -26,72 +26,24 @@
 
 <script setup lang="ts">
 import { ICommunity } from '~~/types'
-
+import shared from '~~/scripts/shared';
 import { useI18n } from 'vue-i18n'
 
-const { t, locale } = useI18n()
-const route = useRoute()
-const config = useRuntimeConfig()
+const { t } = useI18n()
+
+const communities = ref<ICommunity[]>([])
+const isPending = ref(true)
+const userInfo = computed(() => useUser().user.value.info)
 
 definePageMeta({
   title: 'my-communities',
   name: 'myCommunities',
-  //middleware: 'auth',
+  middleware: 'auth',
 })
 
-useHead({
-  title: `${t('seo.profile.communities.title')} | Zempie`,
-  link: [
-    {
-      rel: 'alternate',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-      hreflang: locale,
-    },
-    {
-      rel: 'canonical',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-  ],
-  meta: [
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-    {
-      property: 'og:site_name',
-      content: 'Zempie',
-    },
-    {
-      name: 'og:type',
-      content: 'website',
-    },
-    {
-      name: 'robots',
-      content: 'noindex, nofollow',
-    },
-    {
-      name: 'description',
-      content: `${t('seo.profile.communities.desc')}`,
-    },
-    {
-      property: 'og:title',
-      content: `${t('seo.profile.communities.title')}`,
-    },
-    {
-      property: 'og:description',
-      content: `${t('seo.profile.communities.description')}`,
-    },
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`,
-    },
-  ],
-})
+shared.createHeadMeta(t('seo.profile.communities.title'), t('seo.profile.communities.desc'))
 
-const communities = ref<ICommunity[]>([])
-const isPending = ref(true)
 
-const userInfo = computed(() => useUser().user.value.info)
 
 watch(
   () => userInfo.value,

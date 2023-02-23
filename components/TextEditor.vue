@@ -53,89 +53,8 @@
         </div>
       </template>
       <ClientOnly>
-
         <el-cascader class="mp-category" id="cascader" :props="props" v-model="selectedGroup"
           placeholder="Select cagetory" :options="categoryList" :popper-class="'categories'" />
-
-
-        <!-- <div
-          class="mp-category"
-          :style="
-            snsAttachFiles.img?.length
-              ? 'border-top: #e9e9e9 1px solid; margin-top:10px; padding-top:10px;'
-              : ''
-          "
-        >
-          <el-popover
-            name="category"
-            trigger="click"
-            v-model:visible="showCommunity"
-          >
-            <template #reference>
-              <button class="btn-line-small" style="width: 30%">
-                <i class="uil uil-plus"></i>
-                <template v-if="postingChannels.length >= 2">
-                  <span>Add</span>
-                </template>
-                <template v-else>
-                  <span>Add </span><span>community</span>
-                </template>
-              </button>
-            </template>
-
-            <div v-if="communityList.length" class="mpc-more-dropdown">
-              <button
-                class="category-group group-btn"
-                @click="openChannel(com)"
-                :class="isCommunityListOpen ? 'on' : 'off'"
-                v-for="com in communityList"
-              >
-                <p style="margin: 0 auto">{{ com.name }}</p>
-              </button>
-              <div :class="['channel-btn', isChannelListOpen ? 'on' : 'off']">
-                <div class="back-group-btn" @click="backToCommunityList">
-                  <button class="category-group">
-                    <i class="uil uil-arrow-circle-left"></i>
-                    {{ selectedGroup?.name }}
-                  </button>
-                </div>
-                <button
-                  class="category-group"
-                  v-for="channel in channels"
-                  @click="selectChannel(channel)"
-                >
-                  {{ channel.title }}
-                </button>
-              </div>
-            </div>
-            <div v-else>
-              {{ t('noJoined.community') }}
-            </div>
-          </el-popover>
-          <swiper
-            style="width: 100%; margin-left: 10px"
-            v-if="postingChannels.length"
-            class="swiper-area"
-            :space-between="7"
-            :slides-per-view="3"
-          >
-            <swiper-slide
-              class="community-slide"
-              v-for="(postedAt, index) in postingChannels"
-              :key="index"
-            >
-              <div class="category-select-finish">
-                <div>
-                  <span>{{ postedAt.group.name }}</span> /
-                  <em>{{ postedAt.channel.title }}</em>
-                </div>
-                <div class="cross-btn" @click="deletePostingChannel(index)">
-                  <i class="uil uil-times"></i>
-                </div>
-              </div>
-            </swiper-slide>
-          </swiper>
-        </div> -->
       </ClientOnly>
 
       <dl class="mp-type">
@@ -243,7 +162,7 @@ import {
 } from 'element-plus'
 
 import { useI18n } from 'vue-i18n'
-import { htmlToDomElem, stringToDomElem, isObjEmpty } from '~~/scripts/utils'
+import { htmlToDomElem, stringToDomElem, isImageUrl } from '~~/scripts/utils'
 
 interface IDraft {
   time: number
@@ -301,13 +220,9 @@ const audio = ref<HTMLElement>()
 const editor = ref<Editor>()
 
 const categoryList = ref([])
-const isCommunityListOpen = ref(true)
-const isChannelListOpen = ref(false)
 const selectedGroup = ref([])
-const channels = ref()
 const postingChannels = ref([])
 const isCommunityListVisible = ref(false)
-const showCommunity = ref(false)
 
 const imgArr = ref([])
 const videoArr = ref([])
@@ -330,12 +245,10 @@ const textInterval = ref()
 const prevText = ref()
 const saveId = ref(Date.now())
 
-// watch(
-//   () => selectedGroup.value,
-//   (type) => {
-//     console.log(type)
-//   }
-// )
+const gameInfo = computed(() => useGame().game.value.info)
+const communityInfo = computed(() => useCommunity().community.value.info)
+
+await communityFetch()
 
 onBeforeMount(() => {
   getDraftList()
@@ -360,39 +273,37 @@ onBeforeMount(() => {
 })
 
 onMounted(async () => {
-  const community = useCommunity().community.value.info
+
+  colorLog('text editor', 'pink')
   //새로고침 시 알람
   window.addEventListener('beforeunload', refreshPage)
 
-  await communityFetch()
-
-  if (useGame().game.value.info) {
-
+  if (gameInfo.value) {
     //방문한 페이지가 게임페이지인 경우 해당 게임찾아서 리턴
     const game = categoryList.value.find((elem) => {
       if (elem.value.type === 'game') {
-        return elem.value.game.id === useGame().game.value.info.id
+        return elem.value.game.id === gameInfo.value.id
       }
     })
-
     if (game) {
       selectedGroup.value = [
         ...selectedGroup.value,
-        [{
+        {
           type: 'game',
           game: game.value.game,
-        }]
+        }
       ]
     }
   }
 
 
-  if (community) {
+  if (communityInfo.value) {
 
     //general 채널 디폴트 카테고리로 설정
-    const generalChannel = community.channels.find(channel => {
+    const generalChannel = communityInfo.value.channels.find(channel => {
       return channel.title === 'general'
     })
+
 
     if (community) {
       selectedGroup.value = [
@@ -400,11 +311,11 @@ onMounted(async () => {
         [{
           type: 'community',
           community: {
-            id: community.id,
-            is_certificated: community.is_certificated,
-            name: community.name,
-            profile_img: community.profile_img,
-            url: community.url
+            id: communityInfo.value.id,
+            is_certificated: communityInfo.value.is_certificated,
+            name: communityInfo.value.name,
+            profile_img: communityInfo.value.profile_img,
+            url: communityInfo.value.url
           }
         }, {
           type: 'channel',
@@ -414,79 +325,103 @@ onMounted(async () => {
     }
   }
 
+  const postCommunities = props.feed?.posted_at?.community || props.feed?.posted_at[0].community
+
   //기존 카테고리 추가
   if (props.isEdit) {
-    if (props.feed?.posted_at?.community) {
-      for (const community of props.feed.posted_at.community) {
-        selectedGroup.value = [
-          ...selectedGroup.value,
-          [{
-            type: "community",
-            community: community.community
-          },
-          {
-            type: "channel",
-            channel: community.channel
-          }]
-        ]
+    if (postCommunities) {
+      for (const community of postCommunities) {
+        const index = selectedGroup.value.findIndex((elem) => {
+          if (elem.type !== 'game') {
+            const [com, chan] = elem
+            return chan.channel.id === community.channel.id
+          }
+        })
+        if (index === -1) {
+          selectedGroup.value = [
+            ...selectedGroup.value,
+            [{
+              type: "community",
+              community: community.community || community.group
+            },
+            {
+              type: "channel",
+              channel: community.channel
+            }]
+          ]
+        } else {
+          selectedGroup.value = [
+            ...selectedGroup.value]
+        }
+
+
       }
     }
+    const postGame = props.feed?.posted_at?.game || props.feed?.posted_at[0].game
 
-    if (props.feed?.posted_at?.game) {
-      for (const game of props.feed.posted_at.game) {
-        selectedGroup.value = [
-          ...selectedGroup.value,
-          [{
-            type: "game",
-            game: game.game
-          }]
-        ]
-      }
-    }
 
-    if (activeTab.value === 'SNS') {
-      if (attachFileArr.value?.length) {
-        snsAttachFiles.value = {
-          img:
-            attachFileArr.value[0]?.type === 'image' ? attachFileArr.value : [],
-          video:
-            attachFileArr.value[0]?.type === 'video'
-              ? attachFileArr.value[0]
-              : null,
-          audio:
-            attachFileArr.value[0]?.type === 'sound' ? attachFileArr.value : [],
+    if (postGame) {
+      for (const game of postGame) {
+        const index = selectedGroup.value
+          .findIndex((elem: { type: string, game: IGame }) => {
+            return elem?.game?.id === game.id
+          })
+
+        if (index === -1) {
+          selectedGroup.value = [
+            ...selectedGroup.value,
+            {
+              type: "game",
+              game: game.game
+            }
+          ]
         }
       }
     }
-    // loading.close()
+
+
+    if (activeTab.value === 'SNS') {
+      const attFileFilter = (type: string) => attachFileArr.value?.filter((file: { type: string, name: string, priority: number, size: number, url: string }) => file.type === type)
+
+      snsAttachFiles.value = {
+        img: attFileFilter('image'),
+        video: attachFileArr.value?.find((file: { type: string, name: string, priority: number, size: number, url: string }) => file.type === 'video') || null,
+        audio: attFileFilter('sounc'),
+      }
+    }
   }
+
+
 
   if (props.type === 'community') {
     if (props.channelInfo) {
       postingChannels.value = [
         {
-          group: useCommunity().community.value.info,
+          group: communityInfo.value,
           channel: props.channelInfo,
         },
       ]
+
     } else {
       postingChannels.value = [
         {
-          group: useCommunity().community.value.info,
-          channel: useCommunity().community.value.info.channels[0],
+          group: communityInfo.value,
+          channel: communityInfo.value.channels[0],
         },
       ]
     }
   }
+
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('beforeunload', refreshPage)
+  colorLog('beforeunload END', 'violet')
   clearInterval(interval.value)
   clearTimeout(textInterval.value)
 })
 
-function refreshPage(event) {
+function refreshPage(event: { preventDefault: () => void; returnValue: string }) {
   if (editor.value.isEmpty) return
   event.preventDefault()
 
@@ -521,7 +456,9 @@ function postingType(type: string) {
     usePost().setType(type)
   }
 }
+
 async function onSubmit() {
+
   const payload = {
     post_contents: form.post_contents,
     post_state: activeTab.value,
@@ -550,33 +487,38 @@ async function onSubmit() {
   videoArr.value = [...dom.getElementsByTagName('video')]
   audioArr.value = [...dom.getElementsByTagName('audio')]
 
+  console.log(imgArr.value)
+
   if (activeTab.value.toLocaleUpperCase() === 'BLOG') {
     const imgFiles = []
     const videoFiles = []
     const audioFiles = []
     let payloadFiles = []
 
+
+
+
     for (const img of imgArr.value) {
-      if (
-        img.src.substring(0, 4) === 'blob' ||
-        img.src.substring(0, 4) === 'data'
-      ) {
-        const formData = new FormData()
 
-        await fetch(img.src).then(async (result) => {
-          formData.append(img.title, await result.blob())
-        })
+      if (!isImageUrl(img.src)) {
+        const result = await fetch(img.src)
+        const blob = await result.blob()
+        const blobUrl = URL.createObjectURL(blob)
+        const isImage = blob.type.startsWith('image')
+        if (isImage) {
+          const formData = new FormData()
+          formData.append(img.title, blob)
+          const response = await useCustomFetch<{ result: { name: string, priority: number, size: number, type: string, url: string }[] }>('community/att', getZempieFetchOptions('post', true, formData))
 
-        const { data, error, pending } = await useCustomAsyncFetch<{ result: [] }>(
-          '/community/att',
-          getZempieFetchOptions('post', true, formData)
-        )
-        if (data.value) {
-          form.post_contents = form.post_contents.replace(
-            img.src,
-            data.value.result[0].url
-          )
-          imgFiles.push(...data.value.result)
+          if (response) {
+            const { result } = response
+            const [imgObj] = result
+            form.post_contents = form.post_contents.replace(
+              img.src,
+              imgObj.url
+            )
+          }
+
         }
       }
     }
@@ -713,49 +655,39 @@ function uploadImageFile() {
   image.value.click()
 }
 
-function onSelectImageFile(event: any) {
-  const files = event.target.files
+function onSelectImageFile(event: Event) {
+  const files = (event.target as HTMLInputElement).files
 
   for (const file of files) {
+    if (file.type === 'image/svg+xml') {
+      alert('svg는 지원하지 않는 확장자 형식입니다')
+      continue
+    }
     const reader = new FileReader()
 
     reader.onload = async (e) => {
-      const url = e.target!.result as any
-      const result = await fetch(url)
-      const blob = await result.blob()
-      const blobUrl = URL.createObjectURL(blob)
+
+      const url = e.target!.result as string
 
       if (activeTab.value.toUpperCase() === 'BLOG') {
         editor.value
           .chain()
           .focus(null)
-          .setImage({ src: blobUrl, alt: file.name, title: file.name })
+          .setImage({ src: url, alt: file.name, title: file.name })
           .setHardBreak()
           .setHardBreak()
           .run()
       } else {
-        if (snsAttachFiles.value.img) {
-          snsAttachFiles.value.img.push({
-            file: file,
-            name: file.name,
-            url: url,
-          })
-        } else {
-          snsAttachFiles.value.img = [
-            {
-              file: file,
-              name: file.name,
-              url: url,
-            },
-          ]
-        }
+        snsAttachFiles.value.img = [...(snsAttachFiles.value.img || []),
+        { file, name: file.name, url }
+        ]
       }
     }
 
     reader.readAsDataURL(file)
   }
 
-  event.target.value = ''
+  (event.target as HTMLInputElement).value = ''
 }
 
 function deleteImg(idx: number) {
@@ -792,21 +724,14 @@ function onSelectVideoFile(event: any) {
       const blob = await result.blob()
       const blobUrl = URL.createObjectURL(blob)
 
+
       if (activeTab.value === 'BLOG') {
         editor.value.chain().focus(null).setVideo({ src: blobUrl }).run()
       } else {
-        if (snsAttachFiles.value.video) {
-          snsAttachFiles.value.video = {
-            file: file,
-            name: file.name,
-            url: url,
-          }
-        } else {
-          snsAttachFiles.value.video = {
-            file: file,
-            name: file.name,
-            url: url,
-          }
+        snsAttachFiles.value.video = {
+          file: file,
+          name: file.name,
+          url: url,
         }
       }
       isVideoUploading.value = false
@@ -883,11 +808,14 @@ function deleteAudio(idx: number) {
 }
 
 async function onUpdatePost() {
-  let attatchment_files: any = props.feed.attatchment_files
-    ? Array.isArray(props.feed.attatchment_files)
+
+  // 테스트 서버 실서버 디비 환경 차이
+  let attatchment_files = props.feed.attatchment_files
+    && (Array.isArray(props.feed.attatchment_files)
       ? props.feed.attatchment_files
-      : JSON.parse(props.feed.attatchment_files)
-    : []
+      : JSON.parse(props.feed.attatchment_files))
+
+
 
   const attachedFile = []
   const payload = {
@@ -903,9 +831,12 @@ async function onUpdatePost() {
 
   if (selectedGroup.value) {
     const pl = setCategoryPayload(payload)
+
+    console.log('pl', pl)
     payload.community = pl.community;
     payload.game = pl.game
   }
+
 
   const dom = htmlToDomElem(form.post_contents)
 
@@ -950,7 +881,7 @@ async function onUpdatePost() {
         else {
           if (!attatchment_files) {
             //기존 파일에서 찾아서 push
-            const file = attatchment_files.find((file) => {
+            const file = attatchment_files.find((file: { url: any }) => {
               return file.url === img.src
             })
             imgFiles.push(file)
@@ -990,7 +921,7 @@ async function onUpdatePost() {
         } else {
           //기존 파일에서 찾아서 push
 
-          const file = attatchment_files.find((file) => {
+          const file = attatchment_files.find((file: { url: any }) => {
             return file.url === video.src
           })
           videoFiles.push(file)
@@ -1022,7 +953,7 @@ async function onUpdatePost() {
             audioFiles.push(...data.value.result)
           } else {
             //기존 파일에서 찾아서 push
-            const file = attatchment_files.find((file) => {
+            const file = attatchment_files.find((file: { url: any }) => {
               return file.url === audio.src
             })
             audioFiles.push(file)
@@ -1184,27 +1115,34 @@ async function onUpdatePost() {
   loading.close()
 }
 
-function setCategoryPayload(payload) {
-  console.log(selectedGroup.value)
-  selectedGroup.value.map((selected) => {
-    console.log('selected', selected)
-    const postTarget = selected.length ? selected[0].type : selected.type
 
-    switch (postTarget) {
+function setCategoryPayload(payload: { post_contents?: string; post_state?: string; hashtags?: any[]; community: any; game: any; post_id?: string; attatchment_files?: any; channel_id?: string }) {
+
+  selectedGroup.value.forEach((selected) => {
+    // cascader 산텍시 배열로 넘어오기때문에 객체로 다시 저장
+    let target = selected
+    if (Array.isArray(selected)) {
+      [target] = selected
+    }
+
+    switch (target.type) {
       case 'community':
-        payload.community.push({
-          id: selected[0].community.id,
-          group: selected[0].community,
-          channel_id: selected[1].channel.id,
-          channel: selected[1].channel
-        })
+        const [, channel] = selected
+        payload.community = [
+          ...payload.community,
+          {
+            id: target.community.id,
+            group: target.community,
+            channel_id: channel.channel.id,
+            channel: channel.channel
+          }
+        ]
         break;
       case 'game':
-        payload.game = [...payload.game, { game: selected[0].game, id: selected[0].game.id }];
+        payload.game = [...payload.game, { game: target.game, id: target.game.id }];
         break;
       default:
         break;
-
     }
   })
 

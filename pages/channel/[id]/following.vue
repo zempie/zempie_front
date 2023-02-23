@@ -17,91 +17,39 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { IFollowUser } from '~~/types'
+import shared from '~~/scripts/shared';
+import { IFollowUser, IUserChannel } from '~~/types'
 
-const { t, locale } = useI18n()
-const config = useRuntimeConfig()
-
-const userInfo = computed(() => useChannel().userChannel.value.info as any)
-
+const { t } = useI18n()
 const route = useRoute()
+
 const isPending = ref(true)
 const totalCount = ref()
 const users = ref([])
+
+const channelId = computed(() => route.params.id as string)
 
 definePageMeta({
   title: 'user-following',
   name: 'userFollwoing',
 })
 
-const isMine = computed(() => {
-  return route.params.id === useUser().user.value.info?.channel_id
-})
-
-watch(
-  () => userInfo.value,
-  async () => {
-    await fetch()
-
-    useHead({
-      title: `${userInfo.value.name}${t(
-        'seo.channel.following.title'
-      )} | Zempie`,
-      link: [
-        {
-          rel: 'alternate',
-          href: `${config.ZEMPIE_URL}${route.fullPath}`,
-          hreflang: locale,
-        },
-        {
-          rel: 'canonical',
-          href: `${config.ZEMPIE_URL}${route.fullPath}`,
-        },
-      ],
-      meta: [
-        {
-          property: 'og:url',
-          content: `${config.ZEMPIE_URL}${route.fullPath}`,
-        },
-        {
-          property: 'og:site_name',
-          content: 'Zempie',
-        },
-        {
-          name: 'og:type',
-          content: 'website',
-        },
-        {
-          name: 'robots',
-          content: 'index, follow',
-        },
-        {
-          name: 'description',
-          content: `${userInfo.value.name}${t('seo.channel.following.desc')}`,
-        },
-        {
-          property: 'og:title',
-          content: `${userInfo.value.name}${t('seo.channel.following.title')}`,
-        },
-        {
-          property: 'og:description',
-          content: `${userInfo.value.name}${t(
-            'seo.channel.following.description'
-          )}`,
-        },
-        {
-          property: 'og:url',
-          content: `${config.ZEMPIE_URL}${route.path}`,
-        },
-      ],
-    })
+/**
+ * seo 반영은 함수안에서 되지 않으므로 최상단에서 진행함
+ */
+const { data } = await useAsyncData<{ result: { target: IUserChannel } }>('channelInfo', () =>
+  $fetch(`/channel/${channelId.value}`, getZempieFetchOptions('get', true)),
+  {
+    initialCache: false
   }
 )
+const { target: channelInfo } = data.value?.result;
+
+shared.createHeadMeta(`${channelInfo.name}${t('seo.channel.following.title')}`, `${channelInfo.name}${t('seo.channel.following.desc')}`, channelInfo.picture)
 
 onMounted(async () => {
-  if (userInfo.value?.id) {
-    await fetch()
-  }
+  if (channelInfo.id) await fetch()
+
 })
 
 async function fetch() {
@@ -110,7 +58,7 @@ async function fetch() {
     result: []
     pageInfo: {}
   }>(
-    `/user/${userInfo.value.id}/list/following`,
+    `/user/${channelInfo.id}/list/following`,
     getComFetchOptions('get', true)
   )
   if (data.value) {
@@ -133,48 +81,6 @@ async function fetch() {
   isPending.value = false
 }
 
-// console.log(useChannel().userChannel.value.info)
-// @Prop() userId!: any;
-// private followerList: any = [];
-// private totalCnt: number = 0;
-// private limit: number = 10;
-// private offset: number = 0;
-// private search: string = '';
-// private user !: any;
-
-// channel_id: string = '';
-
-// mounted() {
-//   if (this.$route.params.channel_id) {
-//     this.channel_id = this.$route.params.channel_id;
-//   }
-//   else {
-//     this.channel_id = this.userId;
-//   }
-//   this.fetch();
-// }
-
-// fetch() {
-//   const obj = {
-//     limit: this.limit,
-//     offset: this.offset,
-//     search: this.search
-//   }
-//   //userId로 넘기는 부분인데 params 이름이 channel_id임
-//   this.$api.followerList(obj, this.channel_id)
-//     .then((res: any) => {
-//       this.followerList = res.result;
-//       this.totalCnt = res.totalCount;
-
-//     })
-//     .catch((err: any) => {
-
-//     })
-// }
-// reFetch() {
-//   this.fetch();
-//   this.$store.dispatch('reloadUserInfo');
-// }
 </script>
 
 <style lang="scss" scoped>
