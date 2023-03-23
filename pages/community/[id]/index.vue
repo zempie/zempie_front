@@ -7,13 +7,12 @@
           <dd>
             <TimelineSk />
           </dd>
-          <!-- <CommunityAboutSk /> -->
         </dl>
         <dl class="three-area" v-else>
           <CommunityChannelList :community="communityInfo" />
           <dd>
             <PostTimeline type="community" :isSubscribed="communityInfo?.is_subscribed" :key="communityInfo?.id">
-              <template #inputBox>
+              <template #communityInput>
                 <input type="text" :placeholder="t('postModalInput')" readonly @click="
                   isLogin
                     ? !communityInfo?.is_subscribed && (needSubscribe = true)
@@ -93,8 +92,9 @@ const needSubscribe = ref(false)
 
 const isLogin = computed(() => useUser().user.value.isLogin)
 const communityId = computed(() => route.params.id as string)
+const communityInfo = computed(() => useCommunity().community.value.info)
 const createdDate = computed(() =>
-  dayjs(useCommunity().community.value.info?.created_at).format(
+  dayjs(communityInfo.value?.created_at).format(
     'YYYY / MM / DD'
   )
 )
@@ -107,13 +107,16 @@ definePageMeta({
 /**
  * seo 반영은 함수안에서 되지 않으므로 최상단에서 진행함
  */
-const { data: communityInfo } = await useAsyncData<ICommunity>('communityInfo', () =>
+// await useCommunity().setCommunity(communityId.value)
+const { data } = await useAsyncData<ICommunity>('communityInfo', () =>
   $fetch(`/community/${communityId.value}`, getComFetchOptions('get', true)),
   {
     initialCache: false
   }
 )
-shared.createHeadMeta(`${communityInfo.value.name}`, `${communityInfo.value.description}`, `${communityInfo.value.profile_img}`)
+
+useCommunity().community.value.info = data.value
+shared.createHeadMeta(`${data.value.name}`, `${data.value.description}`, `${data.value.profile_img}`)
 
 
 onMounted(async () => {

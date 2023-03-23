@@ -12,7 +12,7 @@
                 ? (isTextEditorOpen = true)
                 : useModal().openLoginModal()
             " />
-            <slot v-else name="inputBox" />
+            <slot v-else name="communityInput" />
           </dt>
           <dd>
             <a><i class="uil uil-message"></i></a>

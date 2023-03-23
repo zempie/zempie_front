@@ -13,7 +13,7 @@
       </li>
     </ul>
     <div>
-      <Tiptap @editorContent="getEditorContent" :postType="activeTab" :feed="feed" :key="activeTab" />
+      <Tiptap @editorContent="getEditorContent" :postType="activeTab" :feed="feed" :key="activeTab" ref="tiptapRef" />
 
       <template v-if="activeTab === 'SNS'">
         <div v-if="snsAttachFiles.img?.length" class="mp-image" style="padding-bottom: 0px">
@@ -163,6 +163,7 @@ import {
 
 import { useI18n } from 'vue-i18n'
 import { htmlToDomElem, stringToDomElem, isImageUrl } from '~~/scripts/utils'
+import { fileUpload } from '~~/scripts/fileManager'
 
 interface IDraft {
   time: number
@@ -212,6 +213,7 @@ const snsAttachFiles = ref({
   audio: null,
 })
 
+const tiptapRef = ref()
 const activeTab = ref(props.feed?.post_type || 'SNS')
 const video = ref<HTMLElement>()
 const image = ref<HTMLElement>()
@@ -656,6 +658,7 @@ function uploadImageFile() {
 }
 
 function onSelectImageFile(event: Event) {
+  console.log('eve')
   const files = (event.target as HTMLInputElement).files
 
   for (const file of files) {
@@ -666,17 +669,24 @@ function onSelectImageFile(event: Event) {
     const reader = new FileReader()
 
     reader.onload = async (e) => {
+      console.log('reader', activeTab.value.toUpperCase())
 
       const url = e.target!.result as string
 
       if (activeTab.value.toUpperCase() === 'BLOG') {
-        editor.value
-          .chain()
-          .focus(null)
-          .setImage({ src: url, alt: file.name, title: file.name })
-          .setHardBreak()
-          .setHardBreak()
-          .run()
+        const response = await fileUpload(file)
+
+        if (response) {
+          const { url, name, priority } = response.result[0]
+
+          editor.value
+            .chain()
+            .focus(null)
+            .setImage({ src: url, alt: file.name, title: file.name })
+            .setHardBreak()
+            .setHardBreak()
+            .run()
+        }
       } else {
         snsAttachFiles.value.img = [...(snsAttachFiles.value.img || []),
         { file, name: file.name, url }
