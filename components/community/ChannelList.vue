@@ -1,40 +1,29 @@
 <template>
   <dt>
     <div class="ta-channel-list">
-      <div
-      style="display: flex;
-      border-bottom: #e9e9e9 1px solid;
-      align-items: center;
-      justify-content: space-between;">
+      <div style="display: flex;
+        border-bottom: #e9e9e9 1px solid;
+        align-items: center;
+        justify-content: space-between;">
         <h2 style="padding: 20px; font-weight: 600; font-size: 18px; line-height: 18px;color: #333;">Channel</h2>
-        <i
-          style="font-size: 20px; padding: 20px;"
-          @click="showChannelList = !showChannelList"
-          :class="showChannelList ? 'uil uil-angle-up' : 'uil uil-angle-down'"
-        ></i>
+        <i style="font-size: 20px; padding: 20px;" @click="showChannelList = !showChannelList"
+          :class="showChannelList ? 'uil uil-angle-up' : 'uil uil-angle-down'"></i>
       </div>
 
       <TransitionGroup name="list">
         <ul v-if="showChannelList">
-          <li
-            :class="['channel', { active: !channelName }]"
+          <li :class="['channel', { active: !channelName }]"
             :style="`background: url('/images/1500_300_com_banner_default.png') center center / cover no-repeat;`"
-            @click="$router.push($localePath(`/community/${community.id}`))"
-          >
+            @click="$router.push($localePath(`/community/${community.id}`))">
             <span>All Posts</span>
           </li>
-          <li
-            v-for="(channel, index) in community?.channels"
-            :style="`background: url(${
-              channel.profile_img || '/images/1500_300_com_channel_default.png'
-            }) center center / cover no-repeat;`"
-            :class="[{ active: channelName === channel.title }, 'channel']"
+          <li v-for="(channel, index) in community?.channels" :style="`background: url(${channel.profile_img || '/images/1500_300_com_channel_default.png'
+            }) center center / cover no-repeat;`" :class="[{ active: channelName === channel.title }, 'channel']"
             @click="
               $router.push(
                 $localePath(`/community/${community.id}/${channel.title}`)
               )
-            "
-          >
+            ">
             <span>{{ channel.title }}</span>
           </li>
         </ul>
@@ -88,15 +77,18 @@ function onResize() {
   display: inline-block;
   margin-right: 10px;
 }
+
 .list-enter-active,
 .list-leave-active {
   transition: all 0.5s ease;
 }
+
 .list-enter-from,
 .list-leave-to {
   opacity: 0;
   transform: translateY(30px);
 }
+
 .ta-channel-list {
   div {
     display: flex;
@@ -104,6 +96,7 @@ function onResize() {
     align-items: center;
 
     justify-content: space-between;
+
     h2 {
       padding: 20px !important;
       font-weight: 600 !important;
@@ -111,6 +104,7 @@ function onResize() {
       line-height: 18px !important;
       color: #333 !important;
     }
+
     i {
       font-size: 20px;
       padding: 20px;
@@ -118,6 +112,7 @@ function onResize() {
     }
   }
 }
+
 .channel {
   opacity: 0.5;
 
@@ -136,6 +131,7 @@ function onResize() {
     }
   }
 }
+
 @media all and (min-width: 480px) and (max-width: 767px) {
   .ta-channel-list {
     div {

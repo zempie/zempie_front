@@ -2,42 +2,11 @@
   <li class="tap-list" v-if="feed">
     <dl class="tapl-title">
       <dt class="w100p">
-        <dl>
-          <dt>
-            <NuxtLink :to="$localePath(`/channel/${feed.user?.channel_id}`)">
-              <UserAvatar :user="feed.user" tag='span'></UserAvatar>
-            </NuxtLink>
-          </dt>
-
-          <dd v-if="feed.user?.name">
-            <h2 class="user-name">
-              {{
-                feed.user?.name
-              }}<span> uploaded a {{ feed.post_type }} post </span>
-            </h2>
-            <p>
-              <i class="uis uis-clock" style="color: #c1c1c1"></i>
-              <span v-if="locale === 'ko'">
-                {{ dateFormat(feed.created_at) }}</span>
-              <span v-else> {{ enDateFormat(feed.created_at) }}</span>
-              <TranslateBtn :text="feedContent" @translatedText="translate" @untranslatedText="untranslatedText" />
-            </p>
-          </dd>
-          <dd v-else>
-            <h2>{{ t('feed.noUser.post') }}</h2>
-            <p>
-              <i class="uis uis-clock" style="color: #c1c1c1"></i>
-              {{ dateFormat(feed.created_at) }}
-            </p>
-          </dd>
-
-          <slot name="followBtn"></slot>
-          <!-- <UserFollowBtn
-            :user="user"
-            class="follow-btn-feed"
-            @refresh="refreshFollow"
-          /> -->
-        </dl>
+        <PostHeaderInfo :feed="feed">
+          <template #followBtn>
+            <slot name="followBtn"></slot>
+          </template>
+        </PostHeaderInfo>
       </dt>
       <dd v-if="feed.user?.name">
         <PostDropdown :feed="feed" @deletePost="emit('refresh')" @refresh="emit('refresh')" />
@@ -45,8 +14,8 @@
     </dl>
 
     <div>
-      <div ref="feedDiv" class="tapl-content" v-html="feedContent"
-        @click="$router.push($localePath(`/feed/${feed.id}`))"></div>
+      <div ref="feedDiv" class="tapl-content" v-html="feedContent" @click="$router.push($localePath(`/feed/${feed.id}`))">
+      </div>
 
       <div v-if="isOverflow" :class="isMoreView ? '' : 'gradient'"></div>
     </div>
@@ -76,8 +45,8 @@
         <audio controls :src="file.url"></audio>
         <p>{{ file.name }}</p>
       </div>
-      <img v-else-if="initFiles?.length === 1" style="width: 100%; margin: 0 auto; display: flex"
-        :src="initFiles[0].url" class="feed-img mt-3" />
+      <img v-else-if="initFiles?.length === 1" style="width: 100%; margin: 0 auto; display: flex" :src="initFiles[0].url"
+        class="feed-img mt-3" />
 
       <swiper v-else class="swiper" :modules="[Pagination]" style="height: 350px" :pagination="{ clickable: true }"
         :options="swiperOption">
@@ -173,7 +142,6 @@ import { useI18n } from 'vue-i18n'
 
 // import hljs from 'highlight.js'
 import { useWindowScroll, useInfiniteScroll } from '@vueuse/core'
-import { comment } from 'postcss'
 
 const { $localePath } = useNuxtApp()
 const { x, y } = useWindowScroll()
@@ -473,23 +441,6 @@ function untranslatedText(originText: string) {
 </script>
 
 <style lang="scss" scoped>
-// .tapl-title {
-//   dt {
-//     width: 100%;
-
-//     dl {
-//       dt {
-//         width: 15%;
-//       }
-//       dd {
-//         width: 80%;
-//       }
-//     }
-//   }
-// }
-
-// transition
-
 .component-fade-enter-active,
 .component-fade-leave-active {
   transition: opacity 0.5s ease;
@@ -707,6 +658,7 @@ function untranslatedText(originText: string) {
 @media all and (max-width: 479px) {
   .tapl-title {
     .user-name {
+
       span {
         display: none;
       }

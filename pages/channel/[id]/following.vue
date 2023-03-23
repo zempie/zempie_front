@@ -67,6 +67,7 @@ async function fetch() {
       return {
         picture: user.profile_img,
         name: user.name,
+        nickname: user.nickname,
         id: user.id,
         channel_id: user.channel_id,
         email: user.email,

@@ -16,6 +16,7 @@ export default function () {
       info.games.map((game) => {
         game.user = {
           name: info.name,
+          nickname: info.nickname,
           id: info.id,
           uid: info.uid,
           email: info.email,

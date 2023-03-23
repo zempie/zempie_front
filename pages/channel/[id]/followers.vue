@@ -73,6 +73,7 @@ async function fetch() {
         channel_id: user.channel_id,
         email: user.email,
         uid: user.uid,
+        nickname: user.nickname,
         followings_cnt: user.followings_cnt,
         followers_cnt: user.followers_cnt,
         is_following: user.is_following,

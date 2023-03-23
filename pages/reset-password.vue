@@ -13,13 +13,13 @@
           <i class="uil uil-info-circle" style="font-size: 16px; line-height: 24px"></i>&nbsp;&nbsp;{{
             $t('find.pwd.input.text')
           }}
-          <p style="margin-left:22px">{{ $t('find.pwd.input.info') }}메일이 오지 않는 경우 스팸함을 확인해주세요</p>
+          <p style="margin-left:22px">{{ $t('find.pwd.input.info') }}</p>
         </div>
         <ul>
           <li>
             <div>
-              <input v-model="email" @input="email ? (isEmailErr = false) : (isEmailErr = true)"
-                @keyup.enter="sendEmail" type="text" :placeholder="$t('login.email.placeholder')" class="w100p h60" />
+              <input v-model="email" @input="email ? (isEmailErr = false) : (isEmailErr = true)" @keyup.enter="sendEmail"
+                type="text" :placeholder="$t('login.email.placeholder')" class="w100p h60" />
               <h3 class="input-errors" v-if="isEmailErr">
                 <i class="uil uil-check"></i>{{ $t('login.empty.email') }}
               </h3>

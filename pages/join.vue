@@ -41,9 +41,16 @@
 
           </li> -->
             <li>
-              <input type="text" name="register-username" v-model="v$.username.$model" title=""
-                :placeholder="$t('name')" class="w100p h60" autocomplete="off" />
+              <input type="text" name="register-username" v-model="v$.username.$model" title="" :placeholder="$t('name')"
+                class="w100p h60" autocomplete="off" />
               <h3 class="input-errors" v-for="error of v$.username.$errors" :key="error.$uid">
+                <i class="uil uil-check"></i>{{ error.$message }}
+              </h3>
+            </li>
+            <li>
+              <input type="text" name="register-nickname" v-model="v$.nickname.$model" title=""
+                :placeholder="$t('nickname')" class="w100p h60" autocomplete="off" />
+              <h3 class="input-errors" v-for="error of v$.nickname.$errors" :key="error.$uid">
                 <i class="uil uil-check"></i>{{ error.$message }}
               </h3>
             </li>
@@ -89,7 +96,7 @@ import * as fbFcm from '~~/scripts/firebase-fcm'
 import useVuelidate from '@vuelidate/core'
 import { ElMessage } from 'element-plus'
 import { required, helpers, maxLength } from '@vuelidate/validators'
-import { emailRegex, passwordRegex } from '~/scripts/utils'
+import { emailRegex, passwordRegex, nicknameRegex } from '~/scripts/utils'
 import { useI18n } from 'vue-i18n';
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { onBeforeRouteLeave } from 'vue-router';
@@ -115,6 +122,7 @@ const errorAgree = ref(false);
 
 const emailValidator = helpers.regex(emailRegex);
 const pwdValidator = helpers.regex(passwordRegex);
+const nicknameValidator = helpers.regex(nicknameRegex)
 
 const rules = computed(() => {
   const formRule = {
@@ -127,14 +135,14 @@ const rules = computed(() => {
       pwdValidator: helpers.withMessage(t('login.pwd.format.err'), pwdValidator)
     },
     nickname: {
+      required: helpers.withMessage(t('join.empty.nickname'), required),
+      pwdValidator: helpers.withMessage(t('join.nickname.format.err'), nicknameValidator),
 
     },
     username: {
       required: helpers.withMessage(t('join.name.empty.err'), required),
       maxLength: helpers.withMessage(t('join.name.format.err'), maxLength(100)),
-
     }
-
   }
 
   return formRule
@@ -233,6 +241,7 @@ async function register() {
 async function joinZempie() {
   const payload = {
     name: form.username,
+    nickname: form.nickname
   }
 
   const { data, error } = await useCustomAsyncFetch<{ result: any }>('/user/sign-up', getZempieFetchOptions('post', true, payload))

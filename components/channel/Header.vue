@@ -1,12 +1,8 @@
 <template>
-  <div
-    v-if="userInfo"
-    class="visual-info-center"
-    style="
-      background: url('/images/banner_white.png') center no-repeat;
-      background-size: cover;
-    "
-  >
+  <div v-if="userInfo" class="visual-info-center" style="
+                  background: url('/images/banner_white.png') center no-repeat;
+                  background-size: cover;
+                ">
     <dl>
       <dt>
         <ul>
@@ -17,17 +13,13 @@
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink
-              :to="$localePath(`/channel/${userInfo.channel_id}/followers`)"
-            >
+            <NuxtLink :to="$localePath(`/channel/${userInfo.channel_id}/followers`)">
               <h2>{{ userInfo.follower_cnt }}</h2>
               <h3>Followers</h3>
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink
-              :to="$localePath(`/channel/${userInfo.channel_id}/following`)"
-            >
+            <NuxtLink :to="$localePath(`/channel/${userInfo.channel_id}/following`)">
               <h2>{{ userInfo.following_cnt }}</h2>
               <h3>Followings</h3>
             </NuxtLink>
@@ -59,7 +51,7 @@ const isMine = computed(() => {
   return props.userInfo?.uid === useUser().user.value.info?.uid
 })
 
-onMounted(() => {})
+onMounted(() => { })
 </script>
 
 <style lang="scss" scoped></style>

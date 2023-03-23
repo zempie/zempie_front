@@ -18,7 +18,7 @@
         <h2 @click="playGame">
           {{ gameInfo.title }}
         </h2>
-        <p @click="moveUserPage">{{ gameInfo.user?.name }}</p>
+        <p @click="moveUserPage">{{ gameInfo.user?.nickname }}</p>
         <ul>
           <template v-for="platform in support_platforms">
             <li v-if="Number(platform) === ePlatformType.Android">

@@ -26,7 +26,8 @@ export interface IUser {
   },
   url_banner?: string,
   profile_img?: string,
-  new_noti_count?: number
+  new_noti_count?: number,
+  nickname?: string
 }
 
 
@@ -143,6 +144,7 @@ export interface IUserChannel {
   id: number,
   uid: string,
   name: string,
+  nickname: string,
   channel_id: string,
   email: string,
   picture: string,
@@ -196,18 +198,19 @@ export interface IFeed {
   status: string,
   retweet_id: number,
   user: {
+    name: string,
+    id: number,
+    channel_id: string,
+    email: string,
+    uid: string,
     follow_you: boolean,
     is_following: boolean,
     block_you: boolean,
     is_blocked: boolean,
     mutes_you: boolean,
     is_muted: boolean,
-    id: number,
-    uid: string,
-    name: string,
-    channel_id: string,
+    nickname: string,
     picture: string,
-    email: string,
     is_developer: number,
     last_log_in: string,
     created_at: string,

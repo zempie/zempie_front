@@ -4,29 +4,9 @@
       <ul class="ta-post" v-if="feed">
         <li class="tap-list">
           <dl class="tapl-title">
-            <dt class="w50p">
-              <dl>
-                <dt>
-                  <NuxtLink :to="$localePath(`/channel/${feed?.user?.channel_id}`)">
-                    <UserAvatar :user="feed?.user" tag='span' />
-                  </NuxtLink>
-                </dt>
-                <dd v-if="feed?.user">
-                  <h2>{{ feed?.user?.name }}</h2>
-                  <span>
-                    <i class="uis uis-clock" style="color: #c1c1c1"></i>
-                    {{ dateFormat(feed?.created_at) }}
-                  </span>
-                  <TranslateBtn :text="feed.content" @translatedText="translate" @untranslatedText="untranslatedText" />
-                </dd>
-                <dd v-else>
-                  <h2>{{ $t('feed.noUser.post') }}</h2>
-                  <p>
-                    <i class="uis uis-clock" style="color: #c1c1c1"></i>
-                    {{ dateFormat(feed?.created_at) }}
-                  </p>
-                </dd>
-              </dl>
+            <dt class="w100p">
+              <PostHeaderInfo :feed="feed">
+              </PostHeaderInfo>
             </dt>
             <dd>
               <UserFollowBtn :user="feed.user" class="follow-btn-feed" />
@@ -159,7 +139,8 @@ import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import { dateFormat, execCommandCopy, getFirstDomElementByServer, stringToDomElemByServer } from '~~/scripts/utils'
+
+import { dateFormat, execCommandCopy, getFirstDomElementByServer, stringToDomElemByServer, enDateFormat, } from '~~/scripts/utils'
 import shared from '~~/scripts/shared'
 import { IComment } from '~~/types'
 

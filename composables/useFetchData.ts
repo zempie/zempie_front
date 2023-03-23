@@ -49,7 +49,7 @@ export const getComFetchOptions = (method = 'get', withCredentials = false, body
 }
 
 
-const useFetchData = async (method: string, url: string, data = null, withCredentials: boolean = false, error = false) => {
+const useFetchData = async<T>(method: string, url: string, data = null, withCredentials: boolean = false, error = false) => {
   const config = useRuntimeConfig();
   const accessToken = useCookie(config.COOKIE_NAME).value
 
@@ -80,7 +80,7 @@ const useFetchData = async (method: string, url: string, data = null, withCreden
   } else {
     options['body'] = data;
   }
-  const result = await useFetch(url, options)
+  const result = await useFetch<T>(url, options)
 
   return result
 
@@ -170,7 +170,7 @@ export const user = {
     return communityFetch('get', `/user/${userId}/list/follower`, obj, true);
   },
   updateInfo(formData: FormData) {
-    return useFetchData('post', `/user/update/info`, formData, true);
+    return useFetchData<{ result: any }>('post', `/user/update/info`, formData, true);
   },
   leave(obj: { text: string, num: string }) {
     return useFetchData('post', `/user/leave-zempie`, obj, true);

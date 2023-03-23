@@ -6,16 +6,51 @@
 .pointer{
   cursor: pointer;
 }
+.text-bold{
+  font-weight: bold;
+}
 
 .full-width {
   width: 100%;
 }
+
+.flex{
+  display: flex;
+}
+.items-center{
+  align-items: center;
+}
+.justify-center{
+  justify-items: center;
+}
+.content-center{
+  justify-content: center;
+}
+.row{
+  display: flex;
+  flex-direction: row;
+}
+
+.column{
+  display: flex;
+  flex-direction: column;
+}
+
+.text-ellipsis{
+  text-overflow: ellipsis;
+  overflow:hidden;
+  white-space:nowrap;
+}
+
 
 .bg-grey-1 {
   background-color: #ededed;
 }
 .bg-grey-3 {
   background-color: #e4e6ef;
+}
+.text-red{
+  color:#c5292a;
 }
 
 .btn-green-small {
