@@ -877,6 +877,15 @@
   "need.refresh": "Please refresh the page",
   "setting": "Settings",
   "userSetting.alarm.info": "Click the toggle on the right to disable notifications. You can change it at any time.",
-  "global.game.jam.info":"Show us your talent for GGJ 2023",
-  "members":"Members"
+  "global.game.jam.info": "Show us your talent for GGJ 2023",
+  "members": "Members",
+  "nickname": "User name",
+  "user": "User",
+  "cookie": "__STRING_NOT_TRANSLATED__",
+  "join.empty.nickname": "__STRING_NOT_TRANSLATED__",
+  "join.nickname.format.err": "__STRING_NOT_TRANSLATED__",
+  "name.info": "__STRING_NOT_TRANSLATED__",
+  "nickname.info": "__STRING_NOT_TRANSLATED__",
+  "userSetting.error": "__STRING_NOT_TRANSLATED__",
+  "find.pwd.input.info": "__STRING_NOT_TRANSLATED__"
 }

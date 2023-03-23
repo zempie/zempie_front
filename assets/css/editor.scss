@@ -202,11 +202,10 @@
   iframe {
     border: 8px solid #000;
     border-radius: 4px;
-    min-width: 200px;
     min-height: 200px;
     display: block;
     outline: 0px solid transparent;
-    max-width: 100%;
+    width: 100%;
   }
 
   div[data-youtube-video] {
@@ -523,11 +522,10 @@ pre {
   iframe {
     border: 8px solid #000;
     border-radius: 4px;
-    min-width: 200px;
     min-height: 200px;
     display: block;
     outline: 0px solid transparent;
-    max-width: 100%;
+    width: 100%;
   }
 
   div[data-youtube-video] {

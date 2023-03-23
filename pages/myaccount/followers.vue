@@ -71,6 +71,7 @@ async function fetch() {
     users.value = data.value.result.map((user) => {
       return {
         name: user.name,
+        nickname: user.nickname,
         id: user.id,
         channel_id: user.channel_id,
         email: user.email,

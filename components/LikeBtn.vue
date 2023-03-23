@@ -1,27 +1,14 @@
 <template>
   <li>
-    <i
-      v-if="!isLiked"
-      @click="setLike"
-      class="xi-heart-o like-icon"
-      style="font-size: 22px; color: #ff6e17; cursor: pointer"
-    ></i>
-    <i
-      v-else
-      @click="unsetLike"
-      class="xi-heart like-icon"
-      style="font-size: 22px; color: #ff6e17; cursor: pointer"
-    ></i>
-    <span :class="likeCnt >= 1 && 'like-list'" @click="showLikeFetch">
-      {{ likeCnt }}</span
-    >
+    <i v-if="!isLiked" @click="setLike" class="xi-heart-o like-icon"
+      style="font-size: 22px; color: #ff6e17; cursor: pointer"></i>
+    <i v-else @click="unsetLike" class="xi-heart like-icon"
+      style="font-size: 22px; color: #ff6e17; cursor: pointer"></i>
+    <span :class="likeCnt >= 1 && 'like-list pointer'" @click="showLikeFetch">
+      {{ likeCnt }}</span>
   </li>
   <ClientOnly>
-    <el-dialog
-      v-model="isLikeHistoryOpen"
-      class="modal-area-type"
-      width="500px"
-    >
+    <el-dialog v-model="isLikeHistoryOpen" class="modal-area-type" width="500px">
       <div class="modal-alert modal-like">
         <dl class="ma-header">
 
@@ -43,12 +30,7 @@
               </h2>
             </div>
             <div>
-              <UserFollowBtn
-                v-if="isLogin"
-                :user="like.user"
-                :customClass="'small-btn'"
-                style="width: 100%"
-              />
+              <UserFollowBtn v-if="isLogin" :user="like.user" :customClass="'small-btn'" style="width: 100%" />
             </div>
           </li>
         </ul>
@@ -153,9 +135,9 @@ async function showLikeFetch() {
         isAddData.value = false
       }
     }
-    else{
-    likeList.value= data.value
-    isAddData.value = true
+    else {
+      likeList.value = data.value
+      isAddData.value = true
     }
   }
 }
@@ -164,7 +146,7 @@ function moveUserChannel(channel_id: string) {
   router.push($localePath(`/channel/${channel_id}`))
 }
 
-function closeHistory(){
+function closeHistory() {
   isLikeHistoryOpen.value = false
 
   offset.value = 0;
@@ -181,19 +163,4 @@ function closeHistory(){
     text-decoration: underline;
   }
 }
-
-// @media all and (max-width: 479px) {
-// }
-
-// @media all and (min-width: 480px) and (max-width: 767px) {
-// }
-
-// @media all and (min-width: 768px) and (max-width: 991px) {
-// }
-
-// @media all and (min-width: 992px) and (max-width: 1199px) {
-// }
-
-// @media all and (min-width: 1200px) {
-// }
 </style>

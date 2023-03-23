@@ -12,8 +12,10 @@
       </dl>
       <transition name="component-fade" mode="out-in">
         <ul class="card-game">
-          <GameCardSk v-if="!isLoadDone" v-for="game in 4" :key="game" />
-          <GameCard v-else v-for="game in games" :gameInfo="game" :key="game.id" />
+          <!-- <GameCardSk v-if="!isLoadDone" v-for="game in 4" :key="game" /> -->
+          <ClientOnly>
+            <GameCard v-for="game in games" :gameInfo="game" :key="game.id" />
+          </ClientOnly>
         </ul>
       </transition>
       <div class="no-result" v-if="isLoadDone && !games?.length">

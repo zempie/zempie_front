@@ -123,6 +123,9 @@ export const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[~!@#$%^&*()+|=_-])[A-
 // (?=.*[A-Za-z])(?=.*\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\d~!@#$%^&*()+|=]{8,16
 //[a-zA-Z0-9`~!@#$%^&*()-_=+\|[]{};:'",.<>/?]{8,24}
 
+export const nicknameRegex = /^([A-Za-z0-9_]{4,15})$/
+
+
 export const randomString = (count: number = 11) => {
   let str = Math.random().toString(36).substr(2, 11);
   while (str.length < count) {
@@ -147,4 +150,31 @@ export const isObjEmpty = (obj: Record<string, any>): Boolean => {
       return false;
   }
   return true;
+}
+
+
+export const debounce = <T extends (...args: any[]) => void>(fn: T, delay: number): T => {
+  let timeoutID: string | number | NodeJS.Timeout | null = null;
+
+  return function (...args: any[]) {
+    clearTimeout(timeoutID);
+    timeoutID = setTimeout(() => {
+      fn.apply(args);
+    }, delay);
+  } as T;
+}
+
+
+export const fileReader = (file: File): Promise<string | ArrayBuffer> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+
+    reader.onload = (e) => {
+      resolve(reader.result)
+    }
+    reader.readAsDataURL(file);
+
+    reader.onerror = reject;
+  })
+
 }

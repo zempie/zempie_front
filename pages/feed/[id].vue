@@ -4,36 +4,16 @@
       <ul class="ta-post" v-if="feed">
         <li class="tap-list">
           <dl class="tapl-title">
-            <dt class="w50p">
-              <dl>
-                <dt>
-                  <NuxtLink :to="$localePath(`/channel/${feed?.user?.channel_id}`)">
-                    <UserAvatar :user="feed?.user" tag='span' />
-                  </NuxtLink>
-                </dt>
-                <dd v-if="feed?.user">
-                  <h2>{{ feed?.user?.name }}</h2>
-                  <span>
-                    <i class="uis uis-clock" style="color: #c1c1c1"></i>
-                    {{ dateFormat(feed?.created_at) }}
-                  </span>
-                  <TranslateBtn :text="feed.content" @translatedText="translate" @untranslatedText="untranslatedText" />
-                </dd>
-                <dd v-else>
-                  <h2>{{ $t('feed.noUser.post') }}</h2>
-                  <p>
-                    <i class="uis uis-clock" style="color: #c1c1c1"></i>
-                    {{ dateFormat(feed?.created_at) }}
-                  </p>
-                </dd>
-              </dl>
+            <dt class="w100p">
+              <PostHeaderInfo :feed="feed">
+              </PostHeaderInfo>
             </dt>
             <dd>
               <UserFollowBtn :user="feed.user" class="follow-btn-feed" />
             </dd>
           </dl>
 
-          <div class="tapl-content" v-html="feed?.content"></div>
+          <div class="tapl-content" v-html="feed?.content" style="max-height:none"></div>
           <template v-if="
             feed?.post_type === 'SNS' &&
             feed?.attatchment_files?.length === 1 &&
@@ -159,7 +139,8 @@ import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import { dateFormat, execCommandCopy, getFirstDomElementByServer, stringToDomElemByServer } from '~~/scripts/utils'
+
+import { dateFormat, execCommandCopy, getFirstDomElementByServer, stringToDomElemByServer, enDateFormat, } from '~~/scripts/utils'
 import shared from '~~/scripts/shared'
 import { IComment } from '~~/types'
 
@@ -206,7 +187,7 @@ const postedCommunity = (posted_at) => {
 
     return postedTarget.community
       .filter(com => 'group' in com)
-      .map((com) => ({
+      ?.map((com) => ({
         community_id: com.id,
         channel: com.channel,
         channel_id: com.channel_id,
@@ -221,7 +202,7 @@ const postedGame = (posted_at) => {
     const [postedTarget] = posted_at
 
     return postedTarget.game
-      .map((game) =>
+      ?.map((game) =>
       ({
         id: game.id,
         game: game.game

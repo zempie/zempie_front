@@ -1,14 +1,15 @@
 <template>
+  <div v-if="isLoading">
+    <dl v-for="group in 4">
+      <CommunityListItemSk />
+    </dl>
+  </div>
   <div v-if="communities?.length">
-    <dl
-      v-for="community in communities"
-      :key="community.id"
-      @click="$router.push($localePath(`/community/${community.id}`))"
-    >
+    <dl v-for="community in communities" :key="community.id"
+      @click="$router.push($localePath(`/community/${community.id}`))">
       <dt>
         <span
-          :style="`background: url(${community.profile_img}) center center no-repeat; background-size: cover;`"
-        ></span>
+          :style="`background: url(${community.profile_img}) center center no-repeat; background-size: cover;`"></span>
       </dt>
       <dd>
         <h2>{{ community.name }}</h2>
@@ -29,11 +30,15 @@ import { PropType } from 'vue'
 import { ICommunity } from '~~/types'
 const { $localePath } = useNuxtApp()
 
-const props = defineProps({
+defineProps({
   communities: {
     type: Array as PropType<ICommunity[]>,
     default: [],
   },
+  isLoading: {
+    type: Boolean,
+    default: true
+  }
 })
 </script>
 <style lang="scss" scoped>

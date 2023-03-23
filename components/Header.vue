@@ -21,7 +21,7 @@
             </li>
             <li class="uppercase">
               <NuxtLink id="gameMenu" :to="$localePath('/game/list')" :class="
-              $route.name.toString().includes('game-list') && 'active'">
+                $route.name.toString().includes('game-list') && 'active'">
                 games
               </NuxtLink>
             </li>
@@ -64,13 +64,16 @@
                     <el-dropdown-menu class="header-search-list" style="min-width: 260px">
                       <div :class="hasResearchResult || 'no-result'">
                         <template v-if="userList?.length">
-                          <h2>{{ t('user.name') }}</h2>
+                          <h2>{{ t('user') }}</h2>
                           <el-dropdown-item v-for="user in userList" :key="user.id">
                             <div @click="moveUserPage(user.channel_id)">
                               <dl>
                                 <dt>
-                                  <UserAvatar :user="user" :tag="'span'" />
-                                  {{ user?.name }}
+                                  <UserAvatar :user="user" :tag="'span'" style="width:40px" />
+                                  <div>
+                                    <h3 class="font14 text-bold"> {{ user?.nickname }}</h3>
+                                    <h3>{{ user?.name }}</h3>
+                                  </div>
                                 </dt>
                                 <dd><i class="uil uil-user"></i></dd>
                               </dl>
@@ -84,7 +87,7 @@
                               <dl>
                                 <dt>
                                   <span :style="`background:url(${game.profile_img || game.url_thumb
-                                  }) center center / cover no-repeat; background-size:cover;`"></span>
+                                    }) center center / cover no-repeat; background-size:cover;`"></span>
                                   {{ game.title }}
                                 </dt>
                                 <dd><i class="uil uil-robot"></i></dd>

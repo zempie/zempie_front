@@ -6,61 +6,54 @@
         <span>{{ $t('search.result') }}</span>
       </h1>
     </div>
-    <template v-if="results">
-      <dl class="area-title" v-if="results.users?.length" style="margin-top: 12.5px">
-        <dt>
-          Users <span>{{ results.users?.length }}</span>
-        </dt>
-      </dl>
-      <ul class="user-list" v-if="results.users.length">
-        <ul class="card-follow">
-          <TransitionGroup name="list-complete">
-            <UserCard v-for="user in results.users" :key="user.id" :user="user" />
-            <!-- <li class="more-card" v-if="userList?.length > 2">
+    {{ results }}
+    <dl class="area-title" v-if="userList" style="margin-top: 12.5px">
+      <dt>
+        Users <span>{{ userList.length }}</span>
+      </dt>
+    </dl>
+    <ul class="user-list" v-if="userList">
+      <ul class="card-follow">
+        <TransitionGroup name="list-complete">
+          <UserCard v-for="user in userList" :key="user.id" :user="user" />
+          <!-- <li class="more-card" v-if="userList?.length > 2">
             <h3><i class="uil uil-plus"></i></h3>
             <h4>{{ $t('search.viewAll') }}</h4>
           </li> -->
-          </TransitionGroup>
-        </ul>
-      </ul>
-
-      <dl class="area-title" v-if="results.games?.length">
-        <dt>
-          Games <span>{{ results.games?.length }}</span>
-        </dt>
-      </dl>
-
-      <ul v-if="results.games.length" class="card-game">
-        <TransitionGroup name="list-complete">
-          <GameCard v-for="game in results.games" :key="game.id" :gameInfo="game" />
         </TransitionGroup>
       </ul>
+    </ul>
 
-      <dl class="area-title" v-if="results.posts?.length">
-        <dt>
-          Posts <span>{{ results.posts?.length }}</span>
-        </dt>
-      </dl>
-      <div class="ta-search-post" v-if="results.posts.length" :style="results.posts.length ? 'padding:0px ;' : ''">
-        <ul class="ta-post">
-          <div v-for="feed in results.posts" :key="feed.id">
-            <PostFeed :feed="feed">
-              <!-- <template #followBtn>
-                <UserFollowBtn
-                  :user="feed.user"
-                  :key="`${feed.user.is_following}`"
-                  class="follow-btn-feed"
-                  @refresh="refreshFollow"
-                />
-              </template> -->
-            </PostFeed>
-          </div>
-        </ul>
-      </div>
-    </template>
+    <!-- <dl class="area-title" v-if="results.games?.length">
+      <dt>
+        Games <span>{{ results.games?.length }}</span>
+      </dt>
+    </dl>
+
+    <ul v-if="results.games.length" class="card-game">
+      <TransitionGroup name="list-complete">
+        <GameCard v-for="game in results.games" :key="game.id" :gameInfo="game" />
+      </TransitionGroup>
+    </ul>
+
+    <dl class="area-title" v-if="results.posts?.length">
+      <dt>
+        Posts <span>{{ results.posts?.length }}</span>
+      </dt>
+    </dl>
+    <div class="ta-search-post" v-if="results.posts.length" :style="results.posts.length ? 'padding:0px ;' : ''">
+      <ul class="ta-post">
+        <div v-for="feed in results.posts" :key="feed.id">
+          <PostFeed :feed="feed">
+
+          </PostFeed>
+        </div>
+      </ul>
+    </div>-->
   </div>
 </template>
 
+<!-- TODO: 스토어 처리해야됨 -->
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import shared from '~/scripts/shared'
@@ -71,20 +64,20 @@ const config = useRuntimeConfig()
 const $route = useRoute()
 
 const keyword = ref($route.query.q)
-const userList = ref([])
+const userList = computed(() => [])
 const gameList = ref([])
 const communityList = ref([])
 const postList = ref([])
 
-const {
-  data: results,
-  error,
-  pending,
-  refresh,
-} = await useCustomAsyncFetch<any>(
-  `/search?q=${keyword.value}`,
-  getComFetchOptions('get', true)
-)
+// const {
+//   data: results,
+//   error,
+//   pending,
+//   refresh,
+// } = await useCustomAsyncFetch<any>(
+//   `/search?q=${keyword.value}`,
+//   getComFetchOptions('get', true)
+// )
 
 
 shared.createHeadMeta(`${keyword.value}${t('seo.search.title')}`, `${t('seo.search.desc1')}${keyword.value}${t('seo.search.desc2')}`)
@@ -93,13 +86,16 @@ watch(
   () => $route.query.q,
   (newKeyword: string) => {
     keyword.value = newKeyword
-    refresh()
+    // refresh()
   }
 )
+
 </script>
 
 <style scoped lang="scss">
 .visual-title {
+  background: url('/images/1200_150_game.jpeg');
+
   h1 {
     font-weight: 600;
     font-size: 30px;

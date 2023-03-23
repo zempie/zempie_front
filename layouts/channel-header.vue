@@ -2,39 +2,38 @@
   <div class="content">
     <ul class="ta-post">
       <dd>
-        <div v-if="route.meta.name !== 'userChannel'" class="tab-search-swiper">
+        <div v-if="route.meta?.name !== 'userChannel'" class="tab-search-swiper">
           <div class="swiper-area uppercase">
-            <div class="swiper-slide" style="width: 25%; cursor: pointer">
+            <div class="swiper-slide">
               <NuxtLink :to="$localePath(`/channel/${channelId}`)"
-                :class="route.meta.name === 'userChannel' ? 'active' : ''">
+                :class="route.meta?.name === 'userChannel' && 'active'">
                 <p class="mobile">
                   <i class="uil uil-clock-three"></i>
                   <span style="border: 0">TIMELINE</span>
                 </p>
               </NuxtLink>
             </div>
-            <div class="swiper-slide" style="width: 25%; cursor: pointer">
+            <div class="swiper-slide">
               <NuxtLink :to="$localePath(`/channel/${channelId}/followers`)"
-                :class="route.meta.name === 'userFollowers' ? 'active' : ''">
+                :class="route.meta?.name === 'userFollowers' && 'active'">
                 <p class="mobile">
                   <i class="uil uil-users-alt"></i>
                   <span style="border: 0">FOLLOWERS</span>
                 </p>
               </NuxtLink>
             </div>
-            <div class="swiper-slide" style="width: 25%; cursor: pointer">
+            <div class="swiper-slide">
               <NuxtLink :to="$localePath(`/channel/${channelId}/following`)"
-                :class="route.meta.name === 'userFollwoing' ? 'active' : ''">
+                :class="route.meta?.name === 'userFollwoing' && 'active'">
                 <p class="mobile">
                   <i class="uil uil-user-plus"></i>
                   <span style="border: 0">FOLLOWING</span>
                 </p>
               </NuxtLink>
             </div>
-
-            <div class="swiper-slide" style="width: 25%; cursor: pointer">
+            <div class="swiper-slide">
               <NuxtLink :to="$localePath(`/channel/${channelId}/games`)"
-                :class="route.meta.name === 'userGame' ? 'active' : ''">
+                :class="route.meta?.name === 'userGame' && 'active'">
                 <p class="mobile">
                   <i class="uil uil-map-pin-alt"></i>
                   <span style="border: 0">GAME</span>
@@ -50,27 +49,28 @@
 </template>
 
 <script setup lang="ts">
+import shared from '~~/scripts/shared';
 
 const { $localePath } = useNuxtApp()
 const route = useRoute()
-
-
+const { t } = useI18n()
 const channelId = computed(() => route.params.id as string)
+const channelInfo = computed(() => useChannel().userChannel.value.info)
 
-useChannel().getChannelInfo(channelId.value)
-  // .then(() => {
-  //   console.log(useChannel().userChannel.value.info)
+try {
+  await useChannel().getChannelInfo(channelId.value)
+  shared.createHeadMeta(`${channelInfo.value.name}${t('seo.channel.title')}`, `${channelInfo.value.name}${t('seo.channel.desc')}`, channelInfo.value.picture)
 
-  // })
-  .catch((error) => {
-    console.log(error)
-  })
-
+} catch (error) {
+  console.log(error)
+}
 </script>
 
 <style lang="scss" scoped>
 .swiper-slide {
   display: inline-block;
+  width: 25% !important;
+  cursor: pointer;
 }
 
 .content {

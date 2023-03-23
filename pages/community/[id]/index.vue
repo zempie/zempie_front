@@ -7,7 +7,7 @@
           <dd>
             <TimelineSk />
           </dd>
-          <CommunityAboutSk />
+          <!-- <CommunityAboutSk /> -->
         </dl>
         <dl class="three-area" v-else>
           <CommunityChannelList :community="communityInfo" />
@@ -35,7 +35,7 @@
             </div>
             <div class="ta-groups">
               <h2>Other communities</h2>
-              <CommunityList :communities="communities" />
+              <CommunityList :communities="communities" :isLoading="isPending" />
             </div>
           </dt>
         </dl>
@@ -157,6 +157,4 @@ async function subscribe() {
 }
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

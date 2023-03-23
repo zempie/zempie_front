@@ -1,7 +1,7 @@
 <template>
   <NuxtLayout name="my-timeline">
     <dl class="three-area">
-      <dt v-if="isChannelLoading">
+      <!-- <dt v-if="isChannelLoading">
         <UserInfoCard />
         <div class="ta-game-list">
           <dl>
@@ -11,19 +11,20 @@
             <li>
               <p style="background-color: #d5d5d5"></p>
               <h2 class="grey-text" style="
-                  text-overflow: ellipsis;
-                  overflow: hidden;
-                  margin: 15px 0 10px 0;
-                "></h2>
+                            text-overflow: ellipsis;
+                            overflow: hidden;
+                            margin: 15px 0 10px 0;
+                          "></h2>
             </li>
           </ul>
           <TimelineSk v-if="isPending" />
           <div></div>
         </div>
-      </dt>
+      </dt> -->
 
-      <dt v-else>
-        <div class="ta-myinfo" :key="userInfo?.id">
+      <dt>
+        <ChannelInfoBox />
+        <!-- <div class="ta-myinfo" :key="userInfo?.id">
           <UserAvatar :user="userInfo" :tag="'p'"></UserAvatar>
           <h1>{{ userInfo?.name }}</h1>
           <ul>
@@ -59,7 +60,7 @@
               </NuxtLink>
             </li>
           </ul>
-        </div>
+        </div> -->
         <div class="ta-game-list" :key="userInfo?.id">
           <dl>
             <dt>Games</dt>
@@ -69,7 +70,7 @@
             <li v-for="game in channelInfo?.games?.slice(0, 5)"
               @click="$router.push($localePath(`/game/${game.pathname}`))">
               <p :style="`background:url(${game.url_thumb_webp || '/images/default.png'
-              }) center; background-size:cover;`"></p>
+                }) center; background-size:cover;`"></p>
               <h2 style="text-overflow: ellipsis; overflow: hidden">
                 {{ game.title }}
               </h2>
@@ -93,12 +94,12 @@
       <dt>
         <div class="ta-groups" style="margin-top: 0px">
           <h2>Community</h2>
-          <div v-if="isChannelLoading">
+          <!-- <div v-if="isChannelLoading">
             <dl v-for="group in 4">
               <CommunityListItemSk />
             </dl>
-          </div>
-          <CommunityList v-else :communities="channelInfo?.communities" />
+          </div> -->
+          <CommunityList :communities="channelInfo?.communities" :isLoading="isChannelLoading" />
         </div>
       </dt>
     </dl>
@@ -167,9 +168,9 @@ onMounted(() => {
 }
 
 @media all and (max-width: 479px) {
-  .ta-myinfo {
-    margin-bottom: 0px;
-  }
+  // .ta-myinfo {
+  //   margin-bottom: 0px;
+  // }
 
   .ta-game-list {
     display: none;
@@ -177,9 +178,9 @@ onMounted(() => {
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
-  .ta-myinfo {
-    margin-bottom: 0px;
-  }
+  // .ta-myinfo {
+  //   margin-bottom: 0px;
+  // }
 
   .ta-game-list {
     display: none;
@@ -192,9 +193,9 @@ onMounted(() => {
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
-  .ta-myinfo {
-    margin-bottom: 0px;
-  }
+  // .ta-myinfo {
+  //   margin-bottom: 0px;
+  // }
 
   .ta-game-list {
     display: none;

@@ -1,17 +1,15 @@
 <template>
   <li @click="$router.push($localePath(`/channel/${user.channel_id}`))">
 
-    <div
-      class="cf-img"
-      :style="
-        bannerImg
-          ? `background: url(${bannerImg}) center center / cover no-repeat; background-size: cover;`
-          : `background-color:orange; background-size:cover`
-      "
-    ></div>
-    <UserAvatar :user="userObj" :tag="'p'" :hasRouter="true" ></UserAvatar>
+    <div class="cf-img" :style="
+      bannerImg
+        ? `background: url(${bannerImg}) center center / cover no-repeat; background-size: cover;`
+        : `background-color:orange; background-size:cover`
+    "></div>
+    <UserAvatar :user="userObj" :tag="'p'" :hasRouter="true"></UserAvatar>
     <div class="cf-info">
-      <h3>{{ user.name }}</h3>
+      <h3>{{ user.nickname }}</h3>
+      <h4>{{ user.name }}</h4>
       <dl>
         <dd>
           <h4>{{ user.followers_cnt }}</h4>

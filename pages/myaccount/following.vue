@@ -71,6 +71,7 @@ async function fetch() {
     totalCount.value = data.value.totalCount
     users.value = data.value.result.map((user: any) => {
       return {
+        nickname: user.nickname,
         name: user.name,
         id: user.id,
         channel_id: user.channel_id,
