@@ -503,10 +503,10 @@ async function onSubmit() {
     for (const img of imgArr.value) {
 
       if (!isImageUrl(img.src)) {
-        const result = await fetch(img.src)
-        const blob = await result.blob()
-        const blobUrl = URL.createObjectURL(blob)
-        const isImage = blob.type.startsWith('image')
+        // const result = await fetch(img.src)
+        // const blob = await result.blob()
+        // const blobUrl = URL.createObjectURL(blob)
+        // const isImage = blob.type.startsWith('image')
         // if (isImage) {
         //   const formData = new FormData()
         //   formData.append(img.title, blob)
