@@ -60,7 +60,7 @@
           </li>
           <li>
             <CommonPrefixInput prefix="@" @change-input="onChangeNickname" :inputValue="newNickname" />
-            <small class="text-red" v-if="isUserNameErr">{{ userNameErr }}</small>
+            <small class="text-red" v-if="isUsernameErr">{{ userNameErr }}</small>
           </li>
         </ol>
       </div>
@@ -167,7 +167,7 @@ const nickname = ref()
 const newNickname = computed(() => currNickname.value)
 
 const userNameErr = ref('')
-const isUserNameErr = ref(false)
+const isUsernameErr = ref(false)
 
 const userName = computed({
   get: () => userInfo.value?.name,
@@ -257,7 +257,7 @@ function deleteBannerImg() {
 }
 
 async function onSubmit() {
-  if (isUserNameErr.value) {
+  if (isUsernameErr.value) {
     return
   }
 
@@ -327,13 +327,17 @@ async function onChangeNickname(input?: string) {
   nickname.value = input
   clearError();
 
+
   if (!nicknameRegex.test(nickname.value)) {
-    if (specialCharRegex.test(nickname.value)) {
-      showError(t('join.nickname.format.err'));
-    } else if (nickname.value.length > MAX_LIMIT) {
+    console.log('error')
+    if (nickname.value.length > MAX_LIMIT) {
       showError(`${t('username.max.err1')} ${MAX_LIMIT}${t('username.max.err2')}`);
     } else if (nickname.value.length < MIN_LIMIT) {
       showError(`${t('username.max.err1')} ${MIN_LIMIT}${t('username.min.err2')}`);
+    } else if (specialCharRegex.test(nickname.value)) {
+      showError(t('join.nickname.format.err'));
+    } else {
+      showError(t('join.nickname.format.err'));
     }
     return
   }
@@ -354,12 +358,12 @@ async function onChangeNickname(input?: string) {
 
 }
 function showError(message: string) {
-  isUserNameErr.value = true;
+  isUsernameErr.value = true;
   userNameErr.value = message;
 }
 
 function clearError() {
-  isUserNameErr.value = false;
+  isUsernameErr.value = false;
   userNameErr.value = '';
 }
 
