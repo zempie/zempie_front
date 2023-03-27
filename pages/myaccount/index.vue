@@ -59,7 +59,7 @@
             </el-tooltip>
           </li>
           <li>
-            <CommonPrefixInput prefix="@" @change-input="onChangeNickname" :inputValue="newNickname" :key="newNickname" />
+            <CommonPrefixInput prefix="@" @change-input="onChangeNickname" :inputValue="newNickname" />
             <small class="text-red" v-if="isUserNameErr">{{ userNameErr }}</small>
           </li>
         </ol>
@@ -164,7 +164,7 @@ const isAlarmOn = ref(useUser().user.value.info?.setting.alarm)
 
 const currNickname = computed(() => userInfo.value?.nickname)
 const nickname = ref()
-const newNickname = computed(() => nickname.value ? nickname.value : currNickname.value)
+const newNickname = computed(() => currNickname.value)
 
 const userNameErr = ref('')
 const isUserNameErr = ref(false)
@@ -325,14 +325,15 @@ async function onChangeNickname(input?: string) {
   const MAX_LIMIT = 15;
   const MIN_LIMIT = 4;
   nickname.value = input
+  clearError();
 
   if (!nicknameRegex.test(nickname.value)) {
     if (specialCharRegex.test(nickname.value)) {
-      showError('아이디는 영문자, 숫자 및 밑줄(_)만 사용할 수 있습니다.');
+      showError(t('join.nickname.format.err'));
     } else if (nickname.value.length > MAX_LIMIT) {
-      showError(`사용자 아이디는 ${MAX_LIMIT}자 미만이어야 합니다.`);
+      showError(`${t('username.max.err1')} ${MAX_LIMIT}${t('username.max.err2')}`);
     } else if (nickname.value.length < MIN_LIMIT) {
-      showError(`사용자 아이디는 ${MIN_LIMIT}글자 이상이여야 합니다.`);
+      showError(`${t('username.max.err1')} ${MIN_LIMIT}${t('username.min.err2')}`);
     }
     return
   }
@@ -343,7 +344,7 @@ async function onChangeNickname(input?: string) {
       getZempieFetchOptions('post', false, { nickname: nickname.value })
     );
     if (data.value.result.success) {
-      showError('이미 사용 중인 아이디입니다. 다른 아이디를 입력해보세요.');
+      showError(t('used.id'));
     } else {
       clearError();
     }

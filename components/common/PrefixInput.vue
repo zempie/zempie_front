@@ -14,6 +14,11 @@ const props = defineProps({
 
 const inputData = ref(props.inputValue)
 
+watch(() =>
+  (props.inputValue), (newValue) => {
+    inputData.value = newValue
+  })
+
 const emit = defineEmits(['changeInput'])
 
 const onInputDebounce = debounce(() => {

@@ -887,5 +887,9 @@
   "name.info": "User's real or active name in the profile",
   "nickname.info": "ID that uniquely identifies each user. Others can use this ID to find you",
   "userSetting.error": "Failed to update the profile. Please try again later",
-  "find.pwd.input.info": "If you did not receive an email, please check your spam folder"
+  "find.pwd.input.info": "If you did not receive an email, please check your spam folder",
+  "used.id": "__STRING_NOT_TRANSLATED__",
+  "username.max.err1": "__STRING_NOT_TRANSLATED__",
+  "username.max.err2": "__STRING_NOT_TRANSLATED__",
+  "username.min.err2": "__STRING_NOT_TRANSLATED__"
 }
