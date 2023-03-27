@@ -881,11 +881,11 @@
   "members": "Members",
   "nickname": "User name",
   "user": "User",
-  "cookie": "__STRING_NOT_TRANSLATED__",
-  "join.empty.nickname": "__STRING_NOT_TRANSLATED__",
-  "join.nickname.format.err": "__STRING_NOT_TRANSLATED__",
-  "name.info": "__STRING_NOT_TRANSLATED__",
-  "nickname.info": "__STRING_NOT_TRANSLATED__",
-  "userSetting.error": "__STRING_NOT_TRANSLATED__",
-  "find.pwd.input.info": "__STRING_NOT_TRANSLATED__"
+  "cookie": "cookie",
+  "join.empty.nickname": "Please enter your username ",
+  "join.nickname.format.err": "Username must contain 4-15 characters, and only '_(space),.(dot)' can be used ",
+  "name.info": "User's real or active name in the profile",
+  "nickname.info": "ID that uniquely identifies each user. Others can use this ID to find you",
+  "userSetting.error": "Failed to update the profile. Please try again later",
+  "find.pwd.input.info": "If you did not receive an email, please check your spam folder"
 }

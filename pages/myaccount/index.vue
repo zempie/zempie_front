@@ -131,7 +131,7 @@ const route = useRoute()
 const config = useRuntimeConfig()
 const { $localePath } = useNuxtApp()
 
-const specialCharRegex = /[\{\}\[\]\/?.,;:|\)*~`!^\-+<>@\#$%&\\\=\(\'\"]/;
+const specialCharRegex = /[\{\}\[\]\/?,;:|\)*~`!^\-+<>@\#$%&\\\=\(\'\"]/;
 
 const MAX_FILE_SIZE = 3
 
@@ -169,10 +169,9 @@ const newNickname = computed(() => nickname.value ? nickname.value : currNicknam
 const userNameErr = ref('')
 const isUserNameErr = ref(false)
 
-const newUserName = ref()
 const userName = computed({
-  get: () => newUserName.value || userInfo.value?.name,
-  set: newValue => newUserName.value = newValue
+  get: () => userInfo.value?.name,
+  set: newValue => userInfo.value.name = newValue
 })
 
 const currProfile = computed(() => userInfo.value?.picture && userInfo.value.picture + `?_=${Date.now()}`)
@@ -244,14 +243,14 @@ function isPassFileSize(file: File): boolean {
 
 }
 
-function deleteProfileImg(e: any) {
+function deleteProfileImg() {
   prevProfile.value = ''
   profileFileName.value = ''
   updateProfileFile.value = null
 }
 
 
-function deleteBannerImg(e: any) {
+function deleteBannerImg() {
   prevBanner.value = ''
   bannerFileName.value = ''
   updateBannerFile.value = null
@@ -261,6 +260,7 @@ async function onSubmit() {
   if (isUserNameErr.value) {
     return
   }
+
   isUpdating.value = true
   const formData = new FormData()
 
@@ -269,7 +269,6 @@ async function onSubmit() {
   }
   if (updateProfileFile.value) {
     formData.append('file', updateProfileFile.value)
-    formData.append('name', userInfo.value.name)
   }
   if (prevProfile.value === '') {
     formData.append('rm_picture', 'true')
@@ -280,8 +279,8 @@ async function onSubmit() {
   if (nickname.value) {
     formData.append('nickname', nickname.value)
   }
-  if (newUserName.value) {
-    formData.append('name', newUserName.value)
+  if (userName.value) {
+    formData.append('name', userName.value)
   }
 
 

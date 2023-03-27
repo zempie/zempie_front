@@ -29,17 +29,7 @@
               <h3 class="input-errors" v-for="error of v$.password.$errors" :key="error.$uid">
                 <i class="uil uil-check"></i>{{ error.$message }}
               </h3>
-
-
             </li>
-            <!-- <li>
-            <input type="password" name="register-repeat-password" v-model="v$.repeatPassword.$model" title=""
-              :placeholder="$t('login.pwd.placeholder')" class="w100p h60 " />
-            <span></span>
-            <h3>
-            </h3>
-
-          </li> -->
             <li>
               <input type="text" name="register-username" v-model="v$.username.$model" title="" :placeholder="$t('name')"
                 class="w100p h60" autocomplete="off" />
@@ -115,7 +105,6 @@ const form = reactive({
   password: "",
   username: "",
   nickname: "",
-  // repeatPassword: "",
   policyAgreement: false
 })
 const errorAgree = ref(false);
@@ -123,6 +112,9 @@ const errorAgree = ref(false);
 const emailValidator = helpers.regex(emailRegex);
 const pwdValidator = helpers.regex(passwordRegex);
 const nicknameValidator = helpers.regex(nicknameRegex)
+
+const fUser = computed(() => useUser().user.value.fUser)
+const isLogin = computed(() => useUser().user.value.isLogin)
 
 const rules = computed(() => {
   const formRule = {
@@ -145,11 +137,12 @@ const rules = computed(() => {
     }
   }
 
+  if (fUser.value) {
+    delete formRule.password
+  }
   return formRule
 })
 
-const fUser = computed(() => useUser().user.value.fUser)
-const isLogin = computed(() => useUser().user.value.isLogin)
 
 watch(isLogin,
   async (val) => {
@@ -177,7 +170,6 @@ shared.createHeadMeta(t('seo.join.title'), t('seo.join.desc'))
 
 
 onBeforeRouteLeave((to, from, next) => {
-  console.log('leave', useUser().user.value.fUser)
 
   if (fUser.value && !isLogin.value) {
     console.log('here?')
@@ -198,8 +190,6 @@ const v$ = useVuelidate(rules, form)
 
 async function register() {
 
-
-  if (fUser.value) { await joinZempie(); return; }
   const result = await v$.value.$validate()
 
   if (!form.policyAgreement) {
@@ -208,6 +198,9 @@ async function register() {
   } else {
     if (!result) return;
   }
+
+  if (fUser.value) { await joinZempie(); return; }
+
   try {
 
     const result = await createUserWithEmailAndPassword($firebaseAuth, form.email, form.password)

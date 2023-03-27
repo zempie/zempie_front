@@ -43,7 +43,7 @@
     </div>
 
     <ClientOnly>
-      <el-dialog v-model="openModal" append-to-body class="modal-area-type" :show-close="false">
+      <el-dialog v-model="openModal" append-to-body class="modal-area-type" :show-close="false" width="500px">
         <div class="modal-alert">
           <dl class="ma-header">
             <dt>{{ $t('information') }}</dt>
