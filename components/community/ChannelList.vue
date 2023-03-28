@@ -2,9 +2,9 @@
   <dt>
     <div class="ta-channel-list">
       <div style="display: flex;
-                          border-bottom: #e9e9e9 1px solid;
-                          align-items: center;
-                          justify-content: space-between;">
+                              border-bottom: #e9e9e9 1px solid;
+                              align-items: center;
+                              justify-content: space-between;">
         <h2 style="padding: 20px; font-weight: 600; font-size: 18px; line-height: 18px;color: #333;">Channel</h2>
         <i style="font-size: 20px; padding: 20px;" @click="showChannelList = !showChannelList"
           :class="showChannelList ? 'uil uil-angle-up' : 'uil uil-angle-down'"></i>
@@ -12,7 +12,7 @@
 
       <TransitionGroup name="list">
         <ul v-if="showChannelList">
-          <li :class="{ active: !channelName }" class="channel"
+          <li class="channel" :class="{ active: !channelName }"
             :style="`background: url('/images/1500_300_com_banner_default.png') center center / cover no-repeat;`"
             @click="$router.push($localePath(`/community/${community.id}`))">
             <span>All Posts</span>
@@ -121,33 +121,9 @@ function onResize() {
   }
 }
 
-@media all and (max-width: 479px) {
-  .ta-channel-list {
-    div {
-      i {
-        // display: block;
-      }
-    }
-  }
-}
+@media all and (max-width: 479px) {}
 
-@media all and (min-width: 480px) and (max-width: 767px) {
-  .ta-channel-list {
-    div {
-      i {
-        // display: block;
-      }
-    }
-  }
-}
+@media all and (min-width: 480px) and (max-width: 767px) {}
 
-@media all and (min-width: 768px) and (max-width: 991px) {
-  .ta-channel-list {
-    div {
-      i {
-        // display: block;
-      }
-    }
-  }
-}
+@media all and (min-width: 768px) and (max-width: 991px) {}
 </style>

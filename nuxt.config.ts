@@ -51,7 +51,7 @@ export default defineNuxtConfig({
       minify: {
         collapseBooleanAttributes: true,
         decodeEntities: true,
-        minifyCSS: true,
+        // minifyCSS: true,
         minifyJS: true,
         processConditionalComments: true,
         removeEmptyAttributes: true,
