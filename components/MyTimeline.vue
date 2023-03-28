@@ -1,67 +1,10 @@
 <template>
   <NuxtLayout name="my-timeline">
     <dl class="three-area">
-      <!-- <dt v-if="isChannelLoading">
-        <UserInfoCard />
-        <div class="ta-game-list">
-          <dl>
-            <dt>Games</dt>
-          </dl>
-          <ul v-for="game in 4">
-            <li>
-              <p style="background-color: #d5d5d5"></p>
-              <h2 class="grey-text" style="
-                            text-overflow: ellipsis;
-                            overflow: hidden;
-                            margin: 15px 0 10px 0;
-                          "></h2>
-            </li>
-          </ul>
-          <TimelineSk v-if="isPending" />
-          <div></div>
-        </div>
-      </dt> -->
-
       <dt>
         <ChannelInfoBox />
-        <!-- <div class="ta-myinfo" :key="userInfo?.id">
-          <UserAvatar :user="userInfo" :tag="'p'"></UserAvatar>
-          <h1>{{ userInfo?.name }}</h1>
-          <ul>
-            <li>
-              <NuxtLink :to="$localePath(`/channel/${userInfo?.channel_id}`)">
-                <p style="background: #feb100; cursor: pointer">
-                  <i class="uil uil-comment-chart-line"></i>
-                </p>
-                <h2>{{ channelInfo?.post_cnt }}</h2>
-                <h3>Posts</h3>
-              </NuxtLink>
-            </li>
-            <li>
-              <NuxtLink :to="
-                $localePath(`/channel/${channelInfo?.channel_id}/followers`)
-              ">
-                <p style="background: #33e4ce; cursor: pointer">
-                  <i class="uil uil-users-alt"></i>
-                </p>
-                <h2>{{ userInfo?.follower_cnt }}</h2>
-                <h3>Followers</h3>
-              </NuxtLink>
-            </li>
-            <li>
-              <NuxtLink :to="
-                $localePath(`/channel/${channelInfo?.channel_id}/following`)
-              ">
-                <p style="background: #5d5ffe; cursor: pointer">
-                  <i class="uil uil-user-plus"></i>
-                </p>
-                <h2>{{ userInfo?.following_cnt }}</h2>
-                <h3>following</h3>
-              </NuxtLink>
-            </li>
-          </ul>
-        </div> -->
-        <div class="ta-game-list" :key="userInfo?.id">
+        <ChannelGameBox />
+        <!-- <div class="ta-game-list" :key="userInfo?.id">
           <dl>
             <dt>Games</dt>
           </dl>
@@ -85,7 +28,7 @@
             }}
             </NuxtLink>
           </div>
-        </div>
+        </div> -->
       </dt>
 
       <dd>

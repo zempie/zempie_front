@@ -6,7 +6,7 @@
           <UserAvatar :user="comment.user" :tag="'span'"></UserAvatar>
         </dt>
         <dd>
-          <h2>{{ comment.user?.name }} <span>{{}}</span></h2>
+          <h2>{{ comment.user?.nickname }} <span>{{}}</span></h2>
           <div style="color: #000">
             {{ commentContent }}
           </div>

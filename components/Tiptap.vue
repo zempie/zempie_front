@@ -31,8 +31,8 @@
         </li>
       </ul>
     </BubbleMenu>
-    <EditorContent :editor="editor" :class="['editor-container', postType === 'SNS' ? 'sns' : 'blog']"
-      @drop="dropEditor" @paste="pasteEditor" />
+    <EditorContent :editor="editor" :class="['editor-container', postType === 'SNS' ? 'sns' : 'blog']" @drop="dropEditor"
+      @paste="pasteEditor" />
 
     <div class="character-count">
       <p>{{ charCount }}/{{ limit }}</p>
@@ -83,6 +83,9 @@ const props = defineProps({
   postType: String,
   feed: Object as PropType<IFeed>,
 })
+
+defineExpose(['addImage'])
+
 
 const BLOG_LIMIT = 5000
 const SNS_LIMIT = 300

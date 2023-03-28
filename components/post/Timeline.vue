@@ -12,7 +12,7 @@
                 ? (isTextEditorOpen = true)
                 : useModal().openLoginModal()
             " />
-            <slot v-else name="inputBox" />
+            <slot v-else name="communityInput" />
           </dt>
           <dd>
             <a><i class="uil uil-message"></i></a>
@@ -189,7 +189,7 @@ async function fetch() {
   switch (props.type) {
     case 'community':
       const channelName = computed(() => route.params.channel_name)
-      const channel = useCommunity().community.value.info?.channels.find(
+      const channel = useCommunity().community.value.info?.channels?.find(
         (channel) => {
           return channel.title === channelName.value
         }

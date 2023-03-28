@@ -123,7 +123,7 @@ export const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[~!@#$%^&*()+|=_-])[A-
 // (?=.*[A-Za-z])(?=.*\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\d~!@#$%^&*()+|=]{8,16
 //[a-zA-Z0-9`~!@#$%^&*()-_=+\|[]{};:'",.<>/?]{8,24}
 
-export const nicknameRegex = /^([A-Za-z0-9_]{4,15})$/
+export const nicknameRegex = /^([A-Za-z0-9._]{4,15})$/
 
 
 export const randomString = (count: number = 11) => {

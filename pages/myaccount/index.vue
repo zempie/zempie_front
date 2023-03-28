@@ -59,8 +59,8 @@
             </el-tooltip>
           </li>
           <li>
-            <CommonPrefixInput prefix="@" @change-input="onChangeNickname" :inputValue="newNickname" :key="newNickname" />
-            <small class="text-red" v-if="isUserNameErr">{{ userNameErr }}</small>
+            <CommonPrefixInput prefix="@" @change-input="onChangeNickname" :inputValue="newNickname" />
+            <small class="text-red" v-if="isUsernameErr">{{ userNameErr }}</small>
           </li>
         </ol>
       </div>
@@ -131,7 +131,7 @@ const route = useRoute()
 const config = useRuntimeConfig()
 const { $localePath } = useNuxtApp()
 
-const specialCharRegex = /[\{\}\[\]\/?.,;:|\)*~`!^\-+<>@\#$%&\\\=\(\'\"]/;
+const specialCharRegex = /[\{\}\[\]\/?,;:|\)*~`!^\-+<>@\#$%&\\\=\(\'\"]/;
 
 const MAX_FILE_SIZE = 3
 
@@ -164,15 +164,14 @@ const isAlarmOn = ref(useUser().user.value.info?.setting.alarm)
 
 const currNickname = computed(() => userInfo.value?.nickname)
 const nickname = ref()
-const newNickname = computed(() => nickname.value ? nickname.value : currNickname.value)
+const newNickname = computed(() => currNickname.value)
 
 const userNameErr = ref('')
-const isUserNameErr = ref(false)
+const isUsernameErr = ref(false)
 
-const newUserName = ref()
 const userName = computed({
-  get: () => newUserName.value || userInfo.value?.name,
-  set: newValue => newUserName.value = newValue
+  get: () => userInfo.value?.name,
+  set: newValue => userInfo.value.name = newValue
 })
 
 const currProfile = computed(() => userInfo.value?.picture && userInfo.value.picture + `?_=${Date.now()}`)
@@ -244,23 +243,24 @@ function isPassFileSize(file: File): boolean {
 
 }
 
-function deleteProfileImg(e: any) {
+function deleteProfileImg() {
   prevProfile.value = ''
   profileFileName.value = ''
   updateProfileFile.value = null
 }
 
 
-function deleteBannerImg(e: any) {
+function deleteBannerImg() {
   prevBanner.value = ''
   bannerFileName.value = ''
   updateBannerFile.value = null
 }
 
 async function onSubmit() {
-  if (isUserNameErr.value) {
+  if (isUsernameErr.value) {
     return
   }
+
   isUpdating.value = true
   const formData = new FormData()
 
@@ -269,7 +269,6 @@ async function onSubmit() {
   }
   if (updateProfileFile.value) {
     formData.append('file', updateProfileFile.value)
-    formData.append('name', userInfo.value.name)
   }
   if (prevProfile.value === '') {
     formData.append('rm_picture', 'true')
@@ -280,8 +279,8 @@ async function onSubmit() {
   if (nickname.value) {
     formData.append('nickname', nickname.value)
   }
-  if (newUserName.value) {
-    formData.append('name', newUserName.value)
+  if (userName.value) {
+    formData.append('name', userName.value)
   }
 
 
@@ -326,14 +325,19 @@ async function onChangeNickname(input?: string) {
   const MAX_LIMIT = 15;
   const MIN_LIMIT = 4;
   nickname.value = input
+  clearError();
+
 
   if (!nicknameRegex.test(nickname.value)) {
-    if (specialCharRegex.test(nickname.value)) {
-      showError('아이디는 영문자, 숫자 및 밑줄(_)만 사용할 수 있습니다.');
-    } else if (nickname.value.length > MAX_LIMIT) {
-      showError(`사용자 아이디는 ${MAX_LIMIT}자 미만이어야 합니다.`);
+    console.log('error')
+    if (nickname.value.length > MAX_LIMIT) {
+      showError(`${t('username.max.err1')} ${MAX_LIMIT}${t('username.max.err2')}`);
     } else if (nickname.value.length < MIN_LIMIT) {
-      showError(`사용자 아이디는 ${MIN_LIMIT}글자 이상이여야 합니다.`);
+      showError(`${t('username.max.err1')} ${MIN_LIMIT}${t('username.min.err2')}`);
+    } else if (specialCharRegex.test(nickname.value)) {
+      showError(t('join.nickname.format.err'));
+    } else {
+      showError(t('join.nickname.format.err'));
     }
     return
   }
@@ -344,7 +348,7 @@ async function onChangeNickname(input?: string) {
       getZempieFetchOptions('post', false, { nickname: nickname.value })
     );
     if (data.value.result.success) {
-      showError('이미 사용 중인 아이디입니다. 다른 아이디를 입력해보세요.');
+      showError(t('used.id'));
     } else {
       clearError();
     }
@@ -354,12 +358,12 @@ async function onChangeNickname(input?: string) {
 
 }
 function showError(message: string) {
-  isUserNameErr.value = true;
+  isUsernameErr.value = true;
   userNameErr.value = message;
 }
 
 function clearError() {
-  isUserNameErr.value = false;
+  isUsernameErr.value = false;
   userNameErr.value = '';
 }
 

@@ -2,9 +2,9 @@
   <dt>
     <div class="ta-channel-list">
       <div style="display: flex;
-        border-bottom: #e9e9e9 1px solid;
-        align-items: center;
-        justify-content: space-between;">
+                                    border-bottom: #e9e9e9 1px solid;
+                                    align-items: center;
+                                    justify-content: space-between;">
         <h2 style="padding: 20px; font-weight: 600; font-size: 18px; line-height: 18px;color: #333;">Channel</h2>
         <i style="font-size: 20px; padding: 20px;" @click="showChannelList = !showChannelList"
           :class="showChannelList ? 'uil uil-angle-up' : 'uil uil-angle-down'"></i>
@@ -12,13 +12,13 @@
 
       <TransitionGroup name="list">
         <ul v-if="showChannelList">
-          <li :class="['channel', { active: !channelName }]"
+          <li class="channel" :class="{ active: !channelName }"
             :style="`background: url('/images/1500_300_com_banner_default.png') center center / cover no-repeat;`"
             @click="$router.push($localePath(`/community/${community.id}`))">
             <span>All Posts</span>
           </li>
           <li v-for="(channel, index) in community?.channels" :style="`background: url(${channel.profile_img || '/images/1500_300_com_channel_default.png'
-            }) center center / cover no-repeat;`" :class="[{ active: channelName === channel.title }, 'channel']"
+            }) center center / cover no-repeat;`" class="channel" :class="{ active: channelName === channel.title }"
             @click="
               $router.push(
                 $localePath(`/community/${community.id}/${channel.title}`)
@@ -90,19 +90,18 @@ function onResize() {
 }
 
 .ta-channel-list {
-  div {
+  >div {
     display: flex;
     border-bottom: #e9e9e9 1px solid;
     align-items: center;
-
     justify-content: space-between;
 
     h2 {
-      padding: 20px !important;
-      font-weight: 600 !important;
-      font-size: 18px !important;
-      line-height: 18px !important;
-      color: #333 !important;
+      padding: 20px;
+      font-weight: 600;
+      font-size: 18px;
+      line-height: 18px;
+      color: #333;
     }
 
     i {
@@ -122,33 +121,9 @@ function onResize() {
   }
 }
 
-@media all and (max-width: 479px) {
-  .ta-channel-list {
-    div {
-      i {
-        // display: block;
-      }
-    }
-  }
-}
+@media all and (max-width: 479px) {}
 
-@media all and (min-width: 480px) and (max-width: 767px) {
-  .ta-channel-list {
-    div {
-      i {
-        // display: block;
-      }
-    }
-  }
-}
+@media all and (min-width: 480px) and (max-width: 767px) {}
 
-@media all and (min-width: 768px) and (max-width: 991px) {
-  .ta-channel-list {
-    div {
-      i {
-        // display: block;
-      }
-    }
-  }
-}
+@media all and (min-width: 768px) and (max-width: 991px) {}
 </style>

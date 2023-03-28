@@ -29,17 +29,7 @@
               <h3 class="input-errors" v-for="error of v$.password.$errors" :key="error.$uid">
                 <i class="uil uil-check"></i>{{ error.$message }}
               </h3>
-
-
             </li>
-            <!-- <li>
-            <input type="password" name="register-repeat-password" v-model="v$.repeatPassword.$model" title=""
-              :placeholder="$t('login.pwd.placeholder')" class="w100p h60 " />
-            <span></span>
-            <h3>
-            </h3>
-
-          </li> -->
             <li>
               <input type="text" name="register-username" v-model="v$.username.$model" title="" :placeholder="$t('name')"
                 class="w100p h60" autocomplete="off" />
@@ -66,7 +56,7 @@
                         @click="form.policyAgreement ? errorAgree = true : errorAgree = false" />
 
                       <label for="agree"><i class="uil uil-check"></i></label>
-                      <span><label for="agree" style="text-decoration:underline;">{{ $t('terms') }} ({{
+                      <span><label for="agree" class="ml5 underline">{{ $t('terms') }} ({{
                         $t('required')
                       }})</label></span>
                     </dt>
@@ -83,7 +73,7 @@
             </div>
           </div>
           <p>
-          <p @click="register" class="btn-default-big w100p">{{ $t('join') }}</p>
+          <p @click="register" :class="['btn-default-big w100p', isSubmitActive ? 'on' : 'off']">{{ $t('join') }}</p>
           </p>
         </form>
       </ClientOnly>
@@ -115,7 +105,6 @@ const form = reactive({
   password: "",
   username: "",
   nickname: "",
-  // repeatPassword: "",
   policyAgreement: false
 })
 const errorAgree = ref(false);
@@ -123,6 +112,11 @@ const errorAgree = ref(false);
 const emailValidator = helpers.regex(emailRegex);
 const pwdValidator = helpers.regex(passwordRegex);
 const nicknameValidator = helpers.regex(nicknameRegex)
+
+const fUser = computed(() => useUser().user.value.fUser)
+const isLogin = computed(() => useUser().user.value.isLogin)
+
+
 
 const rules = computed(() => {
   const formRule = {
@@ -145,11 +139,14 @@ const rules = computed(() => {
     }
   }
 
+  if (fUser.value) {
+    delete formRule.password
+  }
   return formRule
 })
 
-const fUser = computed(() => useUser().user.value.fUser)
-const isLogin = computed(() => useUser().user.value.isLogin)
+
+
 
 watch(isLogin,
   async (val) => {
@@ -177,7 +174,6 @@ shared.createHeadMeta(t('seo.join.title'), t('seo.join.desc'))
 
 
 onBeforeRouteLeave((to, from, next) => {
-  console.log('leave', useUser().user.value.fUser)
 
   if (fUser.value && !isLogin.value) {
     console.log('here?')
@@ -196,10 +192,16 @@ onBeforeRouteLeave((to, from, next) => {
 
 const v$ = useVuelidate(rules, form)
 
+const isSubmitActive = computed(() => {
+  return !!form.policyAgreement && !!v$.value.$dirty
+})
+
+
+
 async function register() {
 
+  if (!isSubmitActive.value) return
 
-  if (fUser.value) { await joinZempie(); return; }
   const result = await v$.value.$validate()
 
   if (!form.policyAgreement) {
@@ -208,6 +210,9 @@ async function register() {
   } else {
     if (!result) return;
   }
+
+  if (fUser.value) { await joinZempie(); return; }
+
   try {
 
     const result = await createUserWithEmailAndPassword($firebaseAuth, form.email, form.password)
@@ -332,6 +337,20 @@ async function joinZempie() {
 .login-agreement-container .lam-content>p a {
   width: 100%;
   border-radius: 30px;
+}
+
+
+.btn-default-big {
+  &.on {
+    background: #f97316;
+    color: #fff;
+
+  }
+
+  &.off {
+    background: #ffe2d1;
+    cursor: no-drop;
+  }
 }
 
 @media all and (max-width: 479px) {

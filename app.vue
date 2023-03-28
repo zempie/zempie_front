@@ -24,7 +24,6 @@
 import { ElDialog, ID_INJECTION_KEY } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import shared from './scripts/shared';
-import { getFirstDomElement, getFirstDomElementByServer, stringToDomElemByServer } from './scripts/utils';
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
 const switchLocalePath = useSwitchLocalePath()

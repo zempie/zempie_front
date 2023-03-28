@@ -11,9 +11,9 @@
             <ul style="margin-bottom: 20px">
               <li v-for="game in games.slice(0, 5)" @click="$router.push($localePath(`/game/${game?.pathname}`))">
                 <p :style="`background:url(${game?.url_thumb_webp ||
-                game?.url_thumb ||
-                '/images/default.png'
-                }) center; background-size:cover;`"></p>
+                  game?.url_thumb ||
+                  '/images/default.png'
+                  }) center; background-size:cover;`"></p>
                 <h2 style="text-overflow: ellipsis; overflow: hidden">
                   {{ game?.title }}
                 </h2>

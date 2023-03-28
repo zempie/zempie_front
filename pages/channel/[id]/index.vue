@@ -51,15 +51,6 @@ definePageMeta({
   display: inline-block;
 }
 
-.no-game {
-  height: 60px;
-  padding: 20px 20px 0 20px;
-
-  li {
-    margin-top: 0px;
-  }
-}
-
 .ta-game-list {
   display: block;
   width: 100%;

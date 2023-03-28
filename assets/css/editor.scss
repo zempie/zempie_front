@@ -291,10 +291,9 @@ pre {
 .editor-container {
   min-height: 200px;
   text-align: left;
-  padding: 15px;
+  padding: 25px 15px 10px 15px;
   max-height: 350px;
   overflow-y: scroll;
-  // max-height: 80vh;
 
   h1 {
     display: block;

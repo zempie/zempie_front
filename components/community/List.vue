@@ -12,7 +12,7 @@
           :style="`background: url(${community.profile_img}) center center no-repeat; background-size: cover;`"></span>
       </dt>
       <dd>
-        <h2>{{ community.name }}</h2>
+        <h2 class="pt10">{{ community.name }}</h2>
         <h3>
           <i class="uil uil-chat-bubble-user"></i>{{ community.member_cnt }}
         </h3>

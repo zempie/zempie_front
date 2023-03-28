@@ -16,13 +16,13 @@ export default defineNuxtConfig({
         },
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1' },
-        { hid: 'description', name: 'description', content: "Worldwide Community Platform for Game Creators." },
+        { name: 'description', content: "Worldwide Community Platform for Game Creators." },
         { name: 'format-detection', content: 'telephone=no' }
       ],
 
       link: [
         { hid: 'icon', rel: 'icon', type: 'image/x-icon', href: '~/static/favicon.ico' },
-        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/icon?family=Material+Icons' },
+        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Two+Tone' },
         { rel: 'stylesheet', href: 'https://unicons.iconscout.com/release/v3.0.3/css/line.css' },
         { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0' },
         { rel: "apple-touch-icon", href: 'https://s3.ap-northeast-2.amazonaws.com/zempie.com/icons/favicon-32x32.png' },
@@ -47,19 +47,19 @@ export default defineNuxtConfig({
   },
 
   build: {
-    html: {
-      minify: {
-        collapseBooleanAttributes: true,
-        decodeEntities: true,
-        minifyCSS: true,
-        minifyJS: true,
-        processConditionalComments: true,
-        removeEmptyAttributes: true,
-        removeRedundantAttributes: true,
-        trimCustomFragments: true,
-        useShortDoctype: true,
-      }
-    }
+    // html: {
+    //   minify: {
+    //     collapseBooleanAttributes: true,
+    //     decodeEntities: true,
+    //     minifyCSS: true,
+    //     minifyJS: true,
+    //     processConditionalComments: true,
+    //     removeEmptyAttributes: true,
+    //     removeRedundantAttributes: true,
+    //     trimCustomFragments: true,
+    //     useShortDoctype: true,
+    //   }
+    // }
   },
 
   generate: {
