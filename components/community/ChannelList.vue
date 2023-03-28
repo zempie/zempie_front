@@ -112,10 +112,10 @@ function onResize() {
 .channel {
   opacity: 0.5;
 
-  &.active,
-  &:hover {
-    opacity: 1;
-  }
+  // &.active,
+  // &:hover {
+  //   opacity: 1;
+  // }
 }
 
 @media all and (max-width: 479px) {}
