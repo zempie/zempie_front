@@ -97,6 +97,7 @@ const communityFetch = async (method: string, url: string, data = null, withCred
     initialCache: false,
   }
 
+
   if (method === 'get') {
     url = url + '?_=' + Date.now()
     if (data) {
@@ -140,6 +141,9 @@ const studioFetch = async (method: string, url: string, data = null, withCredent
 }
 
 
+export const searchKeyword = (keyword: string) => {
+  return communityFetch('get', `/search?q=${keyword}`, undefined, false);
+}
 
 
 export const auth = {

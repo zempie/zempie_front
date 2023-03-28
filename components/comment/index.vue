@@ -3,10 +3,13 @@
     <dt>
       <dl>
         <dt>
-          <UserAvatar :user="comment.user" :tag="'span'"></UserAvatar>
+          <UserAvatar :user="comment.user" :tag="'span'" :has-router="true"></UserAvatar>
         </dt>
         <dd>
-          <h2>{{ comment.user?.nickname }} <span>{{}}</span></h2>
+          <h2 style="color:#000">
+            <NuxtLink :to="$localePath(`/channel/${comment.user?.channel_id}`)">
+              {{ comment.user?.nickname }}</NuxtLink>
+          </h2>
           <div style="color: #000">
             {{ commentContent }}
           </div>
@@ -79,6 +82,8 @@
 import _ from 'lodash'
 import { ElDropdown, ElDialog } from 'element-plus'
 import { IComment } from '~~/types';
+
+const { $localePath } = useNuxtApp()
 
 const showDeleteModal = ref(false)
 const isCommentEdit = ref(false)
