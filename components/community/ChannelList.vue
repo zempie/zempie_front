@@ -1,7 +1,10 @@
 <template>
   <dt>
     <div class="ta-channel-list">
-      <div>
+      <div style="display: flex;
+                                    border-bottom: #e9e9e9 1px solid;
+                                    align-items: center;
+                                    justify-content: space-between;">
         <h2 style="padding: 20px; font-weight: 600; font-size: 18px; line-height: 18px;color: #333;">Channel</h2>
         <i style="font-size: 20px; padding: 20px;" @click="showChannelList = !showChannelList"
           :class="showChannelList ? 'uil uil-angle-up' : 'uil uil-angle-down'"></i>
@@ -112,10 +115,10 @@ function onResize() {
 .channel {
   opacity: 0.5;
 
-  // &.active,
-  // &:hover {
-  //   opacity: 1;
-  // }
+  &.active,
+  &:hover {
+    opacity: 1;
+  }
 }
 
 @media all and (max-width: 479px) {}

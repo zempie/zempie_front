@@ -49,15 +49,15 @@ export default defineNuxtConfig({
   build: {
     html: {
       minify: {
-        collapseBooleanAttributes: true,
-        decodeEntities: true,
+        // collapseBooleanAttributes: true,
+        // decodeEntities: true,
         // minifyCSS: true,
-        minifyJS: true,
-        processConditionalComments: true,
-        removeEmptyAttributes: true,
-        removeRedundantAttributes: true,
-        trimCustomFragments: true,
-        useShortDoctype: true,
+        // minifyJS: true,
+        // processConditionalComments: true,
+        // removeEmptyAttributes: true,
+        // removeRedundantAttributes: true,
+        // trimCustomFragments: true,
+        // useShortDoctype: true,
       }
     }
   },
