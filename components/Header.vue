@@ -53,7 +53,8 @@
 
       <ClientOnly>
         <dd>
-          <div class="header-search">
+          <SearchHeader />
+          <!-- <div class="header-search">
             <div class="input-search-line">
               <i class="uil uil-search"></i>
               <div>
@@ -119,7 +120,7 @@
                 </el-dropdown>
               </div>
             </div>
-          </div>
+          </div> -->
           <!-- FIXME: popper-class: css수정 -->
           <div class="header-language">
             <el-select class="hl-select-box" v-model="selectedLang" :placeholder="t('korean')">
@@ -293,11 +294,6 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', onResize)
 })
 
-function handleKeyDown() {
-  console.log('handleKeyDown')
-  searchDropdown.value.handleOpen()
-}
-
 function onResize() {
   showMobileLogo.value = isMobile.value.matches ? true : false
   showHamburger.value = isTablet.value.matches ? true : false
@@ -310,62 +306,12 @@ function switchLangauge() {
 }
 
 
-const search = _.debounce(async () => {
-  const { data, error, pending } = await community.search({
-    q: searchInput.value,
-  })
-  const { posts, games, community: comList, users } = data.value
-  userList.value = users
-  gameList.value = games
-  communityList.value = comList
-
-  if (
-    userList.value?.length ||
-    gameList.value?.length ||
-    communityList.value?.length
-  ) {
-    hasResearchResult.value = true
-  } else {
-    hasResearchResult.value = false
-  }
-}, 300)
-
-function moveSearchPage() {
+async function moveSearchPage() {
   isHeaderSideMobile.value = false
-
+  await useSearch().getSearch(searchInput.value)
   router.push({ path: $localePath(`/search`), query: { q: searchInput.value } })
-  searchDropdown.value.handleClose()
+  searchInput.value = ''
 }
-
-function movePage(command: any) {
-
-  console.log('command', command)
-
-  return
-  const searchObj = command[1]
-  if (searchObj.isUser) {
-    moveUserPage(searchObj.channel_id)
-  } else if (searchObj.isCommunity) {
-    moveCommunityPage(searchObj.id)
-  } else if (searchObj.isGame) {
-    moveGamePage(searchObj.pathname)
-  }
-}
-
-function moveUserPage(channelId: string) {
-  initSearchData()
-  router.push($localePath(`/channel/${channelId}`))
-}
-function moveCommunityPage(communityId: string) {
-  initSearchData()
-  router.push($localePath(`/community/${communityId}`))
-}
-
-function moveGamePage(pathname: string) {
-  initSearchData()
-  router.push($localePath(`/game/${pathname}`))
-}
-
 function initSearchData() {
   searchInput.value = ''
   userList.value = []

@@ -6,8 +6,7 @@
         <span>{{ $t('search.result') }}</span>
       </h1>
     </div>
-    {{ results }}
-    <dl class="area-title" v-if="userList" style="margin-top: 12.5px">
+    <dl class="area-title" v-if="userList?.length" style="margin-top: 12.5px">
       <dt>
         Users <span>{{ userList.length }}</span>
       </dt>
@@ -24,71 +23,61 @@
       </ul>
     </ul>
 
-    <!-- <dl class="area-title" v-if="results.games?.length">
+    <dl class="area-title" v-if="gameList?.length">
       <dt>
-        Games <span>{{ results.games?.length }}</span>
+        Games <span>{{ gameList?.length }}</span>
       </dt>
     </dl>
 
-    <ul v-if="results.games.length" class="card-game">
+    <ul v-if="gameList?.length" class="card-game">
       <TransitionGroup name="list-complete">
-        <GameCard v-for="game in results.games" :key="game.id" :gameInfo="game" />
+        <GameCard v-for="game in gameList" :key="game.id" :gameInfo="game" />
       </TransitionGroup>
     </ul>
 
-    <dl class="area-title" v-if="results.posts?.length">
+    <dl class="area-title" v-if="postList?.length">
       <dt>
-        Posts <span>{{ results.posts?.length }}</span>
+        Posts <span>{{ postList?.length }}</span>
       </dt>
     </dl>
-    <div class="ta-search-post" v-if="results.posts.length" :style="results.posts.length ? 'padding:0px ;' : ''">
+    <div class="ta-search-post" v-if="postList?.length" :style="postList?.length ? 'padding:0px ;' : ''">
       <ul class="ta-post">
-        <div v-for="feed in results.posts" :key="feed.id">
+        <div v-for="feed in postList" :key="feed.id">
           <PostFeed :feed="feed">
 
           </PostFeed>
         </div>
       </ul>
-    </div>-->
+    </div>
   </div>
 </template>
 
-<!-- TODO: 스토어 처리해야됨 -->
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import shared from '~/scripts/shared'
 
 const { t, locale } = useI18n()
-const route = useRoute()
-const config = useRuntimeConfig()
 const $route = useRoute()
 
-const keyword = ref($route.query.q)
-const userList = computed(() => [])
-const gameList = ref([])
-const communityList = ref([])
-const postList = ref([])
+const keyword = computed(() => $route.query.q as string)
+const userList = computed(() => useSearch().search.value.results?.users)
+const gameList = computed(() => useSearch().search.value.results?.games)
+const communityList = computed(() => useSearch().search.value.results?.community)
+const postList = computed(() => useSearch().search.value.results?.posts)
 
-// const {
-//   data: results,
-//   error,
-//   pending,
-//   refresh,
-// } = await useCustomAsyncFetch<any>(
-//   `/search?q=${keyword.value}`,
-//   getComFetchOptions('get', true)
-// )
 
+
+definePageMeta({
+  name: 'search',
+})
+
+if (!useSearch().search.value.results) {
+  useSearch().getSearch(keyword.value)
+  console.log('no', useSearch().search.value)
+}
 
 shared.createHeadMeta(`${keyword.value}${t('seo.search.title')}`, `${t('seo.search.desc1')}${keyword.value}${t('seo.search.desc2')}`)
 
-watch(
-  () => $route.query.q,
-  (newKeyword: string) => {
-    keyword.value = newKeyword
-    // refresh()
-  }
-)
 
 </script>
 

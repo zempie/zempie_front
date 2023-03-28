@@ -7,6 +7,7 @@
           <dd>
             <TimelineSk />
           </dd>
+          <CommunityAboutSk />
         </dl>
         <dl class="three-area" v-else>
           <CommunityChannelList :community="communityInfo" />
