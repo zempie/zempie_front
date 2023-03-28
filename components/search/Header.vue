@@ -91,16 +91,8 @@ const userList = computed(() => useSearch().search.value.results?.users)
 const gameList = computed(() => useSearch().search.value.results?.games)
 const communityList = computed(() => useSearch().search.value.results?.community)
 const isSearchPage = computed(() => (route.meta?.name as string)?.toLowerCase() === 'search')
+const hasResearchResult = computed(() => !!userList.value?.length || !!gameList.value?.length || !!communityList.value?.length ? true : false);
 
-
-
-const hasResearchResult = computed(() => {
-  if (userList.value?.length || gameList.value?.length || communityList.value?.length) {
-    return true
-  } else {
-    return false
-  }
-})
 
 function moveSearchPage() {
   router.push({ path: $localePath(`/search`), query: { q: searchInput.value } })

@@ -54,73 +54,7 @@
       <ClientOnly>
         <dd>
           <SearchHeader />
-          <!-- <div class="header-search">
-            <div class="input-search-line">
-              <i class="uil uil-search"></i>
-              <div>
-                <el-dropdown ref="searchDropdown" trigger="click">
-                  <input type="text" title="keywords" :placeholder="t('needSearchInput')" v-model="searchInput"
-                    @input="search" @keyup.enter="moveSearchPage" autocomplete="off" />
-                  <template #dropdown>
-                    <el-dropdown-menu class="header-search-list" style="min-width: 260px">
-                      <div :class="hasResearchResult || 'no-result'">
-                        <template v-if="userList?.length">
-                          <h2>{{ t('user') }}</h2>
-                          <el-dropdown-item v-for="user in userList" :key="user.id">
-                            <div @click="moveUserPage(user.channel_id)">
-                              <dl>
-                                <dt>
-                                  <UserAvatar :user="user" :tag="'span'" style="width:40px" />
-                                  <div>
-                                    <h3 class="font14 text-bold"> {{ user?.nickname }}</h3>
-                                    <h3>{{ user?.name }}</h3>
-                                  </div>
-                                </dt>
-                                <dd><i class="uil uil-user"></i></dd>
-                              </dl>
-                            </div>
-                          </el-dropdown-item>
-                        </template>
-                        <template v-if="gameList?.length">
-                          <h2>{{ t('addGameInfo.game.name') }}</h2>
-                          <el-dropdown-item v-for="game in gameList" :key="game.id">
-                            <div @click="moveGamePage(game.pathname)">
-                              <dl>
-                                <dt>
-                                  <span :style="`background:url(${game.profile_img || game.url_thumb
-                                    }) center center / cover no-repeat; background-size:cover;`"></span>
-                                  {{ game.title }}
-                                </dt>
-                                <dd><i class="uil uil-robot"></i></dd>
-                              </dl>
-                            </div>
-                          </el-dropdown-item>
-                        </template>
-                        <template v-if="communityList?.length">
-                          <h2>{{ t('community.name') }}</h2>
-                          <el-dropdown-item v-for="community in communityList" :key="community.id">
-                            <div @click="moveCommunityPage(community.id)">
-                              <dl>
-                                <dt>
-                                  <span
-                                    :style="`background:url(${community.profile_img}) center center / cover no-repeat; background-size:cover;`"></span>
-                                  {{ community?.name }}
-                                </dt>
-                                <dd><i class="uil uil-comments"></i></dd>
-                              </dl>
-                            </div>
-                          </el-dropdown-item>
-                        </template>
-                        <template v-if="!hasResearchResult">
-                          <h2>{{ t('no.search.result') }}</h2>
-                        </template>
-                      </div>
-                    </el-dropdown-menu>
-                  </template>
-                </el-dropdown>
-              </div>
-            </div>
-          </div> -->
+
           <!-- FIXME: popper-class: css수정 -->
           <div class="header-language">
             <el-select class="hl-select-box" v-model="selectedLang" :placeholder="t('korean')">
@@ -236,10 +170,6 @@ const user = computed(() => useUser().user.value.info)
 const searchDropdown = ref()
 
 const searchInput = ref()
-const userList = ref([])
-const gameList = ref([])
-const communityList = ref([])
-const hasResearchResult = ref(false)
 const isHeaderSideMobile = ref(false)
 const isHeaderSideBgMobile = ref(false)
 
@@ -311,14 +241,6 @@ async function moveSearchPage() {
   await useSearch().getSearch(searchInput.value)
   router.push({ path: $localePath(`/search`), query: { q: searchInput.value } })
   searchInput.value = ''
-}
-function initSearchData() {
-  searchInput.value = ''
-  userList.value = []
-  gameList.value = []
-  communityList.value = []
-  hasResearchResult.value = false
-  searchDropdown.value.handleClose()
 }
 function clickOutside() {
   if (isHeaderSideMobile.value) {
