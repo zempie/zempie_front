@@ -2,9 +2,9 @@
   <dt>
     <div class="ta-channel-list">
       <div style="display: flex;
-        border-bottom: #e9e9e9 1px solid;
-        align-items: center;
-        justify-content: space-between;">
+            border-bottom: #e9e9e9 1px solid;
+            align-items: center;
+            justify-content: space-between;">
         <h2 style="padding: 20px; font-weight: 600; font-size: 18px; line-height: 18px;color: #333;">Channel</h2>
         <i style="font-size: 20px; padding: 20px;" @click="showChannelList = !showChannelList"
           :class="showChannelList ? 'uil uil-angle-up' : 'uil uil-angle-down'"></i>
@@ -18,7 +18,7 @@
             <span>All Posts</span>
           </li>
           <li v-for="(channel, index) in community?.channels" :style="`background: url(${channel.profile_img || '/images/1500_300_com_channel_default.png'
-            }) center center / cover no-repeat;`" :class="[{ active: channelName === channel.title }, 'channel']"
+            }) center center / cover no-repeat;`" :class="['channel', { active: channelName === channel.title }]"
             @click="
               $router.push(
                 $localePath(`/community/${community.id}/${channel.title}`)

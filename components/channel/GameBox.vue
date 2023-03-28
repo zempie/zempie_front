@@ -35,7 +35,7 @@ const channelInfo = computed(() => useChannel().userChannel.value.info)
 const games = computed(() => channelInfo.value.games)
 
 </script>
-<style scoped lang='scss'>
+<style scoped lang="scss">
 .no-game {
   padding-bottom: 20px;
 }

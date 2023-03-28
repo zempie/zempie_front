@@ -56,7 +56,7 @@
                         @click="form.policyAgreement ? errorAgree = true : errorAgree = false" />
 
                       <label for="agree"><i class="uil uil-check"></i></label>
-                      <span><label for="agree" style="text-decoration:underline;">{{ $t('terms') }} ({{
+                      <span><label for="agree" class="ml5 underline">{{ $t('terms') }} ({{
                         $t('required')
                       }})</label></span>
                     </dt>
@@ -73,7 +73,7 @@
             </div>
           </div>
           <p>
-          <p @click="register" class="btn-default-big w100p">{{ $t('join') }}</p>
+          <p @click="register" :class="['btn-default-big w100p', isSubmitActive ? 'on' : 'off']">{{ $t('join') }}</p>
           </p>
         </form>
       </ClientOnly>
@@ -116,6 +116,8 @@ const nicknameValidator = helpers.regex(nicknameRegex)
 const fUser = computed(() => useUser().user.value.fUser)
 const isLogin = computed(() => useUser().user.value.isLogin)
 
+
+
 const rules = computed(() => {
   const formRule = {
     email: {
@@ -142,6 +144,8 @@ const rules = computed(() => {
   }
   return formRule
 })
+
+
 
 
 watch(isLogin,
@@ -188,7 +192,15 @@ onBeforeRouteLeave((to, from, next) => {
 
 const v$ = useVuelidate(rules, form)
 
+const isSubmitActive = computed(() => {
+  return !!form.policyAgreement && !!v$.value.$dirty
+})
+
+
+
 async function register() {
+
+  if (!isSubmitActive.value) return
 
   const result = await v$.value.$validate()
 
@@ -325,6 +337,20 @@ async function joinZempie() {
 .login-agreement-container .lam-content>p a {
   width: 100%;
   border-radius: 30px;
+}
+
+
+.btn-default-big {
+  &.on {
+    background: #f97316;
+    color: #fff;
+
+  }
+
+  &.off {
+    background: #ffe2d1;
+    cursor: no-drop;
+  }
 }
 
 @media all and (max-width: 479px) {

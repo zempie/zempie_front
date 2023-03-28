@@ -16,7 +16,7 @@ export default defineNuxtConfig({
         },
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1' },
-        { hid: 'description', name: 'description', content: "Worldwide Community Platform for Game Creators." },
+        { name: 'description', content: "Worldwide Community Platform for Game Creators." },
         { name: 'format-detection', content: 'telephone=no' }
       ],
 
