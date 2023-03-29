@@ -95,13 +95,7 @@ function rightAlign() {
 }
 
 function onImageMouseClick() {
-  // if (resizableImg.value.getAttribute('class').includes('right')) {
-  //   align.value = 'right'
-  // } else if (resizableImg.value.getAttribute('class').includes('left')) {
-  //   align.value = 'left'
-  // } else if (resizableImg.value.getAttribute('class').includes('center')) {
-  //   align.value = 'center'
-  // }
+
   showIcon.value = true
 }
 

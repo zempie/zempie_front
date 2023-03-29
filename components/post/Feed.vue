@@ -14,7 +14,8 @@
     </dl>
 
     <div>
-      <div ref="feedDiv" class="tapl-content" v-html="feedContent" @click="$router.push($localePath(`/feed/${feed.id}`))">
+      <div ref="feedDiv" class="tapl-content" v-html="feedContent"
+        @click.stop="$router.push($localePath(`/feed/${feed.id}`))">
       </div>
 
       <div v-if="isOverflow" :class="isMoreView ? '' : 'gradient'"></div>

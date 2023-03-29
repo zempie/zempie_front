@@ -32,7 +32,7 @@
       </ul>
     </BubbleMenu>
     <EditorContent :editor="editor" :class="['editor-container', postType === 'SNS' ? 'sns' : 'blog']" @drop="dropEditor"
-      @paste="pasteEditor" />
+      @paste="pasteEditor" @input="handleInput" />
 
     <div class="character-count">
       <p>{{ charCount }}/{{ limit }}</p>
@@ -71,10 +71,11 @@ import CustomAudio from '~~/scripts/tiptap/customAudio'
 import CustomVideo from '~~/scripts/tiptap/customVideo'
 
 import ResizableImage from './ResizableImage.vue'
-import PreviewLink from './PreviewLink.vue'
+import VueComponent from '~~/scripts/tiptap/extension'
 // import { Link } from '~~/scripts/tiptap/customLink'
 
 import CodeBlockComponent from './CodeBlockComponent.vue'
+import { title } from 'process'
 
 const emit = defineEmits(['editorContent'])
 const { t, locale } = useI18n()
@@ -118,6 +119,7 @@ const editor = useEditor({
           limit: limit.value,
         }),
         Link,
+        VueComponent,
         Typography,
         Highlight,
       ]
@@ -147,6 +149,7 @@ const editor = useEditor({
         TableCell,
         Typography,
         Highlight,
+        VueComponent,
         Image.extend({
           addAttributes() {
             return {
@@ -180,24 +183,12 @@ const editor = useEditor({
 
               isDraggable: {
                 default: true,
-                renderHTML: (attributes) => {
-                  return {}
-                },
               },
             }
           },
           addCommands() {
             return {
               ...this.parent?.(),
-              toggleResizable:
-                () =>
-                  ({ tr }) => {
-                    const { node } = tr?.selection
-
-                    if (node?.type?.name === 'ResizableImage') {
-                      node.attrs.isDraggable = !node.attrs.isDraggable
-                    }
-                  },
             }
           },
           addNodeView() {
@@ -205,6 +196,7 @@ const editor = useEditor({
           },
           addOptions() {
             return {
+              selectable: true,
               inline: true,
               HTMLAttributes: {
                 class: 'image-wrapper',
@@ -215,7 +207,6 @@ const editor = useEditor({
         CustomVideo.extend({
           addOptions() {
             return {
-              inline: true,
               HTMLAttributes: {
                 class: 'video-wrapper',
               },
@@ -225,7 +216,6 @@ const editor = useEditor({
         CustomAudio.extend({
           addOptions() {
             return {
-              inline: true,
               HTMLAttributes: {
                 class: 'audio-wrapper',
               },
@@ -249,8 +239,25 @@ function dropEditor(e: DragEvent) {
   addImage(e.dataTransfer)
 }
 
-function pasteEditor(e: ClipboardEvent) {
+async function pasteEditor(e: ClipboardEvent) {
   addImage(e.clipboardData)
+  const link = editor.value.getAttributes('link')
+  if (link?.href) {
+    const data = await $fetch<{ result: any }>(`/og-tag?url=${link.href}`, getZempieFetchOptions('get', true, { url: link.href }))
+
+    const { result } = data
+    const img = result.images ? result.images[0] : ''
+    const favicon = result.favicons[0]
+    const { title, description } = result
+
+    const url = new URL(result.url);
+    let domain = url.hostname;
+    domain = domain.replace('www.', '');
+
+    if (title || description)
+      editor.value.commands
+        .insertContent(`<div url=${link.href} img_url=${img ?? ''} title=${result.title} description="${result.description ?? ''}" favicon=${favicon} domain=${domain}></div>`)
+  }
 }
 
 async function addImage(data: DataTransfer) {
@@ -281,6 +288,10 @@ async function addImage(data: DataTransfer) {
 
 function shouldShow() {
   return editor.value?.isActive('table')
+}
+
+function handleInput() {
+  console.log('handleInput', editor.value.getAttributes('link').href)
 }
 </script>
 

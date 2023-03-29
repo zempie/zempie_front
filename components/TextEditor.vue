@@ -658,7 +658,6 @@ function uploadImageFile() {
 }
 
 function onSelectImageFile(event: Event) {
-  console.log('eve')
   const files = (event.target as HTMLInputElement).files
 
   for (const file of files) {

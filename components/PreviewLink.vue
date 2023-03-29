@@ -1,49 +1,52 @@
 <template>
-  <node-view-wrapper class="vue-component">
-    <span class="label">Vue Component</span>
-
-    <div class="content">
-      <button>
-        This button has been clicked {{ node.attrs.count }} times.
-      </button>
-    </div>
+  <node-view-wrapper class="link-preview">
+    <el-card class="link-card" :class="{ active: isClick }" :body-style="{ padding: '0px' }" @click="onClickLink"
+      v-on-click-outside="clickOutside" data-drag-handle>
+      <div class="tag-img" :style="`background:url(${node.attrs.img_url});`">
+      </div>
+      <div class="tag-info-container">
+        <span><strong class="tag-title"> {{ node.attrs.title }}</strong></span>
+        <div class="bottom">
+          <p class='tag-desc'> {{ node.attrs.description }}</p>
+          <div class="domain-div">
+            <p class="tag-favicon" :style="`background:url(${node.attrs.favicon});`">
+            </p><strong>{{
+              node.attrs.domain
+            }}</strong>
+          </div>
+        </div>
+      </div>
+    </el-card>
   </node-view-wrapper>
 </template>
+
 <script setup lang="ts">
-import { NodeViewWrapper, NodeViewContent, nodeViewProps } from '@tiptap/vue-3'
+import { nodeViewProps, NodeViewWrapper } from '@tiptap/vue-3'
+import { ElCard } from 'element-plus';
+import { vOnClickOutside } from '@vueuse/components'
 
-const props = defineProps(nodeViewProps)
+const isClick = ref(false)
 
-onMounted(() => {
-  console.log('?')
+const props = defineProps({
+  node: Object
 })
+
+
+function onClickLink() {
+  isClick.value = true
+}
+function clickOutside() {
+  isClick.value = false
+}
+
 </script>
 
 <style lang="scss">
-.vue-component {
-  background: #faf594;
-  border: 3px solid #0d0d0d;
-  border-radius: 0.5rem;
-  margin: 1rem 0;
-  position: relative;
-}
+.link-card {
 
-.label {
-  margin-left: 1rem;
-  background-color: #0d0d0d;
-  font-size: 0.6rem;
-  letter-spacing: 1px;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: #fff;
-  position: absolute;
-  top: 0;
-  padding: 0.25rem 0.75rem;
-  border-radius: 0 0 0.5rem 0.5rem;
-}
-
-.content {
-  margin-top: 1.5rem;
-  padding: 1rem;
+  &:hover,
+  &.active {
+    border: 1px solid #f97316;
+  }
 }
 </style>
