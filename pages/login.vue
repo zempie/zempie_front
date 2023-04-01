@@ -1,272 +1,232 @@
 <template>
-  <div class="login-bg pt50 pb50">
+  <div class="login-bg pt50 pb50" style="height: 100vh; min-height: 900px">
     <div class="login-logo">
-      <router-link to="/"
-        ><img src="../assets/images/zempie_logo.png" alt="zempie-logo" title=""
-      /></router-link>
+      <LoginWhiteLogoDt path="/" />
     </div>
     <div class="login-area">
       <div class="la-logo">
-        <router-link to="#"
-          ><img
-            src="../assets/images/logo.svg"
-            width="140"
-            alt="zempie-logo"
-            title=""
-        /></router-link>
+        <LoginWhiteLogoMb path="/" />
       </div>
-
       <div class="la-title">
-        <h3>{{ i18n.t('login.text1') }}</h3>
-        <p>{{ i18n.t('login.text2') }}</p>
+        <h3>{{ $t('login.text1') }}</h3>
+        <p>{{ $t('login.text2') }}</p>
       </div>
       <div class="la-content">
-        <form @submit.prevent="submitForm">
-          <input
-            v-model="email"
-            style="margin-bottom: 16px"
-            type="email"
-            name="login-email"
-            :placeholder="`${i18n.t('login.email.placeholder')}`"
-            class="w100p h60"
-            required
-          />
-          <input
-            v-model="password"
-            type="password"
-            name="login-password"
-            :placeholder="`${i18n.t('login.pwd.placeholder')}`"
-            class="w100p h60"
-            required
-          />
+        <form>
+          <input type="email" v-model="v$.email.$model" name="login-email" title=""
+            :placeholder="$t('login.email.placeholder')" class="w100p h60" style="margin-bottom: 10px"
+            autocomplete="user-email" @keyup.enter="onSubmit" />
+          <h2 class="input-errors" v-for="error of v$.email.$errors" :key="error.$uid">
+            <i class="uil uil-check"></i>{{ error.$message }}
+          </h2>
+          <input type="password" v-model="v$.password.$model" name="login-password" title=""
+            autocomplete="current-password" :placeholder="$t('login.pwd.placeholder')" class="w100p h60"
+            style="margin-bottom: 10px" @keyup.enter="onSubmit" />
 
-          <button
-            style="border-radius: 30px; width: 100%; margin-top: 40px"
-            type="submit"
-            class="btn-default-big"
-          >
-            {{ i18n.t('login') }}
-          </button>
+          <h2 class="input-errors" v-for="error of v$.password.$errors" :key="error.$uid">
+            <i class="uil uil-check"></i>{{ error.$message }}
+          </h2>
         </form>
-
-        <!--                <div>-->
-        <!--                    <input type="checkbox" name="" title="" id="id-save"/> <label for="id-save"><i-->
-        <!--                    class="uil uil-check"></i></label>&nbsp; <span><label for="id-save">아이디저장</label></span>-->
-        <!--                    <input type="checkbox" name="" title="" id="auto-login"/> <label for="id-save"><i-->
-        <!--                    class="uil uil-check"></i></label>&nbsp; <span><label for="auto-login">자동로그인</label></span>-->
-        <!--                </div>-->
+        <p @click="onSubmit">
+          <a class="btn-default-big">{{ $t('login') }}</a>
+        </p>
 
         <dl>
           <dt>
-            <router-link to="password-search">{{
-              i18n.t('reset.pwd')
-            }}</router-link>
+            <NuxtLink :to="$localePath('/reset-password')">{{
+              $t('reset.pwd')
+            }}</NuxtLink>
           </dt>
           <dd>|</dd>
           <dt>
-            <NuxtLink :to="`/join`">{{ i18n.t('join') }}</NuxtLink>
+            <NuxtLink :to="$localePath('/join')">{{ $t('join') }}</NuxtLink>
           </dt>
         </dl>
       </div>
       <div class="la-bottom">
         <dl>
           <dt></dt>
-          <dd>{{ i18n.t('login.text3') }}</dd>
+          <dd>{{ $t('login.text3') }}</dd>
           <dt></dt>
         </dl>
         <ul>
-          <!--                    <li>-->
-          <!--                        <router-link to="#"><img src="../assets/images/kakao_icon.png" alt="" title=""/></router-link>-->
-          <!--                    </li>-->
-          <li>
-            <img
-              src="../assets/images/google_icon.png"
-              alt="goolge-login"
-              title=""
-            />
+          <li @click="googleLogin">
+            <img src="/images/google_login.png" alt="google-login" title="" />
           </li>
-          <!--                    <li>-->
-          <!--                        <router-link to="#"><img src="../assets/images/naver_icon.png" alt="" tile=""/></router-link>-->
-          <!--                    </li>-->
-          <!--                    <li>-->
-          <!--                        <router-link to="#"><img src="../assets/images/facebook_icon.png" alt="" title=""/>-->
-          <!--                        </router-link>-->
-          <!--                    </li>-->
-          <!--                    <li>-->
-          <!--                        <router-link to="#"><img src="../assets/images/twitter_icon.png" alt="" title=""/></router-link>-->
-          <!--                    </li>-->
+          <li @click="facebookLogin" class="mt10">
+            <img src="/images/facebook_login.png" alt="google-login" title="" />
+          </li>
         </ul>
         <p>
-          <span
-            ><i
-              class="uil uil-info-circle"
-              style="font-size: 16px; line-height: 24px"
-            ></i
-          ></span>
-          {{ i18n.t('login.text4') }}&nbsp;
+          <span><i class="uil uil-info-circle" style="font-size: 16px; line-height: 24px"></i></span>
+          {{ $t('login.text4') }}
         </p>
       </div>
     </div>
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
+import * as fbFcm from '~~/scripts/firebase-fcm'
+import { ElMessage } from 'element-plus'
+import useVuelidate from '@vuelidate/core'
+import { required, helpers } from '@vuelidate/validators'
+import { useI18n } from 'vue-i18n'
+import { emailRegex, passwordRegex } from '~/scripts/utils'
 import {
-  ref,
-  reactive,
-  onMounted,
-  useContext,
-  computed,
-} from '@nuxtjs/composition-api'
-import firebase from '../scripts/firebase'
-import * as Api from '../api'
-import { useUserStore } from '../store/user'
+  signInWithEmailAndPassword,
+  FacebookAuthProvider,
+  GoogleAuthProvider,
+  signInWithPopup,
+  AuthProvider,
+  setPersistence,
+  browserSessionPersistence,
+} from 'firebase/auth'
+import shared from '~/scripts/shared'
 
-const { i18n } = useContext()
-const fUser = ref(computed(() => firebase.state.fUser))
-// import { emailValidator, pwValidator } from 'src/scripts/utils';
+const { $firebaseAuth, $cookies, $localePath } = useNuxtApp()
 
-const userStore = useUserStore()
+const { t, locale } = useI18n()
+const router = useRouter()
+const route = useRoute()
+const config = useRuntimeConfig()
 
-const email = ref('')
-const password = ref('')
+definePageMeta({
+  layout: 'layout-none',
+  middleware: 'guest-only'
+})
 
-async function submitForm(e: any) {
-  console.log('email', email.value)
-  console.log('password', password.value)
-  console.log('fUser', fUser)
+shared.createHeadMeta(t('seo.login.title'), t('seo.login.desc'))
 
-  try {
-    await firebase.signInEmail(email.value, password.value)
+const form = reactive({
+  email: '',
+  password: '',
+})
 
-    // console.log(userStore.$state.user.accessToken)
-    // const result = await Vue.$api.user();
-    sessionStorage.setItem('access_token', userStore.$state.fUser.accessToken)
+const emailValidator = helpers.regex(emailRegex)
 
-    await userStore.setUserInfo()
-
-    // const { result } = await Api.auth.getUserInfo()
-    // if (result.user) {
-    //   userStore.$state.user = result.user
-    //   userStore.$state.isLogin = true
-    // }
-
-    console.log('result: ', userStore.$state.user)
-  } catch (err: any) {
-    console.log(err)
-    // $q.notify(err.message)
+const rules = computed(() => {
+  const formRule = {
+    email: {
+      required: helpers.withMessage(t('login.empty.email'), required),
+      emailValidator: helpers.withMessage(
+        t('login.email.format.err'),
+        emailValidator
+      ),
+    },
+    password: {
+      required: helpers.withMessage(t('login.empty.pwd'), required),
+    },
   }
 
-  // try {
+  return formRule
+})
+const v$ = useVuelidate(rules, form)
+const isLogin = computed(() => useUser().user.value.isLogin)
 
-  //         const result = await firebase
-  //             .auth()
-  //             .signInWithEmailAndPassword(
-  //                 this.form.email,
-  //                 this.form.password
-  //             );
+watch(isLogin,
+  async (val) => {
+    if (val) {
+      router.push($localePath('/'))
+      const { token } = await fbFcm.getFcmToken(useUser().user.value.info.id)
+      console.log('token', token)
+      if (!token) {
+        console.log('regi token')
+        await fbFcm.resigterFcmToken(useUser().user.value.info.id)
+      }
+    }
+  })
 
-  //         if (result.user) {
-  //             const token = await firebase.auth().currentUser!.getIdToken();
-  //             this.$store.commit("idToken", token);
+console.log(useUser().user.value.isLogin)
 
-  //             const result = await Vue.$api.user();
-  //             // if( result.error && result.error && result.error.message === '잘 못 된 유저 아이디입니다' ) {
-  //             if (result?.error?.code === 20001) {
-  //                 // alert( this.$t('login.joinError') as string );
-  //                 this.$store.commit("loginState", LoginState.no_user);
+async function onSubmit() {
+  const isValid = await v$.value.$validate()
 
-  //                 // this.googleRegister = false;
-  //                 // await this.$router.replace("/joinEmailContinue");
-  //                 return;
-  //             }
+  if (!isValid) return
+  setPersistence($firebaseAuth, browserSessionPersistence)
+    .then((res) => {
+      signInWithEmailAndPassword($firebaseAuth, form.email, form.password)
+        .then(async (result) => {
+          const { user } = result
+        })
+        .catch((err: any) => {
+          const errorCode = err.code
+          const errorMessage = err.message
+          let message = errorCode ? errorCode : errorMessage
 
-  //             const {user} = result;
-  //             this.$store.commit("user", user);
-  //             await LoginManager.login();
-  //             // this.$store.commit('loginState', LoginState.login );
+          switch (errorCode) {
+            case 'auth/weak-password':
+              message = `${t('login.pwd.format.err')}`
+              break
+            case 'auth/wrong-password':
+              ElMessage.error(`${t('fb.wrong.info')}`)
+              break
+            case 'auth/user-not-found':
+              ElMessage.error(`${t('fb.not.found')}`)
 
-  //             if (this.$store.getters.redirectRouter) {
-  //                 const router = this.$store.getters.redirectRouter;
-  //                 this.$store.commit("redirectRouter", null);
-  //                 await this.$router.replace(router);
-  //             }
-  //             else if (this.$store.getters.redirectUrl) {
-  //                 const url = this.$store.getters.redirectUrl;
-  //                 this.$store.commit("redirectUrl", null);
-  //                 window.location.href = url;
-  //             }
-  //             else {
-  //                 await this.$router.replace('/');
-  //             }
-  //         }
-  //     }
-  //     catch (e) {
-  //         const code = e.code;
-  //         // console.log(code);
-  //         if (code) {
-  //             switch (code) {
-  //                 case "auth/wrong-password":
-  //                     this.$modal.show('wrongInfo')
-  //                     // this.passwordError = '잘못된 비밀번호 입니다. 다시 입력하세요.'
-  //                     break;
-  //                 case "auth/user-not-found":
-  //                     this.$modal.show('noUser')
-  //                     // alert(this.$t('login.firebaseError.userNotFound') as string);
-  //                     break;
-  //                 default:
-  //                     // alert('잠시 후 다시 시도해주세요.');
-  //                     break;
-  //             }
-  //         }
-  //     }
+              break
+            default:
+              ElMessage.error(errorCode)
+              break
+          }
+          throw { message }
+        })
+    })
+    .catch((err: any) => {
+      ElMessage.error(err.message)
+    })
 }
 
-// onMounted(() => {
-// });
+async function googleLogin() {
+  const provider = new GoogleAuthProvider()
+  return socialLogin(provider)
+}
+
+async function facebookLogin() {
+  const provider = new FacebookAuthProvider()
+  provider.addScope('email')
+  return socialLogin(provider)
+}
+
+async function socialLogin(provider: AuthProvider) {
+  try {
+    const res = await signInWithPopup($firebaseAuth, provider)
+    //회원가입 정보 없는 경우 ???
+    // useUser().setFirebaseUser(res.user)
+  } catch (err) {
+    console.error('socialLogin err', err)
+
+    const errorCode = err.code
+
+    if (err.message.includes('auth/account-exists-with-different-credential')) {
+      ElMessage.error(`${t('exist.wt.diff.email')}`)
+    }
+  }
+}
+
 </script>
 
 <style scoped lang="scss">
-.login-bg {
-  height: 100vh;
+.input-errors {
+  font-size: 12px;
+  color: #c5292a;
+}
 
-  .q-input {
-    margin: 10px 0 10px 0 !important;
-  }
-  :deep(.q-field__control-container) {
-    input {
-      height: 60px !important;
+.input-errors:not(:last-child) {
+  padding-bottom: 10px;
+}
+
+.login-area {
+  .la-bottom {
+    ul {
+      flex-direction: column;
+
+      li {
+        img {
+          width: 300px;
+        }
+      }
     }
   }
-  :deep(.q-field__bottom) {
-    margin-left: 5px;
-  }
 }
-//.btn-default-big {
-//    width: 100%;
-//    border-radius: 30px;
-//}
-
-// .btn-default {
-//   width: 100%;
-// }
-
-//   margin: 10px 0 10px 0;
-// }
-
-// .form-control + .invalid-feedback {
-//   display: none;
-//   color: #999;
-// }
-
-// .is-invalid + .invalid-feedback {
-//   font-size: 12px;
-//   display: inline-block;
-//   color: red;
-// }
-
-// .modal-text {
-//   display: flex;
-//   justify-content: center;
-// }
 </style>

@@ -3,3 +3,776 @@
 .uppercase {
   text-transform: uppercase;
 }
+.pointer{
+  cursor: pointer;
+}
+.underline{
+  text-decoration: underline;
+}
+.text-bold{
+  font-weight: bold;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.flex{
+  display: flex;
+}
+.items-center{
+  align-items: center;
+}
+.justify-center{
+  justify-items: center;
+}
+.content-center{
+  justify-content: center;
+}
+.row{
+  display: flex;
+  flex-direction: row;
+}
+
+.column{
+  display: flex;
+  flex-direction: column;
+}
+
+.text-ellipsis{
+  text-overflow: ellipsis;
+  overflow:hidden;
+  white-space:nowrap;
+}
+
+
+.bg-grey-1 {
+  background-color: #ededed;
+}
+.bg-grey-3 {
+  background-color: #e4e6ef;
+}
+.text-red{
+  color:#c5292a;
+}
+
+.btn-green-small {
+  display: inline-block;
+  height: 30px;
+  padding: 8px 20px;
+  text-align: center;
+  font-size: 13px;
+  line-height: 13px;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  background: #1bc5bd;
+  transition: all 0.4s ease-in-out;
+  cursor: pointer;
+}
+
+.grey-text {
+  background-color: #ededed;
+  border-radius: 10px;
+  min-height: 16px;
+}
+
+.el-popper {
+  .el-popper__arrow {
+    display: none;
+  }
+  &.feed-menu {
+    border-radius: 8px;
+  }
+}
+
+.el-select-dropdown__item {
+  margin: 7px !important;
+}
+.el-select-dropdown__item.selected {
+  color: #f97316 !important;
+}
+.el-select-dropdown__item.hover {
+  color: #fff !important;
+  background-color: #f97316 !important;
+  border-radius: 4px;
+}
+
+.modal-area-type {
+  max-width: 100% !important;
+  min-width: 380px !important;
+  border-radius: 10px !important;
+  position: absolute !important;
+  left: 50%;
+  top: 50%;
+  margin: 0px !important;
+  transform: translate(-50%, -50%);
+  .modal-alert {
+    border-radius: 10px;
+  }
+  .el-dialog__header {
+    display: none !important;
+  }
+  .el-dialog__body {
+    padding: 0px;
+  }
+}
+
+//게임 배너 사이즈 수정 모달
+.modal-area-game-banner {
+  border-radius: 10px !important;
+
+  .el-dialog__header {
+    display: none !important;
+  }
+  .el-dialog__body {
+    padding: 0px;
+  }
+}
+
+//포스팅 작성 모달
+.post-modal {
+  max-width: 700px;
+  border-radius: 10px !important;
+  position: absolute !important;
+  left: 50%;
+  top: 50%;
+  margin: 0px !important;
+  transform: translate(-50%, -50%);
+  .modal-alert {
+    border-radius: 10px;
+  }
+  .el-dialog__header {
+    display: none !important;
+  }
+  .el-dialog__body {
+    padding: 0px;
+  }
+}
+
+//skeleton loading
+.skeleton-animation {
+  animation: skeleton-loading 1s linear infinite alternate;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: hsl(200, 20%, 80%);
+  }
+  100% {
+    background-color: hsl(200, 20%, 95%);
+  }
+}
+
+//like animation
+
+// .like-icon {
+//   &:hover {
+//     -webkit-animation: like 1s ease;
+//     animation: like 1s ease;
+//     -webkit-animation-iteration-count: 1;
+//     animation-iteration-count: 1;
+//   }
+// }
+
+// @keyframes like {
+//   15% {
+//     -webkit-transform: translateY(5px);
+//     transform: translateY(5px);
+//   }
+//   30% {
+//     -webkit-transform: translateY(-5px);
+//     transform: translateY(-5px);
+//   }
+//   50% {
+//     -webkit-transform: translateY(3px);
+//     transform: translateY(3px);
+//   }
+//   65% {
+//     -webkit-transform: translateY(-3px);
+//     transform: translateY(-3px);
+//   }
+//   80% {
+//     -webkit-transform: translateY(2px);
+//     transform: translateY(2px);
+//   }
+//   100% {
+//     -webkit-transform: translateY(0);
+//     transform: translateY(0);
+//   }
+// }
+
+@media all and (max-width: 479px) {
+  .post-modal {
+    min-width: 100%;
+  }
+}
+
+@media all and (min-width: 480px) and (max-width: 767px) {
+  .post-modal {
+    min-width: 100%;
+  }
+}
+
+@media all and (min-width: 768px) and (max-width: 991px) {
+  .post-modal {
+    min-width: 700px;
+  }
+}
+
+@media all and (min-width: 992px) and (max-width: 1199px) {
+  .post-modal {
+    min-width: 700px;
+  }
+}
+
+@media all and (min-width: 1200px) {
+}
+
+.el-dropdown-menu__item:focus {
+  border-radius: 10px;
+  background-color: #ededed !important;
+  color: #f97316 !important;
+}
+
+// swiper-css
+
+.swiper-pagination-bullet-active {
+  background-color: #f97316 !important;
+}
+
+.mp-image {
+  .swiper-wrapper {
+    display: flex;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    display: flex;
+    transition-property: transform;
+    box-sizing: content-box;
+  }
+  .swiper-pagination-bullet {
+    background-color: #fff !important;
+    opacity: 1 !important;
+  }
+}
+
+.loading-spinner {
+  .el-loading-spinner .path {
+    stroke: #f97316 !important;
+  }
+  .el-loading-text {
+    color: #f97316 !important;
+  }
+}
+
+.follow-btn-feed {
+  .btn-default {
+    margin-right: 10px;
+    // margin: 0px 10px 15px 0px !important;
+    font-size: 12px;
+    background-color: transparent;
+    color: #f97316 !important;
+    font-weight: bold;
+    padding: 0px !important;
+    &.unfollow {
+      background-color: transparent !important;
+    }
+    &.my-channel {
+      display: none;
+    }
+  }
+}
+
+.xi-heart {
+  transform-origin: center;
+  animation: animateHeartOut 0.3s linear forwards;
+}
+
+@keyframes animateHeartOut {
+  0% {
+    transform: scale(1.4);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media all and (max-width: 479px) {
+  .header-language {
+    .el-input__inner {
+      font-size: 16px !important;
+    }
+  }
+  .ta-message-send {
+    input {
+      font-size: 14px;
+    }
+  }
+  .modal-post {
+    .editor-container {
+      font-size: 16px;
+    }
+  }
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+@media all and (min-width: 480px) and (max-width: 767px) {
+}
+
+@media all and (min-width: 768px) and (max-width: 991px) {
+}
+
+@media all and (min-width: 992px) and (max-width: 1199px) {
+}
+
+@media all and (min-width: 1200px) {
+}
+
+
+
+// event popup
+.event-dialog{
+  background-color: #0d0c13 !important;
+  header{
+    padding: 8px 35px 0px 0px;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .el-dialog__body{
+    padding: 0px;
+  }
+}
+
+
+//cascader
+.el-cascader{
+  width: 100%;
+
+  .el-input__inner{
+    border: none;
+    &:focus{
+      border: none;
+      box-shadow: none;
+    }
+  }
+  .el-input__wrapper {
+    box-shadow: 0 0 0 1px #e9e9e9 !important;
+
+  }
+  .el-cascader__tags{
+   margin-left: 25px;
+  }
+
+}
+.el-cascader-menu{
+  .el-cascader-node.is-active,.in-active-path{
+    color:#f97316 !important;
+  }
+  .el-checkbox__input.is-checked .el-checkbox__inner {
+    background-color: #f97316 !important;
+    border-color: #f97316 !important;
+  }
+  .el-checkbox__input.is-indeterminate .el-checkbox__inner::before{
+    background-color: #f97316 !important;
+    border-color: #f97316 !important;
+  }
+  .el-checkbox__input.is-indeterminate .el-checkbox__inner {
+    background-color: #fff !important;
+    border-color: #f97316 !important;
+  }
+  .el-checkbox__inner:hover {
+    border-color: #f97316 !important;
+  }
+
+
+}
+.el-cascader-node{
+  .el-checkbox .is-disabled{
+    visibility: hidden !important;
+  }
+
+}
+.el-cascader-menu__wrap.el-scrollbar__wrap{
+  min-height: 150px !important;
+  height: auto !important;
+  max-height: 300px !important;
+  overflow: scroll !important;
+  max-width: 340px !important;
+}
+
+.el-checkbox.is-disabled + .el-cascader-node__label{
+  color:#f97316 !important
+}
+
+// header
+.header-menu{
+    &:hover{
+      background-color: transparent !important;
+    }
+  }
+
+//game list select
+.area-title{
+  .el-select{
+    .el-input{
+      &.is-focus{
+        .el-input__wrapper{
+          box-shadow: none !important;
+        }
+
+      }
+    }
+
+    .el-input__wrapper{
+      width: 150px;
+      height: 40px;
+      border-radius: 10px;
+      &.is-focus{
+        box-shadow: none !important;
+
+      }
+
+      .el-input__inner{
+        border: none;
+        &:focus{
+          border: none;
+          box-shadow: none;
+        }
+      }
+    }
+  }
+
+}
+
+
+// 더보기
+.gradient {
+  background: linear-gradient(to top, #fff, #ededed00);
+  height: 50px;
+  width: 100%;
+  position: relative;
+  bottom: 50px;
+}
+
+.more-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 20px 0 20px;
+
+  span,
+  a {
+    flex: 1;
+  }
+
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .dot-line {
+    border-top: 1px dashed;
+  }
+}
+.tapl-content {
+  max-height: 500px;
+}
+// /더보기
+
+
+.tapl-title {
+  dt {
+    // width: 100%;
+
+    dl {
+      dt {
+        width: 15%;
+      }
+      dd {
+        width: 80%;
+      }
+    }
+  }
+}
+
+
+
+.cancel-btn {
+  margin-right: 10px;
+  background-color: #dc3545;
+}
+
+.cancel-btn:hover {
+  color: #dc3545;
+  background: rgba(220, 53, 69, 0.27);
+}
+
+
+//feed
+
+.feed-img {
+  padding: 20px 20px 0 20px;
+  max-width: 100%;
+  height: 88%;
+  margin: 0px auto;
+  display: flex;
+}
+
+.video {
+  width: 100%;
+  padding: 20px 20px 0 20px;
+}
+
+.audio {
+  margin: 20px 20px 0 20px;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  background: #f5f5f5;
+  flex-direction: column;
+
+  audio {
+    width: 100%;
+  }
+
+  p {
+    width: 100%;
+    height: 30px;
+    padding-left: 20px;
+  }
+}
+
+
+.swiper-button-next,
+.swiper-button-prev {
+  --swiper-navigation-color: #999;
+  --swiper-navigation-size: 20px;
+
+  &:hover {
+    --swiper-navigation-color: #ff6216;
+  }
+}
+
+
+//좋아요 모달
+
+.modal-like {
+  min-height: 100px;
+  padding-right: 10px;
+  .ma-content {
+    padding: 0px;
+    overflow-y: auto;
+    max-height: 400px;
+
+
+    li {
+      display: flex;
+      padding: 10px 20px 10px 20px;
+
+      &:not(:last-child) {
+        border-bottom: #e9e9e9 1px solid;
+      }
+      div {
+        margin-top: 0px;
+      }
+
+      div:nth-child(1) {
+        width: 20%;
+        display: flex;
+        align-items: center;
+      }
+      div:nth-child(2) {
+        width: 50%;
+        cursor: pointer;
+        h2 {
+          text-align: left;
+          width: 100%;
+        }
+      }
+      div:nth-child(3) {
+        width: 140px;
+      }
+    }
+  }
+}
+
+
+
+
+.post-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 1225px;
+  margin: auto;
+  justify-content: center;
+
+  .thumbmail {
+    box-shadow: 0px 10px 50px rgb(0 0 0 / 10%);
+    border-radius: 10px;
+
+    &.skeleton {
+      background-color: #ededed;
+    }
+
+    height: 240px;
+    margin: 1%;
+    width: 23%;
+    transition: all 0.4s ease-in-out;
+
+    img {
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+  }
+}
+
+.card-timeline {
+  margin: 40px 0px;
+}
+
+@media all and (max-width: 479px) {
+  .main-visual {
+    width: 100%;
+
+    .card-timeline {
+      width: 40px auto;
+      width: 100%;
+    }
+
+    .card-game {
+      margin: 0 auto;
+    }
+    &.game-jam-plus{
+      div {
+        .year{
+        display: block;
+        margin-bottom: 30px;
+        }
+      }
+
+    }
+
+  }
+
+  .post-container {
+    width: 100%;
+    margin: 0 auto;
+
+    .thumbmail {
+      width: 48%;
+      margin: 1%;
+    }
+  }
+}
+
+@media all and (min-width: 480px) and (max-width: 767px) {
+  .post-container {
+    width: 470px;
+
+    .thumbmail {
+      width: 48%;
+      margin: 1%;
+    }
+  }
+
+  .main-visual {
+    &.game-jam-plus{
+    }
+  }
+}
+
+@media all and (min-width: 768px) and (max-width: 991px) {
+  .post-container {
+    width: 770px;
+
+    .thumbmail {
+      width: 31.333%;
+      margin: 1%;
+    }
+  }
+}
+
+@media all and (min-width: 992px) and (max-width: 1199px) {
+  .post-container {
+    width: 993px;
+
+    .thumbmail {
+      width: 31.333%;
+      margin: 1%;
+    }
+  }
+}
+.studio-game-step {
+  li {
+    font-size: 16px;
+    cursor: pointer;
+
+    dd {
+      small {
+        font-size: 16px;
+
+      }
+    }
+    small {
+      color: #FF6E17;
+    }
+
+    &:hover:not(.inActive) {
+      box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.2);
+    }
+
+    .active {
+      border: 2px solid #FF6E17;
+    }
+  }
+
+  .inActive{
+    opacity: 0.5;
+
+
+    cursor:auto;
+    pointer-events: none;
+  }
+
+}
+
+.not-open{
+  pointer-events: none;
+  .not-open-float{
+    position: absolute;
+    font-weight: bold;
+    font-size: 30px;
+    z-index: inherit;
+    opacity: 1 !important;
+    color: #000;
+    text-transform: uppercase;
+    justify-content: center;
+    // z-index: 9999;
+    top : 50%;
+    left: 50%;
+    text-align:center;
+    transform: translate(-50%,-50%);
+  }
+}
+.not-open:before {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  content: "";
+  top: 0;
+  left: 0;
+  opacity: 0.5;
+  background: #ffffff;
+}

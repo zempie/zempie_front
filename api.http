@@ -1,0 +1,40 @@
+@zempieApi = http://localhost:8280/api/v1
+@communityApi = http://localhost:5001/api/v1
+
+@apiKey = AIzaSyAE2WeLg2L9n2niQMysGbXzACLNIXd5msE
+
+@refreshToken=AOEOulZrWZe7CRL0uhE5wM2teD3-nQkqEn5qnHHZukSzkKoD3dafQqhxoZ0MYHGWz0WO1SBqt4xK1PGXkJRSqPU_eQspHSrq82xIB3c8hGU59QVgKQxeXc8CabdX0aHEumlkxjceJB4R8FpF1E4T7V3CYZfnWQAiHUUQzr0q_r8ri5GDAYYNzdKu0Nx0VpKD7143KwkMmDp7xEkUAj0vkYSguClikHSFyA
+
+
+
+GET {{zempieApi}}/games
+
+###
+GET {{communityApi}}/timeline/posts/img?limit=15
+
+
+###
+POST {{zempieApi}}/game/banner
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+title
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="1.png"
+Content-Type: image/png
+
+< ./1.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+
+###
+POST  https://securetoken.googleapis.com/v1/token?key={{apiKey}}
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=refresh_token
+&refresh_token={{refreshToken}}
+
+
+###
+
+
+
