@@ -1455,8 +1455,6 @@ function getFirstPostContent(content: string) {
 </script>
 
 <style scoped lang="scss">
-@use 'sass:math';
-
 .component-fade-enter-active,
 .component-fade-leave-active {
   transition: opacity 0.5s ease;
