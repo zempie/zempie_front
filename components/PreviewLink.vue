@@ -40,13 +40,3 @@ function clickOutside() {
 }
 
 </script>
-
-<style lang="scss">
-.link-card {
-
-  &:hover,
-  &.active {
-    border: 1px solid #f97316;
-  }
-}
-</style>

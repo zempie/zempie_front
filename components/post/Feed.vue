@@ -2,6 +2,7 @@
   <li class="tap-list" v-if="feed">
     <dl class="tapl-title">
       <dt class="w100p">
+
         <PostHeaderInfo :feed="feed">
           <template #followBtn>
             <slot name="followBtn"></slot>
@@ -14,8 +15,8 @@
     </dl>
 
     <div>
-      <div ref="feedDiv" class="tapl-content" v-html="feedContent"
-        @click.stop="$router.push($localePath(`/feed/${feed.id}`))">
+      <div ref="feedDiv" class="tapl-content" v-html="feedContent" @mousedown="onMouseDown" @mouseup="onMouseUp"
+        @mousemove="isDragging = true">
       </div>
 
       <div v-if="isOverflow" :class="isMoreView ? '' : 'gradient'"></div>
@@ -59,6 +60,9 @@
       </swiper>
     </template>
 
+    <a v-if="!isObjEmpty(feed.metadata)" :href="feed.metadata?.url" target="_blank">
+      <PostLinkPreview :tag-info="feed.metadata" :isEdit="false" class="link-preview" />
+    </a>
     <CommunityTarget :communities="feed?.posted_at?.community" :games="feed?.posted_at?.game" />
 
     <ul class="tapl-option">
@@ -137,6 +141,7 @@ import {
   execCommandCopy,
   htmlToDomElem,
   enDateFormat,
+  isObjEmpty,
 } from '~/scripts/utils'
 
 import { useI18n } from 'vue-i18n'
@@ -157,6 +162,7 @@ const feedMenu = ref()
 const showDeletePostModal = ref(false)
 const feedId = ref(null)
 const feedDiv = ref<HTMLElement>()
+const isDragging = ref(false)
 
 const isMoreView = ref(false)
 const currScroll = ref(0)
@@ -198,6 +204,8 @@ const user = ref(props.feed?.user)
 const feedContent = ref(props.feed?.content || '')
 
 const emit = defineEmits(['refresh'])
+
+
 
 const attatchment_files = computed(() => {
   return props.feed?.attatchment_files?.length
@@ -401,6 +409,16 @@ function untranslatedText(originText: string) {
   feedContent.value = originText
 }
 
+function onMouseDown() {
+  isDragging.value = false
+}
+function onMouseUp() {
+  if (!isDragging.value) {
+    router.push($localePath(`/feed/${props.feed.id}`))
+
+  }
+  isDragging.value = false
+}
 //     /**
 //      * 댓글
 //      * */
@@ -463,6 +481,12 @@ function untranslatedText(originText: string) {
 /* .fade-leave-active below version 2.1.8 */
   {
   opacity: 0;
+}
+
+.link-preview {
+  box-shadow: none;
+  margin: 20px;
+  cursor: pointer;
 }
 
 // /transition

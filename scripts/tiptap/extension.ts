@@ -47,9 +47,8 @@ export default Node.create({
   },
 
   renderHTML({ HTMLAttributes }) {
-    // this.dom.classList.add("ProseMirror-selectednode")
     return ['div', { class: 'el-card' },
-      ['a', { 'href': `${HTMLAttributes.url}`, 'target': '_blank' },
+      ['a', { 'href': HTMLAttributes.url, 'target': '_blank' },
         ['div', {
           style: `background:url(${HTMLAttributes.img_url}) center center / cover no-repeat;
         width: 100%;
@@ -60,20 +59,20 @@ export default Node.create({
           'div', { class: 'tag-info-container' },
           [
             'span', [
-              'strong', { class: 'tag-title' }, `${HTMLAttributes.title}`
+              'strong', { class: 'tag-title' }, HTMLAttributes.title
             ],
             ['div', { class: 'bottom' }],
             [
               'div', { style: 'display:block' },
-              ['p', { class: 'tag-desc' }, `${HTMLAttributes.description}`],
-              ['div', { 'class': 'domain-div' },
+              ['p', { class: 'tag-desc' }, HTMLAttributes.description],
+              ['div', { class: 'domain-div' },
                 [
                   'p', {
                     class: 'tag-favicon',
                     style: `background:url(${HTMLAttributes.favicon}); `
                   },
                 ],
-                ['strong', `${HTMLAttributes.domain}`]
+                ['strong', HTMLAttributes.domain]
               ]
             ]
           ]

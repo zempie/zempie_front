@@ -28,7 +28,7 @@
           </h2>
         </form>
         <p @click="onSubmit">
-          <a class="btn-default-big">{{ $t('login') }}</a>
+          <a class="btn-default-big text-white">{{ $t('login') }}</a>
         </p>
 
         <dl>
