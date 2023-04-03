@@ -73,7 +73,7 @@
             </div>
           </div>
           <p>
-          <p @click="register" :class="['btn-default-big w100p', isSubmitActive ? 'on' : 'off']">{{ $t('join') }}</p>
+          <p @click="register" :class="['btn-default-big w100p']">{{ $t('join') }}</p>
           </p>
         </form>
       </ClientOnly>
@@ -200,7 +200,7 @@ const isSubmitActive = computed(() => {
 
 async function register() {
 
-  if (!isSubmitActive.value) return
+  // if (!isSubmitActive.value) return
 
   const result = await v$.value.$validate()
 
