@@ -429,7 +429,7 @@ onBeforeUnmount(() => {
 })
 
 function getTagInfo(info) {
-  console.log(info)
+  console.log('info', info)
   metaTagInfo.value = info
 }
 
@@ -840,6 +840,7 @@ async function onUpdatePost() {
 
 
 
+
   const attachedFile = []
   const payload = {
     post_id: props.feed.id,
@@ -850,6 +851,8 @@ async function onUpdatePost() {
     channel_id: useUser().user.value.info.channel_id,
     community: [],
     game: [],
+    metadata: metaTagInfo.value
+
   }
 
   if (selectedGroup.value) {

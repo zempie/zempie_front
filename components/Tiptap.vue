@@ -62,6 +62,7 @@ import Typography from '@tiptap/extension-typography'
 import Highlight from '@tiptap/extension-highlight'
 import { lowlight } from 'lowlight'
 import CodeBlockComponent from './CodeBlockComponent.vue'
+import { isObjEmpty } from '~~/scripts/utils'
 
 const emit = defineEmits(['editorContent', 'sendTagInfo'])
 const { t, locale } = useI18n()
@@ -114,6 +115,11 @@ const editor = useEditor({
 
 onMounted(() => {
   emit('editorContent', editor.value)
+  if (!isObjEmpty(props?.feed?.metadata)) {
+    tagInfo.value = props.feed.metadata
+    console.log('tagInfo', isObjEmpty(tagInfo.value))
+    hasLink.value = true
+  }
 })
 
 function dropEditor(e: DragEvent) {
@@ -145,9 +151,6 @@ async function pasteEditor(e: ClipboardEvent) {
     for (let [key, value] of params) {
       console.log('item: ', value)
     }
-
-
-
     const metaTagInfo = {
       img,
       favicon,
@@ -155,7 +158,6 @@ async function pasteEditor(e: ClipboardEvent) {
       description,
       site_name: siteName,
       url: url.href,
-
     }
 
 

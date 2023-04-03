@@ -1,4 +1,5 @@
 <template>
+  <!-- DEPRECATED: tiptap inline으로 사용되는 preview 현재는 사용하지 않음  -->
   <node-view-wrapper class="link-preview">
     <el-card class="link-card" :class="{ active: isClick }" :body-style="{ padding: '0px' }" @click="onClickLink"
       v-on-click-outside="clickOutside" data-drag-handle>

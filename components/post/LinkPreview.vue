@@ -8,7 +8,7 @@
     <div class="img-container">
       <div v-if="tagInfo.type === eMetadataType.website || isEdit" class="tag-img"
         :style="`background:url(${tagInfo.img});`"></div>
-      <iframe v-else :src="tagInfo.video_url" frameborder="0" allowfullscreen="" :title="tagInfo.title"
+      <iframe v-else :src="tagInfo.video_url" frameborder="0" allowfullscreen="true" :title="tagInfo.title"
         class="yt-iframe"></iframe>
     </div>
     <div class="tag-info-container">
@@ -40,7 +40,6 @@ const emit = defineEmits(['removeLink'])
 
 function onClickRemove() {
   emit('removeLink')
-
 }
 
 

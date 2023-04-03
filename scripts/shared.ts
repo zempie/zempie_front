@@ -28,7 +28,7 @@ export default {
     $cookies.set(config.REFRESH_TOKEN, refreshToken, {
       maxAge: HOURTOSEC * 24 * 30,
       path: '/',
-      domain: config.COOKIE_DOMAIN
+      domain: config.COOKIE_DOMAINㅔ
     });
   },
   removeCookies: async function () {
