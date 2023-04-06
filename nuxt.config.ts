@@ -43,25 +43,6 @@ export default defineNuxtConfig({
       })
     }
   },
-  vite: {
-  },
-
-  build: {
-    // html: {
-    //   minify: {
-    //     collapseBooleanAttributes: true,
-    //     decodeEntities: true,
-    //     minifyCSS: true,
-    //     minifyJS: true,
-    //     processConditionalComments: true,
-    //     removeEmptyAttributes: true,
-    //     removeRedundantAttributes: true,
-    //     trimCustomFragments: true,
-    //     useShortDoctype: true,
-    //   }
-    // }
-  },
-
   generate: {
     fallback: '404.html'
   },

@@ -32,8 +32,8 @@
       </ul>
     </BubbleMenu>
     <EditorContent :editor="editor" :class="['editor-container', postType === 'SNS' ? 'sns' : 'blog']" @drop="dropEditor"
-      @paste="pasteEditor" />
-
+      @paste="pasteEditor" @input="handleInput" />
+    <PostLinkPreview v-if="hasLink" :tagInfo="tagInfo" @removeLink="onRemoveLink" />
     <div class="character-count">
       <p>{{ charCount }}/{{ limit }}</p>
     </div>
@@ -61,178 +61,52 @@ import Placeholder from '@tiptap/extension-placeholder'
 import Typography from '@tiptap/extension-typography'
 import Highlight from '@tiptap/extension-highlight'
 import { lowlight } from 'lowlight'
-import Image from '@tiptap/extension-image'
-import Table from '@tiptap/extension-table'
-import TableRow from '@tiptap/extension-table-row'
-import TableHeader from '@tiptap/extension-table-header'
-import TableCell from '@tiptap/extension-table-cell'
-import CustomImage from '~/scripts/tiptap/customImage'
-import CustomAudio from '~~/scripts/tiptap/customAudio'
-import CustomVideo from '~~/scripts/tiptap/customVideo'
-
-import ResizableImage from './ResizableImage.vue'
-import PreviewLink from './PreviewLink.vue'
-// import { Link } from '~~/scripts/tiptap/customLink'
-
 import CodeBlockComponent from './CodeBlockComponent.vue'
+import { isObjEmpty } from '~~/scripts/utils'
 
-const emit = defineEmits(['editorContent'])
+const emit = defineEmits(['editorContent', 'sendTagInfo'])
 const { t, locale } = useI18n()
+
 
 const props = defineProps({
   postType: String,
   feed: Object as PropType<IFeed>,
 })
 
+
 defineExpose(['addImage'])
 
 
-const BLOG_LIMIT = 5000
-const SNS_LIMIT = 300
+
+const LIMIT = 5000
 const content = ref('')
 const charCount = ref(0)
+const tagInfo = ref()
+const hasLink = ref(false)
 
-const limit = computed(() =>
-  props.postType === 'SNS' ? SNS_LIMIT : BLOG_LIMIT
-)
+const limit = computed(() => LIMIT)
 
 const editor = useEditor({
   content: props.feed?.content || content.value,
-  extensions:
-    props.postType === 'SNS'
-      ? [
-        StarterKit.configure({ codeBlock: false }),
-        Youtube.configure({
-          controls: false,
-        }),
-        CodeBlockLowlight.extend({
-          addNodeView() {
-            return VueNodeViewRenderer(CodeBlockComponent)
-          },
-        }).configure({ lowlight }),
-        Placeholder.configure({
-          emptyEditorClass: 'is-editor-empty',
-          placeholder: `${t('posting.placeholder')}`,
-        }),
-        CharacterCount.configure({
-          limit: limit.value,
-        }),
-        Link,
-        Typography,
-        Highlight,
-      ]
-      : [
-        StarterKit.configure({ codeBlock: false }),
-        Youtube.configure({
-          controls: false,
-        }),
-        CodeBlockLowlight.extend({
-          addNodeView() {
-            return VueNodeViewRenderer(CodeBlockComponent)
-          },
-        }).configure({ lowlight }),
-        Placeholder.configure({
-          emptyEditorClass: 'is-editor-empty',
-          placeholder: `${t('posting.placeholder')}`,
-        }),
-        CharacterCount.configure({
-          limit: limit.value,
-        }),
-        Link,
-        Table.configure({
-          resizable: true,
-        }),
-        TableRow,
-        TableHeader,
-        TableCell,
-        Typography,
-        Highlight,
-        Image.extend({
-          addAttributes() {
-            return {
-              ...this.parent?.(),
+  extensions: [
+    StarterKit.configure({ codeBlock: false }),
+    CodeBlockLowlight.extend({
+      addNodeView() {
+        return VueNodeViewRenderer(CodeBlockComponent)
+      },
+    }).configure({ lowlight }),
+    Placeholder.configure({
+      emptyEditorClass: 'is-editor-empty',
+      placeholder: `${t('posting.placeholder')}`,
+    }),
+    CharacterCount.configure({
+      limit: limit.value,
+    }),
+    Link,
+    Typography,
+    Highlight,
+  ],
 
-              src: {
-                default: '',
-
-                renderHTML: (attributes) => {
-                  return {
-                    src: attributes.src,
-                  }
-                },
-              },
-
-              width: {
-                default: 300,
-                renderHTML: ({ width }) => ({ width }),
-              },
-              height: {
-                renderHTML: ({ height }) => ({ height }),
-              },
-              class: {
-                default: 'center',
-                renderHTML: (attributes) => {
-                  return {
-                    class: attributes.class,
-                  }
-                },
-              },
-
-              isDraggable: {
-                default: true,
-                renderHTML: (attributes) => {
-                  return {}
-                },
-              },
-            }
-          },
-          addCommands() {
-            return {
-              ...this.parent?.(),
-              toggleResizable:
-                () =>
-                  ({ tr }) => {
-                    const { node } = tr?.selection
-
-                    if (node?.type?.name === 'ResizableImage') {
-                      node.attrs.isDraggable = !node.attrs.isDraggable
-                    }
-                  },
-            }
-          },
-          addNodeView() {
-            return VueNodeViewRenderer(ResizableImage)
-          },
-          addOptions() {
-            return {
-              inline: true,
-              HTMLAttributes: {
-                class: 'image-wrapper',
-              },
-            }
-          },
-        }),
-        CustomVideo.extend({
-          addOptions() {
-            return {
-              inline: true,
-              HTMLAttributes: {
-                class: 'video-wrapper',
-              },
-            }
-          },
-        }),
-        CustomAudio.extend({
-          addOptions() {
-            return {
-              inline: true,
-              HTMLAttributes: {
-                class: 'audio-wrapper',
-              },
-            }
-          },
-        }),
-      ],
   onUpdate: (edit) => {
     charCount.value = editor.value.storage.characterCount.characters()
     emit('editorContent', editor.value)
@@ -241,6 +115,11 @@ const editor = useEditor({
 
 onMounted(() => {
   emit('editorContent', editor.value)
+  if (!isObjEmpty(props?.feed?.metadata)) {
+    tagInfo.value = props.feed.metadata
+    console.log('tagInfo', isObjEmpty(tagInfo.value))
+    hasLink.value = true
+  }
 })
 
 function dropEditor(e: DragEvent) {
@@ -249,8 +128,43 @@ function dropEditor(e: DragEvent) {
   addImage(e.dataTransfer)
 }
 
-function pasteEditor(e: ClipboardEvent) {
+async function pasteEditor(e: ClipboardEvent) {
   addImage(e.clipboardData)
+  const link = editor.value.getAttributes('link')
+  if (link?.href) {
+    const data = await $fetch<{ result: any }>(`/og-tag?url=${link.href}`, getZempieFetchOptions('get', true, { url: link.href }))
+
+
+    const { result } = data
+    const img = result.images?.[0] ?? ''
+    const favicon = result.favicons?.[0] ?? ''
+    const { title, description, siteName } = result
+
+
+    const url = new URL(result.url);
+    const domain = url.hostname.replace('www.', '');
+
+    console.log(domain)
+
+    const params = new URLSearchParams(url.search)
+
+    for (let [key, value] of params) {
+      console.log('item: ', value)
+    }
+    const metaTagInfo = {
+      img,
+      favicon,
+      title,
+      description,
+      site_name: siteName,
+      url: url.href,
+    }
+
+
+    tagInfo.value = metaTagInfo
+    hasLink.value = true
+    emit('sendTagInfo', metaTagInfo)
+  }
 }
 
 async function addImage(data: DataTransfer) {
@@ -282,6 +196,18 @@ async function addImage(data: DataTransfer) {
 function shouldShow() {
   return editor.value?.isActive('table')
 }
+
+function handleInput() {
+  console.log('handleInput', editor.value.getAttributes('link').href)
+}
+
+function onRemoveLink() {
+  tagInfo.value = null
+  hasLink.value = false
+  emit('sendTagInfo', null)
+
+}
+
 </script>
 
 <style lang="scss" scoped>

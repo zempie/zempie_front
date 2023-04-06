@@ -4,20 +4,23 @@
       <li v-if="isFullScreen" @click="closeTextEditor" style="width: 50px">
         <i class="uil uil-angle-left-b"></i>
       </li>
-      <li :class="activeTab === 'SNS' ? 'active' : ''" @click="postingType('SNS')">
-        <i class="uil uil-file-landscape"></i>
-        SNS
+      <li class="title">
+        {{ $t('new.post') }}
       </li>
-      <li :class="activeTab === 'BLOG' ? 'active' : ''" @click="postingType('BLOG')">
-        <i class="uil uil-files-landscapes"></i> Blog
+      <li class="close-btn" @click="closeTextEditor">
+        <span class="material-symbols-outlined">
+          close
+        </span>
       </li>
     </ul>
     <div>
-      <Tiptap @editorContent="getEditorContent" :postType="activeTab" :feed="feed" :key="activeTab" ref="tiptapRef" />
+      <Tiptap @editorContent="getEditorContent" @send-tag-info="getTagInfo" :postType="activeTab" :feed="feed"
+        :key="activeTab" ref="tiptapRef" />
 
       <template v-if="activeTab === 'SNS'">
         <div v-if="snsAttachFiles.img?.length" class="mp-image" style="padding-bottom: 0px">
           <dd style="width: 100%">
+
             <swiper :modules="[Pagination]" class="swiper-area" :slides-per-view="3" :space-between="10"
               :pagination="{ clickable: true }">
               <swiper-slide v-for="(img, idx) in snsAttachFiles.img" :key="idx"
@@ -229,10 +232,12 @@ const isCommunityListVisible = ref(false)
 const imgArr = ref([])
 const videoArr = ref([])
 const audioArr = ref([])
+const metaTagInfo = ref()
 
 const form = reactive({
   post_contents: '',
 })
+
 
 //임시저장
 const MAX_LOCAL_SAVE = 3
@@ -391,6 +396,8 @@ onMounted(async () => {
         audio: attFileFilter('sounc'),
       }
     }
+    metaTagInfo.value = props.feed.metadata
+
   }
 
 
@@ -422,6 +429,11 @@ onBeforeUnmount(() => {
   clearInterval(interval.value)
   clearTimeout(textInterval.value)
 })
+
+function getTagInfo(info) {
+  console.log('info', info)
+  metaTagInfo.value = info
+}
 
 function refreshPage(event: { preventDefault: () => void; returnValue: string }) {
   if (editor.value.isEmpty) return
@@ -461,12 +473,16 @@ function postingType(type: string) {
 
 async function onSubmit() {
 
+
+  //태그 인포 넘기고
+
   const payload = {
     post_contents: form.post_contents,
     post_state: activeTab.value,
     hashtags: [],
     community: [],
-    game: []
+    game: [],
+    metadata: metaTagInfo.value
   }
 
 
@@ -489,7 +505,7 @@ async function onSubmit() {
   videoArr.value = [...dom.getElementsByTagName('video')]
   audioArr.value = [...dom.getElementsByTagName('audio')]
 
-  console.log(imgArr.value)
+
 
   if (activeTab.value.toLocaleUpperCase() === 'BLOG') {
     const imgFiles = []
@@ -658,7 +674,6 @@ function uploadImageFile() {
 }
 
 function onSelectImageFile(event: Event) {
-  console.log('eve')
   const files = (event.target as HTMLInputElement).files
 
   for (const file of files) {
@@ -827,6 +842,8 @@ async function onUpdatePost() {
 
 
 
+  console.log(metaTagInfo.value)
+
   const attachedFile = []
   const payload = {
     post_id: props.feed.id,
@@ -837,6 +854,8 @@ async function onUpdatePost() {
     channel_id: useUser().user.value.info.channel_id,
     community: [],
     game: [],
+    metadata: metaTagInfo.value
+
   }
 
   if (selectedGroup.value) {
@@ -1442,8 +1461,6 @@ function getFirstPostContent(content: string) {
 </script>
 
 <style scoped lang="scss">
-@use 'sass:math';
-
 .component-fade-enter-active,
 .component-fade-leave-active {
   transition: opacity 0.5s ease;
@@ -1454,7 +1471,37 @@ function getFirstPostContent(content: string) {
   opacity: 0;
 }
 
+.title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 22px 20px 20px 20px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 16px;
+  border-bottom: #fff 2px solid;
+  cursor: default;
+  transition: all 0.4s ease-in-out;
+}
+
+.close-btn {
+  padding: 22px 20px 20px 20px;
+  position: absolute;
+  right: 0;
+  cursor: pointer;
+
+
+}
+
+.close-btn:hover {
+  color: #f97316;
+
+}
+
 .modal-post {
+
   .mp-category {
     width: 100%;
     display: inline-flex;

@@ -1,5 +1,5 @@
 <template>
-  <div class="swiper-area">
+  <div class="swiper-area" v-if="hasTarget">
     <div class="community-slide" v-for="postedAt in communities" :key="postedAt.id">
       <div class="category-select-finish">
         <div>
@@ -31,6 +31,7 @@
 <script setup lang="ts">
 import { PropType } from 'vue'
 import { IGame } from '~~/types';
+import { isObjEmpty } from '~~/scripts/utils';
 
 const router = useRouter()
 const { $localePath } = useNuxtApp()
@@ -38,6 +39,15 @@ const { $localePath } = useNuxtApp()
 const props = defineProps({
   communities: Object,
   games: Array as PropType<{ id: number, game: IGame }[]>
+})
+
+const hasTarget = computed(() => {
+  if (!props.communities?.length && !props.games?.length) {
+    return false
+  }
+  else {
+    return true
+  }
 })
 
 </script>

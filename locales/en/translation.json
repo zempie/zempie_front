@@ -141,7 +141,7 @@
   "fileUpload": "Upload File",
   "addGameFile.selectFile.text1": "Please Select Game File",
   "addGameFile.selectFile.text2": "Please Upload ZIP File with web pages within the game.",
-  "addGameFile.selectFile.text3": "Only ZIP FIles can be uploaded, and the size shall be below than 500MB.",
+  "addGameFile.selectFile.text3": "Only ZIP FIles can be uploaded, and the size shall be below than 2GB.",
   "addGameFile.select.startFile.text1": "Select Game Start File",
   "addGameFile.select.startFile.text2": "Please Select Game Start File",
   "addGameFile.selectMode": "Select Auto Game Distribution",
@@ -238,7 +238,7 @@
   "subscribe.btn": "Sign In",
   "join.text1": "Enjoy variety benefits after signing up as a member of Zempie",
   "join.name": "Username",
-  "join.name.empty.err": "Please enter at least two letters for username",
+  "join.name.empty.err": "Please enter at least two letters for name",
   "join.name.format.err": "Your name has to be within 20 letters",
   "terms": "Terms and Conditions",
   "required": "Requirements",
@@ -289,7 +289,7 @@
   "send.email.info1": "Password reset email has been sent to the email address you provided",
   "send.email.info2": "Please check your email box",
   "version": "Version",
-  "file.upload.overSize.500": "The file size cannot exceed 500mb",
+  "file.upload.overSize.500": "The file size cannot exceed 2GB.",
   "previewImage.title": "Image Preview",
   "usedId": "Current ID is in use. Please enter different ID",
   "check.gameId": "Please check game ID again",
@@ -888,8 +888,9 @@
   "nickname.info": "ID that uniquely identifies each user. Others can use this ID to find you",
   "userSetting.error": "Failed to update the profile. Please try again later",
   "find.pwd.input.info": "If you did not receive an email, please check your spam folder",
-  "used.id": "This username is already being used. Please put any other username.",
+  "used.id": "This username is already being used. Please choose another",
   "username.max.err1": "Username should be less(more) than",
   "username.max.err2": "",
-  "username.min.err2": ""
+  "username.min.err2": "",
+  "new.post": "Create post"
 }

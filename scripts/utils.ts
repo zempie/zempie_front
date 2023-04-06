@@ -116,6 +116,20 @@ export const numToKMB = (num: number) => {
   }
   return result;
 }
+export function convertFileSize(sizeInBytes: number) {
+  let sizeInUnits = sizeInBytes / 1000;
+  if (sizeInUnits >= 1000) {
+    sizeInUnits /= 1000;
+    if (sizeInUnits >= 1000) {
+      sizeInUnits /= 1000;
+      return sizeInUnits.toFixed(2) + " GB";
+    } else {
+      return sizeInUnits.toFixed(2) + " MB";
+    }
+  } else {
+    return sizeInUnits.toFixed(2) + " KB";
+  }
+}
 
 export const emailRegex = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/
 

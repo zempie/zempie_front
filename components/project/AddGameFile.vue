@@ -5,81 +5,60 @@
       </div>
 
       <dl class="suii-content">
-        <dt>{{$t('file.type')}}</dt>
-        
+        <dt>{{ $t('file.type') }}</dt>
+
         <dd>
           <p class="upload-file-container">
-           <select v-model="selectedType">
-             <option v-for="fileType in fileTypes" :value="fileType">{{fileType.name}}</option>
+            <select v-model="selectedType">
+              <option v-for="fileType in fileTypes" :value="fileType">{{ fileType.name }}</option>
             </select>
           </p>
           <Transition name="component-fade" mode="out-in" v-if="selectedTypeErr">
-            <p class="file-type-err" >{{$t('file.type.info')}} </p>
+            <p class="file-type-err">{{ $t('file.type.info') }} </p>
           </Transition>
 
 
           <ul class="platform-list" v-if="selectedType.value === 2">
             <li v-for="pf of platforms">
-              <input type="checkbox" :id="pf.value" :value="pf.value" :name="pf.name" v-model="selectedPlatform" >
+              <input type="checkbox" :id="pf.value" :value="pf.value" :name="pf.name" v-model="selectedPlatform">
               <label :for="pf.value"><i class="uil uil-check"></i></label>
-              <span><label :for="pf.value">{{pf.name}}</label>
+              <span><label :for="pf.value">{{ pf.name }}</label>
               </span>
             </li>
           </ul>
           <Transition name="component-fade" mode="out-in" v-if="selectedPlatformErr">
-            <p class="file-type-err" > {{$t('game.support.os.info')}}</p>
+            <p class="file-type-err"> {{ $t('game.support.os.info') }}</p>
           </Transition>
         </dd>
       </dl>
 
       <Transition name="component-fade" mode="out-in">
-        <dl class="suii-content" v-if="selectedType.value" >
+        <dl class="suii-content" v-if="selectedType.value">
           <dt>{{ $t('gameUpload') }}</dt>
           <dd>
             <p class="upload-file-container">
               <template v-if="selectedType.value === eGameType.Html">
-              <label for="game-file"
-                ><i class="uil uil-file-plus" style="font-size: 18px"></i> &nbsp;
-                {{ $t('fileUpload') }}</label
-              >
-              <input
-                @change="onFileChange"
-                type="file"
-                id="game-file"
-                accept=".zip"
-              />
-            </template>
-            <template v-else>
-              <label for="game-file"
-                ><i class="uil uil-file-plus" style="font-size: 18px"></i> &nbsp;
-                {{ $t('fileUpload') }}</label
-              >
-              <input
-                @change="onDownloadFileChange"
-                type="file"
-                id="game-file"
-                accept=".zip"
-              />
-            </template>
-              <ClipLoader
-                v-if="isLoadingFile"
-                :color="'#ff6e17'"
-                :size="'20px'"
-              ></ClipLoader>
+                <label for="game-file"><i class="uil uil-file-plus" style="font-size: 18px"></i> &nbsp;
+                  {{ $t('fileUpload') }}</label>
+                <input @change="onFileChange" type="file" id="game-file" accept=".zip" />
+              </template>
+              <template v-else>
+                <label for="game-file"><i class="uil uil-file-plus" style="font-size: 18px"></i> &nbsp;
+                  {{ $t('fileUpload') }}</label>
+                <input @change="onDownloadFileChange" type="file" id="game-file" accept=".zip" />
+              </template>
+              <ClipLoader v-if="isLoadingFile" :color="'#ff6e17'" :size="'20px'"></ClipLoader>
               <button class="btn-circle-icon" @click="deleteFile" v-if="fileName">
                 <i class="uil uil-trash-alt"></i>
               </button>
             </p>
-          
+
 
             <Transition name="component-fade" mode="out-in">
               <div v-if="fileName">
                 <p class="file-size">
                   {{ $t('file.size') }} :
-                  {{
-                    totalSize < 1 ? `${totalSize * 1000} KB` : `${totalSize} MB`
-                  }}
-                </p>
+                  {{ convertFileSize(totalSize) }} </p>
                 <p class="file-name">{{ $t('file.name') }} : {{ fileName }}</p>
               </div>
             </Transition>
@@ -96,10 +75,8 @@
         </dl>
       </Transition>
 
-      <div v-if="selectedType.value === eGameType.Html"  class="suii-open" @click="isAdvancedOpen = !isAdvancedOpen">
-        <span>{{ $t('advanced.setting') }}</span> &nbsp;<i
-          class="uil uil-sliders-v-alt"
-        ></i>
+      <div v-if="selectedType.value === eGameType.Html" class="suii-open" @click="isAdvancedOpen = !isAdvancedOpen">
+        <span>{{ $t('advanced.setting') }}</span> &nbsp;<i class="uil uil-sliders-v-alt"></i>
       </div>
       <Transition name="component-fade" mode="out-in">
         <div v-if="isAdvancedOpen">
@@ -107,12 +84,7 @@
             <dt>{{ $t('addGameFile.select.startFile.text1') }}</dt>
             <dd>
               <select name="" title="" class="w100p">
-                <option
-                  value=""
-                  selected
-                  disabled
-                  v-if="startFileOptions.length === 0"
-                >
+                <option value="" selected disabled v-if="startFileOptions.length === 0">
                   {{ $t('addGameFile.select.startFile.text2') }}
                 </option>
                 <option v-for="file in startFileOptions" :value="file">
@@ -122,10 +94,7 @@
             </dd>
           </dl>
 
-          <dl
-            class="suii-content"
-            v-if="uploadProject.form.stage !== eGameStage.DEV"
-          >
+          <dl class="suii-content" v-if="uploadProject.form.stage !== eGameStage.DEV">
             <dt>{{ $t('addGameFile.selectMode') }}</dt>
             <dd>
               <ul>
@@ -155,8 +124,7 @@
     </div>
     <ul class="sui-btn">
       <li>
-        <a @click="prevPage" class="btn-line w150"
-          ><i class="uil uil-angle-left-b"></i> {{ $t('previous') }}
+        <a @click="prevPage" class="btn-line w150"><i class="uil uil-angle-left-b"></i> {{ $t('previous') }}
         </a>
       </li>
       <li>
@@ -180,8 +148,9 @@ import { ElMessage, ElLoading, ElProgress } from 'element-plus'
 import ZipUtil from '~~/scripts/zipUtil'
 import { eGameStage, eGameType, ePlatformType } from '~~/types'
 import { useI18n } from 'vue-i18n'
+import { convertFileSize } from '~/scripts/utils'
 
-const MAX_FILE_SIZE = 500
+const MAX_FILE_SIZE = 2000
 
 const { $localePath } = useNuxtApp()
 const { uploadProject } = useProject()
@@ -207,23 +176,23 @@ const isAdvancedOpen = ref(false)
 const downloadFile = ref<File>()
 
 //파일 타입
-const selectedType = ref({name:'Select type of file', value:null},)
-const fileTypes = [{name:'Select type of file', value:null}, {name:'HTML', value:1}, {name:'DOWNLOAD', value:2}]
+const selectedType = ref({ name: 'Select type of file', value: null },)
+const fileTypes = [{ name: 'Select type of file', value: null }, { name: 'HTML', value: 1 }, { name: 'DOWNLOAD', value: 2 }]
 const selectedTypeErr = ref(false)
 
 //support platform
-const platforms=[{name:'Window', value:1}, {name:'Mac', value:2} , {name:'Android', value:3}, {name:'Ios', value:4} ]
+const platforms = [{ name: 'Window', value: 1 }, { name: 'Mac', value: 2 }, { name: 'Android', value: 3 }, { name: 'Ios', value: 4 }]
 const selectedPlatform = ref([])
 const selectedPlatformErr = ref(false)
 
 watch(
-  ()=>selectedType.value, 
-  (type) =>{
-    if(type.value){
+  () => selectedType.value,
+  (type) => {
+    if (type.value) {
       fileName.value = '',
-      selectedTypeErr.value = false
+        selectedTypeErr.value = false
 
-    }else{
+    } else {
       selectedTypeErr.value = true
     }
   }
@@ -231,11 +200,11 @@ watch(
 
 
 watch(
-  ()=>selectedPlatform.value, 
-  (platform) =>{
-    if(platform.length){
+  () => selectedPlatform.value,
+  (platform) => {
+    if (platform.length) {
       selectedPlatformErr.value = false
-    }else{
+    } else {
       selectedPlatformErr.value = true
     }
   }
@@ -264,7 +233,7 @@ async function onFileChange(e: any) {
 
     return
   }
-  totalSize.value = Number((size / (1024 * 1000)).toFixed(2))
+  totalSize.value = size
   uploadGameFiles.value = files
 
   const htmls = uploadGameFiles.value.filter((file: File) => {
@@ -301,12 +270,12 @@ async function onFileChange(e: any) {
 }
 
 //다운로드용 파일 업로드
-async function onDownloadFileChange(e: any){
-  
+async function onDownloadFileChange(e: any) {
+
   downloadFile.value = e.target.files[0]
   const size = downloadFile.value.size
   isLoadingFile.value = true
-  
+
   //file limit check
   if (size > limitSize) {
     ElMessage.error(t('file.upload.overSize.500'))
@@ -315,7 +284,7 @@ async function onDownloadFileChange(e: any){
   }
 
 
-  totalSize.value = Number((size / (1024 * 1000)).toFixed(2))
+  totalSize.value = size
   fileName.value = downloadFile.value.name
   uploadGameFiles.value = downloadFile.value
 
@@ -331,13 +300,13 @@ function deleteFile() {
 
 async function upload() {
 
-  if(!selectedType.value.value){
-    selectedTypeErr.value  = true
+  if (!selectedType.value.value) {
+    selectedTypeErr.value = true
     return
 
   }
-  if(!selectedPlatform.value.length && selectedType.value.value === eGameType.Download ){
-    selectedPlatformErr.value  = true
+  if (!selectedPlatform.value.length && selectedType.value.value === eGameType.Download) {
+    selectedPlatformErr.value = true
     return
 
   }
@@ -354,11 +323,11 @@ async function upload() {
 
 
 
-  formData.append('category', useProject().uploadProject.value.purpose.toString() )
-  formData.append('file_type',selectedType.value.value )
-  if(selectedType.value.value  === eGameType.Html){
+  formData.append('category', useProject().uploadProject.value.purpose.toString())
+  formData.append('file_type', selectedType.value.value)
+  if (selectedType.value.value === eGameType.Html) {
     formData.append('support_platform', '0')
-  }else if(selectedType.value.value === eGameType.Download){
+  } else if (selectedType.value.value === eGameType.Download) {
     formData.append('support_platform', selectedPlatform.value.toString())
 
   }
@@ -378,9 +347,9 @@ async function upload() {
     formData.append(k, gameFileInfo[k])
   }
 
-  switch(selectedType.value.value){
+  switch (selectedType.value.value) {
     case eGameType.Download:
-      formData.append('file',  uploadGameFiles.value)
+      formData.append('file', uploadGameFiles.value)
       break;
     case eGameType.Html:
       for (let i = 0; i < uploadGameFiles.value.length; i++) {
@@ -392,7 +361,7 @@ async function upload() {
       break;
   }
 
-  
+
 
   const loading = ElLoading.service({
     lock: true,
@@ -404,39 +373,40 @@ async function upload() {
 
   //onUploadProgress 사용을 위해서 axios 사용.. ohmyfetch가 지원하면 그때 수정
   axios('/studio/project', {
-    method:'post',
-    baseURL:config.STUDIO_API,
-    data:formData,
-    headers:{
-      'Context-Type' : 'multipart/form-data', 
-      Authorization : `Bearer ${useCookie(config.COOKIE_NAME).value}`},
-    onUploadProgress : (e) => { 
+    method: 'post',
+    baseURL: config.STUDIO_API,
+    data: formData,
+    headers: {
+      'Context-Type': 'multipart/form-data',
+      Authorization: `Bearer ${useUser().user.value.fUser.accessToken}`
+    },
+    onUploadProgress: (e) => {
       const percentage = Math.round((e.loaded * 100) / e.total)
       loading.setText(`Loading...${percentage}%`)
 
-      if(Number(percentage) === 100){
-       loading.setText('파일이 업로드되었습니다. 잠시만 기다려주세요')
+      if (Number(percentage) === 100) {
+        loading.setText('파일이 업로드되었습니다. 잠시만 기다려주세요')
 
       }
-   }
+    }
   })
-  .then(()=>{
-    router.push($localePath('/project/list'))
-  })
-  .catch((err)=>{
-    console.log(err)
-  })
-  .finally(()=>{
-    emit('uploadDone')
-    useProject().setStepTwo()
-    useProject().resetForm()
-    loading.close()
-  })
+    .then(() => {
+      router.push($localePath('/project/list'))
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+    .finally(() => {
+      emit('uploadDone')
+      useProject().setStepTwo()
+      useProject().resetForm()
+      loading.close()
+    })
 
 }
 
-function handleProgress(e){
-      
+function handleProgress(e) {
+
 }
 
 function prevPage() {
@@ -446,33 +416,38 @@ function prevPage() {
 </script>
 
 <style scoped lang="scss">
-.suii-content{
-  .file-type-err{
-    color:#c5292a;
-    margin-left:2px;
-    margin-top:10px;
+.suii-content {
+  .file-type-err {
+    color: #c5292a;
+    margin-left: 2px;
+    margin-top: 10px;
   }
-  .upload-file-container{
-    select{
+
+  .upload-file-container {
+    select {
       width: 250px;
     }
-   
+
   }
-  .platform-list{
+
+  .platform-list {
     margin-top: 20px;
-    li{
-      span{
+
+    li {
+      span {
         margin-left: 5px;
       }
     }
   }
 }
+
 .loading-spinner {
   color: #f97316 !important;
 }
 
 .file-err {
   color: #c5292a;
+
   &.on {
     display: inline-block;
   }
@@ -506,7 +481,8 @@ function prevPage() {
 .component-fade-enter,
 .component-fade-leave-to
 
-/* .component-fade-leave-active below version 2.1.8 */ {
+/* .component-fade-leave-active below version 2.1.8 */
+  {
   opacity: 0;
 }
 

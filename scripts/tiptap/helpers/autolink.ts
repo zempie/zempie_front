@@ -12,7 +12,6 @@ import { MarkType, DOMParser } from 'prosemirror-model'
 import { Plugin, PluginKey } from 'prosemirror-state'
 import { ElLoading } from 'element-plus'
 
-import addPreview from './addPreview'
 
 
 type AutolinkOptions = {
@@ -112,36 +111,55 @@ export function autolink(options: AutolinkOptions): Plugin {
               to: lastWordAndBlockOffset + link.end + 1,
             }))
             // add link mark
-            .forEach(async link => {
-              const loading = ElLoading.service({
-                lock: true,
-                text: 'Loading',
-                background: 'rgba(0, 0, 0, 0.7)',
-              })
+            .forEach(link => {
+              // const loading = ElLoading.service({
+              //   lock: true,
+              //   text: 'Loading',
+              //   background: 'rgba(0, 0, 0, 0.7)',
+              // })
 
-              const { data, error, pending } = await useCustomAsyncFetch(`/og-tag?url=${link.href}`, getZempieFetchOptions('get', true, { url: link.href }))
+              // const data = await $fetch<{ result: any }>(`/og-tag?url=${link.href}`, getZempieFetchOptions('get', true, { url: link.href }))
 
-
-              const tmpNode = document.createElement('div');
-              const newContent = document.createTextNode("Hi there and greetings!");
+              // const { result } = data
 
 
-              tmpNode.appendChild(newContent);
-
-              const parser = DOMParser.fromSchema(newState.schema);
-
-              const newNodes = parser.parse(tmpNode);
-
-              tr.addMark(link.from, link.to, options.type.create({
-                href: link.href,
-              })).insert(link.to + 1, newNodes.content)
-
-              loading.close()
-
-              //add preview link
+              // $fetch<{ result: any }>(`/og-tag?url=${link.href}`, getZempieFetchOptions('get', true, { url: link.href }))
+              //   .then((data) => {
+              //     console.log(data)
+              //     editor.commands.insertContent('Example Text')
 
 
-              //add preview link
+              //     const tmpNode = document.createElement('div');
+              //     const newContent = document.createTextNode("Hi there and greetings!");
+
+
+              //     tmpNode.appendChild(newContent);
+
+
+              //     // console.log(result)
+
+              //     // const tmpNode = document.createElement('div');
+
+              //     // const newContent = document.createTextNode("Hi there and greetings!");
+              //     // const img = document.createElement('img');
+              //     // img.src = result.images[0]
+              //     // img.setAttribute('width', '100px')
+              //     // img.setAttribute('height', '100px')
+
+
+              //     // tmpNode.appendChild(newContent)
+
+              //     const parser = DOMParser.fromSchema(newState.schema);
+
+              //     const newNodes = parser.parse(tmpNode);
+
+              //     tr.addMark(link.from, link.to, options.type.create({
+              //       href: link.href,
+              //     })).insert(link.to + 1, newNodes.content)
+              //   })
+              // loading.close()
+
+
 
             })
         }

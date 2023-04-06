@@ -141,7 +141,7 @@
   "fileUpload": "파일 업로드",
   "addGameFile.selectFile.text1": "게임 파일을 선택해주세요",
   "addGameFile.selectFile.text2": "게임에 포함된 웹페이지를 압축 파일로 업로드 해주세요.",
-  "addGameFile.selectFile.text3": "ZIP 파일만 업로드가 가능하고, 압축하지 않은 파일들의 총 크기가 500MB 이하여야 합니다.",
+  "addGameFile.selectFile.text3": "ZIP 파일만 업로드가 가능하고, 압축하지 않은 파일들의 총 크기가 2GB 이하여야 합니다.",
   "addGameFile.select.startFile.text1": "게임 시작 파일 선택",
   "addGameFile.select.startFile.text2": "시작 파일을 선택해주세요.",
   "addGameFile.selectMode": "게임 자동 배포 선택",
@@ -289,7 +289,7 @@
   "send.email.info1": "작성하신 이메일로 비밀번호 재설정 메일을 보냈습니다.",
   "send.email.info2": "메일함을 확인해주세요.",
   "version": "버전",
-  "file.upload.overSize.500": "파일 크기는 500mb를 넘을 수 없습니다.",
+  "file.upload.overSize.500": "파일 크기는 2GB를 넘을 수 없습니다.",
   "previewImage.title": "미리 보기 이미지",
   "usedId": "사용 중인 아이디입니다. 다른 아이디를 입력하세요.",
   "check.gameId": "게임 id 다시 확인",
@@ -889,5 +889,6 @@
   "used.id": "이미 사용 중인 아이디입니다. 다른 아이디를 입력해보세요.",
   "username.max.err1": "사용자 아이디는",
   "username.max.err2": "자 미만이어야 합니다.",
-  "username.min.err2": "자 이상이어야 합니다."
+  "username.min.err2": "자 이상이어야 합니다.",
+  "new.post": "새 게시물"
 }

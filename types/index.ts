@@ -174,6 +174,14 @@ export interface IFile {
   type: string
 }
 
+export interface IMetadata {
+  title: string,
+  type: number,
+  url: string,
+  description?: string,
+  favicon?: string,
+  img?: string,
+}
 export interface IFeed {
   liked: boolean,
   is_pinned: boolean,
@@ -230,7 +238,8 @@ export interface IFeed {
     channel_id: string,
     game_id?: number,
     game: IGame[]
-  }
+  },
+  metadata?: IMetadata
 
 }
 
@@ -356,4 +365,9 @@ export enum eNotificationType {
   report,
   retweet,
   follow
+}
+
+export enum eMetadataType {
+  website = 1,
+  video
 }

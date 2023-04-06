@@ -111,10 +111,10 @@
                     </p>
                   </transition>
                   <p style="
-                      width: 100%;
-                      display: flex;
-                      justify-content: space-around;
-                    ">
+                        width: 100%;
+                        display: flex;
+                        justify-content: space-around;
+                      ">
                     <button class="btn-gray" @click="uploadThumbnail">
                       <i class="uil uil-upload"></i>&nbsp;
                       {{ $t('addGameInfo.game.thumbnail') }}
@@ -160,10 +160,10 @@
                     </template>
                   </div>
                   <p style="
-                      width: 100%;
-                      display: flex;
-                      justify-content: space-around;
-                    ">
+                        width: 100%;
+                        display: flex;
+                        justify-content: space-around;
+                      ">
                     <button class="btn-gray" @click="uploadGif">
                       <i class="uil uil-upload"></i>
                       {{ $t('addGameInfo.game.thumbnail') }}
@@ -356,32 +356,6 @@ const waitGamePath = ref(false)
 
 const isDeleteModalOpen = ref(false)
 
-// onBeforeRouteLeave((to, from, next) => {
-//   if (isUploadDone.value) {
-//     next()
-//     return
-//   }
-
-//   if (
-//     form.name ||
-//     form.pathname ||
-//     form.description ||
-//     form.hashtags ||
-//     form.project_picture ||
-//     form.project_picture2
-//   ) {
-//     ElMessageBox.confirm(`${t('leave.router.warning')}`, 'Warning', {
-//       confirmButtonText: 'Cancel',
-//       cancelButtonText: 'Leave',
-//       type: 'warning',
-//       showClose: false,
-//     }).catch((action: Action) => {
-//       next()
-//     })
-//   } else {
-//     next()
-//   }
-// })
 
 onMounted(() => {
   window.addEventListener('beforeunload', refreshPage)

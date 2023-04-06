@@ -65,8 +65,6 @@ const gameList = computed(() => useSearch().search.value.results?.games)
 const communityList = computed(() => useSearch().search.value.results?.community)
 const postList = computed(() => useSearch().search.value.results?.posts)
 
-
-
 definePageMeta({
   name: 'search',
 })

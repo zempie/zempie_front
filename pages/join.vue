@@ -73,7 +73,8 @@
             </div>
           </div>
           <p>
-          <p @click="register" :class="['btn-default-big w100p', isSubmitActive ? 'on' : 'off']">{{ $t('join') }}</p>
+          <p @click="register" :class="['btn-default-big w100p text-white', isSubmitActive ? 'on' : 'off']">{{ $t('join')
+          }}</p>
           </p>
         </form>
       </ClientOnly>
@@ -95,8 +96,6 @@ import { signOut } from 'firebase/auth'
 
 
 const { t, locale } = useI18n()
-const route = useRoute();
-const config = useRuntimeConfig()
 const { $firebaseAuth, $cookies, $localePath } = useNuxtApp()
 const router = useRouter();
 
@@ -167,7 +166,10 @@ definePageMeta({
 
 onMounted(() => {
 
-  if (fUser.value) form.email = fUser.value.email;
+  if (fUser.value) {
+    form.email = fUser.value.email
+    delete form.password
+  };
 
 })
 shared.createHeadMeta(t('seo.join.title'), t('seo.join.desc'))
@@ -176,7 +178,6 @@ shared.createHeadMeta(t('seo.join.title'), t('seo.join.desc'))
 onBeforeRouteLeave((to, from, next) => {
 
   if (fUser.value && !isLogin.value) {
-    console.log('here?')
     shared.removeCookies()
 
     signOut($firebaseAuth)
@@ -193,6 +194,9 @@ onBeforeRouteLeave((to, from, next) => {
 const v$ = useVuelidate(rules, form)
 
 const isSubmitActive = computed(() => {
+  if (fUser.value) {
+    v$.value.email.$validate()
+  }
   return !!form.policyAgreement && !!v$.value.$dirty
 })
 
@@ -220,16 +224,11 @@ async function register() {
     await joinZempie();
 
   } catch (error: any) {
-
     const { message } = error
     if (message.includes('auth/email-already-in-use')) {
-      // const { result } = await useCustomAsyncFetch<{result:any}>('/user/has-email', getZempieFetchOptions('post', false, { email: form.email }))
 
       ElMessage.error(`${t('fb.using.email')}`)
     }
-    // else if (message.includes('auth/weak-password')) {
-
-    // }
     else if (message.includes('EMAIL_EXISTS')) {
       ElMessage.error(`${t('fb.using.email')}`)
 
@@ -345,11 +344,18 @@ async function joinZempie() {
     background: #f97316;
     color: #fff;
 
+
+
   }
 
   &.off {
     background: #ffe2d1;
     cursor: no-drop;
+
+    &:hover {
+      background: #ffe2d1;
+      color: #fff;
+    }
   }
 }
 
