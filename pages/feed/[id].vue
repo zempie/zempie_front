@@ -52,7 +52,7 @@
               </div>
             </div>
           </template>
-          <PostLinkPreview :tag-info="feed.metadata" :is-edit="false" />
+          <PostLinkPreview v-if="!isObjEmpty(feed.metadata)" :tag-info="feed.metadata" :is-edit="false" />
 
           <CommunityTarget :communities="postedCommunity(feed?.posted_at)" :games="postedGame(feed?.posted_at)" />
 
@@ -143,7 +143,7 @@ import { useI18n } from 'vue-i18n'
 
 import { Swiper, SwiperSlide } from 'swiper/vue'
 
-import { dateFormat, execCommandCopy, getFirstDomElementByServer, stringToDomElemByServer, enDateFormat, } from '~~/scripts/utils'
+import { dateFormat, execCommandCopy, getFirstDomElementByServer, stringToDomElemByServer, isObjEmpty, } from '~~/scripts/utils'
 import shared from '~~/scripts/shared'
 import { IComment } from '~~/types'
 
