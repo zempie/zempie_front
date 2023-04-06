@@ -471,7 +471,7 @@ function onMouseUp() {
 //     }
 </script>
 
-<style lang="scss" scoped>
+<style lang='scss' scoped>
 .component-fade-enter-active,
 .component-fade-leave-active {
   transition: opacity 0.5s ease;

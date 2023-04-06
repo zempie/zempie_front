@@ -7,7 +7,6 @@ export default function () {
   const { $firebaseAuth, $cookies } = useNuxtApp()
   const config = useRuntimeConfig()
   const router = useRouter();
-
   const user = useState('user', () => ({
     isLogin: false,
     info: null as IUser,
@@ -26,6 +25,7 @@ export default function () {
   }
 
   const setLogin = () => {
+    console.log('==== set login =====')
     user.value.isLoading = false;
     user.value.isLogin = !!user.value.info;
   }
@@ -53,7 +53,9 @@ export default function () {
 
   const updateUserKey = (key: string, value?: any) => {
     user.value.info[key] = value
-
+  }
+  const updateFbToken = (token: string) => {
+    user.value.fUser.accessToken = token
   }
 
 
@@ -62,9 +64,11 @@ export default function () {
       .then(() => {
         removeFcmToken(user.value.info.id)
       })
+      .then(async () => {
+        await auth.signOut()
+      })
       .then(() => {
         removeUserState();
-        setLogout()
         $cookies.remove(config.COOKIE_NAME, {
           path: '/',
           domain: config.COOKIE_DOMAIN
@@ -90,12 +94,16 @@ export default function () {
 
   const setUserInfo = async () => {
     colorLog(`===set user info===`, '#ed1cdc')
-    const response = await useCustomFetch<{ result: { user: IUser } }>('/user/info', getZempieFetchOptions('get', true))
+    try {
+      const response = await useCustomFetch<{ result: { user: IUser } }>('/user/info', getZempieFetchOptions('get', true))
 
-    if (response) {
-      const { user: userResult } = response.result
-      user.value.info = { ...userResult }
-      setLogin()
+      if (response) {
+        const { user: userResult } = response.result
+        user.value.info = { ...userResult }
+        setLogin()
+      }
+    } catch (erro) {
+      console.log(erro)
     }
 
   }
@@ -115,6 +123,7 @@ export default function () {
     setBannerImg,
     setLoadDone,
     setUserInfo,
-    updateUserKey
+    updateUserKey,
+    updateFbToken
   }
 }
