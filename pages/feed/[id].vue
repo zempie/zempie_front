@@ -1,5 +1,6 @@
 <template>
   <div class="content">
+
     <div class="area-view">
       <ul class="ta-post" v-if="feed">
         <li class="tap-list">
@@ -8,6 +9,7 @@
               <PostHeaderInfo :feed="feed">
               </PostHeaderInfo>
             </dt>
+
             <dd>
               <UserFollowBtn :user="feed.user" class="follow-btn-feed" />
             </dd>
@@ -50,6 +52,7 @@
               </div>
             </div>
           </template>
+          <PostLinkPreview :tag-info="feed.metadata" :is-edit="false" />
 
           <CommunityTarget :communities="postedCommunity(feed?.posted_at)" :games="postedGame(feed?.posted_at)" />
 
@@ -354,7 +357,7 @@ function copyUrl() {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang='scss' scoped>
 .fade-move,
 .fade-enter-active,
 .fade-leave-active {

@@ -45,6 +45,10 @@ function onClickRemove() {
 
 </script>
 <style scoped lang='scss'>
+.link-card {
+  margin: 20px;
+}
+
 .pointer {
   &:hover {
     color: #f97316
