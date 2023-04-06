@@ -5,7 +5,7 @@
         <i class="uil uil-angle-left-b"></i>
       </li>
       <li class="title">
-        새 게시물
+        {{ $t('new.post') }}
       </li>
       <li class="close-btn" @click="closeTextEditor">
         <span class="material-symbols-outlined">
@@ -396,6 +396,8 @@ onMounted(async () => {
         audio: attFileFilter('sounc'),
       }
     }
+    metaTagInfo.value = props.feed.metadata
+
   }
 
 
@@ -840,6 +842,7 @@ async function onUpdatePost() {
 
 
 
+  console.log(metaTagInfo.value)
 
   const attachedFile = []
   const payload = {
@@ -1468,34 +1471,36 @@ function getFirstPostContent(content: string) {
   opacity: 0;
 }
 
+.title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 22px 20px 20px 20px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 16px;
+  border-bottom: #fff 2px solid;
+  cursor: default;
+  transition: all 0.4s ease-in-out;
+}
+
+.close-btn {
+  padding: 22px 20px 20px 20px;
+  position: absolute;
+  right: 0;
+  cursor: pointer;
+
+
+}
+
+.close-btn:hover {
+  color: #f97316;
+
+}
+
 .modal-post {
-
-  .title {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    padding: 22px 20px 20px 20px;
-    text-align: center;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 16px;
-    border-bottom: #fff 2px solid;
-    cursor: default;
-    transition: all 0.4s ease-in-out;
-  }
-
-  .close-btn {
-    padding: 22px 20px 20px 20px;
-    position: absolute;
-    right: 0;
-    cursor: pointer;
-
-    &:hover {
-      color: #f97316;
-
-    }
-  }
 
   .mp-category {
     width: 100%;
