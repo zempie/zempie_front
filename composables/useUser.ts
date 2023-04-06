@@ -64,9 +64,9 @@ export default function () {
       .then(() => {
         removeFcmToken(user.value.info.id)
       })
-      .then(async () => {
-        await auth.signOut()
-      })
+      // .then(async () => {
+      //   await auth.signOut()
+      // })
       .then(() => {
         removeUserState();
         $cookies.remove(config.COOKIE_NAME, {
