@@ -1,6 +1,7 @@
 import { FetchOptions } from "ohmyfetch"
 import dayjs from "dayjs";
 import shared from "~~/scripts/shared";
+import { getAuth, User } from "firebase/auth";
 
 const HOURTOSEC = 60 * 60;
 
@@ -17,9 +18,9 @@ interface IRefreshToken {
 }
 
 export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions, retryCount: number = 0) => {
-  const { $cookies } = useNuxtApp()
+  // const { $cookies } = useNuxtApp()
   const config = useRuntimeConfig()
-  const accessToken = useCookie(config.COOKIE_NAME)
+  // const accessToken = useCookie(config.COOKIE_NAME)
 
 
   return await useFetch<T>(url, {
@@ -48,8 +49,8 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
         default:
           if (retryCount < 3) {
             console.log('error run', retryCount)
-            await getRefreshToken()
-            await useCustomAsyncFetch(url, options, ++retryCount)
+            // await getRefreshToken()
+            // await useCustomAsyncFetch(url, options, ++retryCount)
           } else {
             console.log('remove cookie')
 
@@ -66,10 +67,14 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
     },
 
     async onRequest({ request, options }) {
+      const user = await getCurrentUser()
+
+      if (user) {
+        let token = user.accessToken
+        options.headers['Authorization'] = `Bearer ${token}`
+      }
 
       options.headers = options.headers || {}
-
-      // if (accessToken) options.headers['Authorization'] = result && `Bearer ${result.access_token}`
 
       useCommon().setLoading()
       console.log('[fetch request]')
@@ -114,7 +119,7 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
         default:
           if (retryCount < 3) {
             console.log('error run')
-            await getRefreshToken()
+            // await getRefreshToken()
             await useCustomAsyncFetch(url, options, ++retryCount)
           } else {
             console.log('remove cookie')
@@ -131,9 +136,16 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
 
     async onRequest({ request, options }) {
 
+      const user = await getCurrentUser()
+
+      if (user) {
+        let token = user.accessToken
+        options.headers['Authorization'] = `Bearer ${token}`
+      }
+
+
       options.headers = options.headers || {}
 
-      // if (accessToken.value) options.headers['Authorization'] = result && `Bearer ${result.access_token}`
       useCommon().setLoading()
       console.log('[fetch request]')
     },
@@ -142,6 +154,19 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
     }
   })
 
+
+}
+
+async function getCurrentUser() {
+  const auth = getAuth()
+
+  const user: any = new Promise((resolve, reject) => {
+    auth.onIdTokenChanged((user: any) => {
+      resolve(user);
+    });
+  });
+
+  return user
 }
 
 export async function getRefreshToken() {

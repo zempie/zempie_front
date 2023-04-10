@@ -57,9 +57,12 @@ function onClickRemove() {
 
 .img-container {
 
-  >div,
-  .yt-iframe {
+  >div {
     min-height: 200px;
+  }
+
+  >.yt-iframe {
+    min-height: 360px;
   }
 
 }

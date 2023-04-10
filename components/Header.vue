@@ -62,12 +62,13 @@
                 @click="switchLangauge" />
             </el-select>
           </div>
-          <div class="header-info ml0" v-if="useCookie(config.COOKIE_NAME).value" :key="user">
+          <div class="header-info ml0" v-if="!isLoading && isLogin" :key="user.id">
             <NotificationHeaderButton />
             <UserMenu />
             <!-- <DmHeaderButton /> -->
           </div>
-          <div v-else class="header-login">
+          <div v-else-if="!isLoading && !isLogin" class="header-login">
+
             <NuxtLink :to="$localePath('/login')">
               <button class="btn-default" id="loginBtn" style="display: flex;">
                 <i class="uil uil-user"></i>{{ t('login') }}
@@ -166,12 +167,14 @@ const router = useRouter()
 const route = useRoute()
 
 const isLogin = computed(() => useUser().user.value.isLogin)
+const isLoading = computed(() => useUser().user.value.isLoading)
 const user = computed(() => useUser().user.value.info)
-const searchDropdown = ref()
 
 const searchInput = ref()
 const isHeaderSideMobile = ref(false)
 const isHeaderSideBgMobile = ref(false)
+
+
 
 const isMobile = computed(() =>
   window.matchMedia('screen and (max-width: 479px)')
@@ -191,6 +194,7 @@ const selectedLang = ref(locale.value)
 
 const isOpen = ref(false)
 const { loginModal } = useModal()
+
 
 watch(
   () => loginModal.value.isOpen,

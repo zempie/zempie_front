@@ -16,15 +16,17 @@
 
     <div>
       <div ref="feedDiv" class="tapl-content" v-html="feedContent" @mousedown="onMouseDown" @mouseup="onMouseUp"
-        @mousemove="isDragging = true" :class="showSeeMore ? 'more-on' : 'more-off'">
+        @mousemove="isDragging = true">
       </div>
+
+      <div v-if="isOverflow" :class="isMoreView ? '' : 'gradient'"></div>
     </div>
 
-    <template v-if="showSeeMore">
+    <template v-if="isOverflow">
       <div v-if="!isMoreView" class="more-container">
         <span>
           <hr class="dot-line" />
-        </span><a class="pointer" @click="showSeeMore = !showSeeMore"> {{ t('moreView') }} </a><span>
+        </span><a class="pointer" @click="moreView"> {{ t('moreView') }} </a><span>
           <hr class="dot-line" />
         </span>
       </div>
@@ -32,12 +34,11 @@
       <div v-else class="more-container">
         <span>
           <hr class="dot-line" />
-        </span><a @click="showSeeMore = !showSeeMore">{{ t('closeView') }} </a><span>
+        </span><a @click="closeView">{{ t('closeView') }} </a><span>
           <hr class="dot-line" />
         </span>
       </div>
     </template>
-
     <template v-if="initFiles?.length && feed.post_type === 'SNS'">
       <div class="video" v-if="initFiles[0].type === 'video'">
         <video style="width: 100%; height: auto" controls :src="initFiles[0].url"></video>
@@ -176,7 +177,6 @@ const isAddData = ref(false)
 
 const isCommentEdit = ref(false)
 const editorKey = ref(0)
-const showSeeMore = ref(false)
 
 useInfiniteScroll(
   commentEl,
@@ -224,18 +224,6 @@ const initFiles = _.cloneDeep(attatchment_files.value)
 onMounted(() => {
   Prism.highlightAll()
   const dom = props.feed?.content && htmlToDomElem(props.feed.content)
-
-
-  const lineHeight = parseInt(window.getComputedStyle(feedDiv.value).getPropertyValue('line-height'));
-  const maxAllowedHeight = lineHeight * 4;
-
-  if (feedDiv.value.scrollHeight > maxAllowedHeight) {
-    // The div has more than 3 lines of text
-    console.log("The div has more than 3 lines of text");
-    showSeeMore.value = true
-  } else {
-    showSeeMore.value = false
-  }
 })
 
 async function commentRefresh(comment?: any) {
@@ -471,7 +459,7 @@ function onMouseUp() {
 //     }
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .component-fade-enter-active,
 .component-fade-leave-active {
   transition: opacity 0.5s ease;
@@ -548,20 +536,6 @@ function onMouseUp() {
       margin-top: 0px;
     }
   }
-}
-
-.more-off {
-  display: inherit;
-  -webkit-line-clamp: inherit;
-  -webkit-box-orient: vertical;
-  max-height: 100%;
-}
-
-
-.more-on {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
 }
 
 .like-icon:hover,

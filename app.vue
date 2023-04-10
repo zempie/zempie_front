@@ -33,15 +33,14 @@ const router = useRouter()
 const isOpen = ref(false)
 const showOneDay = ref(false)
 const showNever = ref(false)
-
-const userInfo = useUser().user.value.info
+const userInfo = computed(() => useUser().user.value.info)
 
 
 watch(
   () => useUser().user.value.fUser,
   async (fUser) => {
-    if (useCookie(config.COOKIE_NAME).value && !userInfo) {
-      await useUser().setUserInfo()
+    if (fUser && !userInfo.value) {
+      // await useUser().setUserInfo()
     }
   })
 
@@ -72,7 +71,7 @@ onBeforeMount(async () => {
 
   //로그인 확인 처리
   if (useCookie(config.REFRESH_TOKEN).value) {
-    await getRefreshToken()
+    // await getRefreshToken()
   }
 
 })

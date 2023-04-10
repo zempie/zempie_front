@@ -2,7 +2,6 @@
   <div class="ml10" id="userMenu">
     <el-dropdown trigger="click" ref="userMenu" id="userMenu">
       <UserAvatar style="width: 30px; height: 30px" :user="user" :key="user?.picture" />
-
       <template #dropdown>
         <div slot="body" class="header-setting" style="min-width: 250px" @click="userMenu?.handleClose()">
           <dl style="margin: 10px 0px 0px 0px">
@@ -62,7 +61,7 @@ const user = computed(() => useUser().user.value.info)
 
 
 function logout() {
-  if (route.meta.middleware === 'auth') {
+  if (route.meta.middleware === 'auth' || route.meta.name === 'main') {
     router.replace($localePath('/'))
   }
   useUser().logout()

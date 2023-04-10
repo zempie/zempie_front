@@ -4,6 +4,7 @@ import { getAuth, onIdTokenChanged, } from 'firebase/auth'
 import * as fbFcm from '~~/scripts/firebase-fcm'
 import shared from '~~/scripts/shared'
 import { getMessaging, onMessage, getToken } from "firebase/messaging";
+import { isObjEmpty } from '~~/scripts/utils'
 
 
 export default defineNuxtPlugin(async (nuxtApp) => {
@@ -35,11 +36,13 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   onIdTokenChanged(auth, async (user: any) => {
 
     if (user) {
-      shared.setTokens(user.accessToken, user.stsTokenManager.refreshToken)
       useUser().setFirebaseUser(user);
+      await useUser().setUserInfo()
+      await setFirebaseToken()
     }
-
-    useUser().setLoadDone()
+    if (!isObjEmpty(useUser().user.value.info)) {
+      useUser().setLoadDone()
+    }
 
   })
   if (!navigator.userAgent.match(/iPad/i) && !navigator.userAgent.match(/iPhone/i) && !window.navigator.userAgent.toLowerCase().includes('naver') && !window.navigator.userAgent.toLowerCase().includes('kakao') && window.location.protocol === 'https:') {
@@ -55,3 +58,11 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   nuxtApp.provide('firebaseApp', app);
   nuxtApp.provide('firebaseAuth', auth);
 })
+
+
+async function setFirebaseToken() {
+  const { token } = await fbFcm.getFcmToken(useUser().user.value.info.id)
+  if (!token) {
+    await fbFcm.resigterFcmToken(useUser().user.value.info.id)
+  }
+}

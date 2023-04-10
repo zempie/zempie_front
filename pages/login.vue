@@ -122,22 +122,21 @@ const rules = computed(() => {
   return formRule
 })
 const v$ = useVuelidate(rules, form)
-const isLogin = computed(() => useUser().user.value.isLogin)
+// const isLogin = computed(() => useUser().user.value.isLogin)
 
-watch(isLogin,
-  async (val) => {
-    if (val) {
-      router.push($localePath('/'))
-      const { token } = await fbFcm.getFcmToken(useUser().user.value.info.id)
-      console.log('token', token)
-      if (!token) {
-        console.log('regi token')
-        await fbFcm.resigterFcmToken(useUser().user.value.info.id)
-      }
-    }
-  })
+// watch(isLogin,
+//   async (val) => {
+//     if (val) {
+//       router.push($localePath('/'))
+//       const { token } = await fbFcm.getFcmToken(useUser().user.value.info.id)
+//       console.log('token', token)
+//       if (!token) {
+//         console.log('regi token')
+//         await fbFcm.resigterFcmToken(useUser().user.value.info.id)
+//       }
+//     }
+//   })
 
-console.log(useUser().user.value.isLogin)
 
 async function onSubmit() {
   const isValid = await v$.value.$validate()
@@ -148,7 +147,20 @@ async function onSubmit() {
       signInWithEmailAndPassword($firebaseAuth, form.email, form.password)
         .then(async (result) => {
           const { user } = result
+          if (user) {
+            router.push($localePath('/'))
+            // await useUser().setUserInfo()
+          }
         })
+        // .then(async () => {
+        //   router.push($localePath('/'))
+        //   const { token } = await fbFcm.getFcmToken(useUser().user.value.info.id)
+        //   console.log('token', token)
+        //   if (!token) {
+        //     console.log('regi token')
+        //     await fbFcm.resigterFcmToken(useUser().user.value.info.id)
+        //   }
+        // })
         .catch((err: any) => {
           const errorCode = err.code
           const errorMessage = err.message
@@ -163,7 +175,6 @@ async function onSubmit() {
               break
             case 'auth/user-not-found':
               ElMessage.error(`${t('fb.not.found')}`)
-
               break
             default:
               ElMessage.error(errorCode)

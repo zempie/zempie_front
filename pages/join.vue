@@ -255,7 +255,7 @@ async function joinZempie() {
 
     if (user) {
       useUser().setUser(user);
-      useUser().setLogin();
+      // useUser().setLogin();
       // useUser().unsetSignup()
     }
 
