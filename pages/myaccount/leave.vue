@@ -106,10 +106,15 @@ async function openConfirnModal() {
 }
 
 async function leave() {
-  const { data, error, pending } = await user.leave({
+  // const { data, error, pending } = await user.leave({
+  //   text: reason.value,
+  //   num: '0',
+  // })
+
+  const { data, error, pending } = await useCustomAsyncFetch('/user/leave-zempie', getZempieFetchOptions('post', true, {
     text: reason.value,
     num: '0',
-  })
+  }))
 
   if (!error.value) {
     setTimeout(() => {
@@ -123,7 +128,7 @@ async function leave() {
     }, 1000)
   } else {
     ElMessage({
-      message: (error as any).error.message,
+      message: (error as any).error?.message,
       type: 'error',
     })
   }

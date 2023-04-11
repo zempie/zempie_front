@@ -24,6 +24,9 @@ export default function () {
   const setUser = (info: IUser) => {
     user.value.info = { ...info }
   }
+  const setLogin = () => {
+    user.value.isLogin = true;
+  }
 
   const setSignup = () => {
     user.value.isSignUp = true;
@@ -99,7 +102,7 @@ export default function () {
     user,
     setUser,
     setFirebaseUser,
-    // setLogin,
+    setLogin,
     // setLogout,
     setProfileImg,
     removeUserState,

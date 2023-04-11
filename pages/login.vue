@@ -81,6 +81,7 @@ import {
   AuthProvider,
   setPersistence,
   browserSessionPersistence,
+  browserLocalPersistence,
 } from 'firebase/auth'
 import shared from '~/scripts/shared'
 
@@ -142,7 +143,7 @@ async function onSubmit() {
   const isValid = await v$.value.$validate()
 
   if (!isValid) return
-  setPersistence($firebaseAuth, browserSessionPersistence)
+  setPersistence($firebaseAuth, browserLocalPersistence)
     .then((res) => {
       signInWithEmailAndPassword($firebaseAuth, form.email, form.password)
         .then(async (result) => {
@@ -203,7 +204,6 @@ async function facebookLogin() {
 async function socialLogin(provider: AuthProvider) {
   try {
     const res = await signInWithPopup($firebaseAuth, provider)
-    //회원가입 정보 없는 경우 ???
     router.push($localePath('/'))
 
     // useUser().setFirebaseUser(res.user)

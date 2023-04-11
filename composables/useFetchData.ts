@@ -1,4 +1,4 @@
-import { getAuth } from "firebase/auth";
+import { getAuth, getIdToken } from "firebase/auth";
 import { access } from "fs";
 
 function baseOption(method: string, withCredentials: boolean, body?: object) {
@@ -54,13 +54,10 @@ export const getComFetchOptions = (method = 'get', withCredentials = false, body
 
 const useFetchData = async<T>(method: string, url: string, data = null, withCredentials: boolean = false, error = false) => {
   const config = useRuntimeConfig();
-  const accessToken = useCookie(config.COOKIE_NAME).value
-  // const accessToken = 'eyJhbGciOiJSUzI1NiIsImtpZCI6Ijg3YzFlN2Y4MDAzNGJiYzgxYjhmMmRiODM3OTIxZjRiZDI4N2YxZGYiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoibG9jYWwwMDIiLCJwaWN0dXJlIjoiaHR0cHM6Ly9kZXYtemVtcGllLnMzLmFwLW5vcnRoZWFzdC0yLmFtYXpvbmF3cy5jb20vdjEvUkxoS21ndjBxVk45WDV5OE41VVVvTkpHUE5DMy9wcm9maWxlL3Byb2ZpbGUud2VicCIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS96ZW1waWUtZGV2IiwiYXVkIjoiemVtcGllLWRldiIsImF1dGhfdGltZSI6MTY4MDU5OTEwNCwidXNlcl9pZCI6IlJMaEttZ3YwcVZOOVg1eThONVVVb05KR1BOQzMiLCJzdWIiOiJSTGhLbWd2MHFWTjlYNXk4TjVVVW9OSkdQTkMzIiwiaWF0IjoxNjgwNTk5NjYyLCJleHAiOjE2ODA2MDMyNjIsImVtYWlsIjoibG9jYWwwMDJAbG9jYWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbImxvY2FsMDAyQGxvY2FsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.L8cgXJFMqGA1ovkCEnHKPciQ1tvYA4XAJnZP-AXAucri-i0qiZ_RYWpo7t5bDW75QofHg3JUO38-DneRnWYEyNeLtvURTQHQTLiEANghs2mLLrIWtvQbExT11Uywhwj3FrZrcgT9gq7hnW_osauDYMENq75Q8NM-O3c7N-E7_FmQdXxUCMtHNP0xeUuPOmf_WxbdQkal-wuxP0j78S3ulSITf7KUETiwAj24PMEIcyCMiJnFSifTL_1-XlmKFam8-pn9pOmWJ5_QNfTJObbn9HUxXqAQT7RBBzqrP1AVr6LzwRrGphrlBvGeM-jPgmhI7fHg55JTUFR6X5TIzj8vWg'
 
   const options = {
     method: method,
     baseURL: config.BASE_API,
-    headers: accessToken && withCredentials ? { 'Authorization': `Bearer ${accessToken}` } : {},
     initialCache: false,
   }
 
@@ -93,10 +90,24 @@ const useFetchData = async<T>(method: string, url: string, data = null, withCred
 
     },
     async onRequest({ request, options }) {
-      // console.log('useFetchData request', accessToken)
+      const user = await getCurrentUser()
 
-      // auth.currentUser.getIdToken(true)
-      // console.log(auth)
+      if (user) {
+        const expirationTime = user.stsTokenManager.expirationTime
+        let token = user.accessToken
+        console.log(token)
+        if (expirationTime <= Date.now()) {
+          const newToken = await getIdToken(user, true)
+          console.log(newToken)
+        }
+        options.headers['Authorization'] = `Bearer ${token}`
+      }
+
+
+      options.headers = options.headers || {}
+
+
+      console.log('[fetch request]')
 
     },
     async onRequestError({ request, options, error }) {
