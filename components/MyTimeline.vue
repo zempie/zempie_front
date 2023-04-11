@@ -51,6 +51,7 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import { isObjEmpty } from '~~/scripts/utils';
 
 const { $localePath } = useNuxtApp()
 const config = useRuntimeConfig()
@@ -69,16 +70,19 @@ const isChannelLoading = computed(
 watch(
   () => userInfo.value,
   async (info) => {
-    if (info?.id) {
+    if (info?.id && isObjEmpty(channelInfo.value)) {
       await useChannel().getChannelInfo(info.channel_id)
       games.value = info.games
     }
   }
 )
 
-onMounted(() => {
+onMounted(async () => {
   // if (!useCookie(config.COOKIE_NAME).value) navigateTo('/')
-
+  if (userInfo.value?.id && isObjEmpty(channelInfo.value)) {
+    await useChannel().getChannelInfo(userInfo.value.channel_id)
+    games.value = userInfo.value.games
+  }
   games.value = channelInfo.value?.games
   isPending.value = false
 })

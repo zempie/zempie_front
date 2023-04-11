@@ -45,6 +45,7 @@ export default function () {
     user.value.fUser = null;
     user.value.info = null as IUser;
     user.value.isLogin = false;
+    useChannel().resetUserChannel()
   }
 
   const updateUserKey = (key: string, value?: any) => {
