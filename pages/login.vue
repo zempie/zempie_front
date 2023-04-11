@@ -203,6 +203,8 @@ async function socialLogin(provider: AuthProvider) {
   try {
     const res = await signInWithPopup($firebaseAuth, provider)
     //회원가입 정보 없는 경우 ???
+    router.push($localePath('/'))
+
     // useUser().setFirebaseUser(res.user)
   } catch (err) {
     console.error('socialLogin err', err)
