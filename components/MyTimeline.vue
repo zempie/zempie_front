@@ -77,7 +77,7 @@ watch(
 )
 
 onMounted(() => {
-  if (!useCookie(config.COOKIE_NAME).value) navigateTo('/')
+  // if (!useCookie(config.COOKIE_NAME).value) navigateTo('/')
 
   games.value = channelInfo.value?.games
   isPending.value = false

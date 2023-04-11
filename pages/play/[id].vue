@@ -2,9 +2,9 @@
   <div id="gamePage">
     <ClientOnly>
       <iframe ref="game" class="iframe" :style="`height:${iframeHeight};`" :src="
-  config.ENV === 'local' || config.ENV === 'development'
-    ? `${config.LAUNCHER_URL}/#/game/${gamePath}`
-    : `${config.LAUNCHER_URL}/game/${gamePath}`
+        config.ENV === 'local' || config.ENV === 'development'
+          ? `${config.LAUNCHER_URL}/#/game/${gamePath}`
+          : `${config.LAUNCHER_URL}/game/${gamePath}`
       "></iframe>
     </ClientOnly>
   </div>
@@ -105,7 +105,7 @@ async function onMessage(msg: MessageEvent) {
       break
     }
     case '@refreshToken': {
-      if (useCookie(config.COOKIE_NAME).value) {
+      if (useUser().user.value.fUser) {
         getIdToken(useUser().user.value.fUser, true).then((idToken) => {
           if (idToken) {
             $cookies.set(config.COOKIE_NAME, idToken, {
