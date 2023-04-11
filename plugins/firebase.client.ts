@@ -33,6 +33,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     useUser().setLoadDone()
   }
 
+  console.log(auth)
   onIdTokenChanged(auth, async (user: any) => {
 
     if (user) {
