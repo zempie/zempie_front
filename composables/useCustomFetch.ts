@@ -157,7 +157,7 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
 
 }
 
-async function getCurrentUser() {
+export async function getCurrentUser() {
   const auth = getAuth()
 
   const user: any = new Promise((resolve, reject) => {
