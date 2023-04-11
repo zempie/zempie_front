@@ -196,6 +196,7 @@ async function googleLogin() {
 async function facebookLogin() {
   const provider = new FacebookAuthProvider()
   provider.addScope('email')
+  provider.addScope('public_profile')
   return socialLogin(provider)
 }
 
