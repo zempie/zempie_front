@@ -177,7 +177,7 @@ export const auth = {
 
 export const user = {
   getUserInfo(channelId: string) {
-    return useFetchData('get', `/channel/${channelId}`, undefined, true)
+    return useFetchData('get', `/channel/${channelId}`, undefined, false)
   },
   follow(userId: number) {
     return communityFetch('post', `/user/${userId}/follow`, undefined, true);

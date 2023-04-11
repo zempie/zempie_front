@@ -1,7 +1,7 @@
 import { FetchOptions } from "ohmyfetch"
 import dayjs from "dayjs";
 import shared from "~~/scripts/shared";
-import { getAuth, User } from "firebase/auth";
+import { getAuth, getIdToken } from "firebase/auth";
 
 const HOURTOSEC = 60 * 60;
 
@@ -70,7 +70,13 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
       const user = await getCurrentUser()
 
       if (user) {
+        const expirationTime = user.stsTokenManager.expirationTime
+        console.log('expirationTime', new Date(expirationTime))
         let token = user.accessToken
+        if (expirationTime <= Date.now()) {
+          const newToken = await getIdToken(user, true)
+          console.log(newToken)
+        }
         options.headers['Authorization'] = `Bearer ${token}`
       }
 
@@ -139,7 +145,14 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
       const user = await getCurrentUser()
 
       if (user) {
+        const expirationTime = user.stsTokenManager.expirationTime
+        console.log('expirationTime', new Date(expirationTime))
+
         let token = user.accessToken
+        if (expirationTime <= Date.now()) {
+          const newToken = await getIdToken(user, true)
+          console.log(newToken)
+        }
         options.headers['Authorization'] = `Bearer ${token}`
       }
 
