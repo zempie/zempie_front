@@ -54,7 +54,6 @@
       <ClientOnly>
         <dd>
           <SearchHeader />
-
           <!-- FIXME: popper-class: css수정 -->
           <div class="header-language">
             <el-select class="hl-select-box" v-model="selectedLang" :placeholder="t('korean')">
@@ -275,13 +274,6 @@ async function moveZemWorld() {
     align-items: center;
   }
 
-  .menu {
-    li {
-      .active {
-        color: #f97316;
-      }
-    }
-  }
 
   .menu-dropdown {
     display: inline-block;

@@ -121,6 +121,10 @@
   color: #f97316;
 }
 
+.header-logo-menu ul>li .active {
+  color: #f97316;
+}
+
 .header-language {
   margin-left: 15px;
 }
