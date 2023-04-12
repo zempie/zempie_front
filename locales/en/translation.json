@@ -892,5 +892,13 @@
   "username.max.err1": "Username should be less(more) than",
   "username.max.err2": "",
   "username.min.err2": "",
-  "new.post": "Create post"
+  "mobile.intro1.title1": "SNS for GAME DEVELOPERS",
+  "mobile.intro1.info1": "__STRING_NOT_TRANSLATED__",
+  "mobile.intro1.info2": "__STRING_NOT_TRANSLATED__",
+  "mobile.intro2.title1": "SHARE GAME & RESOURCE",
+  "mobile.intro2.info1": "__STRING_NOT_TRANSLATED__",
+  "mobile.intro2.info2": "__STRING_NOT_TRANSLATED__",
+  "mobile.intro3.title1": "PLAY GAMES",
+  "mobile.intro3.info1": "__STRING_NOT_TRANSLATED__",
+  "mobile.intro3.info2": "__STRING_NOT_TRANSLATED__"
 }
