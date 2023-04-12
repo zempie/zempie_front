@@ -50,7 +50,7 @@ definePageMeta({
 const isFlutter = await FlutterBridge().FlutterBridge.isFlutter()
 
 
-if (!isFlutter) {
+if (isFlutter) {
   if (process.env.NODE_ENV !== 'development') {
     router.push('/login')
   }
