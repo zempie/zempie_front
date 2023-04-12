@@ -33,8 +33,8 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     useUser().setLoadDone()
   }
 
-  console.log(auth)
   onIdTokenChanged(auth, async (user: any) => {
+    console.info('fuser', user)
     if (!isObjEmpty(useUser().user.value.info)) {
       useUser().setLoadDone()
     } else {

@@ -35,7 +35,7 @@ definePageMeta({
 
 const isFlutter = await FlutterBridge().FlutterBridge.isFlutter()
 
-if (isFlutter) {
+if (!isFlutter) {
   router.push('/login')
 }
 
