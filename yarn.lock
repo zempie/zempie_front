@@ -7890,6 +7890,11 @@ websocket-extensions@>=0.1.1:
   resolved "https://registry.yarnpkg.com/websocket-extensions/-/websocket-extensions-0.1.4.tgz#7f8473bc839dfd87608adb95d7eb075211578a42"
   integrity sha512-OqedPIGOfsDlo31UNwYbCFMSaO9m9G/0faIHj5/dZFDMFqPTcx6UwqyOy3COEaEOg/9VsGIpdqn62W5KhoKSpg==
 
+webview-javascript-bridge@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/webview-javascript-bridge/-/webview-javascript-bridge-2.0.0.tgz#f3cd330776ca2ca072fbcac05b2f4a4853d08092"
+  integrity sha512-0VWKdcpZGwu8xbEkvVZEvx9liE4+K0jD8Mf9Xdwtjjl8zmditVpQ98Y7dQaOEK5n78AIdOr2P1ALt3okdSKgpw==
+
 whatwg-url@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/whatwg-url/-/whatwg-url-5.0.0.tgz#966454e8765462e37644d3626f6742ce8b70965d"

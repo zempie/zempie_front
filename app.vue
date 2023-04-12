@@ -23,6 +23,7 @@
 <script setup lang="ts">
 import { ElDialog, ID_INJECTION_KEY } from 'element-plus'
 import { useI18n } from 'vue-i18n'
+import { isFlutter } from './scripts/flutterBridge';
 import shared from './scripts/shared';
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
@@ -57,6 +58,12 @@ provide(ID_INJECTION_KEY, {
   prefix: 100,
   current: 0,
 })
+
+const isFlu = await isFlutter()
+
+if (isFlu) {
+  alert('flutter')
+}
 
 onBeforeMount(async () => {
 

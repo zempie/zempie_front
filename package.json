@@ -63,6 +63,7 @@
     "prismjs": "^1.29.0",
     "swiper": "^8.3.1",
     "vue-infinite-loading": "^2.4.5",
-    "vue-spinner": "^1.0.4"
+    "vue-spinner": "^1.0.4",
+    "webview-javascript-bridge": "^2.0.0"
   }
 }
