@@ -193,7 +193,7 @@ async function onSubmit() {
 async function googleLogin() {
   const isFlutter = await FlutterBridge().FlutterBridge.isFlutter()
   if (isFlutter) {
-    console.log('!!!???')
+    alert('!!!???')
     return FlutterBridge().FlutterBridge.signInGoogle()
       .then((result) => {
         useUser().setFirebaseUser(result)
