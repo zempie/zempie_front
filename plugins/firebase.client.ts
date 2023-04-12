@@ -34,7 +34,6 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   }
 
   onIdTokenChanged(auth, async (user: any) => {
-    alert('token change')
     if (!isObjEmpty(useUser().user.value.info)) {
       useUser().setLoadDone()
     } else {
@@ -64,7 +63,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 })
 
 
-async function setFirebaseToken() {
+export async function setFirebaseToken() {
   const { token } = await fbFcm.getFcmToken(useUser().user.value.info.id)
   if (!token) {
     await fbFcm.resigterFcmToken(useUser().user.value.info.id)

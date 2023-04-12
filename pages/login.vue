@@ -85,6 +85,7 @@ import {
 } from 'firebase/auth'
 import shared from '~/scripts/shared'
 import FlutterBridge from '~~/scripts/flutterBridge'
+import { setFirebaseToken } from '~~/plugins/firebase.client'
 
 const { $firebaseAuth, $cookies, $localePath } = useNuxtApp()
 
@@ -194,10 +195,12 @@ async function googleLogin() {
   const isFlutter = await FlutterBridge().FlutterBridge.isFlutter()
   if (isFlutter) {
     return FlutterBridge().FlutterBridge.signInGoogle()
-      .then((result) => {
-        useUser().setFirebaseUser(result)
-        alert('!!!???')
-
+      .then(async (result: { additionalUSerInfo: any, credential: any, stsTokenManager: any }) => {
+        if (result) {
+          useUser().setFirebaseUser(result.additionalUSerInfo.profile)
+          await useUser().setUserInfo()
+          await setFirebaseToken()
+        }
         // state.fUser = result;
       })
       .catch((err) => {
