@@ -65,7 +65,9 @@ export default defineNuxtConfig({
     'swiper/css/pagination',
     // '@/assets/css/prism.css'
   ],
-
+  // plugins: [
+  //   { src: '~/plugins/flutterBridge.client.ts', mode: 'client' }
+  // ],
 
   modules: [
     'cookie-universal-nuxt',

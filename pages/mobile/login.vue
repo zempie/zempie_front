@@ -23,12 +23,33 @@
 <script setup lang='ts'>
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/css';
+import FlutterBridge from '~~/scripts/flutterBridge'
 
-
-
+const router = useRouter()
+const nuxtApp = useNuxtApp()
 definePageMeta({
   layout: 'layout-none',
+
 });
+
+const isFlu = await FlutterBridge().FlutterBridge.isFlutter()
+
+if (isFlu) {
+  alert('flutter')
+}
+
+
+onBeforeMount(() => {
+
+  const isVisit = localStorage.getItem('zMoF')
+
+  if (isVisit) {
+    router.push('/login')
+  } else {
+    localStorage.setItem('zMoF', 'true')
+  }
+
+})
 
 
 
