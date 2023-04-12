@@ -84,6 +84,7 @@ import {
   browserLocalPersistence,
 } from 'firebase/auth'
 import shared from '~/scripts/shared'
+import FlutterBridge from '~~/scripts/flutterBridge'
 
 const { $firebaseAuth, $cookies, $localePath } = useNuxtApp()
 
@@ -190,15 +191,33 @@ async function onSubmit() {
 }
 
 async function googleLogin() {
-  const provider = new GoogleAuthProvider()
-  return socialLogin(provider)
+  const isFlutter = await FlutterBridge().FlutterBridge.isFlutter()
+  if (isFlutter) {
+    return FlutterBridge().FlutterBridge.signInGoogle()
+      .then((result) => {
+        useUser().setFirebaseUser(result)
+        // state.fUser = result;
+      });
+  } else {
+    const provider = new GoogleAuthProvider()
+    return socialLogin(provider)
+  }
 }
 
 async function facebookLogin() {
-  const provider = new FacebookAuthProvider()
-  provider.addScope('email')
-  provider.addScope('public_profile')
-  return socialLogin(provider)
+  const isFlutter = await FlutterBridge().FlutterBridge.isFlutter()
+  if (isFlutter) {
+    return FlutterBridge().FlutterBridge.signInFacebook()
+      .then((result) => {
+        useUser().setFirebaseUser(result)
+        // state.fUser = result;
+      });
+  } else {
+    const provider = new FacebookAuthProvider()
+    provider.addScope('email')
+    provider.addScope('public_profile')
+    return socialLogin(provider)
+  }
 }
 
 async function socialLogin(provider: AuthProvider) {

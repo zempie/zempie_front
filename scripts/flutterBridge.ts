@@ -58,6 +58,11 @@ export default function () {
       const result = JSON.parse(response);
       return result;
     },
+    async signInFacebook() {
+      const response = await callHandler("signInFacebook");
+      const result = JSON.parse(response);
+      return result;
+    },
     async signInApple() {
       // const response = await webViewJavaScriptBridge.sendMessage({
       //   action: "signInGoogle",
@@ -124,7 +129,7 @@ export default function () {
 
   // export default FlutterBridge;
 
-return {
-  FlutterBridge
-}
+  return {
+    FlutterBridge
+  }
 }
