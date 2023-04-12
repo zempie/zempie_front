@@ -1,11 +1,11 @@
 
-import webViewJavaScriptBridge from "webview-javascript-bridge";
-
 const callHandler = async (handleName, params) => {
-  const response = await webViewJavaScriptBridge.sendMessage({
-    action: handleName,
-    params: params,
-  });
+  // const response = await webViewJavaScriptBridge.sendMessage({
+  //   action: handleName,
+  //   params: params,
+  // });
+
+  const response = window.postMessage(handleName)
   return response;
 }
 

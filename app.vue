@@ -65,6 +65,7 @@ if (isFlu) {
   alert('flutter')
 }
 
+
 onBeforeMount(async () => {
 
   const fUser = await getCurrentUser()
