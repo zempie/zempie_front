@@ -199,7 +199,10 @@ async function googleLogin() {
         if (result) {
           useUser().setFirebaseUser(result.additionalUserInfo.profile)
           await useUser().setUserInfo()
-          await setFirebaseToken()
+          if (useUser().user.value.info) {
+            await setFirebaseToken()
+          }
+
         }
         // state.fUser = result;
       })
