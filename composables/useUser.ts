@@ -86,10 +86,13 @@ export default function () {
       if (response) {
         const { user: userResult } = response.result
         user.value.info = { ...userResult }
-        if (!isObjEmpty(user.value.fUser)) {
-          useUser().setLoadDone()
-        }
+
         user.value.isLogin = true;
+        useUser().setLoadDone()
+
+      }
+      if (!isObjEmpty(user.value.fUser)) {
+        useUser().setLoadDone()
       }
     } catch (error) {
       console.log(error)
