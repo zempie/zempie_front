@@ -50,7 +50,6 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
           if (retryCount < 3) {
             console.log('error run', retryCount)
             // await getRefreshToken()
-            // await useCustomAsyncFetch(url, options, ++retryCount)
           } else {
             console.log('remove cookie')
 
@@ -67,21 +66,26 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
     },
 
     async onRequest({ request, options }) {
+      console.log('url', url)
       const user = await getCurrentUser()
+      let token = user?.accessToken
 
       if (user) {
+
         const expirationTime = user.stsTokenManager.expirationTime
+        // const expirationTime = 1681264108
         console.log('expirationTime', new Date(expirationTime))
-        let token = user.accessToken
         if (expirationTime <= Date.now()) {
-          const newToken = await getIdToken(user, true)
-          console.log(newToken)
+          console.log('url', url)
+          token = await getIdToken(user, true)
         }
         options.headers['Authorization'] = `Bearer ${token}`
+
       }
 
       options.headers = options.headers || {}
 
+      console.log(options.headers)
       useCommon().setLoading()
       console.log('[fetch request]')
     },
@@ -141,26 +145,33 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
     },
 
     async onRequest({ request, options }) {
+      console.log('url', url)
 
       const user = await getCurrentUser()
+      let token = user?.accessToken
+      console.log('user', user)
 
       if (user) {
         const expirationTime = user.stsTokenManager.expirationTime
-        console.log('expirationTime', new Date(expirationTime))
+        // const expirationTime = 1681264165
+        console.log('expirationTime', expirationTime <= Date.now(), new Date(expirationTime))
 
-        let token = user.accessToken
+
         if (expirationTime <= Date.now()) {
-          const newToken = await getIdToken(user, true)
-          console.log(newToken)
+          token = await getIdToken(user, true)
         }
+        console.log('toekn2 ', token)
         options.headers['Authorization'] = `Bearer ${token}`
+
       }
 
 
       options.headers = options.headers || {}
+      console.log(options.headers)
 
       useCommon().setLoading()
       console.log('[fetch request]')
+      return
     },
     async onRequestError({ request, options, error }) {
       console.log('[fetch request error]')

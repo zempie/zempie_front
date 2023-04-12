@@ -205,9 +205,7 @@ export const user = {
   followerList(obj: any, userId: any) {
     return communityFetch('get', `/user/${userId}/list/follower`, obj, true);
   },
-  updateInfo(formData: FormData) {
-    return useFetchData<{ result: any }>('post', `/user/update/info`, formData, true);
-  },
+
   leave(obj: { text: string, num: string }) {
     return useFetchData('post', `/user/leave-zempie`, obj, true);
   }

@@ -285,7 +285,9 @@ async function onSubmit() {
 
 
   try {
-    const { data } = await user.updateInfo(formData);
+    const { data } = await useCustomAsyncFetch<{result:any}>('/user/update/info', getZempieFetchOptions('post', true, formData))
+
+
     const { result } = data.value;
     const { user: userInfo } = result;
 

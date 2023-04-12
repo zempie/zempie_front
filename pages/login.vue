@@ -206,7 +206,6 @@ async function socialLogin(provider: AuthProvider) {
     const res = await signInWithPopup($firebaseAuth, provider)
     router.push($localePath('/'))
 
-    // useUser().setFirebaseUser(res.user)
   } catch (err) {
     console.error('socialLogin err', err)
 

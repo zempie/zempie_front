@@ -93,13 +93,13 @@
           <button v-if="draftList.length > 0" class="btn-line-small w100 mr10" id="loadPostBtn" @click="onLoadPost">
             Load
           </button>
-          <button class="btn-green-small w100 mr10" id="draftPostBtn" @click="saveDraftCloseModal()">
+          <button class="btn-line-small w100 mr10" id="draftPostBtn" @click="saveDraftCloseModal()">
             Draft
           </button>
-          <button v-if="!isFullScreen" class="btn-default-samll w100 cancel-btn" id="cancelPostBtn"
+          <!-- <button v-if="!isFullScreen" class="btn-default-samll w100 cancel-btn" id="cancelPostBtn"
             @click="closeTextEditor">
             Cancel
-          </button>
+          </button> -->
 
           <button v-if="isEdit" class="btn-default-samll w100" id="updatePostBtn" @click="onUpdatePost">
             Update

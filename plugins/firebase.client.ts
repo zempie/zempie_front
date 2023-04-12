@@ -35,15 +35,18 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   console.log(auth)
   onIdTokenChanged(auth, async (user: any) => {
-
-    if (user) {
-      useUser().setFirebaseUser(user);
-      await useUser().setUserInfo()
-      await setFirebaseToken()
-    }
     if (!isObjEmpty(useUser().user.value.info)) {
       useUser().setLoadDone()
+    } else {
+      if (user) {
+        await useUser().setUserInfo()
+        useUser().setFirebaseUser(user);
+      }
     }
+    if (user) {
+      await setFirebaseToken()
+    }
+
 
   })
   if (!navigator.userAgent.match(/iPad/i) && !navigator.userAgent.match(/iPhone/i) && !window.navigator.userAgent.toLowerCase().includes('naver') && !window.navigator.userAgent.toLowerCase().includes('kakao') && window.location.protocol === 'https:') {
