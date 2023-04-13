@@ -51,15 +51,14 @@ definePageMeta({
 const isFlutter = await FlutterBridge().FlutterBridge.isFlutter()
 
 
-if (isFlutter) {
-  switchLocalePath('ko')
+if (!isFlutter) {
   // router.push('/login')
-} else {
 
 }
 
 
 onBeforeMount(() => {
+  switchLocalePath('ko')
 
   const isVisit = localStorage.getItem('zMoF')
 
@@ -70,7 +69,7 @@ onBeforeMount(() => {
   }
 
   if (useUser().user.value.fUser) {
-    router.push('/')
+    // router.push('/')
   }
 
 })
@@ -83,6 +82,7 @@ onBeforeMount(() => {
   position: relative;
   height: 80%;
   justify-content: flex-start;
+  margin: 20px;
 }
 
 img {
@@ -92,7 +92,7 @@ img {
 
 h3 {
   font-weight: 700;
-  font-size: 1.5rem;
+  font-size: 6vw;
   line-height: 87px;
   color: #000000;
   margin-bottom: 0px;
@@ -100,8 +100,7 @@ h3 {
 
 p {
   color: #fff;
-  font-size: 1rem;
-
+  font-size: 4vw;
 }
 
 button {

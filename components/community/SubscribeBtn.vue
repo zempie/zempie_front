@@ -1,23 +1,12 @@
 <template>
-  <a
-    v-if="!community?.is_subscribed"
-    class="btn-default mr10 mt20 w100p"
-    :community="community"
-    @click.stop="subscribe"
-    >{{ t('subscribe.btn') }}</a
-  >
+  <a v-if="!community?.is_subscribed" class="btn-default mr10 mt20 w100p" :community="community"
+    @click.stop="subscribe">{{ t('subscribe.btn') }}</a>
   <a v-else class="btn-sub mr10 mt20 w100p" @click.stop="modalIsOpen = true">{{
     t('isSubscribing')
   }}</a>
 
   <ClientOnly>
-    <el-dialog
-      v-model="modalIsOpen"
-      append-to-body
-      class="modal-area-type"
-      :show-close="false"
-      width="380px"
-    >
+    <el-dialog v-model="modalIsOpen" append-to-body class="modal-area-type" :show-close="false" width="380px">
       <div class="modal-alert">
         <dl class="ma-header">
           <dt>{{ t('information') }}</dt>
@@ -63,10 +52,11 @@ const props = defineProps({
 const emit = defineEmits(['refresh'])
 
 const isLogin = computed(() => useUser().user.value.isLogin)
+const communityId = computed(() => props.community.id)
 
 async function subscribe() {
   if (isLogin) {
-    const { data, error } = await community.subscribe(props.community.id)
+    const { data, error } = await useCustomAsyncFetch(`/community/${communityId.value}/subscribe`, getComFetchOptions('post', true))
     if (!error.value) {
       emit('refresh')
     }
@@ -76,8 +66,7 @@ async function subscribe() {
 }
 
 async function unsubscribe() {
-  const { data, error } = await community.unsubscribe(props.community.id)
-
+  const { data, error } = await useCustomAsyncFetch(`/community/${communityId.value}/unsubscribe`, getComFetchOptions('post', true))
   if (!error.value) {
     emit('refresh')
     modalIsOpen.value = false

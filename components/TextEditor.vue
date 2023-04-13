@@ -89,18 +89,13 @@
             savedTime
           }}</span></small>
         </Transition>
-        <dd>
+        <dd class="post-btn-container">
           <button v-if="draftList.length > 0" class="btn-line-small w100 mr10" id="loadPostBtn" @click="onLoadPost">
             Load
           </button>
           <button class="btn-line-small w100 mr10" id="draftPostBtn" @click="saveDraftCloseModal()">
             Draft
           </button>
-          <!-- <button v-if="!isFullScreen" class="btn-default-samll w100 cancel-btn" id="cancelPostBtn"
-            @click="closeTextEditor">
-            Cancel
-          </button> -->
-
           <button v-if="isEdit" class="btn-default-samll w100" id="updatePostBtn" @click="onUpdatePost">
             Update
           </button>
@@ -1741,14 +1736,6 @@ function getFirstPostContent(content: string) {
     }
   }
 
-  .mp-type {
-    dd {
-      button {
-        padding: 0px;
-        width: 50px !important;
-      }
-    }
-  }
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
@@ -1756,15 +1743,6 @@ function getFirstPostContent(content: string) {
     .btn-line-small {
       span:nth-child(3) {
         display: none;
-      }
-    }
-  }
-
-  .mp-type {
-    dd {
-      button {
-        padding: 0px;
-        width: 70px !important;
       }
     }
   }

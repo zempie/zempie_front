@@ -120,7 +120,7 @@ const useFetchData = async<T>(method: string, url: string, data = null, withCred
 
 const communityFetch = async (method: string, url: string, data = null, withCredentials: boolean = false, error = false) => {
   const config = useRuntimeConfig();
-  const accessToken = useCookie(config.COOKIE_NAME).value
+  const accessToken = useUser().user.value.fUser.accessToken
 
   const options = {
     method: method,
@@ -149,7 +149,7 @@ const communityFetch = async (method: string, url: string, data = null, withCred
 
 const studioFetch = async (method: string, url: string, data = null, withCredentials: boolean = false, error = false) => {
   const config = useRuntimeConfig();
-  const accessToken = useCookie(config.COOKIE_NAME).value
+  const accessToken = useUser().user.value.fUser.accessToken
 
   const options = {
     method: method,
@@ -179,8 +179,6 @@ export const searchKeyword = (keyword: string) => {
 
 
 export const auth = {
-
-
   signUp(obj: { name: string; nickname?: string }) {
     return useFetchData('post', '/user/sign-up', obj, true)
   },
@@ -246,13 +244,6 @@ export const project = {
 }
 
 export const community = {
-
-  subscribe(communityId: string) {
-    return communityFetch('post', `/community/${communityId}/subscribe`, undefined, true);
-  },
-  unsubscribe(communityId: string) {
-    return communityFetch('post', `/community/${communityId}/unsubscribe`, undefined, true);
-  },
   search(obj: any) {
     return communityFetch('get', `/search`, obj, false)
   },

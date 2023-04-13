@@ -125,6 +125,10 @@ export default function () {
       const result = JSON.parse(response);
       return result;
     },
+
+    async IdTokenChanged(user: any) {
+      return user
+    }
   };
 
   // export default FlutterBridge;
