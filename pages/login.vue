@@ -12,6 +12,8 @@
           <h3>{{ $t('login.text1') }}</h3>
           <p>{{ $t('login.text2') }}</p>
         </div>
+        {{ isVisit }}
+        <hr />
         {{ useUser().user.value.fUser }}
         <hr />
         {{ useUser().user.value.info }}
@@ -105,6 +107,7 @@ const config = useRuntimeConfig()
 const currUser = ref()
 const isPageLoading = ref(true)
 
+const isVisit = ref()
 
 definePageMeta({
   layout: 'layout-none',
@@ -180,6 +183,7 @@ onBeforeMount(() => {
 onMounted(() => {
   nextTick(() => {
     window.addEventListener("message", receiveMessage, false);
+    isVisit.value = localStorage.getItem('zMoF')
   })
 })
 
