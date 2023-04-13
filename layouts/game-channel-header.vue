@@ -2,7 +2,7 @@
   <div class="content">
     <GameHeaderSk v-if="isPending" />
     <GameHeader v-else :gameInfo="gameInfo" />
-    <div class="tab-menu-swiper">
+    <!-- <div class="tab-menu-swiper">
       <div class="swiper-area">
         <NuxtLink :class="['swiper-slide', !routeQuery && 'active']" :to="$localePath(`/game/${gamePath}`)">
           <p><i class="uil uil-clock-three"></i></p>
@@ -27,7 +27,7 @@
           <h2>{{ $t('audio') }}</h2>
         </NuxtLink>
       </div>
-    </div>
+    </div> -->
     <slot />
   </div>
 </template>

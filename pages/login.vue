@@ -11,13 +11,6 @@
         <h3>{{ $t('login.text1') }}</h3>
         <p>{{ $t('login.text2') }}</p>
       </div>
-      {{ useUser().user.value.fUser }}
-      <hr />
-      {{ useUser().user.value.info }}
-      <hr />
-      {{ idToken }}
-      <hr />
-      {{ currUser }}
       <div class="la-content">
         <form>
           <input type="email" v-model="v$.email.$model" name="login-email" title=""
@@ -37,7 +30,6 @@
         <p @click="onSubmit">
           <a class="btn-default-big text-white">{{ $t('login') }}</a>
         </p>
-
         <dl>
           <dt>
             <NuxtLink :to="$localePath('/reset-password')">{{
@@ -50,7 +42,7 @@
           </dt>
         </dl>
       </div>
-      <div class="la-bottom">
+      <div v-if="!isFlutter" class="la-bottom">
         <dl>
           <dt></dt>
           <dd>{{ $t('login.text3') }}</dd>
@@ -60,7 +52,7 @@
           <li @click="googleLogin">
             <img src="/images/google_login.png" alt="google-login" title="" />
           </li>
-          <li v-if="!isFlutter" @click="facebookLogin" class="mt10">
+          <li @click="facebookLogin" class="mt10">
             <img src="/images/facebook_login.png" alt="google-login" title="" />
           </li>
         </ul>
@@ -102,7 +94,6 @@ const route = useRoute()
 const config = useRuntimeConfig()
 
 const isFlutter = await FlutterBridge().FlutterBridge.isFlutter()
-const idToken = await FlutterBridge().FlutterBridge.IdTokenChanged()
 
 const currUser = ref()
 
@@ -153,6 +144,16 @@ const v$ = useVuelidate(rules, form)
 //     }
 //   })
 
+
+onMounted(() => {
+  nextTick(() => {
+    window.addEventListener("message", receiveMessage, false);
+  })
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener("message", receiveMessage, false);
+})
 
 async function onSubmit() {
   const isValid = await v$.value.$validate()
@@ -233,6 +234,17 @@ async function googleLogin() {
     const provider = new GoogleAuthProvider()
     return socialLogin(provider)
   }
+}
+
+async function receiveMessage(message: any) {
+  let data = message.data;
+  switch (data.type) {
+    case 'IdTokenChanged':
+    case 'idTokenChanged': {
+      currUser.value = data.user
+    }
+  }
+
 }
 
 async function facebookLogin() {

@@ -126,15 +126,6 @@ export default function () {
       return result;
     },
 
-    async IdTokenChanged() {
-
-      try {
-        const response = await callHandler("IdTokenChanged");
-        return !!response;
-      } catch (error) {
-        return false;
-      }
-    }
   };
 
   // export default FlutterBridge;
