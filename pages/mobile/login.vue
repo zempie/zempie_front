@@ -53,8 +53,6 @@ definePageMeta({
 const isFlutter = await FlutterBridge().FlutterBridge.isFlutter()
 
 
-
-
 onBeforeMount(() => {
 
   if (!isFlutter) {
