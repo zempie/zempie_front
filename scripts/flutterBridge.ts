@@ -125,6 +125,11 @@ export default function () {
       const result = JSON.parse(response);
       return result;
     },
+    async openFile() {
+      const response = await callHandler("openFile");
+      const result = JSON.parse(response);
+      return result;
+    }
 
   };
 

@@ -14,6 +14,7 @@
       </li>
     </ul>
     <div>
+      {{ flutterFile }}
       <Tiptap @editorContent="getEditorContent" @send-tag-info="getTagInfo" :postType="activeTab" :feed="feed"
         :key="activeTab" ref="tiptapRef" />
 
@@ -162,6 +163,7 @@ import {
 import { useI18n } from 'vue-i18n'
 import { htmlToDomElem, stringToDomElem, isImageUrl } from '~~/scripts/utils'
 import { fileUpload } from '~~/scripts/fileManager'
+import flutterBridge from '~~/scripts/flutterBridge'
 
 interface IDraft {
   time: number
@@ -249,6 +251,8 @@ const saveId = ref(Date.now())
 
 const gameInfo = computed(() => useGame().game.value.info)
 const communityInfo = computed(() => useCommunity().community.value.info)
+
+const flutterFile = ref()
 
 await communityFetch()
 
@@ -669,6 +673,10 @@ function uploadImageFile() {
 }
 
 function onSelectImageFile(event: Event) {
+  if (flutterBridge().FlutterBridge.isFlutter) {
+    flutterFile.value = flutterBridge().FlutterBridge.openFile()
+  }
+
   const files = (event.target as HTMLInputElement).files
 
   for (const file of files) {
