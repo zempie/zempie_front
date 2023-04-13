@@ -2,8 +2,7 @@
   <li>
     <i v-if="!isLiked" @click="setLike" class="xi-heart-o like-icon"
       style="font-size: 22px; color: #ff6e17; cursor: pointer"></i>
-    <i v-else @click="unsetLike" class="xi-heart like-icon"
-      style="font-size: 22px; color: #ff6e17; cursor: pointer"></i>
+    <i v-else @click="unsetLike" class="xi-heart like-icon" style="font-size: 22px; color: #ff6e17; cursor: pointer"></i>
     <span :class="likeCnt >= 1 && 'like-list pointer'" @click="showLikeFetch">
       {{ likeCnt }}</span>
   </li>
@@ -87,11 +86,9 @@ async function setLike() {
   }
   likeAcceessableCount = likeAcceessableCount - 1
   if (likeAcceessableCount > 0) {
+    isLiked.value = true
+    likeCnt.value++
     const { data, error } = await post.like(props.feed.id)
-    if (!error.value) {
-      isLiked.value = true
-      likeCnt.value++
-    }
   }
   likeAcceessableCount = likeAcceessableCount + 1
 }
@@ -103,11 +100,10 @@ async function unsetLike() {
   }
   unlikeAcceessableCount = unlikeAcceessableCount - 1
   if (unlikeAcceessableCount > 0) {
+    isLiked.value = false
+    likeCnt.value--
     const { data, error } = await post.unlike(props.feed.id)
-    if (!error.value) {
-      isLiked.value = false
-      likeCnt.value--
-    }
+
   }
   unlikeAcceessableCount = unlikeAcceessableCount + 1
 }

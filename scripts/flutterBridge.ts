@@ -126,8 +126,14 @@ export default function () {
       return result;
     },
 
-    async IdTokenChanged(user: any) {
-      return user
+    async IdTokenChanged() {
+
+      try {
+        const response = await callHandler("IdTokenChanged");
+        return !!response;
+      } catch (error) {
+        return false;
+      }
     }
   };
 

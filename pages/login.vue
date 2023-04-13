@@ -14,6 +14,8 @@
       {{ useUser().user.value.fUser }}
       <hr />
       {{ useUser().user.value.info }}
+      <hr />
+      {{ idToken }}
       <div class="la-content">
         <form>
           <input type="email" v-model="v$.email.$model" name="login-email" title=""
@@ -56,7 +58,7 @@
           <li @click="googleLogin">
             <img src="/images/google_login.png" alt="google-login" title="" />
           </li>
-          <li @click="facebookLogin" class="mt10">
+          <li v-if="!isFlutter" @click="facebookLogin" class="mt10">
             <img src="/images/facebook_login.png" alt="google-login" title="" />
           </li>
         </ul>
@@ -96,6 +98,10 @@ const { t, locale } = useI18n()
 const router = useRouter()
 const route = useRoute()
 const config = useRuntimeConfig()
+
+const isFlutter = await FlutterBridge().FlutterBridge.isFlutter()
+const idToken = await FlutterBridge().FlutterBridge.IdTokenChanged()
+
 
 definePageMeta({
   layout: 'layout-none',
