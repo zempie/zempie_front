@@ -16,6 +16,8 @@
       {{ useUser().user.value.info }}
       <hr />
       {{ idToken }}
+      <hr />
+      {{ currUser }}
       <div class="la-content">
         <form>
           <input type="email" v-model="v$.email.$model" name="login-email" title=""
@@ -101,6 +103,8 @@ const config = useRuntimeConfig()
 
 const isFlutter = await FlutterBridge().FlutterBridge.isFlutter()
 const idToken = await FlutterBridge().FlutterBridge.IdTokenChanged()
+
+const currUser = ref()
 
 
 definePageMeta({
@@ -211,6 +215,8 @@ async function googleLogin() {
             accessToken: result.credential.accessToken
           }
           useUser().setFirebaseUser(firebaseUser)
+          currUser.value = await getCurrentUser()
+
 
           await useUser().setUserInfo()
           if (useUser().user.value.info) {
