@@ -663,11 +663,11 @@ function getEditorContent(content: Editor) {
 }
 
 async function uploadImageFile() {
-  if (isFlutter.value) {
-    const dataUrl = await useMobile().openMobileFile({ type: 'image', multiple: true })
-    flutterFile.value = dataURLtoFile(dataUrl, 'image.png')
-    return
-  }
+  // if (isFlutter.value) {
+  //   const dataUrl = await useMobile().openMobileFile({ type: 'image', multiple: true })
+  //   flutterFile.value = dataURLtoFile(dataUrl, 'image.png')
+  //   return
+  // }
 
   if (activeTab.value.toUpperCase() === 'SNS') {
     if (snsAttachFiles.value.video || snsAttachFiles.value.audio?.length) {
