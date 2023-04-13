@@ -68,6 +68,7 @@
       </div>
     </div>
     <div v-else style="width:100vw; height:100vh; display: flex;justify-content: center; align-items: center;">
+      {{ useUser().user.value.isLoading }}
       <img src="/images/zempie-logo.png" alt="zempie" title="zempie" class="flex justify-center items-center" />
     </div>
   </div>
@@ -151,6 +152,15 @@ watch(
     }
   })
 
+
+watch(
+  () => useUser().user.value.isLoading,
+  (val) => {
+    if (!val) {
+      isPageLoading.value = false
+    }
+  })
+
 onBeforeMount(() => {
   if (isFlutter.value) {
     if (useUser().user.value.isLoading) {
@@ -171,7 +181,6 @@ onBeforeMount(() => {
 onMounted(() => {
   nextTick(() => {
     window.addEventListener("message", receiveMessage, false);
-    // isPageLoading.value = false
   })
 })
 
