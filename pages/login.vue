@@ -200,7 +200,12 @@ async function googleLogin() {
     return FlutterBridge().FlutterBridge.signInGoogle()
       .then(async (result: { additionalUserInfo: any, credential: any, stsTokenManager: any }) => {
         if (result) {
-          useUser().setFirebaseUser(result.additionalUserInfo.profile)
+          const firebaseUser = {
+            ...result.additionalUserInfo.profile,
+            accessToken: result.credential.accessToken
+          }
+          useUser().setFirebaseUser(firebaseUser)
+
           await useUser().setUserInfo()
           if (useUser().user.value.info) {
             await setFirebaseToken()
