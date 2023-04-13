@@ -197,18 +197,12 @@ const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
 
 async function uploadProfileFile() {
-  if (isFlutter.value) {
-    updateProfileFile.value = await useMobile().openMobileFile({ type: 'image', multiple: false })
-    return
-  }
+
   profileImg.value.click()
 }
 
 async function uploadBannerFile() {
-  if (isFlutter.value) {
-    updateBannerFile.value = await useMobile().openMobileFile({ type: 'image', multiple: false })
-    return
-  }
+
   bannerImg.value.click()
 }
 

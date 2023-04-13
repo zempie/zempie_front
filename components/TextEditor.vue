@@ -14,9 +14,6 @@
       </li>
     </ul>
     <div>
-      {{ isFlutter }}
-      <hr />
-      {{ flutterFile }}
       <Tiptap @editorContent="getEditorContent" @send-tag-info="getTagInfo" :postType="activeTab" :feed="feed"
         :key="activeTab" ref="tiptapRef" />
 
@@ -627,6 +624,7 @@ async function onSubmit() {
         '/community/att',
         getZempieFetchOptions('post', true, formData)
       )
+      console.log('data', data.value)
 
       payload['attatchment_files'] = data.value.result
     }
@@ -663,11 +661,6 @@ function getEditorContent(content: Editor) {
 }
 
 async function uploadImageFile() {
-  // if (isFlutter.value) {
-  //   const dataUrl = await useMobile().openMobileFile({ type: 'image', multiple: true })
-  //   flutterFile.value = dataURLtoFile(dataUrl, 'image.png')
-  //   return
-  // }
 
   if (activeTab.value.toUpperCase() === 'SNS') {
     if (snsAttachFiles.value.video || snsAttachFiles.value.audio?.length) {
@@ -681,20 +674,6 @@ async function uploadImageFile() {
   image.value.click()
 }
 
-function dataURLtoFile(dataurl, filename) {
-
-  var arr = dataurl.split(','),
-    mime = arr[0].match(/:(.*?);/)[1],
-    bstr = atob(arr[1]),
-    n = bstr.length,
-    u8arr = new Uint8Array(n);
-
-  while (n--) {
-    u8arr[n] = bstr.charCodeAt(n);
-  }
-
-  return new File([u8arr], filename, { type: mime });
-}
 
 
 
@@ -746,10 +725,7 @@ function deleteImg(idx: number) {
 }
 
 async function uploaVideoFile() {
-  if (isFlutter.value) {
-    flutterFile.value = await useMobile().openMobileFile({ type: 'video', multiple: true })
-    return
-  }
+
   if (activeTab.value.toUpperCase() === 'SNS') {
     if (
       snsAttachFiles.value.img?.length ||
@@ -801,10 +777,7 @@ function deleteVideo() {
 }
 
 async function uploadAudioFile() {
-  if (isFlutter.value) {
-    flutterFile.value = await useMobile().openMobileFile({ type: 'audio', multiple: true })
-    return
-  }
+
   if (activeTab.value.toUpperCase() === 'SNS') {
     if (snsAttachFiles.value.video || snsAttachFiles.value.img?.length) {
       ElMessage({
@@ -873,10 +846,6 @@ async function onUpdatePost() {
     && (Array.isArray(props.feed.attatchment_files)
       ? props.feed.attatchment_files
       : JSON.parse(props.feed.attatchment_files))
-
-
-
-  console.log(metaTagInfo.value)
 
   const attachedFile = []
   const payload = {
@@ -1149,9 +1118,6 @@ async function onUpdatePost() {
 
   Array.isArray(attachedFile) ? attachedFile : JSON.parse(attatchment_files)
 
-
-  console.log('attachedFile', attachedFile)
-  console.log('attatchment_files', attatchment_files)
 
   attachedFile?.filter((file) => {
     return file?.size

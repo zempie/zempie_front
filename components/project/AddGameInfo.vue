@@ -111,10 +111,10 @@
                     </p>
                   </transition>
                   <p style="
-                                width: 100%;
-                                display: flex;
-                                justify-content: space-around;
-                              ">
+                                  width: 100%;
+                                  display: flex;
+                                  justify-content: space-around;
+                                ">
                     <button class="btn-gray" @click="uploadThumbnail">
                       <i class="uil uil-upload"></i>&nbsp;
                       {{ $t('addGameInfo.game.thumbnail') }}
@@ -160,10 +160,10 @@
                     </template>
                   </div>
                   <p style="
-                                width: 100%;
-                                display: flex;
-                                justify-content: space-around;
-                              ">
+                                  width: 100%;
+                                  display: flex;
+                                  justify-content: space-around;
+                                ">
                     <button class="btn-gray" @click="uploadGif">
                       <i class="uil uil-upload"></i>
                       {{ $t('addGameInfo.game.thumbnail') }}
@@ -516,11 +516,6 @@ async function createGamePath() {
 }
 
 async function uploadThumbnail() {
-  if (isFlutter.value) {
-    thumbFile.value = await useMobile().openMobileFile({ type: 'image', multiple: false })
-    return
-  }
-
   thumbnail.value.click()
 }
 

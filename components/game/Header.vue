@@ -13,20 +13,20 @@
       </div>
 
       <span style="
-                    border-radius: 50%;
-                    background-color: #888;
-                    width: 30px;
-                    height: 30px;
-                    display: flex;
-                    cursor: pointer;
-                    align-items: center;
-                  " @click="uploadBanner">
+                        border-radius: 50%;
+                        background-color: #888;
+                        width: 30px;
+                        height: 30px;
+                        display: flex;
+                        cursor: pointer;
+                        align-items: center;
+                      " @click="uploadBanner">
         <i class="uil uil-image-edit" style="
-                      font-size: 20px;
-                      margin-right: 10px;
-                      color: #fff;
-                      margin: 0 auto;
-                    "></i>
+                          font-size: 20px;
+                          margin-right: 10px;
+                          color: #fff;
+                          margin: 0 auto;
+                        "></i>
       </span>
     </div>
     <dl>
@@ -224,10 +224,6 @@ async function uploadBanner() {
     editBannerUrl.value = prevBanner.value
     openCropper()
   } else {
-    if (isFlutter.value) {
-      bannerFile.value = await useMobile().openMobileFile({ type: 'image', multiple: false })
-      return
-    }
     bannerImg.value.click()
   }
 }
