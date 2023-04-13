@@ -1,9 +1,9 @@
 <template>
   <div class="content">
     <div class="visual-img" style="
-          background: url('/images/com_list_banner.jpeg') center no-repeat;
-          background-size: cover;
-        ">
+            background: url('/images/com_list_banner.jpeg') center no-repeat;
+            background-size: cover;
+          ">
       <div class="title">
         <h1>Communities</h1>
         <!-- TODO: 커뮤니티 전체 개수 -->
@@ -82,7 +82,7 @@ onMounted(async () => {
     { root: null, threshold: 1 }
   )
   observer.value.observe(triggerDiv.value)
-  // await fetch()
+  await fetch()
 })
 
 async function handleIntersection(target) {
