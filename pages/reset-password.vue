@@ -28,7 +28,7 @@
 
         </ul>
         <p>
-          <button @click="sendEmail" class="btn-default-big">
+          <button @click="sendEmail" class="btn-default-big text-white">
             {{ $t('send.email.btn') }}
           </button>
         </p>

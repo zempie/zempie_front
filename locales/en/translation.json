@@ -893,12 +893,13 @@
   "username.max.err2": "",
   "username.min.err2": "",
   "mobile.intro1.title1": "SNS for GAME DEVELOPERS",
-  "mobile.intro1.info1": "__STRING_NOT_TRANSLATED__",
-  "mobile.intro1.info2": "__STRING_NOT_TRANSLATED__",
+  "mobile.intro1.info1": "ZEMPIE is a SNS for all in gaming industry",
+  "mobile.intro1.info2": "to boost their communication and coworking culture.",
   "mobile.intro2.title1": "SHARE GAME & RESOURCE",
-  "mobile.intro2.info1": "__STRING_NOT_TRANSLATED__",
-  "mobile.intro2.info2": "__STRING_NOT_TRANSLATED__",
+  "mobile.intro2.info1": "Share your games, resources, assets,",
+  "mobile.intro2.info2": "feedbacks altogether, and make your own money too.",
   "mobile.intro3.title1": "PLAY GAMES",
-  "mobile.intro3.info1": "__STRING_NOT_TRANSLATED__",
-  "mobile.intro3.info2": "__STRING_NOT_TRANSLATED__"
+  "mobile.intro3.info1": "Play games from all over the world,",
+  "mobile.intro3.info2": "and support the game developers as well.",
+  "new.post": "New post"
 }

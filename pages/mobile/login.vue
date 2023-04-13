@@ -50,27 +50,23 @@ definePageMeta({
 const isFlutter = await FlutterBridge().FlutterBridge.isFlutter()
 
 
-if (isFlutter) {
-  if (process.env.NODE_ENV === 'development') {
-    router.push('/login')
-  }
+if (!isFlutter) {
+  router.push('/login')
 }
 
 
 onBeforeMount(() => {
-  if (process.env.NODE_ENV === 'development') {
 
-    const isVisit = localStorage.getItem('zMoF')
+  const isVisit = localStorage.getItem('zMoF')
 
-    if (isVisit) {
-      router.push('/login')
-    } else {
-      localStorage.setItem('zMoF', 'true')
-    }
+  if (isVisit) {
+    router.push('/login')
+  } else {
+    localStorage.setItem('zMoF', 'true')
+  }
 
-    if (useUser().user.value.fUser) {
-      router.push('/')
-    }
+  if (useUser().user.value.fUser) {
+    router.push('/')
   }
 
 })
@@ -92,7 +88,7 @@ img {
 
 h3 {
   font-weight: 700;
-  font-size: 2rem;
+  font-size: 1.5rem;
   line-height: 87px;
   color: #000000;
   margin-bottom: 0px;
