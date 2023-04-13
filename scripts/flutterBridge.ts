@@ -127,6 +127,7 @@ export default function () {
     },
     async openFile(options?: { type: string, multiple: boolean }) {
       const response = await callHandler("openFile", options);
+      alert(JSON.stringify(response))
       return response;
     }
 
