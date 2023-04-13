@@ -93,8 +93,6 @@ const router = useRouter()
 const route = useRoute()
 const config = useRuntimeConfig()
 
-const isFlutter = await FlutterBridge().FlutterBridge.isFlutter()
-
 const currUser = ref()
 
 
@@ -129,6 +127,8 @@ const rules = computed(() => {
   return formRule
 })
 const v$ = useVuelidate(rules, form)
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+
 // const isLogin = computed(() => useUser().user.value.isLogin)
 
 // watch(isLogin,
@@ -143,6 +143,15 @@ const v$ = useVuelidate(rules, form)
 //       }
 //     }
 //   })
+
+onBeforeMount(() => {
+  if (isFlutter.value) {
+    if (useUser().user.value.fUser) {
+      router.push($localePath('/'))
+    }
+  }
+
+})
 
 
 onMounted(() => {
@@ -206,8 +215,7 @@ async function onSubmit() {
 }
 
 async function googleLogin() {
-  const isFlutter = await FlutterBridge().FlutterBridge.isFlutter()
-  if (isFlutter) {
+  if (isFlutter.value) {
     return FlutterBridge().FlutterBridge.signInGoogle()
       .then(async (result: { additionalUserInfo: any, credential: any, stsTokenManager: any }) => {
         if (result) {
@@ -248,8 +256,7 @@ async function receiveMessage(message: any) {
 }
 
 async function facebookLogin() {
-  const isFlutter = await FlutterBridge().FlutterBridge.isFlutter()
-  if (isFlutter) {
+  if (isFlutter.value) {
     return FlutterBridge().FlutterBridge.signInFacebook()
       .then((result) => {
         useUser().setFirebaseUser(result)
