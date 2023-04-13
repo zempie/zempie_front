@@ -99,7 +99,6 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
 // $fetch interceptor
 export const useCustomFetch = async <T>(url: string, options?: FetchOptions, retryCount: number = 0) => {
   const config = useRuntimeConfig()
-  const accessToken = useCookie(config.COOKIE_NAME)
   const { $cookies, $localePath } = useNuxtApp()
   const router = useRouter()
 
@@ -146,9 +145,10 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
     },
 
     async onRequest({ request, options }) {
-      console.log('url', url)
 
       const user = await getCurrentUser()
+
+      alert(JSON.stringify(user));
       let token = user?.accessToken
       console.log('user', user)
 
