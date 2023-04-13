@@ -28,7 +28,7 @@
             <p>{{ $t('mobile.intro1.info1') }}</p>
             <p>{{ $t('mobile.intro1.info2') }}</p>
           </div>
-          <button @click="$router.push('/login')">시작하기</button>
+          <button @click="$router.push('/ko/login')">시작하기</button>
         </swiper-slide>
       </swiper>
     </ClientOnly>
@@ -42,6 +42,7 @@ import 'swiper/css/pagination';
 import FlutterBridge from '~~/scripts/flutterBridge'
 
 const router = useRouter()
+const switchLocalePath = useSwitchLocalePath()
 
 definePageMeta({
   layout: 'layout-none',
@@ -50,8 +51,11 @@ definePageMeta({
 const isFlutter = await FlutterBridge().FlutterBridge.isFlutter()
 
 
-if (!isFlutter) {
+if (isFlutter) {
+  switchLocalePath('ko')
   // router.push('/login')
+} else {
+
 }
 
 
