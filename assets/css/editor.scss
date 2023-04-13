@@ -349,7 +349,7 @@ pre {
 }
 
 .editor-container {
-  min-height: 200px;
+  // min-height: 200px;
   text-align: left;
   padding: 25px 15px 15px 15px;
   max-height: 350px;
@@ -606,4 +606,27 @@ pre {
 
 
 
+}
+
+
+
+
+
+@media all and (max-width: 479px) {
+  .post-btn-container {
+    button {
+      padding: 0px;
+      width: 50px !important;
+    }
+  }
+
+}
+
+@media all and (min-width: 480px) and (max-width: 767px) {
+  .post-btn-container {
+    button {
+      padding: 0px;
+      width: 70px !important;
+    }
+  }
 }

@@ -89,18 +89,13 @@
             savedTime
           }}</span></small>
         </Transition>
-        <dd>
+        <dd class="post-btn-container">
           <button v-if="draftList.length > 0" class="btn-line-small w100 mr10" id="loadPostBtn" @click="onLoadPost">
             Load
           </button>
-          <button class="btn-green-small w100 mr10" id="draftPostBtn" @click="saveDraftCloseModal()">
+          <button class="btn-line-small w100 mr10" id="draftPostBtn" @click="saveDraftCloseModal()">
             Draft
           </button>
-          <button v-if="!isFullScreen" class="btn-default-samll w100 cancel-btn" id="cancelPostBtn"
-            @click="closeTextEditor">
-            Cancel
-          </button>
-
           <button v-if="isEdit" class="btn-default-samll w100" id="updatePostBtn" @click="onUpdatePost">
             Update
           </button>
@@ -167,6 +162,7 @@ import {
 import { useI18n } from 'vue-i18n'
 import { htmlToDomElem, stringToDomElem, isImageUrl } from '~~/scripts/utils'
 import { fileUpload } from '~~/scripts/fileManager'
+import flutterBridge from '~~/scripts/flutterBridge'
 
 interface IDraft {
   time: number
@@ -254,6 +250,9 @@ const saveId = ref(Date.now())
 
 const gameInfo = computed(() => useGame().game.value.info)
 const communityInfo = computed(() => useCommunity().community.value.info)
+
+const flutterFile = ref()
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
 await communityFetch()
 
@@ -625,6 +624,7 @@ async function onSubmit() {
         '/community/att',
         getZempieFetchOptions('post', true, formData)
       )
+      console.log('data', data.value)
 
       payload['attatchment_files'] = data.value.result
     }
@@ -660,7 +660,8 @@ function getEditorContent(content: Editor) {
   form.post_contents = content.getHTML()
 }
 
-function uploadImageFile() {
+async function uploadImageFile() {
+
   if (activeTab.value.toUpperCase() === 'SNS') {
     if (snsAttachFiles.value.video || snsAttachFiles.value.audio?.length) {
       ElMessage({
@@ -673,7 +674,12 @@ function uploadImageFile() {
   image.value.click()
 }
 
+
+
+
 function onSelectImageFile(event: Event) {
+
+
   const files = (event.target as HTMLInputElement).files
 
   for (const file of files) {
@@ -684,7 +690,6 @@ function onSelectImageFile(event: Event) {
     const reader = new FileReader()
 
     reader.onload = async (e) => {
-      console.log('reader', activeTab.value.toUpperCase())
 
       const url = e.target!.result as string
 
@@ -719,7 +724,8 @@ function deleteImg(idx: number) {
   snsAttachFiles.value.img.splice(idx, 1)
 }
 
-function uploaVideoFile() {
+async function uploaVideoFile() {
+
   if (activeTab.value.toUpperCase() === 'SNS') {
     if (
       snsAttachFiles.value.img?.length ||
@@ -770,7 +776,8 @@ function deleteVideo() {
   snsAttachFiles.value.video = null
 }
 
-function uploadAudioFile() {
+async function uploadAudioFile() {
+
   if (activeTab.value.toUpperCase() === 'SNS') {
     if (snsAttachFiles.value.video || snsAttachFiles.value.img?.length) {
       ElMessage({
@@ -839,10 +846,6 @@ async function onUpdatePost() {
     && (Array.isArray(props.feed.attatchment_files)
       ? props.feed.attatchment_files
       : JSON.parse(props.feed.attatchment_files))
-
-
-
-  console.log(metaTagInfo.value)
 
   const attachedFile = []
   const payload = {
@@ -1115,9 +1118,6 @@ async function onUpdatePost() {
 
   Array.isArray(attachedFile) ? attachedFile : JSON.parse(attatchment_files)
 
-
-  console.log('attachedFile', attachedFile)
-  console.log('attatchment_files', attatchment_files)
 
   attachedFile?.filter((file) => {
     return file?.size
@@ -1741,14 +1741,6 @@ function getFirstPostContent(content: string) {
     }
   }
 
-  .mp-type {
-    dd {
-      button {
-        padding: 0px;
-        width: 50px !important;
-      }
-    }
-  }
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
@@ -1756,15 +1748,6 @@ function getFirstPostContent(content: string) {
     .btn-line-small {
       span:nth-child(3) {
         display: none;
-      }
-    }
-  }
-
-  .mp-type {
-    dd {
-      button {
-        padding: 0px;
-        width: 70px !important;
       }
     }
   }

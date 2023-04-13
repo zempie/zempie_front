@@ -2,6 +2,7 @@ import { IUser } from "~~/types"
 import { signOut } from 'firebase/auth'
 import { ElMessage, ElDialog } from "element-plus";
 import { removeFcmToken } from "~~/scripts/firebase-fcm";
+import { isObjEmpty } from "~~/scripts/utils";
 
 export default function () {
   const { $firebaseAuth, $cookies } = useNuxtApp()
@@ -9,13 +10,12 @@ export default function () {
   const router = useRouter();
 
   const user = useState('user', () => ({
-    isLogin: false,
     info: null as IUser,
     fUser: null,
     isSignUp: false,
-    isLoading: true, //header loading
+    isLoading: true,
+    isLogin: false,
   }))
-
 
   const setFirebaseUser = (info: any) => {
     user.value.fUser = info
@@ -24,14 +24,10 @@ export default function () {
   const setUser = (info: IUser) => {
     user.value.info = { ...info }
   }
-
   const setLogin = () => {
-    user.value.isLoading = false;
-    user.value.isLogin = !!user.value.info;
+    user.value.isLogin = true;
   }
-  const setLogout = () => {
-    user.value.isLogin = false;
-  }
+
   const setSignup = () => {
     user.value.isSignUp = true;
   }
@@ -47,13 +43,16 @@ export default function () {
   }
   const removeUserState = () => {
     user.value.fUser = null;
-    user.value.info = {} as IUser;
+    user.value.info = null as IUser;
     user.value.isLogin = false;
+    // useChannel().resetUserChannel()
   }
 
   const updateUserKey = (key: string, value?: any) => {
     user.value.info[key] = value
-
+  }
+  const updateFbToken = (token: string) => {
+    user.value.fUser.accessToken = token
   }
 
 
@@ -64,16 +63,6 @@ export default function () {
       })
       .then(() => {
         removeUserState();
-        setLogout()
-        $cookies.remove(config.COOKIE_NAME, {
-          path: '/',
-          domain: config.COOKIE_DOMAIN
-        })
-
-        $cookies.remove(config.REFRESH_TOKEN, {
-          path: '/',
-          domain: config.COOKIE_DOMAIN
-        })
       })
       .catch((error: any) => {
         ElMessage({
@@ -90,12 +79,24 @@ export default function () {
 
   const setUserInfo = async () => {
     colorLog(`===set user info===`, '#ed1cdc')
-    const response = await useCustomFetch<{ result: { user: IUser } }>('/user/info', getZempieFetchOptions('get', true))
 
-    if (response) {
-      const { user: userResult } = response.result
-      user.value.info = { ...userResult }
-      setLogin()
+    try {
+      const response = await useCustomFetch<{ result: { user: IUser } }>('/user/info', getZempieFetchOptions('get', true))
+
+      if (response) {
+        const { user: userResult } = response.result
+        user.value.info = { ...userResult }
+
+        user.value.isLogin = true;
+        useUser().setLoadDone()
+
+      }
+      if (!isObjEmpty(user.value.fUser)) {
+        useUser().setLoadDone()
+      }
+    } catch (error) {
+      console.log(error)
+      useUser().setLoadDone()
     }
 
   }
@@ -106,7 +107,7 @@ export default function () {
     setUser,
     setFirebaseUser,
     setLogin,
-    setLogout,
+    // setLogout,
     setProfileImg,
     removeUserState,
     logout,
@@ -115,6 +116,7 @@ export default function () {
     setBannerImg,
     setLoadDone,
     setUserInfo,
-    updateUserKey
+    updateUserKey,
+    updateFbToken
   }
 }

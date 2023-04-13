@@ -890,5 +890,14 @@
   "username.max.err1": "사용자 아이디는",
   "username.max.err2": "자 미만이어야 합니다.",
   "username.min.err2": "자 이상이어야 합니다.",
-  "new.post": "새 게시물"
+  "mobile.intro1.title1": "SNS for GAME DEVELOPERS",
+  "mobile.intro1.info1": "젬파이는 전세계 게임개발자들과 게임업계인들의",
+  "mobile.intro1.info2": "소통과 교류를 위한 SNS 입니다",
+  "mobile.intro2.title1": "SHARE GAME & RESOURCE",
+  "mobile.intro2.info1": "내가 만든 게임과 리소스를 공유하고 피드백을",
+  "mobile.intro2.info2": "주고 받으며, 수익도 창출해 보세요",
+  "mobile.intro3.title1": "PLAY GAMES",
+  "mobile.intro3.info1": "전세계 개발자들의 다양한 게임을 플레이하고",
+  "mobile.intro3.info2": "서로 응원해 주세요",
+  "new.post": "새 포스팅"
 }

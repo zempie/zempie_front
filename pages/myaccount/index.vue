@@ -193,12 +193,16 @@ const profileStyle = computed(() => {
     : `background: url(/images/300_300_default_profile.png) center center / cover no-repeat; background-size: cover;`
 })
 
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
-function uploadProfileFile() {
+
+async function uploadProfileFile() {
+
   profileImg.value.click()
 }
 
-function uploadBannerFile() {
+async function uploadBannerFile() {
+
   bannerImg.value.click()
 }
 
@@ -285,7 +289,9 @@ async function onSubmit() {
 
 
   try {
-    const { data } = await user.updateInfo(formData);
+    const { data } = await useCustomAsyncFetch<{ result: any }>('/user/update/info', getZempieFetchOptions('post', true, formData))
+
+
     const { result } = data.value;
     const { user: userInfo } = result;
 

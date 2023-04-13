@@ -33,17 +33,20 @@ const router = useRouter()
 const isOpen = ref(false)
 const showOneDay = ref(false)
 const showNever = ref(false)
-
-const userInfo = useUser().user.value.info
+const userInfo = computed(() => useUser().user.value.info)
+const cookie = useCookie(config.COOKIE_NAME)
+const isLogin = computed(() => useUser().user.value.isLogin)
 
 
 watch(
   () => useUser().user.value.fUser,
   async (fUser) => {
-    if (useCookie(config.COOKIE_NAME).value && !userInfo) {
-      await useUser().setUserInfo()
+    if (fUser && !userInfo.value) {
+      // await useUser().setUserInfo()
     }
   })
+
+
 
 
 shared.createHeadMeta(
@@ -55,7 +58,19 @@ provide(ID_INJECTION_KEY, {
   current: 0,
 })
 
+
 onBeforeMount(async () => {
+  await useMobile().setMobileState()
+
+  const fUser = await getCurrentUser()
+  if (!fUser) {
+    useUser().setLoadDone()
+  }
+
+
+  if (cookie.value) {
+    cookie.value = null
+  }
 
   const lang = navigator.language.split('-')[0]
 
@@ -70,10 +85,6 @@ onBeforeMount(async () => {
 
   router.replace(route.fullPath)
 
-  //로그인 확인 처리
-  if (useCookie(config.REFRESH_TOKEN).value) {
-    await getRefreshToken()
-  }
 
 })
 

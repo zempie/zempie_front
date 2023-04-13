@@ -1,15 +1,7 @@
 <template>
   <ClientOnly>
-    <el-dialog
-      v-model="isTextEditorOpen"
-      class="post-modal"
-      :show-close="false"
-      :close-on-click-modal="false"
-      :close-on-press-escape="false"
-      :destroy-on-close="true"
-      @close="closeEditor"
-      :fullscreen="isFullScreen"
-    >
+    <el-dialog v-model="isTextEditorOpen" class="post-modal" :show-close="false" :close-on-click-modal="false"
+      :close-on-press-escape="false" :destroy-on-close="true" @close="closeEditor" :fullscreen="isFullScreen">
       <slot name="textEditor"></slot>
     </el-dialog>
   </ClientOnly>
@@ -59,4 +51,4 @@ function onResize() {
   usePost().setFullScreen(isFullScreen.value)
 }
 </script>
-<style scoped></style>
+<style scoped land="scss"></style>

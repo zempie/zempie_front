@@ -1,3 +1,6 @@
+import { getAuth, getIdToken } from "firebase/auth";
+import { access } from "fs";
+
 function baseOption(method: string, withCredentials: boolean, body?: object) {
   const config = useRuntimeConfig();
   const accessToken = useCookie(config.COOKIE_NAME)
@@ -5,7 +8,7 @@ function baseOption(method: string, withCredentials: boolean, body?: object) {
   const options = {
     key: `${Date.now()}`,
     method: method,
-    headers: (accessToken.value && withCredentials) && { 'Authorization': `Bearer ${accessToken.value}` },
+    headers: {},
     initialCache: false,
   }
 
@@ -51,12 +54,10 @@ export const getComFetchOptions = (method = 'get', withCredentials = false, body
 
 const useFetchData = async<T>(method: string, url: string, data = null, withCredentials: boolean = false, error = false) => {
   const config = useRuntimeConfig();
-  const accessToken = useCookie(config.COOKIE_NAME).value
 
   const options = {
     method: method,
     baseURL: config.BASE_API,
-    headers: accessToken && withCredentials ? { 'Authorization': `Bearer ${accessToken}` } : {},
     initialCache: false,
   }
 
@@ -80,15 +81,46 @@ const useFetchData = async<T>(method: string, url: string, data = null, withCred
   } else {
     options['body'] = data;
   }
-  const result = await useFetch<T>(url, options)
+  return await useFetch<T>(url, {
+    ...options,
+    async onResponse({ request, response, options }) {
 
-  return result
+    },
+    async onResponseError({ request, response, options }) {
+
+    },
+    async onRequest({ request, options }) {
+      const user = await getCurrentUser()
+
+      if (user) {
+        const expirationTime = user.stsTokenManager.expirationTime
+        let token = user.accessToken
+        console.log(token)
+        if (expirationTime <= Date.now()) {
+          const newToken = await getIdToken(user, true)
+          console.log(newToken)
+        }
+        options.headers['Authorization'] = `Bearer ${token}`
+      }
+
+
+      options.headers = options.headers || {}
+
+
+      console.log('[fetch request]')
+
+    },
+    async onRequestError({ request, options, error }) {
+
+    }
+  })
+
 
 }
 
 const communityFetch = async (method: string, url: string, data = null, withCredentials: boolean = false, error = false) => {
   const config = useRuntimeConfig();
-  const accessToken = useCookie(config.COOKIE_NAME).value
+  const accessToken = useUser().user.value.fUser.accessToken
 
   const options = {
     method: method,
@@ -117,7 +149,7 @@ const communityFetch = async (method: string, url: string, data = null, withCred
 
 const studioFetch = async (method: string, url: string, data = null, withCredentials: boolean = false, error = false) => {
   const config = useRuntimeConfig();
-  const accessToken = useCookie(config.COOKIE_NAME).value
+  const accessToken = useUser().user.value.fUser.accessToken
 
   const options = {
     method: method,
@@ -147,8 +179,6 @@ export const searchKeyword = (keyword: string) => {
 
 
 export const auth = {
-
-
   signUp(obj: { name: string; nickname?: string }) {
     return useFetchData('post', '/user/sign-up', obj, true)
   },
@@ -156,7 +186,7 @@ export const auth = {
 
 export const user = {
   getUserInfo(channelId: string) {
-    return useFetchData('get', `/channel/${channelId}`, undefined, true)
+    return useFetchData('get', `/channel/${channelId}`, undefined, false)
   },
   follow(userId: number) {
     return communityFetch('post', `/user/${userId}/follow`, undefined, true);
@@ -173,9 +203,7 @@ export const user = {
   followerList(obj: any, userId: any) {
     return communityFetch('get', `/user/${userId}/list/follower`, obj, true);
   },
-  updateInfo(formData: FormData) {
-    return useFetchData<{ result: any }>('post', `/user/update/info`, formData, true);
-  },
+
   leave(obj: { text: string, num: string }) {
     return useFetchData('post', `/user/leave-zempie`, obj, true);
   }
@@ -216,13 +244,6 @@ export const project = {
 }
 
 export const community = {
-
-  subscribe(communityId: string) {
-    return communityFetch('post', `/community/${communityId}/subscribe`, undefined, true);
-  },
-  unsubscribe(communityId: string) {
-    return communityFetch('post', `/community/${communityId}/unsubscribe`, undefined, true);
-  },
   search(obj: any) {
     return communityFetch('get', `/search`, obj, false)
   },

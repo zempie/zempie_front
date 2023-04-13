@@ -87,7 +87,8 @@ watch(
 watch(
   () => useUser().user.value.info,
   (val) => {
-    if (val.new_noti_count) hasNewNoti.value = true
+
+    if (val?.new_noti_count) hasNewNoti.value = true
   }
 )
 

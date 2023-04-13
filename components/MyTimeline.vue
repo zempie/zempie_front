@@ -2,46 +2,15 @@
   <NuxtLayout name="my-timeline">
     <dl class="three-area">
       <dt>
-        <ChannelInfoBox />
-        <ChannelGameBox />
-        <!-- <div class="ta-game-list" :key="userInfo?.id">
-          <dl>
-            <dt>Games</dt>
-          </dl>
-
-          <ul v-if="channelInfo?.games?.length">
-            <li v-for="game in channelInfo?.games?.slice(0, 5)"
-              @click="$router.push($localePath(`/game/${game.pathname}`))">
-              <p :style="`background:url(${game.url_thumb_webp || '/images/default.png'
-                }) center; background-size:cover;`"></p>
-              <h2 style="text-overflow: ellipsis; overflow: hidden">
-                {{ game.title }}
-              </h2>
-            </li>
-          </ul>
-          <ul v-else class="no-game">
-            <li>{{ $t('no.game') }}</li>
-          </ul>
-          <div v-if="channelInfo?.games?.length > 5">
-            <NuxtLink :to="$localePath(`/channel/${userInfo?.channel_id}/games`)" class="btn-default-samll w100p">{{
-              $t('moreView')
-            }}
-            </NuxtLink>
-          </div>
-        </div> -->
+        <ChannelInfoBox :key="channelInfo.channel_id" />
+        <ChannelGameBox :key="channelInfo.channel_id" />
       </dt>
-
       <dd>
         <PostTimeline type="userAll" :isMine="true" />
       </dd>
       <dt>
         <div class="ta-groups" style="margin-top: 0px">
           <h2>Community</h2>
-          <!-- <div v-if="isChannelLoading">
-            <dl v-for="group in 4">
-              <CommunityListItemSk />
-            </dl>
-          </div> -->
           <CommunityList :communities="channelInfo?.communities" :isLoading="isChannelLoading" />
         </div>
       </dt>
@@ -51,6 +20,7 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import { isObjEmpty } from '~~/scripts/utils';
 
 const { $localePath } = useNuxtApp()
 const config = useRuntimeConfig()
@@ -76,9 +46,9 @@ watch(
   }
 )
 
-onMounted(() => {
-  if (!useCookie(config.COOKIE_NAME).value) navigateTo('/')
-
+onMounted(async () => {
+  // if (!useCookie(config.COOKIE_NAME).value) navigateTo('/')
+  await useChannel().getChannelInfo(userInfo.value.channel_id)
   games.value = channelInfo.value?.games
   isPending.value = false
 })

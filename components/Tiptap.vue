@@ -1,42 +1,45 @@
 <template>
-  <div style="min-height: 200px; max-height: 80vh">
-    <BubbleMenu :editor="editor" v-if="editor && shouldShow()" class="table-bubble-menu">
-      <ul>
-        <li @click="editor.chain().focus().addColumnBefore().run()">
-          <p><i class="uil uil-plus"></i> add column before</p>
-        </li>
-        <li @click="editor.chain().focus().addColumnAfter().run()">
-          <p><i class="uil uil-plus"></i> add column after</p>
-        </li>
-        <li @click="editor.chain().focus().addRowBefore().run()">
-          <p><i class="uil uil-plus"></i> add row before</p>
-        </li>
-        <li @click="editor.chain().focus().addRowAfter().run()">
-          <p><i class="uil uil-plus"></i> add row after</p>
-        </li>
-        <li @click="editor.chain().focus().deleteTable().run()">
-          <p><i class="uil uil-trash-alt"></i> delete table</p>
-        </li>
-        <li @click="editor.chain().focus().deleteRow().run()">
-          <p><i class="uil uil-minus"></i> delete row</p>
-        </li>
-        <li @click="editor.chain().focus().deleteColumn().run()">
-          <p><i class="uil uil-minus"></i> delete column</p>
-        </li>
-        <li @click="editor.chain().focus().mergeCells().run()">
-          <p><i class="uil uil-arrows-merge"></i> merge</p>
-        </li>
-        <li @click="editor.chain().focus().splitCell().run()">
-          <p><i class="uil uil-arrows-resize-h"></i> split</p>
-        </li>
-      </ul>
-    </BubbleMenu>
-    <EditorContent :editor="editor" :class="['editor-container', postType === 'SNS' ? 'sns' : 'blog']" @drop="dropEditor"
-      @paste="pasteEditor" @input="handleInput" />
-    <PostLinkPreview v-if="hasLink" :tagInfo="tagInfo" @removeLink="onRemoveLink" />
-    <div class="character-count">
-      <p>{{ charCount }}/{{ limit }}</p>
+  <div>
+    <div style="min-height: 200px; max-height: 80vh;">
+      <BubbleMenu :editor="editor" v-if="editor && shouldShow()" class="table-bubble-menu">
+        <ul>
+          <li @click="editor.chain().focus().addColumnBefore().run()">
+            <p><i class="uil uil-plus"></i> add column before</p>
+          </li>
+          <li @click="editor.chain().focus().addColumnAfter().run()">
+            <p><i class="uil uil-plus"></i> add column after</p>
+          </li>
+          <li @click="editor.chain().focus().addRowBefore().run()">
+            <p><i class="uil uil-plus"></i> add row before</p>
+          </li>
+          <li @click="editor.chain().focus().addRowAfter().run()">
+            <p><i class="uil uil-plus"></i> add row after</p>
+          </li>
+          <li @click="editor.chain().focus().deleteTable().run()">
+            <p><i class="uil uil-trash-alt"></i> delete table</p>
+          </li>
+          <li @click="editor.chain().focus().deleteRow().run()">
+            <p><i class="uil uil-minus"></i> delete row</p>
+          </li>
+          <li @click="editor.chain().focus().deleteColumn().run()">
+            <p><i class="uil uil-minus"></i> delete column</p>
+          </li>
+          <li @click="editor.chain().focus().mergeCells().run()">
+            <p><i class="uil uil-arrows-merge"></i> merge</p>
+          </li>
+          <li @click="editor.chain().focus().splitCell().run()">
+            <p><i class="uil uil-arrows-resize-h"></i> split</p>
+          </li>
+        </ul>
+      </BubbleMenu>
+      <EditorContent :editor="editor" :class="['editor-container', postType === 'SNS' ? 'sns' : 'blog']"
+        @drop="dropEditor" @paste="pasteEditor" @input="handleInput" />
+
+      <div class="character-count">
+        <p>{{ charCount }}/{{ limit }}</p>
+      </div>
     </div>
+    <PostLinkPreview v-if="hasLink" :tagInfo="tagInfo" @removeLink="onRemoveLink" />
   </div>
 </template>
 
@@ -51,7 +54,6 @@ import {
   VueNodeViewRenderer,
   BubbleMenu,
 } from '@tiptap/vue-3'
-import Youtube from '@tiptap/extension-youtube'
 import Link from '@tiptap/extension-link'
 import StarterKit from '@tiptap/starter-kit'
 import CharacterCount from '@tiptap/extension-character-count'

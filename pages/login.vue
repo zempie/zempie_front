@@ -1,4 +1,5 @@
 <template>
+  <!-- <div> -->
   <div class="login-bg pt50 pb50" style="height: 100vh; min-height: 900px">
     <div class="login-logo">
       <LoginWhiteLogoDt path="/" />
@@ -11,6 +12,11 @@
         <h3>{{ $t('login.text1') }}</h3>
         <p>{{ $t('login.text2') }}</p>
       </div>
+      {{ isVisit }}
+      <hr />
+      {{ useUser().user.value.fUser }}
+      <hr />
+      {{ useUser().user.value.info }}
       <div class="la-content">
         <form>
           <input type="email" v-model="v$.email.$model" name="login-email" title=""
@@ -30,7 +36,6 @@
         <p @click="onSubmit">
           <a class="btn-default-big text-white">{{ $t('login') }}</a>
         </p>
-
         <dl>
           <dt>
             <NuxtLink :to="$localePath('/reset-password')">{{
@@ -43,7 +48,7 @@
           </dt>
         </dl>
       </div>
-      <div class="la-bottom">
+      <div v-if="!isFlutter" class="la-bottom">
         <dl>
           <dt></dt>
           <dd>{{ $t('login.text3') }}</dd>
@@ -64,6 +69,11 @@
       </div>
     </div>
   </div>
+  <!-- <div v-else style="width:100vw; height:100vh; display: flex;justify-content: center; align-items: center;">
+      {{ useUser().user.value.isLoading }}
+      <img src="/images/zempie-logo.png" alt="zempie" title="zempie" class="flex justify-center items-center" />
+    </div>
+  </div> -->
 </template>
 
 <script setup lang="ts">
@@ -81,8 +91,11 @@ import {
   AuthProvider,
   setPersistence,
   browserSessionPersistence,
+  browserLocalPersistence,
 } from 'firebase/auth'
 import shared from '~/scripts/shared'
+import FlutterBridge from '~~/scripts/flutterBridge'
+import { setFirebaseToken } from '~~/plugins/firebase.client'
 
 const { $firebaseAuth, $cookies, $localePath } = useNuxtApp()
 
@@ -90,6 +103,11 @@ const { t, locale } = useI18n()
 const router = useRouter()
 const route = useRoute()
 const config = useRuntimeConfig()
+
+const currUser = ref()
+const isPageLoading = ref(true)
+
+const isVisit = ref()
 
 definePageMeta({
   layout: 'layout-none',
@@ -122,33 +140,80 @@ const rules = computed(() => {
   return formRule
 })
 const v$ = useVuelidate(rules, form)
-const isLogin = computed(() => useUser().user.value.isLogin)
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
-watch(isLogin,
-  async (val) => {
+
+watch(
+  () => useUser().user.value.info,
+  (val) => {
     if (val) {
-      router.push($localePath('/'))
-      const { token } = await fbFcm.getFcmToken(useUser().user.value.info.id)
-      console.log('token', token)
-      if (!token) {
-        console.log('regi token')
-        await fbFcm.resigterFcmToken(useUser().user.value.info.id)
+      if (isPageLoading.value) {
+        router.push($localePath('/'))
+        isPageLoading.value = false
       }
     }
   })
 
-console.log(useUser().user.value.isLogin)
+
+watch(
+  () => useUser().user.value.isLoading,
+  (val) => {
+    if (!val) {
+      isPageLoading.value = false
+    }
+  })
+
+onBeforeMount(() => {
+  if (isFlutter.value) {
+    if (useUser().user.value.isLoading) {
+      isPageLoading.value = true
+    } else {
+      isPageLoading.value = false
+      if (useUser().user.value.fUser) {
+        router.push($localePath('/'))
+      }
+    }
+  } else {
+    isPageLoading.value = false
+  }
+
+})
+
+
+onMounted(() => {
+  nextTick(() => {
+    window.addEventListener("message", receiveMessage, false);
+    isVisit.value = localStorage.getItem('zMoF')
+  })
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener("message", receiveMessage, false);
+})
 
 async function onSubmit() {
   const isValid = await v$.value.$validate()
 
   if (!isValid) return
-  setPersistence($firebaseAuth, browserSessionPersistence)
+  setPersistence($firebaseAuth, browserLocalPersistence)
     .then((res) => {
       signInWithEmailAndPassword($firebaseAuth, form.email, form.password)
         .then(async (result) => {
           const { user } = result
+          if (user) {
+            router.push($localePath('/'))
+            // await useUser().setUserInfo()
+          }
         })
+        // .then(async () => {
+        //   router.push($localePath('/'))
+        //   const { token } = await fbFcm.getFcmToken(useUser().user.value.info.id)
+        //   console.log('token', token)
+        //   if (!token) {
+        //     console.log('regi token')
+        //     await fbFcm.resigterFcmToken(useUser().user.value.info.id)
+        //   }
+        // })
         .catch((err: any) => {
           const errorCode = err.code
           const errorMessage = err.message
@@ -163,7 +228,6 @@ async function onSubmit() {
               break
             case 'auth/user-not-found':
               ElMessage.error(`${t('fb.not.found')}`)
-
               break
             default:
               ElMessage.error(errorCode)
@@ -178,21 +242,66 @@ async function onSubmit() {
 }
 
 async function googleLogin() {
-  const provider = new GoogleAuthProvider()
-  return socialLogin(provider)
+  if (isFlutter.value) {
+    return FlutterBridge().FlutterBridge.signInGoogle()
+      .then(async (result: { additionalUserInfo: any, credential: any, stsTokenManager: any }) => {
+        if (result) {
+          const firebaseUser = {
+            ...result.additionalUserInfo.profile,
+            accessToken: result.credential.accessToken
+          }
+          useUser().setFirebaseUser(firebaseUser)
+          currUser.value = await getCurrentUser()
+
+
+          await useUser().setUserInfo()
+          if (useUser().user.value.info) {
+            await setFirebaseToken()
+          }
+
+        }
+        // state.fUser = result;
+      })
+      .catch((err) => {
+        alert(err)
+      })
+  } else {
+    const provider = new GoogleAuthProvider()
+    return socialLogin(provider)
+  }
+}
+
+async function receiveMessage(message: any) {
+  let data = message.data;
+  switch (data.type) {
+    case 'IdTokenChanged':
+    case 'idTokenChanged': {
+      currUser.value = data.user
+    }
+  }
+
 }
 
 async function facebookLogin() {
-  const provider = new FacebookAuthProvider()
-  provider.addScope('email')
-  return socialLogin(provider)
+  if (isFlutter.value) {
+    return FlutterBridge().FlutterBridge.signInFacebook()
+      .then((result) => {
+        useUser().setFirebaseUser(result)
+        // state.fUser = result;
+      });
+  } else {
+    const provider = new FacebookAuthProvider()
+    provider.addScope('email')
+    provider.addScope('public_profile')
+    return socialLogin(provider)
+  }
 }
 
 async function socialLogin(provider: AuthProvider) {
   try {
     const res = await signInWithPopup($firebaseAuth, provider)
-    //회원가입 정보 없는 경우 ???
-    // useUser().setFirebaseUser(res.user)
+    router.push($localePath('/'))
+
   } catch (err) {
     console.error('socialLogin err', err)
 

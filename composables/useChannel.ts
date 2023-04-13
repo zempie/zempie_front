@@ -51,9 +51,6 @@ export default function () {
     userChannel.value.info = {} as IUserChannel
   }
 
-  const getUserJoinedCommunity = async (userId: number) => {
-    return await user.joinedCommunity(userId)
-  }
 
   const setFollowing = () => {
     userChannel.value.info.is_following = true;

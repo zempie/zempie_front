@@ -1,0 +1,146 @@
+<template>
+  <div style="background-color: #fff; ">
+    <ClientOnly>
+
+      <swiper :modules="[Pagination]" :pagination="{ clickable: true }"
+        style="height:100vh; width: 100vw; background-color: #FF9F00;" ref="swiperRef">
+        <swiper-slide class="flex column" style="align-items: center;">
+          <div class="intro-info  items-center column">
+            <img src="/images/mobile_intro1.png" style="width: 90vw;" />
+            <h3>{{ $t('mobile.intro1.title1') }}</h3>
+            <p>{{ $t('mobile.intro1.info1') }}</p>
+            <p>{{ $t('mobile.intro1.info2') }}</p>
+          </div>
+          <MobileTutorialSlide />
+        </swiper-slide>
+        <swiper-slide class="flex column" style="align-items: center;">
+          <div class="intro-info  items-center column">
+            <img src="/images/mobile_intro2.png" style="width: 90vw;" />
+            <h3>{{ $t('mobile.intro2.title1') }}</h3>
+            <p>{{ $t('mobile.intro2.info1') }}</p>
+            <p>{{ $t('mobile.intro2.info2') }}</p>
+          </div>
+          <MobileTutorialSlide />
+        </swiper-slide>
+        <swiper-slide class="flex column" style="align-items: center;">
+          <div class="intro-info  items-center column">
+            <img src="/images/mobile_intro3.png" style="width: 90vw;" />
+            <h3>{{ $t('mobile.intro3.title1') }}</h3>
+            <p>{{ $t('mobile.intro3.info1') }}</p>
+            <p>{{ $t('mobile.intro3.info2') }}</p>
+          </div>
+          <button @click="$router.push('/ko/login')">시작하기</button>
+        </swiper-slide>
+      </swiper>
+    </ClientOnly>
+  </div>
+</template>
+<script setup lang='ts'>
+import { Pagination } from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import 'swiper/css';
+import 'swiper/css/pagination';
+import FlutterBridge from '~~/scripts/flutterBridge'
+const { $localePath } = useNuxtApp()
+
+const router = useRouter()
+const switchLocalePath = useSwitchLocalePath()
+
+definePageMeta({
+  layout: 'layout-none',
+});
+
+const isFlutter = await FlutterBridge().FlutterBridge.isFlutter()
+
+
+onBeforeMount(() => {
+
+  if (!isFlutter) {
+    router.push($localePath('/login'))
+
+  }
+  switchLocalePath('ko')
+
+  const isVisit = localStorage.getItem('zMoF')
+
+  if (isVisit) {
+    if (useUser().user.value.fUser) {
+      router.push($localePath('/'))
+    } else {
+      router.push($localePath('/login'))
+    }
+  } else {
+    localStorage.setItem('zMoF', 'true')
+    router.push('/mobile/login')
+  }
+
+})
+
+
+
+</script>
+<style scoped lang='scss'>
+.intro-info {
+  position: relative;
+  height: 80%;
+  justify-content: flex-start;
+  margin: 20px;
+}
+
+img {
+  width: 90vw;
+  max-width: 600px;
+}
+
+h3 {
+  font-weight: 700;
+  font-size: 6vw;
+  line-height: 87px;
+  color: #000000;
+  margin-bottom: 0px;
+}
+
+p {
+  color: #fff;
+  font-size: 4vw;
+}
+
+button {
+  display: flex;
+  position: absolute;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 60vw;
+  max-width: 300px;
+  height: 50px;
+  font-size: 20px;
+  font-weight: 300;
+  color: #fff;
+  background: #000000;
+  border-color: #000;
+  border-radius: 50px;
+  max-height: 10%;
+  bottom: 3%;
+  z-index: 999;
+}
+
+::v-deep(.swiper-pagination) {
+  color: #fff !important;
+  position: absolute;
+  height: 10%;
+  margin-bottom: 10%;
+  // bottom: 20%;
+}
+
+::v-deep(.swiper-pagination-bullet) {
+  background-color: transparent;
+  outline: 1px solid #fff;
+  opacity: 0.8;
+}
+
+::v-deep(.swiper-pagination-bullet-active) {
+  background-color: #fff !important;
+
+}
+</style>

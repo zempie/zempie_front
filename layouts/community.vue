@@ -4,7 +4,7 @@
       <CommunityHeaderSk v-if="isPending" />
       <CommunityHeader v-else :communityInfo="communityInfo" />
     </ClientOnly>
-    <div class="tab-menu-swiper">
+    <!-- <div class="tab-menu-swiper">
       <div class="swiper-area">
         <NuxtLink
           :class="['swiper-slide', !routeQuery && 'active']"
@@ -38,7 +38,7 @@
           <h2>{{ $t('audio') }}</h2>
         </NuxtLink>
       </div>
-    </div>
+    </div> -->
     <slot />
   </div>
 </template>
@@ -75,21 +75,26 @@ onMounted(async () => {
 
     &:hover {
       background: #fff;
+
       p {
         color: #888;
       }
     }
   }
 }
+
 @media all and (min-width: 480px) and (max-width: 767px) {
   .tab-menu-swiper {
     width: 100%;
+
     .swiper-slide {
       &:hover {
         background: #fff;
+
         p {
           color: #888;
         }
+
         h2 {
           color: #888;
         }
@@ -98,9 +103,7 @@ onMounted(async () => {
   }
 }
 
-@media all and (min-width: 768px) and (max-width: 991px) {
-}
+@media all and (min-width: 768px) and (max-width: 991px) {}
 
-@media all and (min-width: 992px) and (max-width: 1199px) {
-}
+@media all and (min-width: 992px) and (max-width: 1199px) {}
 </style>

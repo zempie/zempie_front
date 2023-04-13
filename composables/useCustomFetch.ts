@@ -1,6 +1,7 @@
 import { FetchOptions } from "ohmyfetch"
 import dayjs from "dayjs";
 import shared from "~~/scripts/shared";
+import { getAuth, getIdToken } from "firebase/auth";
 
 const HOURTOSEC = 60 * 60;
 
@@ -17,9 +18,9 @@ interface IRefreshToken {
 }
 
 export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions, retryCount: number = 0) => {
-  const { $cookies } = useNuxtApp()
+  // const { $cookies } = useNuxtApp()
   const config = useRuntimeConfig()
-  const accessToken = useCookie(config.COOKIE_NAME)
+  // const accessToken = useCookie(config.COOKIE_NAME)
 
 
   return await useFetch<T>(url, {
@@ -48,8 +49,7 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
         default:
           if (retryCount < 3) {
             console.log('error run', retryCount)
-            await getRefreshToken()
-            await useCustomAsyncFetch(url, options, ++retryCount)
+            // await getRefreshToken()
           } else {
             console.log('remove cookie')
 
@@ -66,11 +66,26 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
     },
 
     async onRequest({ request, options }) {
+      console.log('url', url)
+      const user = await getCurrentUser()
+      let token = user?.accessToken
+
+      if (user) {
+
+        const expirationTime = user.stsTokenManager.expirationTime
+        // const expirationTime = 1681264108
+        console.log('expirationTime', new Date(expirationTime))
+        if (expirationTime <= Date.now()) {
+          console.log('url', url)
+          token = await getIdToken(user, true)
+        }
+        options.headers['Authorization'] = `Bearer ${token}`
+
+      }
 
       options.headers = options.headers || {}
 
-      // if (accessToken) options.headers['Authorization'] = result && `Bearer ${result.access_token}`
-
+      console.log(options.headers)
       useCommon().setLoading()
       console.log('[fetch request]')
     },
@@ -84,7 +99,6 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
 // $fetch interceptor
 export const useCustomFetch = async <T>(url: string, options?: FetchOptions, retryCount: number = 0) => {
   const config = useRuntimeConfig()
-  const accessToken = useCookie(config.COOKIE_NAME)
   const { $cookies, $localePath } = useNuxtApp()
   const router = useRouter()
 
@@ -105,6 +119,7 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
 
       switch (errorCode) {
         case 20001:
+          alert('here')
           router.push($localePath('/join'))
           break;
         case 10001:
@@ -114,7 +129,7 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
         default:
           if (retryCount < 3) {
             console.log('error run')
-            await getRefreshToken()
+            // await getRefreshToken()
             await useCustomAsyncFetch(url, options, ++retryCount)
           } else {
             console.log('remove cookie')
@@ -131,17 +146,51 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
 
     async onRequest({ request, options }) {
 
-      options.headers = options.headers || {}
+      const user = await getCurrentUser()
 
-      // if (accessToken.value) options.headers['Authorization'] = result && `Bearer ${result.access_token}`
+      let token = user?.accessToken
+      console.log('user', user)
+
+      if (user) {
+        const expirationTime = user.stsTokenManager.expirationTime
+        // const expirationTime = 1681264165
+        console.log('expirationTime', expirationTime <= Date.now(), new Date(expirationTime))
+
+
+        if (expirationTime <= Date.now()) {
+          token = await getIdToken(user, true)
+        }
+        console.log('toekn2 ', token)
+        options.headers['Authorization'] = `Bearer ${token}`
+
+      }
+
+
+      options.headers = options.headers || {}
+      console.log(options.headers)
+
       useCommon().setLoading()
       console.log('[fetch request]')
+      return
     },
     async onRequestError({ request, options, error }) {
       console.log('[fetch request error]')
     }
   })
 
+
+}
+
+export async function getCurrentUser() {
+  const auth = getAuth()
+
+  const user: any = new Promise((resolve, reject) => {
+    auth.onIdTokenChanged((user: any) => {
+      resolve(user);
+    });
+  });
+
+  return user
 }
 
 export async function getRefreshToken() {
