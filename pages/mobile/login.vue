@@ -53,13 +53,14 @@ definePageMeta({
 const isFlutter = await FlutterBridge().FlutterBridge.isFlutter()
 
 
-if (!isFlutter) {
-  router.push($localePath('/login'))
-
-}
 
 
 onBeforeMount(() => {
+
+  if (!isFlutter) {
+    router.push($localePath('/login'))
+
+  }
   switchLocalePath('ko')
 
   const isVisit = localStorage.getItem('zMoF')
