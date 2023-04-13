@@ -64,13 +64,14 @@ onBeforeMount(() => {
   const isVisit = localStorage.getItem('zMoF')
 
   if (isVisit) {
-    router.push($localePath('/login'))
+    if (useUser().user.value.fUser) {
+      router.push($localePath('/'))
+    } else {
+      router.push($localePath('/login'))
+
+    }
   } else {
     localStorage.setItem('zMoF', 'true')
-  }
-
-  if (useUser().user.value.fUser) {
-    router.push($localePath('/'))
   }
 
 })

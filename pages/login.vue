@@ -143,7 +143,6 @@ const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 watch(
   () => useUser().user.value.info,
   (val) => {
-    console.log('val', val)
     if (val) {
       if (isPageLoading.value) {
         router.push($localePath('/'))
