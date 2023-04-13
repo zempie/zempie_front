@@ -253,6 +253,7 @@ const gameInfo = computed(() => useGame().game.value.info)
 const communityInfo = computed(() => useCommunity().community.value.info)
 
 const flutterFile = ref()
+const isFlutter = await flutterBridge().FlutterBridge.isFlutter
 
 await communityFetch()
 
@@ -659,10 +660,9 @@ function getEditorContent(content: Editor) {
   form.post_contents = content.getHTML()
 }
 
-function uploadImageFile() {
-  if (flutterBridge().FlutterBridge.isFlutter) {
-    flutterFile.value = flutterBridge().FlutterBridge.openFile()
-    return
+async function uploadImageFile() {
+  if (isFlutter) {
+    await onSelectFlutterFile()
   }
 
   if (activeTab.value.toUpperCase() === 'SNS') {
@@ -675,6 +675,15 @@ function uploadImageFile() {
     }
   }
   image.value.click()
+}
+
+async function onSelectFlutterFile() {
+  flutterFile.value = await flutterBridge().FlutterBridge.openFile()
+
+  // snsAttachFiles.value.img = [...(snsAttachFiles.value.img || []),
+  //     { flutterFile.value , name:  flutterFile.value.name, url }
+  //     ]
+  return
 }
 
 function onSelectImageFile(event: Event) {
