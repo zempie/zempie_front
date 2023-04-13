@@ -663,6 +663,7 @@ function getEditorContent(content: Editor) {
 async function uploadImageFile() {
   if (isFlutter) {
     await onSelectFlutterFile()
+    return
   }
 
   if (activeTab.value.toUpperCase() === 'SNS') {
@@ -734,7 +735,11 @@ function deleteImg(idx: number) {
   snsAttachFiles.value.img.splice(idx, 1)
 }
 
-function uploaVideoFile() {
+async function uploaVideoFile() {
+  if (isFlutter) {
+    await onSelectFlutterFile()
+    return
+  }
   if (activeTab.value.toUpperCase() === 'SNS') {
     if (
       snsAttachFiles.value.img?.length ||
