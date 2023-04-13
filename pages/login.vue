@@ -1,69 +1,74 @@
 <template>
-  <div class="login-bg pt50 pb50" style="height: 100vh; min-height: 900px">
-    <div class="login-logo">
-      <LoginWhiteLogoDt path="/" />
-    </div>
-    <div class="login-area">
-      <div class="la-logo">
-        <LoginWhiteLogoMb path="/" />
+  <div>
+    <div v-if="!isPageLoading" class="login-bg pt50 pb50" style="height: 100vh; min-height: 900px">
+      <div class="login-logo">
+        <LoginWhiteLogoDt path="/" />
       </div>
-      <div class="la-title">
-        <h3>{{ $t('login.text1') }}</h3>
-        <p>{{ $t('login.text2') }}</p>
-      </div>
-      {{ useUser().user.value.fUser }}
-      <hr />
-      {{ useUser().user.value.info }}
-      <div class="la-content">
-        <form>
-          <input type="email" v-model="v$.email.$model" name="login-email" title=""
-            :placeholder="$t('login.email.placeholder')" class="w100p h60" style="margin-bottom: 10px"
-            autocomplete="user-email" @keyup.enter="onSubmit" />
-          <h2 class="input-errors" v-for="error of v$.email.$errors" :key="error.$uid">
-            <i class="uil uil-check"></i>{{ error.$message }}
-          </h2>
-          <input type="password" v-model="v$.password.$model" name="login-password" title=""
-            autocomplete="current-password" :placeholder="$t('login.pwd.placeholder')" class="w100p h60"
-            style="margin-bottom: 10px" @keyup.enter="onSubmit" />
+      <div class="login-area">
+        <div class="la-logo">
+          <LoginWhiteLogoMb path="/" />
+        </div>
+        <div class="la-title">
+          <h3>{{ $t('login.text1') }}</h3>
+          <p>{{ $t('login.text2') }}</p>
+        </div>
+        {{ useUser().user.value.fUser }}
+        <hr />
+        {{ useUser().user.value.info }}
+        <div class="la-content">
+          <form>
+            <input type="email" v-model="v$.email.$model" name="login-email" title=""
+              :placeholder="$t('login.email.placeholder')" class="w100p h60" style="margin-bottom: 10px"
+              autocomplete="user-email" @keyup.enter="onSubmit" />
+            <h2 class="input-errors" v-for="error of v$.email.$errors" :key="error.$uid">
+              <i class="uil uil-check"></i>{{ error.$message }}
+            </h2>
+            <input type="password" v-model="v$.password.$model" name="login-password" title=""
+              autocomplete="current-password" :placeholder="$t('login.pwd.placeholder')" class="w100p h60"
+              style="margin-bottom: 10px" @keyup.enter="onSubmit" />
 
-          <h2 class="input-errors" v-for="error of v$.password.$errors" :key="error.$uid">
-            <i class="uil uil-check"></i>{{ error.$message }}
-          </h2>
-        </form>
-        <p @click="onSubmit">
-          <a class="btn-default-big text-white">{{ $t('login') }}</a>
-        </p>
-        <dl>
-          <dt>
-            <NuxtLink :to="$localePath('/reset-password')">{{
-              $t('reset.pwd')
-            }}</NuxtLink>
-          </dt>
-          <dd>|</dd>
-          <dt>
-            <NuxtLink :to="$localePath('/join')">{{ $t('join') }}</NuxtLink>
-          </dt>
-        </dl>
+            <h2 class="input-errors" v-for="error of v$.password.$errors" :key="error.$uid">
+              <i class="uil uil-check"></i>{{ error.$message }}
+            </h2>
+          </form>
+          <p @click="onSubmit">
+            <a class="btn-default-big text-white">{{ $t('login') }}</a>
+          </p>
+          <dl>
+            <dt>
+              <NuxtLink :to="$localePath('/reset-password')">{{
+                $t('reset.pwd')
+              }}</NuxtLink>
+            </dt>
+            <dd>|</dd>
+            <dt>
+              <NuxtLink :to="$localePath('/join')">{{ $t('join') }}</NuxtLink>
+            </dt>
+          </dl>
+        </div>
+        <div v-if="!isFlutter" class="la-bottom">
+          <dl>
+            <dt></dt>
+            <dd>{{ $t('login.text3') }}</dd>
+            <dt></dt>
+          </dl>
+          <ul>
+            <li @click="googleLogin">
+              <img src="/images/google_login.png" alt="google-login" title="" />
+            </li>
+            <li @click="facebookLogin" class="mt10">
+              <img src="/images/facebook_login.png" alt="google-login" title="" />
+            </li>
+          </ul>
+          <p>
+            <span><i class="uil uil-info-circle" style="font-size: 16px; line-height: 24px"></i></span>
+            {{ $t('login.text4') }}
+          </p>
+        </div>
       </div>
-      <div v-if="!isFlutter" class="la-bottom">
-        <dl>
-          <dt></dt>
-          <dd>{{ $t('login.text3') }}</dd>
-          <dt></dt>
-        </dl>
-        <ul>
-          <li @click="googleLogin">
-            <img src="/images/google_login.png" alt="google-login" title="" />
-          </li>
-          <li @click="facebookLogin" class="mt10">
-            <img src="/images/facebook_login.png" alt="google-login" title="" />
-          </li>
-        </ul>
-        <p>
-          <span><i class="uil uil-info-circle" style="font-size: 16px; line-height: 24px"></i></span>
-          {{ $t('login.text4') }}
-        </p>
-      </div>
+    </div>
+    <div v-else style="width:100vw; height:100vh; display: flex;justify-content: center; align-items: center;">
+      <img src="/images/zempie-logo.png" alt="zempie" title="zempie" class="flex justify-center items-center" />
     </div>
   </div>
 </template>
@@ -97,6 +102,7 @@ const route = useRoute()
 const config = useRuntimeConfig()
 
 const currUser = ref()
+const isPageLoading = ref(true)
 
 
 definePageMeta({
@@ -132,27 +138,31 @@ const rules = computed(() => {
 const v$ = useVuelidate(rules, form)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
-// const isLogin = computed(() => useUser().user.value.isLogin)
 
-// watch(isLogin,
-//   async (val) => {
-//     if (val) {
-//       router.push($localePath('/'))
-//       const { token } = await fbFcm.getFcmToken(useUser().user.value.info.id)
-//       console.log('token', token)
-//       if (!token) {
-//         console.log('regi token')
-//         await fbFcm.resigterFcmToken(useUser().user.value.info.id)
-//       }
-//     }
-//   })
+watch(
+  () => useUser().user.value.info,
+  (val) => {
+    console.log('val', val)
+    if (val) {
+      if (isPageLoading.value) {
+        router.push($localePath('/'))
+        isPageLoading.value = false
+      }
+    }
+  })
 
 onBeforeMount(() => {
   if (isFlutter.value) {
-    alert('flutter')
-    if (useUser().user.value.fUser) {
-      router.push($localePath('/'))
+    if (useUser().user.value.isLoading) {
+      isPageLoading.value = true
+    } else {
+      isPageLoading.value = false
+      if (useUser().user.value.fUser) {
+        router.push($localePath('/'))
+      }
     }
+  } else {
+    isPageLoading.value = false
   }
 
 })
@@ -161,6 +171,7 @@ onBeforeMount(() => {
 onMounted(() => {
   nextTick(() => {
     window.addEventListener("message", receiveMessage, false);
+    // isPageLoading.value = false
   })
 })
 
