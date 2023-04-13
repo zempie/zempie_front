@@ -1,6 +1,7 @@
 <template>
   <div style="background-color: #fff; ">
     <ClientOnly>
+
       <swiper :modules="[Pagination]" :pagination="{ clickable: true }"
         style="height:100vh; width: 100vw; background-color: #FF9F00;" ref="swiperRef">
         <swiper-slide class="flex column" style="align-items: center;">
@@ -68,10 +69,10 @@ onBeforeMount(() => {
       router.push($localePath('/'))
     } else {
       router.push($localePath('/login'))
-
     }
   } else {
     localStorage.setItem('zMoF', 'true')
+    router.push('/mobile/login')
   }
 
 })
