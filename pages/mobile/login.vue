@@ -15,18 +15,18 @@
         <swiper-slide class="flex column" style="align-items: center;">
           <div class="intro-info  items-center column">
             <img src="/images/mobile_intro2.png" style="width: 90vw;" />
-            <h3>{{ $t('mobile.intro1.title1') }}</h3>
-            <p>{{ $t('mobile.intro1.info1') }}</p>
-            <p>{{ $t('mobile.intro1.info2') }}</p>
+            <h3>{{ $t('mobile.intro2.title1') }}</h3>
+            <p>{{ $t('mobile.intro2.info1') }}</p>
+            <p>{{ $t('mobile.intro2.info2') }}</p>
           </div>
           <MobileTutorialSlide />
         </swiper-slide>
         <swiper-slide class="flex column" style="align-items: center;">
           <div class="intro-info  items-center column">
             <img src="/images/mobile_intro3.png" style="width: 90vw;" />
-            <h3>{{ $t('mobile.intro1.title1') }}</h3>
-            <p>{{ $t('mobile.intro1.info1') }}</p>
-            <p>{{ $t('mobile.intro1.info2') }}</p>
+            <h3>{{ $t('mobile.intro3.title1') }}</h3>
+            <p>{{ $t('mobile.intro3.info1') }}</p>
+            <p>{{ $t('mobile.intro3.info2') }}</p>
           </div>
           <button @click="$router.push('/ko/login')">시작하기</button>
         </swiper-slide>
