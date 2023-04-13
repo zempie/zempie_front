@@ -51,7 +51,7 @@ const isFlutter = await FlutterBridge().FlutterBridge.isFlutter()
 
 
 if (!isFlutter) {
-  router.push('/login')
+  // router.push('/login')
 }
 
 
@@ -60,7 +60,7 @@ onBeforeMount(() => {
   const isVisit = localStorage.getItem('zMoF')
 
   if (isVisit) {
-    router.push('/login')
+    // router.push('/login')
   } else {
     localStorage.setItem('zMoF', 'true')
   }
