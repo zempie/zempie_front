@@ -664,9 +664,8 @@ function getEditorContent(content: Editor) {
 
 async function uploadImageFile() {
   if (isFlutter.value) {
-    flutterFile.value = await useMobile().openMobileFile({ type: 'image', multiple: true })
-    const file = dataURLtoFile(flutterFile.value, 'image.png')
-    alert(file)
+    const dataUrl = await useMobile().openMobileFile({ type: 'image', multiple: true })
+    flutterFile.value = dataURLtoFile(dataUrl, 'image.png')
     return
   }
 
