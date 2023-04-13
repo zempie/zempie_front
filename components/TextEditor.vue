@@ -660,6 +660,11 @@ function getEditorContent(content: Editor) {
 }
 
 function uploadImageFile() {
+  if (flutterBridge().FlutterBridge.isFlutter) {
+    flutterFile.value = flutterBridge().FlutterBridge.openFile()
+    return
+  }
+
   if (activeTab.value.toUpperCase() === 'SNS') {
     if (snsAttachFiles.value.video || snsAttachFiles.value.audio?.length) {
       ElMessage({
@@ -673,9 +678,7 @@ function uploadImageFile() {
 }
 
 function onSelectImageFile(event: Event) {
-  if (flutterBridge().FlutterBridge.isFlutter) {
-    flutterFile.value = flutterBridge().FlutterBridge.openFile()
-  }
+
 
   const files = (event.target as HTMLInputElement).files
 
