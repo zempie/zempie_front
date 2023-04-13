@@ -14,6 +14,8 @@
       </li>
     </ul>
     <div>
+      {{ isFlutter }}
+      <hr />
       {{ flutterFile }}
       <Tiptap @editorContent="getEditorContent" @send-tag-info="getTagInfo" :postType="activeTab" :feed="feed"
         :key="activeTab" ref="tiptapRef" />
@@ -253,7 +255,7 @@ const gameInfo = computed(() => useGame().game.value.info)
 const communityInfo = computed(() => useCommunity().community.value.info)
 
 const flutterFile = ref()
-const isFlutter = await flutterBridge().FlutterBridge.isFlutter
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
 await communityFetch()
 
@@ -661,8 +663,8 @@ function getEditorContent(content: Editor) {
 }
 
 async function uploadImageFile() {
-  if (isFlutter) {
-    await onSelectFlutterFile()
+  if (isFlutter.value) {
+    flutterFile.value = await useMobile().openMobileFile({ type: 'image', multiple: true })
     return
   }
 
@@ -678,14 +680,6 @@ async function uploadImageFile() {
   image.value.click()
 }
 
-async function onSelectFlutterFile() {
-  flutterFile.value = await flutterBridge().FlutterBridge.openFile()
-
-  // snsAttachFiles.value.img = [...(snsAttachFiles.value.img || []),
-  //     { flutterFile.value , name:  flutterFile.value.name, url }
-  //     ]
-  return
-}
 
 function onSelectImageFile(event: Event) {
 
@@ -736,8 +730,8 @@ function deleteImg(idx: number) {
 }
 
 async function uploaVideoFile() {
-  if (isFlutter) {
-    await onSelectFlutterFile()
+  if (isFlutter.value) {
+    flutterFile.value = await useMobile().openMobileFile({ type: 'video', multiple: true })
     return
   }
   if (activeTab.value.toUpperCase() === 'SNS') {
@@ -790,7 +784,11 @@ function deleteVideo() {
   snsAttachFiles.value.video = null
 }
 
-function uploadAudioFile() {
+async function uploadAudioFile() {
+  if (isFlutter.value) {
+    flutterFile.value = await useMobile().openMobileFile({ type: 'audio', multiple: true })
+    return
+  }
   if (activeTab.value.toUpperCase() === 'SNS') {
     if (snsAttachFiles.value.video || snsAttachFiles.value.img?.length) {
       ElMessage({

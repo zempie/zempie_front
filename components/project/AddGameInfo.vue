@@ -111,10 +111,10 @@
                     </p>
                   </transition>
                   <p style="
-                        width: 100%;
-                        display: flex;
-                        justify-content: space-around;
-                      ">
+                                width: 100%;
+                                display: flex;
+                                justify-content: space-around;
+                              ">
                     <button class="btn-gray" @click="uploadThumbnail">
                       <i class="uil uil-upload"></i>&nbsp;
                       {{ $t('addGameInfo.game.thumbnail') }}
@@ -160,10 +160,10 @@
                     </template>
                   </div>
                   <p style="
-                        width: 100%;
-                        display: flex;
-                        justify-content: space-around;
-                      ">
+                                width: 100%;
+                                display: flex;
+                                justify-content: space-around;
+                              ">
                     <button class="btn-gray" @click="uploadGif">
                       <i class="uil uil-upload"></i>
                       {{ $t('addGameInfo.game.thumbnail') }}
@@ -319,6 +319,8 @@ const gifThumFile = ref<File>()
 const prevGif = ref<String | ArrayBuffer>('')
 
 const uploadStage = computed(() => uploadProject.value.form.stage)
+
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
 //게임 정보 수정
 const isEditInfo = ref(false)
@@ -513,7 +515,12 @@ async function createGamePath() {
   }
 }
 
-function uploadThumbnail() {
+async function uploadThumbnail() {
+  if (isFlutter.value) {
+    thumbFile.value = await useMobile().openMobileFile({ type: 'image', multiple: false })
+    return
+  }
+
   thumbnail.value.click()
 }
 

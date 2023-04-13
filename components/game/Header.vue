@@ -13,20 +13,20 @@
       </div>
 
       <span style="
-            border-radius: 50%;
-            background-color: #888;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            cursor: pointer;
-            align-items: center;
-          " @click="uploadBanner">
+                    border-radius: 50%;
+                    background-color: #888;
+                    width: 30px;
+                    height: 30px;
+                    display: flex;
+                    cursor: pointer;
+                    align-items: center;
+                  " @click="uploadBanner">
         <i class="uil uil-image-edit" style="
-              font-size: 20px;
-              margin-right: 10px;
-              color: #fff;
-              margin: 0 auto;
-            "></i>
+                      font-size: 20px;
+                      margin-right: 10px;
+                      color: #fff;
+                      margin: 0 auto;
+                    "></i>
       </span>
     </div>
     <dl>
@@ -178,6 +178,9 @@ const editBannerUrl = ref()
 const cropper = ref()
 const showDeleteBanner = ref(false)
 
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+
+
 function playGame() {
   window.open(`/play/${gameInfo.value.pathname}`, '_blank')
 }
@@ -215,12 +218,16 @@ const unsetLike = _.debounce(async () => {
   }
 }, 300)
 
-function uploadBanner() {
+async function uploadBanner() {
   if (prevBanner.value) {
     showChangeBanner.value = true
     editBannerUrl.value = prevBanner.value
     openCropper()
   } else {
+    if (isFlutter.value) {
+      bannerFile.value = await useMobile().openMobileFile({ type: 'image', multiple: false })
+      return
+    }
     bannerImg.value.click()
   }
 }

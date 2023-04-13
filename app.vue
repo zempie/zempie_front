@@ -60,6 +60,7 @@ provide(ID_INJECTION_KEY, {
 
 
 onBeforeMount(async () => {
+  await useMobile().setMobileState()
 
   const fUser = await getCurrentUser()
   if (!fUser) {

@@ -193,12 +193,22 @@ const profileStyle = computed(() => {
     : `background: url(/images/300_300_default_profile.png) center center / cover no-repeat; background-size: cover;`
 })
 
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
-function uploadProfileFile() {
+
+async function uploadProfileFile() {
+  if (isFlutter.value) {
+    updateProfileFile.value = await useMobile().openMobileFile({ type: 'image', multiple: false })
+    return
+  }
   profileImg.value.click()
 }
 
-function uploadBannerFile() {
+async function uploadBannerFile() {
+  if (isFlutter.value) {
+    updateBannerFile.value = await useMobile().openMobileFile({ type: 'image', multiple: false })
+    return
+  }
   bannerImg.value.click()
 }
 
@@ -285,7 +295,7 @@ async function onSubmit() {
 
 
   try {
-    const { data } = await useCustomAsyncFetch<{result:any}>('/user/update/info', getZempieFetchOptions('post', true, formData))
+    const { data } = await useCustomAsyncFetch<{ result: any }>('/user/update/info', getZempieFetchOptions('post', true, formData))
 
 
     const { result } = data.value;
