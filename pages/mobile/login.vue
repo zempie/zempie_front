@@ -40,6 +40,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/css';
 import 'swiper/css/pagination';
 import FlutterBridge from '~~/scripts/flutterBridge'
+const { $localePath } = useNuxtApp()
 
 const router = useRouter()
 const switchLocalePath = useSwitchLocalePath()
@@ -52,7 +53,7 @@ const isFlutter = await FlutterBridge().FlutterBridge.isFlutter()
 
 
 if (!isFlutter) {
-  // router.push('/login')
+  router.push($localePath('/login'))
 
 }
 
@@ -63,13 +64,13 @@ onBeforeMount(() => {
   const isVisit = localStorage.getItem('zMoF')
 
   if (isVisit) {
-    // router.push('/login')
+    router.push($localePath('/login'))
   } else {
     localStorage.setItem('zMoF', 'true')
   }
 
   if (useUser().user.value.fUser) {
-    // router.push('/')
+    router.push($localePath('/'))
   }
 
 })

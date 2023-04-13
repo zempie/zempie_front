@@ -694,7 +694,6 @@ function onSelectImageFile(event: Event) {
     const reader = new FileReader()
 
     reader.onload = async (e) => {
-      console.log('reader', activeTab.value.toUpperCase())
 
       const url = e.target!.result as string
 
