@@ -15,7 +15,7 @@
             </li>
             <li>
               <h2>0</h2>
-              <h3>following</h3>
+              <h3>Following</h3>
             </li>
           </ul>
         </dt>
@@ -34,5 +34,4 @@
 <script setup lang="ts">
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

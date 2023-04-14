@@ -20,7 +20,7 @@
         </dt>
         <dd>
           <h4>{{ user.followings_cnt }}</h4>
-          <p>following</p>
+          <p>Following</p>
         </dd>
       </dl>
       <slot name="followBtn"></slot>

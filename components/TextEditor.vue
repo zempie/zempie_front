@@ -756,14 +756,11 @@ function onSelectVideoFile(event: any) {
       const blobUrl = URL.createObjectURL(blob)
 
 
-      if (activeTab.value === 'BLOG') {
-        editor.value.chain().focus(null).setVideo({ src: blobUrl }).run()
-      } else {
-        snsAttachFiles.value.video = {
-          file: file,
-          name: file.name,
-          url: url,
-        }
+
+      snsAttachFiles.value.video = {
+        file: file,
+        name: file.name,
+        url: blobUrl,
       }
       isVideoUploading.value = false
     }

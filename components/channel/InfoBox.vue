@@ -40,7 +40,7 @@
         <NuxtLink :to="$localePath(`/channel/${channelId}/following`)">
           <ChannelFollowIcon />
           <h2>{{ channelInfo.following_cnt }}</h2>
-          <h3>following</h3>
+          <h3>Following</h3>
         </NuxtLink>
       </li>
     </ul>

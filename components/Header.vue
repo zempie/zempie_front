@@ -44,7 +44,12 @@
             </ClientOnly>
             <li class="uppercase pointer">
               <a id="zempieWorldMenu" @click="moveZemWorld">
-                Zempie world
+                Z-world
+              </a>
+            </li>
+            <li class="uppercase pointer">
+              <a id="zempieWorldMenu" :href="config.ANDROID_DOWNLOAD_LINK">
+                App
               </a>
             </li>
           </ul>
@@ -62,7 +67,8 @@
             </el-select>
           </div>
           <div class="header-info ml0" v-if="!isLoading && isLogin" :key="user.id">
-            <NotificationHeaderButton />
+            <NotificationHeaderButton v-if="!isMob" />
+
             <UserMenu />
             <!-- <DmHeaderButton /> -->
           </div>
@@ -108,6 +114,10 @@
                   class="uil uil-keyboard"></i>
                 GJ+
               </NuxtLink>
+              <a class="pointer" id="zempieWorldMenu" :href="config.ANDROID_DOWNLOAD_LINK">
+                <i class="uil uil-globe"></i>
+                Zempie App
+              </a>
             </div>
           </div>
           <div class="header-side-bg-mobile" :style="isHeaderSideBgMobile ? 'display:block;' : ''"
@@ -117,7 +127,6 @@
         </dd>
       </ClientOnly>
     </dl>
-
     <el-dialog v-model="isOpen" append-to-body class="modal-area-type" :show-close="false" width="380px">
       <div class="modal-alert">
         <dl class="ma-header">
@@ -139,8 +148,6 @@
         </div>
       </div>
     </el-dialog>
-
-
   </div>
 </template>
 
@@ -156,6 +163,8 @@ import {
   ElOption,
   ElDialog,
 } from 'element-plus'
+
+import { isMobile } from '~~/scripts/utils'
 
 const config = useRuntimeConfig()
 const { $localePath } = useNuxtApp()
@@ -175,13 +184,15 @@ const isHeaderSideBgMobile = ref(false)
 
 
 
-const isMobile = computed(() =>
+const isMobileSize = computed(() =>
   window.matchMedia('screen and (max-width: 479px)')
 )
 
 const isTablet = computed(() =>
   window.matchMedia('screen and (max-width: 767px)')
 )
+
+const isMob = computed(() => isMobile())
 
 const showMobileLogo = ref(false)
 const showHamburger = ref(false)
@@ -228,7 +239,7 @@ onBeforeUnmount(() => {
 })
 
 function onResize() {
-  showMobileLogo.value = isMobile.value.matches ? true : false
+  showMobileLogo.value = isMobileSize.value.matches ? true : false
   showHamburger.value = isTablet.value.matches ? true : false
 }
 
@@ -385,6 +396,19 @@ async function moveZemWorld() {
   font-size: 16px;
 }
 
+.btn-circle {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  font-size: 18px;
+  line-height: 18px;
+  border: none;
+  border-radius: 50%;
+  background: #fbf6f2;
+  transition: all 0.4s ease-in-out;
+  cursor: pointer;
+}
 
 @media all and (max-width: 479px) {
   .logo {

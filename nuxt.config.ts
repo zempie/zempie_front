@@ -104,7 +104,8 @@ export default defineNuxtConfig({
     fCM_KEY: process.env.FCM_KEY,
     ZEMPIE_METAVERSE: process.env.ZEMPIE_METAVERSE,
     OG_IMG: process.env.OG_IMG,
-    APPLE_TOUCH_ICON: process.env.APPLE_TOUCH_ICON
+    APPLE_TOUCH_ICON: process.env.APPLE_TOUCH_ICON,
+    ANDROID_DOWNLOAD_LINK: process.env.ANDROID_DOWNLOAD_LINK
   },
 
 })
