@@ -1238,7 +1238,9 @@ async function communityFetch() {
     label: 'Games',
     disabled: true,
   })
-  const gameList = useUser().user.value.info.games.map((game: IGame) => {
+
+  console.log('useUser().user.value.info', useUser().user.value.info)
+  const gameList = useUser().user.value.info.games?.map((game: IGame) => {
     return {
       value: {
         type: 'game',

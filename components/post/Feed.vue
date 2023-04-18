@@ -71,7 +71,7 @@
           <LikeBtn :feed="feed" />
           <li @click="openComments">
             <i class="uil uil-comment-alt-dots pointer" style="font-size: 22px;"></i>
-            {{ feed.comment_cnt }}
+            {{ commentCount }}
           </li>
           <li>
             <a @click="copyUrl"><i class="uil uil-share-alt pointer" style="font-size: 20px"></i></a>
@@ -83,7 +83,7 @@
     <!-- TODO: mobile: 댓글만 보기 -->
     <ClientOnly>
       <div v-show="isOpenedComments" :class="['tapl-comment', isOpenedComments ? 'open' : 'close']">
-        <ul ref="commentEl" style="overflow-y: scroll;max-height: 500px;">
+        <ul ref="commentEl" style="overflow-y: scroll ;max-height: 500px;">
           <li v-for="comment in comments" :key="comment.id">
             <Comment :comment="comment" :isEdit="isCommentEdit" @refresh="commentRefresh" @editComment="editComment"
               @deleteComment="deleteComment" :key="comment.content" />
@@ -193,6 +193,7 @@ const props = defineProps({
   feed: Object as PropType<IFeed>,
 })
 
+const commentCount = ref(props.feed.comment_cnt)
 
 const swiperOption = ref({
   pagination: {
@@ -235,6 +236,7 @@ async function commentRefresh(comment?: any) {
 function addComment(comment: IComment) {
   if (comment) {
     comments.value = [comment, ...comments.value]
+    commentCount.value += 1
   }
 }
 
@@ -251,9 +253,9 @@ async function deleteComment(commentId: string) {
     console.log(elem.id, commentId)
     return elem.id !== commentId
   })
+  commentCount.value -= 1
 
   if (comments.value.length < COMMENT_LIMIT) {
-
     offset.value = comments.value.length
     await commentFetch()
   }
@@ -264,7 +266,7 @@ async function openComments() {
   commentInit()
   isOpenedComments.value = !isOpenedComments.value
 
-  if (isOpenedComments.value && props.feed.comment_cnt > 0) {
+  if (isOpenedComments.value) {
     await commentFetch()
   }
 }

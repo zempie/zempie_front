@@ -80,7 +80,12 @@ function leaveCard() {
 }
 
 function playGame() {
-  window.open(`/play/${props.gameInfo.pathname}`, '_blank')
+
+  if (props.gameInfo.game_type !== eGameType.Download) {
+    window.open(`/play/${props.gameInfo.pathname}`, '_blank')
+  } else {
+    router.push($localePath(`/game/${props.gameInfo?.pathname}`))
+  }
 }
 
 function moveGamePage() {

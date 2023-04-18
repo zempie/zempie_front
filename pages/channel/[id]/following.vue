@@ -66,6 +66,7 @@ async function fetch() {
     users.value = data.value.result.map((user: IFollowUser) => {
       return {
         picture: user.profile_img,
+        banner_img: user.banner_img,
         name: user.name,
         nickname: user.nickname,
         id: user.id,

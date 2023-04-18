@@ -63,15 +63,19 @@ onMounted(async () => {
 })
 
 async function fetch() {
-  const { data, pending, refresh, error } = await user.followingList(
-    payload,
-    Number(userInfo.value.id)
-  )
+  // const { data, pending, refresh, error } = await user.followingList(
+  //   payload,
+  //   Number(userInfo.value.id)
+  // )
+
+  const { data, pending, refresh, error } = await useCustomAsyncFetch<{ totalCount: number, result: any }>(`/user/${Number(userInfo.value.id)}/list/following`, getComFetchOptions('get', true, payload))
+
   if (!error.value) {
     totalCount.value = data.value.totalCount
     users.value = data.value.result.map((user: any) => {
       return {
         nickname: user.nickname,
+        banner_img: user.banner_img,
         name: user.name,
         id: user.id,
         channel_id: user.channel_id,

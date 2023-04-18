@@ -1,24 +1,22 @@
 <template>
   <div>
-    <ClientOnly>
-      <NuxtLayout name="channel-header">
-        <dl class="three-area">
-          <dt :key="channelInfo.id">
-            <ChannelInfoBox :isLoading="isLoading" />
-            <ChannelGameBox />
-          </dt>
-          <dd>
-            <PostTimeline type="user" :isMine="isMine" :key="channelId" />
-          </dd>
-          <dt>
-            <div class="ta-groups" style="margin-top: 0px">
-              <h2>Community</h2>
-              <CommunityList :communities="communityList" :isLoading="isLoading" />
-            </div>
-          </dt>
-        </dl>
-      </NuxtLayout>
-    </ClientOnly>
+    <NuxtLayout name="channel-header">
+      <dl class="three-area">
+        <dt :key="channelInfo.id">
+          <ChannelInfoBox :isLoading="isLoading" />
+          <ChannelGameBox />
+        </dt>
+        <dd>
+          <PostTimeline type="user" :isMine="isMine" :key="channelId" />
+        </dd>
+        <dt>
+          <div class="ta-groups" style="margin-top: 0px">
+            <h2>Community</h2>
+            <CommunityList :communities="communityList" :isLoading="isLoading" />
+          </div>
+        </dt>
+      </dl>
+    </NuxtLayout>
   </div>
 </template>
 
