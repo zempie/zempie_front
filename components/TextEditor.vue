@@ -56,8 +56,9 @@
         </div>
       </template>
       <ClientOnly>
-        <el-cascader class="mp-category" id="cascader" :props="props" v-model="selectedGroup"
-          placeholder="Select cagetory" :options="categoryList" :popper-class="'categories'" />
+        <el-cascader class="mp-category" id="cascader" :props="props" v-model="selectedGroup" style="width:100%"
+          placeholder="Select cagetory" :options="categoryList">
+        </el-cascader>
       </ClientOnly>
 
       <dl class="mp-type">
@@ -162,7 +163,6 @@ import {
 import { useI18n } from 'vue-i18n'
 import { htmlToDomElem, stringToDomElem, isImageUrl } from '~~/scripts/utils'
 import { fileUpload } from '~~/scripts/fileManager'
-import flutterBridge from '~~/scripts/flutterBridge'
 
 interface IDraft {
   time: number
@@ -1206,8 +1206,7 @@ async function communityFetch() {
     `/user/${useUser().user.value.info?.id}/list/community`,
     getComFetchOptions('get', true)
   )
-
-  if (data.value) {
+  if (data.value.length) {
     categoryList.value = data.value.map((elem: ICommunity) => {
       return {
         value: {
@@ -1233,13 +1232,15 @@ async function communityFetch() {
       }
     })
   }
-  categoryList.value.push({
-    value: "game",
-    label: 'Games',
-    disabled: true,
-  })
+  if (useUser().user.value.info.games.length) {
+    categoryList.value.push({
+      value: "game",
+      label: t('game'),
+      disabled: true,
+    })
+  }
 
-  console.log('useUser().user.value.info', useUser().user.value.info)
+
   const gameList = useUser().user.value.info.games?.map((game: IGame) => {
     return {
       value: {
@@ -1251,11 +1252,29 @@ async function communityFetch() {
   })
   categoryList.value = [...categoryList.value, ...gameList]
 
-  categoryList.value.unshift({
-    value: 'community',
-    label: 'Community',
-    disabled: true
-  })
+  if (data.value.length) {
+    categoryList.value.unshift({
+      value: 'community',
+      label: t('community'),
+      disabled: true
+    })
+  }
+
+  if (!categoryList.value.length && !gameList.length) {
+    categoryList.value.push({
+      value: 'community',
+      label: t('no.select.category.info1'),
+      disabled: true
+    },
+      {
+        value: 'community',
+        label: t('no.select.category.info2'),
+        disabled: true
+      })
+  }
+  // console.log(categoryList.value.length, gameList.length)
+
+
 
   isCommunityListVisible.value = true
 }
