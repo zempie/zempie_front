@@ -175,7 +175,7 @@ const userName = computed({
 })
 
 const currProfile = computed(() => userInfo.value?.picture && userInfo.value.picture + `?_=${Date.now()}`)
-const currBanner = computed(() => userInfo.value?.banner_img && userInfo.value.banner_img + `?_=${Date.now()}`)
+const currBanner = computed(() => userInfo.value?.url_banner && userInfo.value.url_banner + `?_=${Date.now()}`)
 const prevProfile = ref<string | ArrayBuffer>()
 const prevBanner = ref<string | ArrayBuffer>()
 
