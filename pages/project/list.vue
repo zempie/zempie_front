@@ -75,13 +75,13 @@
         <div v-if="isPending">
           <ul>
             <ClipLoader :color="'#ff6e17'" :size="'30px'" style="
-                margin: 0 auto;
-                border-radius: 10px;
-                height: 100px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-              " />
+                        margin: 0 auto;
+                        border-radius: 10px;
+                        height: 100px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                      " />
           </ul>
         </div>
         <template v-else-if="projects.length">
@@ -91,13 +91,12 @@
                 <span> {{ $t('game.thumbnail') }}: </span>
 
                 <p :style="`background: url(${project.picture_webp ||
-                project.picture ||
-                project.picture2 ||
-                '/images/default.png'
-                }?t=${Date.now()}) center center / cover no-repeat; background-size: cover;`"></p>
+                  project.picture ||
+                  project.picture2 ||
+                  '/images/default.png'
+                  }?t=${Date.now()}) center center / cover no-repeat; background-size: cover;`"></p>
               </li>
               <li>
-                {{ eGameType[project.game?.game_type]}}
                 <span> {{ $t('game.title') }}: </span> &nbsp;&nbsp;{{
                   project.name
                 }}

@@ -46,7 +46,9 @@ export interface IFollowUser {
   is_muted: boolean,
   mutes_you: boolean,
   name: string,
+  nickname: string,
   profile_img: string,
+  banner_img: string,
   type: string,
   uid: string,
 }
@@ -75,7 +77,7 @@ export interface IGame {
   url_thumb: string,
   url_thumb_gif: string,
   url_thumb_webp: string,
-  url_banner: string,
+  banner_img: string,
   userId: number,
   user_id: number,
   version: string,
@@ -161,7 +163,7 @@ export interface IUserChannel {
     follower_cnt: number,
     state_msg: string,
     description: string,
-    url_banner: string
+    banner_img: string
   },
   communities: ICommunity[]
   games: IGame[]

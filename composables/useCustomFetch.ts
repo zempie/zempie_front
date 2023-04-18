@@ -119,7 +119,6 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
 
       switch (errorCode) {
         case 20001:
-          alert('here')
           router.push($localePath('/join'))
           break;
         case 10001:

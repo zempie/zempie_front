@@ -901,5 +901,7 @@
   "mobile.intro3.title1": "PLAY GAMES",
   "mobile.intro3.info1": "Play games from all over the world,",
   "mobile.intro3.info2": "and support the game developers as well.",
-  "new.post": "New post"
+  "new.post": "New post",
+  "no.select.category.info1": "There is no category available to select",
+  "no.select.category.info2": "Please try to upload your game or join the community."
 }

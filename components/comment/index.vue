@@ -30,7 +30,7 @@
     <dd v-if="comment.user?.uid === user?.uid">
       <el-dropdown trigger="click" ref="feedMenu" popper-class="tapl-more-dropdown">
 
-        <a slot="trigger"><i class="uil uil-ellipsis-h font25"></i></a>
+        <a slot="trigger"><i class="uil uil-ellipsis-h font25 pointer"></i></a>
         <template #dropdown>
           <div slot="body" class="more-list">
             <a @click="isCommentEdit = !isCommentEdit" class="pointer">{{
@@ -95,6 +95,7 @@ const props = defineProps({
   },
 })
 
+
 const commentContent = ref(props.comment?.content || '')
 
 const emit = defineEmits(['refresh', 'editComment', 'deleteComment'])
@@ -143,7 +144,6 @@ async function deleteComment() {
     `/post/${props.comment.post_id}/comment/${props.comment.id}`,
     getComFetchOptions('delete', true)
   )
-  console.log(data.value)
 
   if (!error.value) {
     emit('deleteComment', props.comment.id)
@@ -158,6 +158,7 @@ async function translate(text: string) {
 function untranslatedText(originText: string) {
   commentContent.value = originText
 }
+
 
 </script>
 

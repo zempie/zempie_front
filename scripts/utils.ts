@@ -192,3 +192,10 @@ export const fileReader = (file: File): Promise<string | ArrayBuffer> => {
   })
 
 }
+
+export const isMobile = () => {
+  let details = navigator.userAgent;
+  let regexp = /android|iphone|kindle|ipad|Windows Phone/i;
+
+  return regexp.test(details);
+}

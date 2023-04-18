@@ -460,6 +460,10 @@
   max-width: 340px !important;
 }
 
+.el-checkbox .is-disabled {
+  display: none;
+}
+
 .el-checkbox.is-disabled+.el-cascader-node__label {
   color: #f97316 !important
 }

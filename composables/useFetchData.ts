@@ -197,12 +197,12 @@ export const user = {
   // joinedCommunity(userId: number) {
   //   return communityFetch('get', `/user/${userId}/list/community`, undefined, true)
   // },
-  followingList(obj: any, userId: number) {
-    return communityFetch('get', `/user/${userId}/list/following`, obj, true);
-  },
-  followerList(obj: any, userId: any) {
-    return communityFetch('get', `/user/${userId}/list/follower`, obj, true);
-  },
+  // followingList(obj: any, userId: number) {
+  //   return communityFetch('get', `/user/${userId}/list/following`, obj, true);
+  // },
+  // followerList(obj: any, userId: any) {
+  //   return communityFetch('get', `/user/${userId}/list/follower`, obj, true);
+  // },
 
   leave(obj: { text: string, num: string }) {
     return useFetchData('post', `/user/leave-zempie`, obj, true);

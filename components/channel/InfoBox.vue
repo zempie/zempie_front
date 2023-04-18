@@ -1,23 +1,22 @@
 <template>
   <div class="ta-myinfo" v-if="isLoading">
     <UserAvatarSk tag="p" style="width: 100px; height: 100px" />
-    <h1 class="grey-text skeleton-animation"></h1>
+    <div class="grey-text skeleton-animation"></div>
+    <div class="grey-text mt10 skeleton-animation"></div>
     <ul>
-      <li>
-        <ChannelPostIcon />
+      <div style="width:32%">
         <h2 class="grey-text mt10 skeleton-animation"></h2>
-      </li>
-      <li>
-        <ChannelFollowIcon />
+      </div>
+      <div style="width:32%">
         <h2 class="grey-text mt10 skeleton-animation"></h2>
-      </li>
-      <li>
-        <ChannelFollowIcon />
+      </div>
+      <div style="width:32%">
         <h2 class="grey-text mt10 skeleton-animation"></h2>
-      </li>
+      </div>
     </ul>
   </div>
   <div v-else class="ta-myinfo">
+
     <UserAvatar :user="channelInfo" tag="p" />
     <h1>{{ channelInfo.nickname }}</h1>
     <h2>{{ channelInfo.name }}</h2>
@@ -40,7 +39,7 @@
         <NuxtLink :to="$localePath(`/channel/${channelId}/following`)">
           <ChannelFollowIcon />
           <h2>{{ channelInfo.following_cnt }}</h2>
-          <h3>following</h3>
+          <h3>Following</h3>
         </NuxtLink>
       </li>
     </ul>

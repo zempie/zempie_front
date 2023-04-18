@@ -56,8 +56,9 @@
         </div>
       </template>
       <ClientOnly>
-        <el-cascader class="mp-category" id="cascader" :props="props" v-model="selectedGroup"
-          placeholder="Select cagetory" :options="categoryList" :popper-class="'categories'" />
+        <el-cascader class="mp-category" id="cascader" :props="props" v-model="selectedGroup" style="width:100%"
+          placeholder="Select cagetory" :options="categoryList">
+        </el-cascader>
       </ClientOnly>
 
       <dl class="mp-type">
@@ -162,7 +163,6 @@ import {
 import { useI18n } from 'vue-i18n'
 import { htmlToDomElem, stringToDomElem, isImageUrl } from '~~/scripts/utils'
 import { fileUpload } from '~~/scripts/fileManager'
-import flutterBridge from '~~/scripts/flutterBridge'
 
 interface IDraft {
   time: number
@@ -756,14 +756,11 @@ function onSelectVideoFile(event: any) {
       const blobUrl = URL.createObjectURL(blob)
 
 
-      if (activeTab.value === 'BLOG') {
-        editor.value.chain().focus(null).setVideo({ src: blobUrl }).run()
-      } else {
-        snsAttachFiles.value.video = {
-          file: file,
-          name: file.name,
-          url: url,
-        }
+
+      snsAttachFiles.value.video = {
+        file: file,
+        name: file.name,
+        url: blobUrl,
       }
       isVideoUploading.value = false
     }
@@ -1209,8 +1206,7 @@ async function communityFetch() {
     `/user/${useUser().user.value.info?.id}/list/community`,
     getComFetchOptions('get', true)
   )
-
-  if (data.value) {
+  if (data.value.length) {
     categoryList.value = data.value.map((elem: ICommunity) => {
       return {
         value: {
@@ -1236,12 +1232,16 @@ async function communityFetch() {
       }
     })
   }
-  categoryList.value.push({
-    value: "game",
-    label: 'Games',
-    disabled: true,
-  })
-  const gameList = useUser().user.value.info.games.map((game: IGame) => {
+  if (useUser().user.value.info.games.length) {
+    categoryList.value.push({
+      value: "game",
+      label: t('game'),
+      disabled: true,
+    })
+  }
+
+
+  const gameList = useUser().user.value.info.games?.map((game: IGame) => {
     return {
       value: {
         type: 'game',
@@ -1252,11 +1252,29 @@ async function communityFetch() {
   })
   categoryList.value = [...categoryList.value, ...gameList]
 
-  categoryList.value.unshift({
-    value: 'community',
-    label: 'Community',
-    disabled: true
-  })
+  if (data.value.length) {
+    categoryList.value.unshift({
+      value: 'community',
+      label: t('community'),
+      disabled: true
+    })
+  }
+
+  if (!categoryList.value.length && !gameList.length) {
+    categoryList.value.push({
+      value: 'community',
+      label: t('no.select.category.info1'),
+      disabled: true
+    },
+      {
+        value: 'community',
+        label: t('no.select.category.info2'),
+        disabled: true
+      })
+  }
+  // console.log(categoryList.value.length, gameList.length)
+
+
 
   isCommunityListVisible.value = true
 }

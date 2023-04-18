@@ -13,20 +13,20 @@
       </div>
 
       <span style="
-                        border-radius: 50%;
-                        background-color: #888;
-                        width: 30px;
-                        height: 30px;
-                        display: flex;
-                        cursor: pointer;
-                        align-items: center;
-                      " @click="uploadBanner">
+                                          border-radius: 50%;
+                                          background-color: #888;
+                                          width: 30px;
+                                          height: 30px;
+                                          display: flex;
+                                          cursor: pointer;
+                                          align-items: center;
+                                        " @click="uploadBanner">
         <i class="uil uil-image-edit" style="
-                          font-size: 20px;
-                          margin-right: 10px;
-                          color: #fff;
-                          margin: 0 auto;
-                        "></i>
+                                            font-size: 20px;
+                                            margin-right: 10px;
+                                            color: #fff;
+                                            margin: 0 auto;
+                                          "></i>
       </span>
     </div>
     <dl>
@@ -68,8 +68,9 @@
 
         <a v-if="gameInfo.stage !== eGameStage.DEV && gameInfo.game_type === eGameType.Html" @click="playGame"
           class="btn-default w150" style="margin-left: 12px">Play Game</a>
-        <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game"
-          class="btn-default w150 download">Download</a>
+
+        <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default w150 download"
+          :class="isFlutter && 'disabled'" @click="downloadGame">Download</a>
       </dd>
     </dl>
     <el-dialog v-model="showChangeBanner" class="modal-area-game-banner">
@@ -170,7 +171,7 @@ const isLike = ref(gameInfo.value?.is_like)
 const likeCnt = ref(gameInfo.value?.count_heart)
 const bannerImg = ref()
 const bannerFile = ref<File>()
-const prevBanner = ref<String | ArrayBuffer>(gameInfo.value?.url_banner)
+const prevBanner = ref<String | ArrayBuffer>(gameInfo.value?.banner_img)
 
 const showChangeBanner = ref(false)
 const editBanner = ref()
@@ -286,7 +287,7 @@ async function updateBannerImg() {
     )
     if (data.value) {
       const { result } = data.value
-      prevBanner.value = result.url_banner + `?_=${Date.now()}`
+      prevBanner.value = result.banner_img + `?_=${Date.now()}`
     }
   })
 
@@ -320,7 +321,7 @@ function saveBannerImg() {
     )
     if (data.value) {
       const { result } = data.value
-      prevBanner.value = result.url_banner + `?_=${Date.now()}`
+      prevBanner.value = result.banner_img + `?_=${Date.now()}`
     }
   })
 
@@ -334,6 +335,16 @@ function moveUserPage() {
 function searchHashtag(hashtag: string) {
   router.push({ path: $localePath(`/search`), query: { q: hashtag } })
 }
+
+function downloadGame() {
+  if (isFlutter.value) {
+    ElMessage({
+      type: 'error',
+      message: 'pc 환경에서 다운로드 해주세요 '
+    })
+  }
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -389,6 +400,13 @@ function searchHashtag(hashtag: string) {
     }
   }
 
+}
+
+.disabled {
+  // pointer-events: none;
+  opacity: 0.5;
+  background: #ededed !important;
+  color: #888;
 }
 
 @media all and (max-width: 479px) {

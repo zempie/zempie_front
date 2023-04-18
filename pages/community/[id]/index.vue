@@ -147,7 +147,7 @@ async function fetch() {
 }
 
 async function subscribe() {
-  const { data, error } = await community.subscribe(communityId.value)
+  const { data, error } = await useCustomAsyncFetch(`/community/${communityId.value}/subscribe`, getComFetchOptions('post', true))
 
   if (!error.value) {
     useCommunity().setSubscribe()

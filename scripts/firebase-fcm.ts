@@ -13,7 +13,7 @@ interface iFcmToken {
 export const getFcmToken = async (user_id) => {
   return await useCustomFetch<{
     channel_id: string, created_at: string, deleted_at: string, email: string, id: number, is_developer: number, last_log_in: string,
-    name: string, picture: string, token: iFcmToken, uid: string, updated_at: string, url_banner: string
+    name: string, picture: string, token: iFcmToken, uid: string, updated_at: string, banner_img: string
   }>(`/fcm/${user_id}`, getComFetchOptions('get', false))
 }
 

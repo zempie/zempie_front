@@ -111,10 +111,10 @@
                     </p>
                   </transition>
                   <p style="
-                                  width: 100%;
-                                  display: flex;
-                                  justify-content: space-around;
-                                ">
+                                                            width: 100%;
+                                                            display: flex;
+                                                            justify-content: space-around;
+                                                          ">
                     <button class="btn-gray" @click="uploadThumbnail">
                       <i class="uil uil-upload"></i>&nbsp;
                       {{ $t('addGameInfo.game.thumbnail') }}
@@ -160,10 +160,10 @@
                     </template>
                   </div>
                   <p style="
-                                  width: 100%;
-                                  display: flex;
-                                  justify-content: space-around;
-                                ">
+                                                            width: 100%;
+                                                            display: flex;
+                                                            justify-content: space-around;
+                                                          ">
                     <button class="btn-gray" @click="uploadGif">
                       <i class="uil uil-upload"></i>
                       {{ $t('addGameInfo.game.thumbnail') }}
@@ -279,7 +279,7 @@ import {
 } from 'element-plus'
 
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
-import { eGameStage } from '~~/types'
+import { eGameCategory, eGameStage } from '~~/types'
 import useVuelidate from '@vuelidate/core'
 import { required, helpers, maxLength } from '@vuelidate/validators'
 import { useI18n } from 'vue-i18n'
@@ -360,6 +360,7 @@ const isDeleteModalOpen = ref(false)
 
 
 onMounted(() => {
+  // console.log('useProject().uploadProject.value.form', editProject.value.info)
   window.addEventListener('beforeunload', refreshPage)
   //게임 정보 수정
   if (editProject.value.info?.id) {
@@ -589,6 +590,7 @@ async function updateGame() {
   isUploadDone.value = true
   form.hashtags = hashtagsArr.value.toString()
 
+
   form['file'] = form.project_picture
   form.file = thumbFile.value ?? null
   delete form.project_picture
@@ -604,6 +606,9 @@ async function updateGame() {
 
   const formData = new FormData()
 
+  if (useProject().editProject.value.purpose === eGameCategory.NONE) {
+    useProject().editProject.value.purpose = useProject().editProject.value.info.game.category
+  }
   formData.append('category', useProject().editProject.value.purpose.toString())
 
   for (let k in form) {

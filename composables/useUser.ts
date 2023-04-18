@@ -39,7 +39,7 @@ export default function () {
   }
 
   const setBannerImg = (url: string) => {
-    user.value.info.url_banner = url;
+    user.value.info.banner_img = url;
   }
   const removeUserState = () => {
     user.value.fUser = null;

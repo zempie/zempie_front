@@ -20,7 +20,7 @@
         </dt>
         <dd>
           <h4>{{ user.followings_cnt }}</h4>
-          <p>following</p>
+          <p>Following</p>
         </dd>
       </dl>
       <slot name="followBtn"></slot>
@@ -39,8 +39,10 @@ const props = defineProps({
 })
 
 const bannerImg = computed(() =>
-  props.user.url_banner ? props.user.url_banner + `?_=${Date.now()}` : null
+  props.user.banner_img ? props.user.banner_img + `?_=${Date.now()}` : null
 )
+
+console.log('props.', props.user)
 
 const userObj = computed(() => {
   return {
@@ -52,7 +54,7 @@ const userObj = computed(() => {
     channel_id: props.user.channel_id,
     email: props.user.email,
     uid: props.user.uid,
-    url_banner: props.user.url_banner,
+    banner_img: props.user.banner_img,
   }
 })
 </script>
