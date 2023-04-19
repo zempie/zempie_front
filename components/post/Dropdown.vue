@@ -5,7 +5,7 @@
       <template #dropdown>
         <div slot="body" class="more-list fixed" style="min-width: 150px">
           <template v-if="user && user.id === (feed?.user && feed?.user.id)">
-            <a @click="isTextEditorOpen = true" id="editFeed" class="pointer">{{ t('feed.edit') }}</a>
+            <a @click="onClickEdit" id="editFeed" class="pointer">{{ t('feed.edit') }}</a>
             <a @click="showDeletePostModal = true" class="pointer">{{ t('feed.delete') }}</a>
           </template>
           <template v-else>
@@ -62,6 +62,7 @@ import {
   ElDropdown,
   ElMessage,
   ElDialog,
+  ElMessageBox,
 } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 
@@ -97,6 +98,26 @@ async function deletePost() {
 async function closeEditor() {
   isTextEditorOpen.value = false
   editorKey.value = Date.now()
+}
+
+function onClickEdit() {
+
+  if (props.feed.post_type === 'BLOG') {
+    ElMessageBox.confirm(`${t('ask.edit.blog')}<br/>${t('confirm.edit')}`, {
+      cancelButtonText: t('no'),
+      confirmButtonText: t('yes'),
+      dangerouslyUseHTMLString: true,
+      type: 'info',
+    })
+      .then(() => {
+        isTextEditorOpen.value = true
+      })
+      .catch(() => {
+
+      })
+      .finally(() => {
+      })
+  }
 }
 </script>
 

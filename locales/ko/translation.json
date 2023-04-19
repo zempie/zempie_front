@@ -901,5 +901,8 @@
   "mobile.intro3.info2": "서로 응원해 주세요",
   "new.post": "새 포스팅",
   "no.select.category.info1": "선택할 수 있는 카테고리가 없습니다.",
-  "no.select.category.info2": "게임을 업로드하거나 커뮤니티를 가입해보세요."
+  "no.select.category.info2": "게임을 업로드하거나 커뮤니티를 가입해보세요.",
+  "ask.edit.blog": "SNS와 블로그 포스팅의 형식 통합으로 인해 기존 블로그 형식으로 작성된 글을 수정 시 이미지가 삭제됩니다.",
+  "confirm.edit": "그래도 수정하시겠습니까?",
+  "edit.post": "포스팅 수정"
 }

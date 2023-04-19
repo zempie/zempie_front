@@ -5,7 +5,7 @@
         <i class="uil uil-angle-left-b"></i>
       </li>
       <li class="title">
-        {{ $t('new.post') }}
+        {{ isEdit ? $t('edit.post') : $t('new.post') }}
       </li>
       <li class="close-btn" @click="closeTextEditor">
         <span class="material-symbols-outlined">
@@ -363,7 +363,7 @@ onMounted(async () => {
 
       }
     }
-    const postGame = props.feed?.posted_at?.game || props.feed?.posted_at[0].game
+    const postGame = props.feed?.posted_at?.game || props.feed?.posted_at[0]?.game
 
 
     if (postGame) {

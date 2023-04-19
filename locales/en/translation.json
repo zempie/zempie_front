@@ -903,5 +903,8 @@
   "mobile.intro3.info2": "and support the game developers as well.",
   "new.post": "New post",
   "no.select.category.info1": "There is no category available to select",
-  "no.select.category.info2": "Please try to upload your game or join the community."
+  "no.select.category.info2": "Please try to upload your game or join the community.",
+  "ask.edit.blog": "Images in Blog-form posts can be deleted as the Blog and Social Network forms are integrated.",
+  "confirm.edit": "Do you still want to edit this post?",
+  "edit.post": "Edit post"
 }
