@@ -575,11 +575,12 @@
 
     dl {
       dt {
-        width: 15%;
+        width: 10%;
+        min-width: 60px;
       }
 
       dd {
-        width: 80%;
+        width: 90%;
       }
     }
   }
@@ -648,7 +649,6 @@
 
 .modal-like {
   min-height: 100px;
-  padding-right: 10px;
 
   .ma-content {
     padding: 0px;

@@ -1,6 +1,5 @@
 <template>
-  <li @click="$router.push($localePath(`/channel/${user.channel_id}`))">
-
+  <li @click="$router.push($localePath(`/${user.nickname}`))">
     <div class="cf-img" :style="
       bannerImg
         ? `background: url(${bannerImg}) center center / cover no-repeat; background-size: cover;`
@@ -13,14 +12,14 @@
       <dl>
         <dd>
           <h4>{{ user.followers_cnt }}</h4>
-          <p>Followers</p>
+          <p>{{ $t('follower') }}</p>
         </dd>
         <dt>
           <p></p>
         </dt>
         <dd>
           <h4>{{ user.followings_cnt }}</h4>
-          <p>Following</p>
+          <p>{{ $t('following') }}</p>
         </dd>
       </dl>
       <slot name="followBtn"></slot>
@@ -29,20 +28,15 @@
 </template>
 
 <script setup lang="ts">
-import { IUser } from '~~/types'
-import { PropType } from 'vue'
-
 const { $localePath } = useNuxtApp()
 
 const props = defineProps({
-  user: Object as PropType<IUser>,
+  user: Object,
 })
 
 const bannerImg = computed(() =>
   props.user.banner_img ? props.user.banner_img + `?_=${Date.now()}` : null
 )
-
-console.log('props.', props.user)
 
 const userObj = computed(() => {
   return {
@@ -55,6 +49,9 @@ const userObj = computed(() => {
     email: props.user.email,
     uid: props.user.uid,
     banner_img: props.user.banner_img,
+    nickname: props.user.nickname,
+    follower_cnt: props.user.followers_cnt,
+    following_cnt: props.user.followings_cnt,
   }
 })
 </script>

@@ -24,7 +24,7 @@ export interface IUser {
     theme: number,
     theme_extra: any
   },
-  url_banner?: string,
+  banner_img?: string,
   profile_img?: string,
   new_noti_count?: number,
   nickname?: string

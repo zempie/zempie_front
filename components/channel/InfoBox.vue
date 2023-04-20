@@ -22,24 +22,24 @@
     <h2>{{ channelInfo.name }}</h2>
     <ul>
       <li>
-        <NuxtLink :to="$localePath(`/channel/${channelId}`)">
+        <NuxtLink :to="$localePath(`/${userId}`)">
           <ChannelPostIcon />
           <h2>{{ channelInfo.post_cnt }}</h2>
-          <h3>Posts</h3>
+          <h3>{{ $t('posts') }}</h3>
         </NuxtLink>
       </li>
       <li>
-        <NuxtLink :to="$localePath(`/channel/${channelId}/followers`)">
+        <NuxtLink :to="$localePath(`/${userId}/followers`)">
           <ChannelFollowIcon />
           <h2>{{ channelInfo.follower_cnt }}</h2>
-          <h3>Followers</h3>
+          <h3>{{ $t('follower') }}</h3>
         </NuxtLink>
       </li>
       <li>
-        <NuxtLink :to="$localePath(`/channel/${channelId}/following`)">
+        <NuxtLink :to="$localePath(`/${userId}/following`)">
           <ChannelFollowIcon />
           <h2>{{ channelInfo.following_cnt }}</h2>
-          <h3>Following</h3>
+          <h3>{{ $t('following') }}</h3>
         </NuxtLink>
       </li>
     </ul>
@@ -51,7 +51,7 @@ const route = useRoute()
 
 const channelInfo = computed(() => useChannel().userChannel.value.info)
 const isLoading = computed(() => useChannel().userChannel.value.isLoading)
-const channelId = computed(() => route.params.id as string || channelInfo.value.uid)
+const userId = computed(() => route.params.id as string || channelInfo.value.nickname)
 
 
 </script>

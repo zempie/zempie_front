@@ -9,7 +9,7 @@
             <a @click="showDeletePostModal = true" class="pointer">{{ t('feed.delete') }}</a>
           </template>
           <template v-else>
-            <NuxtLink :to="$localePath(`/channel/${feed.user && feed.user.channel_id}`)">
+            <NuxtLink :to="$localePath(`/${feed.user && feed.user.nickname}`)">
               {{ t('visit.userChannel') }}
             </NuxtLink>
             <!-- <a v-if="user" @click="report">{{ t('post.report') }}</a>

@@ -111,10 +111,10 @@
                     </p>
                   </transition>
                   <p style="
-                                                            width: 100%;
-                                                            display: flex;
-                                                            justify-content: space-around;
-                                                          ">
+                                                               width: 100%;
+                                                               display: flex;
+                                                               justify-content: space-around;
+                                                             ">
                     <button class="btn-gray" @click="uploadThumbnail">
                       <i class="uil uil-upload"></i>&nbsp;
                       {{ $t('addGameInfo.game.thumbnail') }}
@@ -160,10 +160,10 @@
                     </template>
                   </div>
                   <p style="
-                                                            width: 100%;
-                                                            display: flex;
-                                                            justify-content: space-around;
-                                                          ">
+                                                width: 100%;
+                                                display: flex;
+                                                justify-content: space-around;
+                                              ">
                     <button class="btn-gray" @click="uploadGif">
                       <i class="uil uil-upload"></i>
                       {{ $t('addGameInfo.game.thumbnail') }}
@@ -181,7 +181,7 @@
             <dt style="padding-top: 5px">{{ $t('auto.game.id.generator') }}</dt>
             <dd>
               <label class="switch-button">
-                <input type="checkbox" name="" v-model="isAuthGamePath" />
+                <input type="checkbox" v-model="isAuthGamePath" />
                 <span class="onoff-switch"></span>
               </label>
             </dd>
@@ -192,9 +192,13 @@
                 {{ $t('addGameInfo.game.id') }}
               </dt>
               <dd>
-                <input v-model="v$.pathname.$model" type="text" name="" class="game-id-input w90p" title=""
-                  :placeholder="$t('addGameInfo.game.id')" />
+                <input v-model="v$.pathname.$model" type="text" class="game-id-input w90p"
+                  :title="$t('addGameInfo.game.id')" :placeholder="$t('addGameInfo.game.id')" @input="onInputPathname" />
+                <p class="valid-err" :class="hasPathnameErr && 'active'">
+                  {{ pathnameValidErrMsg }}
+                </p>
               </dd>
+
               <ClipLoader v-if="waitGamePath" :color="'#ff6e17'" :size="'20px'"></ClipLoader>
               <a @click="checkPathName" class="btn-default w150">
                 {{ $t('addGameInfo.game.id.check') }}
@@ -320,6 +324,12 @@ const prevGif = ref<String | ArrayBuffer>('')
 
 const uploadStage = computed(() => uploadProject.value.form.stage)
 
+//게임 id(pathname)
+const needToVerify = ref(false)
+const hasPathnameErr = ref(false)
+const pathnameValidErrMsg = ref()
+const originPathname = ref('')
+
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
 //게임 정보 수정
@@ -376,6 +386,8 @@ onMounted(() => {
     form.stage = stage
     prevThumbnail.value = picture
     prevGif.value = picture2
+    originPathname.value = game.pathname
+
   } else {
     //게임 정보 입력
     if (useProject().uploadProject.value.form.stage !== eGameStage.NONE) {
@@ -396,6 +408,8 @@ onMounted(() => {
       form.project_picture = project_picture
       form.project_picture2 = project_picture2
       form.stage = stage
+
+      originPathname.value = pathname
     }
   }
 })
@@ -430,8 +444,19 @@ async function checkPathName() {
 
   if (form.pathname) {
     const { data, error } = await game.verifyPath(form.pathname)
+    console.log(data.value.result)
+    if (data.value.result) {
+      const { success } = data.value.result
+      if (success) {
+        needToVerify.value = false
+        hasPathnameErr.value = false
+      } else {
+        hasPathnameErr.value = true
+        pathnameValidErrMsg.value = t('game.pathname.duplicated')
+      }
+    }
 
-    const result = await this.$api.confirmGamePath(this.gamePath)
+    // const result = await this.$api.confirmGamePath(this.gamePath)
     // if (result && result.success) {
     //   this.confirmedGamePath = true;
     //   this.gamePathError = "";
@@ -586,7 +611,25 @@ function backspaceDelete({ which }) {
     hashtagsArr.value.splice(hashtagsArr.value.length - 1)
 }
 
+function onInputPathname() {
+  const newPathname = form.pathname
+  hasPathnameErr.value = false
+  if (originPathname.value === newPathname) {
+    needToVerify.value = false
+  } else {
+    needToVerify.value = true
+  }
+}
 async function updateGame() {
+  if (needToVerify.value) {
+    isAuthGamePath.value = false
+    hasPathnameErr.value = true
+    pathnameValidErrMsg.value = t('addGameInfo.game.pathname.err')
+    return
+  }
+
+  if (hasPathnameErr.value) return
+
   isUploadDone.value = true
   form.hashtags = hashtagsArr.value.toString()
 

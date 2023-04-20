@@ -906,5 +906,13 @@
   "no.select.category.info2": "Please try to upload your game or join the community.",
   "ask.edit.blog": "Images in Blog-form posts can be deleted as the Blog and Social Network forms are integrated.",
   "confirm.edit": "Do you still want to edit this post?",
-  "edit.post": "Edit post"
+  "edit.post": "Edit post",
+  "game.link.copy": "Copy Game Link",
+  "deleted.user": "Deleted user",
+  "follow": "Follow",
+  "about.game": "About us",
+  "notification": "Notification",
+  "addGameInfo.game.pathname.err": "__STRING_NOT_TRANSLATED__",
+  "game.pathname.duplicated": "__STRING_NOT_TRANSLATED__",
+  "posts": "Posts"
 }

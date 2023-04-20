@@ -7,7 +7,7 @@
         </dt>
         <dd>
           <h2 style="color:#000">
-            <NuxtLink :to="$localePath(`/channel/${comment.user?.channel_id}`)">
+            <NuxtLink :to="$localePath(`/${comment.user?.nickname}`)">
               {{ comment.user?.nickname }}</NuxtLink>
           </h2>
           <div style="color: #000">

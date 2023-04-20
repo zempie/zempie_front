@@ -228,12 +228,12 @@ async function fetch() {
       }
 
     case 'user':
-      console.log('user')
+      const channelId = useChannel().userChannel.value.info.channel_id
       const { data: userPostData } = await useCustomAsyncFetch<{
         result: IFeed[]
         totalCount: number
       }>(
-        createQueryUrl(`/timeline/channel/${paramId.value}`, query),
+        createQueryUrl(`/timeline/channel/${channelId}`, query),
         getComFetchOptions('get', true)
       )
 

@@ -7,7 +7,7 @@
           <dl style="margin: 10px 0px 0px 0px">
             <UserAvatar style="width: 30px; height: 30px" :user="user" :key="user?.picture" />
             <dd>
-              <NuxtLink :to="$localePath(`/channel/${user?.channel_id}`)">
+              <NuxtLink :to="$localePath(`/${user?.nickname}`)">
                 <h2>{{ user?.nickname }}</h2>
               </NuxtLink>
             </dd>
@@ -15,7 +15,7 @@
           <div>
             <h2>{{ $t('myProfile') }}</h2>
             <div>
-              <NuxtLink id="myChannel" :to="$localePath(`/channel/${user?.channel_id}`)"><i class="uil uil-user"></i>
+              <NuxtLink id="myChannel" :to="$localePath(`/${user?.nickname}`)"><i class="uil uil-user"></i>
                 {{ $t('myChannel') }}
               </NuxtLink>
               <NuxtLink id="gameStudio" :to="$localePath('/project/list')"><i class="uil uil-robot"></i>

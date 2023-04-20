@@ -13,7 +13,7 @@
                   <template v-if="userList?.length">
                     <h2>{{ $t('user') }}</h2>
                     <el-dropdown-item v-for="user in userList" :key="user.id">
-                      <div @click="moveUserPage(user.channel_id)">
+                      <div @click="moveUserPage(user.nickname)">
                         <dl>
                           <dt>
                             <UserAvatar :user="user" :tag="'span'" style="width:40px" />
@@ -118,9 +118,9 @@ async function search() {
   await useSearch().getSearch(searchInput.value)
 }
 
-function moveUserPage(channelId: string) {
+function moveUserPage(nickname: string) {
   initSearchData()
-  router.push($localePath(`/channel/${channelId}`))
+  router.push($localePath(`/${nickname}`))
 }
 
 async function onEnterSearch() {

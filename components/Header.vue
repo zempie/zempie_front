@@ -153,8 +153,8 @@
 
 <script setup lang="ts">
 import _ from 'lodash'
-import { vOnClickOutside } from '@vueuse/components'
-import { useI18n } from 'vue-i18n'
+import { vOnClickOutside } from "@vueuse/components"
+import { useI18n } from "vue-i18n"
 import {
   ElDropdown,
   ElDropdownMenu,
@@ -162,9 +162,9 @@ import {
   ElSelect,
   ElOption,
   ElDialog,
-} from 'element-plus'
+} from "element-plus"
 
-import { isMobile } from '~~/scripts/utils'
+import { isMobile } from "../scripts/utils"
 
 const config = useRuntimeConfig()
 const { $localePath } = useNuxtApp()
@@ -185,11 +185,11 @@ const isHeaderSideBgMobile = ref(false)
 
 
 const isMobileSize = computed(() =>
-  window.matchMedia('screen and (max-width: 479px)')
+  window.matchMedia("screen and (max-width: 479px)")
 )
 
 const isTablet = computed(() =>
-  window.matchMedia('screen and (max-width: 767px)')
+  window.matchMedia("screen and (max-width: 767px)")
 )
 
 const isMob = computed(() => isMobile())
@@ -197,8 +197,8 @@ const isMob = computed(() => isMobile())
 const showMobileLogo = ref(false)
 const showHamburger = ref(false)
 const options = [
-  { code: 'ko', label: '한국어' },
-  { code: 'en', label: 'English' },
+  { code: "ko", label: "한국어" },
+  { code: "en", label: "English" },
 ]
 const selectedLang = ref(locale.value)
 
@@ -216,10 +216,10 @@ watch(
 watch(
   () => locale,
   (val) => {
-    if (val.value === 'ko') {
-      selectedLang.value = 'ko'
+    if (val.value === "ko") {
+      selectedLang.value = "ko"
     } else {
-      selectedLang.value = 'en'
+      selectedLang.value = "en"
     }
   },
   { immediate: true }
@@ -230,12 +230,12 @@ onMounted(() => {
   nextTick(() => {
     onResize()
   })
-  window.addEventListener('resize', onResize)
+  window.addEventListener("resize", onResize)
 })
 
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', onResize)
+  window.removeEventListener("resize", onResize)
 })
 
 function onResize() {
@@ -254,7 +254,7 @@ async function moveSearchPage() {
   isHeaderSideMobile.value = false
   await useSearch().getSearch(searchInput.value)
   router.push({ path: $localePath(`/search`), query: { q: searchInput.value } })
-  searchInput.value = ''
+  searchInput.value = ""
 }
 function clickOutside() {
   if (isHeaderSideMobile.value) {
@@ -265,12 +265,12 @@ function clickOutside() {
 
 async function moveZemWorld() {
   if (isLogin.value) {
-    const { result } = await useCustomFetch<{ result: { token: string } }>('/create/token', getZempieFetchOptions('post', true))
+    const { result } = await useCustomFetch<{ result: { token: string } }>("/create/token", getZempieFetchOptions("post", true))
     if (result) {
-      window.open(`${config.ZEMPIE_METAVERSE}?key=${result.token}`, '_blank');
+      window.open(`${config.ZEMPIE_METAVERSE}?key=${result.token}`, "_blank");
     }
   } else {
-    router.push($localePath('/login'))
+    router.push($localePath("/login"))
   }
 
 }

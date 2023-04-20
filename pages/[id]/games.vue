@@ -42,7 +42,7 @@ definePageMeta({
 
 const games = computed(() => useChannel().userChannel.value.info?.games)
 const isLoadDone = computed(() => useRender().state.value.isDone)
-const channelId = computed(() => route.params.id as string)
+const userId = computed(() => route.params.id as string)
 const isMine = computed(() => {
   return route.params.id === useUser().user.value.info?.channel_id
 })
@@ -52,7 +52,7 @@ const isMine = computed(() => {
  * seo 반영은 함수안에서 되지 않으므로 최상단에서 진행함
  */
 const { data } = await useAsyncData<{ result: { target: IUserChannel } }>('channelInfo', () =>
-  $fetch(`/channel/${channelId.value}`, getZempieFetchOptions('get', true)),
+  $fetch(`/user/${userId.value}`, getZempieFetchOptions('get', true)),
   {
     initialCache: false
   }

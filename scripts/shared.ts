@@ -87,7 +87,7 @@ export default {
         console.log('notice')
         break;
       case eNotificationType.follow:
-        router.push($localePath(`/channel/${noti.user.channel_id}`))
+        router.push($localePath(`/${noti.user.nickname}`))
         break;
 
 

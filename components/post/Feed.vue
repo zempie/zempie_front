@@ -2,7 +2,6 @@
   <li class="tap-list" v-if="feed">
     <dl class="tapl-title">
       <dt class="w100p">
-
         <PostHeaderInfo :feed="feed">
           <template #followBtn>
             <slot name="followBtn"></slot>
@@ -358,18 +357,6 @@ function copyUrl() {
   })
 }
 
-//     moveHashtag(hashtag: string) {
-//         this.$router.push(`/${this.$i18n.locale}/search?hashtag=${hashtag}`)
-//     }
-
-//     pinPost() {
-//         console.log("pinned");
-//     }
-
-//     closeModal() {
-//         this.$modal.hide('noUser')
-
-//     }
 
 async function deletePost() {
   const { data, error, pending } = await post.delete(feedId.value)
@@ -384,11 +371,6 @@ async function deletePost() {
   showDeletePostModal.value = false
 }
 
-//     report() {
-//         this.$emit('reportPost', this.feed.id)
-//         this.isOpenReportModal = !this.isOpenReportModal
-//         this.$modal.show('modalReport')
-//     }
 
 function moreView() {
   feedDiv.value.style.maxHeight = '100%'
