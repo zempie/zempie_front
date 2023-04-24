@@ -43,7 +43,7 @@
           </dt>
         </dl>
       </div>
-      <div v-if="!isFlutter" class="la-bottom">
+      <div class="la-bottom">
         <dl>
           <dt></dt>
           <dd>{{ $t('login.text3') }}</dd>
