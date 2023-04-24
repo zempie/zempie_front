@@ -73,14 +73,12 @@ function copyUrl() {
 }
 
 function shareSocial(social: string) {
-  const Kakao = window.Kakao
+
 
   const imageUrl = getImgObj()?.url || config.OG_IMG
   let linkUrl = props.url ?? window.location.href
 
-  if (!Kakao.isInitialized()) {
-    Kakao.init(config.KAKAO_JS_KEY)
-  }
+
 
   const { title, desc } = shared.getFeedInfo(props.feed)
 
@@ -92,6 +90,10 @@ function shareSocial(social: string) {
 
   switch (social) {
     case 'kakao':
+      const Kakao = window.Kakao
+      if (!Kakao.isInitialized()) {
+        Kakao.init(config.KAKAO_JS_KEY)
+      }
       Kakao.Share.sendDefault({
         objectType: 'feed',
         content: {
