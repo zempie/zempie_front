@@ -33,10 +33,13 @@ import { PropType } from 'vue';
 import { IFeed } from '~~/types';
 import shared from '~~/scripts/shared'
 import { openCenteredPopup } from '~~/scripts/ui-utils';
+import { useGtag } from 'vue-gtag-next';
+
 
 
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
+const gtag = useGtag()
 
 const props = defineProps({
   url: String,
@@ -61,6 +64,12 @@ function copyUrl() {
     type: 'success',
     customClass: 'copy-msg',
   })
+
+  gtag.event('click', {
+    event_category: 'button',
+    event_label: `url_share`,
+    event_value: 1
+  })
 }
 
 function shareSocial(social: string) {
@@ -74,6 +83,12 @@ function shareSocial(social: string) {
   }
 
   const { title, desc } = shared.getFeedInfo(props.feed)
+
+  gtag.event('click', {
+    event_category: 'button',
+    event_label: `${social}_share`,
+    event_value: 1
+  })
 
   switch (social) {
     case 'kakao':

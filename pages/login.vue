@@ -12,7 +12,7 @@
         <h3>{{ $t('login.text1') }}</h3>
         <p>{{ $t('login.text2') }}</p>
       </div>
-      {{ currUser }}
+      currUser {{ currUser }}
       <div class="la-content">
         <form>
           <input type="email" v-model="v$.email.$model" name="login-email" title=""
@@ -246,9 +246,11 @@ async function googleLogin() {
             ...result.additionalUserInfo.profile,
             accessToken: result.credential.accessToken
           }
+
           useUser().setFirebaseUser(firebaseUser)
 
-          currUser.value = await getCurrentUser()
+          currUser.value = await FlutterBridge().FlutterBridge.getFbCurrentUser()
+          // currUser.value = await getCurrentUser()
 
           await useUser().setUserInfo()
 
