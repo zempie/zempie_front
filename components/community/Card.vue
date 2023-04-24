@@ -1,45 +1,39 @@
 <template>
   <li @click="$router.push($localePath(`/community/${community.id}`))">
-    <div
-      :style="{
-        background: 'url(' + bannerImg + ') center center / cover no-repeat',
-        'background-size': 'cover',
-        height: '120px',
-      }"
-    ></div>
-    <p
-      :style="{
-        background: 'url(' + profileImg + ') center center / cover no-repeat',
-        'background-size': 'cover',
-      }"
-    ></p>
+    <div :style="{
+      background: 'url(' + bannerImg + ') center center / cover no-repeat',
+      'background-size': 'cover',
+      height: '120px',
+    }"></div>
+    <p :style="{
+      background: 'url(' + profileImg + ') center center / cover no-repeat',
+      'background-size': 'cover',
+    }"></p>
     <div class="ct-info">
       <h3 class="title">{{ community.name }}</h3>
       <p class="desc">{{ community.description }}</p>
       <dl>
-        <dd
-          @click.stop="
-            $router.push(
-              $localePath(`/community/${props.community.id}/members`)
-            )
-          "
-        >
+        <dd @click.stop="
+          $router.push(
+            $localePath(`/community/${props.community.id}/members`)
+          )
+        ">
           <h4>{{ community.member_cnt }}</h4>
-          <p>Members</p>
+          <p>{{ $t('members') }}</p>
         </dd>
         <dt>
           <p></p>
         </dt>
         <dd>
           <h4>{{ community.posts_cnt }}</h4>
-          <p>Posts</p>
+          <p>{{ $t('posts') }}</p>
         </dd>
         <dt>
           <p></p>
         </dt>
         <dd>
           <h4>{{ visitCount }}</h4>
-          <p>Visits</p>
+          <p>{{ $t('visits') }}</p>
         </dd>
       </dl>
 

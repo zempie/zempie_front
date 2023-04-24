@@ -373,3 +373,11 @@ export enum eMetadataType {
   website = 1,
   video
 }
+
+
+
+declare global {
+  interface Window {
+    Kakao: any
+  }
+}

@@ -65,7 +65,8 @@
     <CommunityTarget :communities="feed?.posted_at?.community" :games="feed?.posted_at?.game" />
 
     <ul class="tapl-option">
-      <li>
+      <PostActions :feed="feed" :is-comment-closed="true" @open-comment="openComments" />
+      <!-- <li>
         <ul>
           <LikeBtn :feed="feed" />
           <li @click="openComments">
@@ -76,7 +77,7 @@
             <a @click="copyUrl"><i class="uil uil-share-alt pointer" style="font-size: 20px"></i></a>
           </li>
         </ul>
-      </li>
+      </li> -->
     </ul>
 
     <!-- TODO: mobile: 댓글만 보기 -->
@@ -261,11 +262,11 @@ async function deleteComment(commentId: string) {
 
 }
 
-async function openComments() {
+async function openComments(isOpenComment: boolean) {
   commentInit()
-  isOpenedComments.value = !isOpenedComments.value
+  isOpenedComments.value = isOpenComment
 
-  if (isOpenedComments.value) {
+  if (isOpenComment) {
     await commentFetch()
   }
 }

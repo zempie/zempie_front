@@ -912,7 +912,14 @@
   "follow": "Follow",
   "about.game": "About us",
   "notification": "Notification",
-  "addGameInfo.game.pathname.err": "__STRING_NOT_TRANSLATED__",
-  "game.pathname.duplicated": "__STRING_NOT_TRANSLATED__",
-  "posts": "Posts"
+  "addGameInfo.game.pathname.err": "Please Check the availability for username.",
+  "game.pathname.duplicated": "This username is unavailable. Please try another.",
+  "posts": "Posts",
+  "visits": "__STRING_NOT_TRANSLATED__",
+  "share.link.url": "__STRING_NOT_TRANSLATED__",
+  "share.link.kakao": "__STRING_NOT_TRANSLATED__",
+  "share.link.twitter": "__STRING_NOT_TRANSLATED__",
+  "share.link.facabook": "__STRING_NOT_TRANSLATED__",
+  "share.zempie.title": "__STRING_NOT_TRANSLATED__",
+  "share.zempie.nickname.title": "__STRING_NOT_TRANSLATED__"
 }

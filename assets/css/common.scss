@@ -264,8 +264,9 @@
 @media all and (min-width: 1200px) {}
 
 .el-dropdown-menu__item:focus {
-  border-radius: 10px;
-  background-color: #ededed !important;
+  // border-radius: 10px;
+  // background-color: #ededed !important;
+  background-color: transparent !important;
   color: #f97316 !important;
 }
 
@@ -865,4 +866,30 @@
   left: 0;
   opacity: 0.5;
   background: #ffffff;
+}
+
+
+/*
+ * el-message
+ */
+.el-message {
+  &.copy-msg {
+    background-color: #fff;
+    border-color: #f97316;
+
+    i,
+    p {
+      color: #f97316
+    }
+  }
+}
+
+.share-menu {
+
+  li {
+    &:focus {
+      background-color: transparent !important;
+
+    }
+  }
 }

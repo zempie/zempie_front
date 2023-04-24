@@ -912,5 +912,12 @@
   "notification": "알람",
   "addGameInfo.game.pathname.err": "ID 중복확인을 진행해주세요.",
   "game.pathname.duplicated": "중복된 게임 ID입니다. 다른 ID를 사용해주세요",
-  "posts": "포스팅"
+  "posts": "포스팅",
+  "visits": "방문",
+  "share.link.url": "링크 URL 복사",
+  "share.link.kakao": "카카오톡에 공유하기",
+  "share.link.twitter": "트위터에 공유하기",
+  "share.link.facabook": "페이스북에 공유하기",
+  "share.zempie.title": "Zempie의",
+  "share.zempie.nickname.title": "님"
 }

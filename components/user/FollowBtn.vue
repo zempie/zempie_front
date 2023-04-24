@@ -37,7 +37,7 @@ const props = defineProps({
 })
 
 const isMine = computed(() => {
-  return loginUser.value.id === props.user.id
+  return loginUser.value?.id === props.user?.id
 })
 
 const isFollowing = ref(props.user?.is_following)
