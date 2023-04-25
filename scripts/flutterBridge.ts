@@ -84,9 +84,11 @@ export default function () {
       const result = await callHandler("getMessagingToken");
       return result;
     },
-
-
-
+    async signInEmail(params: { email: string, password: string }) {
+      const response = await callHandler('signInEmail', params)
+      alert(JSON.stringify(response))
+      return JSON.parse(response)
+    },
     async windowOpen(url) {
       // const response = await webViewJavaScriptBridge.sendMessage({
       //   action: "windowOpen",

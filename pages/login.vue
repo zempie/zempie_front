@@ -190,6 +190,16 @@ onBeforeUnmount(() => {
 async function onSubmit() {
   const isValid = await v$.value.$validate()
 
+  if (isFlutter.value) {
+    return FlutterBridge().FlutterBridge.signInEmail({ email: form.email, password: form.password })
+      .then((result: any) => {
+        alert(JSON.stringify(result))
+      })
+
+    return
+
+  }
+
   if (!isValid) return
   setPersistence($firebaseAuth, browserLocalPersistence)
     .then((res) => {
