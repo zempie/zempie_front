@@ -191,6 +191,10 @@ async function onSubmit() {
   const isValid = await v$.value.$validate()
 
   if (isFlutter.value) {
+
+    alert('email login')
+
+
     return FlutterBridge().FlutterBridge.signInEmail({ email: form.email, password: form.password })
       .then((result: any) => {
         alert(JSON.stringify(result))

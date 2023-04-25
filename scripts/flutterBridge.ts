@@ -85,6 +85,7 @@ export default function () {
       return result;
     },
     async signInEmail(params: { email: string, password: string }) {
+      alert(JSON.stringify(params))
       const response = await callHandler('signInEmail', params)
       alert(JSON.stringify(response))
       return JSON.parse(response)
