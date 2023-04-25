@@ -64,9 +64,10 @@ export default function () {
       return result;
     },
     async getFbCurrentUser() {
-      return await callHandler("currentUser");
-      // const result = JSON.parse(response);
-      // return result;
+      const response = await callHandler("currentUser");
+      alert(response)
+      const result = JSON.parse(response);
+      return result;
     },
     async signInApple() {
       const response = await callHandler("signInApple");
