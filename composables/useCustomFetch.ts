@@ -2,6 +2,7 @@ import { FetchOptions } from "ohmyfetch"
 import dayjs from "dayjs";
 import shared from "~~/scripts/shared";
 import { getAuth, getIdToken } from "firebase/auth";
+import FlutterBridge from '~~/scripts/flutterBridge'
 
 const HOURTOSEC = 60 * 60;
 
@@ -16,7 +17,7 @@ interface IRefreshToken {
   token_type: string,
   user_id: string
 }
-
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions, retryCount: number = 0) => {
   // const { $cookies } = useNuxtApp()
   const config = useRuntimeConfig()
@@ -148,7 +149,6 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
       const user = await getCurrentUser()
 
       let token = user?.accessToken
-      console.log('user', user)
 
       if (user) {
         const expirationTime = user.stsTokenManager.expirationTime
@@ -181,15 +181,24 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
 }
 
 export async function getCurrentUser() {
-  const auth = getAuth()
 
-  const user: any = new Promise((resolve, reject) => {
-    auth.onIdTokenChanged((user: any) => {
-      resolve(user);
+
+  if (isFlutter.value) {
+    const result = await FlutterBridge().FlutterBridge.getFbCurrentUser()
+
+    alert(result)
+
+  } else {
+    const auth = getAuth()
+
+    const user: any = new Promise((resolve, reject) => {
+      auth.onIdTokenChanged((user: any) => {
+        resolve(user);
+      });
     });
-  });
 
-  return user
+    return user
+  }
 }
 
 export async function getRefreshToken() {
