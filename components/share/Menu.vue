@@ -55,7 +55,7 @@ function getImgObj(): { url: string, name: string, size: number, type: string, p
       : JSON.parse(props.feed.attatchment_files))
 
 
-  if (attatchment_files.length) {
+  if (attatchment_files && attatchment_files.length) {
     console.log('here')
     return attatchment_files.find((file: any) => file.type === 'image');
   } else {
@@ -84,9 +84,8 @@ function shareSocial(social: string) {
 
 
   const imageUrl = getImgObj()?.url || config.OG_IMG
+
   let linkUrl = props.url ?? window.location.href
-
-
 
   const { title, desc } = shared.getFeedInfo(props.feed)
 
