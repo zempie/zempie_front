@@ -150,7 +150,6 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
       alert(`request :  ${JSON.stringify(user)}`)
 
       let token = user?.accessToken || user?.idToken
-      alert(token)
 
       if (user) {
         const expirationTime = user.stsTokenManager.expirationTime
@@ -168,7 +167,7 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
 
 
       options.headers = options.headers || {}
-      console.log(options.headers)
+      alert(`request :  ${JSON.stringify(options.headers)}`)
 
       useCommon().setLoading()
       console.log('[fetch request]')
