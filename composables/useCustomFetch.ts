@@ -151,7 +151,9 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
 
       let token = user?.accessToken || user?.idToken
 
-      if (user && !isFlutter.value) {
+      if (isFlutter.value) {
+        options.headers['Authorization'] = `Bearer ${token}`
+      } else if (user && !isFlutter.value) {
         const expirationTime = user.stsTokenManager.expirationTime
         // const expirationTime = 1681264165
         console.log('expirationTime', expirationTime <= Date.now(), new Date(expirationTime))
@@ -162,7 +164,6 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
         }
         console.log('toekn2 ', token)
         options.headers['Authorization'] = `Bearer ${token}`
-
       }
 
 
