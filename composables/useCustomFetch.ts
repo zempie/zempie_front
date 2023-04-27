@@ -150,6 +150,7 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
       alert(`request :  ${JSON.stringify(user)}`)
 
       let token = user?.accessToken
+      alert(token)
 
       if (user) {
         const expirationTime = user.stsTokenManager.expirationTime

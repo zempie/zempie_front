@@ -80,9 +80,11 @@ export default function () {
   const setUserInfo = async () => {
     colorLog(`===set user info===`, '#ed1cdc')
 
+
     try {
       const response = await useCustomFetch<{ result: { user: IUser } }>('/user/info', getZempieFetchOptions('get', true))
-      alert('getuserinfo')
+
+      alert(`user/info :  ${JSON.stringify(response)}`)
 
       if (response) {
         const { user: userResult } = response.result
