@@ -191,6 +191,14 @@ export default {
           content: image ? `${image}` : `${config.OG_IMG}`,
         },
         {
+          property: 'og:image:height',
+          content: '400'
+        },
+        {
+          property: 'og:image:width',
+          content: '700'
+        },
+        {
           property: 'og:image:alt',
           content: `${title}`,
         }

@@ -48,8 +48,16 @@ const props = defineProps({
 })
 
 function getImgObj(): { url: string, name: string, size: number, type: string, priority: number } | null {
-  if (props.feed.attatchment_files?.length) {
-    return props.feed.attatchment_files?.find((file: any) => file.type === 'image');
+
+  let attatchment_files = props.feed.attatchment_files
+    && (Array.isArray(props.feed.attatchment_files)
+      ? props.feed.attatchment_files
+      : JSON.parse(props.feed.attatchment_files))
+
+
+  if (attatchment_files && attatchment_files.length) {
+    console.log('here')
+    return attatchment_files.find((file: any) => file.type === 'image');
   } else {
     return null
   }
@@ -76,9 +84,8 @@ function shareSocial(social: string) {
 
 
   const imageUrl = getImgObj()?.url || config.OG_IMG
+
   let linkUrl = props.url ?? window.location.href
-
-
 
   const { title, desc } = shared.getFeedInfo(props.feed)
 

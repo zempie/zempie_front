@@ -117,6 +117,9 @@ function onClickEdit() {
       })
       .finally(() => {
       })
+  } else {
+    isTextEditorOpen.value = true
+
   }
 }
 </script>
