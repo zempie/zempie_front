@@ -82,6 +82,7 @@ export default function () {
 
     try {
       const response = await useCustomFetch<{ result: { user: IUser } }>('/user/info', getZempieFetchOptions('get', true))
+      alert('getuserinfo')
 
       if (response) {
         const { user: userResult } = response.result
@@ -89,11 +90,12 @@ export default function () {
 
         user.value.isLogin = true;
         useUser().setLoadDone()
-
       }
       if (!isObjEmpty(user.value.fUser)) {
         useUser().setLoadDone()
       }
+      return response
+
     } catch (error) {
       console.log(error)
       useUser().setLoadDone()
