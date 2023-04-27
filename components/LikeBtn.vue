@@ -10,21 +10,20 @@
     <el-dialog v-model="isLikeHistoryOpen" class="modal-area-type" width="500px">
       <div class="modal-alert modal-like">
         <dl class="ma-header">
-
-          <dt>Like </dt>
+          <dt>{{ $t('like') }}</dt>
           <dd>
-            <button @click="closeHistory">
+            <button @click="closeHistory" class="pointer">
               <i class="uil uil-times"></i>
             </button>
           </dd>
         </dl>
         <ul class="ma-content" ref="likeEl">
           <li v-for="like in likeList" :key="like.id">
-            <div @click="moveUserChannel(like.user.channel_id)">
+            <div @click="moveUserChannel(like.user.nickname)">
               <UserAvatar :user="like.user" style="width: 40px; height: 40px" />
             </div>
             <div>
-              <h2 @click="moveUserChannel(like.user.channel_id)">
+              <h2 @click="moveUserChannel(like.user.nickname)">
                 {{ like.user.name }}
               </h2>
             </div>
@@ -42,6 +41,7 @@
 import _ from 'lodash'
 import { useInfiniteScroll } from '@vueuse/core'
 import { ElDialog } from 'element-plus'
+import { IUser } from '~~/types';
 const { $localePath } = useNuxtApp()
 const router = useRouter()
 
@@ -56,7 +56,7 @@ const isLiked = ref(props.feed.liked)
 const likeCnt = ref(props.feed.like_cnt)
 
 const isLikeHistoryOpen = ref(false)
-const likeList = ref()
+const likeList = ref<{ id: string, post_id: string, user: IUser }[]>()
 const likeEl = ref<HTMLElement | null>()
 const isAddData = ref(false)
 const limit = ref(LIKE_LIMIT)
@@ -118,7 +118,7 @@ async function showLikeFetch() {
 
   isLikeHistoryOpen.value = true
 
-  const { data, error, refresh } = await useCustomAsyncFetch<[]>(
+  const { data, error, refresh } = await useCustomAsyncFetch<{ id: string, post_id: string, user: IUser }[]>(
     createQueryUrl(`/post/${props.feed.id}/like/list`, query),
     getComFetchOptions('get', true)
   )
@@ -138,8 +138,8 @@ async function showLikeFetch() {
   }
 }
 
-function moveUserChannel(channel_id: string) {
-  router.push($localePath(`/channel/${channel_id}`))
+function moveUserChannel(nickname: string) {
+  router.push($localePath(`/${nickname}`))
 }
 
 function closeHistory() {

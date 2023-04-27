@@ -1,18 +1,16 @@
 <template>
   <div class="content">
-
     <div class="area-view">
       <ul class="ta-post" v-if="feed">
         <li class="tap-list">
           <dl class="tapl-title">
             <dt class="w100p">
               <PostHeaderInfo :feed="feed">
+                <template #followBtn>
+                  <UserFollowBtn :user="feed.user" class="follow-btn-feed" />
+                </template>
               </PostHeaderInfo>
             </dt>
-
-            <dd>
-              <UserFollowBtn :user="feed.user" class="follow-btn-feed" />
-            </dd>
           </dl>
 
           <div class="tapl-content" v-html="feed?.content" style="max-height:none"></div>
@@ -57,20 +55,19 @@
           <CommunityTarget :communities="postedCommunity(feed?.posted_at)" :games="postedGame(feed?.posted_at)" />
 
           <ul class="tapl-option">
-            <li>
+            <PostActions :feed="feed" />
+            <!-- <li>
               <ul>
                 <LikeBtn v-if="feed" :feed="feed" />
                 <li>
                   <i class="uil uil-comment-alt-dots" style="font-size: 22px"></i>&nbsp;
                   {{ feed?.comment_cnt }}
                 </li>
-
-                <li @click="copyUrl">
-                  <a><i class="uil uil-share-alt" style="font-size: 20px"></i>
-                  </a>
+                <li>
+                  <ShareMenu :feed="feed" />
                 </li>
               </ul>
-            </li>
+            </li> -->
 
             <li>
               <PostDropdown :feed="feed" @deletePost="$router.back()" @refresh="refresh" />
@@ -107,7 +104,6 @@
                   <dd>
                     <h2 class="grey-text skeleton-animation" style="width: 300px; margin-bottom: 10px">
                     </h2>
-
                     <p class="grey-text skeleton-animation" style="width: 150px; margin-bottom: 10px"></p>
                   </dd>
                 </dl>

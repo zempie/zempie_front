@@ -7,7 +7,7 @@
           <ChannelGameBox />
         </dt>
         <dd>
-          <PostTimeline type="user" :isMine="isMine" :key="channelId" />
+          <PostTimeline type="user" :isMine="isMine" :key="userId" />
         </dd>
         <dt>
           <div class="ta-groups" style="margin-top: 0px">
@@ -23,13 +23,14 @@
 <script setup lang="ts">
 const route = useRoute()
 
-const isLoading = computed(() => useChannel().userChannel.value.isLoading)
-const channelInfo = computed(() => useChannel().userChannel.value.info)
-const channelId = computed(() => route.params.id as string)
+const userChannel = computed(() => useChannel().userChannel.value)
+const isLoading = computed(() => userChannel.value.isLoading)
+const channelInfo = computed(() => userChannel.value.info)
+const userId = computed(() => route.params.id as string)
 const communityList = computed(() => channelInfo.value.communities)
 
 const isMine = computed(() => {
-  return channelId.value === useUser().user.value.info?.channel_id
+  return userId.value === useUser().user.value.info?.nickname
 })
 
 
@@ -37,6 +38,8 @@ definePageMeta({
   title: 'user-channel',
   name: 'userChannel',
 })
+
+
 
 </script>
 

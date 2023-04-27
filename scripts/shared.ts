@@ -2,13 +2,12 @@
  * 2개 이상의 컴포넌트에서 쓰는 method
  */
 
-import { eNotificationType, INotification } from '~~/types'
+import { eNotificationType, IFeed, INotification } from '~~/types'
 import { ElMessage } from 'element-plus'
+import { getFirstDomElementByServer, stringToDomElemByServer } from './utils';
 const HOURTOSEC = 60 * 60;
 
 export default {
-
-
   /**
    * 유저 토큰 저장
    * @param token access token
@@ -87,7 +86,7 @@ export default {
         console.log('notice')
         break;
       case eNotificationType.follow:
-        router.push($localePath(`/channel/${noti.user.channel_id}`))
+        router.push($localePath(`/${noti.user.nickname}`))
         break;
 
 
@@ -200,6 +199,35 @@ export default {
 
   },
 
+  /**
+   *
+   * @param feed : feed 객체
+   * @returns : 포스팅에서 사용할 제목이랑 본문 내용 리턴, 원문은 태그가 포함되어있음s
+   */
+  getFeedInfo: (feed: IFeed) => {
+    const content = stringToDomElemByServer(feed.content);
+    const h1Tag = content.querySelector('h1');
+    const h2Tag = content.querySelector('h2');
+    const h3Tag = content.querySelector('h3');
+    const pTag = content.querySelector('p');
+
+
+
+    let title = h1Tag?.innerText || h2Tag?.innerText || h3Tag?.innerText || pTag?.innerText;
+
+    const firstDom = getFirstDomElementByServer(feed.content)
+    let desc = firstDom?.innerText.slice(0, 50)
+
+    if (!title) {
+      title = desc.length ? desc.slice(0, 50) : feed?.user.name
+    }
+    return {
+      title,
+      desc
+    }
+
+
+  }
 
 
 

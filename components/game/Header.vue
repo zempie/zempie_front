@@ -13,20 +13,20 @@
       </div>
 
       <span style="
-                                          border-radius: 50%;
-                                          background-color: #888;
-                                          width: 30px;
-                                          height: 30px;
-                                          display: flex;
-                                          cursor: pointer;
-                                          align-items: center;
-                                        " @click="uploadBanner">
+                                            border-radius: 50%;
+                                            background-color: #888;
+                                            width: 30px;
+                                            height: 30px;
+                                            display: flex;
+                                            cursor: pointer;
+                                            align-items: center;
+                                          " @click="uploadBanner">
         <i class="uil uil-image-edit" style="
-                                            font-size: 20px;
-                                            margin-right: 10px;
-                                            color: #fff;
-                                            margin: 0 auto;
-                                          "></i>
+                                              font-size: 20px;
+                                              margin-right: 10px;
+                                              color: #fff;
+                                              margin: 0 auto;
+                                            "></i>
       </span>
     </div>
     <dl>
@@ -329,7 +329,7 @@ function saveBannerImg() {
 }
 
 function moveUserPage() {
-  router.push($localePath(`/channel/${gameInfo.value.user.channel_id}`))
+  router.push($localePath(`/${gameInfo.value.user.nickname}`))
 }
 
 function searchHashtag(hashtag: string) {

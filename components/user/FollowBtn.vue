@@ -1,27 +1,16 @@
 <template>
-  <div v-if="user && user.id !== loginUser?.id">
-    <p
-      :class="[customClass, 'btn-default unfollow uppercase']"
-      @click.stop="unfollow"
-      v-if="isFollowing"
-    >
-      Followed
+  <div v-if="!isMine">
+    <p :class="[customClass, 'btn-default unfollow uppercase']" @click.stop="unfollow" v-if="isFollowing">
+      {{ $t('following') }}
     </p>
-    <p
-      :class="[customClass, 'btn-default uppercase']"
-      @click.stop="follow"
-      v-else
-    >
-      Follow
+    <p :class="[customClass, 'btn-default uppercase']" @click.stop="follow" v-else>
+      {{ $t('follow') }}
     </p>
   </div>
   <div v-else>
-    <p
-      :class="[customClass, 'btn-default uppercase my-channel']"
-      @click.stop="
-        $router.push($localePath(`/channel/${loginUser.channel_id}`))
-      "
-    >
+    <p :class="[customClass, 'btn-default uppercase my-channel']" @click.stop="
+      $router.push($localePath(`/${loginUser.nickname}`))
+    ">
       {{ $t('myChannel') }}
     </p>
   </div>
@@ -35,14 +24,20 @@ import { useI18n } from 'vue-i18n'
 
 const { t, locale } = useI18n()
 const { $localePath } = useNuxtApp()
+
 const isLogin = computed(() => useUser().user.value.isLogin)
 const loginUser = computed(() => useUser().user.value.info)
+
 
 const emit = defineEmits(['refresh'])
 
 const props = defineProps({
   user: Object as PropType<IUser | any>,
   customClass: String,
+})
+
+const isMine = computed(() => {
+  return loginUser.value?.id === props.user?.id
 })
 
 const isFollowing = ref(props.user?.is_following)
@@ -52,7 +47,6 @@ async function follow() {
     useModal().openLoginModal()
     return
   }
-
   const { data, error } = await useCustomAsyncFetch(
     `/user/${props.user.id}/follow`,
     getComFetchOptions('post', true)
@@ -93,6 +87,7 @@ async function unfollow() {
   align-items: center;
 
   justify-content: center;
+
   &.unfollow {
     background: #feb100;
   }
@@ -128,9 +123,7 @@ async function unfollow() {
   }
 }
 
-@media all and (min-width: 992px) and (max-width: 1199px) {
-}
+@media all and (min-width: 992px) and (max-width: 1199px) {}
 
-@media all and (min-width: 1200px) {
-}
+@media all and (min-width: 1200px) {}
 </style>

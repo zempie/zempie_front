@@ -4,9 +4,8 @@
       <dt>
         <div class="ta-game-list">
           <dl>
-            <dt>Games</dt>
+            <dt>{{ $t('game') }}</dt>
           </dl>
-
           <template v-if="games?.length">
             <ul style="margin-bottom: 20px">
               <li v-for="game in games.slice(0, 5)" @click="$router.push($localePath(`/game/${game?.pathname}`))">
@@ -20,7 +19,7 @@
               </li>
             </ul>
             <div v-if="games.length > 5">
-              <NuxtLink :to="$localePath(`/channel/${game?.user.channel_id}/games`)" class="btn-default-samll w100p">
+              <NuxtLink :to="$localePath(`/${game?.user.nickname}/games`)" class="btn-default-samll w100p">
                 {{ $t('moreView') }}
               </NuxtLink>
             </div>
@@ -33,20 +32,19 @@
       <dd>
         <PostTimeline type="game" :isMine="isMine" />
       </dd>
-
       <dt>
         <div class="ta-about">
-          <h2>About Us</h2>
+          <h2>{{ $t('about.game') }}</h2>
           <div class="desc">
             {{ game?.description }}
           </div>
           <dl>
-            <dt>Version</dt>
+            <dt>{{ $t('version') }}</dt>
             <dd>{{ game?.version }}</dd>
           </dl>
         </div>
         <div class="ta-copy-link">
-          <a @click="copyUrl"><em>Copy Game Link</em> <span><i class="uil uil-link"></i></span></a>
+          <a @click="copyUrl"><em>{{ $t('game.link.copy') }}</em> <span><i class="uil uil-link"></i></span></a>
         </div>
       </dt>
     </dl>

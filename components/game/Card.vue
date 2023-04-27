@@ -9,7 +9,7 @@
 
     <dl>
       <dt>
-        <NuxtLink :to="$localePath(`/channel/${gameInfo.user?.channel_id}`)">
+        <NuxtLink :to="$localePath(`/${gameInfo.user?.nickname}`)">
           <UserAvatar :user="gameInfo.user" tag='p' />
         </NuxtLink>
       </dt>
@@ -94,7 +94,7 @@ function moveGamePage() {
 }
 
 function moveUserPage() {
-  router.push($localePath(`/channel/${props.gameInfo?.user.channel_id}`))
+  router.push($localePath(`/${props.gameInfo?.user.nickname}`))
 }
 </script>
 

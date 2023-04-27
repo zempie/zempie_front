@@ -12,6 +12,7 @@
         <h3>{{ $t('login.text1') }}</h3>
         <p>{{ $t('login.text2') }}</p>
       </div>
+      currUser {{ currUser }}
       <div class="la-content">
         <form>
           <input type="email" v-model="v$.email.$model" name="login-email" title=""
@@ -43,7 +44,7 @@
           </dt>
         </dl>
       </div>
-      <div v-if="!isFlutter" class="la-bottom">
+      <div class="la-bottom">
         <dl>
           <dt></dt>
           <dd>{{ $t('login.text3') }}</dd>
@@ -189,6 +190,20 @@ onBeforeUnmount(() => {
 async function onSubmit() {
   const isValid = await v$.value.$validate()
 
+  if (isFlutter.value) {
+
+    return FlutterBridge().FlutterBridge.signInEmail({ email: form.email, password: form.password })
+      .then((result: any) => {
+        alert(JSON.stringify(result))
+      })
+      .catch((err: any) => {
+        alert(JSON.stringify(err))
+      })
+
+
+
+  }
+
   if (!isValid) return
   setPersistence($firebaseAuth, browserLocalPersistence)
     .then((res) => {
@@ -245,11 +260,14 @@ async function googleLogin() {
             ...result.additionalUserInfo.profile,
             accessToken: result.credential.accessToken
           }
-          useUser().setFirebaseUser(firebaseUser)
-          currUser.value = await getCurrentUser()
 
+          useUser().setFirebaseUser(firebaseUser)
+
+          currUser.value = await FlutterBridge().FlutterBridge.getFbCurrentUser()
+          // currUser.value = await getCurrentUser()
 
           await useUser().setUserInfo()
+
           if (useUser().user.value.info) {
             await setFirebaseToken()
           }

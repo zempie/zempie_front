@@ -48,7 +48,7 @@ watch(
 
 onMounted(async () => {
   // if (!useCookie(config.COOKIE_NAME).value) navigateTo('/')
-  await useChannel().getChannelInfo(userInfo.value.channel_id)
+  await useChannel().getChannelInfo(userInfo.value.nickname)
   games.value = channelInfo.value?.games
   isPending.value = false
 })

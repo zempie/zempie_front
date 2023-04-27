@@ -3,7 +3,7 @@
     <div>
       <dl class="area-title">
         <dt>
-          Members <span> {{ communities?.totalCount }}</span>
+          {{ $t('members') }} <span> {{ communities?.totalCount }}</span>
         </dt>
       </dl>
       <ul class="card-member" v-if="isPending">
@@ -59,6 +59,4 @@ const {
 
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

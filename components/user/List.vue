@@ -1,13 +1,11 @@
 <template>
   <transition name="component-fade" mode="out-in">
-    <!-- <ul v-if="isPending" class="card-member">
+    <ul v-if="isPending" class="card-member">
       <UserCardSk v-for="user in 4" />
-    </ul> -->
-    <ClientOnly>
-      <ul class="card-follow">
-        <UserCard v-for="user in users" :user="user"></UserCard>
-      </ul>
-    </ClientOnly>
+    </ul>
+    <ul v-else class="card-follow">
+      <UserCard v-for="user in users" :user="user"></UserCard>
+    </ul>
   </transition>
 </template>
 

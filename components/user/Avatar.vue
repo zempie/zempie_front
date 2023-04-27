@@ -7,11 +7,14 @@
 </template>
 
 <script setup lang="ts">
+import { PropType } from 'vue';
+import { IUser } from '~~/types';
+
 const { $localePath } = useNuxtApp()
 const $router = useRouter()
 
 const props = defineProps({
-  user: Object,
+  user: Object as PropType<IUser>,
   tag: {
     default: 'div',
     type: String,
@@ -22,14 +25,16 @@ const props = defineProps({
   }
 })
 
+
 const profileStyle = computed(() => {
   const url = props.user?.picture ? props.user?.picture + `?_=${Date.now()}` : '/images/300_300_default_profile.png'
   return `background: url('${url}') center center  / cover no-repeat; background-size: cover;`
 })
 
 function moveUserPage() {
-  if (props.hasRouter) {
-    $router.push($localePath(`/channel/${props.user.channel_id}`))
+
+  if (props.hasRouter && props.user.id) {
+    $router.push($localePath(`/${props.user.nickname}`))
   }
 }
 </script>

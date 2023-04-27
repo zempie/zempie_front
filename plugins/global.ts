@@ -7,7 +7,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   })
   nuxtApp.hooks.hook('page:finish', () => {
-    window.scrollTo(0, 0)
+    // window.scrollTo(0, 0)
     useRender().finishLoad()
   })
 

@@ -15,7 +15,7 @@
       </ul>
 
       <div v-if="games?.length > 5">
-        <NuxtLink :to="$localePath(`/channel/${channelId}/games`)" class="btn-default-samll w100p">{{
+        <NuxtLink :to="$localePath(`/${userId}/games`)" class="btn-default-samll w100p">{{
           $t('moreView')
         }}
         </NuxtLink>
@@ -30,7 +30,7 @@
 const { $localePath } = useNuxtApp()
 const route = useRoute()
 
-const channelId = computed(() => route.params.id as string)
+const userId = computed(() => route.params.id as string)
 const channelInfo = computed(() => useChannel().userChannel.value.info)
 const games = computed(() => channelInfo.value.games)
 

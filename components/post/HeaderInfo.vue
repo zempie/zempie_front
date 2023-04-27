@@ -4,9 +4,12 @@
       <UserAvatar :user="feed.user" tag='span' :hasRouter="true" />
     </dt>
     <dd class="column content-center">
-      <div class="row" v-if="user">
+      <div class="row" style="align-items: center; min-height: 40px;" v-if="feed.user.id">
         <h2 class="user-name mr5 text-ellipsis pointer" @click="moveUserPage"> {{ feed.user?.nickname }} </h2>
-        <!-- <h3 class="text-ellipsis pointer" v-if="feed.user.nickname" @click="moveUserPage">@{{ feed.user.nickname }}</h3> -->
+        <slot name="followBtn" />
+      </div>
+      <div v-else class="row" style=" min-height: 40px;align-items: center; ">
+        <h2 class="user-name mr5 text-ellipsis"> {{ $t('deleted.user') }} </h2>
       </div>
       <p>
         <i class="uis uis-clock" style="color: #c1c1c1"></i>
@@ -21,7 +24,6 @@
         }}</span>
       </p>
     </dd>
-    <slot name="followBtn" />
   </dl>
   <dl v-else class="row items-center">
     <dt>
@@ -35,7 +37,7 @@
 <script setup lang='ts'>
 import _ from 'lodash'
 
-import { dateFormat, enDateFormat, } from '~~/scripts/utils'
+import { dateFormat, enDateFormat, isObjEmpty, } from '~~/scripts/utils'
 
 const { $localePath } = useNuxtApp()
 const { locale } = useI18n()
@@ -87,8 +89,7 @@ async function undoTranslate() {
 }
 
 function moveUserPage() {
-
-  $router.push($localePath(`/channel/${props.feed?.user.channel_id}`))
+  $router.push($localePath(`/${props.feed?.user.nickname}`))
 }
 </script>
 <style scoped lang='scss'></style>

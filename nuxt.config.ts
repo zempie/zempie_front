@@ -28,7 +28,11 @@ export default defineNuxtConfig({
         { rel: "apple-touch-icon", href: 'https://s3.ap-northeast-2.amazonaws.com/zempie.com/icons/favicon-32x32.png' },
         { rel: "apple-touch-icon-precomposed", href: 'https://s3.ap-northeast-2.amazonaws.com/zempie.com/icons/favicon-32x32.png' },
       ],
-
+      script: [
+        {
+          src: process.env.KAKAO_SDK
+        }
+      ]
     }
   },
   // experimental: {
@@ -105,7 +109,11 @@ export default defineNuxtConfig({
     ZEMPIE_METAVERSE: process.env.ZEMPIE_METAVERSE,
     OG_IMG: process.env.OG_IMG,
     APPLE_TOUCH_ICON: process.env.APPLE_TOUCH_ICON,
-    ANDROID_DOWNLOAD_LINK: process.env.ANDROID_DOWNLOAD_LINK
+    ANDROID_DOWNLOAD_LINK: process.env.ANDROID_DOWNLOAD_LINK,
+    KAKAO_JS_KEY: process.env.KAKAO_JS_KEY,
+    FACEBOOK_SHARE_URL: process.env.FACEBOOK_SHARE_URL,
+    FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID,
+    TWITTER_SHARE_URL: process.env.TWITTER_SHARE_URL
   },
 
 })

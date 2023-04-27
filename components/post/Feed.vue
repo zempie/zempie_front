@@ -2,7 +2,6 @@
   <li class="tap-list" v-if="feed">
     <dl class="tapl-title">
       <dt class="w100p">
-
         <PostHeaderInfo :feed="feed">
           <template #followBtn>
             <slot name="followBtn"></slot>
@@ -66,7 +65,8 @@
     <CommunityTarget :communities="feed?.posted_at?.community" :games="feed?.posted_at?.game" />
 
     <ul class="tapl-option">
-      <li>
+      <PostActions :feed="feed" :is-comment-closed="true" @open-comment="openComments" />
+      <!-- <li>
         <ul>
           <LikeBtn :feed="feed" />
           <li @click="openComments">
@@ -77,7 +77,7 @@
             <a @click="copyUrl"><i class="uil uil-share-alt pointer" style="font-size: 20px"></i></a>
           </li>
         </ul>
-      </li>
+      </li> -->
     </ul>
 
     <!-- TODO: mobile: 댓글만 보기 -->
@@ -262,11 +262,11 @@ async function deleteComment(commentId: string) {
 
 }
 
-async function openComments() {
+async function openComments(isOpenComment: boolean) {
   commentInit()
-  isOpenedComments.value = !isOpenedComments.value
+  isOpenedComments.value = isOpenComment
 
-  if (isOpenedComments.value) {
+  if (isOpenComment) {
     await commentFetch()
   }
 }
@@ -358,18 +358,6 @@ function copyUrl() {
   })
 }
 
-//     moveHashtag(hashtag: string) {
-//         this.$router.push(`/${this.$i18n.locale}/search?hashtag=${hashtag}`)
-//     }
-
-//     pinPost() {
-//         console.log("pinned");
-//     }
-
-//     closeModal() {
-//         this.$modal.hide('noUser')
-
-//     }
 
 async function deletePost() {
   const { data, error, pending } = await post.delete(feedId.value)
@@ -384,11 +372,6 @@ async function deletePost() {
   showDeletePostModal.value = false
 }
 
-//     report() {
-//         this.$emit('reportPost', this.feed.id)
-//         this.isOpenReportModal = !this.isOpenReportModal
-//         this.$modal.show('modalReport')
-//     }
 
 function moreView() {
   feedDiv.value.style.maxHeight = '100%'

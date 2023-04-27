@@ -63,39 +63,14 @@ export default function () {
       const result = JSON.parse(response);
       return result;
     },
+    async getFbCurrentUser() {
+      const response = await callHandler("currentUser");
+      alert(response)
+      const result = JSON.parse(response);
+      return result;
+    },
     async signInApple() {
-      // const response = await webViewJavaScriptBridge.sendMessage({
-      //   action: "signInGoogle",
-      // });
-      // const result = JSON.parse(response);
-      // return result;
       const response = await callHandler("signInApple");
-      const result = JSON.parse(response);
-      return result;
-    },
-    async initPurchase(products) {
-      // const response = await webViewJavaScriptBridge.sendMessage({
-      //   action: "signInGoogle",
-      // });
-      // const result = JSON.parse(response);
-      // return result;
-      const response = await callHandler("initPurchase", { products });
-      const result = JSON.parse(response);
-      return result;
-    },
-    async purchaseItem(productId) {
-      // const response = await webViewJavaScriptBridge.sendMessage({
-      //   action: "signInGoogle",
-      // });
-      // const result = JSON.parse(response);
-      // return result;
-      const response = await callHandler("purchaseItem", { productId });
-      const result = JSON.parse(response);
-      return result;
-    },
-
-    async consumeReceipt(receipt) {
-      const response = await callHandler("consumeReceipt", { receipt });
       const result = JSON.parse(response);
       return result;
     },
@@ -109,9 +84,12 @@ export default function () {
       const result = await callHandler("getMessagingToken");
       return result;
     },
-
-
-
+    async signInEmail(params: { email: string, password: string }) {
+      alert(JSON.stringify(params))
+      const response = await callHandler('signInEmail', params)
+      alert(JSON.stringify(response))
+      return JSON.parse(response)
+    },
     async windowOpen(url) {
       // const response = await webViewJavaScriptBridge.sendMessage({
       //   action: "windowOpen",
