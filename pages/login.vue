@@ -12,9 +12,6 @@
         <h3>{{ $t('login.text1') }}</h3>
         <p>{{ $t('login.text2') }}</p>
       </div>
-
-      {{ useUser().user }}
-      <hr />
       currUser {{ currUser }}
       <div class="la-content">
         <form>
@@ -211,7 +208,7 @@ async function onSubmit() {
           .then(async (result) => {
             const { user } = result
             if (user) {
-              // router.push($localePath('/'))
+              router.push($localePath('/'))
               // await useUser().setUserInfo()
             }
           })
@@ -269,7 +266,9 @@ async function googleLogin() {
 
           await useUser().setUserInfo()
 
-          await setFirebaseToken()
+          if (useUser().user.value.info) {
+            await setFirebaseToken()
+          }
 
         }
         // state.fUser = result;
