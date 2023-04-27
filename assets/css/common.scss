@@ -1,3 +1,6 @@
+$zempie-main-color: #f97316;
+$zempie-main-color-hover: #f974162a;
+
 // 퍼블리싱제외 공통 scss
 .uppercase {
   text-transform: uppercase;
@@ -875,11 +878,11 @@
 .el-message {
   &.copy-msg {
     background-color: #fff;
-    border-color: #f97316;
+    border-color: $zempie-main-color;
 
     i,
     p {
-      color: #f97316
+      color: $zempie-main-color
     }
   }
 }
@@ -890,6 +893,44 @@
     &:focus {
       background-color: transparent !important;
 
+    }
+  }
+}
+
+/*
+ * el-message-box
+*/
+.el-message-box {
+  .el-message-box-icon--info {
+    color: $zempie-main-color
+  }
+
+  .el-button {
+    &.el-button--primary {
+      background-color: $zempie-main-color;
+      border-color: $zempie-main-color;
+    }
+
+    &:hover {
+      color: $zempie-main-color;
+      border-color: $zempie-main-color;
+      background-color: $zempie-main-color-hover;
+      outline: 0;
+    }
+  }
+
+  .el-message-box__headerbtn {
+    &:hover {
+      .el-message-box__close {
+        color: $zempie-main-color;
+
+      }
+    }
+  }
+
+  .el-message-box__close {
+    &:hover {
+      color: $zempie-main-color;
     }
   }
 }

@@ -915,11 +915,12 @@
   "addGameInfo.game.pathname.err": "Please Check the availability for username.",
   "game.pathname.duplicated": "This username is unavailable. Please try another.",
   "posts": "Posts",
-  "visits": "__STRING_NOT_TRANSLATED__",
-  "share.link.url": "__STRING_NOT_TRANSLATED__",
-  "share.link.kakao": "__STRING_NOT_TRANSLATED__",
-  "share.link.twitter": "__STRING_NOT_TRANSLATED__",
-  "share.link.facabook": "__STRING_NOT_TRANSLATED__",
-  "share.zempie.title": "__STRING_NOT_TRANSLATED__",
-  "share.zempie.nickname.title": "__STRING_NOT_TRANSLATED__"
+  "visits": "Visit",
+  "share.link.url": "Copy Link URL",
+  "share.link.kakao": "Share on Kakaotalk",
+  "share.link.twitter": "Share on Twitter",
+  "share.link.facabook": "Share on Facebook",
+  "share.zempie.title": "Zempie's",
+  "share.zempie.nickname.title": "",
+  "goto.web":"Go to website"
 }

@@ -107,7 +107,7 @@
       </dl>
     </div>
 
-    <el-dialog v-model="showDraftList" append-to-body class="modal-area-type" width="380px">
+    <el-dialog v-model="showDraftList" append-to-body class="modal-area-type" width="380px" :close-on-click-modal="false">
       <div class="modal-alert">
         <dl class="ma-header">
           <dt>{{ t('draft') }}</dt>
@@ -1181,9 +1181,10 @@ function closeTextEditor() {
   //작성한 글이 있는 경우 임시저장 처리
   if (!editor.value.isEmpty) {
     ElMessageBox.confirm(`${t('ask.save.draft.post')}`, {
-      confirmButtonText: 'SAVE',
-      cancelButtonText: 'LEAVE',
+      confirmButtonText: t('save'),
+      cancelButtonText: t('close'),
       type: 'info',
+      closeOnClickModal: false
     })
       .then(() => {
         form['save_type'] = 'cancel'

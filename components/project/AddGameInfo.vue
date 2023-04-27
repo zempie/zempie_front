@@ -111,10 +111,10 @@
                     </p>
                   </transition>
                   <p style="
-                                                               width: 100%;
-                                                               display: flex;
-                                                               justify-content: space-around;
-                                                             ">
+                                                                                                 width: 100%;
+                                                                                                 display: flex;
+                                                                                                 justify-content: space-around;
+                                                                                               ">
                     <button class="btn-gray" @click="uploadThumbnail">
                       <i class="uil uil-upload"></i>&nbsp;
                       {{ $t('addGameInfo.game.thumbnail') }}
@@ -160,10 +160,10 @@
                     </template>
                   </div>
                   <p style="
-                                                width: 100%;
-                                                display: flex;
-                                                justify-content: space-around;
-                                              ">
+                                                                                  width: 100%;
+                                                                                  display: flex;
+                                                                                  justify-content: space-around;
+                                                                                ">
                     <button class="btn-gray" @click="uploadGif">
                       <i class="uil uil-upload"></i>
                       {{ $t('addGameInfo.game.thumbnail') }}
@@ -194,15 +194,17 @@
               <dd>
                 <input v-model="v$.pathname.$model" type="text" class="game-id-input w90p"
                   :title="$t('addGameInfo.game.id')" :placeholder="$t('addGameInfo.game.id')" @input="onInputPathname" />
-                <p class="valid-err" :class="hasPathnameErr && 'active'">
-                  {{ pathnameValidErrMsg }}
-                </p>
+                <transition name="component-fade" mode="out-in">
+                  <p class="valid-err" :class="hasPathnameErr && 'active'">
+                    {{ pathnameValidErrMsg }}
+                  </p>
+                </transition>
               </dd>
 
-              <ClipLoader v-if="waitGamePath" :color="'#ff6e17'" :size="'20px'"></ClipLoader>
-              <a @click="checkPathName" class="btn-default w150">
+              <!-- <ClipLoader v-if="waitGamePath" :color="'#ff6e17'" :size="'20px'"></ClipLoader> -->
+              <!-- <a @click="checkPathName" class="btn-default w150">
                 {{ $t('addGameInfo.game.id.check') }}
-              </a>
+              </a> -->
             </dl>
           </transition>
         </div>
@@ -287,7 +289,7 @@ import { eGameCategory, eGameStage } from '~~/types'
 import useVuelidate from '@vuelidate/core'
 import { required, helpers, maxLength } from '@vuelidate/validators'
 import { useI18n } from 'vue-i18n'
-import { randomString } from '~~/scripts/utils.js'
+import { debounce, randomString } from '~~/scripts/utils.js'
 const { $localePath } = useNuxtApp()
 
 const IMAGE_MAX_SIZE = 4
@@ -325,7 +327,6 @@ const prevGif = ref<String | ArrayBuffer>('')
 const uploadStage = computed(() => uploadProject.value.form.stage)
 
 //게임 id(pathname)
-const needToVerify = ref(false)
 const hasPathnameErr = ref(false)
 const pathnameValidErrMsg = ref()
 const originPathname = ref('')
@@ -448,7 +449,6 @@ async function checkPathName() {
     if (data.value.result) {
       const { success } = data.value.result
       if (success) {
-        needToVerify.value = false
         hasPathnameErr.value = false
       } else {
         hasPathnameErr.value = true
@@ -611,22 +611,11 @@ function backspaceDelete({ which }) {
     hashtagsArr.value.splice(hashtagsArr.value.length - 1)
 }
 
-function onInputPathname() {
-  const newPathname = form.pathname
-  hasPathnameErr.value = false
-  if (originPathname.value === newPathname) {
-    needToVerify.value = false
-  } else {
-    needToVerify.value = true
-  }
-}
+const onInputPathname = debounce(async () => {
+  checkPathName()
+}, 300)
+
 async function updateGame() {
-  if (needToVerify.value) {
-    isAuthGamePath.value = false
-    hasPathnameErr.value = true
-    pathnameValidErrMsg.value = t('addGameInfo.game.pathname.err')
-    return
-  }
 
   if (hasPathnameErr.value) return
 

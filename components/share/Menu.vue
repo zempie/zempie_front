@@ -107,19 +107,19 @@ function shareSocial(social: string) {
         },
         buttons: [
           {
-            title: '웹으로 이동',
+            title: t('goto.web'),
             link: {
               mobileWebUrl: linkUrl,
               webUrl: linkUrl,
             },
           },
-          {
-            title: '앱으로 이동',
-            link: {
-              mobileWebUrl: linkUrl,
-              webUrl: linkUrl,
-            },
-          },
+          // {
+          //   title: '앱으로 이동',
+          //   link: {
+          //     mobileWebUrl: linkUrl,
+          //     webUrl: linkUrl,
+          //   },
+          // },
         ],
       })
       break;
