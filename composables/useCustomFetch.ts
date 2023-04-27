@@ -186,6 +186,7 @@ export async function getCurrentUser() {
   if (isFlutter.value) {
 
     const result = await FlutterBridge().FlutterBridge.getFbCurrentUser()
+    return result
   } else {
     const auth = getAuth()
 
