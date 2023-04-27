@@ -153,6 +153,7 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
 
       if (isFlutter.value) {
         options.headers['Authorization'] = `Bearer ${token}`
+        alert(options.headers)
       } else if (user && !isFlutter.value) {
         const expirationTime = user.stsTokenManager.expirationTime
         // const expirationTime = 1681264165
