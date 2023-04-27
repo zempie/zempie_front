@@ -12,6 +12,9 @@
         <h3>{{ $t('login.text1') }}</h3>
         <p>{{ $t('login.text2') }}</p>
       </div>
+
+      {{ useUser().user }}
+      <hr />
       currUser {{ currUser }}
       <div class="la-content">
         <form>
@@ -195,14 +198,10 @@ async function onSubmit() {
     return FlutterBridge().FlutterBridge.signInEmail({ email: form.email, password: form.password })
       .then((result: any) => {
         currUser.value = result
-        useUser().setFirebaseUser(result)
-        alert(JSON.stringify(result))
       })
       .catch((err: any) => {
         alert(err)
       })
-
-
 
   } else {
     if (!isValid) return
@@ -212,7 +211,7 @@ async function onSubmit() {
           .then(async (result) => {
             const { user } = result
             if (user) {
-              router.push($localePath('/'))
+              // router.push($localePath('/'))
               // await useUser().setUserInfo()
             }
           })
@@ -270,9 +269,7 @@ async function googleLogin() {
 
           await useUser().setUserInfo()
 
-          if (useUser().user.value.info) {
-            await setFirebaseToken()
-          }
+          await setFirebaseToken()
 
         }
         // state.fUser = result;
