@@ -48,10 +48,16 @@ const props = defineProps({
 })
 
 function getImgObj(): { url: string, name: string, size: number, type: string, priority: number } | null {
-  console.log(props.feed.attatchment_files)
-  if (props.feed.attatchment_files && props.feed.attatchment_files.length) {
+
+  let attatchment_files = props.feed.attatchment_files
+    && (Array.isArray(props.feed.attatchment_files)
+      ? props.feed.attatchment_files
+      : JSON.parse(props.feed.attatchment_files))
+
+
+  if (attatchment_files.length) {
     console.log('here')
-    return props.feed.attatchment_files.find((file: any) => file.type === 'image');
+    return attatchment_files.find((file: any) => file.type === 'image');
   } else {
     return null
   }
