@@ -195,6 +195,7 @@ async function onSubmit() {
     return FlutterBridge().FlutterBridge.signInEmail({ email: form.email, password: form.password })
       .then((result: any) => {
         currUser.value = result
+        router.push($localePath('/'))
       })
       .catch((err: any) => {
         alert(err)
