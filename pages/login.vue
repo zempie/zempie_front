@@ -194,10 +194,11 @@ async function onSubmit() {
 
     return FlutterBridge().FlutterBridge.signInEmail({ email: form.email, password: form.password })
       .then((result: any) => {
+        currUser.value = result
         alert(JSON.stringify(result))
       })
       .catch((err: any) => {
-        alert(JSON.stringify(err))
+        alert(err)
       })
 
 
