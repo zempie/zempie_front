@@ -151,7 +151,7 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
 
       let token = user?.accessToken || user?.idToken
 
-      if (user) {
+      if (user && !isFlutter.value) {
         const expirationTime = user.stsTokenManager.expirationTime
         // const expirationTime = 1681264165
         console.log('expirationTime', expirationTime <= Date.now(), new Date(expirationTime))
