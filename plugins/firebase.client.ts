@@ -64,8 +64,11 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
 
 export async function setFirebaseToken() {
-  const { token } = await fbFcm.getFcmToken(useUser().user.value.info.id)
-  if (!token) {
-    await fbFcm.resigterFcmToken(useUser().user.value.info.id)
+  const userInfo = useUser().user.value.info;
+  if (userInfo) {
+    const { token } = await fbFcm.getFcmToken(userInfo.id)
+    if (!token) {
+      await fbFcm.resigterFcmToken(userInfo.id)
+    }
   }
 }
