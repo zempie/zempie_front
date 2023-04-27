@@ -48,7 +48,7 @@ const props = defineProps({
 })
 
 function getImgObj(): { url: string, name: string, size: number, type: string, priority: number } | null {
-  if (props.feed.attatchment_files?.length) {
+  if (props.feed.attatchment_files && props.feed.attatchment_files.length) {
     return props.feed.attatchment_files?.find((file: any) => file.type === 'image');
   } else {
     return null
