@@ -149,7 +149,7 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
       const user = await getCurrentUser()
       alert(`request :  ${JSON.stringify(user)}`)
 
-      let token = user?.accessToken
+      let token = user?.accessToken || user?.idToken
       alert(token)
 
       if (user) {
