@@ -12,7 +12,7 @@
         <h3>{{ $t('login.text1') }}</h3>
         <p>{{ $t('login.text2') }}</p>
       </div>
-      <!-- currUser {{ currUser }} -->
+      currUser {{ currUser }}
       <div class="la-content">
         <form>
           <input type="email" v-model="v$.email.$model" name="login-email" title=""
@@ -195,6 +195,7 @@ async function onSubmit() {
     return FlutterBridge().FlutterBridge.signInEmail({ email: form.email, password: form.password })
       .then((result: any) => {
         currUser.value = result
+        useUser().setFirebaseUser(result)
         alert(JSON.stringify(result))
       })
       .catch((err: any) => {
@@ -203,53 +204,53 @@ async function onSubmit() {
 
 
 
+  } else {
+    if (!isValid) return
+    setPersistence($firebaseAuth, browserLocalPersistence)
+      .then((res) => {
+        signInWithEmailAndPassword($firebaseAuth, form.email, form.password)
+          .then(async (result) => {
+            const { user } = result
+            if (user) {
+              router.push($localePath('/'))
+              // await useUser().setUserInfo()
+            }
+          })
+          // .then(async () => {
+          //   router.push($localePath('/'))
+          //   const { token } = await fbFcm.getFcmToken(useUser().user.value.info.id)
+          //   console.log('token', token)
+          //   if (!token) {
+          //     console.log('regi token')
+          //     await fbFcm.resigterFcmToken(useUser().user.value.info.id)
+          //   }
+          // })
+          .catch((err: any) => {
+            const errorCode = err.code
+            const errorMessage = err.message
+            let message = errorCode ? errorCode : errorMessage
+
+            switch (errorCode) {
+              case 'auth/weak-password':
+                message = `${t('login.pwd.format.err')}`
+                break
+              case 'auth/wrong-password':
+                ElMessage.error(`${t('fb.wrong.info')}`)
+                break
+              case 'auth/user-not-found':
+                ElMessage.error(`${t('fb.not.found')}`)
+                break
+              default:
+                ElMessage.error(errorCode)
+                break
+            }
+            throw { message }
+          })
+      })
+      .catch((err: any) => {
+        ElMessage.error(err.message)
+      })
   }
-
-  if (!isValid) return
-  setPersistence($firebaseAuth, browserLocalPersistence)
-    .then((res) => {
-      signInWithEmailAndPassword($firebaseAuth, form.email, form.password)
-        .then(async (result) => {
-          const { user } = result
-          if (user) {
-            router.push($localePath('/'))
-            // await useUser().setUserInfo()
-          }
-        })
-        // .then(async () => {
-        //   router.push($localePath('/'))
-        //   const { token } = await fbFcm.getFcmToken(useUser().user.value.info.id)
-        //   console.log('token', token)
-        //   if (!token) {
-        //     console.log('regi token')
-        //     await fbFcm.resigterFcmToken(useUser().user.value.info.id)
-        //   }
-        // })
-        .catch((err: any) => {
-          const errorCode = err.code
-          const errorMessage = err.message
-          let message = errorCode ? errorCode : errorMessage
-
-          switch (errorCode) {
-            case 'auth/weak-password':
-              message = `${t('login.pwd.format.err')}`
-              break
-            case 'auth/wrong-password':
-              ElMessage.error(`${t('fb.wrong.info')}`)
-              break
-            case 'auth/user-not-found':
-              ElMessage.error(`${t('fb.not.found')}`)
-              break
-            default:
-              ElMessage.error(errorCode)
-              break
-          }
-          throw { message }
-        })
-    })
-    .catch((err: any) => {
-      ElMessage.error(err.message)
-    })
 }
 
 async function googleLogin() {
