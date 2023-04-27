@@ -303,7 +303,13 @@ async function setHead() {
     const video = content.querySelector('video');
     const audio = content.querySelector('audio');
 
-    const [attr] = feed.value.attatchment_files || []
+
+    let attatchment_files = feed.value.attatchment_files
+      && (Array.isArray(feed.value.attatchment_files)
+        ? feed.value.attatchment_files
+        : JSON.parse(feed.value.attatchment_files))
+
+    const [attr] = attatchment_files || []
 
 
     let imgMeta = img?.attrs.src || attr?.type === 'image' && attr?.url
@@ -331,6 +337,7 @@ async function setHead() {
       title = desc.length ? desc.slice(0, 20) : feed.value?.user.name
     }
 
+    console.log('img', imgMeta)
     shared.createHeadMeta(title, desc, imgMeta)
 
   }
