@@ -193,9 +193,12 @@ async function onSubmit() {
   if (isFlutter.value) {
 
     return FlutterBridge().FlutterBridge.signInEmail({ email: form.email, password: form.password })
-      .then((result: any) => {
+      .then(async (result: any) => {
+        alert(`login: ${JSON.stringify(result)}`)
         currUser.value = result
         router.push($localePath('/'))
+        await useUser().setUserInfo()
+
       })
       .catch((err: any) => {
         console.log(err)
@@ -213,15 +216,6 @@ async function onSubmit() {
               // await useUser().setUserInfo()
             }
           })
-          // .then(async () => {
-          //   router.push($localePath('/'))
-          //   const { token } = await fbFcm.getFcmToken(useUser().user.value.info.id)
-          //   console.log('token', token)
-          //   if (!token) {
-          //     console.log('regi token')
-          //     await fbFcm.resigterFcmToken(useUser().user.value.info.id)
-          //   }
-          // })
           .catch((err: any) => {
             const errorCode = err.code
             const errorMessage = err.message
@@ -263,8 +257,6 @@ async function googleLogin() {
           useUser().setFirebaseUser(firebaseUser)
 
           currUser.value = await FlutterBridge().FlutterBridge.getFbCurrentUser()
-          // currUser.value = await getCurrentUser()
-
           await useUser().setUserInfo()
 
           if (useUser().user.value.info) {

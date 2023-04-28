@@ -33,21 +33,7 @@ const router = useRouter()
 const isOpen = ref(false)
 const showOneDay = ref(false)
 const showNever = ref(false)
-const userInfo = computed(() => useUser().user.value.info)
 const cookie = useCookie(config.COOKIE_NAME)
-const isLogin = computed(() => useUser().user.value.isLogin)
-
-
-watch(
-  () => useUser().user.value.fUser,
-  async (fUser) => {
-    if (fUser && !userInfo.value) {
-      // await useUser().setUserInfo()
-    }
-  })
-
-
-
 
 shared.createHeadMeta(
   t('seo.landing.title'),
@@ -63,7 +49,7 @@ onBeforeMount(async () => {
   await useMobile().setMobileState()
 
   const fUser = await getCurrentUser()
-  alert(`app : ${JSON.stringify(fUser)}`)
+
   if (!fUser) {
     useUser().setLoadDone()
   }
