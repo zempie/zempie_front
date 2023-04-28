@@ -188,12 +188,12 @@ export const user = {
   getUserInfo(channelId: string) {
     return useFetchData('get', `/channel/${channelId}`, undefined, false)
   },
-  follow(userId: number) {
-    return communityFetch('post', `/user/${userId}/follow`, undefined, true);
-  },
-  unfollow(userId: number) {
-    return communityFetch('post', `/user/${userId}/unfollow`, undefined, true);
-  },
+  // follow(userId: number) {
+  //   return communityFetch('post', `/user/${userId}/follow`, undefined, true);
+  // },
+  // unfollow(userId: number) {
+  //   return communityFetch('post', `/user/${userId}/unfollow`, undefined, true);
+  // },
   // joinedCommunity(userId: number) {
   //   return communityFetch('get', `/user/${userId}/list/community`, undefined, true)
   // },

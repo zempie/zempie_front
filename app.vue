@@ -2,23 +2,6 @@
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
-  <el-dialog v-model="isOpen" append-to-body :fullscreen="true" class="event-dialog">
-    <template #header="{ close, titleId, titleClass }">
-      <ul class="my-header">
-        <li>
-          <input type="checkbox" id="oneDay" :value="showOneDay" @click="clickOneDay">
-          <label for="oneDay"><i class="uil uil-check"></i></label>
-          <span><label for="oneDay">{{ $t('now.show.today') }}</label></span>
-        </li>
-        <li>
-          <input type="checkbox" id="never" :value="showNever" @click="clickNever">
-          <label for="never"><i class="uil uil-check"></i></label>
-          <span><label for="never">{{ $t('do.now.show') }}</label></span>
-        </li>
-      </ul>
-    </template>
-    <EventGJPlus />
-  </el-dialog>
 </template>
 <script setup lang="ts">
 import { ElDialog, ID_INJECTION_KEY } from 'element-plus'
@@ -30,15 +13,13 @@ const switchLocalePath = useSwitchLocalePath()
 const route = useRoute()
 const router = useRouter()
 
-const isOpen = ref(false)
-const showOneDay = ref(false)
-const showNever = ref(false)
 const cookie = useCookie(config.COOKIE_NAME)
 
 shared.createHeadMeta(
   t('seo.landing.title'),
   t('seo.landing.description')
 )
+
 provide(ID_INJECTION_KEY, {
   prefix: 100,
   current: 0,
@@ -61,6 +42,8 @@ onBeforeMount(async () => {
 
   const lang = navigator.language.split('-')[0]
 
+  console.log('lan', lang)
+
   if (lang === 'ko') {
     locale.value = 'ko'
     switchLocalePath('ko')
@@ -69,31 +52,9 @@ onBeforeMount(async () => {
     switchLocalePath('en')
   }
   useCommon().setLang(locale.value)
-
   router.replace(route.fullPath)
 
-
 })
-
-
-function clickOneDay(e: Event) {
-  const isChecked = (e.target as HTMLInputElement).checked
-  if (isChecked) {
-    const date = new Date()
-    //다음날 00:00:00 까지
-    const expiredTime = new Date(2022, 10, date.getDate() + 1, 0, 0, 0).getTime()
-    localStorage.setItem('GJ_POPUP_ONE', expiredTime + '')
-    isOpen.value = false;
-  }
-}
-
-function clickNever(e: Event) {
-  const isChecked = (e.target as HTMLInputElement).checked
-  if (isChecked) {
-    localStorage.setItem('GJ_POPUP_NEVER', 'true')
-    isOpen.value = false;
-  }
-}
 </script>
 
 <style lang="scss">

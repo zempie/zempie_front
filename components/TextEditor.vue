@@ -430,7 +430,6 @@ onBeforeUnmount(() => {
 })
 
 function getTagInfo(info) {
-  console.log('info', info)
   metaTagInfo.value = info
 }
 
