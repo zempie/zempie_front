@@ -63,6 +63,7 @@ onBeforeMount(async () => {
   await useMobile().setMobileState()
 
   const fUser = await getCurrentUser()
+  alert(`app : ${JSON.stringify(fUser)}`)
   if (!fUser) {
     useUser().setLoadDone()
   }
