@@ -65,7 +65,6 @@ export default function () {
     },
     async getFbCurrentUser() {
       const response = await callHandler("currentUser");
-      alert(response)
       const result = JSON.parse(response);
       return result;
     },
@@ -103,7 +102,6 @@ export default function () {
     },
     async openFile(options?: { type: string, multiple: boolean }) {
       const response = await callHandler("openFile", options);
-      alert(JSON.stringify(response))
       return response;
     }
 

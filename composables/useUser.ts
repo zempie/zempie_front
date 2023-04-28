@@ -98,7 +98,7 @@ export default function () {
       return response
 
     } catch (error) {
-      alert(`errr :  ${JSON.stringify(error)}`)
+      // alert(`errr :  ${JSON.stringify(error)}`)
       console.log(error)
       useUser().setLoadDone()
     }

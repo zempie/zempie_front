@@ -198,7 +198,7 @@ async function onSubmit() {
         router.push($localePath('/'))
       })
       .catch((err: any) => {
-        alert(err)
+        console.log(err)
       })
 
   } else {
@@ -275,7 +275,7 @@ async function googleLogin() {
         // state.fUser = result;
       })
       .catch((err) => {
-        alert(err)
+        console.log(err)
       })
   } else {
     const provider = new GoogleAuthProvider()
