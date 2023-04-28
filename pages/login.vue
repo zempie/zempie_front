@@ -194,7 +194,7 @@ async function onSubmit() {
 
     return FlutterBridge().FlutterBridge.signInEmail({ email: form.email, password: form.password })
       .then(async (result: any) => {
-        alert(`login: ${JSON.stringify(result)}`)
+        //TODO: 등록해야됨
         currUser.value = result
         router.push($localePath('/'))
         await useUser().setUserInfo()

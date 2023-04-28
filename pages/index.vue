@@ -14,7 +14,6 @@ const config = useRuntimeConfig()
 const { t } = useI18n()
 
 const userInfo = computed(() => useUser().user.value.info)
-alert(`index : ${JSON.stringify(userInfo.value)}`)
 
 
 definePageMeta({
