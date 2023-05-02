@@ -1,5 +1,7 @@
 import axios from 'axios'
 import { getMessaging, getToken } from 'firebase/messaging'
+import flutterBridge from './flutterBridge'
+
 
 interface iFcmToken {
   created_at: string,
@@ -28,21 +30,28 @@ export const removeFcmToken = async (user_id: number) => {
 }
 
 export const resigterFcmToken = async (user_id: number) => {
-  const config = useRuntimeConfig()
-  const { $firebaseApp } = useNuxtApp()
-  const messaging = getMessaging($firebaseApp);
+  const isFlutter = useMobile().mobile.value.isFlutter
+  let token = null
 
-  console.log('messagein', messaging)
+  if (isFlutter) {
+    token = await flutterBridge().FlutterBridge.getMessagingToken()
+    alert(token)
+  } else {
+    const config = useRuntimeConfig()
+    const { $firebaseApp } = useNuxtApp()
+    const messaging = getMessaging($firebaseApp);
 
-  console.log('== resigeter fcm token start ==', config.fCM_KEY)
 
-  const token = await getToken(messaging, { vapidKey: config.fCM_KEY })
+    token = await getToken(messaging, { vapidKey: config.fCM_KEY })
 
-  console.log('fcn token', token)
+  }
+  console.log('fb token: ', token)
+  if (token) {
 
-  return await axios(`/fcm/${user_id}?token=${token}`,
-    {
-      method: 'post',
-      baseURL: config.COMMUNITY_API
-    })
+    return await axios(`/fcm/${user_id}?token=${token}`,
+      {
+        method: 'post',
+        baseURL: config.COMMUNITY_API
+      })
+  }
 }
