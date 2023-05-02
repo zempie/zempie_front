@@ -31,6 +31,7 @@ export const removeFcmToken = async (user_id: number) => {
 
 export const resigterFcmToken = async (user_id: number) => {
   const isFlutter = useMobile().mobile.value.isFlutter
+  alert(isFlutter)
   let token = null
 
   if (isFlutter) {
