@@ -88,8 +88,7 @@ export default function () {
       return JSON.parse(response)
     },
     async getMessagingToken() {
-      const response = await callHandler('getMessagingToken')
-      return JSON.parse(response)
+      return await callHandler('getMessagingToken')
     },
     async windowOpen(url) {
       // const response = await webViewJavaScriptBridge.sendMessage({
