@@ -260,7 +260,12 @@ async function googleLogin() {
           await useUser().setUserInfo()
 
           // if (useUser().user.value.info) {
-          await setFirebaseToken()
+          try {
+
+            await setFirebaseToken()
+          } catch (err) {
+            alert(err)
+          }
           // }
 
         }
