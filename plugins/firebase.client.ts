@@ -3,7 +3,7 @@ import * as firebase from 'firebase/app'
 import { getAuth, onIdTokenChanged, } from 'firebase/auth'
 import * as fbFcm from '~~/scripts/firebase-fcm'
 import shared from '~~/scripts/shared'
-import { getMessaging, onMessage, getToken } from "firebase/messaging";
+import { getMessaging, onMessage, getToken, isSupported } from "firebase/messaging";
 import { isObjEmpty } from '~~/scripts/utils'
 
 
@@ -48,8 +48,14 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
 
   })
-  if (!navigator.userAgent.match(/iPad/i) && !navigator.userAgent.match(/iPhone/i) && !window.navigator.userAgent.toLowerCase().includes('naver') && !window.navigator.userAgent.toLowerCase().includes('kakao') && window.location.protocol === 'https:') {
+
+  const isSupport = await isSupported()
+
+
+  if (isSupport) {
     const messaging = getMessaging(app);
+
+    console.log('messaging', messaging)
 
     onMessage(messaging, (payload) => {
       console.log('Message received. ', payload);
@@ -65,10 +71,10 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
 export async function setFirebaseToken() {
   const userInfo = useUser().user.value.info;
-  if (userInfo) {
-    const { token } = await fbFcm.getFcmToken(userInfo.id)
-    if (!token) {
-      await fbFcm.resigterFcmToken(userInfo.id)
-    }
-  }
+  // if (userInfo) {
+  //   const { token } = await fbFcm.getFcmToken(userInfo.id)
+  //   if (!token) {
+  await fbFcm.resigterFcmToken(userInfo.id)
+  //   }
+  // }
 }
