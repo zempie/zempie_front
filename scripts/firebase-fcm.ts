@@ -32,11 +32,11 @@ export const removeFcmToken = async (user_id: number) => {
 export const resigterFcmToken = async (user_id: number) => {
   const isFlutter = useMobile().mobile.value.isFlutter
   alert(`isFlutter : ${isFlutter}`)
+  const config = useRuntimeConfig()
   let token = null
 
   if (isFlutter) {
     try {
-
       token = await flutterBridge().FlutterBridge.getMessagingToken()
       alert(token)
 
@@ -45,7 +45,6 @@ export const resigterFcmToken = async (user_id: number) => {
 
     }
   } else {
-    const config = useRuntimeConfig()
     const { $firebaseApp } = useNuxtApp()
     const messaging = getMessaging($firebaseApp);
 
@@ -53,8 +52,8 @@ export const resigterFcmToken = async (user_id: number) => {
     token = await getToken(messaging, { vapidKey: config.fCM_KEY })
 
   }
-  console.log('fb token: ', token)
   if (token) {
+
 
     return await axios(`/fcm/${user_id}?token=${token}`,
       {
