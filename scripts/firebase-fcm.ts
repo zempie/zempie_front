@@ -35,8 +35,15 @@ export const resigterFcmToken = async (user_id: number) => {
   let token = null
 
   if (isFlutter) {
-    token = await flutterBridge().FlutterBridge.getMessagingToken()
-    alert(token)
+    try {
+
+      token = await flutterBridge().FlutterBridge.getMessagingToken()
+      alert(token)
+
+    } catch (err) {
+      alert(`err : ${err}`)
+
+    }
   } else {
     const config = useRuntimeConfig()
     const { $firebaseApp } = useNuxtApp()
