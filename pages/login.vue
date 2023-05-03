@@ -169,7 +169,6 @@ onBeforeMount(() => {
       isPageLoading.value = false
 
       if (fUser.value) {
-        alert(`fuser exists : ${fUser.value}`)
         router.push($localePath('/'))
       }
     }
@@ -260,7 +259,6 @@ async function googleLogin() {
           useUser().setFirebaseUser(firebaseUser)
 
           await useUser().setUserInfo()
-          alert(`info :  ${JSON.stringify(useUser().user.value.info)}`)
 
           currUser.value = await FlutterBridge().getFbCurrentUser()
 

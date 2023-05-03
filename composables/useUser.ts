@@ -83,7 +83,6 @@ export default function () {
 
     try {
       const response = await useCustomFetch<{ result: { user: IUser } }>('/user/info', getZempieFetchOptions('get', true))
-      alert(`erresponserr :  ${JSON.stringify(response)}`)
 
       if (response) {
         const { user: userResult } = response.result
@@ -95,7 +94,6 @@ export default function () {
       if (!isObjEmpty(user.value.fUser)) {
         useUser().setLoadDone()
       }
-      alert(`erresponserr :  ${JSON.stringify(response)}`)
 
       return response
 

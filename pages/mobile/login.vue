@@ -62,7 +62,6 @@ onBeforeMount(() => {
   switchLocalePath('ko')
 
   const isVisit = localStorage.getItem('zMoF')
-  alert(JSON.stringify(isVisit))
 
   if (isVisit || isVisit === 'true') {
     if (useUser().user.value.fUser) {
