@@ -14,6 +14,7 @@ const route = useRoute()
 const router = useRouter()
 
 const cookie = useCookie(config.COOKIE_NAME)
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
 shared.createHeadMeta(
   t('seo.landing.title'),
@@ -30,15 +31,14 @@ provide(ID_INJECTION_KEY, {
 onBeforeMount(async () => {
   await useMobile().setMobileState()
   const fUser = await getCurrentUser()
-  alert(JSON.stringify(fUser))
-
+  const userInfo = useUser().user.value.info
 
   if (!fUser) {
     useUser().setLoadDone()
   }
-
-
-
+  if (isFlutter.value && fUser && !userInfo) {
+    await useUser().setUserInfo()
+  }
 
   //기존에 사용하던 쿠키가 있으면 삭제 -> 더 이상 사용하지 않음
   if (cookie.value) {
