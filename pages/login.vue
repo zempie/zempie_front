@@ -183,7 +183,6 @@ onBeforeMount(() => {
 onMounted(() => {
   nextTick(() => {
     window.addEventListener("message", receiveMessage, false);
-    isVisit.value = localStorage.getItem('zMoF')
   })
 })
 

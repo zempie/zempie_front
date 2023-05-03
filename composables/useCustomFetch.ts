@@ -188,7 +188,10 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
 export async function getCurrentUser() {
 
   if (isFlutter.value) {
-    return await FlutterBridge().getFbCurrentUser()
+
+    const result = await FlutterBridge().getFbCurrentUser()
+    useUser().setFirebaseUser(result)
+    return result
   } else {
     const auth = getAuth()
 
