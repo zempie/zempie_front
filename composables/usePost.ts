@@ -13,11 +13,7 @@ export default function () {
 
   const setFullScreen = (state: boolean) => {
     post.value.isFullScreen = state;
-
   }
-
-
-
 
   return {
     post,

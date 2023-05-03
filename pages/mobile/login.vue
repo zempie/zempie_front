@@ -50,7 +50,7 @@ definePageMeta({
   layout: 'layout-none',
 });
 
-const isFlutter = await FlutterBridge().FlutterBridge.isFlutter()
+const isFlutter = await FlutterBridge().isFlutter()
 
 
 onBeforeMount(() => {

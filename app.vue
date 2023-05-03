@@ -4,7 +4,7 @@
   </NuxtLayout>
 </template>
 <script setup lang="ts">
-import { ElDialog, ID_INJECTION_KEY } from 'element-plus'
+import { ID_INJECTION_KEY } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import shared from './scripts/shared';
 const { t, locale } = useI18n()
@@ -26,23 +26,21 @@ provide(ID_INJECTION_KEY, {
 })
 
 
+
 onBeforeMount(async () => {
   await useMobile().setMobileState()
-
   const fUser = await getCurrentUser()
 
   if (!fUser) {
     useUser().setLoadDone()
   }
 
-
+  //기존에 사용하던 쿠키가 있으면 삭제 -> 더 이상 사용하지 않음
   if (cookie.value) {
     cookie.value = null
   }
 
   const lang = navigator.language.split('-')[0]
-
-  console.log('lan', lang)
 
   if (lang === 'ko') {
     locale.value = 'ko'
