@@ -261,14 +261,16 @@ async function googleLogin() {
           useUser().setFirebaseUser(firebaseUser)
 
           await useUser().setUserInfo()
-          alert(JSON.stringify(useUser().user.value.info))
+          alert(`info :  ${JSON.stringify(useUser().user.value.info)}`)
+
           currUser.value = await FlutterBridge().getFbCurrentUser()
 
           // if (useUser().user.value.info) {
           try {
             await setFirebaseToken()
           } catch (err) {
-            alert(err)
+            alert(`err :  ${JSON.stringify(err)}`)
+
           }
           // }
 

@@ -18,6 +18,7 @@ interface IRefreshToken {
   user_id: string
 }
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+
 export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions, retryCount: number = 0) => {
   // const { $cookies } = useNuxtApp()
   const config = useRuntimeConfig()
@@ -187,9 +188,7 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
 export async function getCurrentUser() {
 
   if (isFlutter.value) {
-
-    const result = await FlutterBridge().FlutterBridge.getFbCurrentUser()
-    return result
+    return await FlutterBridge().getFbCurrentUser()
   } else {
     const auth = getAuth()
 
