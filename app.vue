@@ -30,10 +30,15 @@ provide(ID_INJECTION_KEY, {
 onBeforeMount(async () => {
   await useMobile().setMobileState()
   const fUser = await getCurrentUser()
+  alert(JSON.stringify(fUser))
+
 
   if (!fUser) {
     useUser().setLoadDone()
   }
+
+
+
 
   //기존에 사용하던 쿠키가 있으면 삭제 -> 더 이상 사용하지 않음
   if (cookie.value) {

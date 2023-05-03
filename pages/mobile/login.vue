@@ -1,5 +1,5 @@
 <template>
-  <div style="background-color: #fff; ">
+  <div style="background-color: #fff;">
     <ClientOnly>
 
       <swiper :modules="[Pagination]" :pagination="{ clickable: true }"
@@ -62,6 +62,7 @@ onBeforeMount(() => {
   switchLocalePath('ko')
 
   const isVisit = localStorage.getItem('zMoF')
+  alert(JSON.stringify(isVisit))
 
   if (isVisit) {
     if (useUser().user.value.fUser) {
