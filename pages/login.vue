@@ -13,6 +13,7 @@
         <p>{{ $t('login.text2') }}</p>
       </div>
       currUser {{ currUser }}
+      fUser{{ fUser }}
       <div class="la-content">
         <form>
           <input type="email" v-model="v$.email.$model" name="login-email" title=""
@@ -138,6 +139,7 @@ const rules = computed(() => {
 const v$ = useVuelidate(rules, form)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
+const fUser = computed(() => useUser().user.value.fUser)
 
 watch(
   () => useUser().user.value.info,
@@ -165,7 +167,9 @@ onBeforeMount(() => {
       isPageLoading.value = true
     } else {
       isPageLoading.value = false
-      if (useUser().user.value.fUser) {
+
+      if (fUser.value) {
+        alert(`fuser exists : ${fUser.value}`)
         router.push($localePath('/'))
       }
     }
@@ -192,7 +196,7 @@ async function onSubmit() {
 
   if (isFlutter.value) {
 
-    return FlutterBridge().FlutterBridge.signInEmail({ email: form.email, password: form.password })
+    return FlutterBridge().signInEmail({ email: form.email, password: form.password })
       .then(async (result: any) => {
         //TODO: 등록해야됨
         currUser.value = result
@@ -246,7 +250,7 @@ async function onSubmit() {
 
 async function googleLogin() {
   if (isFlutter.value) {
-    return FlutterBridge().FlutterBridge.signInGoogle()
+    return FlutterBridge().signInGoogle()
       .then(async (result: { additionalUserInfo: any, credential: any, stsTokenManager: any }) => {
         if (result) {
           const firebaseUser = {
@@ -256,7 +260,7 @@ async function googleLogin() {
 
           useUser().setFirebaseUser(firebaseUser)
 
-          currUser.value = await FlutterBridge().FlutterBridge.getFbCurrentUser()
+          currUser.value = await FlutterBridge().getFbCurrentUser()
           await useUser().setUserInfo()
 
           // if (useUser().user.value.info) {
@@ -293,7 +297,7 @@ async function receiveMessage(message: any) {
 
 async function facebookLogin() {
   if (isFlutter.value) {
-    return FlutterBridge().FlutterBridge.signInFacebook()
+    return FlutterBridge().signInFacebook()
       .then((result) => {
         useUser().setFirebaseUser(result)
         // state.fUser = result;
