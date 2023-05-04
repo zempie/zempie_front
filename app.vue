@@ -30,11 +30,11 @@ provide(ID_INJECTION_KEY, {
 
 onBeforeMount(async () => {
   await useMobile().setMobileState()
-  alert('why..?')
 
   const fUser = await getCurrentUser()
   const userInfo = useUser().user.value.info
 
+  alert(JSON.parse(fUser))
 
   if (!fUser) {
     useUser().setLoadDone()
