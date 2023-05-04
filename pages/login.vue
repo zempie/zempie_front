@@ -271,6 +271,8 @@ async function googleLogin() {
 
       })
       .catch((err) => {
+        alert(JSON.parse(err))
+
         console.log(err)
       })
 
@@ -301,7 +303,10 @@ async function facebookLogin() {
         }
         // useUser().setFirebaseUser(result)
         // state.fUser = result;
-      });
+      })
+      .catch((err) => {
+        alert(JSON.parse(err))
+      })
   } else {
     const provider = new FacebookAuthProvider()
     provider.addScope('email')
