@@ -3,11 +3,14 @@ import { signOut } from 'firebase/auth'
 import { ElMessage, ElDialog } from "element-plus";
 import { removeFcmToken } from "~~/scripts/firebase-fcm";
 import { isObjEmpty } from "~~/scripts/utils";
+import flutterBridge from "~~/scripts/flutterBridge";
 
 export default function () {
   const { $firebaseAuth, $cookies } = useNuxtApp()
   const config = useRuntimeConfig()
   const router = useRouter();
+
+  const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
   const user = useState('user', () => ({
     info: null as IUser,
@@ -57,19 +60,22 @@ export default function () {
 
 
   const logout = async () => {
-    signOut($firebaseAuth)
-      .then(() => {
-        removeFcmToken(user.value.info.id)
-      })
-      .then(() => {
-        removeUserState();
-      })
-      .catch((error: any) => {
-        ElMessage({
-          message: error.message,
-          type: 'error'
-        })
-      })
+
+    try {
+      if (isFlutter.value) {
+        await flutterBridge().signOutFirebase();
+      } else {
+        await signOut($firebaseAuth);
+      }
+      await removeFcmToken(user.value.info.id);
+      removeUserState();
+    } catch (error) {
+      ElMessage({
+        message: error.message,
+        type: 'error',
+      });
+    }
+
   }
 
 

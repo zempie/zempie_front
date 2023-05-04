@@ -61,6 +61,9 @@ export default function () {
       const response = await callHandler('signInEmail', params)
       return JSON.parse(response)
     },
+    async signOutFirebase() {
+      return await callHandler('signOutFirebase')
+    },
     async getMessagingToken() {
       return await callHandler('getMessagingToken')
     },
