@@ -189,10 +189,10 @@ export async function getCurrentUser() {
 
   if (isFlutter.value) {
 
-
     const result = await FlutterBridge().getFbCurrentUser()
+
     useUser().setFirebaseUser(result)
-    return result
+    return result || null
   } else {
     const auth = getAuth()
 
