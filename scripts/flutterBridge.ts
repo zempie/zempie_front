@@ -31,18 +31,35 @@ export default function () {
       return result;
     },
     async signInGoogle() {
-      const response = await callHandler("signInGoogle");
-      const result = JSON.parse(response);
-      return result;
-    },
-    async signInFacebook() {
       try {
-        const response = await callHandler("signInFacebook");
-        return JSON.parse(response);
+
+        const response = await callHandler("signInGoogle");
+        const result = JSON.parse(response);
+        alert(`response: ${response}`)
+        alert(JSON.parse(response))
+        return result;
+        return result;
       } catch (err) {
         if (err.message.includes('auth/account-exists-with-different-credential')) {
           ElMessage.error(`${t('exist.wt.diff.email')}`)
         }
+
+        alert(JSON.parse(err))
+      }
+    },
+    async signInFacebook() {
+      try {
+        const response = await callHandler("signInFacebook");
+        const result = JSON.parse(response);
+        alert(`response: ${response}`)
+        alert(JSON.parse(response))
+        return result;
+      } catch (err) {
+        if (err.message.includes('auth/account-exists-with-different-credential')) {
+          ElMessage.error(`${t('exist.wt.diff.email')}`)
+        }
+
+        alert(JSON.parse(err))
       }
     },
     async getFbCurrentUser() {
