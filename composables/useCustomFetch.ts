@@ -191,7 +191,10 @@ export async function getCurrentUser() {
 
     const result = await FlutterBridge().getFbCurrentUser()
 
-    useUser().setFirebaseUser(result)
+    if (result)
+      useUser().setFirebaseUser(result)
+    alert(`after fuser:${result}`)
+
     return result || null
   } else {
     const auth = getAuth()
