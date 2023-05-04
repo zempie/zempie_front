@@ -295,6 +295,7 @@ async function facebookLogin() {
   if (isFlutter.value) {
     return FlutterBridge().signInFacebook()
       .then(async (result) => {
+        alert(JSON.parse(result))
         if (result) {
           await flutterSocialLogin(result)
         }

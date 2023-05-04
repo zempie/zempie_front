@@ -33,9 +33,13 @@ export default function () {
       return result;
     },
     async signInFacebook() {
-      const response = await callHandler("signInFacebook");
-      const result = JSON.parse(response);
-      return result;
+      try {
+        const response = await callHandler("signInFacebook");
+        const result = JSON.parse(response);
+        return result;
+      } catch (err) {
+        alert(JSON.parse(err))
+      }
     },
     async getFbCurrentUser() {
       const response = await callHandler("currentUser");
