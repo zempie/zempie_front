@@ -18,8 +18,11 @@ export default function () {
 
   const FlutterBridge = {
     async isFlutter() {
+
       try {
         const response = await callHandler("isFlutter");
+        alert(`isFlutter: ${response}`)
+
         return !!response;
       } catch (error) {
         return false;
@@ -64,6 +67,8 @@ export default function () {
     },
     async getFbCurrentUser() {
       const response = await callHandler("currentUser");
+      alert(`getFbCurrentUser: ${response}`)
+
       const result = JSON.parse(response);
       return result;
     },
