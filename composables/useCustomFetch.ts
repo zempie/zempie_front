@@ -195,6 +195,8 @@ export async function getCurrentUser() {
     if (result) {
       useUser().setFirebaseUser(result)
     }
+    useUser().setLoadDone()
+
     alert(`after fuser:${result}`)
 
     return result || null
