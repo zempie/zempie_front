@@ -68,12 +68,14 @@ export default function () {
         await signOut($firebaseAuth);
       }
       await removeFcmToken(user.value.info.id);
-      removeUserState();
+
     } catch (error) {
       ElMessage({
         message: error.message,
         type: 'error',
       });
+    } finally {
+      removeUserState();
     }
 
   }
