@@ -304,6 +304,7 @@ onMounted(async () => {
 
 
   if (communityInfo.value) {
+    console.log('communityInfo.value', communityInfo.value)
 
     //general 채널 디폴트 카테고리로 설정
     const generalChannel = communityInfo.value.channels.find(channel => {
@@ -311,24 +312,22 @@ onMounted(async () => {
     })
 
 
-    if (community) {
-      selectedGroup.value = [
-        ...selectedGroup.value,
-        [{
-          type: 'community',
-          community: {
-            id: communityInfo.value.id,
-            is_certificated: communityInfo.value.is_certificated,
-            name: communityInfo.value.name,
-            profile_img: communityInfo.value.profile_img,
-            url: communityInfo.value.url
-          }
-        }, {
-          type: 'channel',
-          channel: generalChannel
-        }]
-      ]
-    }
+    selectedGroup.value = [
+      ...selectedGroup.value,
+      [{
+        type: 'community',
+        community: {
+          id: communityInfo.value.id,
+          is_certificated: communityInfo.value.is_certificated,
+          name: communityInfo.value.name,
+          profile_img: communityInfo.value.profile_img,
+          url: communityInfo.value.url
+        }
+      }, {
+        type: 'channel',
+        channel: generalChannel
+      }]
+    ]
   }
 
   const postCommunities = props.feed?.posted_at?.community || props.feed?.posted_at[0].community

@@ -186,13 +186,15 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
 }
 
 export async function getCurrentUser() {
+  alert(`isFlutter.value:${isFlutter.value}`)
 
   if (isFlutter.value) {
 
     const result = await FlutterBridge().getFbCurrentUser()
 
-    if (result)
+    if (result) {
       useUser().setFirebaseUser(result)
+    }
     alert(`after fuser:${result}`)
 
     return result || null

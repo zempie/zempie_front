@@ -360,7 +360,7 @@ function copyUrl() {
 
 
 async function deletePost() {
-  const { data, error, pending } = await post.delete(feedId.value)
+  const { data, error, pending } = await useCustomAsyncFetch(`/post/${feedId.value}`, getComFetchOptions('delete', true))
 
   if (!error.value) {
     ElMessage({

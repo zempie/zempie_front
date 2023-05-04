@@ -73,15 +73,20 @@
 </template>
 <script setup lang="ts">
 import dayjs from 'dayjs'
-
+import { useWindowScroll } from '@vueuse/core'
 import { ElDialog } from 'element-plus'
 import { ICommunity } from '~~/types'
 import { useI18n } from 'vue-i18n'
 import shared from '~~/scripts/shared'
-const { t } = useI18n()
 
 const MAX_LIST_SIZE = 5
+
+const { t } = useI18n()
+const { x, y } = useWindowScroll()
+
 const route = useRoute()
+const router = useRouter()
+const nuxtApp = useNuxtApp()
 const config = useRuntimeConfig()
 const accessToken = useCookie(config.COOKIE_NAME).value
 
@@ -121,6 +126,7 @@ shared.createHeadMeta(`${data.value.name}`, `${data.value.description}`, `${data
 
 
 onMounted(async () => {
+
   await fetch()
 })
 
@@ -128,6 +134,12 @@ onBeforeUnmount(() => {
   useCommunity().resetCommunity()
 })
 
+onBeforeUnmount(() => {
+  console.log(y.value)
+  // useScroll().setScroll(y.value)
+  // route.meta.scroll = { x: x.value, y: y.value, }
+  // console.log('unmount', window.scrollY)
+})
 async function fetch() {
   const query = {
     limit: limit.value,

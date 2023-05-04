@@ -83,7 +83,8 @@ const emit = defineEmits(['refresh', 'deletePost'])
 const user = computed(() => useUser().user.value.info)
 
 async function deletePost() {
-  const { data, error, pending } = await post.delete(props.feed.id)
+  const { data, error, pending } = await useCustomAsyncFetch(`/post/${props.feed.id}`, getComFetchOptions('delete', true))
+
 
   if (!error.value) {
     ElMessage({
