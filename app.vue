@@ -33,7 +33,10 @@ onBeforeMount(async () => {
   const userInfo = useUser().user.value.info
 
   try {
+    alert('before fuser')
     const fUser = await getCurrentUser()
+    alert('after fuser')
+
     if (!fUser) {
       useUser().setLoadDone()
     }
@@ -42,7 +45,7 @@ onBeforeMount(async () => {
     }
   } catch (err) {
     alert(`err: ${JSON.parse(err)}`)
-
+    useUser().setLoadDone()
   }
 
 
