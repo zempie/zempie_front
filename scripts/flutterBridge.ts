@@ -1,6 +1,9 @@
+import { ElMessage } from "element-plus";
+
 export default function () {
 
   const nuxtApp = useNuxtApp()
+  const { t, locale } = useI18n()
 
   const callHandler = async (handleName, params?: any) => {
     //flutter_inappwebview
@@ -35,14 +38,11 @@ export default function () {
     async signInFacebook() {
       try {
         const response = await callHandler("signInFacebook");
-        const result = JSON.parse(response);
-        alert(`response: ${response}`)
-        alert(JSON.parse(response))
-        return result;
+        return JSON.parse(response);
       } catch (err) {
-        alert(`response: ${err}`)
-
-        alert(JSON.parse(err))
+        if (err.message.includes('auth/account-exists-with-different-credential')) {
+          ElMessage.error(`${t('exist.wt.diff.email')}`)
+        }
       }
     },
     async getFbCurrentUser() {
