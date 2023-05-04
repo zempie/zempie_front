@@ -33,6 +33,7 @@ onBeforeMount(async () => {
   const fUser = await getCurrentUser()
   const userInfo = useUser().user.value.info
 
+  alert(fUser)
   if (!fUser) {
     useUser().setLoadDone()
   }
