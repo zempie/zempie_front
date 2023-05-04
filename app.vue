@@ -30,22 +30,26 @@ provide(ID_INJECTION_KEY, {
 
 onBeforeMount(async () => {
   await useMobile().setMobileState()
-
-  const fUser = await getCurrentUser()
-  alert(`fUser: ${fUser}`)
-  alert(`JSON.parse(fUser): ${JSON.parse(fUser)}`)
-
-
-
   const userInfo = useUser().user.value.info
 
+  try {
+    const fUser = await getCurrentUser()
+    if (!fUser) {
+      useUser().setLoadDone()
+    }
+    if (isFlutter.value && fUser && !userInfo) {
+      await useUser().setUserInfo()
+    }
+  } catch (err) {
+    alert(`err: ${JSON.parse(err)}`)
 
-  if (!fUser) {
-    useUser().setLoadDone()
   }
-  if (isFlutter.value && fUser && !userInfo) {
-    await useUser().setUserInfo()
-  }
+
+
+
+
+
+
 
   //기존에 사용하던 쿠키가 있으면 삭제 -> 더 이상 사용하지 않음
   if (cookie.value) {

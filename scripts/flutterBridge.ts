@@ -21,8 +21,6 @@ export default function () {
 
       try {
         const response = await callHandler("isFlutter");
-        alert(`isFlutter: ${response}`)
-
         return !!response;
       } catch (error) {
         return false;
