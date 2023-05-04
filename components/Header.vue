@@ -58,8 +58,9 @@
 
       <ClientOnly>
         <dd>
+          isLogin {{ isLogin }}
+
           <SearchHeader />
-          <!-- FIXME: popper-class: css수정 -->
           <div class="header-language">
             <el-select class="hl-select-box" v-model="selectedLang" :placeholder="t('korean')">
               <el-option v-for="item in options" :key="item.code" :label="item.label" :value="item.code"
@@ -68,7 +69,6 @@
           </div>
           <div class="header-info ml0" v-if="!isLoading && isLogin" :key="user.id">
             <NotificationHeaderButton v-if="!isMob" />
-
             <UserMenu />
             <!-- <DmHeaderButton /> -->
           </div>
@@ -201,6 +201,7 @@ const options = [
   { code: "en", label: "English" },
 ]
 const selectedLang = ref(locale.value)
+// console.log('currneLan', locale.value)
 
 const isOpen = ref(false)
 const { loginModal } = useModal()
@@ -212,19 +213,6 @@ watch(
     isOpen.value = state
   }
 )
-
-watch(
-  () => locale,
-  (val) => {
-    if (val.value === "ko") {
-      selectedLang.value = "ko"
-    } else {
-      selectedLang.value = "en"
-    }
-  },
-  { immediate: true }
-)
-
 
 onMounted(() => {
   nextTick(() => {
@@ -279,7 +267,6 @@ async function moveZemWorld() {
 
 <style lang="scss" scoped>
 .header {
-
   .header-info {
     display: flex;
     align-items: center;

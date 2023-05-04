@@ -31,8 +31,8 @@ export default function () {
       return result;
     },
     async signInGoogle() {
+      alert(`signInGoogle`)
       try {
-
         const response = await callHandler("signInGoogle");
         const result = JSON.parse(response);
         alert(`response: ${response}`)
