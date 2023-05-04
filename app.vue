@@ -32,7 +32,10 @@ onBeforeMount(async () => {
   await useMobile().setMobileState()
 
   const fUser = await getCurrentUser()
-  alert(JSON.parse(fUser))
+  alert(`fUser: ${fUser}`)
+  alert(`JSON.parse(fUser): ${JSON.parse(fUser)}`)
+
+
 
   const userInfo = useUser().user.value.info
 
