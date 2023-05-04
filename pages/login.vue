@@ -200,7 +200,7 @@ async function onSubmit() {
         currUser.value = result
         router.push($localePath('/'))
         await useUser().setUserInfo()
-
+        await setFirebaseToken()
       })
       .catch((err: any) => {
         console.log(err)
@@ -251,32 +251,29 @@ async function googleLogin() {
     return FlutterBridge().signInGoogle()
       .then(async (result: { additionalUserInfo: any, credential: any, stsTokenManager: any }) => {
         if (result) {
-          const firebaseUser = {
-            ...result.additionalUserInfo.profile,
-            accessToken: result.credential.accessToken
-          }
+          await flutterSocialLogin(result)
 
-          useUser().setFirebaseUser(firebaseUser)
-
-          await useUser().setUserInfo()
-
-          currUser.value = await FlutterBridge().getFbCurrentUser()
-
-          // if (useUser().user.value.info) {
-          try {
-            await setFirebaseToken()
-          } catch (err) {
-            alert(`err :  ${JSON.stringify(err)}`)
-
-          }
+          // const firebaseUser = {
+          //   ...result.additionalUserInfo.profile,
+          //   accessToken: result.credential.accessToken
           // }
 
+          // useUser().setFirebaseUser(firebaseUser)
+
+          // await useUser().setUserInfo()
+
+          // currUser.value = await FlutterBridge().getFbCurrentUser()
+          // await setFirebaseToken()
+
+
         }
-        // state.fUser = result;
+        // router.push($localePath('/'))
+
       })
       .catch((err) => {
         console.log(err)
       })
+
   } else {
     const provider = new GoogleAuthProvider()
     return socialLogin(provider)
@@ -297,8 +294,11 @@ async function receiveMessage(message: any) {
 async function facebookLogin() {
   if (isFlutter.value) {
     return FlutterBridge().signInFacebook()
-      .then((result) => {
-        useUser().setFirebaseUser(result)
+      .then(async (result) => {
+        if (result) {
+          await flutterSocialLogin(result)
+        }
+        // useUser().setFirebaseUser(result)
         // state.fUser = result;
       });
   } else {
@@ -307,6 +307,21 @@ async function facebookLogin() {
     provider.addScope('public_profile')
     return socialLogin(provider)
   }
+}
+
+async function flutterSocialLogin(info: any) {
+  const firebaseUser = {
+    ...info.additionalUserInfo.profile,
+    accessToken: info.credential.accessToken
+  }
+
+  useUser().setFirebaseUser(firebaseUser)
+
+  await useUser().setUserInfo()
+  await setFirebaseToken()
+
+  router.push($localePath('/'))
+
 }
 
 async function socialLogin(provider: AuthProvider) {
