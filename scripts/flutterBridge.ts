@@ -36,9 +36,12 @@ export default function () {
       try {
         const response = await callHandler("signInFacebook");
         const result = JSON.parse(response);
+        alert(`response: ${response}`)
         alert(JSON.parse(response))
         return result;
       } catch (err) {
+        alert(`response: ${err}`)
+
         alert(JSON.parse(err))
       }
     },
