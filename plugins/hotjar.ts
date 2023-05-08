@@ -1,10 +1,10 @@
 import Hotjar from 'vue-hotjar'
 
-export default defineNuxtPlugin(async (nuxtApp) => {
+export default defineNuxtPlugin((nuxtApp) => {
+  console.log(Hotjar)
   nuxtApp.vueApp.use(Hotjar, {
-    property: {
-      id: '3482036'
-    }
+    id: '3482036',
+    snippetVersion: 6
   })
 
 })
