@@ -20,7 +20,8 @@
               </NuxtLink>
             </li>
             <li class="uppercase">
-              <NuxtLink id="gameMenu" :to="$localePath('/game/list')" :class="$route.name.toString().includes('game-list') && 'active'">
+              <NuxtLink id="gameMenu" :to="$localePath('/game/list')"
+                :class="$route.name.toString().includes('game-list') && 'active'">
                 games
               </NuxtLink>
             </li>
@@ -65,7 +66,7 @@
             </el-select>
           </div>
           <div class="header-info ml0" v-if="!isLoading && isLogin" :key="user.id">
-            <NotificationHeaderButton v-if="!isMob" />
+            <NotificationHeaderButton />
             <UserMenu />
             <!-- <DmHeaderButton /> -->
           </div>

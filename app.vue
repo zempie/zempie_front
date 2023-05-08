@@ -38,11 +38,12 @@ onBeforeMount(async () => {
     if (!fUser) {
       useUser().setLoadDone()
     }
+
     if (isFlutter.value && fUser && !userInfo) {
       await useUser().setUserInfo()
     }
+
   } catch (err) {
-    alert(`err: ${JSON.parse(err)}`)
     useUser().setLoadDone()
   }
 

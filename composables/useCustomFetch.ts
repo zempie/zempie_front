@@ -20,10 +20,7 @@ interface IRefreshToken {
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
 export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions, retryCount: number = 0) => {
-  // const { $cookies } = useNuxtApp()
   const config = useRuntimeConfig()
-  // const accessToken = useCookie(config.COOKIE_NAME)
-
 
   return await useFetch<T>(url, {
     initialCache: false,

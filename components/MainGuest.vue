@@ -48,10 +48,8 @@
 const { $localePath } = useNuxtApp()
 
 const GAME_COUNT = 8
-const COMMUNITY_COUNT = 4
+const COMMUNITY_COUNT = 4ㅌㅌㅌ
 const POST_COUNT = 12
-
-console.log('?')
 
 const { data, pending, error } = await useCustomAsyncFetch<any>(
   createQueryUrl('/games', { limit: GAME_COUNT }),

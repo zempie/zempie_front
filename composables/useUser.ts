@@ -104,7 +104,6 @@ export default function () {
       return user.value.info
 
     } catch (error) {
-      alert(JSON.stringify(error))
       useUser().setLoadDone()
     }
 
