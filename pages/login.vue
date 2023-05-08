@@ -237,7 +237,6 @@ async function googleLogin() {
   if (isFlutter.value) {
     try {
       const result = await FlutterBridge().signInGoogle()
-      console.log('result', result)
       await flutterSocialLogin(result)
     } catch (err) {
       if (err.message.includes('auth/account-exists-with-different-credential')) {
@@ -289,10 +288,11 @@ async function flutterSocialLogin(info: any) {
 
   useUser().setFirebaseUser(firebaseUser)
 
-  await useUser().setUserInfo()
-  await setFirebaseToken()
-
-  router.push($localePath('/'))
+  const userInfo = await useUser().setUserInfo()
+  if (userInfo) {
+    await setFirebaseToken()
+    router.push($localePath('/'))
+  }
 
 }
 
@@ -302,8 +302,6 @@ async function socialLogin(provider: AuthProvider) {
     router.push($localePath('/'))
 
   } catch (err) {
-    console.error('socialLogin err', err)
-
     const errorCode = err.code
 
     if (err.message.includes('auth/account-exists-with-different-credential')) {
