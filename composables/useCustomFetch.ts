@@ -120,7 +120,6 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
     async onResponseError({ request, response, options }) {
       console.log('[fetch response error]', response)
 
-      alert(JSON.stringify(response))
 
 
       //사용자 uid error

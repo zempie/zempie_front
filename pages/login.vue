@@ -130,7 +130,9 @@ const rules = computed(() => {
 const v$ = useVuelidate(rules, form)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
+
 const fUser = computed(() => useUser().user.value.fUser)
+const userInfo = computed(() => useUser().user.value.info)
 
 watch(
   () => useUser().user.value.info,
@@ -158,8 +160,7 @@ onBeforeMount(() => {
       isPageLoading.value = true
     } else {
       isPageLoading.value = false
-
-      if (fUser.value) {
+      if (fUser.value && userInfo.value) {
         router.push($localePath('/'))
       }
     }
