@@ -48,7 +48,7 @@
 const { $localePath } = useNuxtApp()
 
 const GAME_COUNT = 8
-const COMMUNITY_COUNT = 4ㅌㅌㅌ
+const COMMUNITY_COUNT = 4
 const POST_COUNT = 12
 
 const { data, pending, error } = await useCustomAsyncFetch<any>(
