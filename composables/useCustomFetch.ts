@@ -186,7 +186,6 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
 }
 
 export async function getCurrentUser() {
-  alert(`isFlutter.value:${isFlutter.value}`)
 
   if (isFlutter.value) {
 
@@ -197,7 +196,6 @@ export async function getCurrentUser() {
     }
     useUser().setLoadDone()
 
-    alert(`after fuser:${result}`)
 
     return result || null
   } else {

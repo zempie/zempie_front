@@ -1,5 +1,4 @@
 <template>
-  <!-- <div> -->
   <div class="login-bg pt50 pb50" style="height: 100vh; min-height: 900px">
     <div class="login-logo">
       <LoginWhiteLogoDt path="/" />
@@ -12,8 +11,6 @@
         <h3>{{ $t('login.text1') }}</h3>
         <p>{{ $t('login.text2') }}</p>
       </div>
-      currUser {{ currUser }}
-      fUser{{ fUser }}
       <div class="la-content">
         <form>
           <input type="email" v-model="v$.email.$model" name="login-email" title=""
@@ -66,11 +63,6 @@
       </div>
     </div>
   </div>
-  <!-- <div v-else style="width:100vw; height:100vh; display: flex;justify-content: center; align-items: center;">
-      {{ useUser().user.value.isLoading }}
-      <img src="/images/zempie-logo.png" alt="zempie" title="zempie" class="flex justify-center items-center" />
-    </div>
-  </div> -->
 </template>
 
 <script setup lang="ts">
@@ -104,7 +96,6 @@ const config = useRuntimeConfig()
 const currUser = ref()
 const isPageLoading = ref(true)
 
-const isVisit = ref()
 
 definePageMeta({
   layout: 'layout-none',
@@ -248,35 +239,16 @@ async function onSubmit() {
 
 async function googleLogin() {
   if (isFlutter.value) {
-    return FlutterBridge().signInGoogle()
-      .then(async (result: { additionalUserInfo: any, credential: any, stsTokenManager: any }) => {
-        if (result) {
-          await flutterSocialLogin(result)
-
-          // const firebaseUser = {
-          //   ...result.additionalUserInfo.profile,
-          //   accessToken: result.credential.accessToken
-          // }
-
-          // useUser().setFirebaseUser(firebaseUser)
-
-          // await useUser().setUserInfo()
-
-          // currUser.value = await FlutterBridge().getFbCurrentUser()
-          // await setFirebaseToken()
-
-
-        }
-        // router.push($localePath('/'))
-
-      })
-      .catch((err) => {
-        alert(JSON.parse(err))
-
-        console.log(err)
-      })
-
-  } else {
+    try {
+      const result = await FlutterBridge().signInGoogle()
+      await flutterSocialLogin(result)
+    } catch (err) {
+      if (err.message.includes('auth/account-exists-with-different-credential')) {
+        ElMessage.error(`${t('exist.wt.diff.email')}`)
+      }
+    }
+  }
+  else {
     const provider = new GoogleAuthProvider()
     return socialLogin(provider)
   }
@@ -295,18 +267,14 @@ async function receiveMessage(message: any) {
 
 async function facebookLogin() {
   if (isFlutter.value) {
-    return FlutterBridge().signInFacebook()
-      .then(async (result) => {
-        alert(JSON.parse(result))
-        if (result) {
-          await flutterSocialLogin(result)
-        }
-        // useUser().setFirebaseUser(result)
-        // state.fUser = result;
-      })
-      .catch((err) => {
-        alert(JSON.parse(err))
-      })
+    try {
+      const result = await FlutterBridge().signInFacebook()
+      await flutterSocialLogin(result)
+    } catch (err) {
+      if (err.message.includes('auth/account-exists-with-different-credential')) {
+        ElMessage.error(`${t('exist.wt.diff.email')}`)
+      }
+    }
   } else {
     const provider = new FacebookAuthProvider()
     provider.addScope('email')

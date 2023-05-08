@@ -1,15 +1,9 @@
-import { ElMessage } from "element-plus";
-
 export default function () {
-
-  const nuxtApp = useNuxtApp()
-  const { t, locale } = useI18n()
-
-  const callHandler = async (handleName, params?: any) => {
+  const callHandler = async (handleName: string, params?: any) => {
     //flutter_inappwebview
     return await callInappWebviewHandler(handleName, params);
   };
-  const callInappWebviewHandler = async (handleName, params) => {
+  const callInappWebviewHandler = async (handleName: string, params) => {
     //@ts-ignore
     const response = await window.flutter_inappwebview
       .callHandler(handleName, params);
@@ -18,7 +12,6 @@ export default function () {
 
   const FlutterBridge = {
     async isFlutter() {
-
       try {
         const response = await callHandler("isFlutter");
         return !!response;
@@ -32,36 +25,17 @@ export default function () {
       return result;
     },
     async signInGoogle() {
-      alert(`signInGoogle`)
-      try {
-        const response = await callHandler("signInGoogle");
-        const result = JSON.parse(response);
-        alert(`response: ${response}`)
-        alert(JSON.parse(response))
-        return result;
-        return result;
-      } catch (err) {
-        if (err.message.includes('auth/account-exists-with-different-credential')) {
-          ElMessage.error(`${t('exist.wt.diff.email')}`)
-        }
+      const response = await callHandler("signInGoogle");
+      const result = JSON.parse(response);
+      return result;
 
-        alert(JSON.parse(err))
-      }
     },
     async signInFacebook() {
-      try {
-        const response = await callHandler("signInFacebook");
-        const result = JSON.parse(response);
-        alert(`response: ${response}`)
-        alert(JSON.parse(response))
-        return result;
-      } catch (err) {
-        if (err.message.includes('auth/account-exists-with-different-credential')) {
-          ElMessage.error(`${t('exist.wt.diff.email')}`)
-        }
 
-        alert(JSON.parse(err))
-      }
+      const response = await callHandler("signInFacebook");
+      const result = JSON.parse(response);
+      return result;
+
     },
     async getFbCurrentUser() {
       return await callHandler("currentUser");

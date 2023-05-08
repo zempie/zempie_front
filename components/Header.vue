@@ -20,8 +20,7 @@
               </NuxtLink>
             </li>
             <li class="uppercase">
-              <NuxtLink id="gameMenu" :to="$localePath('/game/list')" :class="
-                $route.name.toString().includes('game-list') && 'active'">
+              <NuxtLink id="gameMenu" :to="$localePath('/game/list')" :class="$route.name.toString().includes('game-list') && 'active'">
                 games
               </NuxtLink>
             </li>
@@ -58,8 +57,6 @@
 
       <ClientOnly>
         <dd>
-          isLogin {{ isLogin }}
-          isLoading{{ isLoading }}
           <SearchHeader />
           <div class="header-language">
             <el-select class="hl-select-box" v-model="selectedLang" :placeholder="t('korean')">
