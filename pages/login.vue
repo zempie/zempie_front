@@ -185,17 +185,13 @@ async function onSubmit() {
 
   if (isFlutter.value) {
 
-    return FlutterBridge().signInEmail({ email: form.email, password: form.password })
-      .then(async (result: any) => {
-        //TODO: 등록해야됨
-        currUser.value = result
-        router.push($localePath('/'))
-        await useUser().setUserInfo()
-        await setFirebaseToken()
-      })
-      .catch((err: any) => {
-        console.log(err)
-      })
+    const result = await FlutterBridge().signInEmail({ email: form.email, password: form.password })
+    currUser.value = result
+    console.log('email login', result)
+    router.push($localePath('/'))
+    await useUser().setUserInfo()
+    await setFirebaseToken()
+
 
   } else {
     if (!isValid) return
@@ -241,6 +237,7 @@ async function googleLogin() {
   if (isFlutter.value) {
     try {
       const result = await FlutterBridge().signInGoogle()
+      console.log('result', result)
       await flutterSocialLogin(result)
     } catch (err) {
       if (err.message.includes('auth/account-exists-with-different-credential')) {
@@ -284,6 +281,7 @@ async function facebookLogin() {
 }
 
 async function flutterSocialLogin(info: any) {
+
   const firebaseUser = {
     ...info.additionalUserInfo.profile,
     accessToken: info.credential.accessToken

@@ -68,8 +68,8 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
     },
 
     async onRequest({ request, options }) {
-      console.log('url', url)
       const user = await getCurrentUser()
+
       let token = user?.accessToken || user?.idToken
 
       if (isFlutter.value) {
@@ -96,7 +96,7 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
       console.log('[fetch request]')
     },
     async onRequestError({ request, options, error }) {
-      console.log('[fetch request error]')
+      console.log('[fetch request error]', error)
     }
   })
 }
@@ -152,7 +152,6 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
     async onRequest({ request, options }) {
 
       const user = await getCurrentUser()
-
       let token = user?.accessToken || user?.idToken
 
       if (isFlutter.value) {
@@ -178,7 +177,7 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
       return
     },
     async onRequestError({ request, options, error }) {
-      console.log('[fetch request error]')
+      console.log('[fetch request error]', error)
     }
   })
 
@@ -195,8 +194,6 @@ export async function getCurrentUser() {
       useUser().setFirebaseUser(result)
     }
     useUser().setLoadDone()
-
-
     return result || null
   } else {
     const auth = getAuth()
