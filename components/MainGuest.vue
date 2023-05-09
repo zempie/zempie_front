@@ -56,6 +56,10 @@ const { data, pending, error } = await useCustomAsyncFetch<any>(
   getZempieFetchOptions('get', false)
 )
 
+alert(`GAMELIST DATA : ${JSON.parse(data.value)}`)
+alert(`error DATA : ${error.value}`)
+
+
 const {
   data: communities,
   pending: cPending,
