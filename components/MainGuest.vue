@@ -55,7 +55,6 @@ const { data, pending, error } = await useCustomAsyncFetch<any>(
   getZempieFetchOptions('get', false)
 )
 
-
 const {
   data: communities,
   pending: cPending,

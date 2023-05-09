@@ -15,28 +15,48 @@
           <div>
             <h2>{{ $t('myProfile') }}</h2>
             <div>
-              <NuxtLink id="myChannel" :to="$localePath(`/${user?.nickname}`)"><i class="uil uil-user"></i>
+              <NuxtLink id="myChannel" :to="$localePath(`/${user?.nickname}`)">
+                <!-- <i class="uil uil-user"></i> -->
                 {{ $t('myChannel') }}
               </NuxtLink>
-              <NuxtLink id="gameStudio" :to="$localePath('/project/list')"><i class="uil uil-robot"></i>
+              <NuxtLink id="gameStudio" :to="$localePath('/project/list')">
+                <!-- <i class="uil uil-robot"></i> -->
                 {{ $t('gameStudio') }}
+              </NuxtLink>
+
+              <NuxtLink :to="$localePath(`/myaccount`)">
+                <!-- <i class="uil uil-setting"></i> -->
+                {{ $t('my.account') }}
               </NuxtLink>
             </div>
           </div>
           <div>
             <h2>{{ $t('group') }}</h2>
             <div>
-              <NuxtLink :to="$localePath(`/myaccount/communities`)"><i class="uil uil-users-alt"></i>
+              <NuxtLink :to="$localePath(`/myaccount/communities`)">
+                <!-- <i class="uil uil-users-alt"></i> -->
                 {{ $t('joined.group') }}
               </NuxtLink>
             </div>
           </div>
-          <div>
-            <h2>{{ $t('account') }}</h2>
+
+          <div class="zem-coin">
+            <h2>{{ $t('purchase') }}</h2>
             <div>
-              <NuxtLink :to="$localePath(`/myaccount`)"><i class="uil uil-setting"></i>
-                {{ $t('my.account') }}
+              <NuxtLink class="pointer" :to="$localePath(`/coin/purchase`)">
+                ZEM 충전
               </NuxtLink>
+              <div class="row justify-between">
+                <span>보유</span>
+                <span class="text-bold flex align-center">
+                  {{ tempCoint }}
+                  <img src="/images/coins/zem_icon.png" width="18" class="ml5" />
+                </span>
+              </div>
+              <!-- <div class="row">
+                <span>수익</span>
+                <span class="text-bold">{{ }}</span>
+              </div> -->
             </div>
           </div>
           <p>
@@ -60,6 +80,10 @@ const userMenu = ref()
 const user = computed(() => useUser().user.value.info)
 
 
+//TODO: 코인 임시 
+const tempCoint = 10
+
+
 function logout() {
   if (route.meta.middleware === 'auth' || route.meta.name === 'main') {
     router.replace($localePath('/'))
@@ -67,4 +91,13 @@ function logout() {
   useUser().logout()
 }
 </script>
-<style scoped lang='scss'></style>
+<style scoped lang='scss'>
+.zem-coin {
+  .row {
+    padding-top: 20px;
+    font-size: 16px;
+    line-height: 14px;
+    color: #333;
+  }
+}
+</style>
