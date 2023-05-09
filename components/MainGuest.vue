@@ -9,7 +9,7 @@
       <h2>
         <span style="font: 36px/46px 'Jalnan'">Recent games</span>
       </h2>
-
+      {{ data.result.games }}
       <ul style="margin: 40px 0px">
         <span class="card-game">
           <GameCardSk v-if="pending" v-for="game in GAME_COUNT" />
