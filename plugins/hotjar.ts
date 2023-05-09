@@ -1,9 +1,10 @@
 import Hotjar from 'vue-hotjar'
 
 export default defineNuxtPlugin((nuxtApp) => {
-  console.log(Hotjar)
+  const config = useRuntimeConfig()
+
   nuxtApp.vueApp.use(Hotjar, {
-    id: '3482036',
+    id: config.HOTJAR_ID,
     snippetVersion: 6
   })
 
