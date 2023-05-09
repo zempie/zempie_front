@@ -113,7 +113,8 @@ export default defineNuxtConfig({
     KAKAO_JS_KEY: process.env.KAKAO_JS_KEY,
     FACEBOOK_SHARE_URL: process.env.FACEBOOK_SHARE_URL,
     FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID,
-    TWITTER_SHARE_URL: process.env.TWITTER_SHARE_URL
+    TWITTER_SHARE_URL: process.env.TWITTER_SHARE_URL,
+    HOTJAR_ID: process.env.HOTJAR_ID
   },
 
 })
