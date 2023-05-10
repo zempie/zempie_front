@@ -1157,9 +1157,9 @@ function setCategoryPayload(payload: { post_contents?: string; post_state?: stri
         payload.community = [
           ...payload.community,
           {
-            id: target.community.id,
+            id: target.community?.id,
             group: target.community,
-            channel_id: channel.channel.id,
+            channel_id: channel.channel?.id,
             channel: channel.channel
           }
         ]
