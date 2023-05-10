@@ -37,6 +37,12 @@ definePageMeta({
   // middleware: 'auth',
 })
 
+const tempCoin = 10
+
+
+const { data: coinData, error } = await useCustomAsyncFetch('/items', getZempieFetchOptions('get', true))
+// const coins = computed(() => coinData.value?.result?.refitems)
+
 const coins = [
   {
     id: 1,
@@ -75,19 +81,31 @@ const coins = [
     img: '/images/coins/shopItem_img_money_mid_06.png'
   },
 ]
-const tempCoin = 10
 const activeCoin = ref(coins[0])
 
 function activateCoin(coin) {
   activeCoin.value = coin
 }
 
+
 async function purchaseCoin() {
   if (user.value) {
     if (isFlutter.value) {
       //TODO: 인앱결제 연결 
     } else {
-      (await Bootpay()).requestPay()
+      const payload = {
+        price: activeCoin.value.price,
+        name: activeCoin.value.zem + 'ZEM',
+        user_id: user.value.id,
+        username: user.value.name,
+        user_email: user.value.email,
+        item_id: activeCoin.value.id,
+        qty: 1,
+      };
+
+      (await Bootpay()).requestPay(payload)
+
+
 
 
     }
