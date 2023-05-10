@@ -14,6 +14,10 @@ export interface IUser {
   is_developer?: boolean,
   picture?: string,
   profile?: any,
+  coin?: {
+    zem: number,
+    pie: number
+  },
   setting?: {
     alarm: boolean,
     battle: boolean,

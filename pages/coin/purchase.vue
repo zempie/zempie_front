@@ -2,14 +2,16 @@
   <div class="content">
     <div class="purchase-container">
       <div class="top flex content-center items-center">
-        <h3>안녕하세요, <span class="zem-color"> {{ user?.nickname }}({{ user?.name }})</span> 님!</h3>
+        <h3>{{ $t('hi') }}, <span class="zem-color"> {{ user?.nickname }}({{ user?.name }})</span>{{
+          $t('share.zempie.nickname.title') }}!</h3>
       </div>
       <div class="coin-menu">
         <p class="my-info flex items-center justify-between">
-          <span>ZEM 충전</span>
-          <span>내 ZEM <span class="zem-color"> {{ tempZem }}</span>
-            <img src="/images/coins/zem_icon.png" width="18" class="ml5" />
+          <span>ZEM {{ $t('charge') }}</span>
+          <span>{{ $t('my') }} ZEM
+            <Coin :coin="tempCoin" />
           </span>
+
         </p>
         <div class="card-container row">
           <CoinCard v-for="coin in coins" :coin="coin" :key="coin?.id" :isActive="activeCoin?.id === coin?.id"
@@ -17,14 +19,17 @@
         </div>
       </div>
       <div class="bottom row flex items-center justify-between">
-        <h3><span class="zem-color">{{ activeCoin?.price }}원</span>으로 <span class="zem-color"> {{ activeCoin?.zem
-        }}ZEM</span>을 충전합니다.</h3>
-        <button class="btn-default" @click="purchaseCoin">₩{{ activeCoin?.price }} pay</button>
+        <h3><span class="zem-color">{{ activeCoin?.price }}{{ $t('won') }}</span>{{ $t('inform1') }} <span
+            class="zem-color"> {{
+              activeCoin?.zem
+            }}ZEM</span>{{ $t('inform.charge') }}</h3>
+        <button class="btn-default" @click="purchaseCoin">₩{{ activeCoin?.price }} {{ $t('pay') }}</button>
       </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
+import Bootpay from '~~/scripts/bootpay'
 const user = computed(() => useUser().user.value.info)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
@@ -70,19 +75,21 @@ const coins = [
     img: '/images/coins/shopItem_img_money_mid_06.png'
   },
 ]
-const tempZem = 10
+const tempCoin = 10
 const activeCoin = ref(coins[0])
 
 function activateCoin(coin) {
   activeCoin.value = coin
 }
 
-function purchaseCoin() {
+async function purchaseCoin() {
   if (user.value) {
     if (isFlutter.value) {
       //TODO: 인앱결제 연결 
     } else {
-      //TODO:부트페이 연결
+      (await Bootpay()).requestPay()
+
+
     }
   }
 
