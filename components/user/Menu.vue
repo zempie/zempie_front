@@ -43,15 +43,12 @@
           <div class="zem-coin">
             <h2>{{ $t('purchase') }}</h2>
             <div>
-              <NuxtLink class="pointer" :to="$localePath(`/coin/purchase`)">
-                ZEM 충전
+              <NuxtLink class="pointer" :to="$localePath(`/coin/purchase`)" target="_blank">
+                ZEM {{ $t('charge') }}
               </NuxtLink>
               <div class="row justify-between">
-                <span>보유</span>
-                <span class="text-bold flex align-center">
-                  {{ tempCoint }}
-                  <img src="/images/coins/zem_icon.png" width="18" class="ml5" />
-                </span>
+                <span> {{ $t('inventory') }}</span>
+                <Coin :coin="user?.coin?.zem" class="text-bold" />
               </div>
               <!-- <div class="row">
                 <span>수익</span>
@@ -78,10 +75,6 @@ const router = useRouter()
 const userMenu = ref()
 
 const user = computed(() => useUser().user.value.info)
-
-
-//TODO: 코인 임시 
-const tempCoint = 10
 
 
 function logout() {

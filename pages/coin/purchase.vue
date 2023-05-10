@@ -9,7 +9,7 @@
         <p class="my-info flex items-center justify-between">
           <span>ZEM {{ $t('charge') }}</span>
           <span>{{ $t('my') }} ZEM
-            <Coin :coin="tempCoin" />
+            <Coin :coin="user?.coin?.zem" />
           </span>
 
         </p>
@@ -37,55 +37,37 @@ definePageMeta({
   // middleware: 'auth',
 })
 
-const tempCoin = 10
 
+const { data: coinData, error } = await useCustomAsyncFetch<{ result: any }>('/items', getZempieFetchOptions('get', true))
+const activeCoin = ref()
 
-const { data: coinData, error } = await useCustomAsyncFetch('/items', getZempieFetchOptions('get', true))
-// const coins = computed(() => coinData.value?.result?.refitems)
+const coins = computed(() => {
+  const coin = coinData.value?.result?.refitems.map((item) => {
+    return {
+      id: item.id,
+      name: item.name,
+      zem: item.quantity,
+      img: `/images/coins/${item.img}.png`
+    }
+  })
+  const result = coinData.value?.result.shipitems.map((item) => {
+    const refItem = coin.find(({ id }) => id === item.refitem_idx)
+    return {
+      ...refItem,
+      price: item.price
+    }
+  })
 
-const coins = [
-  {
-    id: 1,
-    zem: 10,
-    price: 1200,
-    img: '/images/coins/shopItem_img_money_small_01.png'
-  },
-  {
-    id: 2,
-    zem: 50,
-    price: 6000,
-    img: '/images/coins/shopItem_img_money_small_02.png'
-  },
-  {
-    id: 3,
-    zem: 100,
-    price: 12000,
-    img: '/images/coins/shopItem_img_money_small_03.png'
-  },
-  {
-    id: 4,
-    zem: 300,
-    price: 36000,
-    img: '/images/coins/shopItem_img_money_mid_04.png'
-  },
-  {
-    id: 5,
-    zem: 500,
-    price: 60000,
-    img: '/images/coins/shopItem_img_money_mid_05.png'
-  },
-  {
-    id: 6,
-    zem: 1000,
-    price: 120000,
-    img: '/images/coins/shopItem_img_money_mid_06.png'
-  },
-]
-const activeCoin = ref(coins[0])
+  activeCoin.value = result && result[0]
+
+  return result
+})
+
 
 function activateCoin(coin) {
   activeCoin.value = coin
 }
+
 
 
 async function purchaseCoin() {
@@ -96,14 +78,37 @@ async function purchaseCoin() {
       const payload = {
         price: activeCoin.value.price,
         name: activeCoin.value.zem + 'ZEM',
-        user_id: user.value.id,
+        user_id: String(user.value.id),
         username: user.value.name,
         user_email: user.value.email,
         item_id: activeCoin.value.id,
         qty: 1,
       };
 
-      (await Bootpay()).requestPay(payload)
+      try {
+        const response = (await Bootpay()).requestPay(payload)
+
+        switch (response.event) {
+
+        }
+      } catch (e) {
+        // 결제 진행중 오류 발생
+        // e.error_code - 부트페이 오류 코드
+        // e.pg_error_code - PG 오류 코드
+        // e.message - 오류 내용
+        console.log(e.message)
+        switch (e.event) {
+          case 'cancel':
+            // 사용자가 결제창을 닫을때 호출
+            console.log(e.message);
+            break
+          case 'error':
+            // 결제 승인 중 오류 발생시 호출
+            console.log(e.error_code);
+            break
+        }
+      }
+
 
 
 
