@@ -14,7 +14,6 @@
 
         </p>
         <div class="card-container row">
-          activeCoin{{ activeCoin }}
           <CoinCard v-for="coin in coins" :coin="coin" :key="coin?.id" :isActive="activeCoin?.id === coin?.id"
             @activate="activateCoin(coin)" />
         </div>
@@ -69,7 +68,7 @@ const coins = computed(() => {
   activeCoin.value = result && result[0]
 
   if (isFlutter.value) {
-    flutterBridge().initPurchase(coins.value)
+    flutterBridge().initPurchase({ store_code: result.store_code })
       .then((res) => {
         console.log('res', res)
         result = res
