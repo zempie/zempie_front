@@ -56,7 +56,8 @@ const coins = computed(() => {
     const refItem = coin.find(({ id }) => id === item.refitem_id)
     return {
       ...refItem,
-      price: item.price
+      price: item.price,
+      store_code: item.store_code
     }
   })
 
@@ -85,7 +86,7 @@ async function purchaseCoin() {
   if (user.value) {
     if (isFlutter.value) {
       //TODO: 인앱결제 연결 
-      const result = await flutterBridge().purchaseItem(activeCoin.value.id)
+      const result = await flutterBridge().purchaseItem(activeCoin.value.store_code)
       console.log('purchase: ', result)
     } else {
       const payload = {
@@ -105,7 +106,10 @@ async function purchaseCoin() {
         switch (response.event) {
 
           case 'done':
-            const bpData = response.data
+            const bpData = {
+              receipt: response.data
+
+            }
 
             const { data, error } = await useCustomAsyncFetch<{ result: any }>('/payment/web', getZempieFetchOptions('post', true, bpData))
 
