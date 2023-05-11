@@ -88,6 +88,7 @@ function activateCoin(coin) {
 
 
 async function purchaseCoin() {
+
   if (user.value) {
     if (isFlutter.value) {
       //TODO: 인앱결제 연결 
@@ -119,7 +120,7 @@ async function purchaseCoin() {
               const { update } = data.value.result?.data
               useUser().updateUserCoin(update.user.coin)
               useCoin().setCoinReceipt(response.data)
-              router.push($localePath('/purchase-done'))
+              router.push($localePath('/coin/purchase-done'))
 
             }
             break;
