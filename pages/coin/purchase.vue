@@ -43,7 +43,7 @@ definePageMeta({
 const { data: coinData, error } = await useCustomAsyncFetch<{ result: any }>('/items', getZempieFetchOptions('get', true))
 const activeCoin = ref()
 
-const coins = computed(async () => {
+const coins = computed(() => {
   const coin = coinData.value?.result?.refitems.map((item) => {
     return {
       id: item.id,
@@ -52,7 +52,7 @@ const coins = computed(async () => {
       img: `/images/coins/${item.img}.png`
     }
   })
-  const result = coinData.value?.result.shipitems.map((item) => {
+  let result = coinData.value?.result.shipitems.map((item) => {
     const refItem = coin.find(({ id }) => id === item.refitem_idx)
     return {
       ...refItem,
@@ -63,13 +63,17 @@ const coins = computed(async () => {
   activeCoin.value = result && result[0]
 
   if (isFlutter.value) {
-    const initshop = await flutterBridge().initPurchase(coins)
-    console.log('inishop', initshop)
+    flutterBridge().initPurchase(coins.value)
+      .then((res) => {
+        console.log('res', res)
+        result = res
+      })
+    console.log('inishop', result)
   }
 
   return result
 })
-
+console.log('coins: ', coins.value)
 
 function activateCoin(coin) {
   activeCoin.value = coin
