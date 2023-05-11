@@ -53,7 +53,7 @@ const coins = computed(() => {
     }
   })
   let result = coinData.value?.result.shipitems.map((item) => {
-    const refItem = coin.find(({ id }) => id === item.refitem_idx)
+    const refItem = coin.find(({ id }) => id === item.refitem_id)
     return {
       ...refItem,
       price: item.price
@@ -73,7 +73,6 @@ const coins = computed(() => {
 
   return result
 })
-console.log('coins: ', coins.value)
 
 function activateCoin(coin) {
   activeCoin.value = coin
