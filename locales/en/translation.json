@@ -922,5 +922,21 @@
   "share.link.facabook": "Share on Facebook",
   "share.zempie.title": "Zempie's",
   "share.zempie.nickname.title": "",
-  "goto.web":"Go to website"
+  "goto.web": "Go to website",
+  "playgame": "Play Game",
+  "download": "Download",
+  "purchase": "Purchase",
+  "charge": "Charge",
+  "inventory": "__STRING_NOT_TRANSLATED__",
+  "hi": "Hello",
+  "my": "with my",
+  "won": "KRW",
+  "inform1": "",
+  "inform.charge": "will charge up",
+  "pay": "Payment",
+  "community.subscribe.done": "__STRING_NOT_TRANSLATED__",
+  "community.unsubscribe.done": "__STRING_NOT_TRANSLATED__",
+  "about.us": "About us",
+  "created": "Created",
+  "other.communities": "Other communities"
 }

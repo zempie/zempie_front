@@ -920,5 +920,21 @@
   "share.link.facabook": "페이스북에 공유하기",
   "share.zempie.title": "Zempie의",
   "share.zempie.nickname.title": "님",
-  "goto.web":"웹으로 이동"
+  "goto.web": "웹으로 이동",
+  "playgame": "게임 플레이",
+  "download": "다운로드",
+  "purchase": "구매",
+  "charge": "충전",
+  "inventory": "소유",
+  "hi": "안녕하세요",
+  "my": "내",
+  "won": "원",
+  "inform1": "으로",
+  "inform.charge": "을 충전합니다.",
+  "pay": "결제",
+  "community.subscribe.done": "가입이 완료되었습니다.",
+  "community.unsubscribe.done": "탈퇴가 완료되었습니다.",
+  "about.us": "About us",
+  "created": "생성일",
+  "other.communities": "다른 커뮤니티"
 }

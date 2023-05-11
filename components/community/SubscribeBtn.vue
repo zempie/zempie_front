@@ -55,7 +55,7 @@ const isLogin = computed(() => useUser().user.value.isLogin)
 const communityId = computed(() => props.community.id)
 
 async function subscribe() {
-  if (isLogin) {
+  if (isLogin.value) {
     const { data, error } = await useCustomAsyncFetch(`/community/${communityId.value}/subscribe`, getComFetchOptions('post', true))
     if (!error.value) {
       emit('refresh')
