@@ -40,7 +40,7 @@ const { $localePath } = useNuxtApp()
 const showChannelList = ref(true)
 const channelName = computed(() => route.params.channel_name)
 
-const props = defineProps({
+defineProps({
   community: {
     type: Object as PropType<ICommunity>,
     default: [],

@@ -172,6 +172,7 @@ interface IDraft {
 }
 
 const { t, locale } = useI18n()
+const route = useRoute()
 const isVideoUploading = ref(false)
 const isAudioUploading = ref(false)
 
@@ -192,7 +193,6 @@ const props = defineProps({
   },
 
 })
-console.log(props.feed)
 
 const initFiles = _.cloneDeep(props.feed?.attatchment_files)
 
@@ -251,9 +251,6 @@ const saveId = ref(Date.now())
 const gameInfo = computed(() => useGame().game.value.info)
 const communityInfo = computed(() => useCommunity().community.value.info)
 
-const flutterFile = ref()
-const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
-
 await communityFetch()
 
 onBeforeMount(() => {
@@ -303,13 +300,26 @@ onMounted(async () => {
   }
 
 
-  if (communityInfo.value) {
-    console.log('communityInfo.value', communityInfo.value)
+  if (communityInfo.value && !props.isEdit) {
+    const currChannelName = route.params.channel_name
+    let targetChannel = null
 
-    //general 채널 디폴트 카테고리로 설정
-    const generalChannel = communityInfo.value.channels.find(channel => {
-      return channel.title === 'general'
-    })
+    //선택한 채널 있는 경우
+    if (currChannelName) {
+      targetChannel = communityInfo.value.channels.find(channel => {
+        return channel.title === 'currChannelName'
+      })
+    } else {
+      //지금 선택된 채널 없으면 general 채널 디폴트 카테고리로 설정
+
+      targetChannel = communityInfo.value.channels.find(channel => {
+        if (channel.title === 'general') {
+          return channel.title === 'general'
+        } else {
+          return communityInfo.value.channels[0]
+        }
+      })
+    }
 
 
     selectedGroup.value = [
@@ -325,7 +335,7 @@ onMounted(async () => {
         }
       }, {
         type: 'channel',
-        channel: generalChannel
+        channel: targetChannel
       }]
     ]
   }
