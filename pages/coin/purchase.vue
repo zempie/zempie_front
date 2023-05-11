@@ -68,7 +68,7 @@ const coins = computed(() => {
   activeCoin.value = result && result[0]
 
   if (isFlutter.value) {
-    flutterBridge().initPurchase({ store_code: result.store_code })
+    flutterBridge().initPurchase(result)
       .then((res) => {
         console.log('res', res)
         result = res
