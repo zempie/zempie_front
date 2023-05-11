@@ -307,7 +307,7 @@ onMounted(async () => {
     //선택한 채널 있는 경우
     if (currChannelName) {
       targetChannel = communityInfo.value.channels.find(channel => {
-        return channel.title === 'currChannelName'
+        return channel.title === currChannelName
       })
     } else {
       //지금 선택된 채널 없으면 general 채널 디폴트 카테고리로 설정
