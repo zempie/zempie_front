@@ -14,6 +14,7 @@
 
         </p>
         <div class="card-container row">
+          activeCoin{{ activeCoin }}
           <CoinCard v-for="coin in coins" :coin="coin" :key="coin?.id" :isActive="activeCoin?.id === coin?.id"
             @activate="activateCoin(coin)" />
         </div>
@@ -42,7 +43,7 @@ definePageMeta({
 const { data: coinData, error } = await useCustomAsyncFetch<{ result: any }>('/items', getZempieFetchOptions('get', true))
 const activeCoin = ref()
 
-const coins = computed(() => {
+const coins = computed(async () => {
   const coin = coinData.value?.result?.refitems.map((item) => {
     return {
       id: item.id,
@@ -61,6 +62,11 @@ const coins = computed(() => {
 
   activeCoin.value = result && result[0]
 
+  if (isFlutter.value) {
+    const initshop = await flutterBridge().initPurchase(coins)
+    console.log('inishop', initshop)
+  }
+
   return result
 })
 
@@ -71,11 +77,13 @@ function activateCoin(coin) {
 
 
 
+
 async function purchaseCoin() {
   if (user.value) {
     if (isFlutter.value) {
       //TODO: 인앱결제 연결 
-      await flutterBridge().initPurchase(coins)
+      const result = await flutterBridge().purchaseItem(activeCoin.value.id)
+      console.log('purchase: ', result)
     } else {
       const payload = {
         price: activeCoin.value.price,
