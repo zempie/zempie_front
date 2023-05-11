@@ -88,7 +88,6 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
 
       options.headers = options.headers || {}
 
-      console.log(options.headers)
       useCommon().setLoading()
       console.log('[fetch request]')
     },
@@ -104,6 +103,7 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
   const config = useRuntimeConfig()
   const { $cookies, $localePath } = useNuxtApp()
   const router = useRouter()
+
 
   return await $fetch<T>(url, {
     ...options,

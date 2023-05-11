@@ -9,6 +9,7 @@ function baseOption(method: string, withCredentials: boolean, body?: object) {
     method: method,
     headers: {},
     initialCache: false,
+    credentials: withCredentials
   }
 
   if (method === 'post' || method === 'put' || method === 'delete') {

@@ -31,7 +31,6 @@ export default function () {
 
     },
     async signInFacebook() {
-
       const response = await callHandler("signInFacebook");
       console.log('respon', response)
       const result = JSON.parse(response);

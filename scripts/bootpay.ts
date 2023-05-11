@@ -36,6 +36,9 @@ export default async function () {
             "price": params.price
           }
         ],
+        "metadata": {
+          "id": params.item_id,
+        }
 
       })
       return response
