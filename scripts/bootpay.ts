@@ -15,7 +15,7 @@ export default async function () {
 
   const BootPay = {
     async requestPay(params: IReqParam) {
-      return await BP.requestPayment({
+      const response = await BP.requestPayment({
         "application_id": config.BOOTPAY_JS_KEY,
         "price": params.price,
         "order_name": "ZEM 구매",
@@ -38,6 +38,7 @@ export default async function () {
         ],
 
       })
+      return response
     }
   }
   return BootPay

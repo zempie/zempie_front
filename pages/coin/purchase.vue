@@ -30,6 +30,7 @@
 </template>
 <script setup lang="ts">
 import Bootpay from '~~/scripts/bootpay'
+import flutterBridge from '~~/scripts/flutterBridge'
 const user = computed(() => useUser().user.value.info)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
@@ -74,6 +75,7 @@ async function purchaseCoin() {
   if (user.value) {
     if (isFlutter.value) {
       //TODO: 인앱결제 연결 
+      await flutterBridge().initPurchase(coins)
     } else {
       const payload = {
         price: activeCoin.value.price,
@@ -86,9 +88,18 @@ async function purchaseCoin() {
       };
 
       try {
-        const response = (await Bootpay()).requestPay(payload)
+        const response = await (await Bootpay()).requestPay(payload)
+
 
         switch (response.event) {
+
+          case 'done':
+            const bpData = response.data
+
+            const { data, error } = await useCustomAsyncFetch<{ result: any }>('/payment/web', getZempieFetchOptions('post', true, bpData))
+
+            break;
+
 
         }
       } catch (e) {

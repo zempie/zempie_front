@@ -214,16 +214,5 @@ export const post = {
   upload(obj: any) {
     return communityFetch('post', `/post`, obj, true);
   },
-
-  // delete(postId: string) {
-  //   return communityFetch('delete', `/post/${postId}`, undefined, true)
-  // },
-  // like(postId: string) {
-  //   return communityFetch('post', `/post/${postId}/like`, undefined, true)
-  // },
-  // unlike(postId: string) {
-  //   return communityFetch('post', `/post/${postId}/unlike`, undefined, true);
-  // }
-
 }
 
