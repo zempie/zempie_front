@@ -2,14 +2,13 @@ import { getAuth, getIdToken } from "firebase/auth";
 
 function baseOption(method: string, withCredentials: boolean, body?: object) {
   const config = useRuntimeConfig();
-  const accessToken = useCookie(config.COOKIE_NAME)
 
   const options = {
     key: `${Date.now()}`,
     method: method,
     headers: {},
     initialCache: false,
-    credentials: withCredentials
+    // credentials: withCredentials
   }
 
   if (method === 'post' || method === 'put' || method === 'delete') {
