@@ -32,8 +32,13 @@
 <script setup lang="ts">
 import Bootpay from '~~/scripts/bootpay'
 import flutterBridge from '~~/scripts/flutterBridge'
+
+const router = useRouter()
+const { $localePath } = useNuxtApp()
+
 const user = computed(() => useUser().user.value.info)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+
 
 definePageMeta({
   // middleware: 'auth',
@@ -101,18 +106,22 @@ async function purchaseCoin() {
 
       try {
         const response = await (await Bootpay()).requestPay(payload)
-
-
         switch (response.event) {
 
           case 'done':
             const bpData = {
               receipt: response.data
-
             }
 
-            const { data, error } = await useCustomAsyncFetch<{ result: any }>('/payment/web', getZempieFetchOptions('post', true, bpData))
+            const { data, error } = await useCustomAsyncFetch<{ result: { data: { receipt_url: string, update: { user: { coin: { before_zem: number, zem: number, pie: number } }, message: string } } } }>('/payment/web', getZempieFetchOptions('post', true, bpData))
 
+            if (data.value.result?.data) {
+              const { update } = data.value.result?.data
+              useUser().updateUserCoin(update.user.coin)
+              useCoin().setCoinReceipt(response.data)
+              router.push($localePath('/purchase-done'))
+
+            }
             break;
 
 

@@ -57,7 +57,11 @@ export default function () {
   const updateFbToken = (token: string) => {
     user.value.fUser.accessToken = token
   }
+  const updateUserCoin = (coin: { zem: number, pie: number }) => {
+    user.value.info.coin.pie = coin.pie
+    user.value.info.coin.zem = coin.zem
 
+  }
 
   const logout = async () => {
 
@@ -125,6 +129,7 @@ export default function () {
     setLoadDone,
     setUserInfo,
     updateUserKey,
-    updateFbToken
+    updateFbToken,
+    updateUserCoin
   }
 }

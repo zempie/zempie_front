@@ -9,24 +9,24 @@
           <h2>결제완료</h2>
           <p class="my-zem">
             <b class="mr5">내 ZEM</b>
-            <Coin :coin="tempCoin" />
+            <Coin :coin="user.coin.zem" />
           </p>
         </div>
         <div class="mt20">
           <p class="font18 text-bold pb10">{{ user?.nickname }}의 주문이 완료되었습니다.</p>
-          <p class="font16 ">주문확인 번호 <span class="zem-color">{{ tempOrdNum }}</span></p>
+          <p class="font16 ">주문확인 번호 <span class="zem-color">{{ receipt?.order_id }}</span></p>
 
           <p class="mt30 font18 text-bold">주문 상품 </p>
           <hr />
 
           <p class="font16 row product-info mt10 mb30">
-            <span>상품명 {{ prodName }}</span>
-            <span> 가격 <span class="zem-color">{{ prodPrice }}원</span></span>
+            <span>상품명 {{ receipt?.order_name }}</span>
+            <span> 가격 <span class="zem-color">{{ receipt?.price }}원</span></span>
           </p>
 
           <p class="font18 text-bold">결제방법</p>
           <hr />
-          {{ purchaseMethod }}
+          {{ receipt?.method }}
 
         </div>
 
@@ -44,13 +44,14 @@
 </template>
 <script setup lang="ts">
 const user = computed(() => useUser().user.value.info)
+const receipt = computed(() => useCoin().coin.value.receipt)
 
 //TODO: temp
-const tempCoin = 10
-const tempOrdNum = 'djasksdjk232edja2'
-const prodName = '120Cube'
-const prodPrice = 1100
-const purchaseMethod = '결제방법 서버에서! '
+// const tempCoin = 10
+// const tempOrdNum = 'djasksdjk232edja2'
+// const prodName = '120Cube'
+// const prodPrice = 1100
+// const purchaseMethod = '결제방법 서버에서! '
 </script>
 <style scoped lang="scss">
 .purchase-container {
