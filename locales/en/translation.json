@@ -938,5 +938,14 @@
   "community.unsubscribe.done": "__STRING_NOT_TRANSLATED__",
   "about.us": "About us",
   "created": "Created",
-  "other.communities": "Other communities"
+  "other.communities": "Other communities",
+  "enjoy.zempie": "__STRING_NOT_TRANSLATED__",
+  "payment.done": "__STRING_NOT_TRANSLATED__",
+  "payment.done.info": "__STRING_NOT_TRANSLATED__",
+  "order.confirm.id": "__STRING_NOT_TRANSLATED__",
+  "order.product": "__STRING_NOT_TRANSLATED__",
+  "product.name": "__STRING_NOT_TRANSLATED__",
+  "payment.method": "__STRING_NOT_TRANSLATED__",
+  "payment.warning": "__STRING_NOT_TRANSLATED__",
+  "price":"__STRING_NOT_TRANSLATED__"
 }

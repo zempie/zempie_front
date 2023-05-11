@@ -2,40 +2,40 @@
   <div class="content">
     <div class="purchase-container">
       <div class="top flex content-center items-center">
-        <h3><span class="zem-color"> {{ user?.nickname }}({{ user?.name }})</span>님, 이제 젬파이를 즐겨보세요!</h3>
+        <h3><span class="zem-color"> {{ user?.nickname }}({{ user?.name }})</span>{{ $t('enjoy.zempie') }}</h3>
       </div>
       <div class="purchase-info">
         <div class="row justify-between text-bold">
-          <h2>결제완료</h2>
+          <h2>{{ $t('payment.done') }}</h2>
           <p class="my-zem">
-            <b class="mr5">내 ZEM</b>
+            <b class="mr5">{{ $t('my') }}ZEM</b>
             <Coin :coin="user.coin.zem" />
           </p>
         </div>
         <div class="mt20">
-          <p class="font18 text-bold pb10">{{ user?.nickname }}의 주문이 완료되었습니다.</p>
-          <p class="font16 ">주문확인 번호 <span class="zem-color">{{ receipt?.order_id }}</span></p>
+          <p class="font18 text-bold pb10">{{ user?.nickname }}{{ $t('payment.done.info') }}</p>
+          <p class="font16 ">{{ $t('order.confirm.id') }} <span class="zem-color">{{ receipt?.order_id }}</span>
+          </p>
 
-          <p class="mt30 font18 text-bold">주문 상품 </p>
+          <p class="mt30 font18 text-bold">{{ $t('order.product') }} </p>
           <hr />
 
           <p class="font16 row product-info mt10 mb30">
-            <span>상품명 {{ receipt?.order_name }}</span>
-            <span> 가격 <span class="zem-color">{{ receipt?.price }}원</span></span>
+            <span>{{ $t('product.name') }} {{ receipt?.metadata?.item_name }}</span>
+            <span> {{ $t('price') }} <span class="zem-color">{{ receipt?.price }}{{ $t('won') }}</span></span>
           </p>
 
-          <p class="font18 text-bold">결제방법</p>
+          <p class="font18 text-bold">{{ $t('payment.method') }}</p>
           <hr />
-          {{ receipt?.method }}
-
+          <p class="font16">{{ receipt?.method }}</p>
         </div>
-
       </div>
       <div class="bottom">
-        <p class="flex justify-end"> <button class="btn-default">확인</button></p>
+        <p class="flex justify-end"> <button class="btn-default" @click="$router.push($localePath('/'))">{{ $t('confirm')
+        }}</button></p>
       </div>
       <p class="warning-info">
-        <li> 구매한 지 7일이 경과하지 않았으며 사용하지 않은 상품만 청약 철회할 수 있습니다. 더 자세한 내용은 젬파이 고객센터로 연락주시기 바랍니다.
+        <li> {{ $t('payment.warning') }}
         </li>
       </p>
     </div>
@@ -43,6 +43,8 @@
   </div>
 </template>
 <script setup lang="ts">
+const { $localePath } = useNuxtApp()
+
 const user = computed(() => useUser().user.value.info)
 const receipt = computed(() => useCoin().coin.value.receipt)
 

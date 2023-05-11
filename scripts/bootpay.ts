@@ -37,7 +37,8 @@ export default async function () {
           }
         ],
         "metadata": {
-          "id": params.item_id,
+          "refitem_id": params.item_id,
+          "item_name": params.name
         }
 
       })
