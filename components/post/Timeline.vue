@@ -13,11 +13,11 @@
               isLogin
                 ? (isTextEditorOpen = true)
                 : useModal().openLoginModal()
-            " />
+              " />
             <slot v-else name="communityInput" />
           </dt>
           <dd>
-            <a><i class="uil uil-message"></i></a>
+            <!-- <a><i class="uil uil-message"></i></a> -->
           </dd>
         </dl>
       </div>

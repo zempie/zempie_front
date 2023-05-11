@@ -9,7 +9,6 @@
         <i style="font-size: 20px; padding: 20px;" @click="showChannelList = !showChannelList"
           :class="showChannelList ? 'uil uil-angle-up' : 'uil uil-angle-down'"></i>
       </div>
-
       <TransitionGroup name="list">
         <ul v-if="showChannelList">
           <li :class="['channel', { active: !channelName }]"
@@ -23,7 +22,7 @@
               $router.push(
                 $localePath(`/community/${community.id}/${channel.title}`)
               )
-            ">
+              ">
             <span>{{ channel.title }}</span>
           </li>
         </ul>
@@ -32,8 +31,8 @@
   </dt>
 </template>
 <script setup lang="ts">
-import { PropType } from 'vue'
-import { ICommunity } from '~~/types'
+import { PropType } from "vue"
+import { ICommunity } from "~~/types"
 
 const route = useRoute()
 const { $localePath } = useNuxtApp()
@@ -94,7 +93,6 @@ function onResize() {
     display: flex;
     border-bottom: #e9e9e9 1px solid;
     align-items: center;
-
     justify-content: space-between;
 
     h2 {
@@ -108,46 +106,6 @@ function onResize() {
     i {
       font-size: 20px;
       padding: 20px;
-      // display: none;
-    }
-  }
-}
-
-.channel {
-  opacity: 0.5;
-
-  &.active,
-  &:hover {
-    opacity: 1;
-  }
-}
-
-@media all and (max-width: 479px) {
-  .ta-channel-list {
-    div {
-      i {
-        // display: block;
-      }
-    }
-  }
-}
-
-@media all and (min-width: 480px) and (max-width: 767px) {
-  .ta-channel-list {
-    div {
-      i {
-        // display: block;
-      }
-    }
-  }
-}
-
-@media all and (min-width: 768px) and (max-width: 991px) {
-  .ta-channel-list {
-    div {
-      i {
-        // display: block;
-      }
     }
   }
 }

@@ -935,5 +935,8 @@
   "inform.charge": "will charge up",
   "pay": "Payment",
   "community.subscribe.done": "__STRING_NOT_TRANSLATED__",
-  "community.unsubscribe.done": "__STRING_NOT_TRANSLATED__"
+  "community.unsubscribe.done": "__STRING_NOT_TRANSLATED__",
+  "about.us": "About us",
+  "created": "Created",
+  "other.communities": "Other communities"
 }

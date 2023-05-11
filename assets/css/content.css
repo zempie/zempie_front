@@ -2431,6 +2431,16 @@
   background: rgba(51, 51, 51, 0.8);
 }
 
+.ta-channel-list .channel {
+  opacity: 0.5;
+}
+
+
+.ta-channel-list>ul .active,
+.ta-channel-list .channel:hover {
+  opacity: 1;
+}
+
 @media all and (max-width: 479px) {}
 
 @media all and (min-width: 480px) and (max-width: 767px) {}

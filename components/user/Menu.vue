@@ -43,7 +43,7 @@
           <div class="zem-coin">
             <h2>{{ $t('purchase') }}</h2>
             <div>
-              <NuxtLink class="pointer" :to="$localePath(`/coin/purchase`)" target="_blank">
+              <NuxtLink class="pointer" :to="$localePath(`/coin/purchase`)" :target="!isFlutter && '_blank'">
                 ZEM {{ $t('charge') }}
               </NuxtLink>
               <div class="row justify-between">
@@ -75,6 +75,7 @@ const router = useRouter()
 const userMenu = ref()
 
 const user = computed(() => useUser().user.value.info)
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
 
 function logout() {

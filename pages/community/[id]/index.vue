@@ -2,14 +2,14 @@
   <NuxtLayout name="community">
     <ClientOnly>
       <div>
-        <dl class="three-area" v-if="isPending">
+        <!-- <dl class="three-area" v-if="pending">
           <CommunityChannelListSk />
           <dd>
             <TimelineSk />
           </dd>
           <CommunityAboutSk />
-        </dl>
-        <dl class="three-area" v-else>
+        </dl> -->
+        <dl class="three-area">
           <CommunityChannelList :community="communityInfo" />
           <dd>
             <PostTimeline type="community" :isSubscribed="communityInfo?.is_subscribed" :key="communityInfo?.id">
@@ -18,24 +18,24 @@
                   isLogin
                     ? !communityInfo?.is_subscribed && (needSubscribe = true)
                     : useModal().openLoginModal()
-                " />
+                  " />
               </template>
             </PostTimeline>
           </dd>
           <dt>
             <div class="ta-about">
-              <h2>About us</h2>
+              <h2>{{ $t('about.us') }}</h2>
               <div>
                 {{ communityInfo?.description }}
               </div>
               <dl>
-                <dt>Created</dt>
+                <dt>{{ $t('created') }}</dt>
                 <dd>{{ createdDate }}</dd>
               </dl>
             </div>
             <div class="ta-groups">
-              <h2>Other communities</h2>
-              <CommunityList :communities="communities" :isLoading="isPending" />
+              <h2>{{ $t('other.communities') }}</h2>
+              <CommunityList :communities="communities" :isLoading="pending" />
             </div>
           </dt>
         </dl>
@@ -82,18 +82,10 @@ import shared from '~~/scripts/shared'
 const MAX_LIST_SIZE = 5
 
 const { t } = useI18n()
-const { x, y } = useWindowScroll()
 
 const route = useRoute()
-const router = useRouter()
-const nuxtApp = useNuxtApp()
-const config = useRuntimeConfig()
-const accessToken = useCookie(config.COOKIE_NAME).value
 
 const limit = ref(MAX_LIST_SIZE)
-const offset = ref(0)
-const communities = ref([])
-const isPending = ref(true)
 const needSubscribe = ref(false)
 
 const isLogin = computed(() => useUser().user.value.isLogin)
@@ -125,38 +117,22 @@ useCommunity().community.value.info = data.value
 shared.createHeadMeta(`${data.value.name}`, `${data.value.description}`, `${data.value.profile_img}`)
 
 
-onMounted(async () => {
-
-  await fetch()
-})
-
 onBeforeUnmount(() => {
   useCommunity().resetCommunity()
 })
 
-onBeforeUnmount(() => {
-  console.log(y.value)
-  // useScroll().setScroll(y.value)
-  // route.meta.scroll = { x: x.value, y: y.value, }
-  // console.log('unmount', window.scrollY)
+
+const { data: comList, pending } = await useFetch<any>(
+  createQueryUrl(`/community/list`, { limit: limit.value, }), getComFetchOptions('get', true)
+)
+
+const communities = computed(() => {
+  return comList.value.filter((elem) => {
+    return elem.id !== communityId.value
+  })
 })
-async function fetch() {
-  const query = {
-    limit: limit.value,
-    offset: offset.value,
-  }
 
-  const { data } = await useFetch<any>(
-    createQueryUrl(`/community/list`, query), getComFetchOptions('get', true)
-  )
 
-  if (data.value.length) {
-    communities.value = data.value?.filter((elem) => {
-      return elem.id !== communityId.value
-    })
-  }
-  isPending.value = false
-}
 
 async function subscribe() {
   const { data, error } = await useCustomAsyncFetch(`/community/${communityId.value}/subscribe`, getComFetchOptions('post', true))

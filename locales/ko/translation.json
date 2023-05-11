@@ -933,5 +933,8 @@
   "inform.charge": "을 충전합니다.",
   "pay": "결제",
   "community.subscribe.done": "가입이 완료되었습니다.",
-  "community.unsubscribe.done": "탈퇴가 완료되었습니다."
+  "community.unsubscribe.done": "탈퇴가 완료되었습니다.",
+  "about.us": "About us",
+  "created": "생성일",
+  "other.communities": "다른 커뮤니티"
 }
