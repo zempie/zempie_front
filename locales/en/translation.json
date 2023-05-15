@@ -947,5 +947,9 @@
   "product.name": "__STRING_NOT_TRANSLATED__",
   "payment.method": "__STRING_NOT_TRANSLATED__",
   "payment.warning": "__STRING_NOT_TRANSLATED__",
-  "price":"__STRING_NOT_TRANSLATED__"
+  "price": "Price",
+  "load.post": "Load",
+  "draft.post": "Draft",
+  "update.post": "Update",
+  "save.post": "Save"
 }
