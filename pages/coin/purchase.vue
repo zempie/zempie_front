@@ -44,6 +44,14 @@ definePageMeta({
 })
 
 
+onMounted(() => {
+  window.addEventListener("message", receiveMessage, false);
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener("message", receiveMessage, false);
+})
+
 const { data: coinData, error } = await useCustomAsyncFetch<{ result: any }>('/items', getZempieFetchOptions('get', true))
 const activeCoin = ref()
 
@@ -84,7 +92,30 @@ function activateCoin(coin) {
 }
 
 
+async function receiveMessage(message: any) {
+  if (message.data) {
+    const { type, receipt } = message.data
+    switch (type) {
+      case 'purchasing_success':
+        const { data, error } = await useCustomAsyncFetch<{
+          result: {
+            data: {
+              receipt_url: string, update: {
+                user: { coin: { before_zem: number, zem: number, pie: number } },
+                message: string
+              }
+            }
+          }
+        }>('/payment/iap', getZempieFetchOptions('post', true, { receipt }))
 
+        //TODO receipt 보내야함
+        const result = await flutterBridge().consumeReceipt(data.value.result.data)
+
+
+        break;
+    }
+  }
+}
 
 async function purchaseCoin() {
 
@@ -93,6 +124,7 @@ async function purchaseCoin() {
       //TODO: 인앱결제 연결 
       const result = await flutterBridge().purchaseItem(activeCoin.value.store_code)
       console.log('purchase: ', result)
+
     } else {
       const payload = {
         price: activeCoin.value.price,
@@ -113,7 +145,16 @@ async function purchaseCoin() {
               receipt: response.data
             }
 
-            const { data, error } = await useCustomAsyncFetch<{ result: { data: { receipt_url: string, update: { user: { coin: { before_zem: number, zem: number, pie: number } }, message: string } } } }>('/payment/web', getZempieFetchOptions('post', true, bpData))
+            const { data, error } = await useCustomAsyncFetch<{
+              result: {
+                data: {
+                  receipt_url: string, update: {
+                    user: { coin: { before_zem: number, zem: number, pie: number } },
+                    message: string
+                  }
+                }
+              }
+            }>('/payment/web', getZempieFetchOptions('post', true, bpData))
 
             if (data.value.result?.data) {
               const { update } = data.value.result?.data
@@ -143,11 +184,6 @@ async function purchaseCoin() {
             break
         }
       }
-
-
-
-
-
     }
   }
 

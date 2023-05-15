@@ -67,11 +67,10 @@
           </div>
           <div class="header-info ml0" v-if="!isLoading && isLogin" :key="user.id">
             <NotificationHeaderButton />
+            <DmHeaderButton />
             <UserMenu />
-            <!-- <DmHeaderButton /> -->
           </div>
           <div v-else-if="!isLoading && !isLogin" class="header-login">
-
             <NuxtLink :to="$localePath('/login')">
               <button class="btn-default" id="loginBtn" style="display: flex;">
                 <i class="uil uil-user"></i>{{ t('login') }}

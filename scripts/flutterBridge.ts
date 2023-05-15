@@ -78,7 +78,7 @@ export default function () {
       const result = JSON.parse(response);
       return result;
     },
-    async purchaseItem(productId) {
+    async purchaseItem(productId: string) {
       // const response = await webViewJavaScriptBridge.sendMessage({
       //   action: "signInGoogle",
       // });
