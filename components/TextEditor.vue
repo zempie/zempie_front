@@ -92,16 +92,16 @@
         </Transition>
         <dd class="post-btn-container">
           <button v-if="draftList.length > 0" class="btn-line-small w100 mr10" id="loadPostBtn" @click="onLoadPost">
-            Load
+            {{ $t('load.post') }}
           </button>
           <button class="btn-line-small w100 mr10" id="draftPostBtn" @click="saveDraftCloseModal()">
-            Draft
+            {{ $t('draft.post') }}
           </button>
           <button v-if="isEdit" class="btn-default-samll w100" id="updatePostBtn" @click="onUpdatePost">
-            Update
+            {{ $t('update.post') }}
           </button>
           <button v-else id="submitPostBtn" class="btn-default-samll w100" @click="onSubmit">
-            Post
+            {{ $t('save.post') }}
           </button>
         </dd>
       </dl>
@@ -309,6 +309,7 @@ onMounted(async () => {
       targetChannel = communityInfo.value.channels.find(channel => {
         return channel.title === currChannelName
       })
+
     } else {
       //지금 선택된 채널 없으면 general 채널 디폴트 카테고리로 설정
 
@@ -1445,6 +1446,7 @@ function insertContet(draft: IDraft) {
 
   nextTick(() => {
     editor.value.view.dom.focus()
+    editor.value.commands.clearContent()
     editor.value.chain().focus().insertContent(draft.post_contents).run()
   })
 }

@@ -936,5 +936,18 @@
   "community.unsubscribe.done": "탈퇴가 완료되었습니다.",
   "about.us": "About us",
   "created": "생성일",
-  "other.communities": "다른 커뮤니티"
+  "other.communities": "다른 커뮤니티",
+  "enjoy.zempie": "님, 이제 젬파이를 즐겨보세요!",
+  "payment.done": "결제완료",
+  "payment.done.info": "의 주문이 완료되었습니다.",
+  "order.confirm.id": "주문확인 번호",
+  "order.product": "주문 상품",
+  "product.name": "상품명",
+  "payment.method": "결제방법",
+  "payment.warning": "구매한 지 7일이 경과하지 않았으며 사용하지 않은 상품만 청약 철회할 수 있습니다. 더 자세한 내용은 젬파이 고객센터로 연락주시기 바랍니다.",
+  "price": "가격",
+  "load.post": "초안",
+  "draft.post": "임시저장",
+  "update.post": "수정",
+  "save.post": "게시"
 }
