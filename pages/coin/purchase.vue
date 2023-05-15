@@ -97,21 +97,29 @@ async function receiveMessage(message: any) {
     const { type, receipt } = message.data
     switch (type) {
       case 'purchasing_success':
+        //TODO: 서버 코드 수정해야됨 임시로 해둔것임 
         const { data, error } = await useCustomAsyncFetch<{
           result: {
             data: {
-              receipt_url: string, update: {
+              receipt_url: string,
+              update: {
                 user: { coin: { before_zem: number, zem: number, pie: number } },
                 message: string
-              }
+              },
+              receipt: any
             }
           }
         }>('/payment/iap', getZempieFetchOptions('post', true, { receipt }))
 
         //TODO receipt 보내야함
-        const result = await flutterBridge().consumeReceipt(data.value.result.data)
+        const result = await flutterBridge().consumeReceipt(data.value.result.data.receipt)
 
-
+        if (result) {
+          const { update } = data.value.result?.data
+          useUser().updateUserCoin(update.user.coin)
+          useCoin().setCoinReceipt(data.value.result.data.receipt)
+          router.push($localePath('/coin/purchase-done'))
+        }
         break;
     }
   }
@@ -148,7 +156,8 @@ async function purchaseCoin() {
             const { data, error } = await useCustomAsyncFetch<{
               result: {
                 data: {
-                  receipt_url: string, update: {
+                  receipt_url: string,
+                  update: {
                     user: { coin: { before_zem: number, zem: number, pie: number } },
                     message: string
                   }

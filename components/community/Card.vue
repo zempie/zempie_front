@@ -1,5 +1,5 @@
 <template>
-  <li @click="$router.push($localePath(`/community/${community.id}`))">
+  <li @click.stop="$router.push($localePath(`/community/${community.id}`))">
     <div :style="{
       background: 'url(' + bannerImg + ') center center / cover no-repeat',
       'background-size': 'cover',
@@ -17,7 +17,7 @@
           $router.push(
             $localePath(`/community/${props.community.id}/members`)
           )
-        ">
+          ">
           <h4>{{ community.member_cnt }}</h4>
           <p>{{ $t('members') }}</p>
         </dd>
