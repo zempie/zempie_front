@@ -86,10 +86,11 @@
         <ul ref="commentEl" style="overflow-y: scroll ;max-height: 500px;">
           <li v-for="comment in comments" :key="comment.id">
             <Comment :comment="comment" :isEdit="isCommentEdit" @refresh="commentRefresh" @editComment="editComment"
-              @deleteComment="deleteComment" :key="comment.content" />
+              @deleteComment="deleteComment" :key="comment.content" @recomment="getRecomment" />
           </li>
         </ul>
-        <CommentInput :postId="feed.id" @addComment="addComment" />
+
+        <CommentInput :postId="feed.id" @addComment="addComment" :recomment="recomment" />
       </div>
     </ClientOnly>
     <ClientOnly>
@@ -176,7 +177,6 @@ const commentEl = ref<HTMLElement | null>(null)
 const isAddData = ref(false)
 
 const isCommentEdit = ref(false)
-const editorKey = ref(0)
 
 useInfiniteScroll(
   commentEl,
@@ -205,6 +205,9 @@ const user = ref(props.feed?.user)
 const feedContent = ref(props.feed?.content || '')
 
 const emit = defineEmits(['refresh'])
+
+//대댓글
+const recomment = ref()
 
 
 
@@ -304,59 +307,8 @@ async function commentFetch() {
   }
 
 
-
-  // async comments(post_id: string, obj: any) {
-  //     return await this.request('get', `${communityApi}post/${post_id}/comment/list`, obj, false)
-  // }
-
-  // this.$api.comments(this.feed.id, obj)
-  //     .then((res: any) => {
-  //         if (this.isAddData) {
-  //             if (res.result.length > 0) {
-  //                 this.comments = [...this.comments, ...res.result]
-  //             }
-  //             else {
-  //                 // console.log('no data')
-  //             }
-  //         }
-  //         else {
-  //             this.comments = res.result;
-  //             this.isAddData = true
-  //         }
-  //     })
-  //     .catch((err: AxiosError) => {
-
-  //     })
-  //     .finally(() => {
-
-  //     })
 }
 
-//     likeListFetch() {
-//         const obj = {
-//             post_id: this.feed.id,
-//             limit: this.limit,
-//             offset: this.offset
-//         }
-//         this.$api.likeList(obj)
-//             .then((res: AxiosResponse) => {
-//                 this.likeList = res;
-//             })
-//             .catch((err: AxiosError) => {
-
-//             })
-
-//     }
-
-function copyUrl() {
-  execCommandCopy(`${config.ZEMPIE_URL}/feed/${props.feed.id}`)
-
-  ElMessage.closeAll()
-  ElMessage({
-    message: t('copied.clipboard'),
-    type: 'success',
-  })
-}
 
 
 async function deletePost() {
@@ -404,6 +356,11 @@ function onMouseUp() {
   }
   isDragging.value = false
 }
+
+function getRecomment(comment: IComment) {
+  recomment.value = comment
+}
+
 //     /**
 //      * 댓글
 //      * */

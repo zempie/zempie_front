@@ -75,6 +75,9 @@ $zempie-main-color-hover: #f974162a;
   position: absolute;
 }
 
+.bg-red {
+  background-color: red;
+}
 
 .bg-grey-1 {
   background-color: #ededed;
@@ -93,7 +96,7 @@ $zempie-main-color-hover: #f974162a;
 }
 
 .zem-color {
-  color: #f97316;
+  color: $zempie-main-color;
 }
 
 .btn-green-small {

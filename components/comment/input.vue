@@ -3,7 +3,7 @@
     <UserAvatar :user="user" :tag="'p'" class="user" />
     <dt>
       <input type="text" v-model="content" :placeholder="$t('comment.input.placeholder')" :readonly="!isLogin"
-        @keyup.enter="isEdit ? editComment() : sendComment()" />
+        @keyup.enter="isEdit ? editComment() : sendComment()" ref="commentInput" />
     </dt>
     <dd>
       <a @click="isEdit ? editComment() : sendComment()">
@@ -14,6 +14,8 @@
 
 <script setup lang="ts">
 import _ from 'lodash'
+import { PropType } from 'vue'
+import { IComment } from '~~/types'
 
 const props = defineProps({
   postId: String,
@@ -22,6 +24,7 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  recomment: Object as PropType<IComment>
 })
 
 const content = ref(props.comment?.content || null)
@@ -31,6 +34,16 @@ const user = computed(() => useUser().user.value.info)
 const isLogin = computed(() => useUser().user.value.isLogin)
 
 const emit = defineEmits(['addComment', 'editComment'])
+const commentInput = ref()
+
+
+watch(() =>
+  (props.recomment), (recomment) => {
+    content.value = recomment?.user?.nickname
+    commentInput.value.focus()
+
+  })
+
 
 async function editComment() {
   if (!content.value) return

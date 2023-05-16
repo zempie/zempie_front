@@ -6,30 +6,33 @@
           <UserAvatar :user="comment.user" :tag="'span'" :has-router="true"></UserAvatar>
         </dt>
         <dd>
-          <h2 style="color:#000">
-            <NuxtLink :to="$localePath(`/${comment.user?.nickname}`)">
+          <h2>
+            <NuxtLink style="color:#000" :to="$localePath(`/${comment.user?.nickname}`)">
               {{ comment.user?.nickname }}</NuxtLink>
+            <span class="font13">{{ dateFormat(comment.created_at) }}</span>
           </h2>
           <div style="color: #000">
             {{ commentContent }}
           </div>
           <p style="display: inline-block">
-            <a v-if="isLiked" @click="unsetLike()">
-              <i class="xi-heart like-icon" style="color: red"></i>
-            </a>
-            <a v-else @click="setLike()">
-              <i class="uil uil-heart-sign"></i>
-            </a>
-            {{ $t('like') }} {{ likeCnt }}{{ $t('like.unit') }}
+            <i v-if="isLiked" @click="unsetLike()" class="xi-heart like-icon pointer" style="color: red"></i>
+            <i v-else class="uil uil-heart-sign pointer" @click="setLike()"></i>
+            <span class="ml5">{{ $t('like') }} {{ likeCnt }}{{ $t('like.unit') }}</span>
           </p>
+          <Recomment class="ml15" @recomment="emit('recomment', comment)" />
           <TranslateBtn :text="commentContent" @translatedText="translate" @untranslatedText="untranslatedText" />
+          <p class="zem-color" @click="handleRecomment">
+            <i class="uil uil-angle-down"></i>
+            답글 {{ }}개
+          </p>
         </dd>
+
       </dl>
+
     </dt>
 
     <dd v-if="comment.user?.uid === user?.uid">
       <el-dropdown trigger="click" ref="feedMenu" popper-class="tapl-more-dropdown">
-
         <a slot="trigger"><i class="uil uil-ellipsis-h font25 pointer"></i></a>
         <template #dropdown>
           <div slot="body" class="more-list">
@@ -80,15 +83,18 @@
 
 <script setup lang="ts">
 import _ from 'lodash'
+import Recomment from '~~/components/comment/Recomment.vue'
 import { ElDropdown, ElDialog } from 'element-plus'
 import { IComment } from '~~/types';
+import { dateFormat } from '~~/scripts/utils'
+import { PropType } from 'vue';
 
 const { $localePath } = useNuxtApp()
 
 const showDeleteModal = ref(false)
 const isCommentEdit = ref(false)
 const props = defineProps({
-  comment: Object,
+  comment: Object as PropType<IComment>,
   isEdit: {
     type: Boolean,
     default: false,
@@ -98,7 +104,7 @@ const props = defineProps({
 
 const commentContent = ref(props.comment?.content || '')
 
-const emit = defineEmits(['refresh', 'editComment', 'deleteComment'])
+const emit = defineEmits(['refresh', 'editComment', 'deleteComment', 'recomment'])
 const isLiked = ref(props.comment.is_liked)
 const likeCnt = ref(props.comment.like_cnt)
 
