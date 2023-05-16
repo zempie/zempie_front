@@ -26,8 +26,8 @@
               </NuxtLink>
             </li>
             <ClientOnly>
-              <el-dropdown trigger="click" class="menu-dropdown uppercase">
-                <span class="el-dropdown-link">
+              <el-dropdown trigger="click" class="menu-dropdown uppercase font15">
+                <span class="el-dropdown-link ">
                   GameJam
                 </span>
                 <template #dropdown>

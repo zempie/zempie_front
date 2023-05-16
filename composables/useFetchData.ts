@@ -21,6 +21,8 @@ export const createQueryUrl = (url: string, queries: object) => {
   url = url + '?_=' + Date.now()
   if (queries) {
     for (let d in queries) {
+      console.log(queries[d])
+
       if (queries[d]) url += `&${d}=${queries[d]}`
     }
   }
