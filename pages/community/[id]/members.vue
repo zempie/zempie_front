@@ -3,18 +3,20 @@
     <div>
       <dl class="area-title">
         <dt>
-          {{ $t('members') }} <span> {{ communities?.totalCount }}</span>
+          {{ $t('members') }} <span> {{ totalCount }}</span>
         </dt>
       </dl>
       <ul class="card-member" v-if="isPending">
         <UserCardSk v-for="user in 4" />
       </ul>
       <ul class="card-follow" v-else>
-        <UserCard v-for="member in communities?.result" :key="member.id" :user="member">
+        <UserCard v-for="member in members" :key="member.id" :user="member">
           <template #followBtn>
-            <UserFollowBtn :user="member" class="mt20" @refresh="refresh" />
+            <UserFollowBtn :user="member" class="mt20" />
           </template>
         </UserCard>
+        <div ref="triggerDiv"></div>
+        {{ isAddData }}
       </ul>
     </div>
   </NuxtLayout>
@@ -24,22 +26,30 @@
 import { ICommunity, IUser } from '~~/types'
 import { useI18n } from 'vue-i18n'
 import shared from '~~/scripts/shared';
-const { t } = useI18n()
 
+const LIMIT = 10
+
+const { t } = useI18n()
 const route = useRoute()
-const isPending = ref(true)
 const nuxt = useNuxtApp()
+
+
+const observer = ref<IntersectionObserver>(null)
+const triggerDiv = ref<HTMLElement | null>(null)
 
 const communityId = computed(() => route.params.id as string)
 
-nuxt.hook('page:finish', () => {
-  isPending.value = false
-})
+const limit = ref(LIMIT)
+const offset = ref(0)
+const isAddData = ref(false)
+const members = ref()
+const totalCount = ref(0)
+
 
 /**
  * seo 반영은 함수안에서 되지 않으므로 최상단에서 진행함
  */
-const { data: communityInfo } = await useAsyncData<ICommunity>('communityInfo', () =>
+const { data: communityInfo, pending: isPending } = await useAsyncData<ICommunity>('communityInfo', () =>
   $fetch(`/community/${communityId.value}`, getComFetchOptions('get', true)),
   {
     initialCache: false
@@ -48,15 +58,56 @@ const { data: communityInfo } = await useAsyncData<ICommunity>('communityInfo', 
 shared.createHeadMeta(`${communityInfo.value.name} ${t('members')} `, `${communityInfo.value.description}`, `${communityInfo.value.profile_img}`)
 
 
-//TODO:커뮤니티 많아지면 수정해야됨 : 페이징
-const {
-  data: communities,
-  refresh,
-} = await useCustomAsyncFetch<{
-  result: IUser[]
-  totalCount: number
-}>(`/community/${communityId.value}/members`, getComFetchOptions('get', true))
 
+onMounted(async () => {
+  await fetch()
+
+  if (members.value && triggerDiv.value) {
+    observer.value = new IntersectionObserver(
+      async (entries) => {
+        await handleIntersection(entries[0])
+      },
+      { root: null, threshold: 1 }
+    )
+    observer.value.observe(triggerDiv.value)
+  }
+})
+
+async function handleIntersection(target: any) {
+  if (target.isIntersecting && isAddData.value) {
+    offset.value += limit.value
+    await fetch()
+  }
+}
+
+
+async function fetch() {
+
+  const {
+    data
+  } = await useCustomAsyncFetch<{
+    result: IUser[]
+    totalCount: number
+  }>(createQueryUrl(`/community/${communityId.value}/members`, { offset: offset.value, limit: limit.value }), getComFetchOptions('get', true))
+
+
+  if (data.value) {
+    const { result, totalCount: total } = data.value
+    totalCount.value = total
+    if (isAddData.value) {
+      if (result.length > 0) {
+        members.value = [...members.value, ...result]
+      } else {
+        isAddData.value = false
+        observer.value.unobserve(triggerDiv.value)
+      }
+    } else {
+      members.value = result
+      isAddData.value = true
+    }
+  }
+
+}
 </script>
 
 <style lang="scss" scoped></style>
