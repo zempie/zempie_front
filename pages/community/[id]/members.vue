@@ -16,7 +16,6 @@
           </template>
         </UserCard>
         <div ref="triggerDiv"></div>
-        {{ isAddData }}
       </ul>
     </div>
   </NuxtLayout>
