@@ -20,14 +20,14 @@
               </NuxtLink>
             </li>
             <li class="uppercase">
-              <NuxtLink id="gameMenu" :to="$localePath('/game/list')" :class="
-                $route.name.toString().includes('game-list') && 'active'">
+              <NuxtLink id="gameMenu" :to="$localePath('/game/list')"
+                :class="$route.name.toString().includes('game-list') && 'active'">
                 games
               </NuxtLink>
             </li>
             <ClientOnly>
-              <el-dropdown trigger="click" class="menu-dropdown uppercase">
-                <span class="el-dropdown-link">
+              <el-dropdown trigger="click" class="menu-dropdown uppercase font15">
+                <span class="el-dropdown-link ">
                   GameJam
                 </span>
                 <template #dropdown>

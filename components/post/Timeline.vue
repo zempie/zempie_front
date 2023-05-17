@@ -150,7 +150,6 @@ const userWatcher = watch(
 )
 
 onMounted(async () => {
-  // if (paramId.value || route.meta.name === 'main') {
   const result = await fetch()
   if (result && triggerDiv.value) {
     observer.value = new IntersectionObserver(
@@ -162,7 +161,6 @@ onMounted(async () => {
 
     observer.value.observe(triggerDiv.value)
   }
-  // }
 })
 
 onBeforeUnmount(() => {
@@ -172,7 +170,6 @@ onBeforeUnmount(() => {
 })
 
 async function handleIntersection(target) {
-  console.log('handleIntersection')
   if (target.isIntersecting) {
     if (isAddData.value) {
       offset.value += limit.value
