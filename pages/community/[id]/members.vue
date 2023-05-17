@@ -59,17 +59,17 @@ shared.createHeadMeta(`${communityInfo.value.name} ${t('members')} `, `${communi
 
 
 onMounted(async () => {
+
+  observer.value = new IntersectionObserver(
+    async (entries) => {
+      await handleIntersection(entries[0])
+    },
+    { root: null, threshold: 1 }
+  )
+  observer.value.observe(triggerDiv.value)
+
   await fetch()
 
-  if (members.value && triggerDiv.value) {
-    observer.value = new IntersectionObserver(
-      async (entries) => {
-        await handleIntersection(entries[0])
-      },
-      { root: null, threshold: 1 }
-    )
-    observer.value.observe(triggerDiv.value)
-  }
 })
 
 async function handleIntersection(target: any) {
