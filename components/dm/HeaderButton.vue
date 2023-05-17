@@ -8,19 +8,17 @@
       <template #dropdown>
         <div slot="body" class="header-message">
           <dl>
-            <dt>New Message</dt>
+            <dt>{{ $t('message') }}</dt>
             <dd>
               <a><i class="uil uil-comment-alt"></i><em>{{ t('mark.all') }}</em></a>
             </dd>
           </dl>
           <ul>
-            <li class="active">
+            <li>
               <dl>
                 <dd>
                   <span
                     style="background: url('https://i.pinimg.com/564x/b5/a1/b3/b5a1b3de46d3e66a241d21f4f5141df7.jpg') center center no-repeat; background-size: cover;"></span>
-                  <span
-                    style="margin-left:-60px; background: url('https://i.pinimg.com/564x/d8/aa/76/d8aa7628aa5b8671607c8326b36d71b7.jpg') center center no-repeat; background-size: cover;"></span>
                 </dd>
                 <dt>
                   <h3>쿵쿵딱 게임세상</h3>
@@ -41,8 +39,8 @@
     </el-dropdown>
   </client-only>
 </template>
-<script setup lang='ts'>
-import { ElDropdown } from 'element-plus'
+<script setup lang="ts">
+import { ElDropdown } from "element-plus"
 
 const { $localePath } = useNuxtApp()
 const { t } = useI18n()
@@ -57,6 +55,45 @@ function goDmList() {
 }
 
 </script>
-<style scoped lang='scss'>
+<style scoped lang="scss">
+.header-message {
+  ul {
+    li {
+      dl {
+        display: flex;
+        align-items: center;
+        width: 100%;
 
+        dd {
+          width: 20%;
+          text-align: right;
+
+          span {
+            display: inline-block;
+            position: absolute;
+            margin: -25px 0 0 -70px;
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 50px;
+            color: #ff6e17;
+            border-radius: 50%;
+            background: rgba(249, 115, 22, 0.15);
+            border: 2px solid #fff;
+            box-shadow: 0px 4px 9px rgba(0, 0, 0, 0.06);
+          }
+
+        }
+
+        dt {
+          width: 60%;
+        }
+      }
+    }
+  }
+
+
+}
 </style>
