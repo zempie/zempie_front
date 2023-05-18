@@ -98,7 +98,7 @@ const postMsg = ref()
 
 
 async function receiveMessage(message: any) {
-  postMsg.value = message
+  postMsg.value = message.data
   if (message.data) {
     const { type, receipt } = message.data
     switch (type) {
