@@ -29,7 +29,6 @@
 
     <dd v-if="comment.user?.uid === user?.uid">
       <el-dropdown trigger="click" ref="feedMenu" popper-class="tapl-more-dropdown">
-
         <a slot="trigger"><i class="uil uil-ellipsis-h font25 pointer"></i></a>
         <template #dropdown>
           <div slot="body" class="more-list">
@@ -47,7 +46,6 @@
         </template>
       </el-dropdown>
     </dd>
-
     <ClientOnly>
       <el-dialog v-model="showDeleteModal" append-to-body class="modal-area-type" width="380px">
         <div class="modal-alert">

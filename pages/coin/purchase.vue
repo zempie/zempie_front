@@ -109,7 +109,7 @@ async function receiveMessage(message: any) {
               receipt: any
             }
           }
-        }>('/payment/iap', getZempieFetchOptions('post', true, { receipt }))
+        }>('/payment/iap', getZempieFetchOptions('post', true, { receipt: receipt.receipt }))
 
         //TODO receipt 보내야함
         const result = await flutterBridge().consumeReceipt(data.value.result.data.receipt)
