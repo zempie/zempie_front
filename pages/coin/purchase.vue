@@ -1,11 +1,12 @@
 <template>
   <div class="content">
     <div class="purchase-container">
-      {{ receipt_check }}
+      receipt_check {{ receipt_check }}
       <div class="top flex content-center items-center">
         <h3>{{ $t('hi') }}, <span class="zem-color"> {{ user?.nickname }}({{ user?.name }})</span>{{
           $t('share.zempie.nickname.title') }}!</h3>
       </div>
+      postMsg{{ postMsg }}
       <div class="coin-menu">
         <p class="my-info flex items-center justify-between">
           <span>ZEM {{ $t('charge') }}</span>
@@ -93,9 +94,11 @@ function activateCoin(coin) {
 }
 
 const receipt_check = ref()
+const postMsg = ref()
 
 
 async function receiveMessage(message: any) {
+  postMsg.value = message
   if (message.data) {
     const { type, receipt } = message.data
     switch (type) {
