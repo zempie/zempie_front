@@ -1,16 +1,32 @@
 <template>
   <dl v-if="comment && !isCommentEdit">
-    <dt>
+    <dt class="full-width">
       <dl>
         <dt>
           <UserAvatar :user="comment.user" :tag="'span'" :has-router="true"></UserAvatar>
         </dt>
-        <dd>
-          <h2>
-            <NuxtLink style="color:#000" :to="$localePath(`/${comment.user?.nickname}`)">
-              {{ comment.user?.nickname }}</NuxtLink>
-            <span class="font13">{{ dateFormat(comment.created_at) }}</span>
-          </h2>
+        <dd class="full-width">
+          <div class="row items-center justify-between">
+            <h2>
+              <NuxtLink style="color:#000" :to="$localePath(`/${comment.user?.nickname}`)">
+                {{ comment.user?.nickname }}</NuxtLink>
+              <span class="font13">{{ dateFormat(comment.created_at) }}</span>
+            </h2>
+            <el-dropdown v-if="comment.user?.uid === user?.uid" trigger="click" ref="feedMenu"
+              popper-class="tapl-more-dropdown">
+              <a slot="trigger"><i class="uil uil-ellipsis-h font25 pointer"></i></a>
+              <template #dropdown>
+                <div slot="body" class="more-list">
+                  <a @click="isCommentEdit = !isCommentEdit" class="pointer">{{
+                    $t('comment.edit')
+                  }}</a>
+                  <a @click="showDeleteModal = true" class="pointer">
+                    {{ $t('comment.delete') }}
+                  </a>
+                </div>
+              </template>
+            </el-dropdown>
+          </div>
           <div style="color: #000">
             {{ commentContent }}
           </div>
@@ -19,37 +35,26 @@
             <i v-else class="uil uil-heart-sign pointer" @click="setLike()"></i>
             <span class="ml5">{{ $t('like') }} {{ likeCnt }}{{ $t('like.unit') }}</span>
           </p>
-          <Recomment class="ml15" @recomment="emit('recomment', comment)" />
+          <Recomment class="ml10" @recomment="emit('recomment', comment)" />
           <TranslateBtn :text="commentContent" @translatedText="translate" @untranslatedText="untranslatedText" />
-          <p class="zem-color" @click="handleRecomment">
-            <i class="uil uil-angle-down"></i>
-            답글 {{ }}개
+          <p class="zem-color pointer" v-if="comment.children_comments?.length" @click="onClickRecomment">
+            <i :class="isRecommentOpen ? 'uil uil-angle-up' : 'uil uil-angle-down'"></i>
+            답글 {{ comment.children_comments?.length }}개
           </p>
+
+
         </dd>
 
       </dl>
-
+      <div class="tapl-comment" v-if="comment.children_comments?.length">
+        <ul>
+          <li v-for="cmt in comment.children_comments">
+            <Comment :comment="cmt" />
+          </li>
+        </ul>
+      </div>
     </dt>
 
-    <dd v-if="comment.user?.uid === user?.uid">
-      <el-dropdown trigger="click" ref="feedMenu" popper-class="tapl-more-dropdown">
-        <a slot="trigger"><i class="uil uil-ellipsis-h font25 pointer"></i></a>
-        <template #dropdown>
-          <div slot="body" class="more-list">
-            <a @click="isCommentEdit = !isCommentEdit" class="pointer">{{
-              $t('comment.edit')
-            }}</a>
-            <!-- <slot name="commentEdit"></slot> -->
-
-            <!-- <a @click="$modal.show('deleteComment', { commentId: comment.id, postId: postId })">{{ $t('comment.delete')
-          }}</a> -->
-            <a @click="showDeleteModal = true" class="pointer">
-              {{ $t('comment.delete') }}
-            </a>
-          </div>
-        </template>
-      </el-dropdown>
-    </dd>
 
     <ClientOnly>
       <el-dialog v-model="showDeleteModal" append-to-body class="modal-area-type" width="380px">
@@ -108,6 +113,8 @@ const emit = defineEmits(['refresh', 'editComment', 'deleteComment', 'recomment'
 const isLiked = ref(props.comment.is_liked)
 const likeCnt = ref(props.comment.like_cnt)
 
+const isRecommentOpen = ref(false)
+
 const { info: user, isLogin } = useUser().user.value
 
 function refresh(content: string) {
@@ -165,6 +172,10 @@ function untranslatedText(originText: string) {
   commentContent.value = originText
 }
 
+function onClickRecomment() {
+  isRecommentOpen.value = !isRecommentOpen.value
+}
+
 
 </script>
 
@@ -205,6 +216,19 @@ function untranslatedText(originText: string) {
   width: 100px;
   position: fixed;
   right: 10px;
+}
+
+.tapl-comment {
+  padding: 10px 0px 10px 50px !important;
+  width: 100%;
+
+  ul {
+    li {
+
+      margin-top: 10px !important;
+      padding-top: 0px !important;
+    }
+  }
 }
 
 @keyframes animateHeartOut {

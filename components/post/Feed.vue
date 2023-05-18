@@ -65,7 +65,7 @@
     <CommunityTarget :communities="feed?.posted_at?.community" :games="feed?.posted_at?.game" />
 
     <ul class="tapl-option">
-      <PostActions :feed="feed" :is-comment-closed="true" @open-comment="openComments" />
+      <PostActions :feed="feed" :is-comment-closed="true" @open-comment="openComments" :comment-cnt="commentCount" />
       <!-- <li>
         <ul>
           <LikeBtn :feed="feed" />
@@ -81,19 +81,16 @@
     </ul>
 
     <!-- TODO: mobile: 댓글만 보기 -->
-    <ClientOnly>
-      <div v-show="isOpenedComments" :class="['tapl-comment', isOpenedComments ? 'open' : 'close']">
-        <ul ref="commentEl" style="overflow-y: scroll ;max-height: 500px;">
-          <li v-for="comment in comments" :key="comment.id">
-            <Comment :comment="comment" :isEdit="isCommentEdit" @refresh="commentRefresh" @editComment="editComment"
-              @deleteComment="deleteComment" :key="comment.content" @recomment="getRecomment" />
-          </li>
-        </ul>
-
-        <CommentInput :postId="feed.id" @addComment="addComment" :recomment="recomment" />
-      </div>
-    </ClientOnly>
-    <ClientOnly>
+    <div v-show="isOpenedComments" :class="['tapl-comment', isOpenedComments ? 'open' : 'close']">
+      <ul ref="commentEl" style="overflow-y: scroll ;max-height: 500px;">
+        <li v-for="comment in comments" :key="comment.id">
+          <Comment :comment="comment" :isEdit="isCommentEdit" @refresh="commentRefresh" @editComment="editComment"
+            @deleteComment="deleteComment" :key="comment.content" @recomment="getRecomment" />
+        </li>
+      </ul>
+      <CommentInput :postId="feed.id" @addComment="addComment" :recomment="recomment" />
+    </div>
+    ㅋ <ClientOnly>
       <el-dialog v-model="showDeletePostModal" append-to-body class="modal-area-type" width="380px">
         <div class="modal-alert">
           <dl class="ma-header">
@@ -159,7 +156,6 @@ const router = useRouter()
 const COMMENT_LIMIT = 5
 const MAX_FEED_HEIGHT = 450
 
-const feedMenu = ref()
 const showDeletePostModal = ref(false)
 const feedId = ref(null)
 const feedDiv = ref<HTMLElement>()
@@ -238,9 +234,15 @@ async function commentRefresh(comment?: any) {
 
 function addComment(comment: IComment) {
   if (comment) {
-    comments.value = [comment, ...comments.value]
+    if (comment.parent_id) {
+      // comments.value = []
+    } else {
+      comments.value = [comment, ...comments.value]
+
+    }
     commentCount.value += 1
   }
+
 }
 
 function editComment(comment: IComment) {
@@ -288,12 +290,13 @@ async function commentFetch() {
     sort: sort.value,
   }
 
-  const { data, pending, error } = await useCustomAsyncFetch<{ result: [] }>(
+  const { data, pending, error } = await useCustomAsyncFetch<{ result: [], totalCount: number }>(
     createQueryUrl(`/post/${props.feed.id}/comment/list`, query),
     getComFetchOptions('get', true)
   )
 
   if (data.value) {
+
     if (isAddData.value) {
       if (data.value.result.length > 0) {
         comments.value = [...comments.value, ...data.value.result]

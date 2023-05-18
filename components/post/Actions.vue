@@ -4,7 +4,7 @@
       <LikeBtn v-if="feed" :feed="feed" />
       <li @click="openComments">
         <i :class="[isCommentClosed && 'pointer', 'uil uil-comment-alt-dots']" style="font-size: 22px"></i>&nbsp;
-        {{ feed?.comment_cnt }}
+        {{ commentCnt }}
       </li>
       <li>
         <ShareMenu :feed="feed" :url="url" />
@@ -26,8 +26,10 @@ const props = defineProps({
   isCommentClosed: {
     default: false,
     type: Boolean
-  }
+  },
+  commentCnt: Number
 })
+
 
 const emit = defineEmits([
   'openComment'

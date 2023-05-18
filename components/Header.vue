@@ -117,9 +117,7 @@
               </a>
             </div>
           </div>
-          <div class="header-side-bg-mobile" :style="isHeaderSideBgMobile ? 'display:block;' : ''"
-            id="headerSideBgMobile">
-            &nbsp;
+          <div class="header-side-bg-mobile" :style="isHeaderSideBgMobile && 'display:block;'" id="headerSideBgMobile">
           </div>
         </dd>
       </ClientOnly>

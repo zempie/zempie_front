@@ -14,19 +14,17 @@
           </dl>
 
           <div class="tapl-content" v-html="feed?.content" style="max-height:none"></div>
-          <template v-if="
-            feed?.post_type === 'SNS' &&
+          <template v-if="feed?.post_type === 'SNS' &&
             feed?.attatchment_files?.length === 1 &&
             feed?.attatchment_files[0].type === 'image'
-          ">
+            ">
             <img style="height: 88%; margin: 0 auto; display: flex" :src="feed?.attatchment_files[0].url"
               class="feed-img mt-3" />
           </template>
-          <template v-else-if="
-            feed?.post_type === 'SNS' &&
+          <template v-else-if="feed?.post_type === 'SNS' &&
             feed?.attatchment_files &&
             feed?.attatchment_files.length > 0
-          ">
+            ">
             <div class="tapl-movie-img" v-if="feed?.attatchment_files[0].type === 'image'">
               <swiper class="swiper" :options="swiperOption" style="height: 350px">
                 <template v-for="file in feed?.attatchment_files">
@@ -162,6 +160,7 @@ const swiperOption = ref({
   },
 })
 const feedId = computed(() => route.params.id as string)
+const commentCnt = ref(0)
 
 const observer = ref<IntersectionObserver>(null)
 const triggerDiv = ref()
