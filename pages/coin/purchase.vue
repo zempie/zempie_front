@@ -1,6 +1,7 @@
 <template>
   <div class="content">
     <div class="purchase-container">
+      {{ receipt_check }}
       <div class="top flex content-center items-center">
         <h3>{{ $t('hi') }}, <span class="zem-color"> {{ user?.nickname }}({{ user?.name }})</span>{{
           $t('share.zempie.nickname.title') }}!</h3>
@@ -91,12 +92,16 @@ function activateCoin(coin) {
   activeCoin.value = coin
 }
 
+const receipt_check = ref()
+
 
 async function receiveMessage(message: any) {
   if (message.data) {
     const { type, receipt } = message.data
     switch (type) {
       case 'purchasing_success':
+
+        receipt_check.value = receipt
         //TODO: 서버 코드 수정해야됨 임시로 해둔것임 
         const { data, error } = await useCustomAsyncFetch<{
           result: {
