@@ -313,6 +313,7 @@ export interface IEvent {
 
 export interface IComment {
   attatchment_files: [],
+  children_comments: [],
   content: string,
   created_at: string,
   deleted_att: string,
@@ -329,6 +330,7 @@ export interface IComment {
   user: IUser,
   user_id: number,
   user_uid: string,
+  parent_id?: string,
 }
 
 

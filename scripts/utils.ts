@@ -77,7 +77,7 @@ export const dateFormat = (sec: number | string) => {
   } else if (dayjs().diff(dayjs(sec), 'd') <= 7) {
     return dayjs().diff(dayjs(sec), 'd') + '일 전'
   } else {
-    return dayjs(sec).locale('ko').format('MM월 DD일 ')
+    return dayjs(sec).locale('ko').format('YYYY년 MM월 DD일')
   }
 }
 
@@ -92,7 +92,7 @@ export const enDateFormat = (sec: number | string) => {
   } else if (dayjs().diff(dayjs(sec), 'd') <= 7) {
     return dayjs().diff(dayjs(sec), 'd') + 'DAYS AGO'
   } else {
-    return dayjs(sec).locale('en').format('MMMM DD ')
+    return dayjs(sec).locale('en').format('MMMM DD YYYY')
   }
 }
 

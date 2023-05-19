@@ -1,51 +1,81 @@
 <template>
   <dl v-if="comment && !isCommentEdit">
-    <dt>
+    <dt class="full-width">
       <dl>
         <dt>
           <UserAvatar :user="comment.user" :tag="'span'" :has-router="true"></UserAvatar>
         </dt>
-        <dd>
-          <h2 style="color:#000">
-            <NuxtLink :to="$localePath(`/${comment.user?.nickname}`)">
-              {{ comment.user?.nickname }}</NuxtLink>
-          </h2>
-          <div style="color: #000">
-            {{ commentContent }}
+        <dd class="full-width">
+          <div class="row items-center justify-between">
+            <h2>
+              <NuxtLink style="color:#000" :to="$localePath(`/${comment.user?.nickname}`)">
+                {{ comment.user?.nickname }}</NuxtLink>
+              <span class="font13">{{ dateFormat(comment.created_at) }}</span>
+            </h2>
+            <el-dropdown v-if="comment.user?.uid === user?.uid" trigger="click" ref="feedMenu"
+              popper-class="tapl-more-dropdown">
+              <a slot="trigger"><i class="uil uil-ellipsis-h font25 pointer"></i></a>
+              <template #dropdown>
+                <div slot="body" class="more-list">
+                  <a @click="isCommentEdit = !isCommentEdit" class="pointer">{{
+                    $t('comment.edit')
+                  }}</a>
+                  <a @click="showDeleteModal = true" class="pointer">
+                    {{ $t('comment.delete') }}
+                  </a>
+                </div>
+              </template>
+            </el-dropdown>
           </div>
+          <div style="color: #000">
+            <div class="chip-container ">
+              <div v-if="parentUser?.id && parentUser?.nickname" class="chip pointer"
+                @click="$router.push($localePath(`/${parentUser?.nickname}`))">
+                {{ '@' + parentUser?.nickname }}
+              </div>
+              {{ commentContent }}
+            </div>
+          </div>
+          <!-- newRecomment{{ comment.id === newRecomment.parent_id }} -->
+
           <p style="display: inline-block">
-            <a v-if="isLiked" @click="unsetLike()">
-              <i class="xi-heart like-icon" style="color: red"></i>
-            </a>
-            <a v-else @click="setLike()">
-              <i class="uil uil-heart-sign"></i>
-            </a>
-            {{ $t('like') }} {{ likeCnt }}{{ $t('like.unit') }}
+            <i v-if="isLiked" @click="unsetLike()" class="xi-heart like-icon pointer" style="color: red"></i>
+            <i v-else class="uil uil-heart-sign pointer" @click="setLike()"></i>
+            <span class="ml5">{{ $t('like') }} {{ likeCnt }}{{ $t('like.unit') }}</span>
           </p>
+          <span class="pointer ml10" @click="emit('recomment', comment)">
+            <i class="uil uil-edit-alt"></i> 답글 작성</span>
           <TranslateBtn :text="commentContent" @translatedText="translate" @untranslatedText="untranslatedText" />
+          <p class="zem-color pointer" v-if="comment.children_comments?.length" @click="onClickRecomment">
+            <i :class="isRecommentOpen ? 'uil uil-angle-up' : 'uil uil-angle-down'"></i>
+            답글 {{ comment.children_comments?.length }}개
+          </p>
         </dd>
       </dl>
+
+      <div class="tapl-comment" v-if="filteredRecomments?.length" style="padding-bottom:0px !important">
+        <ul>
+          <TransitionGroup name="fade">
+            <li v-for="cmt in filteredRecomments" :key="cmt.id" style="border-top:0px;">
+              <Comment :comment="cmt" @recomment="emit('recomment', cmt)" @refresh="emit('refresh')" />
+            </li>
+          </TransitionGroup>
+        </ul>
+      </div>
+
+      <div class="tapl-comment" v-if="isRecommentOpen">
+        <ul>
+          <TransitionGroup name="fade">
+            <li v-for="comment in comment.children_comments" :key="comment.id" style="border-top:0px;">
+              <Comment :comment="comment" @recomment="emit('recomment', comment)" @refresh="emit('refresh')" />
+            </li>
+          </TransitionGroup>
+        </ul>
+      </div>
+
+
     </dt>
 
-    <dd v-if="comment.user?.uid === user?.uid">
-      <el-dropdown trigger="click" ref="feedMenu" popper-class="tapl-more-dropdown">
-        <a slot="trigger"><i class="uil uil-ellipsis-h font25 pointer"></i></a>
-        <template #dropdown>
-          <div slot="body" class="more-list">
-            <a @click="isCommentEdit = !isCommentEdit" class="pointer">{{
-              $t('comment.edit')
-            }}</a>
-            <!-- <slot name="commentEdit"></slot> -->
-
-            <!-- <a @click="$modal.show('deleteComment', { commentId: comment.id, postId: postId })">{{ $t('comment.delete')
-          }}</a> -->
-            <a @click="showDeleteModal = true" class="pointer">
-              {{ $t('comment.delete') }}
-            </a>
-          </div>
-        </template>
-      </el-dropdown>
-    </dd>
     <ClientOnly>
       <el-dialog v-model="showDeleteModal" append-to-body class="modal-area-type" width="380px">
         <div class="modal-alert">
@@ -80,27 +110,64 @@
 import _ from 'lodash'
 import { ElDropdown, ElDialog } from 'element-plus'
 import { IComment } from '~~/types';
+import { dateFormat } from '~~/scripts/utils'
+import { PropType } from 'vue';
 
 const { $localePath } = useNuxtApp()
+const parentUser = reactive({
+  id: null,
+  nickname: null
+})
 
 const showDeleteModal = ref(false)
 const isCommentEdit = ref(false)
 const props = defineProps({
-  comment: Object,
+  comment: Object as PropType<IComment>,
   isEdit: {
     type: Boolean,
     default: false,
   },
+  newRecomments: Array as PropType<IComment[]>,
 })
 
 
-const commentContent = ref(props.comment?.content || '')
+const commentContent = ref(commentCheck(props.comment) || '')
 
-const emit = defineEmits(['refresh', 'editComment', 'deleteComment'])
+
+const emit = defineEmits(['refresh', 'editComment', 'deleteComment', 'recomment'])
+
 const isLiked = ref(props.comment.is_liked)
 const likeCnt = ref(props.comment.like_cnt)
 
+const isRecommentOpen = ref(false)
+
+const filteredRecomments = computed(() => {
+  return props.newRecomments?.filter((cmt) => {
+    return cmt.parent_id === props.comment.id
+  })
+})
+
+
+
 const { info: user, isLogin } = useUser().user.value
+
+function commentCheck(cmt: IComment) {
+
+  if (cmt?.parent_id) {
+    parentUser.id = cmt.parent_id
+
+    const nickname = cmt.content.indexOf('@') !== -1 ? cmt.content.slice(cmt.content.indexOf('@') + 1, cmt.content.indexOf(' ')) : null
+    if (nickname) {
+      parentUser.nickname = cmt.content.slice(cmt.content.indexOf('@') + 1, cmt.content.indexOf(' '))
+      return cmt.content.slice(cmt.content.indexOf(' '));
+    } else {
+      return cmt.content
+
+    }
+  } else {
+    return cmt.content
+  }
+}
 
 function refresh(content: string) {
   isCommentEdit.value = !isCommentEdit.value
@@ -109,9 +176,24 @@ function refresh(content: string) {
   emit('refresh', content)
 }
 
-function editComment(comment: IComment) {
+function editComment(cmt: IComment) {
+
   isCommentEdit.value = !isCommentEdit.value
-  emit('editComment', comment)
+  const nickname = cmt.content.indexOf('@') !== -1 ? cmt.content.slice(cmt.content.indexOf('@') + 1, cmt.content.indexOf(' ')) : null
+
+  if (nickname) {
+    commentContent.value = cmt.content.slice(cmt.content.indexOf(' '))
+    props.comment.content = '@' + nickname + ' ' + cmt.content.slice(cmt.content.indexOf(' '))
+  } else {
+    parentUser.nickname = null
+    commentContent.value = cmt.content
+    props.comment.content = cmt.content
+  }
+
+
+  console.log(props.comment)
+
+  emit('editComment', cmt)
 }
 const setLike = _.debounce(async () => {
   const { data, pending, error } = await useCustomAsyncFetch(
@@ -157,6 +239,10 @@ function untranslatedText(originText: string) {
   commentContent.value = originText
 }
 
+function onClickRecomment() {
+  isRecommentOpen.value = !isRecommentOpen.value
+}
+
 
 </script>
 
@@ -197,6 +283,62 @@ function untranslatedText(originText: string) {
   width: 100px;
   position: fixed;
   right: 10px;
+}
+
+.tapl-comment {
+  padding: 10px 0px 10px 50px !important;
+  width: 100%;
+
+  ul {
+    li {
+
+      margin-top: 10px !important;
+      padding-top: 0px !important;
+    }
+  }
+}
+
+.chip-container {
+  border-radius: 5px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  .chip {
+    color: #ff6e17;
+    margin: 4px;
+    background: #FFEDDF;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+
+  }
+}
+
+
+//transition
+.component-fade-enter-active,
+.component-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.component-fade-enter,
+.component-fade-leave-to
+
+/* .component-fade-leave-active below version 2.1.8 */
+  {
+  opacity: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 
 @keyframes animateHeartOut {

@@ -65,7 +65,7 @@
     <CommunityTarget :communities="feed?.posted_at?.community" :games="feed?.posted_at?.game" />
 
     <ul class="tapl-option">
-      <PostActions :feed="feed" :is-comment-closed="true" @open-comment="openComments" />
+      <PostActions :feed="feed" :is-comment-closed="true" @open-comment="openComments" :comment-cnt="commentCount" />
       <!-- <li>
         <ul>
           <LikeBtn :feed="feed" />
@@ -81,17 +81,18 @@
     </ul>
 
     <!-- TODO: mobile: 댓글만 보기 -->
-    <ClientOnly>
-      <div v-show="isOpenedComments" :class="['tapl-comment', isOpenedComments ? 'open' : 'close']">
-        <ul ref="commentEl" style="overflow-y: scroll ;max-height: 500px;">
-          <li v-for="comment in comments" :key="comment.id">
-            <Comment :comment="comment" :isEdit="isCommentEdit" @refresh="commentRefresh" @editComment="editComment"
-              @deleteComment="deleteComment" :key="comment.content" />
-          </li>
-        </ul>
-        <CommentInput :postId="feed.id" @addComment="addComment" />
-      </div>
-    </ClientOnly>
+    <div v-show="isOpenedComments" :class="['tapl-comment', isOpenedComments ? 'open' : 'close']">
+      <ul ref="commentEl" style="overflow-y: scroll ;max-height: 500px;">
+        <li v-for="comment in comments" :key="comment.id">
+          <Comment :comment="comment" :isEdit="isCommentEdit" @refresh="commentRefresh" @editComment="editComment"
+            @deleteComment="deleteComment" :key="comment.content" @recomment="getRecomment"
+            :newRecomments="newRecomments" />
+        </li>
+
+      </ul>
+      <CommentInput :postId="feed.id" @addComment="addComment" :recomment="recomment" />
+    </div>
+
     <ClientOnly>
       <el-dialog v-model="showDeletePostModal" append-to-body class="modal-area-type" width="380px">
         <div class="modal-alert">
@@ -158,7 +159,6 @@ const router = useRouter()
 const COMMENT_LIMIT = 5
 const MAX_FEED_HEIGHT = 450
 
-const feedMenu = ref()
 const showDeletePostModal = ref(false)
 const feedId = ref(null)
 const feedDiv = ref<HTMLElement>()
@@ -176,7 +176,6 @@ const commentEl = ref<HTMLElement | null>(null)
 const isAddData = ref(false)
 
 const isCommentEdit = ref(false)
-const editorKey = ref(0)
 
 useInfiniteScroll(
   commentEl,
@@ -206,6 +205,9 @@ const feedContent = ref(props.feed?.content || '')
 
 const emit = defineEmits(['refresh'])
 
+//대댓글
+const recomment = ref()
+const newRecomments = ref([])
 
 
 const attatchment_files = computed(() => {
@@ -235,9 +237,16 @@ async function commentRefresh(comment?: any) {
 
 function addComment(comment: IComment) {
   if (comment) {
-    comments.value = [comment, ...comments.value]
+    if (comment.parent_id) {
+      newRecomments.value = [comment, ...newRecomments.value]
+    } else {
+      console.log('comment', comment)
+      comments.value = [comment, ...comments.value]
+
+    }
     commentCount.value += 1
   }
+
 }
 
 function editComment(comment: IComment) {
@@ -285,12 +294,13 @@ async function commentFetch() {
     sort: sort.value,
   }
 
-  const { data, pending, error } = await useCustomAsyncFetch<{ result: [] }>(
+  const { data, pending, error } = await useCustomAsyncFetch<{ result: [], totalCount: number }>(
     createQueryUrl(`/post/${props.feed.id}/comment/list`, query),
     getComFetchOptions('get', true)
   )
 
   if (data.value) {
+
     if (isAddData.value) {
       if (data.value.result.length > 0) {
         comments.value = [...comments.value, ...data.value.result]
@@ -304,59 +314,8 @@ async function commentFetch() {
   }
 
 
-
-  // async comments(post_id: string, obj: any) {
-  //     return await this.request('get', `${communityApi}post/${post_id}/comment/list`, obj, false)
-  // }
-
-  // this.$api.comments(this.feed.id, obj)
-  //     .then((res: any) => {
-  //         if (this.isAddData) {
-  //             if (res.result.length > 0) {
-  //                 this.comments = [...this.comments, ...res.result]
-  //             }
-  //             else {
-  //                 // console.log('no data')
-  //             }
-  //         }
-  //         else {
-  //             this.comments = res.result;
-  //             this.isAddData = true
-  //         }
-  //     })
-  //     .catch((err: AxiosError) => {
-
-  //     })
-  //     .finally(() => {
-
-  //     })
 }
 
-//     likeListFetch() {
-//         const obj = {
-//             post_id: this.feed.id,
-//             limit: this.limit,
-//             offset: this.offset
-//         }
-//         this.$api.likeList(obj)
-//             .then((res: AxiosResponse) => {
-//                 this.likeList = res;
-//             })
-//             .catch((err: AxiosError) => {
-
-//             })
-
-//     }
-
-function copyUrl() {
-  execCommandCopy(`${config.ZEMPIE_URL}/feed/${props.feed.id}`)
-
-  ElMessage.closeAll()
-  ElMessage({
-    message: t('copied.clipboard'),
-    type: 'success',
-  })
-}
 
 
 async function deletePost() {
@@ -404,34 +363,12 @@ function onMouseUp() {
   }
   isDragging.value = false
 }
-//     /**
-//      * 댓글
-//      * */
 
-//     deleteComment(commentId: string) {
-//         this.commentCnt--;
-//         this.commentInit();
-//         this.$api.deleteComment(this.feed.id, commentId)
-//             .then((res: AxiosResponse) => {
-//                 this.commentFetch()
-//             })
-//             .catch((err: AxiosError) => {
+function getRecomment(comment: IComment) {
+  console.log('comment', comment)
+  recomment.value = comment
+}
 
-//             })
-//     }
-
-//     editDone(comment:any) {
-//         this.commentCnt++;
-//         this.comments = [comment, ...this.comments]
-
-//         // this.commentInit();
-//         // this.commentFetch()
-//     }
-
-//     updateDone() {
-//         // this.commentInit();
-//         // this.commentFetch()
-//     }
 
 //     /**
 //      * 유저 신고
