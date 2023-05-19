@@ -3102,7 +3102,7 @@
 }
 
 .ta-post .tap-list .tapl-comment>ul>li>dl>dt>dl dd div {
-  /* margin-top: 10px; */
+  min-height: 26px;
 }
 
 .ta-post .tap-list .tapl-comment>ul>li>dl>dt>dl dd p {

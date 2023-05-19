@@ -28,31 +28,52 @@
             </el-dropdown>
           </div>
           <div style="color: #000">
-            {{ commentContent }}
+            <div class="chip-container ">
+              <div v-if="parentUser?.id && parentUser?.nickname" class="chip pointer"
+                @click="$router.push($localePath(`/${parentUser?.nickname}`))">
+                {{ '@' + parentUser?.nickname }}
+              </div>
+              {{ commentContent }}
+            </div>
           </div>
+          <!-- newRecomment{{ comment.id === newRecomment.parent_id }} -->
+
           <p style="display: inline-block">
             <i v-if="isLiked" @click="unsetLike()" class="xi-heart like-icon pointer" style="color: red"></i>
             <i v-else class="uil uil-heart-sign pointer" @click="setLike()"></i>
             <span class="ml5">{{ $t('like') }} {{ likeCnt }}{{ $t('like.unit') }}</span>
           </p>
-          <Recomment class="ml10" @recomment="emit('recomment', comment)" />
+          <span class="pointer ml10" @click="emit('recomment', comment)">
+            <i class="uil uil-edit-alt"></i> 답글 작성</span>
           <TranslateBtn :text="commentContent" @translatedText="translate" @untranslatedText="untranslatedText" />
           <p class="zem-color pointer" v-if="comment.children_comments?.length" @click="onClickRecomment">
             <i :class="isRecommentOpen ? 'uil uil-angle-up' : 'uil uil-angle-down'"></i>
             답글 {{ comment.children_comments?.length }}개
           </p>
-
-
         </dd>
-
       </dl>
-      <div class="tapl-comment" v-if="comment.children_comments?.length">
+
+      <div class="tapl-comment" v-if="filteredRecomments?.length" style="padding-bottom:0px !important">
         <ul>
-          <li v-for="cmt in comment.children_comments">
-            <Comment :comment="cmt" />
-          </li>
+          <TransitionGroup name="fade">
+            <li v-for="cmt in filteredRecomments" :key="cmt.id" style="border-top:0px;">
+              <Comment :comment="cmt" @recomment="emit('recomment', cmt)" @refresh="emit('refresh')" />
+            </li>
+          </TransitionGroup>
         </ul>
       </div>
+
+      <div class="tapl-comment" v-if="isRecommentOpen">
+        <ul>
+          <TransitionGroup name="fade">
+            <li v-for="comment in comment.children_comments" :key="comment.id" style="border-top:0px;">
+              <Comment :comment="comment" @recomment="emit('recomment', comment)" @refresh="emit('refresh')" />
+            </li>
+          </TransitionGroup>
+        </ul>
+      </div>
+
+
     </dt>
 
 
@@ -88,13 +109,16 @@
 
 <script setup lang="ts">
 import _ from 'lodash'
-import Recomment from '~~/components/comment/Recomment.vue'
 import { ElDropdown, ElDialog } from 'element-plus'
 import { IComment } from '~~/types';
 import { dateFormat } from '~~/scripts/utils'
 import { PropType } from 'vue';
 
 const { $localePath } = useNuxtApp()
+const parentUser = reactive({
+  id: null,
+  nickname: null
+})
 
 const showDeleteModal = ref(false)
 const isCommentEdit = ref(false)
@@ -104,18 +128,47 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  newRecomments: Array as PropType<IComment[]>,
 })
 
 
-const commentContent = ref(props.comment?.content || '')
+const commentContent = ref(commentCheck(props.comment) || '')
+
 
 const emit = defineEmits(['refresh', 'editComment', 'deleteComment', 'recomment'])
+
 const isLiked = ref(props.comment.is_liked)
 const likeCnt = ref(props.comment.like_cnt)
 
 const isRecommentOpen = ref(false)
 
+const filteredRecomments = computed(() => {
+  return props.newRecomments?.filter((cmt) => {
+    return cmt.parent_id === props.comment.id
+  })
+})
+
+
+
 const { info: user, isLogin } = useUser().user.value
+
+function commentCheck(cmt: IComment) {
+
+  if (cmt?.parent_id) {
+    parentUser.id = cmt.parent_id
+
+    const nickname = cmt.content.indexOf('@') !== -1 ? cmt.content.slice(cmt.content.indexOf('@') + 1, cmt.content.indexOf(' ')) : null
+    if (nickname) {
+      parentUser.nickname = cmt.content.slice(cmt.content.indexOf('@') + 1, cmt.content.indexOf(' '))
+      return cmt.content.slice(cmt.content.indexOf(' '));
+    } else {
+      return cmt.content
+
+    }
+  } else {
+    return cmt.content
+  }
+}
 
 function refresh(content: string) {
   isCommentEdit.value = !isCommentEdit.value
@@ -124,9 +177,24 @@ function refresh(content: string) {
   emit('refresh', content)
 }
 
-function editComment(comment: IComment) {
+function editComment(cmt: IComment) {
+
   isCommentEdit.value = !isCommentEdit.value
-  emit('editComment', comment)
+  const nickname = cmt.content.indexOf('@') !== -1 ? cmt.content.slice(cmt.content.indexOf('@') + 1, cmt.content.indexOf(' ')) : null
+
+  if (nickname) {
+    commentContent.value = cmt.content.slice(cmt.content.indexOf(' '))
+    props.comment.content = '@' + nickname + ' ' + cmt.content.slice(cmt.content.indexOf(' '))
+  } else {
+    parentUser.nickname = null
+    commentContent.value = cmt.content
+    props.comment.content = cmt.content
+  }
+
+
+  console.log(props.comment)
+
+  emit('editComment', cmt)
 }
 const setLike = _.debounce(async () => {
   const { data, pending, error } = await useCustomAsyncFetch(
@@ -229,6 +297,49 @@ function onClickRecomment() {
       padding-top: 0px !important;
     }
   }
+}
+
+.chip-container {
+  border-radius: 5px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  .chip {
+    color: #ff6e17;
+    margin: 4px;
+    background: #FFEDDF;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+
+  }
+}
+
+
+//transition
+.component-fade-enter-active,
+.component-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.component-fade-enter,
+.component-fade-leave-to
+
+/* .component-fade-leave-active below version 2.1.8 */
+  {
+  opacity: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 
 @keyframes animateHeartOut {

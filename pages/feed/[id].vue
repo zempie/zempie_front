@@ -77,8 +77,7 @@
                 feed?.comment_cnt
               }}{{ $t('comment.count.unit') }}
             </p>
-            <CommentInput :postId="feed?.id" @refresh="commentFetch" @addComment="addComment" />
-            <ul>
+            <ul ref="commentEl" style="max-height:700px; overflow-y: scroll;">
               <TransitionGroup name="fade">
                 <li v-for="comment in comments" :key="comment.id" class="comment">
                   <Comment :comment="comment" @refresh="commentFetch" @deleteComment="deleteComment"
@@ -86,8 +85,10 @@
                 </li>
               </TransitionGroup>
             </ul>
+            <CommentInput :postId="feed?.id" @refresh="commentFetch" @addComment="addComment" />
+
           </div>
-          <div ref="triggerDiv"></div>
+          <!-- <div ref="triggerDiv"></div> -->
         </li>
       </ul>
       <ul class="ta-post" v-else>
@@ -153,6 +154,7 @@ const comments = ref<IComment[]>()
 const limit = ref(COMMENT_LIMIT)
 const offset = ref(0)
 const sort = ref(null)
+const commentEl = ref<HTMLElement | null>(null)
 
 const swiperOption = ref({
   pagination: {
@@ -165,6 +167,20 @@ const commentCnt = ref(0)
 const observer = ref<IntersectionObserver>(null)
 const triggerDiv = ref()
 const isAddData = ref(false)
+
+
+
+useInfiniteScroll(
+  commentEl,
+  async () => {
+    if (isAddData.value) {
+      offset.value += limit.value
+      await commentFetch()
+    }
+  },
+  { distance: 10 }
+)
+
 
 const {
   data: feed,
@@ -217,13 +233,13 @@ onMounted(async () => {
     hljs.highlightElement(block)
   })
   if (feed.value) {
-    observer.value = new IntersectionObserver(
-      (entries) => {
-        handleIntersection(entries[0])
-      },
-      { root: null, threshold: 1 }
-    )
-    observer.value.observe(triggerDiv.value)
+    // observer.value = new IntersectionObserver(
+    //   (entries) => {
+    //     handleIntersection(entries[0])
+    //   },
+    //   { root: null, threshold: 1 }
+    // )
+    // observer.value.observe(triggerDiv.value)
   }
   await commentFetch()
 })
@@ -256,7 +272,7 @@ async function commentFetch() {
         comments.value = [...comments.value, ...result]
       } else {
         isAddData.value = false
-        observer.value.unobserve(triggerDiv.value)
+        // observer.value.unobserve(triggerDiv.value)
       }
     } else {
       comments.value = result

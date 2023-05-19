@@ -85,12 +85,15 @@
       <ul ref="commentEl" style="overflow-y: scroll ;max-height: 500px;">
         <li v-for="comment in comments" :key="comment.id">
           <Comment :comment="comment" :isEdit="isCommentEdit" @refresh="commentRefresh" @editComment="editComment"
-            @deleteComment="deleteComment" :key="comment.content" @recomment="getRecomment" />
+            @deleteComment="deleteComment" :key="comment.content" @recomment="getRecomment"
+            :newRecomments="newRecomments" />
         </li>
+
       </ul>
       <CommentInput :postId="feed.id" @addComment="addComment" :recomment="recomment" />
     </div>
-    ㅋ <ClientOnly>
+
+    <ClientOnly>
       <el-dialog v-model="showDeletePostModal" append-to-body class="modal-area-type" width="380px">
         <div class="modal-alert">
           <dl class="ma-header">
@@ -204,7 +207,7 @@ const emit = defineEmits(['refresh'])
 
 //대댓글
 const recomment = ref()
-
+const newRecomments = ref([])
 
 
 const attatchment_files = computed(() => {
@@ -235,8 +238,9 @@ async function commentRefresh(comment?: any) {
 function addComment(comment: IComment) {
   if (comment) {
     if (comment.parent_id) {
-      // comments.value = []
+      newRecomments.value = [comment, ...newRecomments.value]
     } else {
+      console.log('comment', comment)
       comments.value = [comment, ...comments.value]
 
     }
@@ -361,37 +365,10 @@ function onMouseUp() {
 }
 
 function getRecomment(comment: IComment) {
+  console.log('comment', comment)
   recomment.value = comment
 }
 
-//     /**
-//      * 댓글
-//      * */
-
-//     deleteComment(commentId: string) {
-//         this.commentCnt--;
-//         this.commentInit();
-//         this.$api.deleteComment(this.feed.id, commentId)
-//             .then((res: AxiosResponse) => {
-//                 this.commentFetch()
-//             })
-//             .catch((err: AxiosError) => {
-
-//             })
-//     }
-
-//     editDone(comment:any) {
-//         this.commentCnt++;
-//         this.comments = [comment, ...this.comments]
-
-//         // this.commentInit();
-//         // this.commentFetch()
-//     }
-
-//     updateDone() {
-//         // this.commentInit();
-//         // this.commentFetch()
-//     }
 
 //     /**
 //      * 유저 신고
