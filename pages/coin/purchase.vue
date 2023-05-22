@@ -120,12 +120,12 @@ async function receiveMessage(message: any) {
 
         //TODO receipt 보내야함
         try {
-          const result = await flutterBridge().consumeReceipt(data.value.result.data.receipt)
-          alert(JSON.stringify(data.value.result.data.receipt))
+          const receipt = data.value.result.data.receipt
+          const result = await flutterBridge().consumeReceipt(receipt)
           if (result) {
             const { update } = data.value.result?.data
             useUser().updateUserCoin(update.user.coin)
-            useCoin().setCoinReceipt(data.value.result.data.receipt)
+            useCoin().setCoinReceipt(receipt_check.value)
             router.push($localePath('/coin/purchase-done'))
           }
         } catch (err) {
