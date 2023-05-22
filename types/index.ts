@@ -313,7 +313,7 @@ export interface IEvent {
 
 export interface IComment {
   attatchment_files: [],
-  children_comments: [],
+  children_comments: IComment[],
   content: string,
   created_at: string,
   deleted_att: string,

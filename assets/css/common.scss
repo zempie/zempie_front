@@ -950,3 +950,40 @@ $zempie-main-color-hover: #f974162a;
     }
   }
 }
+
+
+/*
+ * 대댓글
+ */
+
+.cmt-chip-container {
+  border-radius: 5px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  .chip {
+    color: #ff6e17;
+    margin: 4px;
+    background: #FFEDDF;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+
+  }
+}
+
+.tapl-comment {
+  &.recomment {
+    padding: 10px 0px 10px 50px !important;
+    width: 100%;
+
+    ul {
+      li {
+        margin-top: 10px !important;
+        padding-top: 0px !important;
+      }
+    }
+  }
+}

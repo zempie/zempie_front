@@ -28,7 +28,7 @@
             </el-dropdown>
           </div>
           <div style="color: #000">
-            <div class="chip-container ">
+            <div class="cmt-chip-container">
               <div v-if="parentUser?.id && parentUser?.nickname" class="chip pointer"
                 @click="$router.push($localePath(`/${parentUser?.nickname}`))">
                 {{ '@' + parentUser?.nickname }}
@@ -36,8 +36,6 @@
               {{ commentContent }}
             </div>
           </div>
-          <!-- newRecomment{{ comment.id === newRecomment.parent_id }} -->
-
           <p style="display: inline-block">
             <i v-if="isLiked" @click="unsetLike()" class="xi-heart like-icon pointer" style="color: red"></i>
             <i v-else class="uil uil-heart-sign pointer" @click="setLike()"></i>
@@ -53,7 +51,7 @@
         </dd>
       </dl>
 
-      <div class="tapl-comment" v-if="filteredRecomments?.length" style="padding-bottom:0px !important">
+      <div class="tapl-comment recomment" v-if="filteredRecomments?.length" style="padding-bottom:0px !important">
         <ul>
           <TransitionGroup name="fade">
             <li v-for="cmt in filteredRecomments" :key="cmt.id" style="border-top:0px;">
@@ -63,17 +61,15 @@
         </ul>
       </div>
 
-      <div class="tapl-comment" v-if="isRecommentOpen">
+      <div class="tapl-comment recomment" v-if="isRecommentOpen">
         <ul>
           <TransitionGroup name="fade">
-            <li v-for="comment in comment.children_comments" :key="comment.id" style="border-top:0px;">
-              <Comment :comment="comment" @recomment="emit('recomment', comment)" @refresh="emit('refresh')" />
+            <li v-for="cmt in comment.children_comments" :key="cmt.id" style="border-top:0px;">
+              <Comment :comment="cmt" @recomment="emit('recomment', cmt)" @refresh="emit('refresh')" />
             </li>
           </TransitionGroup>
         </ul>
       </div>
-
-
     </dt>
 
     <ClientOnly>
@@ -285,36 +281,6 @@ function onClickRecomment() {
   right: 10px;
 }
 
-.tapl-comment {
-  padding: 10px 0px 10px 50px !important;
-  width: 100%;
-
-  ul {
-    li {
-
-      margin-top: 10px !important;
-      padding-top: 0px !important;
-    }
-  }
-}
-
-.chip-container {
-  border-radius: 5px;
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-
-  .chip {
-    color: #ff6e17;
-    margin: 4px;
-    background: #FFEDDF;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-
-  }
-}
 
 
 //transition
