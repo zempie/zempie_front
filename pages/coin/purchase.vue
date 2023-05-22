@@ -120,14 +120,18 @@ async function receiveMessage(message: any) {
         }>('/payment/iap', getZempieFetchOptions('post', true, { receipt: receipt.receipt }))
 
         //TODO receipt 보내야함
-        const result = await flutterBridge().consumeReceipt(data.value.result.data.receipt)
-
-        if (result) {
-          const { update } = data.value.result?.data
-          useUser().updateUserCoin(update.user.coin)
-          useCoin().setCoinReceipt(data.value.result.data.receipt)
-          router.push($localePath('/coin/purchase-done'))
+        try {
+          const result = await flutterBridge().consumeReceipt(data.value.result.data.receipt)
+          if (result) {
+            const { update } = data.value.result?.data
+            useUser().updateUserCoin(update.user.coin)
+            useCoin().setCoinReceipt(data.value.result.data.receipt)
+            router.push($localePath('/coin/purchase-done'))
+          }
+        } catch (err) {
+          alert(err)
         }
+
         break;
     }
   }
