@@ -100,7 +100,7 @@ const postMsg = ref()
 async function receiveMessage(message: any) {
   postMsg.value = message.data
   if (message.data) {
-    const { type, receipt } = message.data
+    const { type, receipt } = JSON.parse(message.data)
     switch (type) {
       case 'purchasing_success':
         alert('here!')
@@ -117,7 +117,7 @@ async function receiveMessage(message: any) {
               receipt: any
             }
           }
-        }>('/payment/iap', getZempieFetchOptions('post', true, { receipt: JSON.stringify(receipt.receipt) }))
+        }>('/payment/iap', getZempieFetchOptions('post', true, { receipt: receipt.receipt }))
 
         //TODO receipt 보내야함
         const result = await flutterBridge().consumeReceipt(data.value.result.data.receipt)
