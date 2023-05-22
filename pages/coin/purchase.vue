@@ -103,7 +103,7 @@ async function receiveMessage(message: any) {
     const { type, receipt } = message.data
     switch (type) {
       case 'purchasing_success':
-
+        alert('here!')
         receipt_check.value = receipt
         //TODO: 서버 코드 수정해야됨 임시로 해둔것임 
         const { data, error } = await useCustomAsyncFetch<{
@@ -117,7 +117,7 @@ async function receiveMessage(message: any) {
               receipt: any
             }
           }
-        }>('/payment/iap', getZempieFetchOptions('post', true, { receipt: receipt.receipt }))
+        }>('/payment/iap', getZempieFetchOptions('post', true, { receipt: JSON.stringify(receipt.receipt) }))
 
         //TODO receipt 보내야함
         const result = await flutterBridge().consumeReceipt(data.value.result.data.receipt)
