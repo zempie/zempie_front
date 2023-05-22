@@ -236,9 +236,12 @@ async function commentRefresh(comment?: any) {
 }
 
 function addComment(comment: IComment) {
+
   if (comment) {
     if (comment.parent_id) {
+      comment.parent_id = recomment.value.parent_id
       newRecomments.value = [comment, ...newRecomments.value]
+
     } else {
       console.log('comment', comment)
       comments.value = [comment, ...comments.value]
@@ -374,16 +377,6 @@ function getRecomment(comment: IComment) {
   recomment.value = comment
 }
 
-
-//     /**
-//      * 유저 신고
-//      */
-
-//     userReportModalOpen() {
-//         this.$emit('reportUser', this.feed.user.id)
-//         // this.isOpenReportModal = !this.isOpenReportModal
-//         this.$modal.show('modalUserReport')
-//     }
 </script>
 
 <style lang="scss" scoped>

@@ -51,6 +51,8 @@
         </dd>
       </dl>
 
+      {{ filteredRecomments }}
+
       <div class="tapl-comment recomment" v-if="filteredRecomments?.length" style="padding-bottom:0px !important">
         <ul>
           <TransitionGroup name="fade">
@@ -142,9 +144,13 @@ const isRecommentOpen = ref(false)
 
 
 const filteredRecomments = computed(() => {
-  return props.newRecomments?.filter((cmt) => {
+  console.log('props.newRecomments', props.newRecomments)
+  const result = props.newRecomments?.filter((cmt) => {
     return cmt.parent_id === props.comment.id
   })
+
+  console.log(result)
+  return result
 })
 
 
@@ -248,7 +254,6 @@ function onClickRecomment() {
 }
 
 function deleteRecomment(commentId: string) {
-  // console.log('delete recomment', cmt)
 
   recomments.value = recomments.value.filter((elem) => {
     return elem.id !== commentId
