@@ -128,6 +128,7 @@ async function receiveMessage(message: any) {
             useUser().updateUserCoin(update.user.coin)
             useCoin().setCoinReceipt({
               order_id: receipt_check.value.orderId,
+              price: activeCoin.value.price,
               metadata: {
                 item_name: activeCoin.value.zem + 'ZEM'
               }
