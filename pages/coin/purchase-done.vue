@@ -48,12 +48,7 @@ const { $localePath } = useNuxtApp()
 const user = computed(() => useUser().user.value.info)
 const receipt = computed(() => useCoin().coin.value.receipt)
 
-//TODO: temp
-// const tempCoin = 10
-// const tempOrdNum = 'djasksdjk232edja2'
-// const prodName = '120Cube'
-// const prodPrice = 1100
-// const purchaseMethod = '결제방법 서버에서! '
+
 </script>
 <style scoped lang="scss">
 .purchase-container {

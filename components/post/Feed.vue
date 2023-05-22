@@ -259,7 +259,6 @@ function editComment(comment: IComment) {
 }
 async function deleteComment(commentId: string) {
   comments.value = comments.value.filter((elem: IComment) => {
-    console.log(elem.id, commentId)
     return elem.id !== commentId
   })
   commentCount.value -= 1
@@ -267,6 +266,12 @@ async function deleteComment(commentId: string) {
   if (comments.value.length < COMMENT_LIMIT) {
     offset.value = comments.value.length
     await commentFetch()
+  }
+
+  if (newRecomments.value.length) {
+    newRecomments.value = newRecomments.value.filter((elem: IComment) => {
+      return elem.id !== commentId
+    })
   }
 
 }

@@ -55,7 +55,8 @@
         <ul>
           <TransitionGroup name="fade">
             <li v-for="cmt in filteredRecomments" :key="cmt.id" style="border-top:0px;">
-              <Comment :comment="cmt" @recomment="emit('recomment', cmt)" @refresh="emit('refresh')" />
+              <Comment :comment="cmt" @recomment="emit('recomment', cmt)" @refresh="emit('refresh')"
+                @delete-recomment="deleteRecomment" />
             </li>
           </TransitionGroup>
         </ul>
@@ -138,6 +139,7 @@ const isLiked = ref(props.comment.is_liked)
 const likeCnt = ref(props.comment.like_cnt)
 
 const isRecommentOpen = ref(false)
+
 
 const filteredRecomments = computed(() => {
   return props.newRecomments?.filter((cmt) => {
@@ -251,6 +253,7 @@ function deleteRecomment(commentId: string) {
   recomments.value = recomments.value.filter((elem) => {
     return elem.id !== commentId
   })
+  emit('deleteComment', commentId)
 
 }
 
