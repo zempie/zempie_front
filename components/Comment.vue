@@ -44,9 +44,9 @@
           <span class="pointer ml10" @click="emit('recomment', comment)">
             <i class="uil uil-edit-alt"></i> 답글 작성</span>
           <TranslateBtn :text="commentContent" @translatedText="translate" @untranslatedText="untranslatedText" />
-          <p class="zem-color pointer" v-if="comment.children_comments?.length" @click="onClickRecomment">
+          <p class="zem-color pointer" v-if="recomments?.length" @click="onClickRecomment">
             <i :class="isRecommentOpen ? 'uil uil-angle-up' : 'uil uil-angle-down'"></i>
-            답글 {{ comment.children_comments?.length }}개
+            답글 {{ recomments?.length }}개
           </p>
         </dd>
       </dl>
@@ -61,11 +61,12 @@
         </ul>
       </div>
 
-      <div class="tapl-comment recomment" v-if="isRecommentOpen">
+      <div class="tapl-comment recomment" v-if="isRecommentOpen && recomments?.length">
         <ul>
           <TransitionGroup name="fade">
-            <li v-for="cmt in comment.children_comments" :key="cmt.id" style="border-top:0px;">
-              <Comment :comment="cmt" @recomment="emit('recomment', cmt)" @refresh="emit('refresh')" />
+            <li v-for="cmt in recomments" :key="cmt.id" style="border-top:0px;">
+              <Comment :comment="cmt" @recomment="emit('recomment', cmt)" @refresh="emit('refresh')"
+                @delete-recomment="deleteRecomment" />
             </li>
           </TransitionGroup>
         </ul>
@@ -127,10 +128,11 @@ const props = defineProps({
 })
 
 
+const recomments = ref(props.comment?.children_comments)
 const commentContent = ref(commentCheck(props.comment) || '')
 
 
-const emit = defineEmits(['refresh', 'editComment', 'deleteComment', 'recomment'])
+const emit = defineEmits(['refresh', 'editComment', 'deleteComment', 'recomment', 'deleteRecomment'])
 
 const isLiked = ref(props.comment.is_liked)
 const likeCnt = ref(props.comment.like_cnt)
@@ -185,10 +187,6 @@ function editComment(cmt: IComment) {
     commentContent.value = cmt.content
     props.comment.content = cmt.content
   }
-
-
-  console.log(props.comment)
-
   emit('editComment', cmt)
 }
 const setLike = _.debounce(async () => {
@@ -216,13 +214,21 @@ const unsetLike = _.debounce(async () => {
 }, 300)
 
 async function deleteComment() {
+
+  console.log(props.comment)
+
   const { data, pending, error } = await useCustomAsyncFetch(
     `/post/${props.comment.post_id}/comment/${props.comment.id}`,
     getComFetchOptions('delete', true)
   )
 
   if (!error.value) {
-    emit('deleteComment', props.comment.id)
+
+    if (props.comment.parent_id) {
+      emit('deleteRecomment', props.comment.id)
+    } else {
+      emit('deleteComment', props.comment.id)
+    }
   }
   showDeleteModal.value = false
 }
@@ -237,6 +243,15 @@ function untranslatedText(originText: string) {
 
 function onClickRecomment() {
   isRecommentOpen.value = !isRecommentOpen.value
+}
+
+function deleteRecomment(commentId: string) {
+  // console.log('delete recomment', cmt)
+
+  recomments.value = recomments.value.filter((elem) => {
+    return elem.id !== commentId
+  })
+
 }
 
 
