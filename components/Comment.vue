@@ -50,9 +50,6 @@
           </p>
         </dd>
       </dl>
-
-      {{ filteredRecomments }}
-
       <div class="tapl-comment recomment" v-if="filteredRecomments?.length" style="padding-bottom:0px !important">
         <ul>
           <TransitionGroup name="fade">
@@ -144,8 +141,8 @@ const isRecommentOpen = ref(false)
 
 
 const filteredRecomments = computed(() => {
-  console.log('props.newRecomments', props.newRecomments)
   const result = props.newRecomments?.filter((cmt) => {
+    console.log(cmt)
     return cmt.parent_id === props.comment.id
   })
 
@@ -223,8 +220,6 @@ const unsetLike = _.debounce(async () => {
 
 async function deleteComment() {
 
-  console.log(props.comment)
-
   const { data, pending, error } = await useCustomAsyncFetch(
     `/post/${props.comment.post_id}/comment/${props.comment.id}`,
     getComFetchOptions('delete', true)
@@ -255,7 +250,7 @@ function onClickRecomment() {
 
 function deleteRecomment(commentId: string) {
 
-  recomments.value = recomments.value.filter((elem) => {
+  recomments.value = recomments.value?.filter((elem) => {
     return elem.id !== commentId
   })
   emit('deleteComment', commentId)
@@ -305,30 +300,6 @@ function deleteRecomment(commentId: string) {
 }
 
 
-
-//transition
-.component-fade-enter-active,
-.component-fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.component-fade-enter,
-.component-fade-leave-to
-
-/* .component-fade-leave-active below version 2.1.8 */
-  {
-  opacity: 0;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
 
 @keyframes animateHeartOut {
   0% {

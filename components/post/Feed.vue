@@ -81,7 +81,8 @@
     </ul>
 
     <!-- TODO: mobile: 댓글만 보기 -->
-    <div v-show="isOpenedComments" :class="['tapl-comment', isOpenedComments ? 'open' : 'close']">
+    <div v-if="isOpenedComments" :class="['tapl-comment', isOpenedComments ? 'open' : 'close']">
+
       <ul ref="commentEl" style="overflow-y: scroll ;max-height: 500px;">
         <li v-for="comment in comments" :key="comment.id">
           <Comment :comment="comment" :isEdit="isCommentEdit" @refresh="commentRefresh" @editComment="editComment"
@@ -176,6 +177,7 @@ const commentEl = ref<HTMLElement | null>(null)
 const isAddData = ref(false)
 
 const isCommentEdit = ref(false)
+const totalComment = ref(0)
 
 useInfiniteScroll(
   commentEl,
@@ -239,13 +241,14 @@ function addComment(comment: IComment) {
 
   if (comment) {
     if (comment.parent_id) {
-      comment.parent_id = recomment.value.parent_id
+      if (recomment.value.parent_id) {
+        comment.parent_id = recomment.value.parent_id
+      }
+
       newRecomments.value = [comment, ...newRecomments.value]
 
     } else {
-      console.log('comment', comment)
       comments.value = [comment, ...comments.value]
-
     }
     commentCount.value += 1
   }
@@ -266,7 +269,8 @@ async function deleteComment(commentId: string) {
   })
   commentCount.value -= 1
 
-  if (comments.value.length < COMMENT_LIMIT) {
+  console.log('comments lengh', totalComment.value)
+  if (comments.value.length < COMMENT_LIMIT && totalComment.value >= COMMENT_LIMIT) {
     offset.value = comments.value.length
     await commentFetch()
   }
@@ -308,6 +312,7 @@ async function commentFetch() {
   )
 
   if (data.value) {
+    totalComment.value = data.value.totalCount
 
     if (isAddData.value) {
       if (data.value.result.length > 0) {
@@ -373,7 +378,6 @@ function onMouseUp() {
 }
 
 function getRecomment(comment: IComment) {
-  console.log('comment', comment)
   recomment.value = comment
 }
 
