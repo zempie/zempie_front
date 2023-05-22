@@ -80,10 +80,8 @@ const coins = computed(() => {
   if (isFlutter.value) {
     flutterBridge().initPurchase(result)
       .then((res) => {
-        console.log('res', res)
         result = res
       })
-    console.log('inishop', result)
   }
 
   return result
@@ -123,10 +121,17 @@ async function receiveMessage(message: any) {
         try {
           const receipt = data.value.result.data.receipt
           const result = await flutterBridge().consumeReceipt(receipt)
+
           if (result) {
             const { update } = data.value.result?.data
+
             useUser().updateUserCoin(update.user.coin)
-            useCoin().setCoinReceipt(receipt_check.value)
+            useCoin().setCoinReceipt({
+              order_id: receipt_check.value.orderId,
+              metadata: {
+                item_name: activeCoin.value.zem + 'ZEM'
+              }
+            })
             router.push($localePath('/coin/purchase-done'))
           }
         } catch (err) {
@@ -142,10 +147,7 @@ async function purchaseCoin() {
 
   if (user.value) {
     if (isFlutter.value) {
-      //TODO: 인앱결제 연결 
       const result = await flutterBridge().purchaseItem(activeCoin.value.store_code)
-      console.log('purchase: ', result)
-
     } else {
       const payload = {
         price: activeCoin.value.price,
