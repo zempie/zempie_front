@@ -105,7 +105,6 @@ async function receiveMessage(message: any) {
       case 'purchasing_success':
         alert('here!')
         receipt_check.value = receipt
-        //TODO: 서버 코드 수정해야됨 임시로 해둔것임 
         const { data, error } = await useCustomAsyncFetch<{
           result: {
             data: {
@@ -122,6 +121,7 @@ async function receiveMessage(message: any) {
         //TODO receipt 보내야함
         try {
           const result = await flutterBridge().consumeReceipt(data.value.result.data.receipt)
+          alert(JSON.stringify(data.value.result.data.receipt))
           if (result) {
             const { update } = data.value.result?.data
             useUser().updateUserCoin(update.user.coin)
