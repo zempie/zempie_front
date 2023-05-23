@@ -32,7 +32,7 @@ const props = defineProps({
   },
   recomment: Object as PropType<IComment>
 })
-const parentComment = ref<IComment | { id: string | null, user: { nickname: string | null } }>(props.recomment || { id: null, user: { nickname: null } })
+const parentComment = ref<IComment | { id: string | null, user: { nickname: string | null }, parent_id?: string }>(props.recomment || { id: null, user: { nickname: null } })
 
 const content = ref(commentCheck(props.comment || props.recomment) || null)
 const commentInput = ref()
@@ -112,11 +112,15 @@ const sendComment = _.debounce(async () => {
   }
 
 
-
+  console.log('parentComment', parentComment.value)
   if (parentComment.value?.id) {
-    payload['parent_id'] = parentComment.value.id
+    payload['parent_id'] = parentComment.value.parent_id ? parentComment.value?.parent_id : parentComment.value.id
     payload.content = `@${parentComment.value.user.nickname} ` + payload.content
   }
+
+
+  console.log(payload)
+  // return
 
   const { data, error } = await useCustomAsyncFetch(
     `/post/${props.postId}/comment`,
