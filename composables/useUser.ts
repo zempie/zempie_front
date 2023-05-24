@@ -66,12 +66,13 @@ export default function () {
   const logout = async () => {
 
     try {
+      await removeFcmToken();
+
       if (isFlutter.value) {
         await flutterBridge().signOutFirebase();
       } else {
         await signOut($firebaseAuth);
       }
-      await removeFcmToken(user.value.info.id);
 
     } catch (error) {
       ElMessage({

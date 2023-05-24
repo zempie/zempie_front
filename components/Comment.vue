@@ -57,19 +57,15 @@
         </dl>
         <div class="tapl-comment recomment" v-if="filteredRecomments?.length" style="padding-bottom:0px !important">
           <ul>
-            <!-- <TransitionGroup name="fade"> -->
             <Comment v-for="cmt in filteredRecomments" :key="cmt.content" :comment="cmt"
               @recomment="emit('recomment', cmt)" @refresh="emit('refresh')" @delete-recomment="deleteRecomment" />
-            <!-- </TransitionGroup> -->
           </ul>
         </div>
 
         <div class="tapl-comment recomment" v-if="isRecommentOpen && recomments?.length">
           <ul>
-            <!-- <TransitionGroup name="fade"> -->
             <Comment v-for="cmt in recomments" :key="cmt.content" :comment="cmt" @recomment="emit('recomment', cmt)"
               @refresh="emit('refresh')" @delete-recomment="deleteRecomment" />
-            <!-- </TransitionGroup> -->
           </ul>
         </div>
       </dt>

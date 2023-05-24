@@ -12,6 +12,8 @@ interface iFcmToken {
   user_id: number
 }
 
+const FCM_TOKEN = 'fToken'
+
 export const getFcmToken = async (user_id) => {
   return await useCustomFetch<{
     channel_id: string, created_at: string, deleted_at: string, email: string, id: number, is_developer: number, last_log_in: string,
@@ -19,14 +21,14 @@ export const getFcmToken = async (user_id) => {
   }>(`/fcm/${user_id}`, getComFetchOptions('get', false))
 }
 
-export const removeFcmToken = async (user_id: number) => {
+export const removeFcmToken = async () => {
   const config = useRuntimeConfig()
-  //$fetch가 안먹음...;
-  return await axios(`/fcm/${user_id}/remove`,
-    {
-      method: 'post',
-      baseURL: config.COMMUNITY_API
-    })
+  const fcmToken = getTokenInLocal()
+  const fUser = useUser().user.value.fUser
+  removeTokenInLocal()
+
+  return useCustomAsyncFetch(`/fcm?token=${fcmToken}`, getComFetchOptions('delete', true))
+
 }
 
 export const resigterFcmToken = async (user_id: number) => {
@@ -44,13 +46,29 @@ export const resigterFcmToken = async (user_id: number) => {
     const { $firebaseApp } = useNuxtApp()
     const messaging = getMessaging($firebaseApp);
     token = await getToken(messaging, { vapidKey: config.fCM_KEY })
-    console.log('fcm token', token)
   }
   if (token) {
+    setTokenInLocal(token)
     return await axios(`/fcm/${user_id}?token=${token}`,
       {
         method: 'post',
         baseURL: config.COMMUNITY_API
       })
+  }
+}
+
+const getTokenInLocal = () => {
+  return localStorage.getItem(FCM_TOKEN)
+}
+
+const setTokenInLocal = (token: string) => {
+  localStorage.setItem(FCM_TOKEN, token);
+}
+
+const removeTokenInLocal = () => {
+  const fcmToken = getTokenInLocal()
+
+  if (fcmToken) {
+    localStorage.removeItem(FCM_TOKEN)
   }
 }
