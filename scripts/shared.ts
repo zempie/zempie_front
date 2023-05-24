@@ -3,8 +3,10 @@
  */
 
 import { eNotificationType, IFeed, INotification } from '~~/types'
-import { ElMessage } from 'element-plus'
 import { getFirstDomElementByServer, stringToDomElemByServer } from './utils';
+import { i18n } from '~~/modules/i18n';
+import Vue from 'vue'
+
 const HOURTOSEC = 60 * 60;
 
 export default {
@@ -100,13 +102,17 @@ export default {
    */
   notiText: function (type: number) {
 
+    const i18n = useNuxtApp().$i18n
+
     switch (type) {
       case eNotificationType.comment:
-        return 'wrote comment on your post'
+        return i18n.t('notification.comment')
       case eNotificationType.comment_like:
-        return 'likes you comment'
+        return i18n.t('notification.like.comment')
+
       case eNotificationType.post_like:
-        return `likes your posting`
+        return i18n.t('notification.like.post')
+
       case eNotificationType.post:
         console.log('post')
         break;
@@ -117,7 +123,9 @@ export default {
         console.log('notice')
         break;
       case eNotificationType.follow:
-        return 'follows you'
+        return i18n.t('notification.follow')
+      case eNotificationType.recomment:
+        return i18n.t('notification.recomment')
       default:
         break;
     }

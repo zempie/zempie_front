@@ -118,6 +118,7 @@ async function fetch() {
 }
 
 async function clickNoti(noti: INotification) {
+ 
   await useCustomFetch('/notification', getComFetchOptions('put', true, { id: noti.id }))
   shared.moveNoti(noti)
 

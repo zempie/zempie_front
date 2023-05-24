@@ -84,11 +84,9 @@
     <div v-if="isOpenedComments" :class="['tapl-comment', isOpenedComments ? 'open' : 'close']">
 
       <ul ref="commentEl" style="overflow-y: scroll ;max-height: 500px;">
-        <li v-for="comment in comments" :key="comment.id">
-          <Comment :comment="comment" :isEdit="isCommentEdit" @refresh="commentRefresh" @editComment="editComment"
-            @deleteComment="deleteComment" :key="comment.content" @recomment="getRecomment"
-            :newRecomments="newRecomments" />
-        </li>
+        <Comment v-for="comment in comments" :key="comment.content" :comment="comment" :isEdit="isCommentEdit"
+          @refresh="commentRefresh" @editComment="editComment" @deleteComment="deleteComment" @recomment="getRecomment"
+          :newRecomments="newRecomments" />
 
       </ul>
       <CommentInput :postId="feed.id" @addComment="addComment" :recomment="recomment" />
@@ -241,7 +239,7 @@ function addComment(comment: IComment) {
 
   if (comment) {
     if (comment.parent_id) {
-      if (recomment.value.parent_id) {
+      if (recomment.value?.parent_id) {
         comment.parent_id = recomment.value.parent_id
       }
 
@@ -251,8 +249,10 @@ function addComment(comment: IComment) {
       comments.value = [comment, ...comments.value]
     }
     commentCount.value += 1
+
   }
 
+  recomment.value = null
 }
 
 function editComment(comment: IComment) {
@@ -263,13 +263,26 @@ function editComment(comment: IComment) {
     return elem;
   })
 }
-async function deleteComment(commentId: string) {
-  comments.value = comments.value.filter((elem: IComment) => {
-    return elem.id !== commentId
+async function deleteComment(comment: IComment) {
+
+  const hasNewRecomments = newRecomments.value.find((elem) => {
+    return elem.parent_id === comment.id
   })
+
+  comments.value = comments.value.filter((elem: IComment) => {
+    if (elem.id === comment.id) {
+      if (elem.children_comments?.length || hasNewRecomments) {
+        delete elem.user
+        elem.deleted_at = String(Date.now())
+        return elem.content = '삭제된 댓글입니다.'
+      }
+    } else {
+      return elem.id !== comment.id
+    }
+  })
+
   commentCount.value -= 1
 
-  console.log('comments lengh', totalComment.value)
   if (comments.value.length < COMMENT_LIMIT && totalComment.value >= COMMENT_LIMIT) {
     offset.value = comments.value.length
     await commentFetch()
@@ -277,7 +290,7 @@ async function deleteComment(commentId: string) {
 
   if (newRecomments.value.length) {
     newRecomments.value = newRecomments.value.filter((elem: IComment) => {
-      return elem.id !== commentId
+      return elem.id !== comment.id
     })
   }
 
@@ -313,6 +326,10 @@ async function commentFetch() {
 
   if (data.value) {
     totalComment.value = data.value.totalCount
+    if (comments.value.length < limit.value && data.value.result.length < limit.value && data.value.result.length > 0) {
+      offset.value += limit.value
+      commentFetch()
+    }
 
     if (isAddData.value) {
       if (data.value.result.length > 0) {

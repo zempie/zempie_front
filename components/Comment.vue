@@ -1,104 +1,107 @@
 <template>
-  <dl v-if="comment && !isCommentEdit">
-    <dt class="full-width">
-      <dl>
-        <dt>
-          <UserAvatar :user="comment.user" :tag="'span'" :has-router="true"></UserAvatar>
-        </dt>
-        <dd class="full-width">
-          <div class="row items-center justify-between">
-            <h2>
-              <NuxtLink style="color:#000" :to="$localePath(`/${comment.user?.nickname}`)">
-                {{ comment.user?.nickname }}</NuxtLink>
-              <span class="font13">{{ dateFormat(comment.created_at) }}</span>
-            </h2>
-            <el-dropdown v-if="comment.user?.uid === user?.uid" trigger="click" ref="feedMenu"
-              popper-class="tapl-more-dropdown">
-              <a slot="trigger"><i class="uil uil-ellipsis-h font25 pointer"></i></a>
-              <template #dropdown>
-                <div slot="body" class="more-list">
-                  <a @click="isCommentEdit = !isCommentEdit" class="pointer">{{
-                    $t('comment.edit')
-                  }}</a>
-                  <a @click="showDeleteModal = true" class="pointer">
-                    {{ $t('comment.delete') }}
-                  </a>
+  <li v-if="showComment">
+    <dl>
+      <dt class="full-width">
+        <dl>
+          <dt v-if="!comment.deleted_at">
+            <UserAvatar :user="comment.user" :tag="'span'" :has-router="true"></UserAvatar>
+          </dt>
+          <dd class="full-width">
+            <div v-if="!comment.deleted_at" class="row items-center justify-between">
+              <h2>
+                <NuxtLink style="color:#000" :to="$localePath(`/${comment.user?.nickname}`)">
+                  {{ comment.user?.nickname }}</NuxtLink>
+                <span class="font13">{{ dateFormat(comment.created_at) }}</span>
+              </h2>
+              <el-dropdown v-if="comment.user?.uid === user?.uid" trigger="click" ref="feedMenu"
+                popper-class="tapl-more-dropdown">
+                <a slot="trigger"><i class="uil uil-ellipsis-h font25 pointer"></i></a>
+                <template #dropdown>
+                  <div slot="body" class="more-list">
+                    <a @click="isCommentEdit = !isCommentEdit" class="pointer">{{
+                      $t('comment.edit')
+                    }}</a>
+                    <a @click="showDeleteModal = true" class="pointer">
+                      {{ $t('comment.delete') }}
+                    </a>
+                  </div>
+                </template>
+              </el-dropdown>
+            </div>
+            <div style="color: #000">
+              <div class="cmt-chip-container">
+                <div v-if="parentUser?.id && parentUser?.nickname" class="chip pointer"
+                  @click="$router.push($localePath(`/${parentUser?.nickname}`))">
+                  {{ '@' + parentUser?.nickname }}
                 </div>
-              </template>
-            </el-dropdown>
-          </div>
-          <div style="color: #000">
-            <div class="cmt-chip-container">
-              <div v-if="parentUser?.id && parentUser?.nickname" class="chip pointer"
-                @click="$router.push($localePath(`/${parentUser?.nickname}`))">
-                {{ '@' + parentUser?.nickname }}
+                {{ commentContent }}
               </div>
-              {{ commentContent }}
             </div>
-          </div>
-          <p style="display: inline-block">
-            <i v-if="isLiked" @click="unsetLike()" class="xi-heart like-icon pointer" style="color: red"></i>
-            <i v-else class="uil uil-heart-sign pointer" @click="setLike()"></i>
-            <span class="ml5">{{ $t('like') }} {{ likeCnt }}{{ $t('like.unit') }}</span>
-          </p>
-          <span class="pointer ml10" @click="emit('recomment', comment)">
-            <i class="uil uil-edit-alt"></i> 답글 작성</span>
-          <TranslateBtn :text="commentContent" @translatedText="translate" @untranslatedText="untranslatedText" />
-          <p class="zem-color pointer" v-if="recomments?.length" @click="onClickRecomment">
-            <i :class="isRecommentOpen ? 'uil uil-angle-up' : 'uil uil-angle-down'"></i>
-            답글 {{ recomments?.length }}개
-          </p>
-        </dd>
-      </dl>
-      <div class="tapl-comment recomment" v-if="filteredRecomments?.length" style="padding-bottom:0px !important">
-        <ul>
-          <TransitionGroup name="fade">
-            <li v-for="cmt in filteredRecomments" :key="cmt.id" style="border-top:0px;">
-              <Comment :comment="cmt" @recomment="emit('recomment', cmt)" @refresh="emit('refresh')"
-                @delete-recomment="deleteRecomment" />
-            </li>
-          </TransitionGroup>
-        </ul>
-      </div>
+            <template v-if="!comment.deleted_at">
+              <p style="display: inline-block">
+                <i v-if="isLiked" @click="unsetLike()" class="xi-heart like-icon pointer" style="color: red"></i>
+                <i v-else class="uil uil-heart-sign pointer" @click="setLike()"></i>
+                <span class="ml5">{{ $t('like') }} {{ likeCnt }}{{ $t('like.unit') }}</span>
+              </p>
+              <span class="pointer ml10" @click="emit('recomment', comment)">
+                <i class="uil uil-edit-alt"></i>{{ $t('write.recomment') }}</span>
+              <TranslateBtn :text="commentContent" @translatedText="translate" @untranslatedText="untranslatedText" />
+            </template>
 
-      <div class="tapl-comment recomment" v-if="isRecommentOpen && recomments?.length">
-        <ul>
-          <TransitionGroup name="fade">
-            <li v-for="cmt in recomments" :key="cmt.id" style="border-top:0px;">
-              <Comment :comment="cmt" @recomment="emit('recomment', cmt)" @refresh="emit('refresh')"
-                @delete-recomment="deleteRecomment" />
-            </li>
-          </TransitionGroup>
-        </ul>
-      </div>
-    </dt>
-
-    <ClientOnly>
-      <el-dialog v-model="showDeleteModal" append-to-body class="modal-area-type" width="380px">
-        <div class="modal-alert">
-          <dl class="ma-header">
-            <dt>{{ $t('information') }}</dt>
-            <dd>
-              <button @click="showDeleteModal = false">
-                <i class="uil uil-times"></i>
-              </button>
-            </dd>
-          </dl>
-          <div class="ma-content">
-            <h2>{{ $t('comment.delete.text') }}</h2>
-            <div>
-              <button class="btn-default w48p" @click="deleteComment">
-                {{ $t('delete') }}
-              </button>
-              <button class="btn-gray w48p" @click="showDeleteModal = false">
-                {{ $t('no') }}
-              </button>
-            </div>
-          </div>
+            <p class="zem-color pointer" v-if="recomments?.length" @click="onClickRecomment"
+              :style="comment.deleted_at ? 'margin-left:35px' : ''">
+              <i :class="isRecommentOpen ? 'uil uil-angle-up' : 'uil uil-angle-down'"></i>
+              {{ $t('recomment') }} {{ recomments?.length }}{{ $t('unit') }}
+            </p>
+          </dd>
+        </dl>
+        <div class="tapl-comment recomment" v-if="filteredRecomments?.length" style="padding-bottom:0px !important">
+          <ul>
+            <TransitionGroup name="fade">
+              <Comment v-for="cmt in filteredRecomments" :key="cmt.content" style="border-top:0px;" :comment="cmt"
+                @recomment="emit('recomment', cmt)" @refresh="emit('refresh')" @delete-recomment="deleteRecomment" />
+            </TransitionGroup>
+          </ul>
         </div>
-      </el-dialog>
-    </ClientOnly>
-  </dl>
+
+        <div class="tapl-comment recomment" v-if="isRecommentOpen && recomments?.length">
+          <ul>
+            <TransitionGroup name="fade">
+              <Comment v-for="cmt in recomments" :key="cmt.content" style="border-top:0px;" :comment="cmt"
+                @recomment="emit('recomment', cmt)" @refresh="emit('refresh')" @delete-recomment="deleteRecomment" />
+            </TransitionGroup>
+          </ul>
+        </div>
+      </dt>
+
+      <ClientOnly>
+        <el-dialog v-model="showDeleteModal" append-to-body class="modal-area-type" width="380px">
+          <div class="modal-alert">
+            <dl class="ma-header">
+              <dt>{{ $t('information') }}</dt>
+              <dd>
+                <button @click="showDeleteModal = false">
+                  <i class="uil uil-times"></i>
+                </button>
+              </dd>
+            </dl>
+            <div class="ma-content">
+              <h2>{{ $t('comment.delete.text') }}</h2>
+              <div>
+                <button class="btn-default w48p" @click="deleteComment">
+                  {{ $t('delete') }}
+                </button>
+                <button class="btn-gray w48p" @click="showDeleteModal = false">
+                  {{ $t('no') }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </el-dialog>
+      </ClientOnly>
+    </dl>
+  </li>
+
   <CommentInput v-if="isCommentEdit" @refresh="refresh" @editComment="editComment" :postId="comment.post_id"
     :comment="comment" :isEdit="true" />
 </template>
@@ -151,6 +154,16 @@ const filteredRecomments = computed(() => {
 })
 
 
+const showComment = computed(() => {
+  if (props.comment.deleted_at && recomments.value?.length === 0) {
+    return false
+  } else if (props.comment && !isCommentEdit.value) {
+    return true
+  } else {
+    return false
+  }
+  // (comment.deleted_at && recomments?.length > 0) && comment && !isCommentEdit
+})
 
 const { info: user, isLogin } = useUser().user.value
 
@@ -228,9 +241,9 @@ async function deleteComment() {
   if (!error.value) {
 
     if (props.comment.parent_id) {
-      emit('deleteRecomment', props.comment.id)
+      emit('deleteRecomment', props.comment)
     } else {
-      emit('deleteComment', props.comment.id)
+      emit('deleteComment', props.comment)
     }
   }
   showDeleteModal.value = false
@@ -248,12 +261,12 @@ function onClickRecomment() {
   isRecommentOpen.value = !isRecommentOpen.value
 }
 
-function deleteRecomment(commentId: string) {
+function deleteRecomment(comment: IComment) {
 
   recomments.value = recomments.value?.filter((elem) => {
-    return elem.id !== commentId
+    return elem.id !== comment.id
   })
-  emit('deleteComment', commentId)
+  emit('deleteComment', comment)
 
 }
 

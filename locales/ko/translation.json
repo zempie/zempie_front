@@ -949,5 +949,13 @@
   "load.post": "초안",
   "draft.post": "임시저장",
   "update.post": "수정",
-  "save.post": "게시"
+  "save.post": "게시",
+  "notification.recomment": "님이 답글을 달았습니다.",
+  "notification.follow": "님이 회원님을 팔로우했습니다.",
+  "write.recomment": " 답글 작성",
+  "recomment": "답글",
+  "unit": "개",
+  "notification.comment": "님이 포스팅에 댓글을 남겼습니다",
+  "notification.like.comment": "님이 댓글에 좋아요를 눌렀습니다.",
+  "notification.like.post": "님이 회원님의 포스팅에 좋아요를 눌렀습니다."
 }

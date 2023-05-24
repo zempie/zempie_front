@@ -316,7 +316,7 @@ export interface IComment {
   children_comments: IComment[],
   content: string,
   created_at: string,
-  deleted_att: string,
+  deleted_at: string,
   dislike_cntt: number,
   id: string,
   is_liked: boolean,
@@ -372,7 +372,8 @@ export enum eNotificationType {
   comment_like,
   report,
   retweet,
-  follow
+  follow,
+  recomment
 }
 
 export enum eMetadataType {

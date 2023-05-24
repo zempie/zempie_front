@@ -951,5 +951,13 @@
   "load.post": "Load",
   "draft.post": "Draft",
   "update.post": "Update",
-  "save.post": "Save"
+  "save.post": "Save",
+  "notification.follow": "wrote comment on your comment",
+  "notification.recomment": "follows you",
+  "write.recomment": "__STRING_NOT_TRANSLATED__",
+  "recomment": "__STRING_NOT_TRANSLATED__",
+  "unit": "__STRING_NOT_TRANSLATED__",
+  "notification.comment": "__STRING_NOT_TRANSLATED__",
+  "notification.like.comment": "__STRING_NOT_TRANSLATED__",
+  "notification.like.post": "__STRING_NOT_TRANSLATED__"
 }

@@ -79,10 +79,8 @@
             </p>
             <ul ref="commentEl" style="max-height:700px; overflow-y: scroll;">
               <TransitionGroup name="fade">
-                <li v-for="comment in comments" :key="comment.id" class="comment">
-                  <Comment :comment="comment" @refresh="commentFetch" @deleteComment="deleteComment"
-                    @editComment="editComment" :key="comment.content" />
-                </li>
+                <Comment v-for="comment in comments" :key="comment.content" class="comment" :comment="comment"
+                  @refresh="commentFetch" @deleteComment="deleteComment" @editComment="editComment" />
               </TransitionGroup>
             </ul>
             <CommentInput :postId="feed?.id" @refresh="commentFetch" @addComment="addComment" />
@@ -287,9 +285,9 @@ function addComment(comment: IComment) {
 
 }
 
-function deleteComment(commentId: string) {
+function deleteComment(comment: IComment) {
   comments.value = comments.value.filter((comment: IComment) => {
-    return comment.id !== commentId
+    return comment.id !== comment.id
   })
 
 }
