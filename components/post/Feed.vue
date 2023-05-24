@@ -87,7 +87,6 @@
         <Comment v-for="comment in comments" :key="comment.content" :comment="comment" :isEdit="isCommentEdit"
           @refresh="commentRefresh" @editComment="editComment" @deleteComment="deleteComment" @recomment="getRecomment"
           :newRecomments="newRecomments" />
-
       </ul>
       <CommentInput :postId="feed.id" @addComment="addComment" :recomment="recomment" />
     </div>

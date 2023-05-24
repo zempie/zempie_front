@@ -1,5 +1,5 @@
 <template>
-  <dl @click="isLogin || useModal().openLoginModal()">
+  <dl class="mt15" @click="isLogin || useModal().openLoginModal()">
     <UserAvatar :user="user" :tag="'p'" class="user" />
     <dt>
       <div class="chip-container ">
