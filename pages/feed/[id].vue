@@ -74,16 +74,17 @@
           <div class="tapl-comment" v-if="comments">
             <p>
               {{ $t('comment') }} {{
-                feed?.comment_cnt
+                commentCount
               }}{{ $t('comment.count.unit') }}
             </p>
+
+            <!-- <CommentList :comments="comments" @addComment="addComment" /> -->
             <ul ref="commentEl" style="max-height:700px; overflow-y: scroll;">
-              <TransitionGroup name="fade">
-                <Comment v-for="comment in comments" :key="comment.content" class="comment" :comment="comment"
-                  @refresh="commentFetch" @deleteComment="deleteComment" @editComment="editComment" />
-              </TransitionGroup>
+              <Comment v-for="comment in comments" :key="comment.content" :comment="comment" :isEdit="isCommentEdit"
+                @refresh="commentRefresh" @editComment="editComment" @deleteComment="deleteComment"
+                @recomment="getRecomment" :newRecomments="newRecomments" />
             </ul>
-            <CommentInput :postId="feed?.id" @refresh="commentFetch" @addComment="addComment" />
+            <CommentInput :postId="feed?.id" @addComment="addComment" :recomment="recomment" />
 
           </div>
           <!-- <div ref="triggerDiv"></div> -->
@@ -167,6 +168,12 @@ const triggerDiv = ref()
 const isAddData = ref(false)
 
 
+const isCommentEdit = ref(false)
+
+//대댓글
+const recomment = ref()
+const newRecomments = ref([])
+
 
 useInfiniteScroll(
   commentEl,
@@ -192,6 +199,7 @@ const {
   }
 )
 setHead()
+const commentCount = ref(feed.value.comment_cnt)
 
 const postedCommunity = (posted_at) => {
   if (posted_at) {
@@ -281,8 +289,22 @@ async function commentFetch() {
 }
 
 function addComment(comment: IComment) {
-  comments.value = [comment, ...comments.value]
+  if (comment) {
+    if (comment.parent_id) {
+      if (recomment.value?.parent_id) {
+        comment.parent_id = recomment.value.parent_id
+      }
 
+      newRecomments.value = [comment, ...newRecomments.value]
+
+    } else {
+      comments.value = [comment, ...comments.value]
+    }
+    commentCount.value += 1
+
+  }
+
+  recomment.value = null
 }
 
 function deleteComment(comment: IComment) {
@@ -370,6 +392,26 @@ function copyUrl() {
     message: t('copied.clipboard'),
     type: 'success',
   })
+}
+
+
+async function commentRefresh(comment?: any) {
+  isCommentEdit.value = !isCommentEdit.value
+  commentInit()
+  await commentFetch()
+}
+
+
+
+function getRecomment(comment: IComment) {
+  recomment.value = comment
+}
+
+function commentInit() {
+  comments.value = []
+  limit.value = COMMENT_LIMIT
+  offset.value = 0
+  sort.value = null
 }
 </script>
 

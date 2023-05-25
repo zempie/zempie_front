@@ -9,8 +9,9 @@
           <dd class="full-width">
             <div v-if="!comment.deleted_at" class="row items-center justify-between">
               <h2>
-                <NuxtLink style="color:#000" :to="$localePath(`/${comment.user?.nickname}`)">
-                  {{ comment.user?.nickname }}</NuxtLink>
+                <NuxtLink style="color:#000" :to="$localePath(`/${commentUser.nickname}`)">
+                  {{ commentUser.nickname }}</NuxtLink>
+
                 <span class="font13">{{ dateFormat(comment.created_at) }}</span>
               </h2>
               <el-dropdown v-if="comment.user?.uid === user?.uid" trigger="click" ref="feedMenu"
@@ -137,6 +138,7 @@ const isLiked = ref(props.comment.is_liked)
 const likeCnt = ref(props.comment.like_cnt)
 
 const isRecommentOpen = ref(false)
+const commentUser = computed(() => props.comment?.user)
 
 
 const filteredRecomments = computed(() => {

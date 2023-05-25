@@ -67,7 +67,7 @@
           </div>
           <div class="header-info ml0" v-if="!isLoading && isLogin" :key="user.id">
             <NotificationHeaderButton />
-            <DmHeaderButton />
+            <!-- <DmHeaderButton /> -->
             <UserMenu />
           </div>
           <div v-else-if="!isLoading && !isLogin" class="header-login">
