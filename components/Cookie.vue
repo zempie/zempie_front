@@ -1,12 +1,12 @@
 <template>
-<div class="cookies-eu-banner">
-  {{$t('cookie')}}
-</div>
+  <div class="cookies-eu-banner">
+    {{ $t('cookie') }}
+  </div>
 </template>
-<script setup lang='ts'>
+<script setup lang="ts">
 
 
-function getCookie(){
+function getCookie() {
 
   const value = " " + document.cookie;
   console.log("value", `==${value}==`);
@@ -23,7 +23,7 @@ onMounted(() => {
   )
 })
 </script>
-<style scoped lang='scss'>
+<style scoped lang="scss">
 .cookies-eu-banner {
   background: #444;
   color: #fff;

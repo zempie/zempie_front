@@ -228,13 +228,13 @@
 
   </div>
 </template>
-<script setup lang='ts'>
+<script setup lang="ts">
 import { ElScrollbar } from 'element-plus'
 
 
 
 </script>
-<style scoped lang='scss'>
+<style scoped lang="scss">
 .visual-menu {
   background: url('/images/dm_banner.jpeg') center no-repeat;
   background-size: cover;

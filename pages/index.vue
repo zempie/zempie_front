@@ -26,4 +26,4 @@ shared.createHeadMeta(t('seo.landing.title'), t('seo.landing.description'), conf
 
 </script>
 
-<style scoped lang='scss'></style>
+<style scoped lang="scss"></style>

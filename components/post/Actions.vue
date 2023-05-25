@@ -12,7 +12,7 @@
     </ul>
   </li>
 </template>
-<script setup lang='ts'>
+<script setup lang="ts">
 import { PropType } from 'vue';
 import { IFeed } from '~~/types';
 
@@ -47,4 +47,4 @@ function openComments() {
   }
 }
 </script>
-<style scoped lang='scss'></style>
+<style scoped lang="scss"></style>
