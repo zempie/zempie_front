@@ -1,8 +1,6 @@
 <template>
   <div>
-
     <NuxtLayout name="channel-header">
-      {{ userId }}
       <dl class="three-area">
         <dt :key="channelInfo.id">
           <ChannelInfoBox :isLoading="isLoading" />
