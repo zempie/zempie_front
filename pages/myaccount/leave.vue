@@ -106,10 +106,6 @@ async function openConfirnModal() {
 }
 
 async function leave() {
-  // const { data, error, pending } = await user.leave({
-  //   text: reason.value,
-  //   num: '0',
-  // })
 
   const { data, error, pending } = await useCustomAsyncFetch('/user/leave-zempie', getZempieFetchOptions('post', true, {
     text: reason.value,

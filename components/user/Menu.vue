@@ -15,30 +15,43 @@
           <div>
             <h2>{{ $t('myProfile') }}</h2>
             <div>
-              <NuxtLink id="myChannel" :to="$localePath(`/${user?.nickname}`)"><i class="uil uil-user"></i>
+              <NuxtLink id="myChannel" :to="$localePath(`/${user?.nickname}`)">
+                <!-- <i class="uil uil-user"></i> -->
                 {{ $t('myChannel') }}
               </NuxtLink>
-              <NuxtLink id="gameStudio" :to="$localePath('/project/list')"><i class="uil uil-robot"></i>
+              <NuxtLink id="gameStudio" :to="$localePath('/project/list')">
+                <!-- <i class="uil uil-robot"></i> -->
                 {{ $t('gameStudio') }}
+              </NuxtLink>
+
+              <NuxtLink :to="$localePath(`/myaccount`)">
+                <!-- <i class="uil uil-setting"></i> -->
+                {{ $t('my.account') }}
               </NuxtLink>
             </div>
           </div>
           <div>
             <h2>{{ $t('group') }}</h2>
             <div>
-              <NuxtLink :to="$localePath(`/myaccount/communities`)"><i class="uil uil-users-alt"></i>
+              <NuxtLink :to="$localePath(`/myaccount/communities`)">
+                <!-- <i class="uil uil-users-alt"></i> -->
                 {{ $t('joined.group') }}
               </NuxtLink>
             </div>
           </div>
-          <div>
-            <h2>{{ $t('account') }}</h2>
+
+          <!-- <div class="zem-coin">
+            <h2>{{ $t('purchase') }}</h2>
             <div>
-              <NuxtLink :to="$localePath(`/myaccount`)"><i class="uil uil-setting"></i>
-                {{ $t('my.account') }}
+              <NuxtLink class="pointer" :to="$localePath(`/coin/purchase`)" :target="!isFlutter && '_blank'">
+                ZEM {{ $t('charge') }}
               </NuxtLink>
+              <div class="row justify-between">
+                <span> {{ $t('inventory') }}</span>
+                <Coin :coin="user?.coin?.zem" class="text-bold" />
+              </div>
             </div>
-          </div>
+          </div> -->
           <p>
             <a class="btn-default w100p" @click="logout">{{
               $t('logout')
@@ -58,6 +71,7 @@ const router = useRouter()
 const userMenu = ref()
 
 const user = computed(() => useUser().user.value.info)
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
 
 function logout() {
@@ -67,4 +81,13 @@ function logout() {
   useUser().logout()
 }
 </script>
-<style scoped lang='scss'></style>
+<style scoped lang='scss'>
+.zem-coin {
+  .row {
+    padding-top: 20px;
+    font-size: 16px;
+    line-height: 14px;
+    color: #333;
+  }
+}
+</style>

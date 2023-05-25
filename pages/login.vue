@@ -1,5 +1,4 @@
 <template>
-  <!-- <div> -->
   <div class="login-bg pt50 pb50" style="height: 100vh; min-height: 900px">
     <div class="login-logo">
       <LoginWhiteLogoDt path="/" />
@@ -12,7 +11,6 @@
         <h3>{{ $t('login.text1') }}</h3>
         <p>{{ $t('login.text2') }}</p>
       </div>
-      <!-- currUser {{ currUser }} -->
       <div class="la-content">
         <form>
           <input type="email" v-model="v$.email.$model" name="login-email" title=""
@@ -65,11 +63,6 @@
       </div>
     </div>
   </div>
-  <!-- <div v-else style="width:100vw; height:100vh; display: flex;justify-content: center; align-items: center;">
-      {{ useUser().user.value.isLoading }}
-      <img src="/images/zempie-logo.png" alt="zempie" title="zempie" class="flex justify-center items-center" />
-    </div>
-  </div> -->
 </template>
 
 <script setup lang="ts">
@@ -103,7 +96,6 @@ const config = useRuntimeConfig()
 const currUser = ref()
 const isPageLoading = ref(true)
 
-const isVisit = ref()
 
 definePageMeta({
   layout: 'layout-none',
@@ -139,6 +131,9 @@ const v$ = useVuelidate(rules, form)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
 
+const fUser = computed(() => useUser().user.value.fUser)
+const userInfo = computed(() => useUser().user.value.info)
+
 watch(
   () => useUser().user.value.info,
   (val) => {
@@ -165,7 +160,7 @@ onBeforeMount(() => {
       isPageLoading.value = true
     } else {
       isPageLoading.value = false
-      if (useUser().user.value.fUser) {
+      if (fUser.value && userInfo.value) {
         router.push($localePath('/'))
       }
     }
@@ -179,7 +174,6 @@ onBeforeMount(() => {
 onMounted(() => {
   nextTick(() => {
     window.addEventListener("message", receiveMessage, false);
-    isVisit.value = localStorage.getItem('zMoF')
   })
 })
 
@@ -192,93 +186,66 @@ async function onSubmit() {
 
   if (isFlutter.value) {
 
-    return FlutterBridge().FlutterBridge.signInEmail({ email: form.email, password: form.password })
-      .then((result: any) => {
-        alert(JSON.stringify(result))
+    const result = await FlutterBridge().signInEmail({ email: form.email, password: form.password })
+    currUser.value = result
+    console.log('email login', result)
+    router.push($localePath('/'))
+    await useUser().setUserInfo()
+    await setFirebaseToken()
+
+
+  } else {
+    if (!isValid) return
+    setPersistence($firebaseAuth, browserLocalPersistence)
+      .then((res) => {
+        signInWithEmailAndPassword($firebaseAuth, form.email, form.password)
+          .then(async (result) => {
+            const { user } = result
+            if (user) {
+              router.push($localePath('/'))
+              // await useUser().setUserInfo()
+            }
+          })
+          .catch((err: any) => {
+            const errorCode = err.code
+            const errorMessage = err.message
+            let message = errorCode ? errorCode : errorMessage
+
+            switch (errorCode) {
+              case 'auth/weak-password':
+                message = `${t('login.pwd.format.err')}`
+                break
+              case 'auth/wrong-password':
+                ElMessage.error(`${t('fb.wrong.info')}`)
+                break
+              case 'auth/user-not-found':
+                ElMessage.error(`${t('fb.not.found')}`)
+                break
+              default:
+                ElMessage.error(errorCode)
+                break
+            }
+            throw { message }
+          })
       })
       .catch((err: any) => {
-        alert(JSON.stringify(err))
+        ElMessage.error(err.message)
       })
-
-
-
   }
-
-  if (!isValid) return
-  setPersistence($firebaseAuth, browserLocalPersistence)
-    .then((res) => {
-      signInWithEmailAndPassword($firebaseAuth, form.email, form.password)
-        .then(async (result) => {
-          const { user } = result
-          if (user) {
-            router.push($localePath('/'))
-            // await useUser().setUserInfo()
-          }
-        })
-        // .then(async () => {
-        //   router.push($localePath('/'))
-        //   const { token } = await fbFcm.getFcmToken(useUser().user.value.info.id)
-        //   console.log('token', token)
-        //   if (!token) {
-        //     console.log('regi token')
-        //     await fbFcm.resigterFcmToken(useUser().user.value.info.id)
-        //   }
-        // })
-        .catch((err: any) => {
-          const errorCode = err.code
-          const errorMessage = err.message
-          let message = errorCode ? errorCode : errorMessage
-
-          switch (errorCode) {
-            case 'auth/weak-password':
-              message = `${t('login.pwd.format.err')}`
-              break
-            case 'auth/wrong-password':
-              ElMessage.error(`${t('fb.wrong.info')}`)
-              break
-            case 'auth/user-not-found':
-              ElMessage.error(`${t('fb.not.found')}`)
-              break
-            default:
-              ElMessage.error(errorCode)
-              break
-          }
-          throw { message }
-        })
-    })
-    .catch((err: any) => {
-      ElMessage.error(err.message)
-    })
 }
 
 async function googleLogin() {
   if (isFlutter.value) {
-    return FlutterBridge().FlutterBridge.signInGoogle()
-      .then(async (result: { additionalUserInfo: any, credential: any, stsTokenManager: any }) => {
-        if (result) {
-          const firebaseUser = {
-            ...result.additionalUserInfo.profile,
-            accessToken: result.credential.accessToken
-          }
-
-          useUser().setFirebaseUser(firebaseUser)
-
-          currUser.value = await FlutterBridge().FlutterBridge.getFbCurrentUser()
-          // currUser.value = await getCurrentUser()
-
-          await useUser().setUserInfo()
-
-          if (useUser().user.value.info) {
-            await setFirebaseToken()
-          }
-
-        }
-        // state.fUser = result;
-      })
-      .catch((err) => {
-        alert(err)
-      })
-  } else {
+    try {
+      const result = await FlutterBridge().signInGoogle()
+      await flutterSocialLogin(result)
+    } catch (err) {
+      if (err.message.includes('auth/account-exists-with-different-credential')) {
+        ElMessage.error(`${t('exist.wt.diff.email')}`)
+      }
+    }
+  }
+  else {
     const provider = new GoogleAuthProvider()
     return socialLogin(provider)
   }
@@ -297,11 +264,14 @@ async function receiveMessage(message: any) {
 
 async function facebookLogin() {
   if (isFlutter.value) {
-    return FlutterBridge().FlutterBridge.signInFacebook()
-      .then((result) => {
-        useUser().setFirebaseUser(result)
-        // state.fUser = result;
-      });
+    try {
+      const result = await FlutterBridge().signInFacebook()
+      await flutterSocialLogin(result)
+    } catch (err) {
+      if (err.message.includes('auth/account-exists-with-different-credential')) {
+        ElMessage.error(`${t('exist.wt.diff.email')}`)
+      }
+    }
   } else {
     const provider = new FacebookAuthProvider()
     provider.addScope('email')
@@ -310,14 +280,29 @@ async function facebookLogin() {
   }
 }
 
+async function flutterSocialLogin(info: any) {
+
+  const firebaseUser = {
+    ...info.additionalUserInfo.profile,
+    accessToken: info.credential.accessToken
+  }
+
+  useUser().setFirebaseUser(firebaseUser)
+
+  const userInfo = await useUser().setUserInfo()
+  if (userInfo) {
+    await setFirebaseToken()
+    router.push($localePath('/'))
+  }
+
+}
+
 async function socialLogin(provider: AuthProvider) {
   try {
     const res = await signInWithPopup($firebaseAuth, provider)
     router.push($localePath('/'))
 
   } catch (err) {
-    console.error('socialLogin err', err)
-
     const errorCode = err.code
 
     if (err.message.includes('auth/account-exists-with-different-credential')) {

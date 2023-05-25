@@ -15,6 +15,7 @@ const { t } = useI18n()
 
 const userInfo = computed(() => useUser().user.value.info)
 
+
 definePageMeta({
   title: 'main',
   name: 'main',

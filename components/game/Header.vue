@@ -12,31 +12,33 @@
           accept="image/jpeg, image/png, image/svg, image/jpg, image/webp, image/bmp," ref="bannerImg" name="fileInput" />
       </div>
 
-      <span style="
-                                            border-radius: 50%;
-                                            background-color: #888;
-                                            width: 30px;
-                                            height: 30px;
-                                            display: flex;
-                                            cursor: pointer;
-                                            align-items: center;
-                                          " @click="uploadBanner">
-        <i class="uil uil-image-edit" style="
-                                              font-size: 20px;
-                                              margin-right: 10px;
-                                              color: #fff;
-                                              margin: 0 auto;
-                                            "></i>
+      <span
+        style="
+                                                                                                                                                                                                                                                                                                border-radius: 50%;
+                                                                                                                                                                                                                                                                                                background-color: #888;
+                                                                                                                                                                                                                                                                                                width: 30px;
+                                                                                                                                                                                                                                                                                                height: 30px;
+                                                                                                                                                                                                                                                                                                display: flex;
+                                                                                                                                                                                                                                                                                                cursor: pointer;
+                                                                                                                                                                                                                                                                                                align-items: center;
+                                                                                                                                                                                                                                                                                              "
+        @click="uploadBanner">
+        <i class="uil uil-image-edit"
+          style="
+                                                                                                                                                                                                                                                                                                  font-size: 20px;
+                                                                                                                                                                                                                                                                                                  margin-right: 10px;
+                                                                                                                                                                                                                                                                                                  color: #fff;
+                                                                                                                                                                                                                                                                                                  margin: 0 auto;
+                                                                                                                                                                                                                                                                                                "></i>
       </span>
     </div>
     <dl>
       <dt class="header-left">
         <dl>
           <dt class="game-profile-img">
-            &nbsp;
             <div
-              :style="`background:url(${gameInfo?.url_thumb}) center center / cover no-repeat; background-size:cover;`">
-              <!--                                <span></span>-->
+              :style="`background:url(${gameInfo?.url_thumb}) center center / cover no-repeat; background-size:cover; border-radius: 10%`">
+              <!-- <span></span> -->
             </div>
           </dt>
           <dd class="game-tag">
@@ -44,18 +46,56 @@
               {{ gameInfo.title }}<span></span>
             </h2>
             <h3 @click="moveUserPage" style="cursor: pointer">
-              By {{ gameInfo.user?.nickname }}
+              By <span class="underline">@{{ gameInfo.user?.nickname }}</span>
             </h3>
-
-            <div class="tag-item secondary">
-              <a v-for="hashtag in hashtags" :key="hashtag" @click="searchHashtag(hashtag)">#{{ hashtag }}
-              </a>
-            </div>
           </dd>
         </dl>
       </dt>
+      <div class="play-btn-container row ">
+        <a v-if="gameInfo.stage !== eGameStage.DEV && gameInfo.game_type === eGameType.Html" @click="playGame"
+          class="btn-default mr10">{{ $t('playgame') }}
 
-      <dd class="play-btn-container">
+          <li v-if="gameInfo.game_type === eGameType.Html" style="margin-top: 2px;">
+            <i class="uil uil-html5-alt"></i>
+          </li>
+        </a>
+
+        <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default download mr10"
+          :class="isFlutter && 'disabled'" @click="downloadGame">
+          <span>{{ $t('download') }}</span>
+          <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small>
+          <Icon icon="ri:kakao-talk-fill" class="icon" />
+          <GamePlatformIcon :platform="gameInfo.support_platform" color="#fff" />
+        </a>
+        <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default download mr10"
+          :class="isFlutter && 'disabled'" @click="downloadGame">
+          <span>{{ $t('download') }}</span>
+          <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small>
+          <GamePlatformIcon :platform="gameInfo.support_platform" color="#fff" />
+        </a>
+        <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default download mr10"
+          :class="isFlutter && 'disabled'" @click="downloadGame">
+          <span>{{ $t('download') }}</span>
+          <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small>
+          <GamePlatformIcon :platform="gameInfo.support_platform" color="#fff" />
+        </a>
+        <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default download mr10"
+          :class="isFlutter && 'disabled'" @click="downloadGame">
+          <span>{{ $t('download') }}</span>
+          <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small>
+          <GamePlatformIcon :platform="gameInfo.support_platform" color="#fff" />
+        </a>
+        <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default download mr10"
+          :class="isFlutter && 'disabled'" @click="downloadGame">
+          <span>{{ $t('download') }}</span>
+          <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small>
+          <GamePlatformIcon :platform="gameInfo.support_platform" color="#fff" />
+        </a>
+
+        <!-- <a v-for="hashtag in hashtags" :key="hashtag" @click="searchHashtag(hashtag)">#{{ hashtag }}
+              </a> -->
+      </div>
+      <!-- <dd class="play-btn-container">
         <div class="like-btn" style="flex-direction: column">
           <i v-if="!isLike" class="xi-heart-o like-icon" style="font-size: 22px; color: #ff6e17; cursor: pointer"
             @click="setLike">
@@ -66,12 +106,8 @@
           <p style="color: #fff">{{ likeCnt }}</p>
         </div>
 
-        <a v-if="gameInfo.stage !== eGameStage.DEV && gameInfo.game_type === eGameType.Html" @click="playGame"
-          class="btn-default w150" style="margin-left: 12px">Play Game</a>
 
-        <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default w150 download"
-          :class="isFlutter && 'disabled'" @click="downloadGame">Download</a>
-      </dd>
+      </dd> -->
     </dl>
     <el-dialog v-model="showChangeBanner" class="modal-area-game-banner">
       <div class="modal-alert">
@@ -139,7 +175,7 @@ import _ from 'lodash'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
 import { ElMessage, ElMessageBox, ElTag, ElDialog } from 'element-plus'
-import { IGame, eGameStage, eGameType } from '~~/types'
+import { ePlatformType, eGameStage, eGameType } from '~~/types'
 
 import { PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -390,8 +426,25 @@ function downloadGame() {
 }
 
 .play-btn-container {
+  position: relative;
+  margin-top: 10px;
+  left: 180px;
+
+  a {
+    // width: 110px;
+    border: none;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+
+    li {
+      list-style: none;
+    }
+  }
+
   .download {
-    margin-left: 12px;
     background-color: #5552F9;
 
     &:hover {
@@ -440,11 +493,33 @@ function downloadGame() {
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
+
+
+
   .visual-info-left {
     width: 100%;
 
+
+    // height: 200px;
+
     dl {
       padding: 0px;
+    }
+
+    .header-left {
+      dl {
+        flex-wrap: nowrap;
+      }
+
+      .game-profile-img {
+        margin-left: 10px;
+
+        div {
+          background-color: red;
+          margin: 0px;
+          position: relative;
+        }
+      }
     }
   }
 
@@ -466,6 +541,21 @@ function downloadGame() {
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
+
+  .play-btn-container {
+    width: calc(100% - 180px);
+
+    a {
+      font-size: 12px;
+      padding: 10px 10px;
+
+      small,
+      span {
+        display: none;
+      }
+    }
+  }
+
   .modal-alert {
     .btn-container {
       button {
@@ -493,7 +583,16 @@ function downloadGame() {
   }
 
   .play-btn-container {
-    width: 30%;
+    width: calc(100% - 180px);
+
+    a {
+      font-size: 12px;
+      padding: 10px 15px;
+
+      small {
+        visibility: hidden;
+      }
+    }
   }
 
   .modal-alert {
@@ -522,8 +621,5 @@ function downloadGame() {
     }
   }
 
-  .play-btn-container {
-    width: 30%;
-  }
 }
 </style>

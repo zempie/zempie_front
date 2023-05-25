@@ -5,21 +5,24 @@
     <div class="grey-text mt10 skeleton-animation"></div>
     <ul>
       <div style="width:32%">
-        <h2 class="grey-text mt10 skeleton-animation"></h2>
+        <p class="grey-text mt10 skeleton-animation"></p>
       </div>
       <div style="width:32%">
-        <h2 class="grey-text mt10 skeleton-animation"></h2>
+        <p class="grey-text mt10 skeleton-animation"></p>
       </div>
       <div style="width:32%">
-        <h2 class="grey-text mt10 skeleton-animation"></h2>
+        <p class="grey-text mt10 skeleton-animation"></p>
       </div>
     </ul>
   </div>
   <div v-else class="ta-myinfo">
-
     <UserAvatar :user="channelInfo" tag="p" />
     <h1>{{ channelInfo.nickname }}</h1>
     <h2>{{ channelInfo.name }}</h2>
+    <!-- <hr/> -->
+    <div class="mt10" v-if="user.uid !== channelInfo.channel_id">
+      <UserFollowBtn :user="channelInfo" />
+    </div>
     <ul>
       <li>
         <NuxtLink :to="$localePath(`/${userId}`)">
@@ -52,6 +55,8 @@ const route = useRoute()
 const channelInfo = computed(() => useChannel().userChannel.value.info)
 const isLoading = computed(() => useChannel().userChannel.value.isLoading)
 const userId = computed(() => route.params.id as string || channelInfo.value.nickname)
+const user = computed(() => useUser().user.value.info)
+
 
 
 </script>

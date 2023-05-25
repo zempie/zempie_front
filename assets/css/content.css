@@ -3067,7 +3067,7 @@
 
 .ta-post .tap-list .tapl-comment>ul>li>dl {
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
 }
 
 .ta-post .tap-list .tapl-comment>ul>li>dl>dt>dl {
@@ -3102,7 +3102,7 @@
 }
 
 .ta-post .tap-list .tapl-comment>ul>li>dl>dt>dl dd div {
-  margin-top: 10px;
+  min-height: 26px;
 }
 
 .ta-post .tap-list .tapl-comment>ul>li>dl>dt>dl dd p {
@@ -3122,26 +3122,21 @@
 }
 
 .ta-post .tap-list .tapl-comment>dl dt {
-  width: 80%;
   padding: 0 5px;
 }
 
-.ta-post .tap-list .tapl-comment>dl dt input {
-  width: 100%;
-  border: none;
-}
 
 .ta-post .tap-list .tapl-comment>dl dt input:focus {
   border: none;
   box-shadow: none;
 }
 
-.ta-post .tap-list .tapl-comment>dl dd {
+/* .ta-post .tap-list .tapl-comment>dl dd {
   width: 20%;
   padding-right: 15px;
   text-align: right;
   font-size: 20px;
-}
+} */
 
 .tapl-more-dropdown .v-dropdown-menu__container {
   min-width: 150px;
@@ -5229,15 +5224,6 @@
 @media all and (min-width: 1200px) {}
 
 /* dm-list 내용 */
-.dl-content {
-  /* display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin-top: 30px;
-  border: 1px solid #e5e5e5;
-  border-radius: 10px;
-  overflow: hidden; */
-}
 
 .dl-content>dd {
   width: 40%;

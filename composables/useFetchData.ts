@@ -1,15 +1,14 @@
 import { getAuth, getIdToken } from "firebase/auth";
-import { access } from "fs";
 
 function baseOption(method: string, withCredentials: boolean, body?: object) {
   const config = useRuntimeConfig();
-  const accessToken = useCookie(config.COOKIE_NAME)
 
   const options = {
     key: `${Date.now()}`,
     method: method,
     headers: {},
     initialCache: false,
+    // credentials: withCredentials
   }
 
   if (method === 'post' || method === 'put' || method === 'delete') {
@@ -97,7 +96,6 @@ const useFetchData = async<T>(method: string, url: string, data = null, withCred
       if (user) {
         const expirationTime = user.stsTokenManager.expirationTime
         let token = user.accessToken
-        console.log(token)
         if (expirationTime <= Date.now()) {
           const newToken = await getIdToken(user, true)
           console.log(newToken)
@@ -179,42 +177,10 @@ export const searchKeyword = (keyword: string) => {
   return communityFetch('get', `/search?q=${keyword}`, undefined, false);
 }
 
-
-export const auth = {
-  signUp(obj: { name: string; nickname?: string }) {
-    return useFetchData('post', '/user/sign-up', obj, true)
-  },
-}
-
-export const user = {
-  getUserInfo(channelId: string) {
-    return useFetchData('get', `/channel/${channelId}`, undefined, false)
-  },
-  follow(userId: number) {
-    return communityFetch('post', `/user/${userId}/follow`, undefined, true);
-  },
-  unfollow(userId: number) {
-    return communityFetch('post', `/user/${userId}/unfollow`, undefined, true);
-  },
-  // joinedCommunity(userId: number) {
-  //   return communityFetch('get', `/user/${userId}/list/community`, undefined, true)
-  // },
-  // followingList(obj: any, userId: number) {
-  //   return communityFetch('get', `/user/${userId}/list/following`, obj, true);
-  // },
-  // followerList(obj: any, userId: any) {
-  //   return communityFetch('get', `/user/${userId}/list/follower`, obj, true);
-  // },
-
-  leave(obj: { text: string, num: string }) {
-    return useFetchData('post', `/user/leave-zempie`, obj, true);
-  }
-}
-
 export const game = {
-  list(obj: { limit: number, offset: number, category?: number, sort?: string, dir?: string }) {
-    return useFetchData('get', '/games', obj, false)
-  },
+  // list(obj: { limit: number, offset: number, category?: number, sort?: string, dir?: string }) {
+  //   return useFetchData('get', '/games', obj, false)
+  // },
   upload(formData: FormData) {
     return studioFetch('post', '/studio/project', formData, true);
   },
@@ -245,41 +211,10 @@ export const project = {
   }
 }
 
-export const community = {
-  search(obj: any) {
-    return communityFetch('get', `/search`, obj, false)
-  },
-  getInfo(id: string) {
-    return communityFetch('get', `/community/${id}`, undefined, true);
-  },
-  getMembers(communityId: string, obj: any) {
-    return communityFetch('get', `/community/${communityId}/members`, obj, true);
-  },
-
-}
 
 export const post = {
   upload(obj: any) {
     return communityFetch('post', `/post`, obj, true);
   },
-  getUserPosts(channelId: string, obj: any) {
-    return communityFetch('get', `/timeline/channel/${channelId}`, obj, true)
-  },
-  getCommunityPosts(communityId: string, obj: any) {
-    return communityFetch('get', `/timeline/${communityId}/post`, obj, true)
-  },
-  getInfo(postId: string) {
-    return communityFetch('get', `/post/${postId}`, undefined, false)
-  },
-  delete(postId: string) {
-    return communityFetch('delete', `/post/${postId}`, undefined, true)
-  },
-  like(postId: string) {
-    return communityFetch('post', `/post/${postId}/like`, undefined, true)
-  },
-  unlike(postId: string) {
-    return communityFetch('post', `/post/${postId}/unlike`, undefined, true);
-  }
-
 }
 

@@ -738,7 +738,7 @@
   "password": "비밀번호",
   "no.search.result": "검색 결과가 없습니다.",
   "account": "계정",
-  "my.account": "내 계정",
+  "my.account": "설정",
   "auto.game.id.generator": "게임 ID 자동 작성",
   "monetize.alert": "추후 게임 수익화를 위한 Zempie 파트너 서비스를 제공할 예정입니다.",
   "file.upload.info": "파일 업로드 정보",
@@ -905,7 +905,7 @@
   "ask.edit.blog": "SNS와 블로그 포스팅의 형식 통합으로 인해 기존 블로그 형식으로 작성된 글을 수정 시 이미지가 삭제됩니다.",
   "confirm.edit": "그래도 수정하시겠습니까?",
   "edit.post": "포스팅 수정",
-  "game.link.copy": "게임 페이지 링크 복사",
+  "game.link.copy": "게임 링크 복사",
   "deleted.user": "탈퇴한 유저",
   "follow": "팔로우",
   "about.game": "게임 소개",
@@ -949,5 +949,13 @@
   "load.post": "초안",
   "draft.post": "임시저장",
   "update.post": "수정",
-  "save.post": "게시"
+  "save.post": "게시",
+  "notification.follow": "님이 회원님을 팔로우했습니다.",
+  "notification.recomment": "님이 답글을 달았습니다.",
+  "write.recomment": " 답글 작성",
+  "recomment": "답글",
+  "unit": "개",
+  "notification.comment": "님이 포스팅에 댓글을 남겼습니다",
+  "notification.like.comment": "님이 댓글에 좋아요를 눌렀습니다.",
+  "notification.like.post": "님이 회원님의 포스팅에 좋아요를 눌렀습니다."
 }

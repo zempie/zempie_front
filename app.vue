@@ -2,26 +2,9 @@
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
-  <el-dialog v-model="isOpen" append-to-body :fullscreen="true" class="event-dialog">
-    <template #header="{ close, titleId, titleClass }">
-      <ul class="my-header">
-        <li>
-          <input type="checkbox" id="oneDay" :value="showOneDay" @click="clickOneDay">
-          <label for="oneDay"><i class="uil uil-check"></i></label>
-          <span><label for="oneDay">{{ $t('now.show.today') }}</label></span>
-        </li>
-        <li>
-          <input type="checkbox" id="never" :value="showNever" @click="clickNever">
-          <label for="never"><i class="uil uil-check"></i></label>
-          <span><label for="never">{{ $t('do.now.show') }}</label></span>
-        </li>
-      </ul>
-    </template>
-    <EventGJPlus />
-  </el-dialog>
 </template>
 <script setup lang="ts">
-import { ElDialog, ID_INJECTION_KEY } from 'element-plus'
+import { ID_INJECTION_KEY } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import shared from './scripts/shared';
 const { t, locale } = useI18n()
@@ -30,44 +13,47 @@ const switchLocalePath = useSwitchLocalePath()
 const route = useRoute()
 const router = useRouter()
 
-const isOpen = ref(false)
-const showOneDay = ref(false)
-const showNever = ref(false)
-const userInfo = computed(() => useUser().user.value.info)
 const cookie = useCookie(config.COOKIE_NAME)
-const isLogin = computed(() => useUser().user.value.isLogin)
-
-
-watch(
-  () => useUser().user.value.fUser,
-  async (fUser) => {
-    if (fUser && !userInfo.value) {
-      // await useUser().setUserInfo()
-    }
-  })
-
-
-
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
 shared.createHeadMeta(
   t('seo.landing.title'),
   t('seo.landing.description')
 )
+
 provide(ID_INJECTION_KEY, {
   prefix: 100,
   current: 0,
 })
 
 
+
 onBeforeMount(async () => {
   await useMobile().setMobileState()
+  const userInfo = useUser().user.value.info
 
-  const fUser = await getCurrentUser()
-  if (!fUser) {
+  try {
+    const fUser = await getCurrentUser()
+
+    if (!fUser) {
+      useUser().setLoadDone()
+    }
+
+    if (isFlutter.value && fUser && !userInfo) {
+      await useUser().setUserInfo()
+    }
+
+  } catch (err) {
     useUser().setLoadDone()
   }
 
 
+
+
+
+
+
+  //기존에 사용하던 쿠키가 있으면 삭제 -> 더 이상 사용하지 않음
   if (cookie.value) {
     cookie.value = null
   }
@@ -82,31 +68,9 @@ onBeforeMount(async () => {
     switchLocalePath('en')
   }
   useCommon().setLang(locale.value)
-
   router.replace(route.fullPath)
 
-
 })
-
-
-function clickOneDay(e: Event) {
-  const isChecked = (e.target as HTMLInputElement).checked
-  if (isChecked) {
-    const date = new Date()
-    //다음날 00:00:00 까지
-    const expiredTime = new Date(2022, 10, date.getDate() + 1, 0, 0, 0).getTime()
-    localStorage.setItem('GJ_POPUP_ONE', expiredTime + '')
-    isOpen.value = false;
-  }
-}
-
-function clickNever(e: Event) {
-  const isChecked = (e.target as HTMLInputElement).checked
-  if (isChecked) {
-    localStorage.setItem('GJ_POPUP_NEVER', 'true')
-    isOpen.value = false;
-  }
-}
 </script>
 
 <style lang="scss">

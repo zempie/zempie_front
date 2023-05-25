@@ -88,7 +88,7 @@ async function setLike() {
   if (likeAcceessableCount > 0) {
     isLiked.value = true
     likeCnt.value++
-    const { data, error } = await post.like(props.feed.id)
+    const { data, error } = await useCustomAsyncFetch(`/post/${props.feed.id}/like`, getComFetchOptions('post', true))
   }
   likeAcceessableCount = likeAcceessableCount + 1
 }
@@ -102,7 +102,8 @@ async function unsetLike() {
   if (unlikeAcceessableCount > 0) {
     isLiked.value = false
     likeCnt.value--
-    const { data, error } = await post.unlike(props.feed.id)
+    const { data, error } = await useCustomAsyncFetch(`/post/${props.feed.id}/unlike`, getComFetchOptions('post', true))
+
 
   }
   unlikeAcceessableCount = unlikeAcceessableCount + 1

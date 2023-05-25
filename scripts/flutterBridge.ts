@@ -1,31 +1,12 @@
 export default function () {
-
-  const nuxtApp = useNuxtApp()
-
-  /**
-   * Flutter Webview <-> Javascirpt Bridge by CCM
-  ​
-  */
-  const callHandler = async (handleName, params?: any) => {
+  const callHandler = async (handleName: string, params?: any) => {
     //flutter_inappwebview
     return await callInappWebviewHandler(handleName, params);
-
-
-    //flutter_webview
-    //return await callwebviewHandler(handleName,params);
   };
-  const callInappWebviewHandler = async (handleName, params) => {
+  const callInappWebviewHandler = async (handleName: string, params) => {
     //@ts-ignore
     const response = await window.flutter_inappwebview
       .callHandler(handleName, params);
-    return response;
-  }
-
-  const callwebviewHandler = async (handleName, params) => {
-    const response = await nuxtApp.$webViewJavaScriptBridge.sendMessage({
-      action: handleName,
-      params: params,
-    });
     return response;
   }
 
@@ -39,35 +20,27 @@ export default function () {
       }
     },
     async signOutGoogle() {
-      // const response = await webViewJavaScriptBridge.sendMessage({
-      //   action: "signOutGoogle",
-      // });
-      // const result = response;
-      // return result;
       const response = await callHandler("signOutGoogle");
       const result = response;
       return result;
     },
     async signInGoogle() {
-      // const response = await webViewJavaScriptBridge.sendMessage({
-      //   action: "signInGoogle",
-      // });
-      // const result = JSON.parse(response);
-      // return result;
       const response = await callHandler("signInGoogle");
       const result = JSON.parse(response);
       return result;
+
     },
     async signInFacebook() {
       const response = await callHandler("signInFacebook");
+      console.log('respon', response)
       const result = JSON.parse(response);
       return result;
+
     },
     async getFbCurrentUser() {
       const response = await callHandler("currentUser");
-      alert(response)
-      const result = JSON.parse(response);
-      return result;
+      return JSON.parse(response);
+
     },
     async signInApple() {
       const response = await callHandler("signInApple");
@@ -85,10 +58,41 @@ export default function () {
       return result;
     },
     async signInEmail(params: { email: string, password: string }) {
-      alert(JSON.stringify(params))
       const response = await callHandler('signInEmail', params)
-      alert(JSON.stringify(response))
       return JSON.parse(response)
+    },
+    async signOutFirebase() {
+      return await callHandler('signOutFirebase')
+    },
+    async getMessagingToken() {
+      return await callHandler('getMessagingToken')
+    },
+
+    async initPurchase(products) {
+      // const response = await webViewJavaScriptBridge.sendMessage({
+      //   action: "signInGoogle",
+      // });
+      // const result = JSON.parse(response);
+      // return result;
+      const response = await callHandler("initPurchase", { products });
+      const result = JSON.parse(response);
+      return result;
+    },
+    async purchaseItem(productId: string) {
+      // const response = await webViewJavaScriptBridge.sendMessage({
+      //   action: "signInGoogle",
+      // });
+      // const result = JSON.parse(response);
+      // return result;
+      const response = await callHandler("purchaseItem", { productId });
+      const result = JSON.parse(response);
+      return result;
+    },
+
+    async consumeReceipt(receipt) {
+      const response = await callHandler("consumeReceipt", { receipt });
+      const result = JSON.parse(response);
+      return result;
     },
     async windowOpen(url) {
       // const response = await webViewJavaScriptBridge.sendMessage({
@@ -105,15 +109,11 @@ export default function () {
     },
     async openFile(options?: { type: string, multiple: boolean }) {
       const response = await callHandler("openFile", options);
-      alert(JSON.stringify(response))
       return response;
     }
 
   };
 
-  // export default FlutterBridge;
+  return FlutterBridge
 
-  return {
-    FlutterBridge
-  }
 }

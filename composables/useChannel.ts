@@ -65,7 +65,21 @@ export default function () {
     userChannel.value.info.is_following = false;
   }
 
+  const increaseFollowerCnt = () => {
+    userChannel.value.info.follower_cnt += 1
+  }
 
+  const decreaseFollowerCnt = () => {
+    userChannel.value.info.follower_cnt -= 1
+  }
+
+  const increaseFollowingCnt = () => {
+    userChannel.value.info.following_cnt += 1
+  }
+
+  const decreaseFollowingCnt = () => {
+    userChannel.value.info.following_cnt -= 1
+  }
 
   return {
     userChannel,
@@ -73,6 +87,10 @@ export default function () {
     resetUserChannel,
     setFollowing,
     setUnfollowing,
-    getChannelInfo
+    getChannelInfo,
+    increaseFollowerCnt,
+    increaseFollowingCnt,
+    decreaseFollowerCnt,
+    decreaseFollowingCnt
   }
 }

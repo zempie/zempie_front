@@ -14,6 +14,10 @@ export interface IUser {
   is_developer?: boolean,
   picture?: string,
   profile?: any,
+  coin?: {
+    zem: number,
+    pie: number
+  },
   setting?: {
     alarm: boolean,
     battle: boolean,
@@ -309,9 +313,10 @@ export interface IEvent {
 
 export interface IComment {
   attatchment_files: [],
+  children_comments: IComment[],
   content: string,
   created_at: string,
-  deleted_att: string,
+  deleted_at: string,
   dislike_cntt: number,
   id: string,
   is_liked: boolean,
@@ -325,6 +330,7 @@ export interface IComment {
   user: IUser,
   user_id: number,
   user_uid: string,
+  parent_id?: string,
 }
 
 
@@ -366,7 +372,8 @@ export enum eNotificationType {
   comment_like,
   report,
   retweet,
-  follow
+  follow,
+  recomment
 }
 
 export enum eMetadataType {

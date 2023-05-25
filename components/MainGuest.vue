@@ -9,7 +9,6 @@
       <h2>
         <span style="font: 36px/46px 'Jalnan'">Recent games</span>
       </h2>
-
       <ul style="margin: 40px 0px">
         <span class="card-game">
           <GameCardSk v-if="pending" v-for="game in GAME_COUNT" />
@@ -50,8 +49,6 @@ const { $localePath } = useNuxtApp()
 const GAME_COUNT = 8
 const COMMUNITY_COUNT = 4
 const POST_COUNT = 12
-
-console.log('?')
 
 const { data, pending, error } = await useCustomAsyncFetch<any>(
   createQueryUrl('/games', { limit: GAME_COUNT }),
