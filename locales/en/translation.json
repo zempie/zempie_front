@@ -961,5 +961,8 @@
   "notification.like.comment": "liked your comment:",
   "notification.like.post": "liked your post:",
   "not.exist.post": "The site's URL might be written incorrectly, deleted, or hidden from unauthorised access.",
-  "to.home": "Home"
+  "to.home": "Home",
+  "company.numbers": "General Directory Number ",
+  "sales.number": "Telecommunication Service Registration Number",
+  "sales.number.info": "Issue Number : 2023-서울서대문-0861"
 }
