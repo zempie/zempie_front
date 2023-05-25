@@ -5,16 +5,17 @@
         Cancel
       </span>
     </div>
-    <div class="img-container">
+    <div class="img-container" v-if="tagInfo.img">
       <div v-if="tagInfo.type === eMetadataType.website || isEdit" class="tag-img"
-        :style="`background:url(${tagInfo.img});`"></div>
+        :style="`background:url(${tagInfo.img});`">
+      </div>
       <iframe v-else :src="tagInfo.video_url" frameborder="0" allowfullscreen="true" :title="tagInfo.title"
         :key="tagInfo.video_url" class="yt-iframe"></iframe>
     </div>
-    <div class="tag-info-container">
+    <div :class="[!tagInfo.img && 'mr20', 'tag-info-container']">
       <span><strong class="tag-title"> {{ tagInfo.title }}</strong></span>
       <div class="bottom">
-        <p class='tag-desc'> {{ tagInfo.desc }}</p>
+        <p class='tag-desc '> {{ tagInfo.desc }}</p>
         <div class="domain-div">
           <p class="tag-favicon" :style="`background:url(${tagInfo.favicon});`">
           </p><strong>{{
@@ -36,11 +37,14 @@ const props = defineProps({
     type: Boolean
   }
 })
+
 const emit = defineEmits(['removeLink'])
+
 
 function onClickRemove() {
   emit('removeLink')
 }
+
 
 
 </script>

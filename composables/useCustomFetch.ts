@@ -2,6 +2,7 @@ import { FetchOptions } from "ohmyfetch"
 import dayjs from "dayjs";
 import shared from "~~/scripts/shared";
 import { getAuth, getIdToken } from "firebase/auth";
+import FlutterBridge from '~~/scripts/flutterBridge'
 
 const HOURTOSEC = 60 * 60;
 
@@ -16,12 +17,10 @@ interface IRefreshToken {
   token_type: string,
   user_id: string
 }
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
 export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions, retryCount: number = 0) => {
-  // const { $cookies } = useNuxtApp()
   const config = useRuntimeConfig()
-  // const accessToken = useCookie(config.COOKIE_NAME)
-
 
   return await useFetch<T>(url, {
     initialCache: false,
@@ -66,11 +65,15 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
     },
 
     async onRequest({ request, options }) {
-      console.log('url', url)
       const user = await getCurrentUser()
-      let token = user?.accessToken
 
-      if (user) {
+
+      let token = user?.accessToken || user?.idToken
+
+      if (isFlutter.value && user) {
+        options.headers['Authorization'] = `Bearer ${token}`
+
+      } else if (user && !isFlutter.value) {
 
         const expirationTime = user.stsTokenManager.expirationTime
         // const expirationTime = 1681264108
@@ -85,12 +88,11 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
 
       options.headers = options.headers || {}
 
-      console.log(options.headers)
       useCommon().setLoading()
       console.log('[fetch request]')
     },
     async onRequestError({ request, options, error }) {
-      console.log('[fetch request error]')
+      console.log('[fetch request error]', error)
     }
   })
 }
@@ -101,6 +103,7 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
   const config = useRuntimeConfig()
   const { $cookies, $localePath } = useNuxtApp()
   const router = useRouter()
+
 
   return await $fetch<T>(url, {
     ...options,
@@ -113,6 +116,8 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
     },
     async onResponseError({ request, response, options }) {
       console.log('[fetch response error]', response)
+
+
 
       //사용자 uid error
       const errorCode = response._data?.error?.code
@@ -146,11 +151,11 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
     async onRequest({ request, options }) {
 
       const user = await getCurrentUser()
+      let token = user?.accessToken || user?.idToken
 
-      let token = user?.accessToken
-      console.log('user', user)
-
-      if (user) {
+      if (isFlutter.value && user) {
+        options.headers['Authorization'] = `Bearer ${token}`
+      } else if (user && !isFlutter.value) {
         const expirationTime = user.stsTokenManager.expirationTime
         // const expirationTime = 1681264165
         console.log('expirationTime', expirationTime <= Date.now(), new Date(expirationTime))
@@ -161,19 +166,17 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
         }
         console.log('toekn2 ', token)
         options.headers['Authorization'] = `Bearer ${token}`
-
       }
 
 
       options.headers = options.headers || {}
-      console.log(options.headers)
 
       useCommon().setLoading()
       console.log('[fetch request]')
       return
     },
     async onRequestError({ request, options, error }) {
-      console.log('[fetch request error]')
+      console.log('[fetch request error]', error)
     }
   })
 
@@ -181,15 +184,27 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
 }
 
 export async function getCurrentUser() {
-  const auth = getAuth()
 
-  const user: any = new Promise((resolve, reject) => {
-    auth.onIdTokenChanged((user: any) => {
-      resolve(user);
+  if (isFlutter.value) {
+
+    const result = await FlutterBridge().getFbCurrentUser()
+
+    if (result) {
+      useUser().setFirebaseUser(result)
+    }
+    useUser().setLoadDone()
+    return result || null
+  } else {
+    const auth = getAuth()
+
+    const user: any = new Promise((resolve, reject) => {
+      auth.onIdTokenChanged((user: any) => {
+        resolve(user);
+      });
     });
-  });
 
-  return user
+    return user
+  }
 }
 
 export async function getRefreshToken() {

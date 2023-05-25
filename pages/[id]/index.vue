@@ -11,7 +11,7 @@
         </dd>
         <dt>
           <div class="ta-groups" style="margin-top: 0px">
-            <h2>Community</h2>
+            <h2>{{ $t('community') }}</h2>
             <CommunityList :communities="communityList" :isLoading="isLoading" />
           </div>
         </dt>
@@ -37,6 +37,11 @@ const isMine = computed(() => {
 definePageMeta({
   title: 'user-channel',
   name: 'userChannel',
+})
+
+onBeforeUnmount(() => {
+  useChannel().resetUserChannel()
+  console.log('unmount', useChannel().userChannel.value.info)
 })
 
 

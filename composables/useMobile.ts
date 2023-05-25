@@ -6,11 +6,11 @@ export default function () {
   }))
 
   const setMobileState = async () => {
-    mobile.value.isFlutter = await flutterBridge().FlutterBridge.isFlutter()
+    mobile.value.isFlutter = await flutterBridge().isFlutter()
   }
 
   const openMobileFile = async (options: { type: string, multiple: boolean }) => {
-    return await flutterBridge().FlutterBridge.openFile(options)
+    return await flutterBridge().openFile(options)
   }
 
 

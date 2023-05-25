@@ -1,7 +1,6 @@
 <template>
-  <div style="background-color: #fff; ">
+  <div style="background-color: #fff;">
     <ClientOnly>
-
       <swiper :modules="[Pagination]" :pagination="{ clickable: true }"
         style="height:100vh; width: 100vw; background-color: #FF9F00;" ref="swiperRef">
         <swiper-slide class="flex column" style="align-items: center;">
@@ -50,7 +49,7 @@ definePageMeta({
   layout: 'layout-none',
 });
 
-const isFlutter = await FlutterBridge().FlutterBridge.isFlutter()
+const isFlutter = await FlutterBridge().isFlutter()
 
 
 onBeforeMount(() => {
@@ -63,7 +62,7 @@ onBeforeMount(() => {
 
   const isVisit = localStorage.getItem('zMoF')
 
-  if (isVisit) {
+  if (isVisit || isVisit === 'true') {
     if (useUser().user.value.fUser) {
       router.push($localePath('/'))
     } else {

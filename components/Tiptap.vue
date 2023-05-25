@@ -1,39 +1,9 @@
 <template>
   <div>
     <div style="min-height: 200px; max-height: 80vh;">
-      <BubbleMenu :editor="editor" v-if="editor && shouldShow()" class="table-bubble-menu">
-        <ul>
-          <li @click="editor.chain().focus().addColumnBefore().run()">
-            <p><i class="uil uil-plus"></i> add column before</p>
-          </li>
-          <li @click="editor.chain().focus().addColumnAfter().run()">
-            <p><i class="uil uil-plus"></i> add column after</p>
-          </li>
-          <li @click="editor.chain().focus().addRowBefore().run()">
-            <p><i class="uil uil-plus"></i> add row before</p>
-          </li>
-          <li @click="editor.chain().focus().addRowAfter().run()">
-            <p><i class="uil uil-plus"></i> add row after</p>
-          </li>
-          <li @click="editor.chain().focus().deleteTable().run()">
-            <p><i class="uil uil-trash-alt"></i> delete table</p>
-          </li>
-          <li @click="editor.chain().focus().deleteRow().run()">
-            <p><i class="uil uil-minus"></i> delete row</p>
-          </li>
-          <li @click="editor.chain().focus().deleteColumn().run()">
-            <p><i class="uil uil-minus"></i> delete column</p>
-          </li>
-          <li @click="editor.chain().focus().mergeCells().run()">
-            <p><i class="uil uil-arrows-merge"></i> merge</p>
-          </li>
-          <li @click="editor.chain().focus().splitCell().run()">
-            <p><i class="uil uil-arrows-resize-h"></i> split</p>
-          </li>
-        </ul>
-      </BubbleMenu>
-      <EditorContent :editor="editor" :class="['editor-container', postType === 'SNS' ? 'sns' : 'blog']"
-        @drop="dropEditor" @paste="pasteEditor" @input="handleInput" />
+
+      <EditorContent :editor="editor" :class="['editor-container']" @drop="dropEditor" @paste="pasteEditor"
+        @input="handleInput" />
 
       <div class="character-count">
         <p>{{ charCount }}/{{ limit }}</p>
@@ -52,7 +22,6 @@ import {
   useEditor,
   EditorContent,
   VueNodeViewRenderer,
-  BubbleMenu,
 } from '@tiptap/vue-3'
 import Link from '@tiptap/extension-link'
 import StarterKit from '@tiptap/starter-kit'
@@ -75,10 +44,7 @@ const props = defineProps({
   feed: Object as PropType<IFeed>,
 })
 
-
 defineExpose(['addImage'])
-
-
 
 const LIMIT = 5000
 const content = ref('')
@@ -138,15 +104,17 @@ async function pasteEditor(e: ClipboardEvent) {
 
 
     const { result } = data
-    const img = result.images?.[0] ?? ''
+    let img = result.images?.[0] ?? ''
+    if (isBase64Url(img)) {
+      img = ''
+    }
+
     const favicon = result.favicons?.[0] ?? ''
     const { title, description, siteName } = result
 
 
     const url = new URL(result.url);
     const domain = url.hostname.replace('www.', '');
-
-    console.log(domain)
 
     const params = new URLSearchParams(url.search)
 
@@ -169,8 +137,17 @@ async function pasteEditor(e: ClipboardEvent) {
   }
 }
 
+
+function isBase64Url(url: string) {
+  return url.startsWith("data:") && url.indexOf(";base64,") !== -1;
+}
+
 async function addImage(data: DataTransfer) {
-  if (props.postType === 'SNS') return
+  if (props.postType === 'SNS') {
+
+    return
+
+  }
 
   const { files } = data
 

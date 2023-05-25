@@ -907,7 +907,7 @@
   "ask.edit.blog": "Images in Blog-form posts can be deleted as the Blog and Social Network forms are integrated.",
   "confirm.edit": "Do you still want to edit this post?",
   "edit.post": "Edit post",
-  "game.link.copy": "Copy Game Page Link",
+  "game.link.copy": "Copy Game Link",
   "deleted.user": "Deleted user",
   "follow": "Follow",
   "about.game": "About us",
@@ -951,5 +951,13 @@
   "load.post": "Load",
   "draft.post": "Draft",
   "update.post": "Update",
-  "save.post": "Save"
+  "save.post": "Save",
+  "notification.follow": "wrote comment on your comment",
+  "notification.recomment": "follows you",
+  "write.recomment": "__STRING_NOT_TRANSLATED__",
+  "recomment": "__STRING_NOT_TRANSLATED__",
+  "unit": "__STRING_NOT_TRANSLATED__",
+  "notification.comment": "__STRING_NOT_TRANSLATED__",
+  "notification.like.comment": "__STRING_NOT_TRANSLATED__",
+  "notification.like.post": "__STRING_NOT_TRANSLATED__"
 }

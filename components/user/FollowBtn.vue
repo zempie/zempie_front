@@ -27,7 +27,7 @@ const { $localePath } = useNuxtApp()
 
 const isLogin = computed(() => useUser().user.value.isLogin)
 const loginUser = computed(() => useUser().user.value.info)
-
+const isMyChannel = computed(() => useChannel().userChannel.value.info.id === useUser().user.value.info.id)
 
 const emit = defineEmits(['refresh'])
 
@@ -43,6 +43,9 @@ const isMine = computed(() => {
 const isFollowing = ref(props.user?.is_following)
 
 async function follow() {
+
+
+
   if (!isLogin.value) {
     useModal().openLoginModal()
     return
@@ -55,7 +58,11 @@ async function follow() {
   if (!error.value) {
     isFollowing.value = !isFollowing.value
     emit('refresh', props.user.id)
-    // useChannel().setFollowing()
+    if (isMyChannel.value) {
+      useChannel().increaseFollowingCnt()
+    } else {
+      useChannel().increaseFollowerCnt()
+    }
   } else {
     ElMessage.error(t('try.later'))
   }
@@ -69,12 +76,16 @@ async function unfollow() {
   if (!error.value) {
     isFollowing.value = !isFollowing.value
     emit('refresh', props.user.id)
-
-    // useChannel().setUnfollowing()
+    if (isMyChannel.value) {
+      useChannel().decreaseFollowingCnt()
+    } else {
+      useChannel().decreaseFollowerCnt()
+    }
   } else {
     ElMessage.error(t('try.later'))
   }
 }
+
 </script>
 
 <style scoped lang="scss">

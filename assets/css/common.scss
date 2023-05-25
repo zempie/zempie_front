@@ -58,6 +58,15 @@ $zempie-main-color-hover: #f974162a;
   white-space: nowrap;
 }
 
+.justify-between {
+  justify-content: space-between;
+}
+
+.align-center {
+  align-items: center;
+}
+
+
 .pos-relative {
   position: relative;
 }
@@ -66,6 +75,9 @@ $zempie-main-color-hover: #f974162a;
   position: absolute;
 }
 
+.bg-red {
+  background-color: red;
+}
 
 .bg-grey-1 {
   background-color: #ededed;
@@ -84,7 +96,7 @@ $zempie-main-color-hover: #f974162a;
 }
 
 .zem-color {
-  color: #f97316;
+  color: $zempie-main-color;
 }
 
 .btn-green-small {
@@ -937,4 +949,67 @@ $zempie-main-color-hover: #f974162a;
       color: $zempie-main-color;
     }
   }
+}
+
+
+/*
+ * 대댓글
+ */
+
+.cmt-chip-container {
+  border-radius: 5px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  .chip {
+    color: #ff6e17;
+    margin: 4px;
+    background: #FFEDDF;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+
+  }
+}
+
+.tapl-comment {
+  &.recomment {
+    padding: 10px 0px 10px 50px !important;
+    width: 100%;
+
+    ul {
+      li {
+        margin-top: 10px !important;
+        padding-top: 0px !important;
+        border: none !important;
+      }
+    }
+  }
+}
+
+
+//transition
+.component-fade-enter-active,
+.component-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.component-fade-enter,
+.component-fade-leave-to
+
+/* .component-fade-leave-active below version 2.1.8 */
+  {
+  opacity: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }

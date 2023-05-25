@@ -73,17 +73,17 @@
 </template>
 <script setup lang="ts">
 import dayjs from 'dayjs'
-
+import { useWindowScroll } from '@vueuse/core'
 import { ElDialog } from 'element-plus'
 import { ICommunity } from '~~/types'
 import { useI18n } from 'vue-i18n'
 import shared from '~~/scripts/shared'
-const { t } = useI18n()
 
 const MAX_LIST_SIZE = 5
+
+const { t } = useI18n()
+
 const route = useRoute()
-const config = useRuntimeConfig()
-const accessToken = useCookie(config.COOKIE_NAME).value
 
 const limit = ref(MAX_LIST_SIZE)
 const needSubscribe = ref(false)

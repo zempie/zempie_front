@@ -3,11 +3,14 @@ import { signOut } from 'firebase/auth'
 import { ElMessage, ElDialog } from "element-plus";
 import { removeFcmToken } from "~~/scripts/firebase-fcm";
 import { isObjEmpty } from "~~/scripts/utils";
+import flutterBridge from "~~/scripts/flutterBridge";
 
 export default function () {
   const { $firebaseAuth, $cookies } = useNuxtApp()
   const config = useRuntimeConfig()
   const router = useRouter();
+
+  const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
   const user = useState('user', () => ({
     info: null as IUser,
@@ -54,22 +57,32 @@ export default function () {
   const updateFbToken = (token: string) => {
     user.value.fUser.accessToken = token
   }
+  const updateUserCoin = (coin: { zem: number, pie: number }) => {
+    user.value.info.coin.pie = coin.pie
+    user.value.info.coin.zem = coin.zem
 
+  }
 
   const logout = async () => {
-    signOut($firebaseAuth)
-      .then(() => {
-        removeFcmToken(user.value.info.id)
-      })
-      .then(() => {
-        removeUserState();
-      })
-      .catch((error: any) => {
-        ElMessage({
-          message: error.message,
-          type: 'error'
-        })
-      })
+
+    try {
+      await removeFcmToken();
+
+      if (isFlutter.value) {
+        await flutterBridge().signOutFirebase();
+      } else {
+        await signOut($firebaseAuth);
+      }
+
+    } catch (error) {
+      ElMessage({
+        message: error.message,
+        type: 'error',
+      });
+    } finally {
+      removeUserState();
+    }
+
   }
 
 
@@ -78,7 +91,6 @@ export default function () {
   }
 
   const setUserInfo = async () => {
-    colorLog(`===set user info===`, '#ed1cdc')
 
     try {
       const response = await useCustomFetch<{ result: { user: IUser } }>('/user/info', getZempieFetchOptions('get', true))
@@ -89,13 +101,14 @@ export default function () {
 
         user.value.isLogin = true;
         useUser().setLoadDone()
-
       }
       if (!isObjEmpty(user.value.fUser)) {
         useUser().setLoadDone()
       }
+
+      return user.value.info
+
     } catch (error) {
-      console.log(error)
       useUser().setLoadDone()
     }
 
@@ -117,6 +130,7 @@ export default function () {
     setLoadDone,
     setUserInfo,
     updateUserKey,
-    updateFbToken
+    updateFbToken,
+    updateUserCoin
   }
 }

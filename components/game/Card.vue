@@ -21,7 +21,8 @@
         <p @click="moveUserPage">{{ gameInfo.user?.nickname }}</p>
         <ul>
           <template v-for="platform in support_platforms">
-            <li v-if="Number(platform) === ePlatformType.Android">
+            <GamePlatformIcon :platform="platform" color="#000" />
+            <!-- <li v-if="Number(platform) === ePlatformType.Android">
               <i class="uil uil-android"></i>
             </li>
             <li v-if="Number(platform) === ePlatformType.Window">
@@ -32,7 +33,7 @@
             </li>
             <li v-if="Number(platform) === ePlatformType.Ios">
               <img src="/icons/ios.svg" alt="ios" />
-            </li>
+            </li> -->
           </template>
 
           <li v-if="gameInfo.game_type === eGameType.Download" style="margin-top: 2px;">

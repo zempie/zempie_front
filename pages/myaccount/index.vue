@@ -321,7 +321,7 @@ async function setAlarmStatus() {
     if (isAlarmOn.value) {
       await resigterFcmToken(userId)
     } else {
-      await removeFcmToken(userId)
+      await removeFcmToken()
     }
   }
 }

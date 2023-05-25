@@ -165,7 +165,11 @@ definePageMeta({
 });
 
 onMounted(() => {
-
+  window.addEventListener('beforeunload', function (e) {
+    e.preventDefault();
+    e.returnValue = '';
+    removeFbUser()
+  });
   if (fUser.value) {
     form.email = fUser.value.email
     delete form.password
@@ -176,19 +180,20 @@ shared.createHeadMeta(t('seo.join.title'), t('seo.join.desc'))
 
 
 onBeforeRouteLeave((to, from, next) => {
+  removeFbUser()
+  next()
+})
 
+//소셜 로그인 회원가입 안 끝내고 페이지 이동하는 경우에 사용 
+function removeFbUser() {
   if (fUser.value && !isLogin.value) {
-    shared.removeCookies()
-
     signOut($firebaseAuth)
       .then(() => {
         useUser().removeUserState();
       })
-
   }
+}
 
-  next()
-})
 
 
 const v$ = useVuelidate(rules, form)

@@ -14,19 +14,17 @@
           </dl>
 
           <div class="tapl-content" v-html="feed?.content" style="max-height:none"></div>
-          <template v-if="
-            feed?.post_type === 'SNS' &&
+          <template v-if="feed?.post_type === 'SNS' &&
             feed?.attatchment_files?.length === 1 &&
             feed?.attatchment_files[0].type === 'image'
-          ">
+            ">
             <img style="height: 88%; margin: 0 auto; display: flex" :src="feed?.attatchment_files[0].url"
               class="feed-img mt-3" />
           </template>
-          <template v-else-if="
-            feed?.post_type === 'SNS' &&
+          <template v-else-if="feed?.post_type === 'SNS' &&
             feed?.attatchment_files &&
             feed?.attatchment_files.length > 0
-          ">
+            ">
             <div class="tapl-movie-img" v-if="feed?.attatchment_files[0].type === 'image'">
               <swiper class="swiper" :options="swiperOption" style="height: 350px">
                 <template v-for="file in feed?.attatchment_files">
@@ -76,20 +74,20 @@
           <div class="tapl-comment" v-if="comments">
             <p>
               {{ $t('comment') }} {{
-                feed?.comment_cnt
+                commentCount
               }}{{ $t('comment.count.unit') }}
             </p>
-            <CommentInput :postId="feed?.id" @refresh="commentFetch" @addComment="addComment" />
-            <ul>
-              <TransitionGroup name="fade">
-                <li v-for="comment in comments" :key="comment.id" class="comment">
-                  <Comment :comment="comment" @refresh="commentFetch" @deleteComment="deleteComment"
-                    @editComment="editComment" :key="comment.content" />
-                </li>
-              </TransitionGroup>
+
+            <!-- <CommentList :comments="comments" @addComment="addComment" /> -->
+            <ul ref="commentEl" style="max-height:700px; overflow-y: scroll;">
+              <Comment v-for="comment in comments" :key="comment.content" :comment="comment" :isEdit="isCommentEdit"
+                @refresh="commentRefresh" @editComment="editComment" @deleteComment="deleteComment"
+                @recomment="getRecomment" :newRecomments="newRecomments" />
             </ul>
+            <CommentInput :postId="feed?.id" @addComment="addComment" :recomment="recomment" />
+
           </div>
-          <div ref="triggerDiv"></div>
+          <!-- <div ref="triggerDiv"></div> -->
         </li>
       </ul>
       <ul class="ta-post" v-else>
@@ -155,6 +153,7 @@ const comments = ref<IComment[]>()
 const limit = ref(COMMENT_LIMIT)
 const offset = ref(0)
 const sort = ref(null)
+const commentEl = ref<HTMLElement | null>(null)
 
 const swiperOption = ref({
   pagination: {
@@ -162,10 +161,31 @@ const swiperOption = ref({
   },
 })
 const feedId = computed(() => route.params.id as string)
+const commentCnt = ref(0)
 
 const observer = ref<IntersectionObserver>(null)
 const triggerDiv = ref()
 const isAddData = ref(false)
+
+
+const isCommentEdit = ref(false)
+
+//대댓글
+const recomment = ref()
+const newRecomments = ref([])
+
+
+useInfiniteScroll(
+  commentEl,
+  async () => {
+    if (isAddData.value) {
+      offset.value += limit.value
+      await commentFetch()
+    }
+  },
+  { distance: 10 }
+)
+
 
 const {
   data: feed,
@@ -179,6 +199,7 @@ const {
   }
 )
 setHead()
+const commentCount = ref(feed.value.comment_cnt)
 
 const postedCommunity = (posted_at) => {
   if (posted_at) {
@@ -218,13 +239,13 @@ onMounted(async () => {
     hljs.highlightElement(block)
   })
   if (feed.value) {
-    observer.value = new IntersectionObserver(
-      (entries) => {
-        handleIntersection(entries[0])
-      },
-      { root: null, threshold: 1 }
-    )
-    observer.value.observe(triggerDiv.value)
+    // observer.value = new IntersectionObserver(
+    //   (entries) => {
+    //     handleIntersection(entries[0])
+    //   },
+    //   { root: null, threshold: 1 }
+    // )
+    // observer.value.observe(triggerDiv.value)
   }
   await commentFetch()
 })
@@ -257,7 +278,7 @@ async function commentFetch() {
         comments.value = [...comments.value, ...result]
       } else {
         isAddData.value = false
-        observer.value.unobserve(triggerDiv.value)
+        // observer.value.unobserve(triggerDiv.value)
       }
     } else {
       comments.value = result
@@ -268,13 +289,27 @@ async function commentFetch() {
 }
 
 function addComment(comment: IComment) {
-  comments.value = [comment, ...comments.value]
+  if (comment) {
+    if (comment.parent_id) {
+      if (recomment.value?.parent_id) {
+        comment.parent_id = recomment.value.parent_id
+      }
 
+      newRecomments.value = [comment, ...newRecomments.value]
+
+    } else {
+      comments.value = [comment, ...comments.value]
+    }
+    commentCount.value += 1
+
+  }
+
+  recomment.value = null
 }
 
-function deleteComment(commentId: string) {
+function deleteComment(comment: IComment) {
   comments.value = comments.value.filter((comment: IComment) => {
-    return comment.id !== commentId
+    return comment.id !== comment.id
   })
 
 }
@@ -357,6 +392,26 @@ function copyUrl() {
     message: t('copied.clipboard'),
     type: 'success',
   })
+}
+
+
+async function commentRefresh(comment?: any) {
+  isCommentEdit.value = !isCommentEdit.value
+  commentInit()
+  await commentFetch()
+}
+
+
+
+function getRecomment(comment: IComment) {
+  recomment.value = comment
+}
+
+function commentInit() {
+  comments.value = []
+  limit.value = COMMENT_LIMIT
+  offset.value = 0
+  sort.value = null
 }
 </script>
 

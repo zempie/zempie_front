@@ -4,9 +4,7 @@ export default function () {
   }))
 
   const getSearch = async (keyword: string) => {
-    const { data, error, pending } = await community.search({
-      q: keyword,
-    })
+    const { data, error, pending } = await useCustomAsyncFetch(`/search?q=${keyword}`, getComFetchOptions('get', false))
     if (data.value) {
       console.log(keyword, data.value)
       setResults(data.value)
