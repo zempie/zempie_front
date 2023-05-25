@@ -90,7 +90,9 @@ export default {
       case eNotificationType.follow:
         router.push($localePath(`/${noti.user.nickname}`))
         break;
-
+      case eNotificationType.recomment:
+        router.push($localePath(`/feed/${noti.target_id}`))
+        break
 
     }
   },

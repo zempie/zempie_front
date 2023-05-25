@@ -59,7 +59,7 @@
     </el-dropdown>
   </client-only>
 </template>
-<script setup lang='ts'>
+<script setup lang="ts">
 import { ElDropdown } from 'element-plus'
 import { INotification, eNotificationType } from '~~/types';
 import { dateFormat } from '~/scripts/utils'
@@ -153,7 +153,7 @@ function moveUserPage(nickname: string) {
 
 }
 </script>
-<style scoped lang='scss'>
+<style scoped lang="scss">
 .header-message {
   ul {
     li {

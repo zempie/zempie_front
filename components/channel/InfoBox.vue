@@ -48,7 +48,7 @@
     </ul>
   </div>
 </template>
-<script setup lang='ts'>
+<script setup lang="ts">
 const { $localePath } = useNuxtApp()
 const route = useRoute()
 
@@ -60,4 +60,4 @@ const user = computed(() => useUser().user.value.info)
 
 
 </script>
-<style scoped lang='scss'></style>
+<style scoped lang="scss"></style>

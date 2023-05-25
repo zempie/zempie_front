@@ -26,7 +26,7 @@
     </div>
   </el-card>
 </template>
-<script setup lang='ts'>
+<script setup lang="ts">
 import { ElCard } from 'element-plus';
 import { eMetadataType } from '~~/types';
 
@@ -48,7 +48,7 @@ function onClickRemove() {
 
 
 </script>
-<style scoped lang='scss'>
+<style scoped lang="scss">
 .link-card {
   margin: 20px;
 }

@@ -34,7 +34,7 @@
     </dd>
   </dl>
 </template>
-<script setup lang='ts'>
+<script setup lang="ts">
 import _ from 'lodash'
 
 import { dateFormat, enDateFormat, isObjEmpty, } from '~~/scripts/utils'
@@ -92,4 +92,4 @@ function moveUserPage() {
   $router.push($localePath(`/${props.feed?.user.nickname}`))
 }
 </script>
-<style scoped lang='scss'></style>
+<style scoped lang="scss"></style>

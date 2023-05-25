@@ -41,7 +41,7 @@
     </el-dropdown>
   </client-only>
 </template>
-<script setup lang='ts'>
+<script setup lang="ts">
 import { ElDropdown } from 'element-plus'
 
 const { $localePath } = useNuxtApp()
@@ -57,6 +57,4 @@ function goDmList() {
 }
 
 </script>
-<style scoped lang='scss'>
-
-</style>
+<style scoped lang="scss"></style>

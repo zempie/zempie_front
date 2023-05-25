@@ -415,7 +415,7 @@ function commentInit() {
 }
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .fade-move,
 .fade-enter-active,
 .fade-leave-active {

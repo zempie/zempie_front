@@ -3,6 +3,6 @@
     <i class="uil uil-users-alt"></i>
   </p>
 </template>
-<script setup lang='ts'>
+<script setup lang="ts">
 </script>
-<style scoped lang='scss'></style>
+<style scoped lang="scss"></style>
