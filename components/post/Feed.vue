@@ -14,8 +14,7 @@
     </dl>
 
     <div>
-      <div ref="feedDiv" class="tapl-content" v-html="feedContent" @mousedown="onMouseDown" @mouseup="onMouseUp"
-        @mousemove="isDragging = true">
+      <div ref="feedDiv" class="tapl-content" v-html="feedContent">
       </div>
 
       <div v-if="isOverflow" :class="isMoreView ? '' : 'gradient'"></div>
@@ -375,7 +374,7 @@ function onMouseDown() {
 }
 function onMouseUp() {
   if (!isDragging.value) {
-    router.push($localePath(`/feed/${props.feed.id}`))
+    // router.push($localePath(`/feed/${props.feed.id}`))
 
   }
   isDragging.value = false
