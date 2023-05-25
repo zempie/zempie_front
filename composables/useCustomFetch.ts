@@ -38,27 +38,29 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
       //사용자 uid error
       const errorCode = response._data?.error?.code
 
-      switch (errorCode) {
-        case 20001:
-          break;
-        case 10001:
-          useUser().removeUserState()
-          shared.removeCookies()
-          break;
-        default:
-          if (retryCount < 3) {
-            console.log('error run', retryCount)
-            // await getRefreshToken()
-          } else {
-            console.log('remove cookie')
-
+      if (errorCode) {
+        switch (errorCode) {
+          case 20001:
+            break;
+          case 10001:
             useUser().removeUserState()
             shared.removeCookies()
-            console.log('check', config.public.ENV, 'env:', config.env === 'development', config.env == 'development')
+            break;
+          default:
+            if (retryCount < 3) {
+              console.log('error run', retryCount)
+            } else {
+              console.log('remove cookie')
 
-          }
+              useUser().removeUserState()
+              shared.removeCookies()
+              console.log('check', config.public.ENV, 'env:', config.env === 'development', config.env == 'development')
+            }
 
-          break;
+            break;
+        }
+      } else {
+        throw response
       }
 
 
