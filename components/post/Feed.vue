@@ -66,18 +66,6 @@
 
     <ul class="tapl-option">
       <PostActions :feed="feed" :is-comment-closed="true" @open-comment="openComments" :comment-cnt="commentCount" />
-      <!-- <li>
-        <ul>
-          <LikeBtn :feed="feed" />
-          <li @click="openComments">
-            <i class="uil uil-comment-alt-dots pointer" style="font-size: 22px;"></i>
-            {{ commentCount }}
-          </li>
-          <li>
-            <a @click="copyUrl"><i class="uil uil-share-alt pointer" style="font-size: 20px"></i></a>
-          </li>
-        </ul>
-      </li> -->
     </ul>
 
     <!-- TODO: mobile: 댓글만 보기 -->
