@@ -290,9 +290,7 @@ async function commentFetch() {
     getComFetchOptions('get', true)
   )
   if (error.value) {
-    if (error.value.statusText === 'Not Found') {
-      isExist.value = false
-    }
+    isExist.value = false
   } else if (data.value) {
     const { result } = data.value
     if (isAddData.value) {
