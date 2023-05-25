@@ -178,7 +178,7 @@ const props = defineProps({
   feed: Object as PropType<IFeed>,
 })
 
-const commentCount = ref(props.feed.comment_cnt)
+const commentCount = ref(props.feed?.comment_cnt || 0)
 
 const swiperOption = ref({
   pagination: {
