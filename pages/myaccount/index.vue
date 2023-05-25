@@ -8,16 +8,8 @@
 
       <dl class="ii-card">
         <dt>
-          <div :style="
-            prevBanner
-              ? `background: url(${prevBanner}) center center / cover no-repeat; background-size: cover;`
-              : `background-color:orange; background-size:cover`
-          "></div>
-          <p :style="
-            prevProfile
-              ? `background: url(${prevProfile}) center center / cover no-repeat; background-size: cover;`
-              : `background: url(/images/300_300_default_profile.png) center center / cover no-repeat; background-size: cover;`
-          "></p>
+          <div :style="bannerStyle"></div>
+          <p :style="profileStyle"></p>
         </dt>
         <dd @click="uploadProfileFile">
           <div style="height: 0px; overflow: hidden">
@@ -51,9 +43,24 @@
           <li>&nbsp;</li>
         </ol>
         <ol>
-          <li>{{ $t('userSetting.name') }}</li>
+          <li>{{ $t('name') }}
+            <el-tooltip :content="$t('name.info')">
+              <i class="uil uil-question-circle" style="color:#888"></i>
+            </el-tooltip>
+          </li>
           <li>
-            <input type="text" readonly class="w100p" :value="userInfo?.name" />
+            <input type="text" class="w100p" v-model="userName" />
+          </li>
+        </ol>
+        <ol>
+          <li>{{ $t('nickname') }}
+            <el-tooltip :content="$t('nickname.info')">
+              <i class="uil uil-question-circle" style="color:#888"></i>
+            </el-tooltip>
+          </li>
+          <li>
+            <CommonPrefixInput prefix="@" @change-input="onChangeNickname" :inputValue="newNickname" />
+            <small class="text-red" v-if="isUsernameErr">{{ userNameErr }}</small>
           </li>
         </ol>
       </div>
@@ -113,73 +120,28 @@
 
 <script setup lang="ts">
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
-import { ElMessage, ElLoading, ElSwitch } from 'element-plus'
-
+import { ElMessage, ElTooltip, ElSwitch } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import { removeFcmToken, resigterFcmToken } from '~~/scripts/firebase-fcm';
+import shared from '~/scripts/shared'
+import { fileReader, nicknameRegex } from '~/scripts/utils'
 
 const { t, locale } = useI18n()
 const route = useRoute()
 const config = useRuntimeConfig()
 const { $localePath } = useNuxtApp()
 
+const specialCharRegex = /[\{\}\[\]\/?,;:|\)*~`!^\-+<>@\#$%&\\\=\(\'\"]/;
+
+const MAX_FILE_SIZE = 3
 
 definePageMeta({
   title: 'my-account',
   name: 'myAccount',
-  // middleware: 'auth',
+  middleware: 'auth',
 })
 
-useHead({
-  title: `${t('seo.profile.info.title')} | Zempie`,
-  link: [
-    {
-      rel: 'alternate',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-      hreflang: locale,
-    },
-    {
-      rel: 'canonical',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-  ],
-  meta: [
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-    {
-      property: 'og:site_name',
-      content: 'Zempie',
-    },
-    {
-      name: 'og:type',
-      content: 'website',
-    },
-    {
-      name: 'robots',
-      content: 'noindex, nofollow',
-    },
-    {
-      name: 'description',
-      content: `${t('seo.profile.info.desc')}`,
-    },
-    {
-      property: 'og:title',
-      content: `${t('seo.profile.info.title')}`,
-    },
-    {
-      property: 'og:description',
-      content: `${t('seo.profile.info.description')}`,
-    },
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`,
-    },
-  ],
-})
-
-const MAX_FILE_SIZE = 3
+shared.createHeadMeta(t('seo.profile.info.title'), t('seo.profile.info.desc'))
 
 const isUpdating = ref(false)
 
@@ -195,44 +157,82 @@ const updateBannerFile = ref<File | null>()
 const signUpType = computed(
   () => useUser().user.value.fUser?.providerData[0].providerId
 )
-const userInfo = computed(() => useUser().user.value.info)
 
-const prevProfile = ref<string | ArrayBuffer>(
-  userInfo.value?.picture && userInfo.value.picture + `?_=${Date.now()}`
-)
-const prevBanner = ref<string | ArrayBuffer>(
-  userInfo.value?.url_banner && userInfo.value.url_banner + `?_=${Date.now()}`
-)
+const userInfo = computed(() => useUser().user.value.info)
 
 const isAlarmOn = ref(useUser().user.value.info?.setting.alarm)
 
-watch(
-  () => userInfo.value,
-  (val) => {
-    prevProfile.value = val.picture
-    prevBanner.value = val.url_banner
-  }
-)
+const currNickname = computed(() => userInfo.value?.nickname)
+const nickname = ref()
+const newNickname = computed(() => currNickname.value)
 
-function uploadProfileFile() {
+const userNameErr = ref('')
+const isUsernameErr = ref(false)
+
+const userName = computed({
+  get: () => userInfo.value?.name,
+  set: newValue => userInfo.value.name = newValue
+})
+
+const currProfile = computed(() => userInfo.value?.picture && userInfo.value.picture + `?_=${Date.now()}`)
+const currBanner = computed(() => userInfo.value?.url_banner && userInfo.value.url_banner + `?_=${Date.now()}`)
+const prevProfile = ref<string | ArrayBuffer>()
+const prevBanner = ref<string | ArrayBuffer>()
+
+const bannerStyle = computed(() => {
+  const url = prevBanner.value || currBanner.value
+  return url
+    ? `background: url(${url}) center center / cover no-repeat; background-size: cover;`
+    : `background-color:orange; background-size:cover`
+})
+
+const profileStyle = computed(() => {
+  const url = prevProfile.value || currProfile.value
+  return url
+    ? `background: url(${url}) center center / cover no-repeat; background-size: cover;`
+    : `background: url(/images/300_300_default_profile.png) center center / cover no-repeat; background-size: cover;`
+})
+
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+
+
+async function uploadProfileFile() {
+
   profileImg.value.click()
 }
 
-function uploadBannerFile() {
+async function uploadBannerFile() {
+
   bannerImg.value.click()
 }
 
-function onProfileFileChange(event: any) {
-  const file = event.target.files[0]
-  if (file.size < 1024 * 1024 * MAX_FILE_SIZE) {
+async function onProfileFileChange(event: Event) {
+  const [file] = (event.target as HTMLInputElement).files
+
+  if (isPassFileSize(file)) {
     profileFileName.value = file.name
     updateProfileFile.value = file
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      prevProfile.value = e.target!.result
-    }
-    reader.readAsDataURL(file)
-    event.target.value = ''
+    const result = await fileReader(file);
+    prevProfile.value = result;
+    (event.target as HTMLInputElement).value = ''
+  }
+}
+
+async function onBannerFileChange(event: Event) {
+  const [file] = (event.target as HTMLInputElement).files
+
+  if (isPassFileSize(file)) {
+    bannerFileName.value = file.name
+    updateBannerFile.value = file
+    const result = await fileReader(file);
+    prevBanner.value = result;
+    (event.target as HTMLInputElement).value = ''
+  }
+}
+
+function isPassFileSize(file: File): boolean {
+  if (file && (file.size < 1024 * 1024 * MAX_FILE_SIZE)) {
+    return true
   } else {
     ElMessage({
       message: t(
@@ -242,43 +242,29 @@ function onProfileFileChange(event: any) {
       ),
       type: 'warning',
     })
+    return false
   }
+
 }
 
-function deleteProfileImg(e: any) {
+function deleteProfileImg() {
   prevProfile.value = ''
   profileFileName.value = ''
   updateProfileFile.value = null
 }
-function onBannerFileChange(event: any) {
-  const file = event.target.files[0]
-  if (file.size < 1024 * 1024 * MAX_FILE_SIZE) {
-    bannerFileName.value = file.name
-    updateBannerFile.value = file
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      prevBanner.value = e.target!.result
-    }
-    reader.readAsDataURL(file)
-    event.target.value = ''
-  } else {
-    ElMessage({
-      message: t(
-        `${t('maxFile.size.text1')}${MAX_FILE_SIZE}mb${t(
-          'maxFile.size.text2'
-        )}.`
-      ),
-      type: 'warning',
-    })
-  }
-}
-function deleteBannerImg(e: any) {
+
+
+function deleteBannerImg() {
   prevBanner.value = ''
   bannerFileName.value = ''
   updateBannerFile.value = null
 }
 
 async function onSubmit() {
+  if (isUsernameErr.value) {
+    return
+  }
+
   isUpdating.value = true
   const formData = new FormData()
 
@@ -287,7 +273,6 @@ async function onSubmit() {
   }
   if (updateProfileFile.value) {
     formData.append('file', updateProfileFile.value)
-    formData.append('name', userInfo.value.name)
   }
   if (prevProfile.value === '') {
     formData.append('rm_picture', 'true')
@@ -295,37 +280,35 @@ async function onSubmit() {
   if (prevBanner.value === '') {
     formData.append('rm_banner', 'true')
   }
+  if (nickname.value) {
+    formData.append('nickname', nickname.value)
+  }
+  if (userName.value) {
+    formData.append('name', userName.value)
+  }
 
-  const { data, error, refresh, pending } = await user.updateInfo(formData)
 
-  if (data.value) {
-    const { result } = data.value
-    const { user } = result
+  try {
+    const { data } = await useCustomAsyncFetch<{ result: any }>('/user/update/info', getZempieFetchOptions('post', true, formData))
+
+
+    const { result } = data.value;
+    const { user: userInfo } = result;
+
     ElMessage({
       message: t('userSetting.done'),
       type: 'success',
-    })
-    if (user.picture) {
-      useUser().setProfileImg(user.picture + `?_=${Date.now()}`)
-    } else {
-      useUser().setProfileImg(null)
-    }
+    });
 
-    if (user.url_banner) {
-      useUser().setBannerImg(user.url_banner + `?_=${Date.now()}`)
-    } else {
-      useUser().setBannerImg(null)
-    }
-
-    updateBannerFile.value = null
-    updateProfileFile.value = null
-  } else {
+    useUser().setUser(userInfo);
+    updateBannerFile.value = null;
+    updateProfileFile.value = null;
+  } catch (error) {
     ElMessage({
-      message: error.error.message,
+      message: error?.error?.message || t('userSetting.error'),
       type: 'error',
-    })
+    });
   }
-
   isUpdating.value = false
 }
 
@@ -338,11 +321,59 @@ async function setAlarmStatus() {
     if (isAlarmOn.value) {
       await resigterFcmToken(userId)
     } else {
-      await removeFcmToken(userId)
+      await removeFcmToken()
     }
+  }
+}
+
+
+async function onChangeNickname(input?: string) {
+  const MAX_LIMIT = 15;
+  const MIN_LIMIT = 4;
+  nickname.value = input
+  clearError();
+
+
+  if (!nicknameRegex.test(nickname.value)) {
+    console.log('error')
+    if (nickname.value.length > MAX_LIMIT) {
+      showError(`${t('username.max.err1')} ${MAX_LIMIT}${t('username.max.err2')}`);
+    } else if (nickname.value.length < MIN_LIMIT) {
+      showError(`${t('username.max.err1')} ${MIN_LIMIT}${t('username.min.err2')}`);
+    } else if (specialCharRegex.test(nickname.value)) {
+      showError(t('join.nickname.format.err'));
+    } else {
+      showError(t('join.nickname.format.err'));
+    }
+    return
+  }
+
+  try {
+    const { data } = await useCustomAsyncFetch<{ result: { success: boolean } }>(
+      '/user/has-nickname',
+      getZempieFetchOptions('post', false, { nickname: nickname.value })
+    );
+    if (data.value.result.success) {
+      showError(t('used.id'));
+    } else {
+      clearError();
+    }
+  } catch (error) {
+    console.error(error);
   }
 
 }
+function showError(message: string) {
+  isUsernameErr.value = true;
+  userNameErr.value = message;
+}
+
+function clearError() {
+  isUsernameErr.value = false;
+  userNameErr.value = '';
+}
+
+
 </script>
 
 <style lang="scss" scoped>

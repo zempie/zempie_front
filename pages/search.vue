@@ -6,167 +6,89 @@
         <span>{{ $t('search.result') }}</span>
       </h1>
     </div>
-    <template v-if="results">
-      <dl
-        class="area-title"
-        v-if="results.users?.length"
-        style="margin-top: 12.5px"
-      >
-        <dt>
-          Users <span>{{ results.users?.length }}</span>
-        </dt>
-      </dl>
-      <ul class="user-list" v-if="results.users.length">
-        <ul class="card-follow">
-          <TransitionGroup name="list-complete">
-            <UserCard
-              v-for="user in results.users"
-              :key="user.id"
-              :user="user"
-            />
-            <!-- <li class="more-card" v-if="userList?.length > 2">
+    <dl class="area-title" v-if="userList?.length" style="margin-top: 12.5px">
+      <dt>
+        Users <span>{{ userList.length }}</span>
+      </dt>
+    </dl>
+    <ul class="user-list" v-if="userList">
+      <ul class="card-follow">
+        <TransitionGroup name="list-complete">
+          <UserCard v-for="user in userList" :key="user.id" :user="user" />
+          <!-- <li class="more-card" v-if="userList?.length > 2">
             <h3><i class="uil uil-plus"></i></h3>
             <h4>{{ $t('search.viewAll') }}</h4>
           </li> -->
-          </TransitionGroup>
-        </ul>
-      </ul>
-
-      <dl class="area-title" v-if="results.games?.length">
-        <dt>
-          Games <span>{{ results.games?.length }}</span>
-        </dt>
-      </dl>
-
-      <ul v-if="results.games.length" class="card-game">
-        <TransitionGroup name="list-complete">
-          <GameCard
-            v-for="game in results.games"
-            :key="game.id"
-            :gameInfo="game"
-          />
         </TransitionGroup>
       </ul>
+    </ul>
 
-      <dl class="area-title" v-if="results.posts?.length">
-        <dt>
-          Posts <span>{{ results.posts?.length }}</span>
-        </dt>
-      </dl>
-      <div
-        class="ta-search-post"
-        v-if="results.posts.length"
-        :style="results.posts.length ? 'padding:0px ;' : ''"
-      >
-        <ul class="ta-post">
-          <div v-for="feed in results.posts" :key="feed.id">
-            <PostFeed :feed="feed">
-              <!-- <template #followBtn>
-                <UserFollowBtn
-                  :user="feed.user"
-                  :key="`${feed.user.is_following}`"
-                  class="follow-btn-feed"
-                  @refresh="refreshFollow"
-                />
-              </template> -->
-            </PostFeed>
-          </div>
-        </ul>
-      </div>
-    </template>
+    <dl class="area-title" v-if="gameList?.length">
+      <dt>
+        Games <span>{{ gameList?.length }}</span>
+      </dt>
+    </dl>
+
+    <ul v-if="gameList?.length" class="card-game">
+      <TransitionGroup name="list-complete">
+        <GameCard v-for="game in gameList" :key="game.id" :gameInfo="game" />
+      </TransitionGroup>
+    </ul>
+
+    <dl class="area-title" v-if="postList?.length">
+      <dt>
+        Posts <span>{{ postList?.length }}</span>
+      </dt>
+    </dl>
+    <div class="ta-search-post" v-if="postList?.length" :style="postList?.length ? 'padding:0px ;' : ''">
+      <ul class="ta-post">
+        <div v-for="feed in postList" :key="feed.id">
+          <PostFeed :feed="feed">
+
+          </PostFeed>
+        </div>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import shared from '~/scripts/shared'
 
 const { t, locale } = useI18n()
-const route = useRoute()
-const config = useRuntimeConfig()
 const $route = useRoute()
 
-const keyword = ref($route.query.q)
-const userList = ref([])
-const gameList = ref([])
-const communityList = ref([])
-const postList = ref([])
+const keyword = computed(() => $route.query.q as string)
+const userList = computed(() => useSearch().search.value.results?.users)
+const gameList = computed(() => useSearch().search.value.results?.games)
+const communityList = computed(() => useSearch().search.value.results?.community)
+const postList = computed(() => useSearch().search.value.results?.posts)
 
-const {
-  data: results,
-  error,
-  pending,
-  refresh,
-} = await useCustomAsyncFetch<any>(
-  `/search?q=${keyword.value}`,
-  getComFetchOptions('get', true)
-)
+definePageMeta({
+  name: 'search',
+})
 
-watch(
-  () => $route.query.q,
-  (newKeyword: string) => {
-    keyword.value = newKeyword
+if (!useSearch().search.value.results) {
+  useSearch().getSearch(keyword.value)
+  console.log('no', useSearch().search.value)
+}
 
-    useHead({
-      title: `${t('seo.search.title')} | Zempie`,
-      link: [
-        {
-          rel: 'alternate',
-          href: `${config.ZEMPIE_URL}${route.fullPath}`,
-          hreflang: locale,
-        },
-      ],
-      meta: [
-        {
-          property: 'og:url',
-          content: `${config.ZEMPIE_URL}${route.fullPath}`,
-        },
-        {
-          property: 'og:site_name',
-          content: 'Zempie',
-        },
-        {
-          property: 'og:type',
-          content: 'website',
-        },
-        {
-          name: 'robots',
-          content: 'noindex, nofollow',
-        },
-        {
-          name: 'description',
-          content: `${t('seo.search.desc1')}${keyword.value}${t(
-            'seo.search.desc2'
-          )}`,
-        },
-        {
-          property: 'og:title',
-          content: `${t('seo.search.title')}`,
-        },
-        {
-          property: 'og:description',
-          content: `${t('seo.search.desc1')}${keyword.value}${t(
-            'seo.search.desc2'
-          )}`,
-        },
-        {
-          property: 'og:url',
-          content: `${config.ZEMPIE_URL}${route.path}`,
-        },
-      ],
-    })
+shared.createHeadMeta(`${keyword.value}${t('seo.search.title')}`, `${t('seo.search.desc1')}${keyword.value}${t('seo.search.desc2')}`)
 
-    refresh()
-  }
-)
+
 </script>
 
 <style scoped lang="scss">
 .visual-title {
+  background: url('/images/1200_150_game.jpeg');
+
   h1 {
     font-weight: 600;
     font-size: 30px;
     line-height: 30px;
     color: #fff;
+
     span {
       font-size: 30px;
       font-weight: 700;
@@ -214,7 +136,8 @@ watch(
 .list-complete-enter,
 .list-complete-leave-to
 
-/* .list-complete-leave-active below version 2.1.8 */ {
+/* .list-complete-leave-active below version 2.1.8 */
+  {
   opacity: 0;
   transform: translateY(30px);
 }
@@ -228,6 +151,7 @@ watch(
     h1 {
       font-size: 30px;
       line-height: 30px;
+
       span {
         font-size: 30px;
         line-height: 30px;
@@ -246,6 +170,7 @@ watch(
     h1 {
       font-size: 30px;
       line-height: 30px;
+
       span {
         font-size: 30px;
         line-height: 30px;
@@ -262,9 +187,7 @@ watch(
   }
 }
 
-@media all and (min-width: 768px) and (max-width: 991px) {
-}
+@media all and (min-width: 768px) and (max-width: 991px) {}
 
-@media all and (min-width: 992px) and (max-width: 1199px) {
-}
+@media all and (min-width: 992px) and (max-width: 1199px) {}
 </style>

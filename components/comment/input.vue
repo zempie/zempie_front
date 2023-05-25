@@ -1,12 +1,18 @@
 <template>
-  <dl @click="isLogin || useModal().openLoginModal()">
+  <dl class="mt15" @click="isLogin || useModal().openLoginModal()">
     <UserAvatar :user="user" :tag="'p'" class="user" />
     <dt>
-      <input type="text" v-model="content" :placeholder="$t('comment.input.placeholder')" :readonly="!isLogin"
-        @keyup.enter="isEdit ? editComment() : sendComment()" />
+      <div class="chip-container ">
+        <div class="chip" v-if="parentComment?.user?.nickname">
+          {{ '@' + parentComment?.user?.nickname }}
+        </div>
+        <input type="text" v-model="content" :placeholder="parentComment ? '' : $t('comment.input.placeholder')"
+          :readonly="!isLogin" @input="onInputComment" @keydown.delete="backspaceDelete"
+          @keyup.enter="isEdit ? editComment() : sendComment()" ref="commentInput" />
+      </div>
     </dt>
     <dd>
-      <a @click="isEdit ? editComment() : sendComment()">
+      <a @click="isEdit ? editComment() : sendComment()" :class="isActive ? 'active' : 'inactive'">
         <i class="uil uil-message"></i></a>
     </dd>
   </dl>
@@ -14,31 +20,76 @@
 
 <script setup lang="ts">
 import _ from 'lodash'
+import { PropType } from 'vue'
+import { IComment } from '~~/types'
 
 const props = defineProps({
   postId: String,
-  comment: Object,
+  comment: Object as PropType<IComment>,
   isEdit: {
     type: Boolean,
     default: false,
   },
+  recomment: Object as PropType<IComment>
 })
+const parentComment = ref<IComment | { id: string | null, user: { nickname: string | null }, parent_id?: string }>(props.recomment || { id: null, user: { nickname: null } })
 
-const content = ref(props.comment?.content || null)
+const content = ref(commentCheck(props.comment || props.recomment) || null)
+const commentInput = ref()
+const isActive = ref(false)
+const isPrivate = ref(false)
+
 
 const user = computed(() => useUser().user.value.info)
-
 const isLogin = computed(() => useUser().user.value.isLogin)
 
 const emit = defineEmits(['addComment', 'editComment'])
 
+
+
+
+function commentCheck(cmt: IComment) {
+  if (cmt) {
+    if (cmt.parent_id) {
+
+      const nickname = cmt.content.indexOf('@') !== -1 ? cmt.content.slice(cmt.content.indexOf('@') + 1, cmt.content.indexOf(' ')) : null
+
+      if (nickname) {
+        parentComment.value.id = cmt.parent_id
+        parentComment.value.user.nickname = cmt.content.slice(cmt.content.indexOf('@') + 1, cmt.content.indexOf(' '))
+        return cmt.content.slice(cmt.content.indexOf(' '));
+      } else {
+        return cmt.content
+      }
+
+
+
+    } else {
+      return cmt.content
+    }
+  }
+}
+
+watch(() =>
+  (props.recomment), (recomment) => {
+    if (recomment) {
+      parentComment.value = recomment
+    }
+    commentInput.value.focus()
+  })
+
 async function editComment() {
-  if (!content.value) return
+  if (!isActive.value) return
 
   const payload = {
     comment_id: props.comment.id,
     post_id: props.postId,
     content: content.value,
+  }
+
+  if (parentComment.value?.id) {
+    payload['parent_id'] = parentComment.value.id
+    payload.content = `@${parentComment.value.user.nickname} ` + payload.content
   }
   const { data, error, pending } = await useCustomAsyncFetch(
     `/post/${props.postId}/comment/${props.comment.id}`,
@@ -49,7 +100,6 @@ async function editComment() {
   }
 }
 
-const isPrivate = ref(false)
 
 const sendComment = _.debounce(async () => {
   if (!content.value) return
@@ -61,6 +111,17 @@ const sendComment = _.debounce(async () => {
     is_private: isPrivate.value,
   }
 
+
+  console.log('parentComment', parentComment.value)
+  if (parentComment.value?.id) {
+    payload['parent_id'] = parentComment.value.parent_id ? parentComment.value?.parent_id : parentComment.value.id
+    payload.content = `@${parentComment.value.user.nickname} ` + payload.content
+  }
+
+
+  console.log(payload)
+  // return
+
   const { data, error } = await useCustomAsyncFetch(
     `/post/${props.postId}/comment`,
     getComFetchOptions('post', true, payload)
@@ -68,12 +129,58 @@ const sendComment = _.debounce(async () => {
 
   if (!error.value) {
     content.value = null
+    parentComment.value = null
     emit('addComment', data.value)
   }
 }, 300)
+
+
+function onInputComment() {
+  isActive.value = content.value?.length > 0
+}
+
+
+function backspaceDelete({ which }) {
+  if (which == 8 && parentComment.value && content.value === '') {
+    parentComment.value = null
+  }
+}
 </script>
 
 <style lang="scss" scoped>
+.chip-container {
+  min-height: 48px;
+  padding: 0 15px;
+  border-radius: 5px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  .chip {
+    color: #ff6e17;
+    margin: 4px;
+    background: #FFEDDF;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+
+    i {
+      cursor: pointer;
+      opacity: 0.56;
+      margin-left: 8px;
+    }
+  }
+
+  input {
+    flex: 1 1 auto;
+    width: 30px;
+    border: none;
+    outline: none;
+    padding: 4px;
+  }
+}
+
 .user {
   display: inline-block;
   width: 40px;
@@ -105,10 +212,24 @@ dl {
   }
 
   dd {
-    width: 20%;
+    // width: 20%;
     padding-right: 15px;
     text-align: right;
     font-size: 20px;
+
+    a {
+      &.inactive {
+        opacity: 0.5;
+        pointer-events: none;
+        cursor: none;
+      }
+
+      &.active {
+        opacity: 1;
+        pointer-events: all;
+        cursor: pointer;
+      }
+    }
   }
 }
 

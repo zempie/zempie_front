@@ -1,54 +1,32 @@
 <template>
-  <div class="content">
+  <div v-if="isExist" class="content">
     <div class="area-view">
       <ul class="ta-post" v-if="feed">
         <li class="tap-list">
           <dl class="tapl-title">
-            <dt class="w50p">
-              <dl>
-                <dt>
-                  <NuxtLink :to="$localePath(`/channel/${feed.user?.channel_id}`)">
-                    <UserAvatar :user="feed?.user" :tag="'span'" />
-                  </NuxtLink>
-                </dt>
-                <dd v-if="feed?.user">
-                  <h2>{{ feed?.user?.name }}</h2>
-                  <span>
-                    <i class="uis uis-clock" style="color: #c1c1c1"></i>
-                    {{ dateFormat(feed?.created_at) }}
-                  </span>
-                  <TranslateBtn :text="feed.content" @translatedText="translate" @untranslatedText="untranslatedText" />
-                </dd>
-                <dd v-else>
-                  <h2>{{ $t('feed.noUser.post') }}</h2>
-                  <p>
-                    <i class="uis uis-clock" style="color: #c1c1c1"></i>
-                    {{ dateFormat(feed?.created_at) }}
-                  </p>
-                </dd>
-              </dl>
+            <dt class="w100p">
+              <PostHeaderInfo :feed="feed">
+                <template #followBtn>
+                  <UserFollowBtn :user="feed.user" class="follow-btn-feed" />
+                </template>
+              </PostHeaderInfo>
             </dt>
-            <dd>
-              <UserFollowBtn :user="feed.user" class="follow-btn-feed" />
-            </dd>
           </dl>
 
-          <div class="tapl-content" style="max-height:none" v-html="feed?.content"></div>
-          <template v-if="
-            feed?.post_type === 'SNS' &&
+          <div class="tapl-content" v-html="feed?.content" style="max-height:none"></div>
+          <template v-if="feed?.post_type === 'SNS' &&
             feed?.attatchment_files?.length === 1 &&
             feed?.attatchment_files[0].type === 'image'
-          ">
+            ">
             <img style="height: 88%; margin: 0 auto; display: flex" :src="feed?.attatchment_files[0].url"
               class="feed-img mt-3" />
           </template>
-          <template v-else-if="
-            feed?.post_type === 'SNS' &&
+          <template v-else-if="feed?.post_type === 'SNS' &&
             feed?.attatchment_files &&
             feed?.attatchment_files.length > 0
-          ">
+            ">
             <div class="tapl-movie-img" v-if="feed?.attatchment_files[0].type === 'image'">
-              <swiper class="swiper" :options="swiperOption" :modules="[Pagination]" style="height: 350px">
+              <swiper class="swiper" :options="swiperOption" style="height: 350px">
                 <template v-for="file in feed?.attatchment_files">
                   <swiper-slide>
                     <img style="height: 88%; margin: 0 auto; display: flex" v-if="file.type === 'image'" :src="file.url"
@@ -70,85 +48,96 @@
               </div>
             </div>
           </template>
-          <CommunityTarget :communities="postedAt" :games="feed?.posted_at[0].game" />
+          <PostLinkPreview v-if="!isObjEmpty(feed.metadata)" :tag-info="feed.metadata" :is-edit="false" />
+
+          <CommunityTarget :communities="postedCommunity(feed?.posted_at)" :games="postedGame(feed?.posted_at)" />
 
           <ul class="tapl-option">
-            <li>
+            <PostActions :feed="feed" :comment-cnt="commentCount" />
+            <!-- <li>
               <ul>
                 <LikeBtn v-if="feed" :feed="feed" />
                 <li>
                   <i class="uil uil-comment-alt-dots" style="font-size: 22px"></i>&nbsp;
                   {{ feed?.comment_cnt }}
                 </li>
-
-                <li @click="copyUrl">
-                  <a><i class="uil uil-share-alt" style="font-size: 20px"></i>
-                  </a>
+                <li>
+                  <ShareMenu :feed="feed" />
                 </li>
               </ul>
-            </li>
+            </li> -->
 
             <li>
-
-              <PostDropdown :feed="feed" @deletePost="$router.back()" @refresh="fetch" />
+              <PostDropdown :feed="feed" @deletePost="$router.back()" @refresh="refresh" />
             </li>
           </ul>
           <div class="tapl-comment" v-if="comments">
             <p>
               {{ $t('comment') }} {{
-                feed?.comment_cnt
+                commentCount
               }}{{ $t('comment.count.unit') }}
             </p>
-            <CommentInput :postId="feed?.id" @refresh="commentFetch" />
-            <ul>
-              <TransitionGroup name="fade">
-                <li v-for="comment in comments" :key="comment.id" class="comment">
-                  <Comment :comment="comment" @refresh="commentFetch" />
-                </li>
-              </TransitionGroup>
+
+            <!-- <CommentList :comments="comments" @addComment="addComment" /> -->
+            <ul ref="commentEl" style="max-height:700px; overflow-y: scroll;">
+              <Comment v-for="comment in comments" :key="comment.content" :comment="comment" :isEdit="isCommentEdit"
+                @refresh="commentRefresh" @editComment="editComment" @deleteComment="deleteComment"
+                @recomment="getRecomment" :newRecomments="newRecomments" />
             </ul>
+            <CommentInput :postId="feed?.id" @addComment="addComment" :recomment="recomment" />
+
           </div>
-          <div ref="triggerDiv"></div>
+          <!-- <div ref="triggerDiv"></div> -->
         </li>
       </ul>
-
       <ul class="ta-post" v-else>
-        <li class="tap-list">
-          <dl class="tapl-title">
-            <ClientOnly>
+        <ClientOnly>
+          <li class="tap-list">
+            <dl class="tapl-title">
               <dt>
                 <dl>
                   <dt>
-                  <dt>
                     <UserAvatarSk style="width: 40px; height: 40px" />
                   </dt>
+                  <dd>
+                    <h2 class="grey-text skeleton-animation" style="width: 300px; margin-bottom: 10px">
+                    </h2>
+                    <p class="grey-text skeleton-animation" style="width: 150px; margin-bottom: 10px"></p>
+                  </dd>
+                </dl>
               </dt>
-              <dd>
-                <h2 class="grey-text skeleton-animation" style="width: 300px; margin-bottom: 10px">
-                </h2>
+            </dl>
 
-                <p class="grey-text skeleton-animation" style="width: 150px; margin-bottom: 10px"></p>
-              </dd>
-
-          </dl>
-          </dt>
-          </ClientOnly>
-          </dl>
-
-          <div class="tapl-content grey-text skeleton-animation" style="margin: 20px; padding: 20px"></div>
-          <ul class="tapl-option">
-            <li>
-              <ul>
-                <li>
-                  <i class="uil uil-comment-alt-dots" style="font-size: 22px"></i>&nbsp;
-                </li>
-                <li>
-                  <a><i class="uil uil-share-alt" style="font-size: 20px"></i>
-                  </a>
-                </li>
-              </ul>
-            </li>
-          </ul>
+            <div class="tapl-content grey-text skeleton-animation" style="margin: 20px; padding: 20px"></div>
+            <ul class="tapl-option">
+              <li>
+                <ul>
+                  <li>
+                    <i class="uil uil-comment-alt-dots" style="font-size: 22px"></i>&nbsp;
+                  </li>
+                  <li>
+                    <a><i class="uil uil-share-alt" style="font-size: 20px"></i>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ClientOnly>
+      </ul>
+    </div>
+  </div>
+  <div v-else class="content">
+    <div class="area-view">
+      <ul class="ta-post">
+        <li class="tap-list flex column items-center
+        content-center" style="min-height: 500px;">
+          <div class="flex content-center items-center "
+            style="background-color:#ededed; height: 70px; width:70px; border-radius: 50%;">
+            <i class="uil uil-exclamation-triangle font30 zem-color"></i>
+          </div>
+          <p class="mt30 mb30 text-bold font16"> {{ $t('not.exist.post') }}</p>
+          <button class="btn-default">{{ $t('to.home') }}</button>
         </li>
       </ul>
     </div>
@@ -156,28 +145,30 @@
 </template>
 
 <script setup lang="ts">
-import Prism from '~/plugins/prism'
+import hljs from 'highlight.js'
 import _ from 'lodash'
-import { ElMessage, ElDropdown, ElDialog } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
-import { Pagination } from 'swiper';
+
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import 'swiper/css/pagination';
-import 'swiper/css';
-import { dateFormat, execCommandCopy, stringToDomElem, getFirstDomElement } from '~~/scripts/utils'
-import shared from '~/scripts/shared'
+
+import { dateFormat, execCommandCopy, getFirstDomElementByServer, stringToDomElemByServer, isObjEmpty, } from '~~/scripts/utils'
+import shared from '~~/scripts/shared'
+import { IComment } from '~~/types'
+
+const { $localePath } = useNuxtApp()
+
 
 const COMMENT_LIMIT = 10
-const { $localePath } = useNuxtApp()
 const route = useRoute()
 const router = useRouter()
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
-const comments = ref([])
-
+const comments = ref<IComment[]>()
 const limit = ref(COMMENT_LIMIT)
 const offset = ref(0)
 const sort = ref(null)
+const commentEl = ref<HTMLElement | null>(null)
 
 const swiperOption = ref({
   pagination: {
@@ -185,64 +176,99 @@ const swiperOption = ref({
   },
 })
 const feedId = computed(() => route.params.id as string)
+const commentCnt = ref(0)
 
 const observer = ref<IntersectionObserver>(null)
-const triggerDiv = ref<Element>()
+const triggerDiv = ref()
 const isAddData = ref(false)
-const feed = ref()
-const postedAt = ref()
 
 
-watch(
-  () => feed.value,
-  (feed) => {
-    setHead()
-  }
+const isCommentEdit = ref(false)
+
+//대댓글
+const recomment = ref()
+const newRecomments = ref([])
+
+
+//에러
+const isExist = ref(true)
+
+
+useInfiniteScroll(
+  commentEl,
+  async () => {
+    if (isAddData.value) {
+      offset.value += limit.value
+      await commentFetch()
+    }
+  },
+  { distance: 10 }
 )
 
+
+const {
+  data: feed,
+  error,
+  pending,
+  refresh,
+} = await useAsyncData<any>('feed', () =>
+  $fetch(`/post/${feedId.value}`, getComFetchOptions('get', true)),
+  {
+    initialCache: false
+  }
+)
+setHead()
+const commentCount = ref(feed.value?.comment_cnt || 0)
+
+const postedCommunity = (posted_at) => {
+  if (posted_at) {
+    const [postedTarget] = posted_at
+
+    return postedTarget.community
+      .filter(com => 'group' in com)
+      ?.map((com) => ({
+        community_id: com.id,
+        channel: com.channel,
+        channel_id: com.channel_id,
+        community: com.group
+      })
+      )
+  }
+}
+
+const postedGame = (posted_at) => {
+  if (posted_at) {
+    const [postedTarget] = posted_at
+
+    return postedTarget.game
+      ?.map((game) =>
+      ({
+        id: game.id,
+        game: game.game
+      })
+      )
+  }
+}
+
 onMounted(async () => {
-  await fetch()
+  hljs.configure({
+    ignoreUnescapedHTML: true,
+  })
+  document.querySelectorAll('pre').forEach((block) => {
+    hljs.highlightElement(block)
+  })
   if (feed.value) {
-    Prism.highlightAll()
-
-    setHead()
-    observer.value = new IntersectionObserver(
-      (entries) => {
-        handleIntersection(entries[0])
-      },
-      { root: null, threshold: 1 }
-    )
-
-    observer.value.observe(triggerDiv.value)
+    // observer.value = new IntersectionObserver(
+    //   (entries) => {
+    //     handleIntersection(entries[0])
+    //   },
+    //   { root: null, threshold: 1 }
+    // )
+    // observer.value.observe(triggerDiv.value)
   }
   await commentFetch()
 })
 
-async function fetch() {
-  try {
-    const response = await useCustomFetch<any>(
-      `/post/${feedId.value}`,
-      getComFetchOptions('get', true)
-    )
-    if (response) {
-      feed.value = response
-      postedAt.value = response.posted_at[0]
-      postedAt.value = postedAt.value.community.map((com) => {
-        return {
-          channel: com.channel,
-          channel_id: com.channel_id,
-          community: com?.group || com.community,
-          id: com.id
-        }
-      })
-      console.log(postedAt.value)
-
-    }
-  } catch (error) {
-    alert(error)
-  }
-
-}
 async function handleIntersection(target: any) {
   if (target.isIntersecting) {
     if (isAddData.value) {
@@ -259,19 +285,20 @@ async function commentFetch() {
     sort: sort.value,
   }
 
-  const { data, pending, refresh } = await useCustomAsyncFetch<{ result: [] }>(
+  const { data, pending, refresh, error } = await useCustomAsyncFetch<{ result: [] }>(
     createQueryUrl(`/post/${feedId.value}/comment/list`, query),
     getComFetchOptions('get', true)
   )
-
-  if (data.value) {
+  if (error.value) {
+    isExist.value = false
+  } else if (data.value) {
     const { result } = data.value
     if (isAddData.value) {
       if (result.length > 0) {
         comments.value = [...comments.value, ...result]
       } else {
         isAddData.value = false
-        observer.value.unobserve(triggerDiv.value)
+        // observer.value.unobserve(triggerDiv.value)
       }
     } else {
       comments.value = result
@@ -281,26 +308,92 @@ async function commentFetch() {
   return
 }
 
+function addComment(comment: IComment) {
+  if (comment) {
+    if (comment.parent_id) {
+      if (recomment.value?.parent_id) {
+        comment.parent_id = recomment.value.parent_id
+      }
+
+      newRecomments.value = [comment, ...newRecomments.value]
+
+    } else {
+      comments.value = [comment, ...comments.value]
+    }
+    commentCount.value += 1
+
+  }
+
+  recomment.value = null
+}
+
+function deleteComment(comment: IComment) {
+  comments.value = comments.value.filter((comment: IComment) => {
+    return comment.id !== comment.id
+  })
+
+}
+
+function editComment(comment: IComment) {
+
+  const newComment = comments.value.map((cmt: IComment) => {
+    if (comment.id === cmt.id) {
+      return { ...cmt, content: comment.content }
+    }
+    return cmt
+  })
+  comments.value = newComment
+
+}
+
 async function setHead() {
+
   if (feed.value) {
-    let title = ''
-    let desc = ''
+    const content = stringToDomElemByServer(feed.value.content);
 
-    // 타이틀 처리
-    const [h1Tag] = stringToDomElem(feed.value.content).getElementsByTagName('h1')
-    const [h2Tag] = stringToDomElem(feed.value.content).getElementsByTagName('h2')
-    const [h3Tag] = stringToDomElem(feed.value.content).getElementsByTagName('h3')
+    const h1Tag = content.querySelector('h1');
+    const h2Tag = content.querySelector('h2');
+    const h3Tag = content.querySelector('h3');
+    const img = content.querySelector('img');
+    const video = content.querySelector('video');
+    const audio = content.querySelector('audio');
 
-    title = (h1Tag || h2Tag || h3Tag)?.innerText
 
-    const firstDom = getFirstDomElement(feed.value.content)
-    desc = (firstDom as HTMLElement).innerText.slice(0, 20)
+    let attatchment_files = feed.value.attatchment_files
+      && (Array.isArray(feed.value.attatchment_files)
+        ? feed.value.attatchment_files
+        : JSON.parse(feed.value.attatchment_files))
 
+    const [attr] = attatchment_files || []
+
+
+    let imgMeta = img?.attrs.src || attr?.type === 'image' && attr?.url
+
+    let title = h1Tag?.innerText || h2Tag?.innerText || h3Tag?.innerText;
+
+    const firstDom = getFirstDomElementByServer(feed.value.content)
+    let desc = firstDom?.innerText.slice(0, 50)
+
+    if (!desc) {
+      if (img) {
+        desc = img.attrs?.title || img.attrs?.alt || '이미지'
+      }
+      else if (video) {
+        desc = '동영상'
+      }
+      else if (audio) {
+        desc = audio.attrs?.title || '오디오'
+      }
+      else if (attr) {
+        desc = attr.name
+      }
+    }
     if (!title) {
-      title = desc
+      title = desc.length ? desc.slice(0, 20) : feed.value?.user.name
     }
 
-    shared.createHeadMeta(title, desc)
+    console.log('img', imgMeta)
+    shared.createHeadMeta(title, desc, imgMeta)
 
   }
 }
@@ -320,15 +413,29 @@ function copyUrl() {
     type: 'success',
   })
 }
+
+
+async function commentRefresh(comment?: any) {
+  isCommentEdit.value = !isCommentEdit.value
+  commentInit()
+  await commentFetch()
+}
+
+
+
+function getRecomment(comment: IComment) {
+  recomment.value = comment
+}
+
+function commentInit() {
+  comments.value = []
+  limit.value = COMMENT_LIMIT
+  offset.value = 0
+  sort.value = null
+}
 </script>
 
 <style lang="scss" scoped>
-@use 'sass:math';
-
-.tapl-content {
-  width: calc(100% - 40px);
-}
-
 .fade-move,
 .fade-enter-active,
 .fade-leave-active {

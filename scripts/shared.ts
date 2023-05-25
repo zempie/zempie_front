@@ -2,13 +2,14 @@
  * 2개 이상의 컴포넌트에서 쓰는 method
  */
 
-import { eNotificationType, INotification } from '~~/types'
-import { ElMessage } from 'element-plus'
+import { eNotificationType, IFeed, INotification } from '~~/types'
+import { getFirstDomElementByServer, stringToDomElemByServer } from './utils';
+import { i18n } from '~~/modules/i18n';
+import Vue from 'vue'
+
 const HOURTOSEC = 60 * 60;
 
 export default {
-
-
   /**
    * 유저 토큰 저장
    * @param token access token
@@ -28,7 +29,7 @@ export default {
     $cookies.set(config.REFRESH_TOKEN, refreshToken, {
       maxAge: HOURTOSEC * 24 * 30,
       path: '/',
-      domain: config.COOKIE_DOMAIN
+      domain: config.COOKIE_DOMAINㅔ
     });
   },
   removeCookies: async function () {
@@ -87,9 +88,11 @@ export default {
         console.log('notice')
         break;
       case eNotificationType.follow:
-        router.push($localePath(`/channel/${noti.user.channel_id}`))
+        router.push($localePath(`/${noti.user.nickname}`))
         break;
-
+      case eNotificationType.recomment:
+        router.push($localePath(`/feed/${noti.target_id}`))
+        break
 
     }
   },
@@ -101,13 +104,17 @@ export default {
    */
   notiText: function (type: number) {
 
+    const i18n = useNuxtApp().$i18n
+
     switch (type) {
       case eNotificationType.comment:
-        return 'wrote comment on your post'
+        return i18n.t('notification.comment')
       case eNotificationType.comment_like:
-        return 'likes you comment'
+        return i18n.t('notification.like.comment')
+
       case eNotificationType.post_like:
-        return `likes your posting`
+        return i18n.t('notification.like.post')
+
       case eNotificationType.post:
         console.log('post')
         break;
@@ -118,7 +125,9 @@ export default {
         console.log('notice')
         break;
       case eNotificationType.follow:
-        return 'follows you'
+        return i18n.t('notification.follow')
+      case eNotificationType.recomment:
+        return i18n.t('notification.recomment')
       default:
         break;
     }
@@ -164,12 +173,12 @@ export default {
           content: 'Zempie',
         },
         {
-          name: 'og:type',
-          content: 'website',
-        },
-        {
           name: 'robots',
           content: 'index, follow',
+        },
+        {
+          property: 'og:type',
+          content: 'website',
         },
         {
           name: 'description',
@@ -177,7 +186,7 @@ export default {
         },
         {
           property: 'og:title',
-          content: `${title}`,
+          content: `${title} | Zempie`,
         },
         {
           property: 'og:description',
@@ -192,11 +201,49 @@ export default {
           content: image ? `${image}` : `${config.OG_IMG}`,
         },
         {
+          property: 'og:image:height',
+          content: '400'
+        },
+        {
+          property: 'og:image:width',
+          content: '700'
+        },
+        {
           property: 'og:image:alt',
           content: `${title}`,
         }
       ],
     })
+
+  },
+
+  /**
+   *
+   * @param feed : feed 객체
+   * @returns : 포스팅에서 사용할 제목이랑 본문 내용 리턴, 원문은 태그가 포함되어있음s
+   */
+  getFeedInfo: (feed: IFeed) => {
+    const content = stringToDomElemByServer(feed.content);
+    const h1Tag = content.querySelector('h1');
+    const h2Tag = content.querySelector('h2');
+    const h3Tag = content.querySelector('h3');
+    const pTag = content.querySelector('p');
+
+
+
+    let title = h1Tag?.innerText || h2Tag?.innerText || h3Tag?.innerText || pTag?.innerText;
+
+    const firstDom = getFirstDomElementByServer(feed.content)
+    let desc = firstDom?.innerText.slice(0, 50)
+
+    if (!title) {
+      title = desc.length ? desc.slice(0, 50) : feed?.user.name
+    }
+    return {
+      title,
+      desc
+    }
+
 
   }
 

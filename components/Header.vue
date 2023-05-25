@@ -20,14 +20,14 @@
               </NuxtLink>
             </li>
             <li class="uppercase">
-              <NuxtLink id="gameMenu" :to="$localePath('/game/list')" :class="
-              $route.name.toString().includes('game-list') && 'active'">
+              <NuxtLink id="gameMenu" :to="$localePath('/game/list')"
+                :class="$route.name.toString().includes('game-list') && 'active'">
                 games
               </NuxtLink>
             </li>
             <ClientOnly>
-              <el-dropdown trigger="click" class="menu-dropdown uppercase">
-                <span class="el-dropdown-link">
+              <el-dropdown trigger="click" class="menu-dropdown uppercase font15">
+                <span class="el-dropdown-link ">
                   GameJam
                 </span>
                 <template #dropdown>
@@ -44,7 +44,12 @@
             </ClientOnly>
             <li class="uppercase pointer">
               <a id="zempieWorldMenu" @click="moveZemWorld">
-                Zempie world
+                Z-world
+              </a>
+            </li>
+            <li class="uppercase pointer">
+              <a id="zempieWorldMenu" :href="config.ANDROID_DOWNLOAD_LINK">
+                App
               </a>
             </li>
           </ul>
@@ -53,133 +58,19 @@
 
       <ClientOnly>
         <dd>
-          <div class="header-search">
-            <div class="input-search-line">
-              <i class="uil uil-search"></i>
-              <div>
-                <el-dropdown ref="searchDropdown" trigger="click">
-                  <input type="text" title="keywords" :placeholder="t('needSearchInput')" v-model="searchInput"
-                    @input="search" @keyup.enter="moveSearchPage" autocomplete="off" />
-                  <template #dropdown>
-                    <el-dropdown-menu class="header-search-list" style="min-width: 260px">
-                      <div :class="hasResearchResult || 'no-result'">
-                        <template v-if="userList?.length">
-                          <h2>{{ t('user.name') }}</h2>
-                          <el-dropdown-item v-for="user in userList" :key="user.id">
-                            <div @click="moveUserPage(user.channel_id)">
-                              <dl>
-                                <dt>
-                                  <UserAvatar :user="user" :tag="'span'" />
-                                  {{ user?.name }}
-                                </dt>
-                                <dd><i class="uil uil-user"></i></dd>
-                              </dl>
-                            </div>
-                          </el-dropdown-item>
-                        </template>
-                        <template v-if="gameList?.length">
-                          <h2>{{ t('addGameInfo.game.name') }}</h2>
-                          <el-dropdown-item v-for="game in gameList" :key="game.id">
-                            <div @click="moveGamePage(game.pathname)">
-                              <dl>
-                                <dt>
-                                  <span :style="`background:url(${game.profile_img || game.url_thumb
-                                  }) center center / cover no-repeat; background-size:cover;`"></span>
-                                  {{ game.title }}
-                                </dt>
-                                <dd><i class="uil uil-robot"></i></dd>
-                              </dl>
-                            </div>
-                          </el-dropdown-item>
-                        </template>
-                        <template v-if="communityList?.length">
-                          <h2>{{ t('community.name') }}</h2>
-                          <el-dropdown-item v-for="community in communityList" :key="community.id">
-                            <div @click="moveCommunityPage(community.id)">
-                              <dl>
-                                <dt>
-                                  <span
-                                    :style="`background:url(${community.profile_img}) center center / cover no-repeat; background-size:cover;`"></span>
-                                  {{ community?.name }}
-                                </dt>
-                                <dd><i class="uil uil-comments"></i></dd>
-                              </dl>
-                            </div>
-                          </el-dropdown-item>
-                        </template>
-                        <template v-if="!hasResearchResult">
-                          <h2>{{ t('no.search.result') }}</h2>
-                        </template>
-                      </div>
-                    </el-dropdown-menu>
-                  </template>
-                </el-dropdown>
-              </div>
-            </div>
-          </div>
-          <!-- FIXME: popper-class: css수정 -->
+          <SearchHeader />
           <div class="header-language">
             <el-select class="hl-select-box" v-model="selectedLang" :placeholder="t('korean')">
               <el-option v-for="item in options" :key="item.code" :label="item.label" :value="item.code"
                 @click="switchLangauge" />
             </el-select>
           </div>
-          <div class="header-info ml0" v-if="useCookie(config.COOKIE_NAME).value" :key="user">
+          <div class="header-info ml0" v-if="!isLoading && isLogin" :key="user.id">
             <NotificationHeaderButton />
             <DmHeaderButton />
-            <div class="ml10" id="userMenu">
-              <el-dropdown trigger="click" ref="userMenu" id="userMenu">
-                <UserAvatar style="width: 30px; height: 30px" :user="user" :key="user?.picture" />
-
-                <template #dropdown>
-                  <div slot="body" class="header-setting" style="min-width: 250px" @click="userMenu?.handleClose()">
-                    <dl style="margin: 10px 0px 0px 0px">
-                      <UserAvatar style="width: 30px; height: 30px" :user="user" :key="user?.picture" />
-                      <dd>
-                        <NuxtLink :to="$localePath(`/channel/${user?.channel_id}`)">
-                          <h2>{{ user?.name }}</h2>
-                        </NuxtLink>
-                      </dd>
-                    </dl>
-                    <div>
-                      <h2>{{ t('myProfile') }}</h2>
-                      <div>
-                        <NuxtLink id="myChannel" :to="$localePath(`/channel/${user?.channel_id}`)"><i
-                            class="uil uil-user"></i>
-                          {{ t('myChannel') }}
-                        </NuxtLink>
-                        <NuxtLink id="gameStudio" :to="$localePath('/project/list')"><i class="uil uil-robot"></i>
-                          {{ t('gameStudio') }}
-                        </NuxtLink>
-                      </div>
-                    </div>
-                    <div>
-                      <h2>{{ t('group') }}</h2>
-                      <div>
-                        <NuxtLink :to="$localePath(`/myaccount/communities`)"><i class="uil uil-users-alt"></i>
-                          {{ t('joined.group') }}
-                        </NuxtLink>
-                      </div>
-                    </div>
-                    <div>
-                      <h2>{{ t('account') }}</h2>
-                      <div>
-                        <NuxtLink :to="$localePath(`/myaccount`)"><i class="uil uil-setting"></i>
-                          {{ t('my.account') }}
-                        </NuxtLink>
-                      </div>
-                    </div>
-                    <p>
-                      <a class="btn-default w100p" @click="logout">{{
-                        t('logout')
-                      }}</a>
-                    </p>
-                  </div>
-                </template>
-              </el-dropdown>
-            </div>
+            <UserMenu />
           </div>
-          <div v-else class="header-login">
+          <div v-else-if="!isLoading && !isLogin" class="header-login">
             <NuxtLink :to="$localePath('/login')">
               <button class="btn-default" id="loginBtn" style="display: flex;">
                 <i class="uil uil-user"></i>{{ t('login') }}
@@ -220,16 +111,17 @@
                   class="uil uil-keyboard"></i>
                 GJ+
               </NuxtLink>
+              <a class="pointer" id="zempieWorldMenu" :href="config.ANDROID_DOWNLOAD_LINK">
+                <i class="uil uil-globe"></i>
+                Zempie App
+              </a>
             </div>
           </div>
-          <div class="header-side-bg-mobile" :style="isHeaderSideBgMobile ? 'display:block;' : ''"
-            id="headerSideBgMobile">
-            &nbsp;
+          <div class="header-side-bg-mobile" :style="isHeaderSideBgMobile && 'display:block;'" id="headerSideBgMobile">
           </div>
         </dd>
       </ClientOnly>
     </dl>
-
     <el-dialog v-model="isOpen" append-to-body class="modal-area-type" :show-close="false" width="380px">
       <div class="modal-alert">
         <dl class="ma-header">
@@ -251,15 +143,13 @@
         </div>
       </div>
     </el-dialog>
-
-
   </div>
 </template>
 
 <script setup lang="ts">
 import _ from 'lodash'
-import { vOnClickOutside } from '@vueuse/components'
-import { useI18n } from 'vue-i18n'
+import { vOnClickOutside } from "@vueuse/components"
+import { useI18n } from "vue-i18n"
 import {
   ElDropdown,
   ElDropdownMenu,
@@ -267,7 +157,9 @@ import {
   ElSelect,
   ElOption,
   ElDialog,
-} from 'element-plus'
+} from "element-plus"
+
+import { isMobile } from "../scripts/utils"
 
 const config = useRuntimeConfig()
 const { $localePath } = useNuxtApp()
@@ -278,36 +170,37 @@ const router = useRouter()
 const route = useRoute()
 
 const isLogin = computed(() => useUser().user.value.isLogin)
+const isLoading = computed(() => useUser().user.value.isLoading)
 const user = computed(() => useUser().user.value.info)
-const userMenu = ref()
-const searchDropdown = ref()
 
 const searchInput = ref()
-const userList = ref([])
-const gameList = ref([])
-const communityList = ref([])
-const hasResearchResult = ref(false)
 const isHeaderSideMobile = ref(false)
 const isHeaderSideBgMobile = ref(false)
 
-const isMobile = computed(() =>
-  window.matchMedia('screen and (max-width: 479px)')
+
+
+const isMobileSize = computed(() =>
+  window.matchMedia("screen and (max-width: 479px)")
 )
 
 const isTablet = computed(() =>
-  window.matchMedia('screen and (max-width: 767px)')
+  window.matchMedia("screen and (max-width: 767px)")
 )
+
+const isMob = computed(() => isMobile())
 
 const showMobileLogo = ref(false)
 const showHamburger = ref(false)
 const options = [
-  { code: 'ko', label: '한국어' },
-  { code: 'en', label: 'English' },
+  { code: "ko", label: "한국어" },
+  { code: "en", label: "English" },
 ]
 const selectedLang = ref(locale.value)
+// console.log('currneLan', locale.value)
 
 const isOpen = ref(false)
 const { loginModal } = useModal()
+
 
 watch(
   () => loginModal.value.isOpen,
@@ -316,38 +209,20 @@ watch(
   }
 )
 
-watch(
-  () => locale,
-  (val) => {
-    if (val.value === 'ko') {
-      selectedLang.value = 'ko'
-    } else {
-      selectedLang.value = 'en'
-    }
-  },
-  { immediate: true }
-)
-
-
 onMounted(() => {
   nextTick(() => {
     onResize()
   })
-  window.addEventListener('resize', onResize)
+  window.addEventListener("resize", onResize)
 })
 
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', onResize)
+  window.removeEventListener("resize", onResize)
 })
 
-function handleKeyDown() {
-  console.log('handleKeyDown')
-  searchDropdown.value.handleOpen()
-}
-
 function onResize() {
-  showMobileLogo.value = isMobile.value.matches ? true : false
+  showMobileLogo.value = isMobileSize.value.matches ? true : false
   showHamburger.value = isTablet.value.matches ? true : false
 }
 
@@ -357,76 +232,12 @@ function switchLangauge() {
   router.replace(route.fullPath)
 }
 
-function logout() {
-  if (route.meta.middleware === 'auth') {
-    router.replace($localePath('/'))
-  }
-  useUser().logout()
-}
 
-const search = _.debounce(async () => {
-  const { data, error, pending } = await community.search({
-    q: searchInput.value,
-  })
-  const { posts, games, community: comList, users } = data.value
-  userList.value = users
-  gameList.value = games
-  communityList.value = comList
-
-  if (
-    userList.value?.length ||
-    gameList.value?.length ||
-    communityList.value?.length
-  ) {
-    hasResearchResult.value = true
-  } else {
-    hasResearchResult.value = false
-  }
-}, 300)
-
-function moveSearchPage() {
+async function moveSearchPage() {
   isHeaderSideMobile.value = false
-
+  await useSearch().getSearch(searchInput.value)
   router.push({ path: $localePath(`/search`), query: { q: searchInput.value } })
-  searchDropdown.value.handleClose()
-}
-
-function movePage(command: any) {
-
-  console.log('command', command)
-
-  return
-  const searchObj = command[1]
-  if (searchObj.isUser) {
-    moveUserPage(searchObj.channel_id)
-  } else if (searchObj.isCommunity) {
-    moveCommunityPage(searchObj.id)
-  } else if (searchObj.isGame) {
-    moveGamePage(searchObj.pathname)
-  }
-}
-
-function moveUserPage(channelId: string) {
-  initSearchData()
-  router.push($localePath(`/channel/${channelId}`))
-}
-function moveCommunityPage(communityId: string) {
-  initSearchData()
-  router.push($localePath(`/community/${communityId}`))
-}
-
-function moveGamePage(pathname: string) {
-  initSearchData()
-  router.push($localePath(`/game/${pathname}`))
-}
-
-function initSearchData() {
-  searchInput.value = ''
-  userList.value = []
-  gameList.value = []
-  communityList.value = []
-  hasResearchResult.value = false
-  searchDropdown.value.handleClose()
+  searchInput.value = ""
 }
 function clickOutside() {
   if (isHeaderSideMobile.value) {
@@ -437,12 +248,12 @@ function clickOutside() {
 
 async function moveZemWorld() {
   if (isLogin.value) {
-    const { result } = await useCustomFetch<{ result: { token: string } }>('/create/token', getZempieFetchOptions('post', true))
+    const { result } = await useCustomFetch<{ result: { token: string } }>("/create/token", getZempieFetchOptions("post", true))
     if (result) {
-      window.open(`${config.ZEMPIE_METAVERSE}?key=${result.token}`, '_blank');
+      window.open(`${config.ZEMPIE_METAVERSE}?key=${result.token}`, "_blank");
     }
   } else {
-    router.push($localePath('/login'))
+    router.push($localePath("/login"))
   }
 
 }
@@ -451,19 +262,11 @@ async function moveZemWorld() {
 
 <style lang="scss" scoped>
 .header {
-
   .header-info {
     display: flex;
     align-items: center;
   }
 
-  .menu {
-    li {
-      .active {
-        color: #f97316;
-      }
-    }
-  }
 
   .menu-dropdown {
     display: inline-block;
@@ -575,6 +378,19 @@ async function moveZemWorld() {
   font-size: 16px;
 }
 
+.btn-circle {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  font-size: 18px;
+  line-height: 18px;
+  border: none;
+  border-radius: 50%;
+  background: #fbf6f2;
+  transition: all 0.4s ease-in-out;
+  cursor: pointer;
+}
 
 @media all and (max-width: 479px) {
   .logo {

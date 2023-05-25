@@ -1,54 +1,34 @@
 <template>
   <li>
-    <i
-      v-if="!isLiked"
-      @click="setLike"
-      class="xi-heart-o like-icon"
-      style="font-size: 22px; color: #ff6e17; cursor: pointer"
-    ></i>
-    <i
-      v-else
-      @click="unsetLike"
-      class="xi-heart like-icon"
-      style="font-size: 22px; color: #ff6e17; cursor: pointer"
-    ></i>
-    <span :class="likeCnt >= 1 && 'like-list'" @click="showLikeFetch">
-      {{ likeCnt }}</span
-    >
+    <i v-if="!isLiked" @click="setLike" class="xi-heart-o like-icon"
+      style="font-size: 22px; color: #ff6e17; cursor: pointer"></i>
+    <i v-else @click="unsetLike" class="xi-heart like-icon" style="font-size: 22px; color: #ff6e17; cursor: pointer"></i>
+    <span :class="likeCnt >= 1 && 'like-list pointer'" @click="showLikeFetch">
+      {{ likeCnt }}</span>
   </li>
   <ClientOnly>
-    <el-dialog
-      v-model="isLikeHistoryOpen"
-      class="modal-area-type"
-      width="500px"
-    >
+    <el-dialog v-model="isLikeHistoryOpen" class="modal-area-type" width="500px">
       <div class="modal-alert modal-like">
         <dl class="ma-header">
-
-          <dt>Like </dt>
+          <dt>{{ $t('like') }}</dt>
           <dd>
-            <button @click="closeHistory">
+            <button @click="closeHistory" class="pointer">
               <i class="uil uil-times"></i>
             </button>
           </dd>
         </dl>
         <ul class="ma-content" ref="likeEl">
           <li v-for="like in likeList" :key="like.id">
-            <div @click="moveUserChannel(like.user.channel_id)">
+            <div @click="moveUserChannel(like.user.nickname)">
               <UserAvatar :user="like.user" style="width: 40px; height: 40px" />
             </div>
             <div>
-              <h2 @click="moveUserChannel(like.user.channel_id)">
+              <h2 @click="moveUserChannel(like.user.nickname)">
                 {{ like.user.name }}
               </h2>
             </div>
             <div>
-              <UserFollowBtn
-                v-if="isLogin"
-                :user="like.user"
-                :customClass="'small-btn'"
-                style="width: 100%"
-              />
+              <UserFollowBtn v-if="isLogin" :user="like.user" :customClass="'small-btn'" style="width: 100%" />
             </div>
           </li>
         </ul>
@@ -61,6 +41,7 @@
 import _ from 'lodash'
 import { useInfiniteScroll } from '@vueuse/core'
 import { ElDialog } from 'element-plus'
+import { IUser } from '~~/types';
 const { $localePath } = useNuxtApp()
 const router = useRouter()
 
@@ -75,7 +56,7 @@ const isLiked = ref(props.feed.liked)
 const likeCnt = ref(props.feed.like_cnt)
 
 const isLikeHistoryOpen = ref(false)
-const likeList = ref()
+const likeList = ref<{ id: string, post_id: string, user: IUser }[]>()
 const likeEl = ref<HTMLElement | null>()
 const isAddData = ref(false)
 const limit = ref(LIKE_LIMIT)
@@ -105,11 +86,9 @@ async function setLike() {
   }
   likeAcceessableCount = likeAcceessableCount - 1
   if (likeAcceessableCount > 0) {
-    const { data, error } = await post.like(props.feed.id)
-    if (!error.value) {
-      isLiked.value = true
-      likeCnt.value++
-    }
+    isLiked.value = true
+    likeCnt.value++
+    const { data, error } = await useCustomAsyncFetch(`/post/${props.feed.id}/like`, getComFetchOptions('post', true))
   }
   likeAcceessableCount = likeAcceessableCount + 1
 }
@@ -121,11 +100,11 @@ async function unsetLike() {
   }
   unlikeAcceessableCount = unlikeAcceessableCount - 1
   if (unlikeAcceessableCount > 0) {
-    const { data, error } = await post.unlike(props.feed.id)
-    if (!error.value) {
-      isLiked.value = false
-      likeCnt.value--
-    }
+    isLiked.value = false
+    likeCnt.value--
+    const { data, error } = await useCustomAsyncFetch(`/post/${props.feed.id}/unlike`, getComFetchOptions('post', true))
+
+
   }
   unlikeAcceessableCount = unlikeAcceessableCount + 1
 }
@@ -140,7 +119,7 @@ async function showLikeFetch() {
 
   isLikeHistoryOpen.value = true
 
-  const { data, error, refresh } = await useCustomAsyncFetch<[]>(
+  const { data, error, refresh } = await useCustomAsyncFetch<{ id: string, post_id: string, user: IUser }[]>(
     createQueryUrl(`/post/${props.feed.id}/like/list`, query),
     getComFetchOptions('get', true)
   )
@@ -153,18 +132,18 @@ async function showLikeFetch() {
         isAddData.value = false
       }
     }
-    else{
-    likeList.value= data.value
-    isAddData.value = true
+    else {
+      likeList.value = data.value
+      isAddData.value = true
     }
   }
 }
 
-function moveUserChannel(channel_id: string) {
-  router.push($localePath(`/channel/${channel_id}`))
+function moveUserChannel(nickname: string) {
+  router.push($localePath(`/${nickname}`))
 }
 
-function closeHistory(){
+function closeHistory() {
   isLikeHistoryOpen.value = false
 
   offset.value = 0;
@@ -181,19 +160,4 @@ function closeHistory(){
     text-decoration: underline;
   }
 }
-
-// @media all and (max-width: 479px) {
-// }
-
-// @media all and (min-width: 480px) and (max-width: 767px) {
-// }
-
-// @media all and (min-width: 768px) and (max-width: 991px) {
-// }
-
-// @media all and (min-width: 992px) and (max-width: 1199px) {
-// }
-
-// @media all and (min-width: 1200px) {
-// }
 </style>

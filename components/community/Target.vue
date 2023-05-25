@@ -1,45 +1,28 @@
 <template>
-  <div class="swiper-area">
-    <div
-      class="community-slide"
-      v-for="postedAt in communities"
-      :key="postedAt.id"
-    >
+  <div class="swiper-area" v-if="hasTarget">
+    <div class="community-slide" v-for="postedAt in communities" :key="postedAt.id">
       <div class="category-select-finish">
         <div>
-          <span
-            @click="
-              router.push($localePath(`/community/${postedAt?.community.id}`))
-            "
-            >{{ postedAt?.community?.name }}</span
-          >
+          <span @click="
+            router.push($localePath(`/community/${postedAt?.community.id}`))
+          ">{{ postedAt?.community?.name }}</span>
           /
-          <em
-            @click="
-              router.push(
-                $localePath(
-                  `/community/${postedAt?.community.id}/${postedAt?.channel.title}`
-                )
+          <em @click="
+            router.push(
+              $localePath(
+                `/community/${postedAt?.community.id}/${postedAt?.channel.title}`
               )
-            "
-            >{{ postedAt?.channel?.title }}</em
-          >
+            )
+          ">{{ postedAt?.channel?.title }}</em>
         </div>
       </div>
     </div>
-    <div
-      class="community-slide"
-      v-for="postedAt in games"
-      :key="postedAt.id"
-    >
+    <div class="community-slide" v-for="postedAt in games" :key="postedAt.id">
       <div class="category-select-finish">
         <div style="margin-left:0px">
-          <span
-            @click="
-              router.push($localePath(`/game/${postedAt?.game.pathname}`))
-            "
-            >{{ postedAt?.game?.title }}</span
-          >
+          <span @click="
+            router.push($localePath(`/game/${postedAt?.game.pathname}`))
+          ">{{ postedAt?.game?.title }}</span>
         </div>
       </div>
     </div>
@@ -48,13 +31,23 @@
 <script setup lang="ts">
 import { PropType } from 'vue'
 import { IGame } from '~~/types';
+import { isObjEmpty } from '~~/scripts/utils';
 
 const router = useRouter()
 const { $localePath } = useNuxtApp()
 
 const props = defineProps({
   communities: Object,
-  games: Array as PropType<{id:number, game:IGame}[]>
+  games: Array as PropType<{ id: number, game: IGame }[]>
+})
+
+const hasTarget = computed(() => {
+  if (!props.communities?.length && !props.games?.length) {
+    return false
+  }
+  else {
+    return true
+  }
 })
 
 </script>
@@ -65,10 +58,12 @@ const props = defineProps({
     border-radius: 10px;
     visibility: hidden;
   }
+
   &::-webkit-scrollbar {
     padding-top: 5px;
     height: 8px;
   }
+
   &:hover {
     &::-webkit-scrollbar-thumb {
       visibility: visible;
@@ -82,13 +77,16 @@ const props = defineProps({
 
   .community-slide {
     white-space: nowrap;
+
     &:not(:last-child) {
       margin-right: 10px;
     }
+
     .category-select-finish {
       &:hover {
         cursor: pointer;
       }
+
       height: 30px;
       justify-content: space-around;
       display: flex;
@@ -96,6 +94,7 @@ const props = defineProps({
       padding: 5.5px 10px;
       border: #f9731657 1px solid;
       border-radius: 5px;
+
       p {
         width: 17px;
         height: 17px;

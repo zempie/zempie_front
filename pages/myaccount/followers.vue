@@ -17,8 +17,8 @@
 
 <script setup lang="ts">
 import { IUser } from '~~/types'
-
 import { useI18n } from 'vue-i18n'
+import shared from '~/scripts/shared'
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -27,57 +27,10 @@ const config = useRuntimeConfig()
 definePageMeta({
   title: 'my-follower',
   name: 'myFollowers',
-  //middleware: 'auth',
+  middleware: 'auth',
 })
 
-useHead({
-  title: `${t('seo.profile.followers.title')} | Zempie`,
-  link: [
-    {
-      rel: 'alternate',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-      hreflang: locale,
-    },
-    {
-      rel: 'canonical',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-  ],
-  meta: [
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-    {
-      property: 'og:site_name',
-      content: 'Zempie',
-    },
-    {
-      name: 'og:type',
-      content: 'website',
-    },
-    {
-      name: 'robots',
-      content: 'noindex, nofollow',
-    },
-    {
-      name: 'description',
-      content: `${t('seo.profile.followers.desc')}`,
-    },
-    {
-      property: 'og:title',
-      content: `${t('seo.profile.followers.title')}`,
-    },
-    {
-      property: 'og:description',
-      content: `${t('seo.profile.followers.description')}`,
-    },
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`,
-    },
-  ],
-})
+shared.createHeadMeta(t('seo.profile.followers.title'), t('seo.profile.followers.desc'))
 
 const MAX_PAGE_SIZE = 20
 
@@ -109,15 +62,21 @@ onMounted(async () => {
 })
 
 async function fetch() {
-  const { data, pending, refresh, error } = await user.followerList(
-    payload,
-    Number(userInfo.value.id)
-  )
+  // const { data, pending, refresh, error } = await user.followerList(
+  //   payload,
+  //   Number(userInfo.value.id)
+  // )
+
+  const { data, pending, refresh, error } = await useCustomAsyncFetch<{ totalCount: number, result: any }>(`/user/${Number(userInfo.value.id)}/list/follower`, getComFetchOptions('get', true, payload))
+
+
   if (!error.value) {
     totalCount.value = data.value.totalCount
     users.value = data.value.result.map((user) => {
       return {
         name: user.name,
+        banner_img: user.banner_img,
+        nickname: user.nickname,
         id: user.id,
         channel_id: user.channel_id,
         email: user.email,

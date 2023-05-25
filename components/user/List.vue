@@ -1,5 +1,4 @@
 <template>
-
   <transition name="component-fade" mode="out-in">
     <ul v-if="isPending" class="card-member">
       <UserCardSk v-for="user in 4" />
@@ -8,7 +7,6 @@
       <UserCard v-for="user in users" :user="user"></UserCard>
     </ul>
   </transition>
-
 </template>
 
 <script setup lang="ts">
@@ -22,7 +20,6 @@ const props = defineProps({
     default: true,
   }
 })
-
 
 </script>
 

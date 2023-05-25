@@ -6,69 +6,20 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import shared from '~~/scripts/shared';
 
-const { t, locale } = useI18n()
+const { t } = useI18n()
 const route = useRoute()
-const router = useRouter()
-const config = useRuntimeConfig()
 
-useHead({
-  title: `${t('seo.project.title')} | Zempie Studio`,
-  link: [
-    {
-      rel: 'alternate',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-      hreflang: locale,
-    },
-    {
-      rel: 'canonical',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-  ],
-  meta: [
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-    {
-      property: 'og:site_name',
-      content: 'Zempie',
-    },
-    {
-      name: 'og:type',
-      content: 'website',
-    },
-    {
-      name: 'robots',
-      content: 'noindex, nofollow',
-    },
-    {
-      name: 'description',
-      content: `${t('seo.project.desc')}`,
-    },
-    {
-      property: 'og:title',
-      content: `${t('seo.project.title')}`,
-    },
-    {
-      property: 'og:description',
-      content: `${t('seo.project.description')}`,
-    },
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`,
-    },
-  ],
-})
+const projectId = computed(() => parseInt(route.params.id as string))
+
+shared.createHeadMeta(t('seo.project.title'), t('seo.project.desc'))
 
 definePageMeta({
   title: 'Edit game information',
   name: 'projectId',
   middleware: 'auth',
 })
-
-const projectId = computed(() => parseInt(route.params.id as string))
-
 onMounted(async () => {
   if (!useProject().editProject.value.info.id) await fetch()
 })
@@ -96,7 +47,8 @@ async function fetch() {
 .component-fade-enter,
 .component-fade-leave-to
 
-/* .component-fade-leave-active below version 2.1.8 */ {
+/* .component-fade-leave-active below version 2.1.8 */
+  {
   opacity: 0;
 }
 
@@ -167,13 +119,13 @@ input[type='radio'] {
   display: none;
 }
 
-input[type='radio']:checked + label {
+input[type='radio']:checked+label {
   color: #fff;
   background: #ff6e17;
   border-color: #ff6e17;
 }
 
-input[type='radio'] + label {
+input[type='radio']+label {
   display: inline-block;
   width: 22px;
   height: 22px;
@@ -184,5 +136,4 @@ input[type='radio'] + label {
   border-radius: 4px;
   cursor: pointer;
 }
-
 </style>

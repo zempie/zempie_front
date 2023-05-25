@@ -4,33 +4,22 @@
       <dt>
         <div class="ta-game-list">
           <dl>
-            <dt>Games</dt>
+            <dt>{{ $t('game') }}</dt>
           </dl>
-
           <template v-if="games?.length">
             <ul style="margin-bottom: 20px">
-              <li
-                v-for="game in games.slice(0, 5)"
-                @click="$router.push($localePath(`/game/${game?.pathname}`))"
-              >
-                <p
-                  :style="`background:url(${
-                    game?.url_thumb_webp ||
-                    game?.url_thumb ||
-                    '/images/default.png'
-                  }) center; background-size:cover;`"
-                ></p>
+              <li v-for="game in games.slice(0, 5)" @click="$router.push($localePath(`/game/${game?.pathname}`))">
+                <p :style="`background:url(${game?.url_thumb_webp ||
+                  game?.url_thumb ||
+                  '/images/default.png'
+                  }) center; background-size:cover;`"></p>
                 <h2 style="text-overflow: ellipsis; overflow: hidden">
                   {{ game?.title }}
                 </h2>
               </li>
             </ul>
-
             <div v-if="games.length > 5">
-              <NuxtLink
-                :to="$localePath(`/channel/${game?.user.channel_id}/games`)"
-                class="btn-default-samll w100p"
-              >
+              <NuxtLink :to="$localePath(`/${game?.user.nickname}/games`)" class="btn-default-samll w100p">
                 {{ $t('moreView') }}
               </NuxtLink>
             </div>
@@ -43,22 +32,19 @@
       <dd>
         <PostTimeline type="game" :isMine="isMine" />
       </dd>
-
       <dt>
         <div class="ta-about">
-          <h2>About Us</h2>
+          <h2>{{ $t('about.game') }}</h2>
           <div class="desc">
             {{ game?.description }}
           </div>
           <dl>
-            <dt>Version</dt>
+            <dt>{{ $t('version') }}</dt>
             <dd>{{ game?.version }}</dd>
           </dl>
         </div>
         <div class="ta-copy-link">
-          <a @click="copyUrl"
-            ><em>Copy Game Link</em> <span><i class="uil uil-link"></i></span
-          ></a>
+          <a @click="copyUrl"><em>{{ $t('game.link.copy') }}</em> <span><i class="uil uil-link"></i></span></a>
         </div>
       </dt>
     </dl>
@@ -66,10 +52,11 @@
 </template>
 
 <script setup lang="ts">
-import { eGameCategory, eGameType, IUserChannel } from '~~/types'
+import { eGameType, IGame } from '~~/types'
 import { execCommandCopy } from '~/scripts/utils'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
+import shared from '~~/scripts/shared';
 
 const { $localePath } = useNuxtApp()
 const config = useRuntimeConfig()
@@ -78,115 +65,49 @@ const { t, locale } = useI18n()
 
 const games = ref()
 
-const game = computed(() => useGame().game.value.info)
-
+const gamePath = computed(() => route.params.id as string)
 const isMine = computed(
-  () => game.value?.user.id === useUser().user.value.info?.id
+  () => game?.user.id === useUser().user.value.info?.id
 )
 
-watch(
-  () => useGame().game.value.info,
-  async (info) => {
-    if (info) {
-      await gameListFetch()
-      useHead({
-        title: `${info.title} | Zempie game`,
-        link: [
-          {
-            rel: 'alternate',
-            href: `${config.ZEMPIE_URL}${route.fullPath}`,
-            hreflang: locale,
-          },
-          {
-            rel: 'canonical',
-            href: `${config.ZEMPIE_URL}${route.fullPath}`,
-          },
-        ],
-        meta: [
-          {
-            property: 'og:url',
-            content: `${config.ZEMPIE_URL}${route.fullPath}`,
-          },
-          {
-            property: 'og:site_name',
-            content: 'Zempie',
-          },
-          {
-            name: 'og:type',
-            content: 'website',
-          },
-          {
-            name: 'robots',
-            content: 'index, follow',
-          },
-          {
-            name: 'description',
-            content: `${info.description}`,
-          },
-          {
-            property: 'og:title',
-            content: `${info.title}`,
-          },
-          {
-            property: 'og:description',
-            content: `${info.description}`,
-          },
-          {
-            property: 'og:url',
-            content: `${config.ZEMPIE_URL}${route.path}`,
-          },
-          {
-            property: 'og:image',
-            content: `${info.url_thumb}`,
-          },
-        ],
-      })
-    }
-  },
+
+/**
+ * seo 반영은 함수안에서 되지 않으므로 최상단에서 진행함
+ */
+const { data } = await useAsyncData<{ result: { game: IGame } }>('gameInfo', () =>
+  $fetch(`/launch/game/${gamePath.value}`, getZempieFetchOptions('get', true)),
   {
-    deep: true,
-    immediate: true,
+    initialCache: false
   }
 )
+const { game } = data.value?.result
+
+if (game)
+  shared.createHeadMeta(game.title, game.description, game.url_thumb)
 
 onMounted(async () => {
-  if (game.value) await gameListFetch()
+  if (game) await gameListFetch()
 })
 
-onBeforeUnmount(()=>{
+onBeforeUnmount(() => {
   useGame().resetGame()
 })
 
 async function gameListFetch() {
-  const response = await useCustomFetch<{
-    result: any
-  }>(
-    `/channel/${game.value?.user.channel_id}`,
-    getZempieFetchOptions('get', false)
-  )
+  try {
+    const response = await useCustomFetch<{ result: any }>(`/channel/${game.user.channel_id}`, getZempieFetchOptions('get', false))
 
-  if (response) {
-    const { result } = response
+    const target = response?.result?.target
+    const gamesList = target?.games ?? []
 
-    if (result) {
-      const { target } = result
-
-      const list = target?.games?.filter((gm) => {
-        return gm.id !== game.value?.id
-      })
-      games.value = list
-    }
+    games.value = gamesList.filter((gm: IGame) => gm.id !== game?.id)
+  } catch (error) {
+    console.error(error)
   }
 }
 
 function copyUrl() {
-  let url = ''
-
-  if(game.value.game_type === eGameType.Download){
-    url = `${config.ZEMPIE_URL}/game/${game.value.pathname}`
-  }else{
-    url = `${config.ZEMPIE_URL}/play/${game.value.pathname}`
-  }
+  const url = game.game_type === eGameType.Download ? `${config.ZEMPIE_URL}/${locale.value}/game/${game.pathname}` : `${config.ZEMPIE_URL}/${locale.value}/play/${game.pathname}`
 
   execCommandCopy(url)
   ElMessage.closeAll()
@@ -204,7 +125,7 @@ function copyUrl() {
   border-radius: 10px;
   background: #fff;
   box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.1);
-  margin-bottom:20px;
+  margin-bottom: 20px;
 }
 
 .ta-screenshot .swiper-button-next {

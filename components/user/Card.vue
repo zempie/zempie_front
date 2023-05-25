@@ -1,28 +1,25 @@
 <template>
-  <li @click="$router.push($localePath(`/channel/${user.channel_id}`))">
-
-    <div
-      class="cf-img"
-      :style="
-        bannerImg
-          ? `background: url(${bannerImg}) center center / cover no-repeat; background-size: cover;`
-          : `background-color:orange; background-size:cover`
-      "
-    ></div>
-    <UserAvatar :user="userObj" :tag="'p'" :hasRouter="true" ></UserAvatar>
+  <li @click="$router.push($localePath(`/${user.nickname}`))">
+    <div class="cf-img" :style="
+      bannerImg
+        ? `background: url(${bannerImg}) center center / cover no-repeat; background-size: cover;`
+        : `background-color:orange; background-size:cover`
+    "></div>
+    <UserAvatar :user="userObj" :tag="'p'" :hasRouter="true"></UserAvatar>
     <div class="cf-info">
-      <h3>{{ user.name }}</h3>
+      <h3>{{ user.nickname }}</h3>
+      <h4>{{ user.name }}</h4>
       <dl>
         <dd>
           <h4>{{ user.followers_cnt }}</h4>
-          <p>Followers</p>
+          <p>{{ $t('follower') }}</p>
         </dd>
         <dt>
           <p></p>
         </dt>
         <dd>
           <h4>{{ user.followings_cnt }}</h4>
-          <p>following</p>
+          <p>{{ $t('following') }}</p>
         </dd>
       </dl>
       <slot name="followBtn"></slot>
@@ -31,17 +28,14 @@
 </template>
 
 <script setup lang="ts">
-import { IUser } from '~~/types'
-import { PropType } from 'vue'
-
 const { $localePath } = useNuxtApp()
 
 const props = defineProps({
-  user: Object as PropType<IUser>,
+  user: Object,
 })
 
 const bannerImg = computed(() =>
-  props.user.url_banner ? props.user.url_banner + `?_=${Date.now()}` : null
+  props.user.banner_img ? props.user.banner_img + `?_=${Date.now()}` : null
 )
 
 const userObj = computed(() => {
@@ -54,7 +48,10 @@ const userObj = computed(() => {
     channel_id: props.user.channel_id,
     email: props.user.email,
     uid: props.user.uid,
-    url_banner: props.user.url_banner,
+    banner_img: props.user.banner_img,
+    nickname: props.user.nickname,
+    follower_cnt: props.user.followers_cnt,
+    following_cnt: props.user.followings_cnt,
   }
 })
 </script>

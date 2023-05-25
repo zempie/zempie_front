@@ -2,50 +2,39 @@
   <div class="content">
     <ul class="ta-post">
       <dd>
-        <div v-if="route.meta.name !== 'userChannel'" class="tab-search-swiper">
+        <div v-if="route.meta?.name !== 'userChannel'" class="tab-search-swiper">
           <div class="swiper-area uppercase">
-            <div class="swiper-slide" style="width: 25%; cursor: pointer">
-              <NuxtLink
-                :to="$localePath(`/channel/${channelId}`) "
-                :class="route.meta.name === 'userChannel' ? 'active' : ''"
-              >
+            <div class="swiper-slide">
+              <NuxtLink :to="$localePath(`/${userId}`)" :class="route.meta?.name === 'userChannel' && 'active'">
                 <p class="mobile">
                   <i class="uil uil-clock-three"></i>
-                  <span style="border: 0">TIMELINE</span>
+                  <span style="border: 0">{{ $t('timeline') }}</span>
                 </p>
               </NuxtLink>
             </div>
-            <div class="swiper-slide" style="width: 25%; cursor: pointer">
-              <NuxtLink
-                :to="$localePath(`/channel/${channelId}/followers`)"
-                :class="route.meta.name === 'userFollowers' ? 'active' : ''"
-              >
+            <div class="swiper-slide">
+              <NuxtLink :to="$localePath(`/${userId}/followers`)"
+                :class="route.meta?.name === 'userFollowers' && 'active'">
                 <p class="mobile">
                   <i class="uil uil-users-alt"></i>
-                  <span style="border: 0">FOLLOWERS</span>
+                  <span style="border: 0">{{ $t('follower') }}</span>
                 </p>
               </NuxtLink>
             </div>
-            <div class="swiper-slide" style="width: 25%; cursor: pointer">
-              <NuxtLink
-                :to="$localePath(`/channel/${channelId}/following`)"
-                :class="route.meta.name === 'userFollwoing' ? 'active' : ''"
-              >
+            <div class="swiper-slide">
+              <NuxtLink :to="$localePath(`/${userId}/following`)"
+                :class="route.meta?.name === 'userFollwoing' && 'active'">
                 <p class="mobile">
                   <i class="uil uil-user-plus"></i>
-                  <span style="border: 0">FOLLOWING</span>
+                  <span style="border: 0">{{ $t('following') }}</span>
                 </p>
               </NuxtLink>
             </div>
-
-            <div class="swiper-slide" style="width: 25%; cursor: pointer">
-              <NuxtLink
-                :to="$localePath(`/channel/${channelId}/games`)"
-                :class="route.meta.name === 'userGame' ? 'active' : ''"
-              >
+            <div class="swiper-slide">
+              <NuxtLink :to="$localePath(`/${userId}/games`)" :class="route.meta?.name === 'userGame' && 'active'">
                 <p class="mobile">
                   <i class="uil uil-map-pin-alt"></i>
-                  <span style="border: 0">GAME</span>
+                  <span style="border: 0">{{ $t('game') }}</span>
                 </p>
               </NuxtLink>
             </div>
@@ -58,28 +47,27 @@
 </template>
 
 <script setup lang="ts">
-import { IUserChannel } from '~~/types'
+import shared from '~~/scripts/shared';
 
 const { $localePath } = useNuxtApp()
 const route = useRoute()
+const { t } = useI18n()
+const userId = computed(() => route.params.id as string)
+const channelInfo = computed(() => useChannel().userChannel.value.info)
 
-const userInfo = ref<IUserChannel>()
-
-const channelId = computed(() => route.params.id as string)
-const routeQuery = computed(() => route.query.media)
-
-
-useChannel().getChannelInfo(channelId.value)
-.catch((error)=>{
+try {
+  await useChannel().getChannelInfo(userId.value)
+  shared.createHeadMeta(`${channelInfo.value.name}${t('seo.channel.title')}`, `${channelInfo.value.name}${t('seo.channel.desc')}`, channelInfo.value.picture)
+} catch (error) {
   console.log(error)
-})
-
-
+}
 </script>
 
 <style lang="scss" scoped>
 .swiper-slide {
   display: inline-block;
+  width: 25% !important;
+  cursor: pointer;
 }
 
 .content {
@@ -132,9 +120,7 @@ useChannel().getChannelInfo(channelId.value)
   }
 }
 
-@media all and (min-width: 768px) and (max-width: 991px) {
-}
+@media all and (min-width: 768px) and (max-width: 991px) {}
 
-@media all and (min-width: 992px) and (max-width: 1199px) {
-}
+@media all and (min-width: 992px) and (max-width: 1199px) {}
 </style>

@@ -2,55 +2,47 @@
   <div class="content">
     <GameHeaderSk v-if="isPending" />
     <GameHeader v-else :gameInfo="gameInfo" />
-    <div class="tab-menu-swiper">
+    <!-- <div class="tab-menu-swiper">
       <div class="swiper-area">
-        <NuxtLink
-          :class="['swiper-slide', !routeQuery ? 'active' : '']"
-          :to="$localePath(`/game/${gamePath}`)"
-        >
+        <NuxtLink :class="['swiper-slide', !routeQuery && 'active']" :to="$localePath(`/game/${gamePath}`)">
           <p><i class="uil uil-clock-three"></i></p>
           <h2>{{ $t('timeline') }}(ALL)</h2>
         </NuxtLink>
-       
-        <NuxtLink
-          :class="['swiper-slide', routeQuery === 'image' ? 'active' : '']"
-          :to="$localePath(`/game/${gamePath}`) + '?media=image'"
-        >
+
+        <NuxtLink :class="['swiper-slide', routeQuery === 'image' && 'active']"
+          :to="$localePath(`/game/${gamePath}`) + '?media=image'">
           <p><i class="uil uil-image-edit"></i></p>
           <h2>{{ $t('image') }}</h2>
         </NuxtLink>
 
-        <NuxtLink
-          :class="['swiper-slide', routeQuery === 'video' ? 'active' : '']"
-          :to="$localePath(`/game/${gamePath}`) + '?media=video'"
-        >
+        <NuxtLink :class="['swiper-slide', routeQuery === 'video' && 'active']"
+          :to="$localePath(`/game/${gamePath}`) + '?media=video'">
           <p><i class="uil uil-play-circle"></i></p>
           <h2>{{ $t('video') }}</h2>
         </NuxtLink>
 
-        <NuxtLink
-          :class="['swiper-slide', routeQuery === 'sound' ? 'active' : '']"
-          :to="$localePath(`/game/${gamePath}`) + '?media=sound'"
-        >
+        <NuxtLink :class="['swiper-slide', routeQuery === 'sound' && 'active']"
+          :to="$localePath(`/game/${gamePath}`) + '?media=sound'">
           <p><i class="uil uil-music"></i></p>
           <h2>{{ $t('audio') }}</h2>
         </NuxtLink>
       </div>
-    </div>
+    </div> -->
     <slot />
   </div>
 </template>
 
 <script setup lang="ts">
 import { IGame } from '~~/types'
+
 const { $localePath } = useNuxtApp()
 const route = useRoute()
 
 const gameInfo = ref<IGame>()
+const isPending = ref(true)
 
 const gamePath = computed(() => route.params.id as string)
 const routeQuery = computed(() => route.query.media)
-const isPending = ref(true)
 
 watch(
   () => gameInfo.value,
@@ -99,11 +91,13 @@ useCustomAsyncFetch<any>(
       h2 {
         display: none;
       }
+
       &.active {
         p {
           color: #fff !important;
         }
       }
+
       &:hover {
         p {
           color: #888;
@@ -116,15 +110,18 @@ useCustomAsyncFetch<any>(
 @media all and (min-width: 480px) and (max-width: 767px) {
   .tab-menu-swiper {
     width: 100%;
+
     .swiper-slide {
       h2 {
         display: none;
       }
+
       &.active {
         p {
           color: #fff !important;
         }
       }
+
       &:hover {
         p {
           color: #888;
@@ -134,12 +131,9 @@ useCustomAsyncFetch<any>(
   }
 }
 
-@media all and (min-width: 768px) and (max-width: 991px) {
-}
+@media all and (min-width: 768px) and (max-width: 991px) {}
 
-@media all and (min-width: 992px) and (max-width: 1199px) {
-}
+@media all and (min-width: 992px) and (max-width: 1199px) {}
 
-@media all and (min-width: 1200px) {
-}
+@media all and (min-width: 1200px) {}
 </style>

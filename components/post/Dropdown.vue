@@ -1,19 +1,15 @@
 <template>
   <ClientOnly>
     <el-dropdown trigger="click" ref="feedMenu" popper-class="feed-menu">
-      <a class="btn-circle-none pt6" slot="trigger"
-        ><i class="uil uil-ellipsis-h font25" id="feedMenu"></i
-      ></a>
+      <a class="btn-circle-none pt6" slot="trigger"><i class="uil uil-ellipsis-h font25" id="feedMenu"></i></a>
       <template #dropdown>
         <div slot="body" class="more-list fixed" style="min-width: 150px">
           <template v-if="user && user.id === (feed?.user && feed?.user.id)">
-            <a @click="isTextEditorOpen = true" id="editFeed" class="pointer">{{ t('feed.edit') }}</a>
+            <a @click="onClickEdit" id="editFeed" class="pointer">{{ t('feed.edit') }}</a>
             <a @click="showDeletePostModal = true" class="pointer">{{ t('feed.delete') }}</a>
           </template>
           <template v-else>
-            <NuxtLink
-              :to="$localePath(`/channel/${feed.user && feed.user.channel_id}`)"
-            >
+            <NuxtLink :to="$localePath(`/${feed.user && feed.user.nickname}`)">
               {{ t('visit.userChannel') }}
             </NuxtLink>
             <!-- <a v-if="user" @click="report">{{ t('post.report') }}</a>
@@ -23,12 +19,7 @@
       </template>
     </el-dropdown>
 
-    <el-dialog
-      v-model="showDeletePostModal"
-      append-to-body
-      class="modal-area-type"
-      width="380px"
-    >
+    <el-dialog v-model="showDeletePostModal" append-to-body class="modal-area-type" width="380px">
       <div class="modal-alert">
         <dl class="ma-header">
           <dt>{{ t('information') }}</dt>
@@ -59,14 +50,8 @@
 
   <PostModal :isTextEditorOpen="isTextEditorOpen">
     <template #textEditor>
-      <TextEditor
-        @closeModal="closeEditor"
-        :isEdit="true"
-        :feed="feed"
-        @refresh="emit('refresh')"
-        :isFullScreen="usePost().post.value.isFullScreen"
-        :key="editorKey"
-      />
+      <TextEditor @closeModal="closeEditor" :isEdit="true" :feed="feed" @refresh="emit('refresh')"
+        :isFullScreen="usePost().post.value.isFullScreen" :key="editorKey" />
     </template>
   </PostModal>
 </template>
@@ -75,12 +60,9 @@ import { PropType } from 'vue'
 import { IFeed } from '~~/types'
 import {
   ElDropdown,
-  ElDropdownMenu,
-  ElDropdownItem,
-  ElSelect,
-  ElOption,
   ElMessage,
   ElDialog,
+  ElMessageBox,
 } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 
@@ -95,12 +77,14 @@ const editorKey = ref(0)
 const props = defineProps({
   feed: Object as PropType<IFeed>,
 })
+
 const emit = defineEmits(['refresh', 'deletePost'])
 
 const user = computed(() => useUser().user.value.info)
 
 async function deletePost() {
-  const { data, error, pending } = await post.delete(props.feed.id)
+  const { data, error, pending } = await useCustomAsyncFetch(`/post/${props.feed.id}`, getComFetchOptions('delete', true))
+
 
   if (!error.value) {
     ElMessage({
@@ -115,6 +99,29 @@ async function deletePost() {
 async function closeEditor() {
   isTextEditorOpen.value = false
   editorKey.value = Date.now()
+}
+
+function onClickEdit() {
+
+  if (props.feed.post_type === 'BLOG') {
+    ElMessageBox.confirm(`${t('ask.edit.blog')}<br/>${t('confirm.edit')}`, {
+      cancelButtonText: t('no'),
+      confirmButtonText: t('yes'),
+      dangerouslyUseHTMLString: true,
+      type: 'info',
+    })
+      .then(() => {
+        isTextEditorOpen.value = true
+      })
+      .catch(() => {
+
+      })
+      .finally(() => {
+      })
+  } else {
+    isTextEditorOpen.value = true
+
+  }
 }
 </script>
 

@@ -35,8 +35,8 @@
                     <UserAvatar :user="noti.user" :tag="'span'" :hasRouter="true" />
                   </dd>
                   <dt>
-                    <h3><span @click.stop="$router.push($localePath(`/channel/${noti.user.channel_id}`))">{{
-                      noti.user.name
+                    <h3><span @click.stop="moveUserPage(noti.user.nickname)">{{
+                      noti.user.nickname
                     }}&nbsp;</span>{{ noti.type_text }}
                     </h3>
                     <h4>{{ noti.content.slice(0, 40) }}</h4>
@@ -59,7 +59,7 @@
     </el-dropdown>
   </client-only>
 </template>
-<script setup lang='ts'>
+<script setup lang="ts">
 import { ElDropdown } from 'element-plus'
 import { INotification, eNotificationType } from '~~/types';
 import { dateFormat } from '~/scripts/utils'
@@ -87,7 +87,8 @@ watch(
 watch(
   () => useUser().user.value.info,
   (val) => {
-    if (val.new_noti_count) hasNewNoti.value = true
+
+    if (val?.new_noti_count) hasNewNoti.value = true
   }
 )
 
@@ -144,10 +145,15 @@ async function moveAlarm(noti: INotification) {
 function goNotiList() {
   router.push($localePath('/notifications'))
   notiDropdown.value.handleClose()
+}
+
+function moveUserPage(nickname: string) {
+  router.push($localePath(`/${nickname}`))
+  notiDropdown.value.handleClose()
 
 }
 </script>
-<style scoped lang='scss'>
+<style scoped lang="scss">
 .header-message {
   ul {
     li {

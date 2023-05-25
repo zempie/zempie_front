@@ -1,62 +1,44 @@
 <template>
-  <div
-    v-if="gameInfo"
-    class="visual-info-left"
-    :style="
-      prevBanner
-        ? `background: url(${
-            prevBanner + `?_=${Date.now()}`
-          }) center center / cover no-repeat; background-size: cover;`
-        : 'background-color: #f973165c'
-    "
-  >
-  <GameStageTag v-if="gameInfo.stage" :stage="gameInfo.stage"/>
-    <div
-      v-if="isMine"
-      style="display: flex; justify-content: flex-end; margin: 20px"
-    >
+  <div v-if="gameInfo" class="visual-info-left" :style="
+    prevBanner
+      ? `background: url(${prevBanner + `?_=${Date.now()}`
+      }) center center / cover no-repeat; background-size: cover;`
+      : 'background-color: #f973165c'
+  ">
+    <GameStageTag v-if="gameInfo.stage" :stage="gameInfo.stage" />
+    <div v-if="isMine" style="display: flex; justify-content: flex-end; margin: 20px">
       <div style="height: 0px; overflow: hidden">
-        <input
-          type="file"
-          @change="onBannerChange"
-          accept="image/jpeg, image/png, image/svg, image/jpg, image/webp, image/bmp,"
-          ref="bannerImg"
-          name="fileInput"
-        />
+        <input type="file" @change="onBannerChange"
+          accept="image/jpeg, image/png, image/svg, image/jpg, image/webp, image/bmp," ref="bannerImg" name="fileInput" />
       </div>
 
       <span
         style="
-          border-radius: 50%;
-          background-color: #888;
-          width: 30px;
-          height: 30px;
-          display: flex;
-          cursor: pointer;
-          align-items: center;
-        "
-        @click="uploadBanner"
-      >
-        <i
-          class="uil uil-image-edit"
+                                                                                                                                                                                                                                                                                                border-radius: 50%;
+                                                                                                                                                                                                                                                                                                background-color: #888;
+                                                                                                                                                                                                                                                                                                width: 30px;
+                                                                                                                                                                                                                                                                                                height: 30px;
+                                                                                                                                                                                                                                                                                                display: flex;
+                                                                                                                                                                                                                                                                                                cursor: pointer;
+                                                                                                                                                                                                                                                                                                align-items: center;
+                                                                                                                                                                                                                                                                                              "
+        @click="uploadBanner">
+        <i class="uil uil-image-edit"
           style="
-            font-size: 20px;
-            margin-right: 10px;
-            color: #fff;
-            margin: 0 auto;
-          "
-        ></i>
+                                                                                                                                                                                                                                                                                                  font-size: 20px;
+                                                                                                                                                                                                                                                                                                  margin-right: 10px;
+                                                                                                                                                                                                                                                                                                  color: #fff;
+                                                                                                                                                                                                                                                                                                  margin: 0 auto;
+                                                                                                                                                                                                                                                                                                "></i>
       </span>
     </div>
     <dl>
       <dt class="header-left">
         <dl>
           <dt class="game-profile-img">
-            &nbsp;
             <div
-              :style="`background:url(${gameInfo?.url_thumb}) center center / cover no-repeat; background-size:cover;`"
-            >
-              <!--                                <span></span>-->
+              :style="`background:url(${gameInfo?.url_thumb}) center center / cover no-repeat; background-size:cover; border-radius: 10%`">
+              <!-- <span></span> -->
             </div>
           </dt>
           <dd class="game-tag">
@@ -64,54 +46,68 @@
               {{ gameInfo.title }}<span></span>
             </h2>
             <h3 @click="moveUserPage" style="cursor: pointer">
-              By {{ gameInfo.user?.name }}
+              By <span class="underline">@{{ gameInfo.user?.nickname }}</span>
             </h3>
-
-            <div class="tag-item secondary">
-              <a
-                v-for="hashtag in hashtags"
-                :key="hashtag"
-                @click="searchHashtag(hashtag)"
-                >#{{ hashtag }}
-              </a>
-            </div>
           </dd>
         </dl>
       </dt>
+      <div class="play-btn-container row ">
+        <a v-if="gameInfo.stage !== eGameStage.DEV && gameInfo.game_type === eGameType.Html" @click="playGame"
+          class="btn-default mr10">{{ $t('playgame') }}
 
-      <dd class="play-btn-container">
+          <li v-if="gameInfo.game_type === eGameType.Html" style="margin-top: 2px;">
+            <i class="uil uil-html5-alt"></i>
+          </li>
+        </a>
+
+        <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default download mr10"
+          :class="isFlutter && 'disabled'" @click="downloadGame">
+          <span>{{ $t('download') }}</span>
+          <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small>
+          <Icon icon="ri:kakao-talk-fill" class="icon" />
+          <GamePlatformIcon :platform="gameInfo.support_platform" color="#fff" />
+        </a>
+        <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default download mr10"
+          :class="isFlutter && 'disabled'" @click="downloadGame">
+          <span>{{ $t('download') }}</span>
+          <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small>
+          <GamePlatformIcon :platform="gameInfo.support_platform" color="#fff" />
+        </a>
+        <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default download mr10"
+          :class="isFlutter && 'disabled'" @click="downloadGame">
+          <span>{{ $t('download') }}</span>
+          <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small>
+          <GamePlatformIcon :platform="gameInfo.support_platform" color="#fff" />
+        </a>
+        <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default download mr10"
+          :class="isFlutter && 'disabled'" @click="downloadGame">
+          <span>{{ $t('download') }}</span>
+          <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small>
+          <GamePlatformIcon :platform="gameInfo.support_platform" color="#fff" />
+        </a>
+        <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default download mr10"
+          :class="isFlutter && 'disabled'" @click="downloadGame">
+          <span>{{ $t('download') }}</span>
+          <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small>
+          <GamePlatformIcon :platform="gameInfo.support_platform" color="#fff" />
+        </a>
+
+        <!-- <a v-for="hashtag in hashtags" :key="hashtag" @click="searchHashtag(hashtag)">#{{ hashtag }}
+              </a> -->
+      </div>
+      <!-- <dd class="play-btn-container">
         <div class="like-btn" style="flex-direction: column">
-          <i
-            v-if="!isLike"
-            class="xi-heart-o like-icon"
-            style="font-size: 22px; color: #ff6e17; cursor: pointer"
-            @click="setLike"
-          >
+          <i v-if="!isLike" class="xi-heart-o like-icon" style="font-size: 22px; color: #ff6e17; cursor: pointer"
+            @click="setLike">
           </i>
-          <i
-            v-else
-            class="xi-heart like-icon"
-            style="font-size: 22px; color: #ff6e17; cursor: pointer"
-            @click="unsetLike"
-          >
+          <i v-else class="xi-heart like-icon" style="font-size: 22px; color: #ff6e17; cursor: pointer"
+            @click="unsetLike">
           </i>
           <p style="color: #fff">{{ likeCnt }}</p>
         </div>
 
-        <a
-          v-if="gameInfo.stage !== eGameStage.DEV && gameInfo.game_type === eGameType.Html"
-          @click="playGame"
-          class="btn-default w150"
-          style="margin-left: 12px"
-          >Play Game</a
-        >
-        <a
-          v-if="gameInfo.game_type === eGameType.Download"
-          :href="gameInfo.url_game"
-          class="btn-default w150 download"
-          >Download</a
-        >
-      </dd>
+
+      </dd> -->
     </dl>
     <el-dialog v-model="showChangeBanner" class="modal-area-game-banner">
       <div class="modal-alert">
@@ -128,11 +124,7 @@
         </div>
         <div class="btn-container">
           <div>
-            <button
-              v-if="prevBanner"
-              class="btn-gray uppercase"
-              @click="showDeleteBanner = true"
-            >
+            <button v-if="prevBanner" class="btn-gray uppercase" @click="showDeleteBanner = true">
               delete <span>banner</span>
             </button>
           </div>
@@ -141,11 +133,7 @@
               change <span>banner </span>
             </button>
 
-            <button
-              v-if="prevBanner"
-              class="btn-default uppercase"
-              @click="updateBannerImg"
-            >
+            <button v-if="prevBanner" class="btn-default uppercase" @click="updateBannerImg">
               update
             </button>
             <button v-else class="btn-default uppercase" @click="saveBannerImg">
@@ -156,12 +144,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog
-      v-model="showDeleteBanner"
-      append-to-body
-      class="modal-area-type"
-      width="380px"
-    >
+    <el-dialog v-model="showDeleteBanner" append-to-body class="modal-area-type" width="380px">
       <div class="modal-alert">
         <dl class="ma-header">
           <dt>{{ t('information') }}</dt>
@@ -192,7 +175,7 @@ import _ from 'lodash'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
 import { ElMessage, ElMessageBox, ElTag, ElDialog } from 'element-plus'
-import { IGame, eGameStage, eGameType } from '~~/types'
+import { ePlatformType, eGameStage, eGameType } from '~~/types'
 
 import { PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -224,13 +207,16 @@ const isLike = ref(gameInfo.value?.is_like)
 const likeCnt = ref(gameInfo.value?.count_heart)
 const bannerImg = ref()
 const bannerFile = ref<File>()
-const prevBanner = ref<String | ArrayBuffer>(gameInfo.value?.url_banner)
+const prevBanner = ref<String | ArrayBuffer>(gameInfo.value?.banner_img)
 
 const showChangeBanner = ref(false)
 const editBanner = ref()
 const editBannerUrl = ref()
 const cropper = ref()
 const showDeleteBanner = ref(false)
+
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+
 
 function playGame() {
   window.open(`/play/${gameInfo.value.pathname}`, '_blank')
@@ -269,7 +255,7 @@ const unsetLike = _.debounce(async () => {
   }
 }, 300)
 
-function uploadBanner() {
+async function uploadBanner() {
   if (prevBanner.value) {
     showChangeBanner.value = true
     editBannerUrl.value = prevBanner.value
@@ -337,7 +323,7 @@ async function updateBannerImg() {
     )
     if (data.value) {
       const { result } = data.value
-      prevBanner.value = result.url_banner + `?_=${Date.now()}`
+      prevBanner.value = result.banner_img + `?_=${Date.now()}`
     }
   })
 
@@ -371,7 +357,7 @@ function saveBannerImg() {
     )
     if (data.value) {
       const { result } = data.value
-      prevBanner.value = result.url_banner + `?_=${Date.now()}`
+      prevBanner.value = result.banner_img + `?_=${Date.now()}`
     }
   })
 
@@ -379,12 +365,22 @@ function saveBannerImg() {
 }
 
 function moveUserPage() {
-  router.push($localePath(`/channel/${gameInfo.value.user.channel_id}`))
+  router.push($localePath(`/${gameInfo.value.user.nickname}`))
 }
 
 function searchHashtag(hashtag: string) {
   router.push({ path: $localePath(`/search`), query: { q: hashtag } })
 }
+
+function downloadGame() {
+  if (isFlutter.value) {
+    ElMessage({
+      type: 'error',
+      message: 'pc 환경에서 다운로드 해주세요 '
+    })
+  }
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -394,6 +390,7 @@ function searchHashtag(hashtag: string) {
   justify-content: center;
   align-items: center;
 }
+
 .secondary {
   a {
     margin-right: 5px;
@@ -410,37 +407,69 @@ function searchHashtag(hashtag: string) {
 .modal-alert {
   .banner-container {
     height: 500px;
+
     img {
       max-width: 100%;
     }
   }
+
   .btn-container {
     display: flex;
     padding: 20px;
 
     justify-content: space-between;
+
     button {
       width: 180px;
     }
   }
 }
-.play-btn-container{
-  .download{
-    margin-left: 12px; background-color: #5552F9;
-    &:hover{
-      color:#5552F9;
+
+.play-btn-container {
+  position: relative;
+  margin-top: 10px;
+  left: 180px;
+
+  a {
+    // width: 110px;
+    border: none;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+
+    li {
+      list-style: none;
+    }
+  }
+
+  .download {
+    background-color: #5552F9;
+
+    &:hover {
+      color: #5552F9;
       background-color: #fff;
     }
   }
 
 }
 
+.disabled {
+  // pointer-events: none;
+  opacity: 0.5;
+  background: #ededed !important;
+  color: #888;
+}
+
 @media all and (max-width: 479px) {
   .visual-info-left {
     width: 100%;
+
     dl {
       padding: 0px;
     }
+
     .play-btn-container {
       margin-top: 0px;
     }
@@ -450,9 +479,11 @@ function searchHashtag(hashtag: string) {
     .ma-header {
       padding: 20px;
     }
+
     .btn-container {
       button {
         width: 110px;
+
         span {
           display: none;
         }
@@ -462,10 +493,33 @@ function searchHashtag(hashtag: string) {
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
+
+
+
   .visual-info-left {
     width: 100%;
+
+
+    // height: 200px;
+
     dl {
       padding: 0px;
+    }
+
+    .header-left {
+      dl {
+        flex-wrap: nowrap;
+      }
+
+      .game-profile-img {
+        margin-left: 10px;
+
+        div {
+          background-color: red;
+          margin: 0px;
+          position: relative;
+        }
+      }
     }
   }
 
@@ -473,9 +527,11 @@ function searchHashtag(hashtag: string) {
     .ma-header {
       padding: 20px;
     }
+
     .btn-container {
       button {
         width: 110px;
+
         span {
           display: none;
         }
@@ -485,10 +541,26 @@ function searchHashtag(hashtag: string) {
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
+
+  .play-btn-container {
+    width: calc(100% - 180px);
+
+    a {
+      font-size: 12px;
+      padding: 10px 10px;
+
+      small,
+      span {
+        display: none;
+      }
+    }
+  }
+
   .modal-alert {
     .btn-container {
       button {
         width: 110px;
+
         span {
           display: none;
         }
@@ -500,20 +572,34 @@ function searchHashtag(hashtag: string) {
 @media all and (min-width: 992px) and (max-width: 1199px) {
   .header-left {
     width: 70%;
+
     .game-profile-img {
       width: 30%;
     }
+
     .game-tag {
       width: 70%;
     }
   }
+
   .play-btn-container {
-    width: 30%;
+    width: calc(100% - 180px);
+
+    a {
+      font-size: 12px;
+      padding: 10px 15px;
+
+      small {
+        visibility: hidden;
+      }
+    }
   }
+
   .modal-alert {
     .btn-container {
       button {
         width: 110px;
+
         span {
           display: none;
         }
@@ -525,15 +611,15 @@ function searchHashtag(hashtag: string) {
 @media all and (min-width: 1200px) {
   .header-left {
     width: 70%;
+
     .game-profile-img {
       width: 24%;
     }
+
     .game-tag {
       width: 70%;
     }
   }
-  .play-btn-container {
-    width: 30%;
-  }
+
 }
 </style>

@@ -1,5 +1,6 @@
 
 import dayjs from 'dayjs';
+import { parse } from 'node-html-parser'
 
 export const execCommandCopy = (text: string) => {
   const input = document.createElement('input') as HTMLInputElement;
@@ -21,8 +22,16 @@ export const stringToDomElem = (string: string) => {
   return new DOMParser().parseFromString(string, 'text/html')
 }
 
+
+export const stringToDomElemByServer = (string: string) => {
+  const root = parse(string)
+  return root
+}
+
+
+
 export const isImageUrl = (url: string): boolean => {
-  const imageExtensions = /\.(jpg|jpeg|png|gif|webp)$/i;
+  const imageExtensions = /\.(jpg|jpeg|png|webp|avif|gif|svg)$/i;
   return imageExtensions.test(url);
 }
 
@@ -38,6 +47,15 @@ export const getFirstDomElement = (string: string) => {
   const div = document.createElement('div');
   div.innerHTML = string
   return div.firstElementChild
+}
+
+export const getFirstDomElementByServer = (string: string) => {
+  if (!string.length) {
+    throw 'Please, send a string with more than one character'
+  }
+  const root = parse(string)
+  const firstElement = root.querySelector('*')
+  return firstElement
 }
 
 export const blobToFile = (blob: Blob, fileName?: string, fileType?: string) => {
@@ -59,7 +77,7 @@ export const dateFormat = (sec: number | string) => {
   } else if (dayjs().diff(dayjs(sec), 'd') <= 7) {
     return dayjs().diff(dayjs(sec), 'd') + '일 전'
   } else {
-    return dayjs(sec).locale('ko').format('MM월 DD일 ')
+    return dayjs(sec).locale('ko').format('YYYY년 MM월 DD일')
   }
 }
 
@@ -74,7 +92,7 @@ export const enDateFormat = (sec: number | string) => {
   } else if (dayjs().diff(dayjs(sec), 'd') <= 7) {
     return dayjs().diff(dayjs(sec), 'd') + 'DAYS AGO'
   } else {
-    return dayjs(sec).locale('en').format('MMMM DD ')
+    return dayjs(sec).locale('en').format('MMMM DD YYYY')
   }
 }
 
@@ -98,12 +116,29 @@ export const numToKMB = (num: number) => {
   }
   return result;
 }
+export function convertFileSize(sizeInBytes: number) {
+  let sizeInUnits = sizeInBytes / 1000;
+  if (sizeInUnits >= 1000) {
+    sizeInUnits /= 1000;
+    if (sizeInUnits >= 1000) {
+      sizeInUnits /= 1000;
+      return sizeInUnits.toFixed(2) + " GB";
+    } else {
+      return sizeInUnits.toFixed(2) + " MB";
+    }
+  } else {
+    return sizeInUnits.toFixed(2) + " KB";
+  }
+}
 
 export const emailRegex = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/
 
 export const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[~!@#$%^&*()+|=_-])[A-Za-z\d~!@#$%^&*()+|=_-]{6,20}$/
 // (?=.*[A-Za-z])(?=.*\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\d~!@#$%^&*()+|=]{8,16
 //[a-zA-Z0-9`~!@#$%^&*()-_=+\|[]{};:'",.<>/?]{8,24}
+
+export const nicknameRegex = /^([A-Za-z0-9._]{4,15})$/
+
 
 export const randomString = (count: number = 11) => {
   let str = Math.random().toString(36).substr(2, 11);
@@ -129,4 +164,38 @@ export const isObjEmpty = (obj: Record<string, any>): Boolean => {
       return false;
   }
   return true;
+}
+
+
+export const debounce = <T extends (...args: any[]) => void>(fn: T, delay: number): T => {
+  let timeoutID: string | number | NodeJS.Timeout | null = null;
+
+  return function (...args: any[]) {
+    clearTimeout(timeoutID);
+    timeoutID = setTimeout(() => {
+      fn.apply(args);
+    }, delay);
+  } as T;
+}
+
+
+export const fileReader = (file: File): Promise<string | ArrayBuffer> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+
+    reader.onload = (e) => {
+      resolve(reader.result)
+    }
+    reader.readAsDataURL(file);
+
+    reader.onerror = reject;
+  })
+
+}
+
+export const isMobile = () => {
+  let details = navigator.userAgent;
+  let regexp = /android|iphone|kindle|ipad|Windows Phone/i;
+
+  return regexp.test(details);
 }

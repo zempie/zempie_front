@@ -2431,6 +2431,16 @@
   background: rgba(51, 51, 51, 0.8);
 }
 
+.ta-channel-list .channel {
+  opacity: 0.5;
+}
+
+
+.ta-channel-list>ul .active,
+.ta-channel-list .channel:hover {
+  opacity: 1;
+}
+
 @media all and (max-width: 479px) {}
 
 @media all and (min-width: 480px) and (max-width: 767px) {}
@@ -2930,9 +2940,10 @@
   align-items: center;
 }
 
+/*
 .ta-post .tap-list .tapl-title>dt>dl dt {
   margin-right: 15px;
-}
+} */
 
 .ta-post .tap-list .tapl-title>dt>dl dt span {
   display: inline-block;
@@ -2945,13 +2956,13 @@
 
 .ta-post .tap-list .tapl-title>dt>dl dd h2 {
   font-weight: 500;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 20px;
   color: #333;
 }
 
 .ta-post .tap-list .tapl-title>dt>dl dd p {
-  margin-top: 7px;
+  /* margin-top: 7px; */
   font-size: 13px;
   line-height: 13px;
 }
@@ -3056,7 +3067,7 @@
 
 .ta-post .tap-list .tapl-comment>ul>li>dl {
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
 }
 
 .ta-post .tap-list .tapl-comment>ul>li>dl>dt>dl {
@@ -3091,7 +3102,7 @@
 }
 
 .ta-post .tap-list .tapl-comment>ul>li>dl>dt>dl dd div {
-  margin-top: 10px;
+  min-height: 26px;
 }
 
 .ta-post .tap-list .tapl-comment>ul>li>dl>dt>dl dd p {
@@ -3111,26 +3122,21 @@
 }
 
 .ta-post .tap-list .tapl-comment>dl dt {
-  width: 80%;
   padding: 0 5px;
 }
 
-.ta-post .tap-list .tapl-comment>dl dt input {
-  width: 100%;
-  border: none;
-}
 
 .ta-post .tap-list .tapl-comment>dl dt input:focus {
   border: none;
   box-shadow: none;
 }
 
-.ta-post .tap-list .tapl-comment>dl dd {
+/* .ta-post .tap-list .tapl-comment>dl dd {
   width: 20%;
   padding-right: 15px;
   text-align: right;
   font-size: 20px;
-}
+} */
 
 .tapl-more-dropdown .v-dropdown-menu__container {
   min-width: 150px;
@@ -3144,14 +3150,14 @@
     border-radius: 0% !important;
   }
 
-  .ta-post .tap-list .tapl-title>dt>dl {
+  /* .ta-post .tap-list .tapl-title>dt>dl {
     align-items: flex-start;
-  }
+  } */
 
-  .ta-post .tap-list .tapl-title>dt>dl dt span {
+  /* .ta-post .tap-list .tapl-title>dt>dl dt span {
     width: 35px;
     height: 35px;
-  }
+  } */
 
   .ta-post .tap-list .tapl-title>dt>dl dd h2 {
     font-size: 14px;
@@ -3165,14 +3171,14 @@
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
-  .ta-post .tap-list .tapl-title>dt>dl {
+  /* .ta-post .tap-list .tapl-title>dt>dl {
     align-items: flex-start;
-  }
+  } */
 
-  .ta-post .tap-list .tapl-title>dt>dl dt span {
+  /* .ta-post .tap-list .tapl-title>dt>dl dt span {
     width: 35px;
     height: 35px;
-  }
+  } */
 
   .ta-post .tap-list .tapl-title>dt>dl dd h2 {
     font-size: 14px;

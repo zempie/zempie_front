@@ -2,20 +2,23 @@ import { IUser } from "~~/types"
 import { signOut } from 'firebase/auth'
 import { ElMessage, ElDialog } from "element-plus";
 import { removeFcmToken } from "~~/scripts/firebase-fcm";
+import { isObjEmpty } from "~~/scripts/utils";
+import flutterBridge from "~~/scripts/flutterBridge";
 
 export default function () {
   const { $firebaseAuth, $cookies } = useNuxtApp()
   const config = useRuntimeConfig()
   const router = useRouter();
 
+  const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+
   const user = useState('user', () => ({
-    isLogin: false,
     info: null as IUser,
     fUser: null,
     isSignUp: false,
-    isLoading: true, //header loading
+    isLoading: true,
+    isLogin: false,
   }))
-
 
   const setFirebaseUser = (info: any) => {
     user.value.fUser = info
@@ -24,14 +27,10 @@ export default function () {
   const setUser = (info: IUser) => {
     user.value.info = { ...info }
   }
-
   const setLogin = () => {
-    user.value.isLoading = false;
-    user.value.isLogin = !!user.value.info;
+    user.value.isLogin = true;
   }
-  const setLogout = () => {
-    user.value.isLogin = false;
-  }
+
   const setSignup = () => {
     user.value.isSignUp = true;
   }
@@ -43,44 +42,47 @@ export default function () {
   }
 
   const setBannerImg = (url: string) => {
-    user.value.info.url_banner = url;
+    user.value.info.banner_img = url;
   }
   const removeUserState = () => {
     user.value.fUser = null;
-    user.value.info = {} as IUser;
+    user.value.info = null as IUser;
     user.value.isLogin = false;
+    // useChannel().resetUserChannel()
   }
 
   const updateUserKey = (key: string, value?: any) => {
     user.value.info[key] = value
+  }
+  const updateFbToken = (token: string) => {
+    user.value.fUser.accessToken = token
+  }
+  const updateUserCoin = (coin: { zem: number, pie: number }) => {
+    user.value.info.coin.pie = coin.pie
+    user.value.info.coin.zem = coin.zem
 
   }
 
-
   const logout = async () => {
-    signOut($firebaseAuth)
-      .then(() => {
-        removeFcmToken(user.value.info.id)
-      })
-      .then(() => {
-        removeUserState();
-        setLogout()
-        $cookies.remove(config.COOKIE_NAME, {
-          path: '/',
-          domain: config.COOKIE_DOMAIN
-        })
 
-        $cookies.remove(config.REFRESH_TOKEN, {
-          path: '/',
-          domain: config.COOKIE_DOMAIN
-        })
-      })
-      .catch((error: any) => {
-        ElMessage({
-          message: error.message,
-          type: 'error'
-        })
-      })
+    try {
+      await removeFcmToken();
+
+      if (isFlutter.value) {
+        await flutterBridge().signOutFirebase();
+      } else {
+        await signOut($firebaseAuth);
+      }
+
+    } catch (error) {
+      ElMessage({
+        message: error.message,
+        type: 'error',
+      });
+    } finally {
+      removeUserState();
+    }
+
   }
 
 
@@ -89,13 +91,25 @@ export default function () {
   }
 
   const setUserInfo = async () => {
-    colorLog(`===set user info===`, '#ed1cdc')
-    const response = await useCustomFetch<{ result: { user: IUser } }>('/user/info', getZempieFetchOptions('get', true))
 
-    if (response) {
-      const { user: userResult } = response.result
-      user.value.info = { ...userResult }
-      setLogin()
+    try {
+      const response = await useCustomFetch<{ result: { user: IUser } }>('/user/info', getZempieFetchOptions('get', true))
+
+      if (response) {
+        const { user: userResult } = response.result
+        user.value.info = { ...userResult }
+
+        user.value.isLogin = true;
+        useUser().setLoadDone()
+      }
+      if (!isObjEmpty(user.value.fUser)) {
+        useUser().setLoadDone()
+      }
+
+      return user.value.info
+
+    } catch (error) {
+      useUser().setLoadDone()
     }
 
   }
@@ -106,7 +120,7 @@ export default function () {
     setUser,
     setFirebaseUser,
     setLogin,
-    setLogout,
+    // setLogout,
     setProfileImg,
     removeUserState,
     logout,
@@ -115,6 +129,8 @@ export default function () {
     setBannerImg,
     setLoadDone,
     setUserInfo,
-    updateUserKey
+    updateUserKey,
+    updateFbToken,
+    updateUserCoin
   }
 }

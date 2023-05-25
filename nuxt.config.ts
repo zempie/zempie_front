@@ -16,19 +16,23 @@ export default defineNuxtConfig({
         },
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1' },
-        { hid: 'description', name: 'description', content: "Worldwide Community Platform for Game Creators." },
+        { name: 'description', content: "Worldwide Community Platform for Game Creators." },
         { name: 'format-detection', content: 'telephone=no' }
       ],
 
       link: [
         { hid: 'icon', rel: 'icon', type: 'image/x-icon', href: '~/static/favicon.ico' },
-        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/icon?family=Material+Icons' },
+        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Two+Tone' },
         { rel: 'stylesheet', href: 'https://unicons.iconscout.com/release/v3.0.3/css/line.css' },
         { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0' },
         { rel: "apple-touch-icon", href: 'https://s3.ap-northeast-2.amazonaws.com/zempie.com/icons/favicon-32x32.png' },
         { rel: "apple-touch-icon-precomposed", href: 'https://s3.ap-northeast-2.amazonaws.com/zempie.com/icons/favicon-32x32.png' },
       ],
-
+      script: [
+        {
+          src: process.env.KAKAO_SDK
+        }
+      ]
     }
   },
   // experimental: {
@@ -43,25 +47,6 @@ export default defineNuxtConfig({
       })
     }
   },
-  vite: {
-  },
-
-  build: {
-    html: {
-      minify: {
-        collapseBooleanAttributes: true,
-        decodeEntities: true,
-        minifyCSS: true,
-        minifyJS: true,
-        processConditionalComments: true,
-        removeEmptyAttributes: true,
-        removeRedundantAttributes: true,
-        trimCustomFragments: true,
-        useShortDoctype: true,
-      }
-    }
-  },
-
   generate: {
     fallback: '404.html'
   },
@@ -84,7 +69,9 @@ export default defineNuxtConfig({
     'swiper/css/pagination',
     // '@/assets/css/prism.css'
   ],
-
+  // plugins: [
+  //   { src: '~/plugins/flutterBridge.client.ts', mode: 'client' }
+  // ],
 
   modules: [
     'cookie-universal-nuxt',
@@ -121,7 +108,14 @@ export default defineNuxtConfig({
     fCM_KEY: process.env.FCM_KEY,
     ZEMPIE_METAVERSE: process.env.ZEMPIE_METAVERSE,
     OG_IMG: process.env.OG_IMG,
-    APPLE_TOUCH_ICON: process.env.APPLE_TOUCH_ICON
+    APPLE_TOUCH_ICON: process.env.APPLE_TOUCH_ICON,
+    ANDROID_DOWNLOAD_LINK: process.env.ANDROID_DOWNLOAD_LINK,
+    KAKAO_JS_KEY: process.env.KAKAO_JS_KEY,
+    FACEBOOK_SHARE_URL: process.env.FACEBOOK_SHARE_URL,
+    FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID,
+    TWITTER_SHARE_URL: process.env.TWITTER_SHARE_URL,
+    HOTJAR_ID: process.env.HOTJAR_ID,
+    BOOTPAY_JS_KEY: process.env.BOOTPAY_JS_KEY
   },
 
 })

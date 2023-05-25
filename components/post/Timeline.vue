@@ -1,5 +1,7 @@
 <template>
   <ul class="ta-post">
+    <!-- <iframe id="player" type="text/html" width="640" height="360" src="https://www.youtube.com/embed/P18SutoOFPE"
+      frameborder="0"></iframe> -->
     <dd>
       <div class="ta-message-send" v-if="isMine">
         <p>
@@ -7,29 +9,20 @@
         </p>
         <dl>
           <dt>
-            <input
-              v-if="isSubscribed"
-              type="text"
-              :placeholder="t('postModalInput')"
-              readonly
-              @click="
-                isLogin
-                  ? (isTextEditorOpen = true)
-                  : useModal().openLoginModal()
-              "
-            />
-            <slot v-else name="inputBox" />
+            <input v-if="isSubscribed" type="text" :placeholder="t('postModalInput')" readonly @click="
+              isLogin
+                ? (isTextEditorOpen = true)
+                : useModal().openLoginModal()
+              " />
+            <slot v-else name="communityInput" />
           </dt>
           <dd>
-            <a><i class="uil uil-message"></i></a>
+            <!-- <a><i class="uil uil-message"></i></a> -->
           </dd>
         </dl>
       </div>
 
-      <div
-        v-if="$route.meta.name === 'userChannel'"
-        class="tab-search-swiper mobile"
-      >
+      <div v-if="$route.meta.name === 'userChannel'" class="tab-search-swiper mobile">
         <div class="swiper-area uppercase">
           <div class="swiper-slide" style="width: 50%; cursor: pointer">
             <a :class="media ?? 'active'">
@@ -37,10 +30,7 @@
             </a>
           </div>
           <div class="swiper-slide" style="width: 50%; cursor: pointer">
-            <NuxtLink
-              :to="$localePath(`/channel/${paramId}/games`)"
-              :class="media === 'game' ? 'active' : ''"
-            >
+            <NuxtLink :to="$localePath(`/channel/${paramId}/games`)" :class="media === 'game' ? 'active' : ''">
               <p><i class="uil uil-map-pin-alt"></i>GAME</p>
             </NuxtLink>
           </div>
@@ -55,19 +45,10 @@
       <ul class="ta-post">
         <PostFeedSk v-if="isPending" v-for="feed in 6" :key="feed" />
         <TransitionGroup name="fade" v-else-if="!isPending && feeds?.length">
-          <PostFeed
-            v-for="feed in feeds"
-            :feed="feed"
-            :key="feed.id"
-            @refresh="refresh"
-          >
+          <PostFeed v-for="feed in feeds" :feed="feed" :key="feed.id" @refresh="refresh">
             <template #followBtn>
-              <UserFollowBtn
-                :user="feed.user"
-                :key="`${feed.user.is_following}`"
-                class="follow-btn-feed"
-                @refresh="refreshFollow"
-              />
+              <UserFollowBtn :user="feed.user" :key="`${feed.user.is_following}`" class="follow-btn-feed"
+                @refresh="refreshFollow" />
             </template>
           </PostFeed>
         </TransitionGroup>
@@ -83,12 +64,8 @@
 
     <PostModal :isTextEditorOpen="isTextEditorOpen">
       <template #textEditor>
-        <TextEditor
-          @closeModal="isTextEditorOpen = false"
-          :type="type"
-          @refresh="refresh"
-          :isFullScreen="usePost().post.value.isFullScreen"
-        />
+        <TextEditor @closeModal="isTextEditorOpen = false" :type="type" @refresh="refresh"
+          :isFullScreen="usePost().post.value.isFullScreen" />
         <!-- :channelInfo="channelInfo" -->
       </template>
     </PostModal>
@@ -173,7 +150,6 @@ const userWatcher = watch(
 )
 
 onMounted(async () => {
-  // if (paramId.value || route.meta.name === 'main') {
   const result = await fetch()
   if (result && triggerDiv.value) {
     observer.value = new IntersectionObserver(
@@ -185,7 +161,6 @@ onMounted(async () => {
 
     observer.value.observe(triggerDiv.value)
   }
-  // }
 })
 
 onBeforeUnmount(() => {
@@ -195,7 +170,6 @@ onBeforeUnmount(() => {
 })
 
 async function handleIntersection(target) {
-  console.log('handleIntersection')
   if (target.isIntersecting) {
     if (isAddData.value) {
       offset.value += limit.value
@@ -214,12 +188,12 @@ async function fetch() {
   switch (props.type) {
     case 'community':
       const channelName = computed(() => route.params.channel_name)
-      const channel = useCommunity().community.value.info?.channels.find(
+      const channel = useCommunity().community.value.info?.channels?.find(
         (channel) => {
           return channel.title === channelName.value
         }
       )
-      if (channelName.value) {
+      if (channel) {
         const { data, error, refresh } = await useCustomAsyncFetch<{
           result: []
           totalCount: number
@@ -251,12 +225,16 @@ async function fetch() {
       }
 
     case 'user':
-      console.log('user')
+      const channelId = computed(() => useChannel().userChannel.value.info.channel_id)
+      if (!channelId.value) {
+        const userId = route.params.id as string
+        await useChannel().getChannelInfo(userId)
+      }
       const { data: userPostData } = await useCustomAsyncFetch<{
         result: IFeed[]
         totalCount: number
       }>(
-        createQueryUrl(`/timeline/channel/${paramId.value}`, query),
+        createQueryUrl(`/timeline/channel/${channelId.value}`, query),
         getComFetchOptions('get', true)
       )
 
@@ -364,7 +342,7 @@ function refreshFollow(user_id: number) {
   padding-top: 44px !important;
 }
 
-.pw-reset .pr-content > p {
+.pw-reset .pr-content>p {
   display: flex !important;
   justify-content: space-between !important;
 }
@@ -414,7 +392,7 @@ textarea {
   justify-content: center;
 }
 
-input[type='radio'] + label {
+input[type='radio']+label {
   display: inline-block;
   width: 22px;
   height: 22px;
@@ -426,7 +404,7 @@ input[type='radio'] + label {
   cursor: pointer;
 }
 
-input[type='radio']:checked + label {
+input[type='radio']:checked+label {
   color: #fff;
   background: #ff6e17;
   border-color: #ff6e17;
@@ -484,6 +462,5 @@ input[type='radio'] {
   }
 }
 
-@media all and (min-width: 992px) and (max-width: 1199px) {
-}
+@media all and (min-width: 992px) and (max-width: 1199px) {}
 </style>

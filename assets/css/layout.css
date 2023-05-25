@@ -34,9 +34,7 @@
     padding: 77px 0 30px 0;
   }
 
-  .content-studio {
-    padding: 77px 0 30px 0;
-  }
+  .content-studio {}
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
@@ -70,9 +68,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 1200px;
+  /* width: 1200px; */
   margin: 0 auto;
-  padding: 10px 0;
+  padding: 10px 20px;
 }
 
 .header>dl>dd {
@@ -102,9 +100,9 @@
 
 .header-logo-menu ul>li a {
   display: inline-block;
-  padding: 20px 20px 20px 0;
+  padding: 20px 15px 20px 0;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 14px;
   color: #333;
 }
@@ -118,6 +116,10 @@
 }
 
 .header-logo-menu ul>li a:hover i {
+  color: #f97316;
+}
+
+.header-logo-menu ul>li .active {
   color: #f97316;
 }
 

@@ -2,60 +2,46 @@
   <NuxtLayout name="community">
     <ClientOnly>
       <div>
-        <dl class="three-area" v-if="isPending">
+        <!-- <dl class="three-area" v-if="pending">
           <CommunityChannelListSk />
           <dd>
             <TimelineSk />
           </dd>
           <CommunityAboutSk />
-        </dl>
-        <dl class="three-area" v-else>
+        </dl> -->
+        <dl class="three-area">
           <CommunityChannelList :community="communityInfo" />
           <dd>
-            <PostTimeline
-              type="community"
-              :isSubscribed="communityInfo?.is_subscribed"
-              :key="communityInfo?.id"
-            >
-              <template #inputBox>
-                <input
-                  type="text"
-                  :placeholder="t('postModalInput')"
-                  readonly
-                  @click="
-                    isLogin
-                      ? !communityInfo?.is_subscribed && (needSubscribe = true)
-                      : useModal().openLoginModal()
-                  "
-                />
+            <PostTimeline type="community" :isSubscribed="communityInfo?.is_subscribed" :key="communityInfo?.id">
+              <template #communityInput>
+                <input type="text" :placeholder="t('postModalInput')" readonly @click="
+                  isLogin
+                    ? !communityInfo?.is_subscribed && (needSubscribe = true)
+                    : useModal().openLoginModal()
+                  " />
               </template>
             </PostTimeline>
           </dd>
           <dt>
             <div class="ta-about">
-              <h2>About us</h2>
+              <h2>{{ $t('about.us') }}</h2>
               <div>
                 {{ communityInfo?.description }}
               </div>
               <dl>
-                <dt>Created</dt>
+                <dt>{{ $t('created') }}</dt>
                 <dd>{{ createdDate }}</dd>
               </dl>
             </div>
             <div class="ta-groups">
-              <h2>Other communities</h2>
-              <CommunityList :communities="communities" />
+              <h2>{{ $t('other.communities') }}</h2>
+              <CommunityList :communities="communities" :isLoading="pending" />
             </div>
           </dt>
         </dl>
       </div>
 
-      <el-dialog
-        v-model="needSubscribe"
-        append-to-body
-        class="modal-area-type"
-        width="380px"
-      >
+      <el-dialog v-model="needSubscribe" append-to-body class="modal-area-type" width="380px">
         <div class="modal-alert">
           <dl class="ma-header">
             <dt>{{ t('information') }}</dt>
@@ -87,108 +73,69 @@
 </template>
 <script setup lang="ts">
 import dayjs from 'dayjs'
-
+import { useWindowScroll } from '@vueuse/core'
 import { ElDialog } from 'element-plus'
-import { dateFormat } from '~/scripts/utils'
-import { IComChannel } from '~~/types'
+import { ICommunity } from '~~/types'
 import { useI18n } from 'vue-i18n'
-const { t, locale } = useI18n()
+import shared from '~~/scripts/shared'
 
 const MAX_LIST_SIZE = 5
+
+const { t } = useI18n()
+
 const route = useRoute()
-const router = useRouter()
-const nuxt = useNuxtApp()
 
-const config = useRuntimeConfig()
-const accessToken = useCookie(config.COOKIE_NAME).value
+const limit = ref(MAX_LIST_SIZE)
+const needSubscribe = ref(false)
 
+const isLogin = computed(() => useUser().user.value.isLogin)
+const communityId = computed(() => route.params.id as string)
 const communityInfo = computed(() => useCommunity().community.value.info)
 const createdDate = computed(() =>
-  dayjs(useCommunity().community.value.info?.created_at).format(
+  dayjs(communityInfo.value?.created_at).format(
     'YYYY / MM / DD'
   )
 )
-
-const communities = ref([])
-const isPending = ref(true)
-const needSubscribe = ref(false)
-const isLogin = computed(() => useUser().user.value.isLogin)
-
-const communityId = computed(() => route.params.id as string)
-const channelId = computed(() => route.params.channel_id as string)
-
-const channelInfo = ref()
-
-const limit = ref(MAX_LIST_SIZE)
-const offset = ref(0)
 
 definePageMeta({
   title: 'community-channel',
   name: 'communityChannel',
 })
 
-watch(
-  () => communityInfo.value,
-  (info) => {
-    if (info) {
-      useHead({
-        title: `${info.name} | Zempie community`,
-        meta: [
-          {
-            name: 'description',
-            content: `${info.description}`,
-          },
-          {
-            name: 'og:title',
-            content: `${info.name}`,
-          },
-          {
-            name: 'og:description',
-            content: `${info.description}`,
-          },
-          {
-            name: 'og:url',
-            content: `${config.ZEMPIE_URL}${route.path}`,
-          },
-        ],
-      })
-    }
+/**
+ * seo 반영은 함수안에서 되지 않으므로 최상단에서 진행함
+ */
+// await useCommunity().setCommunity(communityId.value)
+const { data } = await useAsyncData<ICommunity>('communityInfo', () =>
+  $fetch(`/community/${communityId.value}`, getComFetchOptions('get', true)),
+  {
+    initialCache: false
   }
 )
 
-onMounted(async () => {
-  await fetch()
-})
+useCommunity().community.value.info = data.value
+shared.createHeadMeta(`${data.value.name}`, `${data.value.description}`, `${data.value.profile_img}`)
 
-onBeforeUnmount(()=>{
+
+onBeforeUnmount(() => {
   useCommunity().resetCommunity()
 })
 
-async function fetch() {
-  const query = {
-    limit: limit.value,
-    offset: offset.value,
-  }
 
-  const { data, pending } = await useFetch<any>(
-    createQueryUrl(`/community/list`, query),
-    {
-      method: 'get',
-      baseURL: config.COMMUNITY_API,
-      headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
-    }
-  )
+const { data: comList, pending } = await useFetch<any>(
+  createQueryUrl(`/community/list`, { limit: limit.value, }), getComFetchOptions('get', true)
+)
 
-  if (data.value.length) {
-    communities.value = data.value?.filter((elem) => {
-      return elem.id !== communityId.value
-    })
-  }
-  isPending.value = false
-}
+const communities = computed(() => {
+  return comList.value.filter((elem) => {
+    return elem.id !== communityId.value
+  })
+})
+
+
 
 async function subscribe() {
-  const { data, error } = await community.subscribe(communityId.value)
+  const { data, error } = await useCustomAsyncFetch(`/community/${communityId.value}/subscribe`, getComFetchOptions('post', true))
 
   if (!error.value) {
     useCommunity().setSubscribe()

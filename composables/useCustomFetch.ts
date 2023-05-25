@@ -1,6 +1,8 @@
 import { FetchOptions } from "ohmyfetch"
 import dayjs from "dayjs";
 import shared from "~~/scripts/shared";
+import { getAuth, getIdToken } from "firebase/auth";
+import FlutterBridge from '~~/scripts/flutterBridge'
 
 const HOURTOSEC = 60 * 60;
 
@@ -15,12 +17,10 @@ interface IRefreshToken {
   token_type: string,
   user_id: string
 }
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
 export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions, retryCount: number = 0) => {
-  const { $cookies } = useNuxtApp()
   const config = useRuntimeConfig()
-  const accessToken = useCookie(config.COOKIE_NAME)
-
 
   return await useFetch<T>(url, {
     initialCache: false,
@@ -38,44 +38,63 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
       //사용자 uid error
       const errorCode = response._data?.error?.code
 
-      switch (errorCode) {
-        case 20001:
-          break;
-        case 10001:
-          useUser().removeUserState()
-          shared.removeCookies()
-          break;
-        default:
-          if (retryCount < 3) {
-            console.log('error run', retryCount)
-            await getRefreshToken()
-            await useCustomAsyncFetch(url, options, ++retryCount)
-          } else {
-            console.log('remove cookie')
-
+      if (errorCode) {
+        switch (errorCode) {
+          case 20001:
+            break;
+          case 10001:
             useUser().removeUserState()
             shared.removeCookies()
-            console.log('check', config.public.ENV, 'env:', config.env === 'development', config.env == 'development')
+            break;
+          default:
+            if (retryCount < 3) {
+              console.log('error run', retryCount)
+            } else {
+              console.log('remove cookie')
 
-          }
+              useUser().removeUserState()
+              shared.removeCookies()
+              console.log('check', config.public.ENV, 'env:', config.env === 'development', config.env == 'development')
+            }
 
-          break;
+            break;
+        }
+      } else {
+        throw response
       }
 
 
     },
 
     async onRequest({ request, options }) {
+      const user = await getCurrentUser()
+
+
+      let token = user?.accessToken || user?.idToken
+
+      if (isFlutter.value && user) {
+        options.headers['Authorization'] = `Bearer ${token}`
+
+      } else if (user && !isFlutter.value) {
+
+        const expirationTime = user.stsTokenManager.expirationTime
+        // const expirationTime = 1681264108
+        console.log('expirationTime', new Date(expirationTime))
+        if (expirationTime <= Date.now()) {
+          console.log('url', url)
+          token = await getIdToken(user, true)
+        }
+        options.headers['Authorization'] = `Bearer ${token}`
+
+      }
 
       options.headers = options.headers || {}
-
-      // if (accessToken) options.headers['Authorization'] = result && `Bearer ${result.access_token}`
 
       useCommon().setLoading()
       console.log('[fetch request]')
     },
     async onRequestError({ request, options, error }) {
-      console.log('[fetch request error]')
+      console.log('[fetch request error]', error)
     }
   })
 }
@@ -84,9 +103,9 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
 // $fetch interceptor
 export const useCustomFetch = async <T>(url: string, options?: FetchOptions, retryCount: number = 0) => {
   const config = useRuntimeConfig()
-  const accessToken = useCookie(config.COOKIE_NAME)
   const { $cookies, $localePath } = useNuxtApp()
   const router = useRouter()
+
 
   return await $fetch<T>(url, {
     ...options,
@@ -99,6 +118,8 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
     },
     async onResponseError({ request, response, options }) {
       console.log('[fetch response error]', response)
+
+
 
       //사용자 uid error
       const errorCode = response._data?.error?.code
@@ -114,7 +135,7 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
         default:
           if (retryCount < 3) {
             console.log('error run')
-            await getRefreshToken()
+            // await getRefreshToken()
             await useCustomAsyncFetch(url, options, ++retryCount)
           } else {
             console.log('remove cookie')
@@ -131,17 +152,61 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
 
     async onRequest({ request, options }) {
 
+      const user = await getCurrentUser()
+      let token = user?.accessToken || user?.idToken
+
+      if (isFlutter.value && user) {
+        options.headers['Authorization'] = `Bearer ${token}`
+      } else if (user && !isFlutter.value) {
+        const expirationTime = user.stsTokenManager.expirationTime
+        // const expirationTime = 1681264165
+        console.log('expirationTime', expirationTime <= Date.now(), new Date(expirationTime))
+
+
+        if (expirationTime <= Date.now()) {
+          token = await getIdToken(user, true)
+        }
+        console.log('toekn2 ', token)
+        options.headers['Authorization'] = `Bearer ${token}`
+      }
+
+
       options.headers = options.headers || {}
 
-      // if (accessToken.value) options.headers['Authorization'] = result && `Bearer ${result.access_token}`
       useCommon().setLoading()
       console.log('[fetch request]')
+      return
     },
     async onRequestError({ request, options, error }) {
-      console.log('[fetch request error]')
+      console.log('[fetch request error]', error)
     }
   })
 
+
+}
+
+export async function getCurrentUser() {
+
+  if (isFlutter.value) {
+
+    const result = await FlutterBridge().getFbCurrentUser()
+
+    if (result) {
+      useUser().setFirebaseUser(result)
+    }
+    useUser().setLoadDone()
+    return result || null
+  } else {
+    const auth = getAuth()
+
+    const user: any = new Promise((resolve, reject) => {
+      auth.onIdTokenChanged((user: any) => {
+        resolve(user);
+      });
+    });
+
+    return user
+  }
 }
 
 export async function getRefreshToken() {

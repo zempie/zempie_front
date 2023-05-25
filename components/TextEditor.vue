@@ -4,20 +4,23 @@
       <li v-if="isFullScreen" @click="closeTextEditor" style="width: 50px">
         <i class="uil uil-angle-left-b"></i>
       </li>
-      <li :class="activeTab === 'SNS' ? 'active' : ''" @click="postingType('SNS')">
-        <i class="uil uil-file-landscape"></i>
-        SNS
+      <li class="title">
+        {{ isEdit ? $t('edit.post') : $t('new.post') }}
       </li>
-      <li :class="activeTab === 'BLOG' ? 'active' : ''" @click="postingType('BLOG')">
-        <i class="uil uil-files-landscapes"></i> Blog
+      <li class="close-btn" @click="closeTextEditor">
+        <span class="material-symbols-outlined">
+          close
+        </span>
       </li>
     </ul>
     <div>
-      <Tiptap @editorContent="getEditorContent" :postType="activeTab" :feed="feed" :key="activeTab" />
+      <Tiptap @editorContent="getEditorContent" @send-tag-info="getTagInfo" :postType="activeTab" :feed="feed"
+        :key="activeTab" ref="tiptapRef" />
 
       <template v-if="activeTab === 'SNS'">
         <div v-if="snsAttachFiles.img?.length" class="mp-image" style="padding-bottom: 0px">
           <dd style="width: 100%">
+
             <swiper :modules="[Pagination]" class="swiper-area" :slides-per-view="3" :space-between="10"
               :pagination="{ clickable: true }">
               <swiper-slide v-for="(img, idx) in snsAttachFiles.img" :key="idx"
@@ -53,8 +56,9 @@
         </div>
       </template>
       <ClientOnly>
-        <el-cascader class="mp-category" id="cascader" :props="props" v-model="selectedGroup"
-          placeholder="Select cagetory" :options="categoryList" :popper-class="'categories'" />
+        <el-cascader class="mp-category" id="cascader" :props="props" v-model="selectedGroup" style="width:100%"
+          placeholder="Select cagetory" :options="categoryList">
+        </el-cascader>
       </ClientOnly>
 
       <dl class="mp-type">
@@ -86,29 +90,24 @@
             savedTime
           }}</span></small>
         </Transition>
-        <dd>
+        <dd class="post-btn-container">
           <button v-if="draftList.length > 0" class="btn-line-small w100 mr10" id="loadPostBtn" @click="onLoadPost">
-            Load
+            {{ $t('load.post') }}
           </button>
-          <button class="btn-green-small w100 mr10" id="draftPostBtn" @click="saveDraftCloseModal()">
-            Draft
+          <button class="btn-line-small w100 mr10" id="draftPostBtn" @click="saveDraftCloseModal()">
+            {{ $t('draft.post') }}
           </button>
-          <button v-if="!isFullScreen" class="btn-default-samll w100 cancel-btn" id="cancelPostBtn"
-            @click="closeTextEditor">
-            Cancel
-          </button>
-
           <button v-if="isEdit" class="btn-default-samll w100" id="updatePostBtn" @click="onUpdatePost">
-            Update
+            {{ $t('update.post') }}
           </button>
           <button v-else id="submitPostBtn" class="btn-default-samll w100" @click="onSubmit">
-            Post
+            {{ $t('save.post') }}
           </button>
         </dd>
       </dl>
     </div>
 
-    <el-dialog v-model="showDraftList" append-to-body class="modal-area-type" width="380px">
+    <el-dialog v-model="showDraftList" append-to-body class="modal-area-type" width="380px" :close-on-click-modal="false">
       <div class="modal-alert">
         <dl class="ma-header">
           <dt>{{ t('draft') }}</dt>
@@ -163,6 +162,7 @@ import {
 
 import { useI18n } from 'vue-i18n'
 import { htmlToDomElem, stringToDomElem, isImageUrl } from '~~/scripts/utils'
+import { fileUpload } from '~~/scripts/fileManager'
 
 interface IDraft {
   time: number
@@ -172,6 +172,7 @@ interface IDraft {
 }
 
 const { t, locale } = useI18n()
+const route = useRoute()
 const isVideoUploading = ref(false)
 const isAudioUploading = ref(false)
 
@@ -192,7 +193,6 @@ const props = defineProps({
   },
 
 })
-console.log(props.feed)
 
 const initFiles = _.cloneDeep(props.feed?.attatchment_files)
 
@@ -212,6 +212,7 @@ const snsAttachFiles = ref({
   audio: null,
 })
 
+const tiptapRef = ref()
 const activeTab = ref(props.feed?.post_type || 'SNS')
 const video = ref<HTMLElement>()
 const image = ref<HTMLElement>()
@@ -227,10 +228,12 @@ const isCommunityListVisible = ref(false)
 const imgArr = ref([])
 const videoArr = ref([])
 const audioArr = ref([])
+const metaTagInfo = ref()
 
 const form = reactive({
   post_contents: '',
 })
+
 
 //임시저장
 const MAX_LOCAL_SAVE = 3
@@ -274,6 +277,7 @@ onBeforeMount(() => {
 
 onMounted(async () => {
 
+  colorLog('text editor', 'pink')
   //새로고침 시 알람
   window.addEventListener('beforeunload', refreshPage)
 
@@ -295,72 +299,89 @@ onMounted(async () => {
     }
   }
 
-  if (communityInfo.value) {
 
-    //general 채널 디폴트 카테고리로 설정
-    const generalChannel = communityInfo.value.channels.find(channel => {
-      return channel.title === 'general'
-    })
+  if (communityInfo.value && !props.isEdit) {
+    const currChannelName = route.params.channel_name
+    let targetChannel = null
 
+    //선택한 채널 있는 경우
+    if (currChannelName) {
+      targetChannel = communityInfo.value.channels.find(channel => {
+        return channel.title === currChannelName
+      })
 
-    if (community) {
-      selectedGroup.value = [
-        ...selectedGroup.value,
-        [{
-          type: 'community',
-          community: {
-            id: communityInfo.value.id,
-            is_certificated: communityInfo.value.is_certificated,
-            name: communityInfo.value.name,
-            profile_img: communityInfo.value.profile_img,
-            url: communityInfo.value.url
-          }
-        }, {
-          type: 'channel',
-          channel: generalChannel
-        }]
-      ]
+    } else {
+      //지금 선택된 채널 없으면 general 채널 디폴트 카테고리로 설정
+
+      targetChannel = communityInfo.value.channels.find(channel => {
+        if (channel.title === 'general') {
+          return channel.title === 'general'
+        } else {
+          return communityInfo.value.channels[0]
+        }
+      })
     }
+
+
+    selectedGroup.value = [
+      ...selectedGroup.value,
+      [{
+        type: 'community',
+        community: {
+          id: communityInfo.value.id,
+          is_certificated: communityInfo.value.is_certificated,
+          name: communityInfo.value.name,
+          profile_img: communityInfo.value.profile_img,
+          url: communityInfo.value.url
+        }
+      }, {
+        type: 'channel',
+        channel: targetChannel
+      }]
+    ]
   }
 
-  const postCommunities = props.feed?.posted_at?.community
+  const postCommunities = props.feed?.posted_at?.community || props.feed?.posted_at[0].community
 
   //기존 카테고리 추가
   if (props.isEdit) {
     if (postCommunities) {
-      console.log('selectedGroup.value', selectedGroup.value)
       for (const community of postCommunities) {
-        console.log('community', community)
+        const index = selectedGroup.value.findIndex((elem) => {
+          if (elem.type !== 'game') {
+            const [com, chan] = elem
+            return chan.channel.id === community.channel.id
+          }
+        })
+        if (index === -1) {
+          selectedGroup.value = [
+            ...selectedGroup.value,
+            [{
+              type: "community",
+              community: community.community || community.group
+            },
+            {
+              type: "channel",
+              channel: community.channel
+            }]
+          ]
+        } else {
+          selectedGroup.value = [
+            ...selectedGroup.value]
+        }
 
-        selectedGroup.value = [
-          ...selectedGroup.value,
-          [{
-            type: "community",
-            community: community.community
-          },
-          {
-            type: "channel",
-            channel: community.channel
-          }]
-        ]
 
       }
     }
+    const postGame = props.feed?.posted_at?.game || props.feed?.posted_at[0]?.game
 
-    const postGame = props.feed?.posted_at?.game
 
     if (postGame) {
       for (const game of postGame) {
         const index = selectedGroup.value
-          // .filter((elem) => {
-          //   if ('game' in elem) {
-          //     return elem
-          //   }
-          // })
           .findIndex((elem: { type: string, game: IGame }) => {
             return elem?.game?.id === game.id
           })
-
 
         if (index === -1) {
           selectedGroup.value = [
@@ -384,6 +405,8 @@ onMounted(async () => {
         audio: attFileFilter('sounc'),
       }
     }
+    metaTagInfo.value = props.feed.metadata
+
   }
 
 
@@ -415,6 +438,10 @@ onBeforeUnmount(() => {
   clearInterval(interval.value)
   clearTimeout(textInterval.value)
 })
+
+function getTagInfo(info) {
+  metaTagInfo.value = info
+}
 
 function refreshPage(event: { preventDefault: () => void; returnValue: string }) {
   if (editor.value.isEmpty) return
@@ -454,12 +481,16 @@ function postingType(type: string) {
 
 async function onSubmit() {
 
+
+  //태그 인포 넘기고
+
   const payload = {
     post_contents: form.post_contents,
     post_state: activeTab.value,
     hashtags: [],
     community: [],
-    game: []
+    game: [],
+    metadata: metaTagInfo.value
   }
 
 
@@ -482,7 +513,7 @@ async function onSubmit() {
   videoArr.value = [...dom.getElementsByTagName('video')]
   audioArr.value = [...dom.getElementsByTagName('audio')]
 
-  console.log(imgArr.value)
+
 
   if (activeTab.value.toLocaleUpperCase() === 'BLOG') {
     const imgFiles = []
@@ -490,25 +521,31 @@ async function onSubmit() {
     const audioFiles = []
     let payloadFiles = []
 
+
+
+
     for (const img of imgArr.value) {
-      const result = await fetch(img.src)
-      const blob = await result.blob()
-      const blobUrl = URL.createObjectURL(blob)
-      const isImage = blob.type.startsWith('image')
-      if (isImage) {
-        const formData = new FormData()
-        formData.append(img.title, blob)
-        const response = await useCustomFetch<{ result: { name: string, priority: number, size: number, type: string, url: string }[] }>('community/att', getZempieFetchOptions('post', true, formData))
 
-        if (response) {
-          const { result } = response
-          const [imgObj] = result
-          form.post_contents = form.post_contents.replace(
-            img.src,
-            imgObj.url
-          )
-        }
+      if (!isImageUrl(img.src)) {
+        // const result = await fetch(img.src)
+        // const blob = await result.blob()
+        // const blobUrl = URL.createObjectURL(blob)
+        // const isImage = blob.type.startsWith('image')
+        // if (isImage) {
+        //   const formData = new FormData()
+        //   formData.append(img.title, blob)
+        //   const response = await useCustomFetch<{ result: { name: string, priority: number, size: number, type: string, url: string }[] }>('community/att', getZempieFetchOptions('post', true, formData))
 
+        //   if (response) {
+        //     const { result } = response
+        //     const [imgObj] = result
+        //     form.post_contents = form.post_contents.replace(
+        //       img.src,
+        //       imgObj.url
+        //     )
+        //   }
+
+        // }
       }
     }
     payload.post_contents = form.post_contents
@@ -596,6 +633,7 @@ async function onSubmit() {
         '/community/att',
         getZempieFetchOptions('post', true, formData)
       )
+      console.log('data', data.value)
 
       payload['attatchment_files'] = data.value.result
     }
@@ -631,7 +669,8 @@ function getEditorContent(content: Editor) {
   form.post_contents = content.getHTML()
 }
 
-function uploadImageFile() {
+async function uploadImageFile() {
+
   if (activeTab.value.toUpperCase() === 'SNS') {
     if (snsAttachFiles.value.video || snsAttachFiles.value.audio?.length) {
       ElMessage({
@@ -644,7 +683,12 @@ function uploadImageFile() {
   image.value.click()
 }
 
+
+
+
 function onSelectImageFile(event: Event) {
+
+
   const files = (event.target as HTMLInputElement).files
 
   for (const file of files) {
@@ -659,13 +703,19 @@ function onSelectImageFile(event: Event) {
       const url = e.target!.result as string
 
       if (activeTab.value.toUpperCase() === 'BLOG') {
-        editor.value
-          .chain()
-          .focus(null)
-          .setImage({ src: url, alt: file.name, title: file.name })
-          .setHardBreak()
-          .setHardBreak()
-          .run()
+        const response = await fileUpload(file)
+
+        if (response) {
+          const { url, name, priority } = response.result[0]
+
+          editor.value
+            .chain()
+            .focus(null)
+            .setImage({ src: url, alt: file.name, title: file.name })
+            .setHardBreak()
+            .setHardBreak()
+            .run()
+        }
       } else {
         snsAttachFiles.value.img = [...(snsAttachFiles.value.img || []),
         { file, name: file.name, url }
@@ -683,7 +733,8 @@ function deleteImg(idx: number) {
   snsAttachFiles.value.img.splice(idx, 1)
 }
 
-function uploaVideoFile() {
+async function uploaVideoFile() {
+
   if (activeTab.value.toUpperCase() === 'SNS') {
     if (
       snsAttachFiles.value.img?.length ||
@@ -713,16 +764,12 @@ function onSelectVideoFile(event: any) {
       const blob = await result.blob()
       const blobUrl = URL.createObjectURL(blob)
 
-      if (activeTab.value === 'BLOG') {
-        editor.value.chain().focus(null).setVideo({ src: blobUrl }).run()
-      } else {
-        if (snsAttachFiles.value.video) {
-          snsAttachFiles.value.video = {
-            file: file,
-            name: file.name,
-            url: url,
-          }
-        }
+
+
+      snsAttachFiles.value.video = {
+        file: file,
+        name: file.name,
+        url: blobUrl,
       }
       isVideoUploading.value = false
     }
@@ -735,7 +782,8 @@ function deleteVideo() {
   snsAttachFiles.value.video = null
 }
 
-function uploadAudioFile() {
+async function uploadAudioFile() {
+
   if (activeTab.value.toUpperCase() === 'SNS') {
     if (snsAttachFiles.value.video || snsAttachFiles.value.img?.length) {
       ElMessage({
@@ -805,8 +853,6 @@ async function onUpdatePost() {
       ? props.feed.attatchment_files
       : JSON.parse(props.feed.attatchment_files))
 
-
-
   const attachedFile = []
   const payload = {
     post_id: props.feed.id,
@@ -817,6 +863,8 @@ async function onUpdatePost() {
     channel_id: useUser().user.value.info.channel_id,
     community: [],
     game: [],
+    metadata: metaTagInfo.value
+
   }
 
   if (selectedGroup.value) {
@@ -1077,9 +1125,6 @@ async function onUpdatePost() {
   Array.isArray(attachedFile) ? attachedFile : JSON.parse(attatchment_files)
 
 
-  console.log('attachedFile', attachedFile)
-  console.log('attatchment_files', attatchment_files)
-
   attachedFile?.filter((file) => {
     return file?.size
   })
@@ -1121,9 +1166,9 @@ function setCategoryPayload(payload: { post_contents?: string; post_state?: stri
         payload.community = [
           ...payload.community,
           {
-            id: target.community.id,
+            id: target.community?.id,
             group: target.community,
-            channel_id: channel.channel.id,
+            channel_id: channel.channel?.id,
             channel: channel.channel
           }
         ]
@@ -1145,9 +1190,10 @@ function closeTextEditor() {
   //작성한 글이 있는 경우 임시저장 처리
   if (!editor.value.isEmpty) {
     ElMessageBox.confirm(`${t('ask.save.draft.post')}`, {
-      confirmButtonText: 'SAVE',
-      cancelButtonText: 'LEAVE',
+      confirmButtonText: t('save'),
+      cancelButtonText: t('close'),
       type: 'info',
+      closeOnClickModal: false
     })
       .then(() => {
         form['save_type'] = 'cancel'
@@ -1170,8 +1216,7 @@ async function communityFetch() {
     `/user/${useUser().user.value.info?.id}/list/community`,
     getComFetchOptions('get', true)
   )
-
-  if (data.value) {
+  if (data.value.length) {
     categoryList.value = data.value.map((elem: ICommunity) => {
       return {
         value: {
@@ -1197,12 +1242,16 @@ async function communityFetch() {
       }
     })
   }
-  categoryList.value.push({
-    value: "game",
-    label: 'Games',
-    disabled: true,
-  })
-  const gameList = useUser().user.value.info.games.map((game: IGame) => {
+  if (useUser().user.value.info.games.length) {
+    categoryList.value.push({
+      value: "game",
+      label: t('game'),
+      disabled: true,
+    })
+  }
+
+
+  const gameList = useUser().user.value.info.games?.map((game: IGame) => {
     return {
       value: {
         type: 'game',
@@ -1213,11 +1262,29 @@ async function communityFetch() {
   })
   categoryList.value = [...categoryList.value, ...gameList]
 
-  categoryList.value.unshift({
-    value: 'community',
-    label: 'Community',
-    disabled: true
-  })
+  if (data.value.length) {
+    categoryList.value.unshift({
+      value: 'community',
+      label: t('community'),
+      disabled: true
+    })
+  }
+
+  if (!categoryList.value.length && !gameList.length) {
+    categoryList.value.push({
+      value: 'community',
+      label: t('no.select.category.info1'),
+      disabled: true
+    },
+      {
+        value: 'community',
+        label: t('no.select.category.info2'),
+        disabled: true
+      })
+  }
+  // console.log(categoryList.value.length, gameList.length)
+
+
 
   isCommunityListVisible.value = true
 }
@@ -1378,6 +1445,7 @@ function insertContet(draft: IDraft) {
 
   nextTick(() => {
     editor.value.view.dom.focus()
+    editor.value.commands.clearContent()
     editor.value.chain().focus().insertContent(draft.post_contents).run()
   })
 }
@@ -1422,8 +1490,6 @@ function getFirstPostContent(content: string) {
 </script>
 
 <style scoped lang="scss">
-@use 'sass:math';
-
 .component-fade-enter-active,
 .component-fade-leave-active {
   transition: opacity 0.5s ease;
@@ -1434,7 +1500,37 @@ function getFirstPostContent(content: string) {
   opacity: 0;
 }
 
+.title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 22px 20px 20px 20px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 16px;
+  border-bottom: #fff 2px solid;
+  cursor: default;
+  transition: all 0.4s ease-in-out;
+}
+
+.close-btn {
+  padding: 22px 20px 20px 20px;
+  position: absolute;
+  right: 0;
+  cursor: pointer;
+
+
+}
+
+.close-btn:hover {
+  color: #f97316;
+
+}
+
 .modal-post {
+
   .mp-category {
     width: 100%;
     display: inline-flex;
@@ -1674,14 +1770,6 @@ function getFirstPostContent(content: string) {
     }
   }
 
-  .mp-type {
-    dd {
-      button {
-        padding: 0px;
-        width: 50px !important;
-      }
-    }
-  }
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
@@ -1689,15 +1777,6 @@ function getFirstPostContent(content: string) {
     .btn-line-small {
       span:nth-child(3) {
         display: none;
-      }
-    }
-  }
-
-  .mp-type {
-    dd {
-      button {
-        padding: 0px;
-        width: 70px !important;
       }
     }
   }

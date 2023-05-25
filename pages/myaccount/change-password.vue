@@ -7,14 +7,8 @@
       </div>
       <dl class="ii-card">
         <div>
-          <input
-            @input="email ? (isEmailErr = false) : (isEmailErr = true)"
-            @keyup.enter="sendEmail"
-            type="text"
-            v-model="email"
-            :placeholder="t('login.email.placeholder')"
-            class="w100p h60"
-          />
+          <input @input="email ? (isEmailErr = false) : (isEmailErr = true)" @keyup.enter="sendEmail" type="text"
+            v-model="email" :placeholder="t('login.email.placeholder')" class="w100p h60" />
           <p v-if="isEmailErr" class="email-error">
             {{ t('login.empty.email') }}
           </p>
@@ -27,12 +21,7 @@
         </p>
       </dl>
     </div>
-    <el-dialog
-      v-model="openModal"
-      append-to-body
-      class="modal-area-type"
-      :show-close="false"
-    >
+    <el-dialog v-model="openModal" append-to-body class="modal-area-type" :show-close="false">
       <div class="modal-alert">
         <dl class="ma-header">
           <dt>{{ t('information') }}</dt>
@@ -48,11 +37,7 @@
             {{ t('send.email.info2') }}
           </h2>
           <div>
-            <button
-              class="btn-default"
-              style="width: 100%"
-              @click="openModal = false"
-            >
+            <button class="btn-default" style="width: 100%" @click="openModal = false">
               {{ t('confirm') }}
             </button>
           </div>
@@ -67,73 +52,25 @@ import { ElDialog, ElMessage } from 'element-plus'
 import { sendPasswordResetEmail } from 'firebase/auth'
 
 import { useI18n } from 'vue-i18n'
+import shared from '~~/scripts/shared';
 
-const { t, locale } = useI18n()
-const route = useRoute()
-const config = useRuntimeConfig()
-
-definePageMeta({
-  title: 'change-pwd',
-  name: 'changePwd',
-  //middleware: 'auth',
-})
-
-useHead({
-  title: `${t('seo.profile.change.pwd.title')} | Zempie`,
-  link: [
-    {
-      rel: 'alternate',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-      hreflang: locale,
-    },
-    {
-      rel: 'canonical',
-      href: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-  ],
-  meta: [
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.fullPath}`,
-    },
-    {
-      property: 'og:site_name',
-      content: 'Zempie',
-    },
-    {
-      name: 'og:type',
-      content: 'website',
-    },
-    {
-      name: 'robots',
-      content: 'noindex, nofollow',
-    },
-    {
-      name: 'description',
-      content: `${t('seo.profile.change.pwd.desc')}`,
-    },
-    {
-      property: 'og:title',
-      content: `${t('seo.profile.change.pwd.title')}`,
-    },
-    {
-      property: 'og:description',
-      content: `${t('seo.profile.change.pwd.description')}`,
-    },
-    {
-      property: 'og:url',
-      content: `${config.ZEMPIE_URL}${route.path}`,
-    },
-  ],
-})
+const { $firebaseAuth } = useNuxtApp()
+const { t } = useI18n()
 
 const email = ref('')
 const isEmailErr = ref(false)
 const openModal = ref(false)
 
-const { $firebaseAuth } = useNuxtApp()
-
 const user = computed(() => useUser().user.value.info)
+
+
+definePageMeta({
+  title: 'change-pwd',
+  name: 'changePwd',
+  middleware: 'auth',
+})
+
+shared.createHeadMeta(t('seo.profile.change.pwd.title'), t('seo.profile.change.pwd.desc'))
 
 async function sendEmail() {
   if (!email.value) {

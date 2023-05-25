@@ -14,6 +14,10 @@ export interface IUser {
   is_developer?: boolean,
   picture?: string,
   profile?: any,
+  coin?: {
+    zem: number,
+    pie: number
+  },
   setting?: {
     alarm: boolean,
     battle: boolean,
@@ -24,9 +28,10 @@ export interface IUser {
     theme: number,
     theme_extra: any
   },
-  url_banner?: string,
+  banner_img?: string,
   profile_img?: string,
-  new_noti_count: number
+  new_noti_count?: number,
+  nickname?: string
 }
 
 
@@ -45,7 +50,9 @@ export interface IFollowUser {
   is_muted: boolean,
   mutes_you: boolean,
   name: string,
+  nickname: string,
   profile_img: string,
+  banner_img: string,
   type: string,
   uid: string,
 }
@@ -74,7 +81,7 @@ export interface IGame {
   url_thumb: string,
   url_thumb_gif: string,
   url_thumb_webp: string,
-  url_banner: string,
+  banner_img: string,
   userId: number,
   user_id: number,
   version: string,
@@ -143,6 +150,7 @@ export interface IUserChannel {
   id: number,
   uid: string,
   name: string,
+  nickname: string,
   channel_id: string,
   email: string,
   picture: string,
@@ -159,7 +167,7 @@ export interface IUserChannel {
     follower_cnt: number,
     state_msg: string,
     description: string,
-    url_banner: string
+    banner_img: string
   },
   communities: ICommunity[]
   games: IGame[]
@@ -172,6 +180,14 @@ export interface IFile {
   type: string
 }
 
+export interface IMetadata {
+  title: string,
+  type: number,
+  url: string,
+  description?: string,
+  favicon?: string,
+  img?: string,
+}
 export interface IFeed {
   liked: boolean,
   is_pinned: boolean,
@@ -196,18 +212,19 @@ export interface IFeed {
   status: string,
   retweet_id: number,
   user: {
+    name: string,
+    id: number,
+    channel_id: string,
+    email: string,
+    uid: string,
     follow_you: boolean,
     is_following: boolean,
     block_you: boolean,
     is_blocked: boolean,
     mutes_you: boolean,
     is_muted: boolean,
-    id: number,
-    uid: string,
-    name: string,
-    channel_id: string,
+    nickname: string,
     picture: string,
-    email: string,
     is_developer: number,
     last_log_in: string,
     created_at: string,
@@ -227,7 +244,8 @@ export interface IFeed {
     channel_id: string,
     game_id?: number,
     game: IGame[]
-  }
+  },
+  metadata?: IMetadata
 
 }
 
@@ -295,9 +313,10 @@ export interface IEvent {
 
 export interface IComment {
   attatchment_files: [],
+  children_comments: IComment[],
   content: string,
   created_at: string,
-  deleted_att: string,
+  deleted_at: string,
   dislike_cntt: number,
   id: string,
   is_liked: boolean,
@@ -311,6 +330,7 @@ export interface IComment {
   user: IUser,
   user_id: number,
   user_uid: string,
+  parent_id?: string,
 }
 
 
@@ -352,5 +372,19 @@ export enum eNotificationType {
   comment_like,
   report,
   retweet,
-  follow
+  follow,
+  recomment
+}
+
+export enum eMetadataType {
+  website = 1,
+  video
+}
+
+
+
+declare global {
+  interface Window {
+    Kakao: any
+  }
 }

@@ -1,5 +1,7 @@
 import axios from 'axios'
 import { getMessaging, getToken } from 'firebase/messaging'
+import flutterBridge from './flutterBridge'
+
 
 interface iFcmToken {
   created_at: string,
@@ -10,39 +12,63 @@ interface iFcmToken {
   user_id: number
 }
 
+const FCM_TOKEN = 'fToken'
+
 export const getFcmToken = async (user_id) => {
   return await useCustomFetch<{
     channel_id: string, created_at: string, deleted_at: string, email: string, id: number, is_developer: number, last_log_in: string,
-    name: string, picture: string, token: iFcmToken, uid: string, updated_at: string, url_banner: string
+    name: string, picture: string, token: iFcmToken, uid: string, updated_at: string, banner_img: string
   }>(`/fcm/${user_id}`, getComFetchOptions('get', false))
 }
 
-export const removeFcmToken = async (user_id: number) => {
+export const removeFcmToken = async () => {
   const config = useRuntimeConfig()
-  //$fetch가 안먹음...;
-  return await axios(`/fcm/${user_id}/remove`,
-    {
-      method: 'post',
-      baseURL: config.COMMUNITY_API
-    })
+  const fcmToken = getTokenInLocal()
+  const fUser = useUser().user.value.fUser
+  removeTokenInLocal()
+
+  return useCustomAsyncFetch(`/fcm?token=${fcmToken}`, getComFetchOptions('delete', true))
+
 }
 
 export const resigterFcmToken = async (user_id: number) => {
+  const isFlutter = useMobile().mobile.value.isFlutter
   const config = useRuntimeConfig()
-  const { $firebaseApp } = useNuxtApp()
-  const messaging = getMessaging($firebaseApp);
+  let token = null
 
-  console.log('messagein', messaging)
+  if (isFlutter) {
+    try {
+      token = await flutterBridge().getMessagingToken()
+    } catch (err) {
+      alert(`err : ${err}`)
+    }
+  } else {
+    const { $firebaseApp } = useNuxtApp()
+    const messaging = getMessaging($firebaseApp);
+    token = await getToken(messaging, { vapidKey: config.fCM_KEY })
+  }
+  if (token) {
+    setTokenInLocal(token)
+    return await axios(`/fcm/${user_id}?token=${token}`,
+      {
+        method: 'post',
+        baseURL: config.COMMUNITY_API
+      })
+  }
+}
 
-  console.log('== resigeter fcm token start ==', config.fCM_KEY)
+const getTokenInLocal = () => {
+  return localStorage.getItem(FCM_TOKEN)
+}
 
-  const token = await getToken(messaging, { vapidKey: config.fCM_KEY })
+const setTokenInLocal = (token: string) => {
+  localStorage.setItem(FCM_TOKEN, token);
+}
 
-  console.log('fcn token', token)
+const removeTokenInLocal = () => {
+  const fcmToken = getTokenInLocal()
 
-  return await axios(`/fcm/${user_id}?token=${token}`,
-    {
-      method: 'post',
-      baseURL: config.COMMUNITY_API
-    })
+  if (fcmToken) {
+    localStorage.removeItem(FCM_TOKEN)
+  }
 }
