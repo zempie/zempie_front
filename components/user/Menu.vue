@@ -40,7 +40,7 @@
             </div>
           </div>
 
-          <div class="zem-coin">
+          <!-- <div class="zem-coin">
             <h2>{{ $t('purchase') }}</h2>
             <div>
               <NuxtLink class="pointer" :to="$localePath(`/coin/purchase`)" :target="!isFlutter && '_blank'">
@@ -50,12 +50,8 @@
                 <span> {{ $t('inventory') }}</span>
                 <Coin :coin="user?.coin?.zem" class="text-bold" />
               </div>
-              <!-- <div class="row">
-                <span>수익</span>
-                <span class="text-bold">{{ }}</span>
-              </div> -->
             </div>
-          </div>
+          </div> -->
           <p>
             <a class="btn-default w100p" @click="logout">{{
               $t('logout')
@@ -66,7 +62,7 @@
     </el-dropdown>
   </div>
 </template>
-<script setup lang='ts'>
+<script setup lang="ts">
 import { ElDropdown } from 'element-plus'
 const { $localePath } = useNuxtApp()
 const route = useRoute()
@@ -85,7 +81,7 @@ function logout() {
   useUser().logout()
 }
 </script>
-<style scoped lang='scss'>
+<style scoped lang="scss">
 .zem-coin {
   .row {
     padding-top: 20px;

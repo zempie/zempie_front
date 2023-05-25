@@ -1,12 +1,12 @@
 <template>
   <button @click="swiper.slideNext()">다음</button>
 </template>
-<script setup lang='ts'>
+<script setup lang="ts">
 import { useSwiper } from 'swiper/vue';
 const swiper = useSwiper()
 
 </script>
-<style scoped lang='scss'>
+<style scoped lang="scss">
 button {
   display: flex;
   position: absolute;

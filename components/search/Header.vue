@@ -71,7 +71,7 @@
     </div>
   </div>
 </template>
-<script setup lang='ts'>
+<script setup lang="ts">
 import { debounce } from '~~/scripts/utils'
 
 import {
@@ -134,7 +134,7 @@ function initSearchData() {
   useSearch().resetResults()
 }
 </script>
-<style scoped lang='scss'>
+<style scoped lang="scss">
 .header-search-list {
   div {
     width: 100%;

@@ -53,7 +53,7 @@
           <CommunityTarget :communities="postedCommunity(feed?.posted_at)" :games="postedGame(feed?.posted_at)" />
 
           <ul class="tapl-option">
-            <PostActions :feed="feed" />
+            <PostActions :feed="feed" :comment-cnt="commentCount" />
             <!-- <li>
               <ul>
                 <LikeBtn v-if="feed" :feed="feed" />
@@ -199,7 +199,7 @@ const {
   }
 )
 setHead()
-const commentCount = ref(feed.value.comment_cnt)
+const commentCount = ref(feed.value?.comment_cnt || 0)
 
 const postedCommunity = (posted_at) => {
   if (posted_at) {
@@ -415,7 +415,7 @@ function commentInit() {
 }
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .fade-move,
 .fade-enter-active,
 .fade-leave-active {

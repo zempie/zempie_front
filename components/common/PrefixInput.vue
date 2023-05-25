@@ -4,7 +4,7 @@
     <input type="text" class="w100p" v-model="inputData" @input="onInputDebounce()" />
   </div>
 </template>
-<script setup lang='ts'>
+<script setup lang="ts">
 import { debounce } from '~/scripts/utils'
 
 const props = defineProps({
@@ -27,7 +27,7 @@ const onInputDebounce = debounce(() => {
 
 
 </script>
-<style scoped lang='scss'>
+<style scoped lang="scss">
 .input-box {
   display: flex;
   align-items: center;
