@@ -1,7 +1,7 @@
 <template>
   <client-only>
     <el-dropdown ref="dmDropdown" id="dmList" trigger="click">
-      <button class="btn-circle-icon ml10">
+      <button class="btn-circle-icon ml10" @click="showDmList">
         <i class="uil uil-comment-alt"></i>
         <!-- <span></span> -->
       </button>
@@ -14,19 +14,18 @@
             </dd>
           </dl>
           <ul>
-            <li>
+            <li v-for="msg in msgList" :key="msg.id">
               <dl>
-                <dd>
-                  <span
-                    style="background: url('https://i.pinimg.com/564x/b5/a1/b3/b5a1b3de46d3e66a241d21f4f5141df7.jpg') center center no-repeat; background-size: cover;"></span>
+                <dd v-if="!msg.is_group_conversation">
+                  <UserAvatar :user="msg.other_users[0]" :tag="'span'" :hasRouter="true" />
                 </dd>
-                <dt>
-                  <h3>쿵쿵딱 게임세상</h3>
-                  <p>폼생폼사 창작게임 고수 모임에 가입해주셔서 감사합니다.</p>
+                <dt v-if="!msg.is_group_conversation">
+                  <h3>@{{ msg.other_users[0].nickname }}</h3>
+                  <p>{{ msg.last_message.text }}</p>
                 </dt>
                 <dd>
-                  <h4><i class="uis uis-clock" style="color:#c1c1c1;"></i> 10시간전</h4>
-                  <em>1</em>
+                  <h4><i class="uis uis-clock" style="color:#c1c1c1;"></i>{{ dateFormat(msg.last_message_sent_at) }}</h4>
+                  <em>{{ msg.unread_count }}</em>
                 </dd>
               </dl>
             </li>
@@ -41,12 +40,32 @@
 </template>
 <script setup lang="ts">
 import { ElDropdown } from "element-plus"
+import { dateFormat } from "~~/scripts/utils"
+import { IConversation, IMessage } from "~~/types"
+
+const MSG_LIMIT = 5
 
 const { $localePath } = useNuxtApp()
 const { t } = useI18n()
 
 const router = useRouter()
 const dmDropdown = ref()
+const msgList = ref<IConversation[]>()
+
+
+
+async function showDmList() {
+
+
+  //TODO: limit 제한 걸어야됨 임시
+  const response = await useCustomFetch<{ result: IConversation[] }>(`/conversations`, getComFetchOptions('get', true))
+  if (response) {
+    const { result } = response
+    msgList.value = result
+  }
+
+
+}
 
 function goDmList() {
   router.push($localePath('/dm/list'))
@@ -54,11 +73,15 @@ function goDmList() {
   dmDropdown.value.handleClose()
 }
 
+
+
 </script>
 <style scoped lang="scss">
 .header-message {
   ul {
     li {
+      width: 400px;
+
       dl {
         display: flex;
         align-items: center;

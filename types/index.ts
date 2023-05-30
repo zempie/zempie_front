@@ -333,6 +333,46 @@ export interface IComment {
   parent_id?: string,
 }
 
+export interface IConversation {
+  id: number,
+  created_at: string,
+  unread_count: number,
+  is_read: boolean,
+  last_message: IMessage,
+  last_message_sent_at: string,
+  other_users: IUser[],
+  is_group_conversation: boolean,
+}
+
+export interface IMessage {
+  id: number,
+  text: string,
+  text_html: string,
+  from_user: IUser,
+  conversation_id: number,
+  created_at: string,
+  media_attachments: [
+    {
+      id: number,
+      type: string,
+      url: string,
+      preview_url: string,
+      user_uid: string,
+      file_name: string,
+      content_type: string
+    }
+  ],
+  card: {
+    id: number,
+    url: string,
+    title: string,
+    description: string,
+    type: string,
+    provider_user: IUser
+    preview_image: string
+  }
+
+}
 
 export enum eGameStage {
   NONE = -1,

@@ -67,7 +67,11 @@
           </div>
           <div class="header-info ml0" v-if="!isLoading && isLogin" :key="user.id">
             <NotificationHeaderButton />
-            <DmHeaderButton />
+            <button class="btn-circle-icon ml10" @click="$router.push($localePath('/dm/list'))">
+              <i class="uil uil-comment-alt"></i>
+              <!-- <span></span> -->
+            </button>
+
             <UserMenu />
           </div>
           <div v-else-if="!isLoading && !isLogin" class="header-login">

@@ -86,6 +86,8 @@ onBeforeMount(async () => {
 
 body {
   margin: 0px !important;
+  //전체 페이지 자간 조정
+  letter-spacing: -1px;
 
   .content {
     min-height: calc(100vh - 200px) !important;

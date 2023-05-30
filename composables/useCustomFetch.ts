@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import shared from "~~/scripts/shared";
 import { getAuth, getIdToken } from "firebase/auth";
 import FlutterBridge from '~~/scripts/flutterBridge'
+import { ex } from "~~/scripts/examples";
 
 const HOURTOSEC = 60 * 60;
 
@@ -105,6 +106,10 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
   const config = useRuntimeConfig()
   const { $cookies, $localePath } = useNuxtApp()
   const router = useRouter()
+
+  if (ex[url]) {
+    return Promise.resolve(ex[url][options.method].res);
+  }
 
 
   return await $fetch<T>(url, {

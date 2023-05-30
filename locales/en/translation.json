@@ -961,5 +961,7 @@
   "notification.like.comment": "liked your comment:",
   "notification.like.post": "liked your post:",
   "not.exist.post": "The site's URL might be written incorrectly, deleted, or hidden from unauthorised access.",
-  "to.home": "Home"
+  "to.home": "Home",
+  "message": "__STRING_NOT_TRANSLATED__",
+  "dm": "__STRING_NOT_TRANSLATED__"
 }
