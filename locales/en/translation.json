@@ -959,5 +959,7 @@
   "unit": "",
   "notification.comment": "replied to your post:",
   "notification.like.comment": "liked your comment:",
-  "notification.like.post": "liked your post:"
+  "notification.like.post": "liked your post:",
+  "not.exist.post": "The site's URL might be written incorrectly, deleted, or hidden from unauthorised access.",
+  "to.home": "Home"
 }

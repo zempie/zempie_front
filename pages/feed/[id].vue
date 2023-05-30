@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div v-if="isExist" class="content">
     <div class="area-view">
       <ul class="ta-post" v-if="feed">
         <li class="tap-list">
@@ -127,6 +127,21 @@
       </ul>
     </div>
   </div>
+  <div v-else class="content">
+    <div class="area-view">
+      <ul class="ta-post">
+        <li class="tap-list flex column items-center
+        content-center" style="min-height: 500px;">
+          <div class="flex content-center items-center "
+            style="background-color:#ededed; height: 70px; width:70px; border-radius: 50%;">
+            <i class="uil uil-exclamation-triangle font30 zem-color"></i>
+          </div>
+          <p class="mt30 mb30 text-bold font16"> {{ $t('not.exist.post') }}</p>
+          <button class="btn-default">{{ $t('to.home') }}</button>
+        </li>
+      </ul>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -173,6 +188,10 @@ const isCommentEdit = ref(false)
 //대댓글
 const recomment = ref()
 const newRecomments = ref([])
+
+
+//에러
+const isExist = ref(true)
 
 
 useInfiniteScroll(
@@ -266,12 +285,13 @@ async function commentFetch() {
     sort: sort.value,
   }
 
-  const { data, pending, refresh } = await useFetch<{ result: [] }>(
+  const { data, pending, refresh, error } = await useCustomAsyncFetch<{ result: [] }>(
     createQueryUrl(`/post/${feedId.value}/comment/list`, query),
     getComFetchOptions('get', true)
   )
-
-  if (data.value) {
+  if (error.value) {
+    isExist.value = false
+  } else if (data.value) {
     const { result } = data.value
     if (isAddData.value) {
       if (result.length > 0) {
