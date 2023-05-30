@@ -49,10 +49,6 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
-.ta-myinfo {
-  margin-bottom: 20px;
-}
-
 .swiper-slide {
   display: inline-block;
 }
@@ -66,9 +62,6 @@ onBeforeUnmount(() => {
 }
 
 @media all and (max-width: 479px) {
-  .ta-myinfo {
-    margin-bottom: 0px;
-  }
 
   .ta-game-list {
     display: none;
@@ -76,9 +69,6 @@ onBeforeUnmount(() => {
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
-  .ta-myinfo {
-    margin-bottom: 0px;
-  }
 
   .ta-game-list {
     display: none;
@@ -91,10 +81,6 @@ onBeforeUnmount(() => {
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
-  .ta-myinfo {
-    margin-bottom: 0px;
-  }
-
   .ta-game-list {
     display: none;
   }

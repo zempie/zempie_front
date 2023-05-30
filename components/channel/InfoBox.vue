@@ -1,6 +1,6 @@
 <template>
   <div class="ta-myinfo" v-if="isLoading">
-    <UserAvatarSk tag="p" style="width: 100px; height: 100px" />
+    <UserAvatarSk style="width: 100px; height: 100px; margin:0 auto" />
     <div class="grey-text skeleton-animation"></div>
     <div class="grey-text mt10 skeleton-animation"></div>
     <ul>
@@ -19,7 +19,6 @@
     <UserAvatar :user="channelInfo" tag="p" />
     <h1>{{ channelInfo.nickname }}</h1>
     <h2>{{ channelInfo.name }}</h2>
-    <!-- <hr/> -->
     <div class="mt10" v-if="user.uid !== channelInfo.channel_id">
       <UserFollowBtn :user="channelInfo" />
     </div>
