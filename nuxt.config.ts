@@ -31,13 +31,23 @@ export default defineNuxtConfig({
       script: [
         {
           src: process.env.KAKAO_SDK
+        },
+        {
+          hid: 'gtmHead',
+          innerHTML: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+         j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+         })(window,document,'script','dataLayer',${process.env.TAG_MANAGER_ID});`
         }
-      ]
-    }
+      ],
+
+    },
   },
   // experimental: {
   //   writeEarlyHints: false,
   // },
+
   hooks: {
     'pages:extend'(routes) {
       routes.push({
@@ -115,7 +125,8 @@ export default defineNuxtConfig({
     FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID,
     TWITTER_SHARE_URL: process.env.TWITTER_SHARE_URL,
     HOTJAR_ID: process.env.HOTJAR_ID,
-    BOOTPAY_JS_KEY: process.env.BOOTPAY_JS_KEY
+    BOOTPAY_JS_KEY: process.env.BOOTPAY_JS_KEY,
+    TAG_MANAGER_ID: process.env.TAG_MANAGER_ID
   },
 
 })
