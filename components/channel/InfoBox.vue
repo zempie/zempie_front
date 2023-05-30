@@ -1,25 +1,9 @@
 <template>
-  <div class="ta-myinfo" v-if="isLoading">
-    <UserAvatarSk style="width: 100px; height: 100px; margin:0 auto" />
-    <div class="grey-text skeleton-animation"></div>
-    <div class="grey-text mt10 skeleton-animation"></div>
-    <ul>
-      <div style="width:32%">
-        <p class="grey-text mt10 skeleton-animation"></p>
-      </div>
-      <div style="width:32%">
-        <p class="grey-text mt10 skeleton-animation"></p>
-      </div>
-      <div style="width:32%">
-        <p class="grey-text mt10 skeleton-animation"></p>
-      </div>
-    </ul>
-  </div>
-  <div v-else class="ta-myinfo">
+  <div v-if="channelInfo" class="ta-myinfo mb20">
     <UserAvatar :user="channelInfo" tag="p" />
     <h1>{{ channelInfo.nickname }}</h1>
     <h2>{{ channelInfo.name }}</h2>
-    <div class="mt10" v-if="user.uid !== channelInfo.channel_id">
+    <div class="mt10" v-if="user?.uid !== channelInfo.channel_id">
       <UserFollowBtn :user="channelInfo" />
     </div>
     <ul>
