@@ -137,7 +137,7 @@
             <i class="uil uil-exclamation-triangle font30 zem-color"></i>
           </div>
           <p class="mt30 mb30 text-bold font16"> {{ $t('not.exist.post') }}</p>
-          <button class="btn-default">{{ $t('to.home') }}</button>
+          <button class="btn-default" @click="$router.push($localePath('/'))">{{ $t('to.home') }}</button>
         </li>
       </ul>
     </div>

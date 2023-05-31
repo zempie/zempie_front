@@ -1,6 +1,8 @@
 <template>
   <NuxtLayout>
+    <noscript v-html="tmIframeCode"></noscript>
     <NuxtPage />
+
   </NuxtLayout>
 </template>
 <script setup lang="ts">
@@ -16,6 +18,8 @@ const router = useRouter()
 const cookie = useCookie(config.COOKIE_NAME)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
+const tmIframeCode = `<iframe src="https://www.googletagmanager.com/ns.html?id=${config.TAG_MANAGER_ID}"
+height="0" width="0" style="display:none;visibility:hidden"></iframe>`
 shared.createHeadMeta(
   t('seo.landing.title'),
   t('seo.landing.description')

@@ -3,8 +3,8 @@
     <NuxtLayout name="channel-header">
       <dl class="three-area">
         <dt :key="channelInfo.id">
-          <ChannelInfoBox :isLoading="isLoading" />
-          <ChannelGameBox />
+          <ChannelInfoBox :key="channelInfo.channel_id" />
+          <ChannelGameBox :isLoading="isLoading" />
         </dt>
         <dd>
           <PostTimeline type="user" :isMine="isMine" :key="userId" />
@@ -49,40 +49,16 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
-.ta-myinfo {
-  margin-bottom: 20px;
-}
-
 .swiper-slide {
   display: inline-block;
 }
 
-.ta-game-list {
-  display: block;
-  width: 100%;
-  border-radius: 10px;
-  background: #fff;
-  box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.1);
-}
 
-@media all and (max-width: 479px) {
-  .ta-myinfo {
-    margin-bottom: 0px;
-  }
-
-  .ta-game-list {
-    display: none;
-  }
-}
+@media all and (max-width: 479px) {}
 
 @media all and (min-width: 480px) and (max-width: 767px) {
-  .ta-myinfo {
-    margin-bottom: 0px;
-  }
 
-  .ta-game-list {
-    display: none;
-  }
+
 
   .area-title,
   .card-game {
@@ -90,15 +66,7 @@ onBeforeUnmount(() => {
   }
 }
 
-@media all and (min-width: 768px) and (max-width: 991px) {
-  .ta-myinfo {
-    margin-bottom: 0px;
-  }
-
-  .ta-game-list {
-    display: none;
-  }
-}
+@media all and (min-width: 768px) and (max-width: 991px) {}
 
 @media all and (min-width: 992px) and (max-width: 1199px) {}
 

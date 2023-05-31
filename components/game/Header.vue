@@ -1,10 +1,9 @@
 <template>
-  <div v-if="gameInfo" class="visual-info-left" :style="
-    prevBanner
-      ? `background: url(${prevBanner + `?_=${Date.now()}`
-      }) center center / cover no-repeat; background-size: cover;`
-      : 'background-color: #f973165c'
-  ">
+  <div v-if="gameInfo" class="visual-info-left" :style="prevBanner
+    ? `background: url(${prevBanner + `?_=${Date.now()}`
+    }) center center / cover no-repeat; background-size: cover;`
+    : 'background-color: #f973165c'
+    ">
     <GameStageTag v-if="gameInfo.stage" :stage="gameInfo.stage" />
     <div v-if="isMine" style="display: flex; justify-content: flex-end; margin: 20px">
       <div style="height: 0px; overflow: hidden">
@@ -63,11 +62,12 @@
         <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default download mr10"
           :class="isFlutter && 'disabled'" @click="downloadGame">
           <span>{{ $t('download') }}</span>
-          <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small>
+          <!-- <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small> -->
+          &nbsp;
           <Icon icon="ri:kakao-talk-fill" class="icon" />
           <GamePlatformIcon :platform="gameInfo.support_platform" color="#fff" />
         </a>
-        <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default download mr10"
+        <!--   <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default download mr10"
           :class="isFlutter && 'disabled'" @click="downloadGame">
           <span>{{ $t('download') }}</span>
           <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small>
@@ -90,7 +90,7 @@
           <span>{{ $t('download') }}</span>
           <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small>
           <GamePlatformIcon :platform="gameInfo.support_platform" color="#fff" />
-        </a>
+        </a> -->
 
         <!-- <a v-for="hashtag in hashtags" :key="hashtag" @click="searchHashtag(hashtag)">#{{ hashtag }}
               </a> -->
