@@ -1,16 +1,17 @@
 <template>
-  <div v-if="isLoading" class="ta-game-sk-list">
+  <!-- <div v-if="isLoading" class="ta-game-sk-list">
     <dl>
       <dt>{{ $t('games') }}</dt>
     </dl>
     <ul>
-      <li v-for="i in 4" class="pb20">
+      <li class="pb20">
         <p style="width:100%" class="grey-text  skeleton-animation"></p>
         <h2 style="width:100%" class="grey-text mt10 skeleton-animation "></h2>
       </li>
     </ul>
-  </div>
-  <div v-else class="ta-game-list">
+  </div> -->
+  <!-- <ClientOnly v-else> -->
+  <div class="ta-game-list">
     <dl>
       <dt>{{ $t('games') }}</dt>
     </dl>
@@ -36,6 +37,7 @@
       <li>{{ $t('no.game') }}</li>
     </ul>
   </div>
+  <!-- </ClientOnly> -->
 </template>
 <script setup lang="ts">
 const { $localePath } = useNuxtApp()
