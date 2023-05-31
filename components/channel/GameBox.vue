@@ -35,7 +35,7 @@
           </NuxtLink>
         </div>
       </template>
-      <ul v-else class="no-game">
+      <ul v-else class="no-game pb20">
         <li>{{ $t('no.game') }}</li>
       </ul>
     </div>
@@ -92,9 +92,5 @@ defineProps({
     }
   }
 
-}
-
-.no-game {
-  padding-bottom: 20px;
 }
 </style>

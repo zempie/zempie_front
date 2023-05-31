@@ -8,7 +8,7 @@
 
         </dt>
         <dd>
-          <PostTimeline type=" user" :isMine="isMine" :key="userId" />
+          <PostTimeline type="user" :isMine="isMine" :key="userId" />
         </dd>
         <dt>
           <div class="ta-groups" style="margin-top: 0px">
