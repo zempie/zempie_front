@@ -323,8 +323,6 @@ async function socialLogin(provider: AuthProvider) {
   try {
     const res = await signInWithPopup($firebaseAuth, provider)
 
-    console.log('apple ', res)
-    return
     router.push($localePath('/'))
 
   } catch (err) {
