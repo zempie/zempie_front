@@ -2313,10 +2313,10 @@
 
 /* 게임 */
 .ta-game-list {
-  /* width: 100%;
+  width: 100%;
   border-radius: 10px;
   background: #fff;
-  box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.1); */
+  box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.1);
 }
 
 .ta-game-list>dl {

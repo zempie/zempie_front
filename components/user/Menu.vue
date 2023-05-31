@@ -40,7 +40,7 @@
             </div>
           </div>
 
-          <!-- <div class="zem-coin">
+          <div class="zem-coin">
             <h2>{{ $t('purchase') }}</h2>
             <div>
               <NuxtLink class="pointer" :to="$localePath(`/coin/purchase`)" :target="!isFlutter && '_blank'">
@@ -51,7 +51,7 @@
                 <Coin :coin="user?.coin?.zem" class="text-bold" />
               </div>
             </div>
-          </div> -->
+          </div>
           <p>
             <a class="btn-default w100p" @click="logout">{{
               $t('logout')

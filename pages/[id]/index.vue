@@ -2,9 +2,10 @@
   <div>
     <NuxtLayout name="channel-header">
       <dl class="three-area">
-        <dt :key="channelInfo.id">
-          <ChannelInfoBox :isLoading="isLoading" />
-          <ChannelGameBox />
+        <dt :key="channelInfo.nickname">
+          <ChannelInfoBox :key="channelInfo.channel_id" />
+          <ChannelGameBox :key="channelInfo.channel_id" :isLoading="isLoading" />
+
         </dt>
         <dd>
           <PostTimeline type="user" :isMine="isMine" :key="userId" />
@@ -53,26 +54,12 @@ onBeforeUnmount(() => {
   display: inline-block;
 }
 
-.ta-game-list {
-  display: block;
-  width: 100%;
-  border-radius: 10px;
-  background: #fff;
-  box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.1);
-}
 
-@media all and (max-width: 479px) {
-
-  .ta-game-list {
-    display: none;
-  }
-}
+@media all and (max-width: 479px) {}
 
 @media all and (min-width: 480px) and (max-width: 767px) {
 
-  .ta-game-list {
-    display: none;
-  }
+
 
   .area-title,
   .card-game {
@@ -80,11 +67,7 @@ onBeforeUnmount(() => {
   }
 }
 
-@media all and (min-width: 768px) and (max-width: 991px) {
-  .ta-game-list {
-    display: none;
-  }
-}
+@media all and (min-width: 768px) and (max-width: 991px) {}
 
 @media all and (min-width: 992px) and (max-width: 1199px) {}
 
