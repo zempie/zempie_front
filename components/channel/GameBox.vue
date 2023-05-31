@@ -1,15 +1,17 @@
 <template>
-  <div v-if="isLoading" class="ta-game-sk-list">
-    <dl>
-      <dt>{{ $t('games') }}</dt>
-    </dl>
-    <ul>
-      <li class="pb20">
-        <p style="width:100%" class="grey-text  skeleton-animation"></p>
-        <h2 style="width:100%" class="grey-text mt10 skeleton-animation "></h2>
-      </li>
-    </ul>
-  </div>
+  <template v-if="isLoading">
+    <!-- <div class="ta-game-sk-list">
+      <dl>
+        <dt>{{ $t('games') }}</dt>
+      </dl>
+      <ul>
+        <li class="pb20">
+          <p style="width:100%" class="grey-text  skeleton-animation"></p>
+          <h2 style="width:100%" class="grey-text mt10 skeleton-animation "></h2>
+        </li>
+      </ul>
+    </div> -->
+  </template>
   <ClientOnly v-else>
     <div class="ta-game-list">
       <dl>
@@ -94,13 +96,5 @@ defineProps({
 
 .no-game {
   padding-bottom: 20px;
-}
-
-.ta-game-list {
-  width: 100%;
-  border-radius: 10px;
-  background: #fff;
-  box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
 }
 </style>

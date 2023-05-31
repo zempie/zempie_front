@@ -3,7 +3,7 @@
     <dl class="three-area">
       <dt>
         <ChannelInfoBox :key="channelInfo.channel_id" />
-        <ChannelGameBox :key="channelInfo.channel_id" />
+        <ChannelGameBox :key="channelInfo.channel_id" :isLoading="isChannelLoading" />
       </dt>
       <dd>
         <PostTimeline type="userAll" :isMine="true" />

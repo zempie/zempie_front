@@ -2,12 +2,13 @@
   <div>
     <NuxtLayout name="channel-header">
       <dl class="three-area">
-        <dt :key="channelInfo.id">
+        <dt :key="channelInfo.nickname">
           <ChannelInfoBox :key="channelInfo.channel_id" />
-          <ChannelGameBox :isLoading="isLoading" />
+          <ChannelGameBox :key="channelInfo.channel_id" :isLoading="isLoading" />
+
         </dt>
         <dd>
-          <PostTimeline type="user" :isMine="isMine" :key="userId" />
+          <PostTimeline type=" user" :isMine="isMine" :key="userId" />
         </dd>
         <dt>
           <div class="ta-groups" style="margin-top: 0px">
