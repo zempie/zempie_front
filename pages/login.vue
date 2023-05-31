@@ -50,10 +50,13 @@
         </dl>
         <ul>
           <li @click="googleLogin">
-            <img src="/images/google_login.png" alt="google-login" title="" />
+            <img src="/images/login/google_login.jpeg" alt="google-login" title="" />
           </li>
           <li @click="facebookLogin" class="mt10">
-            <img src="/images/facebook_login.png" alt="google-login" title="" />
+            <img src="/images/login/facebook_login.jpg" alt="google-login" title="" />
+          </li>
+          <li @click="appleLogin" class="mt10">
+            <img src="/images/login/apple_login.jpg" alt="apple-login" title="" />
           </li>
         </ul>
         <p>
@@ -77,6 +80,7 @@ import {
   FacebookAuthProvider,
   GoogleAuthProvider,
   signInWithPopup,
+  OAuthProvider,
   AuthProvider,
   setPersistence,
   browserSessionPersistence,
@@ -280,6 +284,24 @@ async function facebookLogin() {
   }
 }
 
+
+async function appleLogin() {
+  if (isFlutter.value) {
+    try {
+      const result = await FlutterBridge().signInApple()
+      await flutterSocialLogin(result)
+    } catch (err) {
+      if (err.message.includes('auth/account-exists-with-different-credential')) {
+        ElMessage.error(`${t('exist.wt.diff.email')}`)
+      }
+    }
+  } else {
+    const provider = new OAuthProvider('apple.com')
+    provider.addScope('email')
+    provider.addScope('name');
+    return socialLogin(provider)
+  }
+}
 async function flutterSocialLogin(info: any) {
 
   const firebaseUser = {
@@ -300,6 +322,7 @@ async function flutterSocialLogin(info: any) {
 async function socialLogin(provider: AuthProvider) {
   try {
     const res = await signInWithPopup($firebaseAuth, provider)
+
     router.push($localePath('/'))
 
   } catch (err) {
