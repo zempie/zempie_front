@@ -1,17 +1,5 @@
 @charset "utf-8";
 
-/* 메인 ******************************************************** */
-.main-test {
-  height: 4032px;
-  background: url('/images/main_bg.jpg') center no-repeat;
-  background-size: cover;
-}
-
-.main-bg {
-  background: url('/images/main_bg01.jpg') center 70px no-repeat;
-  background-size: cover;
-}
-
 /* 카피 */
 .main-copy {
   width: 750px;
