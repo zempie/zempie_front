@@ -73,8 +73,7 @@
             </div>
           </div>
           <p>
-          <p @click="register" :class="['btn-default-big w100p text-white', isSubmitActive ? 'on' : 'off']">{{
-            $t('join')
+          <p @click="register" :class="['btn-default-big w100p text-white', isSubmitActive ? 'on' : 'off']">{{ $t('join')
           }}</p>
           </p>
         </form>
@@ -209,11 +208,13 @@ const isSubmitActive = computed(() => {
 
 
 async function register() {
-  alert('회원가입 클릭')
+
 
   if (!isSubmitActive.value) return
 
   const result = await v$.value.$validate()
+
+
 
   if (!form.policyAgreement) {
     errorAgree.value = true;
@@ -221,16 +222,22 @@ async function register() {
   } else {
     if (!result) return;
   }
+  alert(JSON.stringify(form))
 
   if (fUser.value) { await joinZempie(); return; }
 
+  alert(JSON.stringify(fUser.value))
+
   try {
 
+    alert('try')
     const result = await createUserWithEmailAndPassword($firebaseAuth, form.email, form.password)
     const { user } = result;
     await joinZempie();
 
   } catch (error: any) {
+    alert('error')
+
     const { message } = error
     if (message.includes('auth/email-already-in-use')) {
 
