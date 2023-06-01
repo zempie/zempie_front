@@ -11,6 +11,7 @@
         <h3>{{ $t('join') }}</h3>
         <p>{{ $t('join.text1') }}</p>
       </div>
+      {{ fUser }}
       <ClientOnly>
         <form class="lj-content">
           <ul>

@@ -5,8 +5,9 @@
         <div class="header-logo-menu">
           <p>
             <NuxtLink :to="$localePath('/')">
-              <img v-if="showMobileLogo" class="mobile-logo" src="/images/zempie_logo_154_155.png" alt="zempie-logo" />
-              <img v-else class="logo" src="/images/zempie-logo-black.png" alt="zempie-logo" />
+              <img v-if="showMobileLogo" class="mobile-logo" src="/images/zempie_logo_154_155.png" alt="zempie-logo"
+                loading="lazy" />
+              <img v-else class="logo" src="/images/zempie-logo-black.png" alt="zempie-logo" loading="lazy" />
             </NuxtLink>
           </p>
           <button class="btn-circle-none" @click="isHeaderSideMobile = true" v-if="showHamburger">
