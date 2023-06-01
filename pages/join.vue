@@ -224,9 +224,10 @@ async function register() {
   }
   alert(JSON.stringify(form))
 
+  alert(JSON.stringify(fUser.value))
+
   if (fUser.value) { await joinZempie(); return; }
 
-  alert(JSON.stringify(fUser.value))
 
   try {
 
@@ -264,6 +265,8 @@ async function joinZempie() {
 
   const { data, error } = await useCustomAsyncFetch<{ result: any }>('/user/sign-up', getZempieFetchOptions('post', true, payload))
 
+  alert(JSON.stringify(data.value))
+
   if (data.value) {
     const { user } = data.value.result;
 
@@ -276,6 +279,8 @@ async function joinZempie() {
     }
 
   } else if (error.value) {
+    alert(JSON.stringify(error.value))
+
     ElMessage.error((error.value as any).data.error)
   }
 }
