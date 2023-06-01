@@ -73,7 +73,7 @@
             </div>
           </div>
           <p>
-          <p @ @click="register" :class="['btn-default-big w100p text-white', isSubmitActive ? 'on' : 'off']">{{
+          <p @click="register" :class="['btn-default-big w100p text-white', isSubmitActive ? 'on' : 'off']">{{
             $t('join')
           }}</p>
           </p>
