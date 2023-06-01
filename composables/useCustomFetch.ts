@@ -1,5 +1,4 @@
 import { FetchOptions } from "ohmyfetch"
-import dayjs from "dayjs";
 import shared from "~~/scripts/shared";
 import { getAuth, getIdToken } from "firebase/auth";
 import FlutterBridge from '~~/scripts/flutterBridge'

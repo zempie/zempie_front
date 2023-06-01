@@ -11,7 +11,6 @@
         <h3>{{ $t('join') }}</h3>
         <p>{{ $t('join.text1') }}</p>
       </div>
-      {{ fUser }}
       <ClientOnly>
         <form class="lj-content">
           <ul>
@@ -74,7 +73,8 @@
             </div>
           </div>
           <p>
-          <p @click="register" :class="['btn-default-big w100p text-white', isSubmitActive ? 'on' : 'off']">{{ $t('join')
+          <p @ @click="register" :class="['btn-default-big w100p text-white', isSubmitActive ? 'on' : 'off']">{{
+            $t('join')
           }}</p>
           </p>
         </form>
@@ -209,6 +209,7 @@ const isSubmitActive = computed(() => {
 
 
 async function register() {
+  alert('회원가입 클릭')
 
   if (!isSubmitActive.value) return
 

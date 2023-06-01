@@ -289,7 +289,6 @@ async function appleLogin() {
   if (isFlutter.value) {
     try {
       const result = await FlutterBridge().signInApple()
-      alert(JSON.stringify(result))
       await flutterSocialLogin(result)
     } catch (err) {
       if (err.message.includes('auth/account-exists-with-different-credential')) {
