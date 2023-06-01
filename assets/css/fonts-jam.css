@@ -1,11 +1,5 @@
 @charset "utf-8";
 
-
-/* 폰트세팅 ******************************************************** */
-/* 구글폰트 - 영문 */
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800');
-
-
 /* press-start-2p-regular */
 @font-face {
   font-family: 'Press Start 2P';
@@ -50,12 +44,11 @@
 
 @font-face {
   font-family: 'NeoDunggeunmo';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.3/NeoDunggeunmo.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   src: url('/assets/fonts/DungGeunMo.eot');
   /* IE9 Compat Modes */
-  src: local(''),
+  src: local('NeoDunggeunmo'),
     url('/assets/fonts/DungGeunMo.eot?#iefix') format('embedded-opentype'),
     /* IE6-IE8 */
     url('/assets/fonts/DungGeunMo.woff2') format('woff2'),
