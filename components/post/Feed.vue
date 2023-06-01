@@ -288,6 +288,8 @@ async function openComments(isOpenComment: boolean) {
 
   if (isOpenComment) {
     await commentFetch()
+  } else {
+    newRecomments.value = []
   }
 }
 
