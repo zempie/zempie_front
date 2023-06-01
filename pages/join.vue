@@ -214,30 +214,23 @@ async function register() {
 
   const result = await v$.value.$validate()
 
-
-
   if (!form.policyAgreement) {
     errorAgree.value = true;
     return;
   } else {
     if (!result) return;
   }
-  alert(JSON.stringify(form))
-
-  alert(JSON.stringify(fUser.value))
 
   if (fUser.value) { await joinZempie(); return; }
 
 
   try {
 
-    alert('try')
     const result = await createUserWithEmailAndPassword($firebaseAuth, form.email, form.password)
     const { user } = result;
     await joinZempie();
 
   } catch (error: any) {
-    alert('error')
 
     const { message } = error
     if (message.includes('auth/email-already-in-use')) {
@@ -265,8 +258,6 @@ async function joinZempie() {
 
   const { data, error } = await useCustomAsyncFetch<{ result: any }>('/user/sign-up', getZempieFetchOptions('post', true, payload))
 
-  alert(JSON.stringify(data.value))
-
   if (data.value) {
     const { user } = data.value.result;
 
@@ -279,9 +270,8 @@ async function joinZempie() {
     }
 
   } else if (error.value) {
-    alert(JSON.stringify(error.value))
 
-    ElMessage.error((error.value as any).data.error)
+    ElMessage.error((error.value as any))
   }
 }
 </script>
