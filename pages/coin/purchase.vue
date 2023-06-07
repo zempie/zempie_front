@@ -112,8 +112,8 @@ async function receiveMessage(message: any) {
           }
         }>('/payment/iap', getZempieFetchOptions('post', true, { receipt: receipt.receipt }))
 
+        console.log('purchased coin result : ', data.value)
 
-        alert(JSON.stringify(data.value.result))
 
         try {
           const receipt = data.value.result.data.receipt
