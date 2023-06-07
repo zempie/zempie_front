@@ -15,7 +15,7 @@
           <ul class="menu">
             <li class="uppercase">
               <NuxtLink :to="$localePath('/community/list')"
-                :class="$route.name.toString().includes('community-list') && 'active'">
+                :class="$route.name?.toString().includes('community-list') && 'active'">
                 community
               </NuxtLink>
             </li>
