@@ -89,15 +89,16 @@ import { ElMessage } from 'element-plus'
 import { required, helpers, maxLength } from '@vuelidate/validators'
 import { emailRegex, passwordRegex, nicknameRegex } from '~/scripts/utils'
 import { useI18n } from 'vue-i18n';
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { browserLocalPersistence, createUserWithEmailAndPassword, setPersistence, signOut } from 'firebase/auth'
 import { onBeforeRouteLeave } from 'vue-router';
 import shared from '~~/scripts/shared';
-import { signOut } from 'firebase/auth'
+import { useGtag } from 'vue-gtag-next';
 
 
 const { t, locale } = useI18n()
 const { $firebaseAuth, $cookies, $localePath } = useNuxtApp()
 const router = useRouter();
+const gtag = useGtag()
 
 const form = reactive({
   email: "",
@@ -165,11 +166,11 @@ definePageMeta({
 });
 
 onMounted(() => {
-  window.addEventListener('beforeunload', function (e) {
-    e.preventDefault();
-    e.returnValue = '';
-    removeFbUser()
-  });
+  // window.addEventListener('beforeunload', function (e) {
+  //   e.preventDefault();
+  //   e.returnValue = '';
+  //   removeFbUser()
+  // });
   if (fUser.value) {
     form.email = fUser.value.email
     delete form.password
@@ -180,8 +181,14 @@ shared.createHeadMeta(t('seo.join.title'), t('seo.join.desc'))
 
 
 onBeforeRouteLeave((to, from, next) => {
+  // window.removeEventListener('beforeunload', function (e) {
+  //   e.preventDefault();
+  //   e.returnValue = '';
+  // });
+  console.log('router leave??')
   removeFbUser()
   next()
+
 })
 
 //소셜 로그인 회원가입 안 끝내고 페이지 이동하는 경우에 사용 
@@ -228,6 +235,7 @@ async function register() {
 
     const result = await createUserWithEmailAndPassword($firebaseAuth, form.email, form.password)
     const { user } = result;
+
     await joinZempie();
 
   } catch (error: any) {
@@ -251,6 +259,7 @@ async function register() {
  * zempie db 등록
  */
 async function joinZempie() {
+  console.log(fUser.value)
   const payload = {
     name: form.username,
     nickname: form.nickname
@@ -262,10 +271,15 @@ async function joinZempie() {
     const { user } = data.value.result;
 
     if (user) {
+
       useUser().setUser(user);
       useUser().setLogin()
       router.push($localePath('/'))
 
+      gtag.event('click', {
+        event_category: 'join',
+        event_label: fUser.value.providerData[0].providerId,
+      })
       // useUser().unsetSignup()
     }
 

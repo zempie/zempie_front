@@ -31,7 +31,6 @@ provide(ID_INJECTION_KEY, {
 })
 
 
-
 onBeforeMount(async () => {
   await useMobile().setMobileState()
   const userInfo = useUser().user.value.info
@@ -39,6 +38,7 @@ onBeforeMount(async () => {
   try {
     const fUser = await getCurrentUser()
 
+    console.log('before in app', fUser)
     if (!fUser) {
       useUser().setLoadDone()
     }
@@ -90,6 +90,7 @@ onBeforeMount(async () => {
 
 body {
   margin: 0px !important;
+  letter-spacing: -1px;
 
   .content {
     min-height: calc(100vh - 200px) !important;

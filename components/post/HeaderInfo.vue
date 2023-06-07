@@ -5,7 +5,7 @@
     </dt>
     <dd class="column content-center">
       <div class="row" style="align-items: center; min-height: 40px;" v-if="feed.user.id">
-        <h2 class="user-name mr5 text-ellipsis pointer" @click="moveUserPage"> {{ feed.user?.nickname }} </h2>
+        <h2 class="user-name pr5 text-ellipsis pointer" @click="moveUserPage"> {{ feed.user?.nickname }} </h2>
         <slot name="followBtn" />
       </div>
       <div v-else class="row" style=" min-height: 40px;align-items: center; ">
