@@ -94,6 +94,11 @@ export default function () {
       const result = JSON.parse(response);
       return result;
     },
+    async webLog(message) {
+      const response = await callHandler("webLog", { message });
+      const result = JSON.parse(response);
+      return result;
+    },
     async windowOpen(url) {
       // const response = await webViewJavaScriptBridge.sendMessage({
       //   action: "windowOpen",

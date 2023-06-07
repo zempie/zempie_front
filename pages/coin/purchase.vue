@@ -112,7 +112,7 @@ async function receiveMessage(message: any) {
           }
         }>('/payment/iap', getZempieFetchOptions('post', true, { receipt: receipt.receipt }))
 
-        console.log('purchased coin result : ', data.value)
+        await flutterBridge().webLog(data.value)
 
 
         try {
