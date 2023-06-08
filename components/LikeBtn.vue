@@ -42,6 +42,8 @@ import _ from 'lodash'
 import { useInfiniteScroll } from '@vueuse/core'
 import { ElDialog } from 'element-plus'
 import { IUser } from '~~/types';
+import { debounce } from '~/scripts/utils'
+
 const { $localePath } = useNuxtApp()
 const router = useRouter()
 
@@ -114,7 +116,9 @@ async function unsetLike() {
   unlikeAcceessableCount = unlikeAcceessableCount + 1
 }
 
-async function showLikeFetch() {
+
+const showLikeFetch = debounce(async () => {
+
   if (likeCnt.value < 1) return
 
   const query = {
@@ -142,7 +146,7 @@ async function showLikeFetch() {
       isAddData.value = true
     }
   }
-}
+}, 300)
 
 function moveUserChannel(nickname: string) {
   router.push($localePath(`/${nickname}`))

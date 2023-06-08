@@ -6,7 +6,7 @@
         <div class="chip" v-if="parentComment?.user?.nickname">
           {{ '@' + parentComment?.user?.nickname }}
         </div>
-        <input type="text" v-model="content" :placeholder="parentComment ? '' : $t('comment.input.placeholder')"
+        <input type="text" v-model="content" :placeholder="parentComment?.id ? '' : $t('comment.input.placeholder')"
           :readonly="!isLogin" @input="onInputComment" @keydown.delete="backspaceDelete"
           @keyup.enter="isEdit ? editComment() : sendComment()" ref="commentInput" />
       </div>
@@ -98,12 +98,18 @@ async function editComment() {
   if (!error.value) {
     emit('editComment', data.value)
   }
-  commentInput.value.blur()
+
+
+  nextTick(() => {
+    commentInput.value.blur()
+  })
 
 }
 
 
 const sendComment = _.debounce(async () => {
+
+
   if (!content.value) return
 
   const payload = {
@@ -132,7 +138,9 @@ const sendComment = _.debounce(async () => {
     emit('addComment', data.value)
   }
 
-  commentInput.value.blur()
+  nextTick(() => {
+    commentInput.value.blur()
+  })
 
 }, 300)
 
