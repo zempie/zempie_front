@@ -16,7 +16,7 @@
           <ul class="menu">
             <li class="uppercase">
               <NuxtLink :to="$localePath('/community/list')"
-                :class="$route.name.toString().includes('community-list') && 'active'">
+                :class="$route.name?.toString().includes('community-list') && 'active'">
                 community
               </NuxtLink>
             </li>
@@ -48,7 +48,7 @@
                 Z-world
               </a>
             </li>
-            <li class="uppercase pointer">
+            <li v-if="!isFlutter" class="uppercase pointer">
               <a id="zempieWorldMenu" :href="config.ANDROID_DOWNLOAD_LINK">
                 App
               </a>
@@ -178,6 +178,7 @@ const searchInput = ref()
 const isHeaderSideMobile = ref(false)
 const isHeaderSideBgMobile = ref(false)
 
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
 
 const isMobileSize = computed(() =>

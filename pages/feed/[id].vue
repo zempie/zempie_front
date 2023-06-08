@@ -100,9 +100,9 @@
                     <UserAvatarSk style="width: 40px; height: 40px" />
                   </dt>
                   <dd>
-                    <h2 class="grey-text skeleton-animation" style="width: 300px; margin-bottom: 10px">
+                    <h2 class="grey-text skeleton-animation mb10" style="width: 300px; ">
                     </h2>
-                    <p class="grey-text skeleton-animation" style="width: 150px; margin-bottom: 10px"></p>
+                    <p class="grey-text skeleton-animation mb10" style="width: 150px; "></p>
                   </dd>
                 </dl>
               </dt>
@@ -327,10 +327,36 @@ function addComment(comment: IComment) {
   recomment.value = null
 }
 
-function deleteComment(comment: IComment) {
-  comments.value = comments.value.filter((comment: IComment) => {
-    return comment.id !== comment.id
+async function deleteComment(comment: IComment) {
+
+  const hasNewRecomments = newRecomments.value.find((elem) => {
+    return elem.parent_id === comment.id
   })
+
+  if (newRecomments.value.length) {
+    newRecomments.value = newRecomments.value.filter((elem: IComment) => {
+      return elem.id !== comment.id
+    })
+  }
+
+  comments.value = comments.value.filter((elem: IComment) => {
+    if (elem.id === comment.id) {
+      if (elem.children_comments?.length || hasNewRecomments) {
+        delete elem.user
+        elem.deleted_at = String(Date.now())
+        return elem.content = '삭제된 댓글입니다.'
+      }
+    } else {
+      return elem.id !== comment.id
+    }
+  })
+
+  commentCount.value -= 1
+
+  if (comments.value.length < COMMENT_LIMIT && commentCount.value >= COMMENT_LIMIT) {
+    offset.value = comments.value.length
+    await commentFetch()
+  }
 
 }
 

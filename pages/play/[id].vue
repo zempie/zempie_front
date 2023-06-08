@@ -1,11 +1,10 @@
 <template>
   <div id="gamePage">
     <ClientOnly>
-      <iframe ref="game" class="iframe" :style="`height:${iframeHeight};`" :src="
-        config.ENV === 'local' || config.ENV === 'development'
+      <iframe ref="game" class="iframe" :style="`height:${iframeHeight};`" :src="config.ENV === 'local' || config.ENV === 'development'
           ? `${config.LAUNCHER_URL}/#/game/${gamePath}`
           : `${config.LAUNCHER_URL}/game/${gamePath}`
-      "></iframe>
+        "></iframe>
     </ClientOnly>
   </div>
 </template>
@@ -128,7 +127,7 @@ async function onMessage(msg: MessageEvent) {
       break
     }
     case '@moveChannel': {
-      await router.push($localePath(`/channel/${channel_id}`))
+      await router.push($localePath(`/${channel_id}`))
       break
     }
   }

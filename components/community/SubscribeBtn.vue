@@ -9,9 +9,9 @@
     <el-dialog v-model="isModalOpen" class="modal-area-type" :show-close="false" width="380px">
       <div class="modal-alert">
         <dl class="ma-header">
-          <dt>{{ t('information') }}</dt>
-          <dd>
-            <button @click="isModalOpen = false">
+          <dt class="mt0" style="order:1; text-align: left;">{{ t('information') }}</dt>
+          <dd style="order:2;text-align: right;">
+            <button @click.stop="isModalOpen = false">
               <i class="uil uil-times"></i>
             </button>
           </dd>
@@ -22,10 +22,10 @@
             {{ t('leave.community.text2') }}
           </h2>
           <div>
-            <button class="btn-default w48p" @click="unsubscribe">
+            <button class="btn-default w48p" @click.stop="unsubscribe">
               {{ t('yes') }}
             </button>
-            <button class="btn-gray w48p" @click="isModalOpen = false">
+            <button class="btn-gray w48p" @click.stop="isModalOpen = false">
               {{ t('no') }}
             </button>
           </div>
