@@ -1,7 +1,7 @@
 <template>
   <a v-if="!community?.is_subscribed" class="btn-default mr10 mt20 w100p" :community="community"
     @click.stop="subscribe">{{ t('subscribe.btn') }}</a>
-  <a v-else class="btn-sub mr10 mt20 w100p" @click.stop="isModalOpen = true">{{
+  <a v-else class="btn-sub mr10 mt20 w100p" @click.stop="isModalOpen = true; emit('isSubModal', true)">{{
     $t('isSubscribing')
   }}</a>
 
@@ -11,7 +11,8 @@
         <dl class="ma-header">
           <dt class="mt0" style="order:1; text-align: left;">{{ t('information') }}</dt>
           <dd style="order:2;text-align: right;">
-            <button @click.stop="isModalOpen = false">
+
+            <button @click.stop="isModalOpen = false; emit('isSubModal', false)">
               <i class="uil uil-times"></i>
             </button>
           </dd>
@@ -25,7 +26,7 @@
             <button class="btn-default w48p" @click.stop="unsubscribe">
               {{ t('yes') }}
             </button>
-            <button class="btn-gray w48p" @click.stop="isModalOpen = false">
+            <button class="btn-gray w48p" @click.stop="isModalOpen = false; emit('isSubModal', false)">
               {{ t('no') }}
             </button>
           </div>
@@ -48,10 +49,12 @@ const isModalOpen = ref(false)
 const props = defineProps({
   community: Object as PropType<ICommunity>,
 })
-const emit = defineEmits(['refresh'])
+const emit = defineEmits(['refresh', 'isSubModal'])
 
 const isLogin = computed(() => useUser().user.value.isLogin)
 const communityId = computed(() => props.community.id)
+
+
 
 async function subscribe() {
   if (isLogin.value) {
@@ -64,12 +67,16 @@ async function subscribe() {
         customClass: "copy-msg",
       })
     }
+
   } else {
     useModal().openLoginModal()
   }
+
 }
 
 async function unsubscribe() {
+  emit('isSubModal', false)
+
   const { data, error } = await useCustomAsyncFetch(`/community/${communityId.value}/unsubscribe`, getComFetchOptions('post', true))
   if (!error.value) {
     ElMessage({
