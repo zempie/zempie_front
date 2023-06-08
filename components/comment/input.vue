@@ -98,6 +98,8 @@ async function editComment() {
   if (!error.value) {
     emit('editComment', data.value)
   }
+  commentInput.value.blur()
+
 }
 
 
@@ -112,14 +114,11 @@ const sendComment = _.debounce(async () => {
   }
 
 
-  console.log('parentComment', parentComment.value)
   if (parentComment.value?.id) {
     payload['parent_id'] = parentComment.value.parent_id ? parentComment.value?.parent_id : parentComment.value.id
     payload.content = `@${parentComment.value.user.nickname} ` + payload.content
   }
 
-
-  console.log(payload)
   // return
 
   const { data, error } = await useCustomAsyncFetch(
@@ -132,6 +131,9 @@ const sendComment = _.debounce(async () => {
     parentComment.value = null
     emit('addComment', data.value)
   }
+
+  commentInput.value.blur()
+
 }, 300)
 
 

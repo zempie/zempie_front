@@ -51,7 +51,7 @@
   <PostModal :isTextEditorOpen="isTextEditorOpen">
     <template #textEditor>
       <TextEditor @closeModal="closeEditor" :isEdit="true" :feed="feed" @refresh="emit('refresh')"
-        :isFullScreen="usePost().post.value.isFullScreen" :key="editorKey" />
+        :isFullScreen="usePost().post.value.isFullScreen" />
     </template>
   </PostModal>
 </template>
@@ -72,7 +72,6 @@ const { t, locale } = useI18n()
 
 const isTextEditorOpen = ref(false)
 const showDeletePostModal = ref(false)
-const editorKey = ref(0)
 
 const props = defineProps({
   feed: Object as PropType<IFeed>,
@@ -98,7 +97,6 @@ async function deletePost() {
 
 async function closeEditor() {
   isTextEditorOpen.value = false
-  editorKey.value = Date.now()
 }
 
 function onClickEdit() {

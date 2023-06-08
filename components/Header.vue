@@ -5,8 +5,9 @@
         <div class="header-logo-menu">
           <p>
             <NuxtLink :to="$localePath('/')">
-              <img v-if="showMobileLogo" class="mobile-logo" src="/images/zempie_logo_154_155.png" alt="zempie-logo" />
-              <img v-else class="logo" src="/images/zempie-logo-black.png" alt="zempie-logo" />
+              <img v-if="showMobileLogo" class="mobile-logo" src="/images/zempie_logo_154_155.png" alt="zempie-logo"
+                loading="lazy" />
+              <img v-else class="logo" src="/images/zempie-logo-black.png" alt="zempie-logo" loading="lazy" />
             </NuxtLink>
           </p>
           <button class="btn-circle-none" @click="isHeaderSideMobile = true" v-if="showHamburger">
@@ -15,7 +16,7 @@
           <ul class="menu">
             <li class="uppercase">
               <NuxtLink :to="$localePath('/community/list')"
-                :class="$route.name.toString().includes('community-list') && 'active'">
+                :class="$route.name?.toString().includes('community-list') && 'active'">
                 community
               </NuxtLink>
             </li>
@@ -47,7 +48,7 @@
                 Z-world
               </a>
             </li>
-            <li class="uppercase pointer">
+            <li v-if="!isFlutter" class="uppercase pointer">
               <a id="zempieWorldMenu" :href="config.ANDROID_DOWNLOAD_LINK">
                 App
               </a>
@@ -111,7 +112,8 @@
                   class="uil uil-keyboard"></i>
                 GJ+
               </NuxtLink>
-              <a class="pointer" id="zempieWorldMenu" :href="config.ANDROID_DOWNLOAD_LINK">
+
+              <a v-if="!isFlutter" class="pointer" id="zempieWorldMenu" :href="config.ANDROID_DOWNLOAD_LINK">
                 <i class="uil uil-globe"></i>
                 Zempie App
               </a>
@@ -177,6 +179,7 @@ const searchInput = ref()
 const isHeaderSideMobile = ref(false)
 const isHeaderSideBgMobile = ref(false)
 
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
 
 const isMobileSize = computed(() =>
@@ -195,8 +198,7 @@ const options = [
   { code: "ko", label: "한국어" },
   { code: "en", label: "English" },
 ]
-const selectedLang = ref(locale.value)
-// console.log('currneLan', locale.value)
+const selectedLang = computed(() => locale.value)
 
 const isOpen = ref(false)
 const { loginModal } = useModal()

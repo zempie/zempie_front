@@ -107,9 +107,10 @@ async function gameListFetch() {
 }
 
 function copyUrl() {
-  const url = game.game_type === eGameType.Download ? `${config.ZEMPIE_URL}/${locale.value}/game/${game.pathname}` : `${config.ZEMPIE_URL}/${locale.value}/play/${game.pathname}`
+  // const url = game.game_type === eGameType.Download ? `${config.ZEMPIE_URL}/${locale.value}/game/${game.pathname}` : `${config.ZEMPIE_URL}/${locale.value}/play/${game.pathname}`
 
-  execCommandCopy(url)
+  execCommandCopy(window.location.href)
+
   ElMessage.closeAll()
   ElMessage({
     message: t('copied.clipboard'),

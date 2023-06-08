@@ -269,7 +269,7 @@
   }
 
   .visual-info-center>dl dt .btn-default {
-    width: 100px !important;
+    width: 100px;
   }
 }
 

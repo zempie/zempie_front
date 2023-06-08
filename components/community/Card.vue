@@ -55,7 +55,7 @@ const bannerImg = computed(
   () => props.community.banner_img ?? '/images/1500_300_com_channel_default.png'
 )
 const profileImg = computed(
-  () => props.community.profile_img ?? '/images/100_100_com_profile_default.png'
+  () => props.community.profile_img ?? '/images/100_100_com_profile_default.jpeg'
 )
 const visitCount = computed(() => numToKMB(props.community.visit_cnt))
 </script>

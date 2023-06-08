@@ -907,7 +907,7 @@
   "ask.edit.blog": "Images in Blog-form posts can be deleted as the Blog and Social Network forms are integrated.",
   "confirm.edit": "Do you still want to edit this post?",
   "edit.post": "Edit post",
-  "game.link.copy": "Copy Game Link",
+  "game.link.copy": "Copy Game Page Link",
   "deleted.user": "Deleted user",
   "follow": "Follow",
   "about.game": "About us",
@@ -965,5 +965,6 @@
   "company.numbers": "General Directory Number ",
   "sales.number": "Telecommunication Service Registration Number",
   "sales.number.info": "Issue Number : 2023-서울서대문-0861",
-  "games": "Games"
+  "games": "Games",
+  "add.game":"Add game"
 }

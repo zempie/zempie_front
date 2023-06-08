@@ -7,7 +7,7 @@
       {{ likeCnt }}</span>
   </li>
   <ClientOnly>
-    <el-dialog v-model="isLikeHistoryOpen" class="modal-area-type" width="500px">
+    <el-dialog v-model="isLikeHistoryOpen" class="modal-area-type" width="500px" :before-close="onCloseLike">
       <div class="modal-alert modal-like">
         <dl class="ma-header">
           <dt>{{ $t('like') }}</dt>
@@ -79,6 +79,11 @@ useInfiniteScroll(
   { distance: 10 }
 )
 
+function onCloseLike() {
+  isLikeHistoryOpen.value = false
+  resetList()
+}
+
 async function setLike() {
   if (!isLogin.value) {
     useModal().openLoginModal()
@@ -146,10 +151,13 @@ function moveUserChannel(nickname: string) {
 function closeHistory() {
   isLikeHistoryOpen.value = false
 
+  resetList()
+
+}
+
+function resetList() {
   offset.value = 0;
   likeList.value = []
-
-
 }
 </script>
 
