@@ -6,8 +6,7 @@
   }}</a>
 
   <ClientOnly>
-    <el-dialog v-model="isModalOpen" append-to-body class="modal-area-type" :show-close="false" width="380px"
-      @close="onClose">
+    <el-dialog v-model="isModalOpen" class="modal-area-type" :show-close="false" width="380px">
       <div class="modal-alert">
         <dl class="ma-header">
           <dt class="mt0" style="order:1; text-align: left;">{{ t('information') }}</dt>
@@ -56,9 +55,6 @@ const isLogin = computed(() => useUser().user.value.isLogin)
 const communityId = computed(() => props.community.id)
 
 
-function onClose() {
-  // emit('isSubModal', false)
-}
 
 async function subscribe() {
   if (isLogin.value) {

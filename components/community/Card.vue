@@ -1,6 +1,5 @@
 <template>
   <li @click="goCommunity">
-    <!-- $router.push($localePath(`/community/${community.id}`))" -->
     <div :style="{
       background: 'url(' + bannerImg + ') center center / cover no-repeat',
       'background-size': 'cover',
