@@ -106,7 +106,7 @@ const {
 }
 
 .main-bg {
-  background: url('/images/main_bg01_fixed.png') center 70px no-repeat;
+  background: url('/images/main_bg01_fixed.jpg') center 70px no-repeat;
   background-size: cover;
   padding-bottom: 100px;
 }
