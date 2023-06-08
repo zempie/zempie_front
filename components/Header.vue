@@ -198,8 +198,7 @@ const options = [
   { code: "ko", label: "한국어" },
   { code: "en", label: "English" },
 ]
-const selectedLang = ref(locale.value)
-// console.log('currneLan', locale.value)
+const selectedLang = computed(() => locale.value)
 
 const isOpen = ref(false)
 const { loginModal } = useModal()
