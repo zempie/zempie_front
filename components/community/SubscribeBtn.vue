@@ -6,7 +6,8 @@
   }}</a>
 
   <ClientOnly>
-    <el-dialog v-model="isModalOpen" class="modal-area-type" :show-close="false" width="380px" @close="onClose">
+    <el-dialog v-model="isModalOpen" append-to-body class="modal-area-type" :show-close="false" width="380px"
+      @close="onClose">
       <div class="modal-alert">
         <dl class="ma-header">
           <dt class="mt0" style="order:1; text-align: left;">{{ t('information') }}</dt>
@@ -23,7 +24,6 @@
             {{ t('leave.community.text2') }}
           </h2>
           <div>
-
             <button class="btn-default w48p" @click.stop="unsubscribe">
               {{ t('yes') }}
             </button>
