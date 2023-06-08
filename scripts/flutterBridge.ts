@@ -99,6 +99,16 @@ export default function () {
       const result = JSON.parse(response);
       return result;
     },
+    async currentLanguage() {
+      const response = await callHandler("currentLanguage");
+      const result = JSON.parse(response);
+      return result;
+    },
+    async currentPlatform() {
+      const response = await callHandler("currentPlatform");
+      const result = JSON.parse(response);
+      return result;
+    },
     async windowOpen(url) {
       // const response = await webViewJavaScriptBridge.sendMessage({
       //   action: "windowOpen",
