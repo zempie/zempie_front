@@ -100,9 +100,9 @@ export default function () {
       return result;
     },
     async currentLanguage() {
-      const response = await callHandler("currentLanguage");
-      const result = JSON.parse(response);
-      return result;
+      return await callHandler("currentLanguage");
+      // const result = JSON.parse(response);
+      // return result;
     },
     async currentPlatform() {
       const response = await callHandler("currentPlatform");
