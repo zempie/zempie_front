@@ -3,7 +3,8 @@
     <div>
       <dl class="area-title">
         <dt>
-          Followers <span>{{ totalCount }}</span>
+          {{ t('follower') }}
+          <span>{{ totalCount }}</span>
         </dt>
       </dl>
       <UserList :users="users" :isPending="isPending" />
