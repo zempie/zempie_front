@@ -112,7 +112,8 @@
                   class="uil uil-keyboard"></i>
                 GJ+
               </NuxtLink>
-              <a class="pointer" id="zempieWorldMenu" :href="config.ANDROID_DOWNLOAD_LINK">
+
+              <a v-if="!isFlutter" class="pointer" id="zempieWorldMenu" :href="config.ANDROID_DOWNLOAD_LINK">
                 <i class="uil uil-globe"></i>
                 Zempie App
               </a>

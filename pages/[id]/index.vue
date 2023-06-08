@@ -41,7 +41,7 @@ definePageMeta({
 })
 
 onBeforeUnmount(() => {
-  useChannel().resetUserChannel()
+  // useChannel().resetUserChannel()
   console.log('unmount', useChannel().userChannel.value.info)
 })
 

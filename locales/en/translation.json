@@ -965,5 +965,6 @@
   "company.numbers": "General Directory Number ",
   "sales.number": "Telecommunication Service Registration Number",
   "sales.number.info": "Issue Number : 2023-서울서대문-0861",
-  "games": "Games"
+  "games": "Games",
+  "add.game":"Add game"
 }

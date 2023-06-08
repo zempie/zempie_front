@@ -62,7 +62,7 @@ onBeforeMount(async () => {
   }
 
 
-  const lang = isFlutter.value ? await flutterBridge().currentLanguage()[0] : navigator.language.split('-')[0]
+  const lang = isFlutter.value ? await flutterBridge().currentLanguage() : navigator.language.split('-')[0]
   // //TODO: 언어 확인
   // if (isFlutter.value) {
 

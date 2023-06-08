@@ -3,11 +3,11 @@
     <div>
       <dl class="area-title" style="margin-top: 12.5px">
         <dt>
-          Games <span>{{ games?.length }}</span>
+          {{ t('games') }} <span>{{ games?.length }}</span>
         </dt>
         <dd>
           <NuxtLink :to="$localePath(`/project/upload`)" v-if="isMine" class="btn-default-samll">
-            Add Game <i class="uil uil-plus"></i></NuxtLink>
+            {{ t('add.game') }}<i class="uil uil-plus"></i></NuxtLink>
         </dd>
       </dl>
       <transition name="component-fade" mode="out-in">
