@@ -14,13 +14,14 @@
 
       <dl class="dl-content">
         <dd>
-          <div>
+          <!-- TODO: 2차 스펙에서 진행함 -> -->
+          <!-- <div>
             <div class="input-search-default" @input="onInputMsg">
               <p><i class="uil uil-search"></i>
               </p>
               <div><input v-model="dmKeyword" type="text" name="" title="keywords" placeholder="검색어를 입력하세요." /></div>
             </div>
-          </div>
+          </div> -->
           <ul class="msg-list">
             <!-- <el-scrollbar tag="ul" wrap-class="msg-list" height="650px"> -->
             <li v-for="msg in msgList" :key="msg.id" @click="onClickMsg(msg)">
@@ -131,7 +132,8 @@
             </div>
             <ul class="user-list">
               <!-- <el-scrollbar tag="ul" wrap-class="msg-list" height="650px"> -->
-              <li v-for="user in userList" :key="user.id" class="pointer" @click="onClickUser(user)">
+              <li v-if="userList?.length" v-for="user in userList" :key="user.id" class="pointer"
+                @click="onClickUser(user)">
                 <dl class="row">
                   <dd class="mr10">
                     <UserAvatar :user="user" tag="p" style="width:45px; height:45px; border-radius: 50%;" />
@@ -141,6 +143,9 @@
                     <p class="font13 nickname">@{{ user.nickname }}</p>
                   </dt>
                 </dl>
+              </li>
+              <li v-else>
+                검색된 계정이 없습니다.
               </li>
             </ul>
 
@@ -223,6 +228,7 @@ async function getFollowings() {
   //TODO: 무한 스크롤 처리 해야됨 
   const { data, error } = await useCustomAsyncFetch<{ totalCount: number, result: IUser[] }>(`/user/${userInfo.value?.id}/list/following`, getComFetchOptions('get', false))
 
+  console.table(data.value)
   if (data.value) {
     const { result } = data.value
     userList.value = result
