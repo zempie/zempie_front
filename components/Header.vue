@@ -198,7 +198,7 @@ const options = [
   { code: "ko", label: "한국어" },
   { code: "en", label: "English" },
 ]
-const selectedLang = computed(() => locale.value)
+const selectedLang = ref(locale.value)
 
 const isOpen = ref(false)
 const { loginModal } = useModal()
@@ -214,6 +214,7 @@ watch(
 onMounted(() => {
   nextTick(() => {
     onResize()
+    selectedLang.value = locale.value
   })
   window.addEventListener("resize", onResize)
 })
