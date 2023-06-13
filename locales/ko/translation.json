@@ -960,6 +960,6 @@
   "notification.like.post": "님이 회원님의 포스팅에 좋아요를 눌렀습니다.",
   "not.exist.post": "잘못된 주소이거나, 비공개 또는 삭제된 글입니다.",
   "to.home": "홈으로",
-  "message": "__STRING_NOT_TRANSLATED__",
-  "dm": "__STRING_NOT_TRANSLATED__"
+  "message": "메세지",
+  "dm": "메세지"
 }

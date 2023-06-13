@@ -7,12 +7,13 @@
           <h2> {{ $t('dm') }}</h2>
         </div>
         <p>
-          <router-link to="#"><i class="uil uil-comment-alt"></i> <span>5</span><em>전부읽음</em></router-link>
-          <router-link to="#"><i class="uil uil-setting"></i> <em>세팅</em></router-link>
+          <!-- <router-link to="#"><i class="uil uil-comment-alt"></i> <span>5</span><em>전부읽음</em></router-link> -->
+          <NuxtLink :to="$localePath(`/myaccount`)"><i class="uil uil-setting"></i> <em>{{ t('setting') }}</em></NuxtLink>
         </p>
       </div>
 
       <dl class="dl-content">
+
         <dd>
           <!-- TODO: 2차 스펙에서 진행함 -> -->
           <!-- <div>
@@ -22,27 +23,48 @@
               <div><input v-model="dmKeyword" type="text" name="" title="keywords" placeholder="검색어를 입력하세요." /></div>
             </div>
           </div> -->
-          <ul class="msg-list">
-            <!-- <el-scrollbar tag="ul" wrap-class="msg-list" height="650px"> -->
-            <li v-for="msg in msgList" :key="msg.id" @click="onClickMsg(msg)">
+          <ul v-if="roomPending">
+            <li v-for="i in 7">
               <dl>
-                <dd v-if="!msg.is_group_conversation" class="mr10">
-                  <UserAvatar :user="msg.other_users[0]" tag="p" />
+                <dd>
+                  <UserAvatarSk tag="p" />
                 </dd>
                 <dt>
-                  <h3>@{{ msg.other_users[0].nickname }}</h3>
-                  <p>{{ msg.last_message.text }}</p>
+                  <h3 class="grey-text w50p skeleton-animation">
+                  </h3>
+                  <p class="grey-text  skeleton-animation"></p>
                 </dt>
                 <dd>
-                  <h4 class="font12"><i class="uis uis-clock" style="color:#c1c1c1;"></i>{{ dateFormat(msg.created_at) }}
-                  </h4>
-                  <span>1</span>
                 </dd>
               </dl>
             </li>
           </ul>
+          <template v-else>
+            <ul v-if="msgList" class="msg-list">
+              <!-- <el-scrollbar tag="ul" wrap-class="msg-list" height="650px"> -->
+              <li v-for="msg in msgList" :key="msg.id" @click="onClickMsg(msg)">
+                <dl>
+                  <dd v-if="!msg.is_group_conversation" class="mr10">
+                    <UserAvatar :user="msg.other_users[0]" tag="p" />
+                  </dd>
+                  <dt>
+                    <h3>@{{ msg.other_users[0].nickname }}</h3>
+                    <p>{{ msg.last_message.text }}</p>
+                  </dt>
+                  <dd>
+                    <h4 class="font12"><i class="uis uis-clock" style="color:#c1c1c1;"></i>{{ dateFormat(msg.created_at)
+                    }}
+                    </h4>
+                    <span>1</span>
+                  </dd>
+                </dl>
+              </li>
+            </ul>
+            <ul v-else class="flex items-center content-center">
+              메세지가 없습니다.
+            </ul>
+          </template>
         </dd>
-
         <dt>
           <template v-if="selectedMsg">
             <dl>
@@ -95,7 +117,7 @@
             </div>
             <div class="dlc-send-message">
               <div>
-                <input type="text" name="" title="" placeholder="댓글달기" />
+                <input v-model="inputMsg" type="text" name="" title="" placeholder="댓글달기" />
                 <router-link to="#"><i class="uil uil-scenery font25 mr5"></i></router-link>
                 <router-link to="#"><i class="uil uil-camera font28"></i></router-link>
               </div>
@@ -130,7 +152,20 @@
                   placeholder="검색어를 입력하세요." />
               </div>
             </div>
-            <ul class="user-list">
+            <ul v-if="followPending" class="user-list">
+              <li>
+                <dl class="row">
+                  <dd class="mr10">
+                    <UserAvatarSk tag="p" style="width:45px; height: 45px;" />
+                  </dd>
+                  <dt class="w100p">
+                    <h3 class="grey-text w50p skeleton-animation"> </h3>
+                    <p class="grey-text mt10 skeleton-animation"></p>
+                  </dt>
+                </dl>
+              </li>
+            </ul>
+            <ul v-else class="user-list">
               <!-- <el-scrollbar tag="ul" wrap-class="msg-list" height="650px"> -->
               <li v-if="userList?.length" v-for="user in userList" :key="user.id" class="pointer"
                 @click="onClickUser(user)">
@@ -149,6 +184,7 @@
               </li>
             </ul>
 
+
           </div>
         </div>
       </el-dialog>
@@ -159,8 +195,9 @@
 <script setup lang="ts">
 import { ElScrollbar, ElDialog } from 'element-plus'
 import { dateFormat } from '~~/scripts/utils'
-import { IConversation, IMessage, IUser } from '~~/types'
+import { IChat, IMessage, IUser } from '~~/types'
 import { debounce } from '~~/scripts/utils'
+import { offset } from 'dom7'
 
 const MSG_LIMIT = 5
 
@@ -171,28 +208,47 @@ const userInfo = computed(() => useUser().user.value.info)
 
 const router = useRouter()
 const dmDropdown = ref()
-const msgList = ref<IConversation[]>()
+const msgList = ref<IChat[]>()
 const selectedMsg = ref<IMessage>()
 const dmKeyword = ref('')
+
+const inputMsg = ref('')
 
 const openNewMsg = ref(false)
 const userKeyword = ref('')
 const userList = ref<IUser[]>()
 
-await fetch()
+const msgOffset = ref(0)
+const msgLimit = ref(15)
 
+const roomPending = ref(true)
+const followPending = ref(true)
+
+onMounted(async () => {
+  await fetch()
+})
 async function fetch() {
+  let isPending = true
 
   //TODO: limit 제한 걸어야됨 임시
-  const response = await useCustomFetch<{ result: IConversation[] }>(`/conversations`, getComFetchOptions('get', true))
-  if (response) {
-    const { result } = response
-    msgList.value = result
-  }
+  try {
+    const { data, error, pending } = await useCustomAsyncFetch<{ result: IChat[] }>(`/chat/rooms`, getComFetchOptions('get', true))
 
+    if (data.value) {
+      const { result } = data.value
+      msgList.value = result
+      console.log(pending)
+      isPending = pending.value
+    } else if (error.value) {
+      isPending = pending.value
+    }
+  }
+  finally {
+    roomPending.value = isPending
+  }
 }
-function onClickMsg(msg: IConversation) {
-  selectedMsg.value = msg
+function onClickMsg(msg: IChat) {
+  // selectedMsg.value = msg
 }
 
 
@@ -205,13 +261,23 @@ const onInputUser = debounce(async () => {
 }, 300)
 
 async function getUsers() {
+  let isPending = true
+
   if (userKeyword.value) {
     //TODO: 무한 스크롤 처리 해야됨 
-    const { data, error } = await useCustomAsyncFetch<{ totalCount: number, result: IUser[] }>(`/search?username=${userKeyword.value}`, getComFetchOptions('get', false))
+    try {
+      const { data, error, pending } = await useCustomAsyncFetch<{ totalCount: number, result: IUser[] }>(`/search?username=${userKeyword.value}`, getComFetchOptions('get', false))
 
-    if (data.value) {
-      const { result } = data.value
-      userList.value = result
+      if (data.value) {
+        const { result } = data.value
+        userList.value = result
+        isPending = pending.value
+      } else if (error.value) {
+        isPending = pending.value
+      }
+    } finally {
+      followPending.value = isPending
+
     }
   } else {
     await getFollowings()
@@ -223,23 +289,86 @@ async function showNewMsg() {
   openNewMsg.value = true
   await getFollowings()
 }
+
 async function getFollowings() {
+  let isPending = true
 
-  //TODO: 무한 스크롤 처리 해야됨 
-  const { data, error } = await useCustomAsyncFetch<{ totalCount: number, result: IUser[] }>(`/user/${userInfo.value?.id}/list/following`, getComFetchOptions('get', false))
+  try {
+    //TODO: 무한 스크롤 처리 해야됨 
+    const { data, error, pending } = await useCustomAsyncFetch<{ totalCount: number, result: IUser[] }>(`/user/${userInfo.value?.id}/list/following`, getComFetchOptions('get', false))
 
-  console.table(data.value)
-  if (data.value) {
-    const { result } = data.value
-    userList.value = result
+    console.table(data.value)
+    if (data.value) {
+      const { result } = data.value
+      userList.value = result
+      isPending = pending.value
+    } else if (error.value) {
+      isPending = pending.value
+    }
+  } finally {
+    followPending.value = isPending
+
   }
 }
 
 
-function onClickUser() {
+async function onClickUser(user: IUser) {
   openNewMsg.value = false
 
+
+  await findRoom([user.id])
+
 }
+
+
+async function getMessages() {
+
+  const payload = {
+    offset: msgOffset.value,
+    limit: msgLimit.value
+  }
+
+  const { data, error } = await useCustomAsyncFetch(`/chat/message`, getComFetchOptions('get', true, payload))
+
+}
+
+async function sendMsg() {
+  const payload = {
+    room_id: 0,
+    receiver_ids: [
+      37
+    ],
+    type: 0,
+    contents: inputMsg.value
+  }
+
+  const { data, error } = await useCustomAsyncFetch(`/chat`, getComFetchOptions('post', true, payload))
+
+}
+
+async function deleteChat() {
+  const { data, error } = await useCustomAsyncFetch(`/chat/room_leave`, getComFetchOptions('delete', true)
+  )
+}
+
+
+async function deleteMsg() {
+  const { data, error } = await useCustomAsyncFetch(`/chat`, getComFetchOptions('delete', true)
+  )
+}
+
+async function findRoom(user_ids: Number[]) {
+
+  const payload = {
+    user_ids
+  }
+
+  const { data, error } = await useCustomAsyncFetch(`/chat/find_rooms/user`, getComFetchOptions('get', true, payload))
+
+}
+
+
+
 </script>
 <style scoped lang="scss">
 .dl-content {

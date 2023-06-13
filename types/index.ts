@@ -333,7 +333,7 @@ export interface IComment {
   parent_id?: string,
 }
 
-export interface IConversation {
+export interface IChat {
   id: number,
   created_at: string,
   unread_count: number,

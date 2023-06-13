@@ -57,10 +57,10 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
               shared.removeCookies()
               console.log('check', config.public.ENV, 'env:', config.env === 'development', config.env == 'development')
             }
-
             break;
         }
       } else {
+        console.log('error throw here')
         throw response
       }
 
