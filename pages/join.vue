@@ -218,8 +218,6 @@ const isSubmitActive = computed(() => {
 
 
 async function register() {
-
-
   if (!isSubmitActive.value) return
 
   const result = await v$.value.$validate()
@@ -231,37 +229,30 @@ async function register() {
     if (!result) return;
   }
 
-  if (isFlutter.value) {
-    const result = await flutterBridge().joinEmail({ email: form.email, password: form.password })
-    console.log(result)
-    await joinZempie();
-
-  } else {
-
-    if (fUser.value) { await joinZempie(); return; }
-
-
-    try {
-
-      const result = await createUserWithEmailAndPassword($firebaseAuth, form.email, form.password)
-      const { user } = result;
-
+  try {
+    if (isFlutter.value) {
+      await flutterBridge().joinEmail({ email: form.email, password: form.password })
       await joinZempie();
 
-    } catch (error: any) {
+    } else {
 
-      const { message } = error
-      if (message.includes('auth/email-already-in-use')) {
+      if (fUser.value) { await joinZempie(); return; }
+      await createUserWithEmailAndPassword($firebaseAuth, form.email, form.password)
+      await joinZempie();
+    }
 
-        ElMessage.error(`${t('fb.using.email')}`)
-      }
-      else if (message.includes('EMAIL_EXISTS')) {
-        ElMessage.error(`${t('fb.using.email')}`)
+  } catch (error: any) {
 
-      } else {
-        ElMessage.error(message)
+    const { message } = error
+    if (message.includes('auth/email-already-in-use')) {
+      ElMessage.error(`${t('fb.using.email')}`)
+    }
+    else if (message.includes('EMAIL_EXISTS')) {
+      ElMessage.error(`${t('fb.using.email')}`)
 
-      }
+    } else {
+      ElMessage.error(message)
+
     }
   }
 }
