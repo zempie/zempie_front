@@ -270,7 +270,7 @@ async function register() {
  * zempie db 등록
  */
 async function joinZempie() {
-  console.log(fUser.value)
+  console.log('join!')
   const payload = {
     name: form.username,
     nickname: form.nickname
@@ -291,7 +291,6 @@ async function joinZempie() {
         event_category: 'join',
         event_label: fUser.value.providerData[0].providerId,
       })
-      // useUser().unsetSignup()
     }
 
   } else if (error.value) {
