@@ -29,7 +29,7 @@
       </span>
     </div>
     <dl>
-      <dt class="header-left">
+      <dt class="header-left" :class="gameInfo?.stage === eGameStage.DEV && 'dev-header'">
         <dl>
           <dt class="game-profile-img">
             <div
@@ -382,6 +382,12 @@ function downloadGame() {
 </script>
 
 <style lang="scss" scoped>
+.header-left {
+  &.dev-header {
+    padding-bottom: 40px;
+  }
+}
+
 .like-btn {
   height: 65px;
   display: inline-flex;
@@ -464,6 +470,12 @@ function downloadGame() {
     width: 100%;
     height: 250px;
 
+    .header-left {
+      &.dev-header {
+        padding-bottom: 0px;
+      }
+    }
+
     dl {
       padding: 0px;
     }
@@ -502,6 +514,7 @@ function downloadGame() {
     }
 
     .header-left {
+
       dl {
         flex-wrap: nowrap;
       }
