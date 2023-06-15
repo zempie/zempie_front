@@ -44,10 +44,6 @@ export default defineNuxtConfig({
 
     },
   },
-  // experimental: {
-  //   writeEarlyHints: false,
-  // },
-
   hooks: {
     'pages:extend'(routes) {
       routes.push({
@@ -66,22 +62,14 @@ export default defineNuxtConfig({
   css: [
     '@/assets/css/animate.css',
     '@/assets/css/jquery-ui.css',
-    // '@/assets/css/fonts-jam.css',
-    // '@/assets/css/common.css',
-    // '@/assets/css/content.css',
+
     '@/assets/css/layout.css',
     '@/assets/css/style.css',
     '@/assets/css/fonts.css',
-    // '@/assets/css/common.scss',
-    // '@/assets/css/editor.scss',
     'element-plus/dist/index.css',
     'swiper/css',
     'swiper/css/pagination',
-    // '@/assets/css/prism.css'
   ],
-  // plugins: [
-  //   { src: '~/plugins/flutterBridge.client.ts', mode: 'client' }
-  // ],
 
   modules: [
     'cookie-universal-nuxt',

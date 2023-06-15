@@ -2067,6 +2067,11 @@ textarea:focus {
   padding-left: 50px !important;
 }
 
+/* 패딩-우측 */
+.pr5 {
+  padding-right: 5px !important;
+}
+
 /* 폰트사이즈 */
 .font11 {
   font-size: 11px !important;

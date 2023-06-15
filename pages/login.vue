@@ -238,6 +238,17 @@ async function onSubmit() {
   }
 }
 
+async function receiveMessage(message: any) {
+  let data = message.data;
+  switch (data.type) {
+    case 'IdTokenChanged':
+    case 'idTokenChanged': {
+      currUser.value = data.user
+    }
+  }
+
+}
+
 async function googleLogin() {
   if (isFlutter.value) {
     try {
@@ -253,17 +264,6 @@ async function googleLogin() {
     const provider = new GoogleAuthProvider()
     return socialLogin(provider)
   }
-}
-
-async function receiveMessage(message: any) {
-  let data = message.data;
-  switch (data.type) {
-    case 'IdTokenChanged':
-    case 'idTokenChanged': {
-      currUser.value = data.user
-    }
-  }
-
 }
 
 async function facebookLogin() {

@@ -94,6 +94,21 @@ export default function () {
       const result = JSON.parse(response);
       return result;
     },
+    async webLog(message) {
+      const response = await callHandler("webLog", { message });
+      const result = JSON.parse(response);
+      return result;
+    },
+    async currentLanguage() {
+      return await callHandler("currentLanguage");
+      // const result = JSON.parse(response);
+      // return result;
+    },
+    async currentPlatform() {
+      const response = await callHandler("currentPlatform");
+      const result = JSON.parse(response);
+      return result;
+    },
     async windowOpen(url) {
       // const response = await webViewJavaScriptBridge.sendMessage({
       //   action: "windowOpen",

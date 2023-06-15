@@ -8,6 +8,7 @@
 <script setup lang="ts">
 import { ID_INJECTION_KEY } from 'element-plus'
 import { useI18n } from 'vue-i18n'
+import flutterBridge from './scripts/flutterBridge';
 import shared from './scripts/shared';
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
@@ -31,14 +32,12 @@ provide(ID_INJECTION_KEY, {
 })
 
 
-
 onBeforeMount(async () => {
   await useMobile().setMobileState()
   const userInfo = useUser().user.value.info
 
   try {
     const fUser = await getCurrentUser()
-
     if (!fUser) {
       useUser().setLoadDone()
     }
@@ -57,12 +56,27 @@ onBeforeMount(async () => {
 
 
 
-  //기존에 사용하던 쿠키가 있으면 삭제 -> 더 이상 사용하지 않음
+  //기존에 사용하던 쿠키가 있으면 삭제 -> 더 이상 사용하지 않음(기존 유저브라우저에 쿠키가 남았을 여부를 생각해서 남겨둠)
   if (cookie.value) {
     cookie.value = null
   }
 
-  const lang = navigator.language.split('-')[0]
+
+  const lang = isFlutter.value ? await flutterBridge().currentLanguage() : navigator.language.split('-')[0]
+  // //TODO: 언어 확인
+  // if (isFlutter.value) {
+
+  //   const [lang] = await flutterBridge().currentLanguage()
+
+  // } else {
+
+  //   const lang = navigator.language.split('-')[0]
+  //   useCommon().setLang(locale.value)
+  //   router.replace(route.fullPath)
+
+  // }
+
+  console.log('lang', lang)
 
   if (lang === 'ko') {
     locale.value = 'ko'
@@ -71,6 +85,7 @@ onBeforeMount(async () => {
     locale.value = 'en'
     switchLocalePath('en')
   }
+
   useCommon().setLang(locale.value)
   router.replace(route.fullPath)
 
@@ -90,6 +105,7 @@ onBeforeMount(async () => {
 
 body {
   margin: 0px !important;
+  letter-spacing: -1px;
 
   .content {
     min-height: calc(100vh - 200px) !important;

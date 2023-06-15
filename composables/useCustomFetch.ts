@@ -1,5 +1,4 @@
 import { FetchOptions } from "ohmyfetch"
-import dayjs from "dayjs";
 import shared from "~~/scripts/shared";
 import { getAuth, getIdToken } from "firebase/auth";
 import FlutterBridge from '~~/scripts/flutterBridge'
@@ -160,13 +159,11 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
       } else if (user && !isFlutter.value) {
         const expirationTime = user.stsTokenManager.expirationTime
         // const expirationTime = 1681264165
-        console.log('expirationTime', expirationTime <= Date.now(), new Date(expirationTime))
 
 
         if (expirationTime <= Date.now()) {
           token = await getIdToken(user, true)
         }
-        console.log('toekn2 ', token)
         options.headers['Authorization'] = `Bearer ${token}`
       }
 

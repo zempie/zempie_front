@@ -2,9 +2,10 @@
   <div>
     <NuxtLayout name="channel-header">
       <dl class="three-area">
-        <dt :key="channelInfo.id">
+        <dt :key="channelInfo.nickname">
           <ChannelInfoBox :key="channelInfo.channel_id" />
-          <ChannelGameBox :isLoading="isLoading" />
+          <ChannelGameBox :key="channelInfo.channel_id" :isLoading="isLoading" />
+
         </dt>
         <dd>
           <PostTimeline type="user" :isMine="isMine" :key="userId" />
@@ -40,7 +41,7 @@ definePageMeta({
 })
 
 onBeforeUnmount(() => {
-  useChannel().resetUserChannel()
+  // useChannel().resetUserChannel()
   console.log('unmount', useChannel().userChannel.value.info)
 })
 

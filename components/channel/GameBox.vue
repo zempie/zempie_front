@@ -1,41 +1,45 @@
 <template>
-  <div v-if="isLoading" class="ta-game-sk-list">
-    <dl>
-      <dt>{{ $t('games') }}</dt>
-    </dl>
-    <ul>
-      <li v-for="i in 4" class="pb20">
-        <p style="width:100%" class="grey-text  skeleton-animation"></p>
-        <h2 style="width:100%" class="grey-text mt10 skeleton-animation "></h2>
-      </li>
-    </ul>
-  </div>
-  <div v-else class="ta-game-list">
-    <dl>
-      <dt>{{ $t('games') }}</dt>
-    </dl>
-    <template v-if="games && games.length">
+  <template v-if="isLoading">
+    <!-- <div class="ta-game-sk-list">
+      <dl>
+        <dt>{{ $t('games') }}</dt>
+      </dl>
       <ul>
-        <li v-for="game in games?.slice(0, 5)" @click="$router.push($localePath(`/game/${game.pathname}`))">
-          <p :style="`background:url(${game.url_thumb_webp || '/images/default.png'
-            }) center; background-size:cover;`"></p>
-          <h2 style="text-overflow: ellipsis; overflow: hidden">
-            {{ game.title }}
-          </h2>
+        <li class="pb20">
+          <p style="width:100%" class="grey-text  skeleton-animation"></p>
+          <h2 style="width:100%" class="grey-text mt10 skeleton-animation "></h2>
         </li>
       </ul>
+    </div> -->
+  </template>
+  <ClientOnly v-else>
+    <div class="ta-game-list">
+      <dl>
+        <dt>{{ $t('games') }}</dt>
+      </dl>
+      <template v-if="games && games.length">
+        <ul>
+          <li v-for="game in games?.slice(0, 5)" @click="$router.push($localePath(`/game/${game.pathname}`))">
+            <p :style="`background:url(${game.url_thumb_webp || '/images/default.png'
+              }) center; background-size:cover;`"></p>
+            <h2 style="text-overflow: ellipsis; overflow: hidden">
+              {{ game.title }}
+            </h2>
+          </li>
+        </ul>
 
-      <div v-if="games?.length > 5">
-        <NuxtLink :to="$localePath(`/${userId}/games`)" class="btn-default-samll w100p">{{
-          $t('moreView')
-        }}
-        </NuxtLink>
-      </div>
-    </template>
-    <ul v-else class="no-game">
-      <li>{{ $t('no.game') }}</li>
-    </ul>
-  </div>
+        <div v-if="games?.length > 5">
+          <NuxtLink :to="$localePath(`/${userId}/games`)" class="btn-default-samll w100p">{{
+            $t('moreView')
+          }}
+          </NuxtLink>
+        </div>
+      </template>
+      <ul v-else class="no-game pb20">
+        <li>{{ $t('no.game') }}</li>
+      </ul>
+    </div>
+  </ClientOnly>
 </template>
 <script setup lang="ts">
 const { $localePath } = useNuxtApp()
@@ -88,17 +92,5 @@ defineProps({
     }
   }
 
-}
-
-.no-game {
-  padding-bottom: 20px;
-}
-
-.ta-game-list {
-  width: 100%;
-  border-radius: 10px;
-  background: #fff;
-  box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
 }
 </style>
