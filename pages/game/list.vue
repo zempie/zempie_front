@@ -132,6 +132,8 @@ onMounted(async () => {
 })
 
 const clickCategory = _.debounce((selected: string) => {
+  initData()
+
   switch (selected) {
     case 'all':
       activeTab.value = selected
@@ -145,11 +147,12 @@ const clickCategory = _.debounce((selected: string) => {
 
   observer.value.unobserve(triggerDiv.value)
   createObserver()
-  initData()
 }, 300)
 
 
 const clickType = _.debounce((selected: string) => {
+  initData()
+
   switch (selected) {
     case 'download':
       activeTab.value = TABS[2]
@@ -162,12 +165,13 @@ const clickType = _.debounce((selected: string) => {
   }
   observer.value.unobserve(triggerDiv.value)
   createObserver()
-  initData()
 }, 300)
 
 
 
 const clickPlatform = _.debounce((platform: string) => {
+  initData()
+
   switch (platform) {
     case 'app':
       activeTab.value = TABS[4]
@@ -177,7 +181,6 @@ const clickPlatform = _.debounce((platform: string) => {
   }
   observer.value.unobserve(triggerDiv.value)
   createObserver()
-  initData()
 }, 300)
 
 
@@ -254,6 +257,10 @@ function initData() {
   offset.value = 0
   isAddData.value = false
   games.value = []
+  selectedFilter.value = ''
+  currPlatform.value = null
+  currGameType.value = null
+
 }
 
 async function handleGameFilter() {
