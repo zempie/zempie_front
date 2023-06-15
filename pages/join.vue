@@ -233,7 +233,7 @@ async function register() {
 
   if (isFlutter.value) {
     const result = await flutterBridge().joinEmail({ email: form.email, password: form.password })
-    await setFirebaseToken()
+    console.log(result)
     await joinZempie();
 
   } else {
