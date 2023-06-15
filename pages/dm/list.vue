@@ -7,13 +7,13 @@
           <h2> {{ $t('dm') }}</h2>
         </div>
         <p>
-          <!-- <router-link to="#"><i class="uil uil-comment-alt"></i> <span>5</span><em>전부읽음</em></router-link> -->
-          <NuxtLink :to="$localePath(`/myaccount`)"><i class="uil uil-setting"></i> <em>{{ t('setting') }}</em></NuxtLink>
+          <a :class="['pointer new-msg-btn-icon', { 'inactive': roomPending }]" @click="showNewMsg"><i
+              class="uil uil-comment-alt-plus"></i> </a>
+          <NuxtLink :to="$localePath(`/myaccount`)"><i class="uil uil-setting"></i> </NuxtLink>
         </p>
       </div>
 
       <dl class="dl-content">
-
         <dd>
           <!-- TODO: 2차 스펙에서 진행함 -> -->
           <!-- <div>
@@ -40,101 +40,48 @@
             </li>
           </ul>
           <template v-else>
-            <ul v-if="msgList" class="msg-list">
+            <ul v-if="roomList" class="msg-list">
               <!-- <el-scrollbar tag="ul" wrap-class="msg-list" height="650px"> -->
-              <li v-for="msg in msgList" :key="msg.id" @click="onClickMsg(msg)">
+              <li v-for="room in roomList" :key="room.id" @click="onClickRoom(room)"
+                :class="{ active: room.id === selectedRoom?.id }">
                 <dl>
-                  <dd v-if="!msg.is_group_conversation" class="mr10">
-                    <UserAvatar :user="msg.other_users[0]" tag="p" />
+                  <dd v-if="!room.is_group_room" class="mr10">
+                    <UserAvatar :user="room.joined_users[0]" tag="p" />
                   </dd>
                   <dt>
-                    <h3>@{{ msg.other_users[0].nickname }}</h3>
-                    <p>{{ msg.last_message.text }}</p>
+                    <h3>{{ room.joined_users[0].nickname }}</h3>
+                    <p>{{ room?.last_message?.contents }}</p>
                   </dt>
                   <dd>
-                    <h4 class="font12"><i class="uis uis-clock" style="color:#c1c1c1;"></i>{{ dateFormat(msg.created_at)
-                    }}
-                    </h4>
-                    <span>1</span>
+                    <h4 class="font12"><i class="uis uis-clock" style="color:#c1c1c1;"></i>
+                      {{ dateFormat(room.created_at) }} </h4>
+                    <span v-if="room.unread_count > 0">{{ room.unread_count }}</span>
                   </dd>
                 </dl>
               </li>
             </ul>
             <ul v-else class="flex items-center content-center">
-              메세지가 없습니다.
+              메시지가 없습니다.
             </ul>
           </template>
         </dd>
         <dt>
-          <template v-if="selectedMsg">
-            <dl>
-              <dd>
-              </dd>
-              <dt>
-                <div>
-                  <h2>{{ selectedMsg.from_user?.name }}</h2>
-                  <p>@{{ selectedMsg.from_user?.nickname }}</p>
-                </div>
-                <!-- <p>Online</p> -->
-              </dt>
-              <dd><router-link to="#"><i class="uil uil-ellipsis-h font25"></i></router-link></dd>
-            </dl>
-
-            <div class="dlc-chat-content">
-              <div class="receiver-chat">
-                <h4>2:30 PM</h4>
-                <ul>
-                  <li><span>전송한 메세지 내용 표시. 전송한 메세지가 width 길이보다 길 경우</span></li>
-                </ul>
-              </div>
-              <div class="sender-chat">
-                <h4>2:30 PM</h4>
-                <ul>
-                  <li><span>안녕</span></li>
-                  <li><span>어떻게 지내고 있어? 나는 잘 지내고 있어. 날씨가 많이 춥지?😎</span></li>
-                </ul>
-              </div>
-              <dl>
-                <dd></dd>
-                <dt>2021년11월09일</dt>
-                <dd></dd>
-              </dl>
-              <div class="receiver-chat">
-                <h4>2:30 PM</h4>
-                <ul>
-                  <li><span>전송한 메세지 내용 표시. 전송한 메세지가 width 길이보다 길 경우</span></li>
-                </ul>
-              </div>
-              <div class="sender-chat">
-                <h4>2:30 PM</h4>
-                <ul>
-                  <li><span>안녕</span></li>
-                  <li><span>어떻게 지내고 있어? 나는 잘 지내고 있어. 날씨가 많이 춥지?😎</span></li>
-                  <li><span>어떻게 지내고 있어?</span></li>
-                  <li><span>밥 먹었어?</span></li>
-                </ul>
-              </div>
-            </div>
-            <div class="dlc-send-message">
-              <div>
-                <input v-model="inputMsg" type="text" name="" title="" placeholder="댓글달기" />
-                <router-link to="#"><i class="uil uil-scenery font25 mr5"></i></router-link>
-                <router-link to="#"><i class="uil uil-camera font28"></i></router-link>
-              </div>
-              <p><a to="#"><img src="/images/send_icon.png" alt="" title="" /></a></p>
-            </div>
+          <template v-if="selectedRoom">
+            <DmActiveRoom :selectedRoom="selectedRoom" @deleted-room="onDeletedRoom" :key="selectedRoom.id" />
           </template>
           <div v-else class="dlc-chat-emptied">
             <p><i class="uil uil-comment-alt-dots" style="font-size:40px; color:#fff;"></i></p>
-            <h2>아무 메세지도 선택하지 않으셨습니다.</h2>
-            <h3>메세지를 선택하거나, 새로운 메세지를 작성하세요.</h3>
-            <div><button @click="showNewMsg" class="btn-default" style="width:100%;">새 메세지</button></div>
+            <h2>아무 메시지도 선택하지 않으셨습니다.</h2>
+            <h3>메시지를 선택하거나, 새로운 메시지를 작성하세요.</h3>
+            <div><button @click="showNewMsg" :class="['btn-default new-msg-btn', { 'inactive': roomPending }]"
+                style="width:100%;">새 메시지</button></div>
           </div>
         </dt>
       </dl>
     </div>
     <ClientOnly>
-      <el-dialog v-model="openNewMsg" class="modal-area-type new-msg-modal" :show-close="false" width="380px">
+      <el-dialog v-model="openNewMsg" class="modal-area-type new-msg-modal" :show-close="false" width="380px"
+        @close="closeModal">
         <div class="modal-alert">
           <dl class="ma-header">
             <dt>{{ t('new.message') }}</dt>
@@ -152,7 +99,7 @@
                   placeholder="검색어를 입력하세요." />
               </div>
             </div>
-            <ul v-if="followPending" class="user-list">
+            <ul v-if="followPending" class="user-list" ref="userListRef">
               <li>
                 <dl class="row">
                   <dd class="mr10">
@@ -166,8 +113,7 @@
               </li>
             </ul>
             <ul v-else class="user-list">
-              <!-- <el-scrollbar tag="ul" wrap-class="msg-list" height="650px"> -->
-              <li v-if="userList?.length" v-for="user in userList" :key="user.id" class="pointer"
+              <li v-if="userList?.length" v-for="user in userList" :key="user.id" class="pointer mb10"
                 @click="onClickUser(user)">
                 <dl class="row">
                   <dd class="mr10">
@@ -183,9 +129,8 @@
                 검색된 계정이 없습니다.
               </li>
             </ul>
-
-
           </div>
+
         </div>
       </el-dialog>
     </ClientOnly>
@@ -197,7 +142,7 @@ import { ElScrollbar, ElDialog } from 'element-plus'
 import { dateFormat } from '~~/scripts/utils'
 import { IChat, IMessage, IUser } from '~~/types'
 import { debounce } from '~~/scripts/utils'
-import { offset } from 'dom7'
+import { useScroll } from '@vueuse/core'
 
 const MSG_LIMIT = 5
 
@@ -208,8 +153,9 @@ const userInfo = computed(() => useUser().user.value.info)
 
 const router = useRouter()
 const dmDropdown = ref()
-const msgList = ref<IChat[]>()
+const roomList = ref<IChat[]>()
 const selectedMsg = ref<IMessage>()
+const selectedRoom = ref<IChat>()
 const dmKeyword = ref('')
 
 const inputMsg = ref('')
@@ -220,36 +166,44 @@ const userList = ref<IUser[]>()
 
 const msgOffset = ref(0)
 const msgLimit = ref(15)
+const msgList = ref<IMessage[]>()
 
 const roomPending = ref(true)
 const followPending = ref(true)
+const msgRef = ref<HTMLElement | null>(null)
+const userListRef = ref<HTMLElement | null>(null)
+
+
+
+
+// 초기데이터 저장용
+const followingList = computed(() => userList.value)
+
 
 onMounted(async () => {
-  await fetch()
+  nextTick(async () => {
+    await fetch()
+  })
+
 })
+
 async function fetch() {
-  let isPending = true
 
   //TODO: limit 제한 걸어야됨 임시
   try {
-    const { data, error, pending } = await useCustomAsyncFetch<{ result: IChat[] }>(`/chat/rooms`, getComFetchOptions('get', true))
+    const { data, error, pending } = await useCustomAsyncFetch<{ rooms: IChat[] }>(`/chat/rooms`, getComFetchOptions('get', true))
 
     if (data.value) {
-      const { result } = data.value
-      msgList.value = result
-      console.log(pending)
-      isPending = pending.value
-    } else if (error.value) {
-      isPending = pending.value
+      const { rooms } = data.value
+      roomList.value = rooms
     }
   }
   finally {
-    roomPending.value = isPending
+    roomPending.value = false
   }
 }
-function onClickMsg(msg: IChat) {
-  // selectedMsg.value = msg
-}
+
+
 
 
 const onInputMsg = debounce(async () => {
@@ -314,12 +268,16 @@ async function getFollowings() {
 
 async function onClickUser(user: IUser) {
   openNewMsg.value = false
-
-
   await findRoom([user.id])
-
 }
 
+
+async function onClickRoom(msg: IChat) {
+  selectedRoom.value = msg
+  // await getMessages()
+
+
+}
 
 async function getMessages() {
 
@@ -328,22 +286,39 @@ async function getMessages() {
     limit: msgLimit.value
   }
 
-  const { data, error } = await useCustomAsyncFetch(`/chat/message`, getComFetchOptions('get', true, payload))
+  const { data, error } = await useCustomAsyncFetch<{ messages: IMessage[] }>(`/chat/room/${selectedRoom.value.id}`, getComFetchOptions('get', true, payload))
+
+  //TODO: 로딩 넣어야함
+
+  if (data.value) {
+    const { messages } = data.value
+    msgList.value = messages
+  }
 
 }
 
 async function sendMsg() {
   const payload = {
-    room_id: 0,
-    receiver_ids: [
-      37
-    ],
+    room_id: selectedRoom.value.id,
+    // receiver_ids: [
+    //   userInfo.value.id
+    // ],
     type: 0,
     contents: inputMsg.value
   }
 
-  const { data, error } = await useCustomAsyncFetch(`/chat`, getComFetchOptions('post', true, payload))
+  const { data, error } = await useCustomAsyncFetch<{ message: IMessage }>(`/chat/room`, getComFetchOptions('post', true, payload))
 
+  if (data.value) {
+    initInputMsg()
+    msgList.value = [...msgList.value, data.value.message]
+  }
+
+
+}
+
+function initInputMsg() {
+  inputMsg.value = ''
 }
 
 async function deleteChat() {
@@ -359,11 +334,43 @@ async function deleteMsg() {
 
 async function findRoom(user_ids: Number[]) {
 
-  const payload = {
-    user_ids
+
+  const { data, error } = await useCustomAsyncFetch<{ rooms: IChat[] }>(`/chat/rooms/search/user?user_ids=${user_ids}`, getComFetchOptions('get', true))
+
+  if (data.value) {
+    // TODO: 다이렉트 메시지만 1차 스펙에서는 가능 -> 추후 그룹 메시지로 변경 
+    const { rooms } = data.value
+    if (!rooms.length) {
+      await createRoom(user_ids)
+    }
   }
 
-  const { data, error } = await useCustomAsyncFetch(`/chat/find_rooms/user`, getComFetchOptions('get', true, payload))
+}
+
+
+async function createRoom(receiver_ids: Number[]) {
+  const payload = {
+    receiver_ids
+  }
+  const { data, error } = await useCustomAsyncFetch<{ rooms: IChat[] }>(`/chat/rooms`, getComFetchOptions('post', true, payload))
+
+  if (data.value) {
+    openNewMsg.value = false
+    selectedRoom.value = data.value.room
+  }
+
+}
+
+function closeModal() {
+  userList.value = followingList.value
+  userKeyword.value = ''
+}
+
+function onDeletedRoom(room: IChat) {
+  selectedRoom.value = null
+  roomList.value = roomList.value.filter((elem) => {
+    return elem.id !== room.id
+  })
 
 }
 
@@ -404,11 +411,22 @@ async function findRoom(user_ids: Number[]) {
   }
 
 
-  .dlc-send-message {
-    div {
-      justify-content: space-between;
-    }
+}
 
+.new-msg-btn-icon {
+  &.inactive {
+    opacity: 0.3;
+    pointer-events: none;
+    cursor: not-allowed
+  }
+}
+
+.new-msg-btn {
+  &.inactive {
+    background-color: #888;
+    opacity: 0.3;
+    pointer-events: none;
+    cursor: not-allowed
   }
 
 }

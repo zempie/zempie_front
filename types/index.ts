@@ -340,15 +340,15 @@ export interface IChat {
   is_read: boolean,
   last_message: IMessage,
   last_message_sent_at: string,
-  other_users: IUser[],
-  is_group_conversation: boolean,
+  joined_users: IUser[],
+  is_group_room: boolean,
 }
 
 export interface IMessage {
   id: number,
-  text: string,
+  contents: string,
   text_html: string,
-  from_user: IUser,
+  sender: IUser,
   conversation_id: number,
   created_at: string,
   media_attachments: [

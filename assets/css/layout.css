@@ -457,7 +457,7 @@
 
 @media all and (min-width: 1200px) {}
 
-/* 상단영역 - [드롭다운] 메세지 */
+/* 상단영역 - [드롭다운] 메시지 */
 .header-message-dropdown .v-dropdown-menu__container {
   min-width: 450px;
   margin: 30px 0 0 -450px;

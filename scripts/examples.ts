@@ -11,7 +11,7 @@ export const ex = {
             is_read: false,
             last_message: {
               id: 1,
-              text: '첫번째 메세지 ',
+              text: '첫번째 메시지 ',
               text_html: null,
               from_user: {
                 id: 37,
@@ -52,7 +52,7 @@ export const ex = {
             is_read: false,
             last_message: {
               id: 1,
-              text: '첫번째 메세지 html있는 메세지',
+              text: '첫번째 메시지 html있는 메시지',
               text_html: null,
               from_user: {
                 id: 37,
