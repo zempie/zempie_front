@@ -133,7 +133,6 @@ onMounted(async () => {
 
 const clickCategory = _.debounce((selected: string) => {
   initData()
-
   switch (selected) {
     case 'all':
       activeTab.value = selected
@@ -152,7 +151,6 @@ const clickCategory = _.debounce((selected: string) => {
 
 const clickType = _.debounce((selected: string) => {
   initData()
-
   switch (selected) {
     case 'download':
       activeTab.value = TABS[2]
@@ -171,7 +169,6 @@ const clickType = _.debounce((selected: string) => {
 
 const clickPlatform = _.debounce((platform: string) => {
   initData()
-
   switch (platform) {
     case 'app':
       activeTab.value = TABS[4]
@@ -259,6 +256,7 @@ function initData() {
   games.value = []
   currPlatform.value = null
   currGameType.value = null
+  category.value = AllGameCategory
 
 }
 
