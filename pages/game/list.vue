@@ -257,7 +257,6 @@ function initData() {
   offset.value = 0
   isAddData.value = false
   games.value = []
-  selectedFilter.value = ''
   currPlatform.value = null
   currGameType.value = null
 
@@ -265,6 +264,7 @@ function initData() {
 
 async function handleGameFilter() {
   initData()
+
   await fetch()
 
 }
