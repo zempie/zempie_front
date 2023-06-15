@@ -93,6 +93,7 @@ import { browserLocalPersistence, createUserWithEmailAndPassword, setPersistence
 import { onBeforeRouteLeave } from 'vue-router';
 import shared from '~~/scripts/shared';
 import { useGtag } from 'vue-gtag-next';
+import flutterBridge from '~~/scripts/flutterBridge'
 
 
 const { t, locale } = useI18n()
@@ -115,6 +116,8 @@ const nicknameValidator = helpers.regex(nicknameRegex)
 
 const fUser = computed(() => useUser().user.value.fUser)
 const isLogin = computed(() => useUser().user.value.isLogin)
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+
 
 
 
@@ -228,29 +231,37 @@ async function register() {
     if (!result) return;
   }
 
-  if (fUser.value) { await joinZempie(); return; }
-
-
-  try {
-
-    const result = await createUserWithEmailAndPassword($firebaseAuth, form.email, form.password)
-    const { user } = result;
-
+  if (isFlutter.value) {
+    const result = await flutterBridge().joinEmail({ email: form.email, password: form.password })
+    await setFirebaseToken()
     await joinZempie();
 
-  } catch (error: any) {
+  } else {
 
-    const { message } = error
-    if (message.includes('auth/email-already-in-use')) {
+    if (fUser.value) { await joinZempie(); return; }
 
-      ElMessage.error(`${t('fb.using.email')}`)
-    }
-    else if (message.includes('EMAIL_EXISTS')) {
-      ElMessage.error(`${t('fb.using.email')}`)
 
-    } else {
-      ElMessage.error(message)
+    try {
 
+      const result = await createUserWithEmailAndPassword($firebaseAuth, form.email, form.password)
+      const { user } = result;
+
+      await joinZempie();
+
+    } catch (error: any) {
+
+      const { message } = error
+      if (message.includes('auth/email-already-in-use')) {
+
+        ElMessage.error(`${t('fb.using.email')}`)
+      }
+      else if (message.includes('EMAIL_EXISTS')) {
+        ElMessage.error(`${t('fb.using.email')}`)
+
+      } else {
+        ElMessage.error(message)
+
+      }
     }
   }
 }

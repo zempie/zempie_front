@@ -67,6 +67,11 @@ export default function () {
     async getMessagingToken() {
       return await callHandler('getMessagingToken')
     },
+    async joinEmail(params: { email: string, password: string }) {
+      const response = await callHandler('joinEmail', params)
+      return JSON.parse(response)
+
+    },
 
     async initPurchase(products) {
       // const response = await webViewJavaScriptBridge.sendMessage({
