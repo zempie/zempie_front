@@ -93,6 +93,7 @@ import { browserLocalPersistence, createUserWithEmailAndPassword, setPersistence
 import { onBeforeRouteLeave } from 'vue-router';
 import shared from '~~/scripts/shared';
 import { useGtag } from 'vue-gtag-next';
+import flutterBridge from '~~/scripts/flutterBridge'
 
 
 const { t, locale } = useI18n()
@@ -115,6 +116,8 @@ const nicknameValidator = helpers.regex(nicknameRegex)
 
 const fUser = computed(() => useUser().user.value.fUser)
 const isLogin = computed(() => useUser().user.value.isLogin)
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+
 
 
 
@@ -215,8 +218,6 @@ const isSubmitActive = computed(() => {
 
 
 async function register() {
-
-
   if (!isSubmitActive.value) return
 
   const result = await v$.value.$validate()
@@ -228,21 +229,22 @@ async function register() {
     if (!result) return;
   }
 
-  if (fUser.value) { await joinZempie(); return; }
-
-
   try {
+    if (isFlutter.value) {
+      await flutterBridge().joinEmail({ email: form.email, password: form.password })
+      await joinZempie();
 
-    const result = await createUserWithEmailAndPassword($firebaseAuth, form.email, form.password)
-    const { user } = result;
+    } else {
 
-    await joinZempie();
+      if (fUser.value) { await joinZempie(); return; }
+      await createUserWithEmailAndPassword($firebaseAuth, form.email, form.password)
+      await joinZempie();
+    }
 
   } catch (error: any) {
 
     const { message } = error
     if (message.includes('auth/email-already-in-use')) {
-
       ElMessage.error(`${t('fb.using.email')}`)
     }
     else if (message.includes('EMAIL_EXISTS')) {
@@ -259,7 +261,7 @@ async function register() {
  * zempie db 등록
  */
 async function joinZempie() {
-  console.log(fUser.value)
+  console.log('join!')
   const payload = {
     name: form.username,
     nickname: form.nickname
@@ -280,7 +282,6 @@ async function joinZempie() {
         event_category: 'join',
         event_label: fUser.value.providerData[0].providerId,
       })
-      // useUser().unsetSignup()
     }
 
   } else if (error.value) {
