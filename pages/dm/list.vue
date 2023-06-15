@@ -352,11 +352,12 @@ async function createRoom(receiver_ids: Number[]) {
   const payload = {
     receiver_ids
   }
-  const { data, error } = await useCustomAsyncFetch<{ rooms: IChat[] }>(`/chat/rooms`, getComFetchOptions('post', true, payload))
+  const { data, error } = await useCustomAsyncFetch<IChat>(`/chat/rooms`, getComFetchOptions('post', true, payload))
 
   if (data.value) {
     openNewMsg.value = false
-    selectedRoom.value = data.value.room
+    selectedRoom.value = data.value
+    roomList.value = [data.value, ...roomList.value]
   }
 
 }

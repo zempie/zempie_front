@@ -75,7 +75,7 @@
 
     <div class="info-input">
       <div class="ii-title">
-        <h2>Notifications</h2>
+        <h2> {{ t('notification') }}</h2>
       </div>
       <div class="ii-form">
         <ol>

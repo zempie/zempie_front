@@ -147,7 +147,6 @@ async function getMessages() {
     limit: msgLimit.value
   }
 
-  useQuery
 
   const { data, error } = await useCustomAsyncFetch<{ messages: IMessage[] }>(`/chat/room/${props.selectedRoom.id}`, getComFetchOptions('get', true, payload))
 
