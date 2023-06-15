@@ -155,6 +155,7 @@ const clickType = _.debounce((selected: string) => {
     case 'download':
       activeTab.value = TABS[2]
       currGameType.value = eGameType.Download
+      currPlatform.value = [ePlatformType.Mac, ePlatformType.Window]
       break;
     case 'html':
       activeTab.value = TABS[3]
@@ -250,18 +251,22 @@ async function fetch() {
 }
 
 function initData() {
+  initPaging()
+  currPlatform.value = null
+  currGameType.value = null
+  category.value = AllGameCategory
+}
+
+function initPaging() {
   limit.value = LIMIT_SIZE
   offset.value = 0
   isAddData.value = false
   games.value = []
-  currPlatform.value = null
-  currGameType.value = null
-  category.value = AllGameCategory
-
 }
 
 async function handleGameFilter() {
-  initData()
+  initPaging()
+
 
   await fetch()
 
