@@ -84,11 +84,8 @@ const { data, pending, error } = await useCustomAsyncFetch<{ result: [] }>(
 
 onBeforeMount(() => {
   events.value = data.value.result
-    // .filter((event:IEvent)=>{
-    //   return new Date(event.end_date) > new Date()
-    // })
     .sort((a: IEvent, b: IEvent) => {
-      return new Date(a.start_date).getTime() - new Date(b.start_date).getTime()
+      return new Date(b.start_date).getTime() - new Date(a.start_date).getTime()
     })
 })
 

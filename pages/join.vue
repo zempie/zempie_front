@@ -232,14 +232,11 @@ async function register() {
   try {
     if (isFlutter.value) {
       await flutterBridge().joinEmail({ email: form.email, password: form.password })
-      await joinZempie();
-
     } else {
-
       if (fUser.value) { await joinZempie(); return; }
       await createUserWithEmailAndPassword($firebaseAuth, form.email, form.password)
-      await joinZempie();
     }
+    await joinZempie();
 
   } catch (error: any) {
 
