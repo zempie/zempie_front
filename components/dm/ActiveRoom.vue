@@ -175,7 +175,11 @@ async function sendMsg() {
 
   if (data.value) {
     initInputMsg()
-    msgList.value = [...msgList.value, data.value.message]
+    if (msgList.value?.length) {
+      msgList.value = [...msgList.value, data.value.message]
+    } else {
+      msgList.value = [data.value.message]
+    }
   }
 }
 

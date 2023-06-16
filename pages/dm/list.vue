@@ -174,6 +174,8 @@ const msgRef = ref<HTMLElement | null>(null)
 const userListRef = ref<HTMLElement | null>(null)
 
 
+const offset = ref(0)
+
 
 
 // 초기데이터 저장용
@@ -188,10 +190,14 @@ onMounted(async () => {
 })
 
 async function fetch() {
+  const payload = {
+    limit: MSG_LIMIT,
+    offset: offset.value
+  }
 
   //TODO: limit 제한 걸어야됨 임시
   try {
-    const { data, error, pending } = await useCustomAsyncFetch<{ rooms: IChat[] }>(`/chat/rooms`, getComFetchOptions('get', true))
+    const { data, error, pending } = await useCustomAsyncFetch<{ rooms: IChat[] }>(`/chat/rooms`, getComFetchOptions('get', true, payload))
 
     if (data.value) {
       const { rooms } = data.value
@@ -311,7 +317,11 @@ async function sendMsg() {
 
   if (data.value) {
     initInputMsg()
-    msgList.value = [...msgList.value, data.value.message]
+    if (msgList.value.length) {
+      msgList.value = [...msgList.value, data.value.message]
+    } else {
+      msgList.value = [data.value.message]
+    }
   }
 
 
@@ -357,7 +367,13 @@ async function createRoom(receiver_ids: Number[]) {
   if (data.value) {
     openNewMsg.value = false
     selectedRoom.value = data.value
-    roomList.value = [data.value, ...roomList.value]
+    if (roomList.value.length) {
+
+      roomList.value = [data.value, ...roomList.value]
+    } else {
+      roomList.value = [data.value]
+    }
+
   }
 
 }
