@@ -6,7 +6,6 @@
 
 <script setup lang="ts">
 import { IUserChannel } from '~~/types'
-
 const route = useRoute()
 
 const userInfo = ref<IUserChannel>()
@@ -28,7 +27,6 @@ onMounted(async () => {
 
 
 async function getChannelHeaderInfo() {
-  console.log('getChannelHeaderInfo')
   const channelId = useUser().user.value.info?.channel_id
 
   if (channelId) {

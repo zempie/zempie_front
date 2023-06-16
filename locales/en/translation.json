@@ -966,5 +966,13 @@
   "sales.number": "Telecommunication Service Registration Number",
   "sales.number.info": "Issue Number : 2023-서울서대문-0861",
   "games": "Games",
-  "add.game":"Add game"
+  "add.game": "Add game",
+  "all.game": "All Games",
+  "pc.game": "Pc",
+  "web.game": "Web",
+  "app.game": "App",
+  "gamejam": "GameJam",
+  "demo": "Demo",
+  "dev": "Dev",
+  "no.results.game": "Apologies, we couldn't find any games that meet your criteria."
 }

@@ -41,6 +41,14 @@
             <h2 style="color: #fff; font-size: 20px; font-weight: bold">
               {{ gameInfo.title }}<span></span>
             </h2>
+            <!-- <div class="like-btn column">
+              <i v-if="!isLike" class="xi-heart-o like-icon pointer" style="font-size: 22px; color: #ff6e17; "
+                @click="setLike">
+              </i>
+              <i v-else class="xi-heart like-icon pointer" style="font-size: 22px; color: #ff6e17; " @click="unsetLike">
+              </i>
+              <p style="color: #fff">{{ likeCnt }}</p>
+            </div> -->
             <h3 @click="moveUserPage" style="cursor: pointer">
               By <span class="underline">@{{ gameInfo.user?.nickname }}</span>
             </h3>
@@ -93,19 +101,7 @@
         </dl>
       </dt>
 
-      <!-- <dd class="play-btn-container">
-        <div class="like-btn" style="flex-direction: column">
-          <i v-if="!isLike" class="xi-heart-o like-icon" style="font-size: 22px; color: #ff6e17; cursor: pointer"
-            @click="setLike">
-          </i>
-          <i v-else class="xi-heart like-icon" style="font-size: 22px; color: #ff6e17; cursor: pointer"
-            @click="unsetLike">
-          </i>
-          <p style="color: #fff">{{ likeCnt }}</p>
-        </div>
 
-
-      </dd> -->
     </dl>
     <el-dialog v-model="showChangeBanner" class="modal-area-game-banner">
       <div class="modal-alert">
@@ -389,8 +385,8 @@ function downloadGame() {
 }
 
 .like-btn {
-  height: 65px;
-  display: inline-flex;
+  // height: 65px;
+  display: inline-block;
   justify-content: center;
   align-items: center;
 }
