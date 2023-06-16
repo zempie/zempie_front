@@ -138,7 +138,7 @@ onMounted(async () => {
 })
 
 const clickCategory = _.debounce((selected: string) => {
-  if (!isInitPending.value) return
+  if (isInitPending.value) return
   initData()
   switch (selected) {
     case 'all':
@@ -157,7 +157,7 @@ const clickCategory = _.debounce((selected: string) => {
 
 
 const clickType = _.debounce((selected: string) => {
-  if (!isInitPending.value) return
+  if (isInitPending.value) return
   initData()
   switch (selected) {
     case 'download':
@@ -177,7 +177,7 @@ const clickType = _.debounce((selected: string) => {
 
 
 const clickPlatform = _.debounce((platform: string) => {
-  if (!isInitPending.value) return
+  if (isInitPending.value) return
   initData()
   switch (platform) {
     case 'app':
@@ -277,8 +277,7 @@ function initPaging() {
 }
 
 async function handleGameFilter() {
-  // isFetchPending.value = true
-  if (!isInitPending.value) return
+  if (isInitPending.value) return
   initPaging()
   observer.value.unobserve(triggerDiv.value)
   createObserver()
