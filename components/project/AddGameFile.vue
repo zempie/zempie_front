@@ -328,7 +328,7 @@ async function upload() {
   if (selectedType.value.value === eGameType.Html) {
     formData.append('support_platform', '0')
   } else if (selectedType.value.value === eGameType.Download) {
-    formData.append('support_platform', selectedPlatform.value.toString())
+    formData.append('support_platform', selectedPlatform.value.sort().toString())
 
   }
 

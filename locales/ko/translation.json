@@ -969,5 +969,8 @@
   "pc.game": "PC 게임",
   "web.game": "웹 게임",
   "app.game": "앱 게임",
-  "gamejam": "게임잼"
+  "gamejam": "게임잼",
+  "demo": "데모",
+  "dev": "개발 노트",
+  "no.results.game": "해당 조건에 맞는 게임을 찾을 수 없습니다."
 }

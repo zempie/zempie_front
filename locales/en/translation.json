@@ -971,5 +971,8 @@
   "pc.game": "Pc",
   "web.game": "Web",
   "app.game": "App",
-  "gamejam": "GameJam"
+  "gamejam": "GameJam",
+  "demo": "Demo",
+  "dev": "Dev",
+  "no.results.game": "Apologies, we couldn't find any games that meet your criteria."
 }

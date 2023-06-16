@@ -28,8 +28,8 @@
             <dd>
               <h3>{{ event?.title }}</h3>
               <div>{{ event?.desc }}</div>
-              <small>{{ dayjs(event?.start_date).format('YYYY/MM/DD') }}~
-                {{ dayjs(event?.end_date).format('YYYY/MM/DD') }}</small>
+              <small>{{ dayjs(event?.start_date).format('YYYY/MM/DD') }} ~ {{ dayjs(event?.end_date).format('YYYY/MM/DD')
+              }}</small>
             </dd>
           </dl>
           <!-- <dl v-if="isNotOpen(event)" class="not-open-float">
@@ -101,9 +101,11 @@ function selectPurpose(purpose: number) {
     useProject().setStepTwo()
   }
 }
+
 function isPassed(event: IEvent) {
-  const end_date = dayjs(event.end_date)
-  return dayjs().isAfter(end_date)
+  const currentDate = new Date();
+  const endDate = new Date(event.end_date)
+  return currentDate > endDate
 }
 function isNotOpen(event: IEvent) {
   const start_date = dayjs(event.start_date)

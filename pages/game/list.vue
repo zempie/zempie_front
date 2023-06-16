@@ -51,8 +51,12 @@
     </dl>
     <ul class="card-game">
       <GameCardSk v-if="isPending" v-for="game in 16" :key="game" />
-      <TransitionGroup name="fade">
-        <GameCard v-for="(game, index) in games" :gameInfo="game" :key="game.id" />
+      <TransitionGroup v-else name="fade">
+        <div v-if="games.length === 0" class="flex row items-center content-center w100p"
+          style="text-align: center; min-height:400px">
+          {{ $t('no.results.game') }}
+        </div>
+        <GameCard v-else v-for="(game, index) in games" :gameInfo="game" :key="game.id" />
       </TransitionGroup>
     </ul>
     <div ref="triggerDiv"></div>
@@ -73,7 +77,6 @@ definePageMeta({
 })
 
 shared.createHeadMeta(t('seo.game.list.title'), t('seo.game.list.desc'))
-
 
 const LIMIT_SIZE = 20
 const el = ref<HTMLElement>(null)
@@ -128,7 +131,9 @@ const headerImgClass = ref()
 
 onMounted(async () => {
   createObserver()
-  await fetch()
+  nextTick(async () => {
+    await fetch()
+  })
 })
 
 const clickCategory = _.debounce((selected: string) => {
@@ -175,7 +180,6 @@ const clickPlatform = _.debounce((platform: string) => {
       activeTab.value = TABS[4]
       currPlatform.value = [ePlatformType.Android, ePlatformType.Ios]
       break;
-
   }
   observer.value.unobserve(triggerDiv.value)
   createObserver()
@@ -187,7 +191,7 @@ function createObserver() {
     (entries) => {
       handleIntersection(entries[0])
     },
-    { root: null, threshold: 1 }
+    { root: null, threshold: 1, rootMargin: '10px' }
   )
   observer.value.observe(triggerDiv.value)
 }
@@ -196,8 +200,10 @@ async function handleIntersection(target) {
   if (target.isIntersecting) {
     if (isAddData.value) {
       offset.value += limit.value
+      isPending.value = true
       await fetch()
     } else {
+      isPending.value = true
       await fetch()
     }
   }
@@ -205,12 +211,10 @@ async function handleIntersection(target) {
 
 async function fetch() {
 
-
   const payload = {
     limit: limit.value,
     offset: offset.value,
     category: category.value,
-    // support_platform: currGameType.value
   }
 
   if (selectedFilter.value) {
@@ -225,28 +229,30 @@ async function fetch() {
     payload['game_type'] = currGameType.value
   }
 
-  const { data, pending, refresh } = await useCustomAsyncFetch<{
-    result: { games: [] }
-  }>(createQueryUrl('/games', payload), getZempieFetchOptions('get', false)
-  )
+  try {
+    const { data, pending, refresh } = await useCustomAsyncFetch<{
+      result: { games: [] }
+    }>(createQueryUrl('/games', payload), getZempieFetchOptions('get', false)
+    )
 
+    if (data.value) {
+      const { games: gameList } = data.value.result
 
-  if (data.value) {
-    const { games: gameList } = data.value.result
-
-    if (isAddData.value) {
-      if (gameList.length > 0) {
-        games.value = [...games.value, ...gameList]
+      if (isAddData.value) {
+        if (gameList.length > 0) {
+          games.value = [...games.value, ...gameList]
+        } else {
+          isAddData.value = false
+          observer.value.unobserve(triggerDiv.value)
+        }
       } else {
-        isAddData.value = false
-        observer.value.unobserve(triggerDiv.value)
+        games.value = gameList
+        isAddData.value = true
       }
-    } else {
-      games.value = gameList
-      isAddData.value = true
     }
+  } finally {
+    isPending.value = false
   }
-  isPending.value = false
 
 }
 
@@ -255,6 +261,8 @@ function initData() {
   currPlatform.value = null
   currGameType.value = null
   category.value = AllGameCategory
+  selectedFilter.value = ''
+
 }
 
 function initPaging() {
@@ -265,10 +273,13 @@ function initPaging() {
 }
 
 async function handleGameFilter() {
+  isPending.value = true
   initPaging()
-
-
+  console.log('observer.value', observer.value)
+  observer.value.unobserve(triggerDiv.value)
+  createObserver()
   await fetch()
+
 
 }
 
