@@ -964,5 +964,13 @@
   "sales.number": "통신판매업 신고번호",
   "sales.number.info": "제 2023-서울서대문-0861호",
   "games": "게임",
-  "add.game":"게임 추가"
+  "add.game": "게임 추가",
+  "all.game": "모든 게임",
+  "pc.game": "PC 게임",
+  "web.game": "웹 게임",
+  "app.game": "앱 게임",
+  "gamejam": "게임잼",
+  "demo": "데모",
+  "dev": "개발 노트",
+  "no.results.game": "해당 조건에 맞는 게임을 찾을 수 없습니다."
 }

@@ -248,21 +248,20 @@ async function onFileChange(e: any) {
   const indexFiles = startFileOptions.value.filter((name) =>
     name.includes('index')
   )
-
   if (indexFiles.length) {
     indexFiles.sort((a, b) => a.length - b.length)
     startFile.value = indexFiles[0]
   } else {
-    startFile.value = startFileOptions[0]
+    startFile.value = startFileOptions.value[0]
   }
 
   if (startFileOptions.value.length) {
     // this.uploadGameFileError = '';
     fileName.value = e.target.files[0].name
   } else {
-    ElMessage.error(t('notFoundHtml'))
-
     fileName.value = ''
+    ElMessage.error(t('notFoundHtml'))
+    deleteFile()
   }
 
   isLoadingFile.value = false
@@ -298,6 +297,7 @@ function deleteFile() {
   fileName.value = ''
 }
 
+
 async function upload() {
 
   if (!selectedType.value.value) {
@@ -328,7 +328,7 @@ async function upload() {
   if (selectedType.value.value === eGameType.Html) {
     formData.append('support_platform', '0')
   } else if (selectedType.value.value === eGameType.Download) {
-    formData.append('support_platform', selectedPlatform.value.toString())
+    formData.append('support_platform', selectedPlatform.value.sort().toString())
 
   }
 
