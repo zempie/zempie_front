@@ -32,7 +32,6 @@
     <!--  TODO: 게임 갯수 표현: 게임 100개 이상일때 주석 제거
       <dt>Games <span>{{ games.length }}</span></dt> -->
     <dl class="area-title">
-      {{ games?.length }}
       <!-- <dt class="mr10">
         <ClientOnly>
           <el-select v-model="selectedSort" class="m-2" placeholder="All">
