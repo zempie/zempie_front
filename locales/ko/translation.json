@@ -219,6 +219,7 @@
   "login.err.text1": "존재하지 않는 회원 정보입니다. 회원가입을 진행해주세요.",
   "login.err.text2": "잘못된 정보입니다. 다시 한번 입력해주세요.",
   "notFoundHtml": "HTML 파일을 찾을 수 없습니다. 다시 한번 확인해주세요",
+  "notFoundIndexHtml": "index.HTML 파일을 찾을 수 없습니다. 다시 한번 확인해주세요",
   "gameUpload.done": "게임이 업로드되었습니다.",
   "update.done": "업데이트되었습니다.",
   "devLog.upload.done": "개발 로그가 업로드되었습니다.",
@@ -972,5 +973,6 @@
   "gamejam": "게임잼",
   "demo": "데모",
   "dev": "개발 노트",
-  "no.results.game": "해당 조건에 맞는 게임을 찾을 수 없습니다."
+  "no.results.game": "해당 조건에 맞는 게임을 찾을 수 없습니다.",
+  "release":"정식 출시"
 }
