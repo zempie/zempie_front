@@ -50,7 +50,7 @@
       </dt>
     </dl>
     <ul class="card-game">
-      <GameCardSk v-if="isPending" v-for="game in 16" :key="game" />
+      <GameCardSk v-if="isInitPending" v-for="game in 16" :key="game" />
       <TransitionGroup v-else name="fade">
         <div v-if="games.length === 0" class="flex row items-center content-center w100p"
           style="text-align: center; min-height:400px">
@@ -97,7 +97,7 @@ const observer = ref<IntersectionObserver>(null)
 const isAddData = ref(false)
 
 const games = ref<any[]>([])
-const isPending = ref(true)
+const isInitPending = ref(true)
 
 const sortOptions = [
   {
@@ -133,10 +133,12 @@ onMounted(async () => {
   createObserver()
   nextTick(async () => {
     await fetch()
+    isInitPending.value = false
   })
 })
 
 const clickCategory = _.debounce((selected: string) => {
+  if (!isInitPending.value) return
   initData()
   switch (selected) {
     case 'all':
@@ -155,6 +157,7 @@ const clickCategory = _.debounce((selected: string) => {
 
 
 const clickType = _.debounce((selected: string) => {
+  if (!isInitPending.value) return
   initData()
   switch (selected) {
     case 'download':
@@ -174,6 +177,7 @@ const clickType = _.debounce((selected: string) => {
 
 
 const clickPlatform = _.debounce((platform: string) => {
+  if (!isInitPending.value) return
   initData()
   switch (platform) {
     case 'app':
@@ -200,10 +204,8 @@ async function handleIntersection(target) {
   if (target.isIntersecting) {
     if (isAddData.value) {
       offset.value += limit.value
-      isPending.value = true
       await fetch()
     } else {
-      isPending.value = true
       await fetch()
     }
   }
@@ -251,7 +253,9 @@ async function fetch() {
       }
     }
   } finally {
-    isPending.value = false
+    // setTimeout(() => {
+    //   isFetchPending.value = false
+    // }, 300);
   }
 
 }
@@ -273,9 +277,9 @@ function initPaging() {
 }
 
 async function handleGameFilter() {
-  isPending.value = true
+  // isFetchPending.value = true
+  if (!isInitPending.value) return
   initPaging()
-  console.log('observer.value', observer.value)
   observer.value.unobserve(triggerDiv.value)
   createObserver()
   await fetch()
