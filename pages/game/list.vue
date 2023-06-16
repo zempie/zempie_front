@@ -32,6 +32,7 @@
     <!--  TODO: 게임 갯수 표현: 게임 100개 이상일때 주석 제거
       <dt>Games <span>{{ games.length }}</span></dt> -->
     <dl class="area-title">
+      {{ games?.length }}
       <!-- <dt class="mr10">
         <ClientOnly>
           <el-select v-model="selectedSort" class="m-2" placeholder="All">
@@ -118,11 +119,11 @@ const stageOptions = [
   },
   {
     value: 3,
-    label: '정식 출시',
+    label: t('release'),
   },
   {
     value: 2,
-    label: '데모',
+    label: t('demo'),
   },
 
 ]
@@ -159,6 +160,7 @@ const clickCategory = _.debounce((selected: string) => {
 const clickType = _.debounce((selected: string) => {
   if (isInitPending.value) return
   initData()
+
   switch (selected) {
     case 'download':
       activeTab.value = TABS[2]
@@ -238,6 +240,8 @@ async function fetch() {
     )
 
     if (data.value) {
+      console.log('isAddData', isAddData.value)
+
       const { games: gameList } = data.value.result
 
       if (isAddData.value) {
@@ -249,7 +253,8 @@ async function fetch() {
         }
       } else {
         games.value = gameList
-        isAddData.value = true
+        if (gameList.length === limit.value)
+          isAddData.value = true
       }
     }
   } finally {
