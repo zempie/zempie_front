@@ -43,7 +43,7 @@
             <ul v-if="roomList" class="msg-list">
               <!-- <el-scrollbar tag="ul" wrap-class="msg-list" height="650px"> -->
               <li v-for="room in roomList" :key="room.id" @click="onClickRoom(room)"
-                :class="{ active: room.id === selectedRoom?.id }">
+                :class="{ active: room?.id === selectedRoom?.id }">
                 <dl>
                   <dd v-if="!room.is_group_room" class="mr10">
                     <UserAvatar :user="room.joined_users[0]" tag="p" />
@@ -197,7 +197,7 @@ async function fetch() {
 
   //TODO: limit 제한 걸어야됨 임시
   try {
-    const { data, error, pending } = await useCustomAsyncFetch<{ rooms: IChat[] }>(`/chat/rooms`, getComFetchOptions('get', true, payload))
+    const { data, error, pending } = await useCustomAsyncFetch<{ rooms: IChat[] }>(createQueryUrl(`/chat/rooms`, payload), getComFetchOptions('get', true))
 
     if (data.value) {
       const { rooms } = data.value
@@ -278,9 +278,20 @@ async function onClickUser(user: IUser) {
 }
 
 
-async function onClickRoom(msg: IChat) {
-  selectedRoom.value = msg
+async function onClickRoom(clickedRoom: IChat) {
+  selectedRoom.value = clickedRoom
   // await getMessages()
+
+  roomList.value = roomList.value.map((room) => {
+    if (room.id === clickedRoom.id) {
+      return {
+        ...room,
+        unread_count: 0
+      }
+    } else {
+      return room
+    }
+  })
 
 
 }
@@ -352,6 +363,10 @@ async function findRoom(user_ids: Number[]) {
     const { rooms } = data.value
     if (!rooms.length) {
       await createRoom(user_ids)
+    } else {
+      //이미 방이 존재하는 경우
+      roomList.value = [rooms[0], ...roomList.value]
+      selectedRoom.value = rooms[0]
     }
   }
 

@@ -72,22 +72,27 @@
       </a>
       <a v-else @click="onSubmit" class="btn-default w250">{{ $t('save') }}</a>
     </div>
-
     <div class="info-input">
       <div class="ii-title">
         <h2> {{ t('notification') }}</h2>
       </div>
       <div class="ii-form">
         <ol>
-          <li>Alarm</li>
+          <li>{{ $t('alarm') }}</li>
           <li>{{ $t('userSetting.alarm.info') }} </li>
           <li>
             <el-switch v-model="isAlarmOn" size="large" active-color="#ff6e17" @click="setAlarmStatus" />
           </li>
         </ol>
+        <ol>
+          <li>{{ $t('dm') }}</li>
+          <li>{{ $t('userSetting.alarm.info') }}</li>
+          <li>
+            <el-switch v-model="isDmAlarmOn" size="large" active-color="#ff6e17" @click="setAlarmStatus" />
+          </li>
+        </ol>
       </div>
     </div>
-
 
     <div class="delete-account" v-if="signUpType === 'password'">
       <h2>{{ $t('userSetting.pwd.change') }}</h2>
@@ -161,6 +166,7 @@ const signUpType = computed(
 const userInfo = computed(() => useUser().user.value.info)
 
 const isAlarmOn = ref(useUser().user.value.info?.setting.alarm)
+const isDmAlarmOn = ref(useUser().user.value.info?.setting.dm_alarm)
 
 const currNickname = computed(() => userInfo.value?.nickname)
 const nickname = ref()

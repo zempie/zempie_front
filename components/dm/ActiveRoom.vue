@@ -118,7 +118,7 @@ const msgRef = ref()
 const inputMsg = ref('')
 const msgList = ref()
 
-const msgOffset = ref(0)
+const fromId = ref(0)
 const msgLimit = ref(15)
 
 const opLeaveChatModal = ref(false)
@@ -132,23 +132,32 @@ const userInfo = computed(() => useUser().user.value.info)
 const emit = defineEmits(['deletedRoom'])
 
 onMounted(async () => {
+  //FIXME : 마이너스로 넘어오는 경우가 있어서 우선은 이렇게 처리
+  if (props.selectedRoom.unread_count <= 0) {
+    fromId.value = props.selectedRoom.last_message.id - 15
+    1
+  }
   await getMessages()
 
-  // 읽을 메세지가 없는 경우 스크롤 맨 하단
-  if (!props.selectedRoom.unread_count)
-    scrollContent.value.scrollTop = scrollContent.value.scrollHeight
+  nextTick(() => {
+    if (props.selectedRoom.unread_count <= 0) {
+      // 읽을 메세지가 없는 경우 스크롤 맨 하단
+      scrollContent.value.scrollTop = scrollContent.value.scrollHeight
+    }
+  })
+
 })
 
 
 async function getMessages() {
 
   const payload = {
-    offset: msgOffset.value,
-    limit: msgLimit.value
+    // from_id: fromId.value,
+    // limit: msgLimit.value,
+    order: 'asc'
   }
 
-
-  const { data, error } = await useCustomAsyncFetch<{ messages: IMessage[] }>(`/chat/room/${props.selectedRoom.id}`, getComFetchOptions('get', true, payload))
+  const { data, error } = await useCustomAsyncFetch<{ messages: IMessage[] }>(createQueryUrl(`/chat/room/${props.selectedRoom.id}`, payload), getComFetchOptions('get', true))
 
   //TODO: 로딩 넣어야함
 

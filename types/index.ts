@@ -26,11 +26,15 @@ export interface IUser {
     like: boolean,
     reply: boolean,
     theme: number,
-    theme_extra: any
+    theme_extra: any,
+    dm_alarm: boolean
   },
   banner_img?: string,
   profile_img?: string,
-  new_noti_count?: number,
+  meta?: {
+    unread_noti_count?: number,
+    unread_dm_count?: number,
+  }
   nickname?: string
 }
 
@@ -342,6 +346,8 @@ export interface IChat {
   last_message_sent_at: string,
   joined_users: IUser[],
   is_group_room: boolean,
+  last_chat_id: number,
+  unread_start_id: number
 }
 
 export interface IMessage {
@@ -413,7 +419,8 @@ export enum eNotificationType {
   report,
   retweet,
   follow,
-  recomment
+  recomment,
+  dm
 }
 
 export enum eMetadataType {

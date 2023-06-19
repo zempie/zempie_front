@@ -69,7 +69,7 @@
             <NotificationHeaderButton />
             <button class="btn-circle-icon ml10" @click="$router.push($localePath('/dm/list'))">
               <i class="uil uil-comment-alt"></i>
-              <!-- <span></span> -->
+              <span class="new-dm-badge">99+</span>
             </button>
 
             <UserMenu />
@@ -424,6 +424,16 @@ async function moveZemWorld() {
       display: none;
     }
   }
+}
+
+.new-dm-badge {
+  font-size: 12px;
+  padding: 0px 5px;
+  color: white;
+  width: auto;
+  height: auto;
+  z-index: 99;
+  border-radius: 10px;
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
