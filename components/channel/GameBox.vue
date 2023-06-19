@@ -45,7 +45,13 @@
 const { $localePath } = useNuxtApp()
 const route = useRoute()
 
-const userId = computed(() => route.params.id as string)
+const userId = computed(() => {
+  if (route.params.id as string) {
+    return route.params.id
+  } else {
+    return useUser().user.value.info.nickname
+  }
+})
 const channelInfo = computed(() => useChannel().userChannel.value.info)
 const games = computed(() => channelInfo.value.games)
 

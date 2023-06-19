@@ -105,11 +105,6 @@ const {
   top: 0px;
 }
 
-.main-bg {
-  background: url('/images/main_bg01_fixed.png') center 70px no-repeat;
-  background-size: cover;
-  padding-bottom: 100px;
-}
 
 .main-visual {
   h3 {

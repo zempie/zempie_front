@@ -37,7 +37,6 @@
           <CommunityCard v-for="community in communities" :community="community" :key="community.id"
             :isSubModal="isSubModal" @is-sub-modal="(e) => isSubModal = e">
             <template v-slot:subBtn>
-              {{ isSubModal }}
               <CommunitySubscribeBtn :community="community" @refresh="fetch" @is-sub-modal="(e) => isSubModal = e" />
             </template>
           </CommunityCard>

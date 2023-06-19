@@ -974,5 +974,7 @@
   "gamejam": "GameJam",
   "demo": "Demo",
   "dev": "Dev",
-  "no.results.game": "Apologies, we couldn't find any games that meet your criteria."
+  "no.results.game": "Apologies, we couldn't find any games that meet your criteria.",
+  "release":"Released"
+
 }
