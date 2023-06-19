@@ -230,7 +230,9 @@ async function register() {
   }
 
   try {
-    if (isFlutter.value) {
+
+
+    if (isFlutter.value && !fUser.value) {
       await flutterBridge().joinEmail({ email: form.email, password: form.password })
     } else {
       if (fUser.value) { await joinZempie(); return; }
