@@ -42,6 +42,10 @@ $zempie-main-color-hover: #f974162a;
   justify-content: center;
 }
 
+.content-start {
+  justify-content: flex-start;
+}
+
 .row {
   display: flex;
   flex-direction: row;

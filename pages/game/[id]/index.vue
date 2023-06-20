@@ -2,6 +2,8 @@
   <NuxtLayout name="game-channel-header">
     <dl class="three-area">
       <dt>
+        <GameComments class="mb20" :game="game" />
+
         <div class="ta-game-list">
           <dl>
             <dt>{{ $t('game') }}</dt>
@@ -28,6 +30,7 @@
             <li>{{ $t('no.game') }}</li>
           </ul>
         </div>
+
       </dt>
       <dd>
         <PostTimeline type="game" :isMine="isMine" />

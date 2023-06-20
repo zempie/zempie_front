@@ -49,7 +49,7 @@
                     <UserAvatar :user="room.joined_users[0]" tag="p" />
                   </dd>
                   <dt>
-                    <h3>{{ room.joined_users[0].nickname }}</h3>
+                    <h3>{{ room.joined_users[0]?.nickname }}</h3>
                     <p>{{ room?.last_message?.contents }}</p>
                   </dt>
                   <dd>
@@ -66,9 +66,8 @@
           </template>
         </dd>
         <dt>
-          <template v-if="selectedRoom">
-            <DmActiveRoom :selectedRoom="selectedRoom" @deleted-room="onDeletedRoom" :key="selectedRoom.id" />
-          </template>
+          <DmActiveRoom v-if="selectedRoom" :selectedRoom="selectedRoom" @deleted-room="onDeletedRoom"
+            :key="selectedRoom.id" ref="activeRoomRef" />
           <div v-else class="dlc-chat-emptied">
             <p><i class="uil uil-comment-alt-dots" style="font-size:40px; color:#fff;"></i></p>
             <h2>아무 메시지도 선택하지 않으셨습니다.</h2>
@@ -156,6 +155,7 @@ const dmDropdown = ref()
 const roomList = ref<IChat[]>()
 const selectedMsg = ref<IMessage>()
 const selectedRoom = ref<IChat>()
+const activeRoomRef = ref()
 const dmKeyword = ref('')
 
 const inputMsg = ref('')
@@ -181,6 +181,40 @@ const offset = ref(0)
 // 초기데이터 저장용
 const followingList = computed(() => userList.value)
 
+
+
+watch(
+  () => useAlarm().alarm.value.newDm,
+  (val) => {
+    if (val) {
+      const meta = JSON.parse(val.data.meta)
+      if (meta) {
+        if (selectedRoom.value?.id === Number(meta.roomId)) {
+          console.log(selectedRoom.value)
+
+          const msg = {
+
+          }
+          // activeRoomRef.value.addMsg(val.data)
+        } else {
+          roomList.value = roomList.value.map((room) => {
+            if (room.id === Number(meta.roomId)) {
+              return {
+                ...room,
+                unread_count: room.unread_count += 1
+              }
+            } else {
+              return room
+            }
+          })
+        }
+      }
+
+      console.log(roomList.value)
+      //  hasNewNoti.value = true
+    }
+  }
+)
 
 onMounted(async () => {
   nextTick(async () => {

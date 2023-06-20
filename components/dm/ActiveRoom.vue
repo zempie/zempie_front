@@ -131,6 +131,10 @@ const userInfo = computed(() => useUser().user.value.info)
 
 const emit = defineEmits(['deletedRoom'])
 
+defineExpose({ addMsg })
+
+
+
 onMounted(async () => {
   //FIXME : 마이너스로 넘어오는 경우가 있어서 우선은 이렇게 처리
   if (props.selectedRoom.unread_count <= 0) {
@@ -190,6 +194,10 @@ async function sendMsg() {
       msgList.value = [data.value.message]
     }
   }
+}
+
+function addMsg(msg) {
+  msgList.value = [...msgList.value, msg]
 }
 
 function initInputMsg() {

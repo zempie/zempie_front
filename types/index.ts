@@ -321,7 +321,7 @@ export interface IComment {
   content: string,
   created_at: string,
   deleted_at: string,
-  dislike_cntt: number,
+  dislike_cnt: number,
   id: string,
   is_liked: boolean,
   is_pinned: boolean,
@@ -357,7 +357,7 @@ export interface IMessage {
   sender: IUser,
   conversation_id: number,
   created_at: string,
-  media_attachments: [
+  media_attachments?: [
     {
       id: number,
       type: string,
@@ -368,7 +368,7 @@ export interface IMessage {
       content_type: string
     }
   ],
-  card: {
+  card?: {
     id: number,
     url: string,
     title: string,
@@ -379,6 +379,19 @@ export interface IMessage {
   }
 
 }
+export interface IReply {
+  content: string,
+  count_bad: number,
+  count_good: number,
+  count_reply: number,
+  created_at: string,
+  id: number,
+  my_reply: number,
+  target: number,
+  updated_at: string
+  user: IUser
+}
+
 
 export enum eGameStage {
   NONE = -1,

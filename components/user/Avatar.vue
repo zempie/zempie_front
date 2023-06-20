@@ -2,9 +2,10 @@
   <!-- {{ user.picture }} -->
   <div v-if="tag === 'div'" :class="[hasRouter && 'pointer', user?.uid && 'user-avatar']" :style="profileStyle"
     @click.stop="moveUserPage"></div>
-  <span v-else-if="tag === 'span'" :class="hasRouter && 'pointer'" :style="profileStyle"
+  <span v-else-if="tag === 'span'" :class="[hasRouter && 'pointer', 'picture']" :style="profileStyle"
     @click.stop="moveUserPage"></span>
-  <p v-else-if="tag === 'p'" :class="hasRouter && 'pointer'" :style="profileStyle" @click.stop="moveUserPage"></p>
+  <p v-else-if="tag === 'p'" :class="[hasRouter && 'pointer', 'picture']" :style="profileStyle"
+    @click.stop="moveUserPage"></p>
 </template>
 
 <script setup lang="ts">

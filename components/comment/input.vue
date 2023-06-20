@@ -45,9 +45,6 @@ const isLogin = computed(() => useUser().user.value.isLogin)
 
 const emit = defineEmits(['addComment', 'editComment'])
 
-
-
-
 function commentCheck(cmt: IComment) {
   if (cmt) {
     if (cmt.parent_id) {
