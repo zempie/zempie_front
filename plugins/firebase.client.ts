@@ -59,7 +59,10 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
     onMessage(messaging, (payload) => {
       console.log('Message received. ', payload);
+
       useAlarm().setNewNoti(payload)
+      console.log(payload)
+      // if(payload.data)
     });
 
   }

@@ -61,7 +61,7 @@ export default {
     }
   },
   /**
-   * 해당 메세지(notification)으로 이동
+   * 해당 메시지(notification)으로 이동
    * @param noti notification 객체
    */
   moveNoti: function (noti: INotification) {
@@ -100,7 +100,7 @@ export default {
   /**
    *
    * @param type notification type(eNotificationType) 입력
-   * @returns 보여줄 알람메세지 text
+   * @returns 보여줄 알람메시지 text
    */
   notiText: function (type: number) {
 

@@ -1,260 +1,415 @@
 <template>
   <div class="content">
-    <!-- 비주얼영역 - 메뉴 -->
-    <div class="visual-menu mb30">
-      <h1>
-        Messaging
-      </h1>
 
-    </div>
-    <!-- 비주얼영역 - 메뉴 끝 -->
-
-
-    <!-- DM 리스트 -->
     <div class="dm-list">
       <div class="dl-title">
         <div>
-          <h2>Messaging</h2>
+          <h2> {{ $t('dm') }}</h2>
         </div>
         <p>
-          <router-link to="#"><i class="uil uil-comment-alt"></i> <span>5</span><em>전부읽음</em></router-link>
-          <router-link to="#"><i class="uil uil-setting"></i> <em>세팅</em></router-link>
+          <a :class="['pointer new-msg-btn-icon', { 'inactive': roomPending }]" @click="showNewMsg"><i
+              class="uil uil-comment-alt-plus"></i> </a>
+          <NuxtLink :to="$localePath(`/myaccount`)"><i class="uil uil-setting"></i> </NuxtLink>
         </p>
       </div>
 
       <dl class="dl-content">
         <dd>
-          <div>
-            <div class="input-search-default">
+          <!-- TODO: 2차 스펙에서 진행함 -> -->
+          <!-- <div>
+            <div class="input-search-default" @input="onInputMsg">
               <p><i class="uil uil-search"></i>
               </p>
-              <div><input type="text" name="" title="keywords" placeholder="검색어를 입력하세요." /></div>
+              <div><input v-model="dmKeyword" type="text" name="" title="keywords" placeholder="검색어를 입력하세요." /></div>
             </div>
-          </div>
-          <ul class="msg-list">
-            <!-- <el-scrollbar tag="ul" wrap-class="msg-list" height="650px"> -->
-            <li class="active">
+          </div> -->
+          <ul v-if="roomPending">
+            <li v-for="i in 7">
               <dl>
                 <dd>
-                  <UserAvatar tag="p" />
-
+                  <UserAvatarSk tag="p" />
                 </dd>
                 <dt>
-                  <h3>쿵쿵딱 게임세상</h3>
-                  <p>폼생폼사 창작게임 고수 모임에 가입해주셔서 감사합니다.</p>
+                  <h3 class="grey-text w50p skeleton-animation">
+                  </h3>
+                  <p class="grey-text  skeleton-animation"></p>
                 </dt>
                 <dd>
-                  <h4><i class="uis uis-clock" style="color:#c1c1c1;"></i> 10시간전</h4>
-                  <span>1</span>
                 </dd>
               </dl>
             </li>
-            <li v-for="i in 4">
-              <dl>
-                <dd>
-                  <p>TW</p>
-                </dd>
-                <dt>
-                  <h3>쿵쿵딱 게임세상</h3>
-                  <p>폼생폼사 창작게임 고수 모임에 가입해주셔서 감사합니다.</p>
-                </dt>
-                <dd>
-                  <h4><i class="uis uis-clock" style="color:#c1c1c1;"></i> 10시간전</h4>
-                  <span>12</span>
-                </dd>
-              </dl>
-            </li>
-            <li>
-              <dl>
-                <dd>
-                  <!-- <p
-                    :style="{ 'background': 'url(' + require('../../assets/images/card_profile_img07.png') + ') center no-repeat', 'background-size': 'cover' }">
-                  </p> -->
-                </dd>
-                <dt>
-                  <h3>쿵쿵딱 게임세상</h3>
-                  <p>폼생폼사 창작게임 고수 모임에 가입해주셔서 감사합니다.</p>
-                </dt>
-                <dd>
-                  <h4><i class="uis uis-clock" style="color:#c1c1c1;"></i> 10시간전</h4>
-                  <span>1</span>
-                </dd>
-              </dl>
-            </li>
-            <li>
-              <dl>
-                <dd>
-                  <!-- <p
-                    :style="{ 'background': 'url(' + require('../../assets/images/card_profile_img07.png') + ') center no-repeat', 'background-size': 'cover' }">
-                  </p> -->
-                </dd>
-                <dt>
-                  <h3>쿵쿵딱 게임세상</h3>
-                  <p>폼생폼사 창작게임 고수 모임에 가입해주셔서 감사합니다.</p>
-                </dt>
-                <dd>
-                  <h4><i class="uis uis-clock" style="color:#c1c1c1;"></i> 10시간전</h4>
-                </dd>
-              </dl>
-            </li>
-            <li>
-              <dl>
-                <dd>
-                  <!-- <p
-                    :style="{ 'background': 'url(' + require('../../assets/images/card_profile_img07.png') + ') center no-repeat', 'background-size': 'cover' }">
-                  </p> -->
-                </dd>
-                <dt>
-                  <h3>쿵쿵딱 게임세상</h3>
-                  <p>폼생폼사 창작게임 고수 모임에 가입해주셔서 감사합니다.</p>
-                </dt>
-                <dd>
-                  <h4><i class="uis uis-clock" style="color:#c1c1c1;"></i> 10시간전</h4>
-                </dd>
-              </dl>
-            </li>
-            <li>
-              <dl>
-                <dd>
-                  <!-- <p
-                    :style="{ 'background': 'url(' + require('../../assets/images/card_profile_img07.png') + ') center no-repeat', 'background-size': 'cover' }">
-                  </p> -->
-                </dd>
-                <dt>
-                  <h3>쿵쿵딱 게임세상</h3>
-                  <p>폼생폼사 창작게임 고수 모임에 가입해주셔서 감사합니다.</p>
-                </dt>
-                <dd>
-                  <h4><i class="uis uis-clock" style="color:#c1c1c1;"></i> 10시간전</h4>
-                </dd>
-              </dl>
-            </li>
-            <li>
-              <dl>
-                <dd>
-                  <!-- <p
-                    :style="{ 'background': 'url(' + require('../../assets/images/card_profile_img07.png') + ') center no-repeat', 'background-size': 'cover' }">
-                  </p> -->
-                </dd>
-                <dt>
-                  <h3>쿵쿵딱 게임세상</h3>
-                  <p>폼생폼사 창작게임 고수 모임에 가입해주셔서 감사합니다.</p>
-                </dt>
-                <dd>
-                  <h4><i class="uis uis-clock" style="color:#c1c1c1;"></i> 10시간전</h4>
-                </dd>
-              </dl>
-            </li>
-            <!-- </el-scrollbar> -->
           </ul>
+          <template v-else>
+            <ul v-if="roomList" class="msg-list">
+              <!-- <el-scrollbar tag="ul" wrap-class="msg-list" height="650px"> -->
+              <li v-for="room in roomList" :key="room.id" @click="onClickRoom(room)"
+                :class="{ active: room?.id === selectedRoom?.id }">
+                <dl>
+                  <dd v-if="!room.is_group_room" class="mr10">
+                    <UserAvatar :user="room.joined_users[0]" tag="p" />
+                  </dd>
+                  <dt>
+                    <h3>{{ room.joined_users[0].nickname }}</h3>
+                    <p>{{ room?.last_message?.contents }}</p>
+                  </dt>
+                  <dd>
+                    <h4 class="font12"><i class="uis uis-clock" style="color:#c1c1c1;"></i>
+                      {{ dateFormat(room.created_at) }} </h4>
+                    <span v-if="room.unread_count > 0">{{ room.unread_count }}</span>
+                  </dd>
+                </dl>
+              </li>
+            </ul>
+            <ul v-else class="flex items-center content-center">
+              메시지가 없습니다.
+            </ul>
+          </template>
         </dd>
-
         <dt>
-          <dl>
-            <dd>
-              <!-- <p
-                :style="{ 'background': 'url(' + require('../../assets/images/card_profile_img07.png') + ') center no-repeat', 'background-size': 'cover' }">
-              </p> -->
-            </dd>
-            <dt>
-              <div>
-                <h2>Followers</h2>
-                <p>@Zempieeeee</p>
-              </div>
-              <p>Online</p>
-            </dt>
-            <dd><router-link to="#"><i class="uil uil-ellipsis-h font25"></i></router-link></dd>
-          </dl>
-
-          <!-- 대화내용 있을 때 -->
-          <div class="dlc-chat-content">
-            <div class="receiver-chat">
-              <h4>2:30 PM</h4>
-              <ul>
-                <li><span>전송한 메세지 내용 표시. 전송한 메세지가 width 길이보다 길 경우</span></li>
-              </ul>
-            </div>
-            <div class="sender-chat">
-              <h4>2:30 PM</h4>
-              <ul>
-                <li><span>안녕</span></li>
-                <li><span>어떻게 지내고 있어? 나는 잘 지내고 있어. 날씨가 많이 춥지?😎</span></li>
-              </ul>
-            </div>
-            <dl>
-              <dd></dd>
-              <dt>2021년11월09일</dt>
-              <dd></dd>
-            </dl>
-            <div class="receiver-chat">
-              <h4>2:30 PM</h4>
-              <ul>
-                <li><span>전송한 메세지 내용 표시. 전송한 메세지가 width 길이보다 길 경우</span></li>
-              </ul>
-            </div>
-            <div class="sender-chat">
-              <h4>2:30 PM</h4>
-              <ul>
-                <li><span>안녕</span></li>
-                <li><span>어떻게 지내고 있어? 나는 잘 지내고 있어. 날씨가 많이 춥지?😎</span></li>
-                <li><span>어떻게 지내고 있어?</span></li>
-                <li><span>밥 먹었어?</span></li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- 대화내용 없을 때 -->
-          <!-- <div class="dlc-chat-emptied">
-        <p><i class="uil uil-comment-alt-dots" style="font-size:40px; color:#fff;"></i></p>
-        <h2>아무 메세지도 선택하지 않으셨습니다.</h2>
-        <h3>메세지를 선택하거나, 새로운 메세지를 작성하세요.</h3>
-        <div><router-link to="#"  class="btn-default" style="width:100%;">새 메세지</router-link></div>
-      </div> -->
-          <!-- 대화내용 없을 때 끝 -->
-
-          <div class="dlc-send-message">
-            <div>
-              <input type="text" name="" title="" placeholder="댓글달기" />
-              <router-link to="#"><i class="uil uil-scenery font25 mr5"></i></router-link>
-              <router-link to="#"><i class="uil uil-camera font28"></i></router-link>
-            </div>
-            <p><a to="#"><img src="/images/send_icon.png" alt="" title="" /></a></p>
+          <template v-if="selectedRoom">
+            <DmActiveRoom :selectedRoom="selectedRoom" @deleted-room="onDeletedRoom" :key="selectedRoom.id" />
+          </template>
+          <div v-else class="dlc-chat-emptied">
+            <p><i class="uil uil-comment-alt-dots" style="font-size:40px; color:#fff;"></i></p>
+            <h2>아무 메시지도 선택하지 않으셨습니다.</h2>
+            <h3>메시지를 선택하거나, 새로운 메시지를 작성하세요.</h3>
+            <div><button @click="showNewMsg" :class="['btn-default new-msg-btn', { 'inactive': roomPending }]"
+                style="width:100%;">새 메시지</button></div>
           </div>
         </dt>
       </dl>
     </div>
-    <!-- DM 리스트 끝 -->
+    <ClientOnly>
+      <el-dialog v-model="openNewMsg" class="modal-area-type new-msg-modal" :show-close="false" width="380px"
+        @close="closeModal">
+        <div class="modal-alert">
+          <dl class="ma-header">
+            <dt>{{ t('new.message') }}</dt>
+            <dd>
+              <button class="pointer" @click="openNewMsg = false">
+                <i class="uil uil-times"></i>
+              </button>
+            </dd>
+          </dl>
+          <div class="ma-content">
+            <div class="input-search-default mt0" @input="onInputUser">
+              <p><i class="uil uil-search"></i>
+              </p>
+              <div class="mt0"><input v-model="userKeyword" type="text" name="" title="keywords"
+                  placeholder="검색어를 입력하세요." />
+              </div>
+            </div>
+            <ul v-if="followPending" class="user-list" ref="userListRef">
+              <li>
+                <dl class="row">
+                  <dd class="mr10">
+                    <UserAvatarSk tag="p" style="width:45px; height: 45px;" />
+                  </dd>
+                  <dt class="w100p">
+                    <h3 class="grey-text w50p skeleton-animation"> </h3>
+                    <p class="grey-text mt10 skeleton-animation"></p>
+                  </dt>
+                </dl>
+              </li>
+            </ul>
+            <ul v-else class="user-list">
+              <li v-if="userList?.length" v-for="user in userList" :key="user.id" class="pointer mb10"
+                @click="onClickUser(user)">
+                <dl class="row">
+                  <dd class="mr10">
+                    <UserAvatar :user="user" tag="p" style="width:45px; height:45px; border-radius: 50%;" />
+                  </dd>
+                  <dt>
+                    <h3 class="font16">{{ user.name }}</h3>
+                    <p class="font13 nickname">@{{ user.nickname }}</p>
+                  </dt>
+                </dl>
+              </li>
+              <li v-else>
+                검색된 계정이 없습니다.
+              </li>
+            </ul>
+          </div>
 
+        </div>
+      </el-dialog>
+    </ClientOnly>
 
   </div>
 </template>
 <script setup lang="ts">
-import { ElScrollbar } from 'element-plus'
+import { ElScrollbar, ElDialog } from 'element-plus'
+import { dateFormat } from '~~/scripts/utils'
+import { IChat, IMessage, IUser } from '~~/types'
+import { debounce } from '~~/scripts/utils'
+import { useScroll } from '@vueuse/core'
+
+const MSG_LIMIT = 5
+
+const { $localePath } = useNuxtApp()
+const { t } = useI18n()
+
+const userInfo = computed(() => useUser().user.value.info)
+
+const router = useRouter()
+const dmDropdown = ref()
+const roomList = ref<IChat[]>()
+const selectedMsg = ref<IMessage>()
+const selectedRoom = ref<IChat>()
+const dmKeyword = ref('')
+
+const inputMsg = ref('')
+
+const openNewMsg = ref(false)
+const userKeyword = ref('')
+const userList = ref<IUser[]>()
+
+const msgOffset = ref(0)
+const msgLimit = ref(15)
+const msgList = ref<IMessage[]>()
+
+const roomPending = ref(true)
+const followPending = ref(true)
+const msgRef = ref<HTMLElement | null>(null)
+const userListRef = ref<HTMLElement | null>(null)
+
+
+const offset = ref(0)
 
 
 
-</script>
-<style scoped lang="scss">
-.visual-menu {
-  background: url('/images/dm_banner.jpeg') center no-repeat;
-  background-size: cover;
-  width: 1200px;
-  height: 150px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+// 초기데이터 저장용
+const followingList = computed(() => userList.value)
 
-  h1 {
-    font-weight: 600;
-    font-size: 30px;
-    line-height: 30px;
-    color: #fff;
 
+onMounted(async () => {
+  nextTick(async () => {
+    await fetch()
+  })
+
+})
+
+async function fetch() {
+  const payload = {
+    limit: MSG_LIMIT,
+    offset: offset.value
+  }
+
+  //TODO: limit 제한 걸어야됨 임시
+  try {
+    const { data, error, pending } = await useCustomAsyncFetch<{ rooms: IChat[] }>(createQueryUrl(`/chat/rooms`, payload), getComFetchOptions('get', true))
+
+    if (data.value) {
+      const { rooms } = data.value
+      roomList.value = rooms
+    }
+  }
+  finally {
+    roomPending.value = false
+  }
+}
+
+
+
+
+const onInputMsg = debounce(async () => {
+  await fetch()
+}, 300)
+
+const onInputUser = debounce(async () => {
+  await getUsers()
+}, 300)
+
+async function getUsers() {
+  let isPending = true
+
+  if (userKeyword.value) {
+    //TODO: 무한 스크롤 처리 해야됨 
+    try {
+      const { data, error, pending } = await useCustomAsyncFetch<{ totalCount: number, result: IUser[] }>(`/search?username=${userKeyword.value}`, getComFetchOptions('get', false))
+
+      if (data.value) {
+        const { result } = data.value
+        userList.value = result
+        isPending = pending.value
+      } else if (error.value) {
+        isPending = pending.value
+      }
+    } finally {
+      followPending.value = isPending
+
+    }
+  } else {
+    await getFollowings()
+  }
+}
+
+async function showNewMsg() {
+  if (!userInfo.value) return
+  openNewMsg.value = true
+  await getFollowings()
+}
+
+async function getFollowings() {
+  let isPending = true
+
+  try {
+    //TODO: 무한 스크롤 처리 해야됨 
+    const { data, error, pending } = await useCustomAsyncFetch<{ totalCount: number, result: IUser[] }>(`/user/${userInfo.value?.id}/list/following`, getComFetchOptions('get', false))
+
+    console.table(data.value)
+    if (data.value) {
+      const { result } = data.value
+      userList.value = result
+      isPending = pending.value
+    } else if (error.value) {
+      isPending = pending.value
+    }
+  } finally {
+    followPending.value = isPending
+
+  }
+}
+
+
+async function onClickUser(user: IUser) {
+  openNewMsg.value = false
+  await findRoom([user.id])
+}
+
+
+async function onClickRoom(clickedRoom: IChat) {
+  selectedRoom.value = clickedRoom
+  // await getMessages()
+
+  roomList.value = roomList.value.map((room) => {
+    if (room.id === clickedRoom.id) {
+      return {
+        ...room,
+        unread_count: 0
+      }
+    } else {
+      return room
+    }
+  })
+
+
+}
+
+async function getMessages() {
+
+  const payload = {
+    offset: msgOffset.value,
+    limit: msgLimit.value
+  }
+
+  const { data, error } = await useCustomAsyncFetch<{ messages: IMessage[] }>(`/chat/room/${selectedRoom.value.id}`, getComFetchOptions('get', true, payload))
+
+  //TODO: 로딩 넣어야함
+
+  if (data.value) {
+    const { messages } = data.value
+    msgList.value = messages
+  }
+
+}
+
+async function sendMsg() {
+  const payload = {
+    room_id: selectedRoom.value.id,
+    // receiver_ids: [
+    //   userInfo.value.id
+    // ],
+    type: 0,
+    contents: inputMsg.value
+  }
+
+  const { data, error } = await useCustomAsyncFetch<{ message: IMessage }>(`/chat/room`, getComFetchOptions('post', true, payload))
+
+  if (data.value) {
+    initInputMsg()
+    if (msgList.value.length) {
+      msgList.value = [...msgList.value, data.value.message]
+    } else {
+      msgList.value = [data.value.message]
+    }
   }
 
 
 }
 
+function initInputMsg() {
+  inputMsg.value = ''
+}
+
+async function deleteChat() {
+  const { data, error } = await useCustomAsyncFetch(`/chat/room_leave`, getComFetchOptions('delete', true)
+  )
+}
+
+
+async function deleteMsg() {
+  const { data, error } = await useCustomAsyncFetch(`/chat`, getComFetchOptions('delete', true)
+  )
+}
+
+async function findRoom(user_ids: Number[]) {
+
+
+  const { data, error } = await useCustomAsyncFetch<{ rooms: IChat[] }>(`/chat/rooms/search/user?user_ids=${user_ids}`, getComFetchOptions('get', true))
+
+  if (data.value) {
+    // TODO: 다이렉트 메시지만 1차 스펙에서는 가능 -> 추후 그룹 메시지로 변경 
+    const { rooms } = data.value
+    if (!rooms.length) {
+      await createRoom(user_ids)
+    } else {
+      //이미 방이 존재하는 경우
+      roomList.value = [rooms[0], ...roomList.value]
+      selectedRoom.value = rooms[0]
+    }
+  }
+
+}
+
+
+async function createRoom(receiver_ids: Number[]) {
+  const payload = {
+    receiver_ids
+  }
+  const { data, error } = await useCustomAsyncFetch<IChat>(`/chat/rooms`, getComFetchOptions('post', true, payload))
+
+  if (data.value) {
+    openNewMsg.value = false
+    selectedRoom.value = data.value
+    if (roomList.value.length) {
+
+      roomList.value = [data.value, ...roomList.value]
+    } else {
+      roomList.value = [data.value]
+    }
+
+  }
+
+}
+
+function closeModal() {
+  userList.value = followingList.value
+  userKeyword.value = ''
+}
+
+function onDeletedRoom(room: IChat) {
+  selectedRoom.value = null
+  roomList.value = roomList.value.filter((elem) => {
+    return elem.id !== room.id
+  })
+
+}
+
+
+
+</script>
+<style scoped lang="scss">
 .dl-content {
   display: flex;
   justify-content: space-between;
@@ -264,100 +419,80 @@ import { ElScrollbar } from 'element-plus'
   border-radius: 10px;
   overflow: hidden;
 
-  :deep(.msg-list) {
-
+  dd {
 
     ul {
-      height: 650px;
-      // padding: 10px 25px;
-
       li {
-        margin: 10px 0px;
-        padding: 20px 13px 20px 20px;
-        background-color: #fff;
-        border: 1px solid #f1f1f1;
-        border-radius: 10px;
-        transition: all 0.4s ease-in-out;
-        cursor: pointer;
+        padding: 13px;
 
         &:hover {
-          background-color: #f1f1f1;
-        }
-
-        &.active {
-          background-color: #f1f1f1;
-
+          background-color: #F9f9f9;
         }
 
         dl {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          width: 100%;
-
           dd {
-            text-align: right;
-
-            p {
-              width: 50px;
-              height: 50px;
-              border-radius: 50%;
-              text-align: center;
-              font-weight: 500;
-              font-size: 16px;
-              line-height: 50px;
-              color: #ff6e17;
-              background: rgba(249, 115, 22, 0.15);
-              border: 2px solid #fff;
-              box-shadow: 0px 4px 9px rgba(0, 0, 0, 0.06);
-            }
-
-
-            h4 {
-              margin-bottom: 5px;
-              font-size: 16px;
-            }
-
-            span {
-              padding: 3px 8.5px;
-              color: #fff;
-              border-radius: 30px;
-              background-color: #ff6e17;
-            }
+            width: 15%;
           }
 
           dt {
-            width: 60%;
-
-            h3 {
-              width: 100%;
-              font-weight: 500;
-              font-size: 16px;
-              line-height: 16px;
-              color: #333;
-              white-space: nowrap;
-              text-overflow: ellipsis;
-              overflow: hidden;
-            }
-
-            p {
-              width: 100%;
-              margin-top: 5px;
-              white-space: nowrap;
-              text-overflow: ellipsis;
-              overflow: hidden;
-            }
+            width: 70%
           }
         }
       }
     }
   }
 
-  .dlc-send-message {
-    div {
-      justify-content: space-between;
+
+}
+
+.new-msg-btn-icon {
+  &.inactive {
+    opacity: 0.3;
+    pointer-events: none;
+    cursor: not-allowed
+  }
+}
+
+.new-msg-btn {
+  &.inactive {
+    background-color: #888;
+    opacity: 0.3;
+    pointer-events: none;
+    cursor: not-allowed
+  }
+
+}
+
+.new-msg-modal {
+  .ma-content {
+    .input-search-default {
+      justify-content: left
     }
 
+    .user-list {
+      margin-top: 20px;
+
+      li {
+        padding: 13px;
+        border: 1px solid #ededed;
+        border-radius: 10px;
+
+        dt {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+
+          h3 {
+            font-weight: 600;
+          }
+
+          .nickname {
+            color: #888
+          }
+        }
+      }
+    }
   }
+
 }
 </style>

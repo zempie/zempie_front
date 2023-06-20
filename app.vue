@@ -2,7 +2,6 @@
   <NuxtLayout>
     <noscript v-html="tmIframeCode"></noscript>
     <NuxtPage />
-
   </NuxtLayout>
 </template>
 <script setup lang="ts">
@@ -105,6 +104,7 @@ onBeforeMount(async () => {
 
 body {
   margin: 0px !important;
+  //전체 페이지 자간 조정
   letter-spacing: -1px;
 
   .content {
