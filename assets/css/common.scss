@@ -1096,7 +1096,7 @@ $zempie-main-color-hover: #f974162a;
       overflow-y: auto;
       padding: 0px;
 
-      ::v-deep(li) {
+      li {
         display: flex;
         flex-direction: column;
 
