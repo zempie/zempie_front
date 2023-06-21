@@ -146,12 +146,15 @@ onMounted(async () => {
   nextTick(() => {
     if (props.selectedRoom.unread_count <= 0) {
       // 읽을 메세지가 없는 경우 스크롤 맨 하단
-      scrollContent.value.scrollTop = scrollContent.value.scrollHeight
+      scrollToBottom()
     }
   })
 
 })
 
+function scrollToBottom() {
+  scrollContent.value.scrollTop = scrollContent.value.scrollHeight
+}
 
 async function getMessages() {
 
@@ -198,6 +201,10 @@ async function sendMsg() {
 
 function addMsg(msg) {
   msgList.value = [...msgList.value, msg]
+
+  nextTick(() => {
+    scrollToBottom()
+  })
 }
 
 function initInputMsg() {

@@ -389,7 +389,8 @@ export interface IReply {
   my_reply: number,
   target: number,
   updated_at: string
-  user: IUser
+  user: IUser,
+  game_id?: number
 }
 
 

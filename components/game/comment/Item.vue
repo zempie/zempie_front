@@ -30,10 +30,12 @@
 
     </div>
     <ul class="recomment" v-if="isRecommentOpen">
-      <GameCommentItem v-for="cmt in recommentList" :comment="cmt" @delete-comment="deleteRecomment" />
+      <GameCommentItem v-for="cmt in recommentList" :comment="cmt" @delete-comment="deleteRecomment"
+        :game-id="cmt.game_id" />
     </ul>
     <ul class="recomment" v-if="newReCmtList.length">
-      <GameCommentItem v-for="cmt in newReCmtList" :comment="cmt" @delete-comment="deleteRecomment" />
+      <GameCommentItem v-for="cmt in newReCmtList" :comment="cmt" @delete-comment="deleteRecomment"
+        :game-id="cmt.game_id" />
     </ul>
     <CommonInput v-if="showRecomment" ref="inputRef" placeholder="Message" @send-input="sendRecomment"
       class="mt10 justify-between pr10" />
@@ -82,6 +84,8 @@ async function sendRecomment(text: string) {
     target_uid: props.comment.user.uid,
     content: text
   }
+
+  console.log(payload)
 
   const { data } = await useCustomAsyncFetch<{ result: IReply }>('/game/reply', getZempieFetchOptions('post', true, payload))
   if (data.value) {

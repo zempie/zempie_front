@@ -189,19 +189,17 @@ watch(
     if (val) {
       const meta = JSON.parse(val.data.meta)
       if (meta) {
-        if (selectedRoom.value?.id === Number(meta.roomId)) {
-          console.log(selectedRoom.value)
-
-          const msg = {
-
-          }
-          // activeRoomRef.value.addMsg(val.data)
+        if (selectedRoom.value?.id === Number(meta.room_id)) {
+          activeRoomRef.value.addMsg(meta)
         } else {
           roomList.value = roomList.value.map((room) => {
-            if (room.id === Number(meta.roomId)) {
+            if (room.id === Number(meta.room_id)) {
               return {
                 ...room,
-                unread_count: room.unread_count += 1
+                unread_count: room.unread_count += 1,
+                last_message: {
+                  contents: meta.contents
+                }
               }
             } else {
               return room
