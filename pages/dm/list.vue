@@ -239,7 +239,7 @@ onMounted(async () => {
   nextTick(async () => {
     await fetch()
     if (!userInfo.value.setting.dm_alarm) {
-      await pollingMsg()
+      await pollingChat()
     }
   })
 })
@@ -373,7 +373,7 @@ async function onClickRoom(clickedRoom: IChat) {
 async function findRoom(user_ids: Number[]) {
 
 
-  const { data, error } = await useCustomAsyncFetch<{ rooms: IChat[] }>(`/chat/rooms/search/user?user_ids=${user_ids}`, getComFetchOptions('get', true))
+  const { data, error } = await useCustomAsyncFetch<{ rooms: IChat[] }>(`/chat/rooms/search/user?user_ids=${user_ids}&perfact=true`, getComFetchOptions('get', true))
 
   if (data.value) {
     // TODO: 다이렉트 메시지만 1차 스펙에서는 가능 -> 추후 그룹 메시지로 변경 
@@ -434,8 +434,9 @@ function onDeletedRoom(room: IChat) {
 
 
 //유저가 fcm 알람 막아둔 경우 polling 해야됨
-async function pollingMsg() {
+async function pollingChat() {
   roomPolling.value = setInterval(async () => {
+    fromId.value = roomList.value[roomList.value.length - 1].id + 1
     await fetch()
   }, 5000)
 }

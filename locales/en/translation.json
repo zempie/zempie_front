@@ -873,7 +873,7 @@
   "mark.all": "Read all",
   "no.alarm": "No Notifications Yet",
   "view.all": "View all",
-  "new.msg": "You have new message",
+  "new.msg": "new message",
   "need.refresh": "Please refresh the page",
   "setting": "Settings",
   "userSetting.alarm.info": "Click the toggle on the right to disable notifications. You can activate it at any time.",
@@ -994,5 +994,6 @@
   "new.msg.info": "Select a message, or write a new one.",
   "enter.keyword": "Enter a keyword to find what you want.",
   "not.found.user": "There is no result with a keyword above.",
-  "notFoundIndexHtml": "index.HTML file is unavailble to find. Please check out one more time."
+  "notFoundIndexHtml": "index.HTML file is unavailble to find. Please check out one more time.",
+  "send.msg": "__STRING_NOT_TRANSLATED__"
 }
