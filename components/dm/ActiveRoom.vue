@@ -138,8 +138,7 @@ defineExpose({ addMsg })
 onMounted(async () => {
   //FIXME : 마이너스로 넘어오는 경우가 있어서 우선은 이렇게 처리
   if (props.selectedRoom.unread_count <= 0) {
-    fromId.value = props.selectedRoom.last_message.id - 15
-    1
+    fromId.value = props.selectedRoom.last_message?.id - 15
   }
   await getMessages()
 
