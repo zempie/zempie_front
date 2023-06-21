@@ -1,5 +1,5 @@
 <template>
-  <dl>
+  <dl class="active-room-container">
     <dd>
       <UserAvatar :user="selectedRoom?.joined_users[0]" tag="p" />
     </dd>
@@ -16,7 +16,7 @@
           <button class="room-btn pointer"> <i class="uil uil-ellipsis-h font25"></i></button>
           <template #dropdown>
             <div class="more-list fixed" style="min-width: 150px">
-              <a @click="opLeaveChatModal = true" id="editFeed" class="pointer">채팅 삭제</a>
+              <a @click="opLeaveChatModal = true" id="editFeed" class="pointer">{{ t('remove.chat') }}</a>
             </div>
           </template>
         </el-dropdown>
@@ -40,19 +40,20 @@
   <div class="dlc-send-message">
     <div>
       <!-- TODO: 태그 보낼 수 있어야함  -->
-      <input v-model="inputMsg" type="text" class="w100p" name="" title="" placeholder="메시지 보내기" @keyup.enter="sendMsg" />
+      <input v-model="inputMsg" type="text" class="w100p" name="" title="" :placeholder="$t('send.msg')"
+        @keyup.enter="sendMsg" />
       <!-- TODO: 2차 스펙 -->
       <!-- <router-link to="#"><i class="uil uil-scenery font25 mr5"></i></router-link>
                 <router-link to="#"><i class="uil uil-camera font28"></i></router-link> -->
     </div>
-    <p><button><img src="/images/send_icon.png" alt="" title="" /></button></p>
+    <p><button @click="sendMsg"><img src="/images/send_icon.png" alt="" title="" /></button></p>
   </div>
 
   <ClientOnly>
     <el-dialog v-model="opLeaveChatModal" class="modal-area-type" width="380px">
       <div class="modal-alert">
         <dl class="ma-header">
-          <dt>대화 나가기</dt>
+          <dt>{{ t('leave.chat') }}</dt>
           <dd>
             <button @click="opLeaveChatModal = false">
               <i class="uil uil-times"></i>
@@ -61,7 +62,7 @@
         </dl>
         <div class="ma-content">
           <h2>
-            나가기를 하면 대화 내용이 모두 삭제되고 목록에서도 삭제됩니다.
+            {{ t('leave.chat.alert') }}
           </h2>
           <div>
             <button class="btn-gray w48p" @click="leaveChat">
@@ -78,7 +79,7 @@
     <el-dialog v-model="opDeleteMsgModal" class="modal-area-type" width="380px">
       <div class="modal-alert">
         <dl class="ma-header">
-          <dt>메시지 나가기</dt>
+          <dt> {{ t('leave.msg') }} </dt>
           <dd>
             <button class="pointer" @click="opDeleteMsgModal = false">
               <i class="uil uil-times"></i>
@@ -87,7 +88,7 @@
         </dl>
         <div class="ma-content">
           <h2>
-            이 작업은 해당 메시지를 모든 사람에게서 삭제됩니다.
+            {{ t('leave.msg.alert') }}
           </h2>
           <div>
             <button class="btn-gray w48p" @click="onDeleteMsg">
@@ -103,6 +104,7 @@
   </ClientOnly>
 </template>
 <script setup lang="ts">
+import _ from 'lodash'
 import { dateFormat } from '~~/scripts/utils'
 import { IChat, IMessage, IUser } from '~~/types'
 import { ElDropdown, ElDialog, ElMessage } from 'element-plus';
@@ -130,6 +132,10 @@ const scrollContent = ref()
 const userInfo = computed(() => useUser().user.value.info)
 const msgPolling = ref(null)
 
+
+//중복호출 방지
+const isSending = ref(false)
+
 const emit = defineEmits(['deletedRoom'])
 
 defineExpose({ addMsg })
@@ -141,10 +147,12 @@ onMounted(async () => {
   if (props.selectedRoom.unread_count <= 0) {
     fromId.value = props.selectedRoom.last_message?.id - 15
   }
+  await getMessages()
+
   if (!userInfo.value.setting.dm_alarm) {
     msgPolling.value = setInterval(async () => {
-      await getMessages()
-      scrollToBottom()
+      const newMsg = await getMessages()
+      console.log(newMsg, msgList.value)
     }, 3000)
   }
 
@@ -163,7 +171,7 @@ onBeforeUnmount(() => {
 })
 
 function scrollToBottom() {
-  scrollContent.value.scrollTop = scrollContent.value.scrollHeight
+  scrollContent.value.scrollTop = scrollContent.value?.scrollHeight
 }
 
 async function getMessages() {
@@ -181,6 +189,7 @@ async function getMessages() {
   if (data.value) {
     const { messages } = data.value
     msgList.value = messages
+    return messages
   }
 
 }
@@ -188,13 +197,19 @@ async function getMessages() {
 
 async function sendMsg() {
   if (!inputMsg.value) return
+  if (isSending.value) return
+  isSending.value = true
+
+  const content = _.cloneDeep(inputMsg.value)
+  inputMsg.value = ''
+
   const payload = {
     room_id: props.selectedRoom.id,
     // receiver_ids: [
     //   userInfo.value.id
     // ],
     type: 0,
-    contents: inputMsg.value
+    contents: content
   }
 
   const { data, error } = await useCustomAsyncFetch<{ message: IMessage }>(`/chat/room`, getComFetchOptions('post', true, payload))
@@ -206,7 +221,11 @@ async function sendMsg() {
     } else {
       msgList.value = [data.value.message]
     }
+  } else if (error.value) {
+    inputMsg.value = content
   }
+
+  isSending.value = false
 }
 
 function addMsg(msg) {
@@ -266,50 +285,3 @@ async function onDeleteMsg() {
 }
 
 </script>
-<style scoped lang="scss">
-.room-btn {
-  background: none;
-  border: none;
-}
-
-.dlc-chat-content {
-  li {
-    &:hover {
-      ::v-deep(.msg-menu-btn) {
-        display: block;
-        cursor: pointer;
-
-      }
-    }
-
-    ::v-deep(.msg-menu-btn) {
-      display: none;
-      background: none;
-      border: none;
-    }
-
-  }
-}
-
-
-.dlc-send-message {
-  div {
-    justify-content: space-between;
-  }
-
-  button {
-    display: inline-block;
-    width: 50px;
-    height: 50px;
-    text-align: center;
-    border-radius: 8px;
-    background: #f4f0eb;
-    border: none;
-    cursor: pointer;
-
-    &:hover {
-      background: #f1f1f1;
-    }
-  }
-}
-</style>

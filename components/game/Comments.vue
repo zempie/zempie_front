@@ -12,7 +12,7 @@
         :has-options="false" @delete-comment="deleteComment" />
 
       <li v-else-if="!isPending && comments.length === 0" class="no-list">
-        작성된 코멘트가 없습니다.
+        {{ $t('no.comment.list') }}
       </li>
       <li v-else="isPending" v-for="i in 5">
         <div class="user-info row items-center w100p" style="min-height: 50px;">

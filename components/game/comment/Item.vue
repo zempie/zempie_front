@@ -92,8 +92,6 @@ async function sendRecomment(text: string) {
     content: text
   }
 
-  console.log(payload)
-
   const { data } = await useCustomAsyncFetch<{ result: IReply }>('/game/reply', getZempieFetchOptions('post', true, payload))
   if (data.value) {
     const { result } = data.value

@@ -40,7 +40,7 @@
             </li>
           </ul>
           <template v-else>
-            <ul v-if="roomList" class="msg-list">
+            <ul v-if="roomList" class="msg-list" ref="msgEl">
               <!-- <el-scrollbar tag="ul" wrap-class="msg-list" height="650px"> -->
               <li v-for="room in roomList" :key="room.id" @click="onClickRoom(room)"
                 :class="{ active: room?.id === selectedRoom?.id }">
@@ -61,7 +61,7 @@
               </li>
             </ul>
             <ul v-else class="flex items-center content-center">
-              메시지가 없습니다.
+              {{ $t('no.msg') }}
             </ul>
           </template>
         </dd>
@@ -70,10 +70,10 @@
             :key="selectedRoom.id" ref="activeRoomRef" />
           <div v-else class="dlc-chat-emptied">
             <p><i class="uil uil-comment-alt-dots" style="font-size:40px; color:#fff;"></i></p>
-            <h2>아무 메시지도 선택하지 않으셨습니다.</h2>
-            <h3>메시지를 선택하거나, 새로운 메시지를 작성하세요.</h3>
+            <h2> {{ $t('no.selected.msg') }} </h2>
+            <h3> {{ $t('new.msg.info') }} </h3>
             <div><button @click="showNewMsg" :class="['btn-default new-msg-btn', { 'inactive': roomPending }]"
-                style="width:100%;">새 메시지</button></div>
+                style="width:100%;">{{ $t('new.msg') }}</button></div>
           </div>
         </dt>
       </dl>
@@ -95,7 +95,7 @@
               <p><i class="uil uil-search"></i>
               </p>
               <div class="mt0"><input v-model="userKeyword" type="text" name="" title="keywords"
-                  placeholder="검색어를 입력하세요." />
+                  :placeholder="$t('enter.keyword')" />
               </div>
             </div>
             <ul v-if="followPending" class="user-list" ref="userListRef">
@@ -125,7 +125,7 @@
                 </dl>
               </li>
               <li v-else>
-                검색된 계정이 없습니다.
+                {{ $t('not.found.user') }}
               </li>
             </ul>
           </div>
@@ -141,9 +141,9 @@ import { ElScrollbar, ElDialog } from 'element-plus'
 import { dateFormat } from '~~/scripts/utils'
 import { IChat, IMessage, IUser } from '~~/types'
 import { debounce } from '~~/scripts/utils'
-import { useScroll } from '@vueuse/core'
+import { useInfiniteScroll } from '@vueuse/core'
 
-const MSG_LIMIT = 5
+const CHAT_LIMIT = 10
 
 const { $localePath } = useNuxtApp()
 const { t } = useI18n()
@@ -170,10 +170,8 @@ const msgList = ref<IMessage[]>()
 
 const roomPending = ref(true)
 const followPending = ref(true)
-const msgRef = ref<HTMLElement | null>(null)
+const msgEl = ref<HTMLElement | null>(null)
 const userListRef = ref<HTMLElement | null>(null)
-
-
 const offset = ref(0)
 
 
@@ -186,28 +184,54 @@ const followingList = computed(() => userList.value)
 const roomPolling = ref(null)
 
 
+
+
+useInfiniteScroll(
+  msgEl,
+  async () => {
+    if (isAddData.value) {
+      offset.value += limit.value
+      await getComments()
+    }
+  },
+  { distance: 10 }
+)
+
+
 watch(
   () => useAlarm().alarm.value.newDm,
-  (val) => {
+  async (val) => {
     if (val) {
       const meta = JSON.parse(val.data.meta)
+      const roomId = Number(meta.room_id)
       if (meta) {
-        if (selectedRoom.value?.id === Number(meta.room_id)) {
+        if (selectedRoom.value?.id === roomId) {
           activeRoomRef.value.addMsg(meta)
         } else {
-          roomList.value = roomList.value.map((room) => {
-            if (room.id === Number(meta.room_id)) {
-              return {
-                ...room,
-                unread_count: room.unread_count += 1,
-                last_message: {
-                  contents: meta.contents
-                }
-              }
-            } else {
+          const existRoom = roomList.value.filter((room) => {
+            if (room.id === roomId) {
               return room
             }
           })
+          console.log('existRoom', existRoom)
+
+          if (existRoom.length) {
+            roomList.value = roomList.value.map((room) => {
+              if (room.id === roomId) {
+                return {
+                  ...room,
+                  unread_count: room.unread_count += 1,
+                  last_message: {
+                    contents: meta.contents
+                  }
+                }
+              } else {
+                return room
+              }
+            })
+          } else {
+            await createRoom([meta.sender_id])
+          }
         }
       }
 
@@ -232,8 +256,9 @@ onBeforeUnmount(() => {
 
 async function fetch() {
   const payload = {
-    limit: MSG_LIMIT,
-    offset: offset.value
+    limit: CHAT_LIMIT,
+    from_id: offset.value,
+    order: 'asc'
   }
 
   //TODO: limit 제한 걸어야됨 임시
@@ -414,12 +439,11 @@ async function findRoom(user_ids: Number[]) {
         }
       })
 
-      if (existRoom) {
-        console.log('exist')
+      if (existRoom.length) {
         selectedRoom.value = existRoom[0]
       } else {
-        roomList.value = [rooms[0], ...roomList.value]
         selectedRoom.value = rooms[0]
+        await createRoom([selectedRoom.value.joined_users[0].id])
       }
     }
   }
@@ -437,7 +461,6 @@ async function createRoom(receiver_ids: Number[]) {
     openNewMsg.value = false
     selectedRoom.value = data.value
     if (roomList.value.length) {
-
       roomList.value = [data.value, ...roomList.value]
     } else {
       roomList.value = [data.value]
@@ -463,7 +486,6 @@ function onDeletedRoom(room: IChat) {
 
 //유저가 fcm 알람 막아둔 경우 polling 해야됨
 async function pollingMsg() {
-
   roomPolling.value = setInterval(async () => {
     await fetch()
   }, 5000)
@@ -484,6 +506,8 @@ async function pollingMsg() {
   dd {
 
     ul {
+      overflow-y: auto;
+
       li {
         padding: 13px;
 

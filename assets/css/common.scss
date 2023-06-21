@@ -1119,5 +1119,55 @@ $zempie-main-color-hover: #f974162a;
       }
     }
   }
+}
 
+/* dm */
+.active-room-container {
+
+  .room-btn {
+    background: none;
+    border: none;
+  }
+
+}
+
+.dlc-chat-content {
+  li {
+    &:hover {
+      .msg-menu-btn {
+        display: block;
+        cursor: pointer;
+
+      }
+    }
+
+    .msg-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+    }
+
+  }
+}
+
+
+.dlc-send-message {
+  div {
+    justify-content: space-between;
+  }
+
+  button {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    border-radius: 8px;
+    background: #f4f0eb;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+      background: #f1f1f1;
+    }
+  }
 }

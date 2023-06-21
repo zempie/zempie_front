@@ -7,7 +7,7 @@
     </div>
     <div v-if="useAlarm().alarm.value.newNoti" class="noti-toast">
 
-      <p>{{ t('new.msg') }} {{ t('need.refresh') }}&nbsp;<i class="uil uil-sync"></i></p>
+      <p>{{ t('got.new.msg') }} {{ t('need.refresh') }}&nbsp;<i class="uil uil-sync"></i></p>
     </div>
     <div class="dm-list"
       :style="useAlarm().alarm.value.newNoti ? 'border-top-left-radius: 0;border-top-right-radius: 0;' : 'border-top-left-radius: 10px;border-top-right-radius: 10px;'">
