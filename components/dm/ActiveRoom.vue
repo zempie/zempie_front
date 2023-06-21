@@ -116,12 +116,14 @@ const props = defineProps({
 
 const { t, locale } = useI18n()
 
+const MAX_MSG_LIMIT = 15
 const msgRef = ref()
 const inputMsg = ref('')
 const msgList = ref()
 
 const fromId = ref(0)
-const msgLimit = ref(15)
+const msgLimit = ref(MAX_MSG_LIMIT)
+const isAddData = ref(false)
 
 const opLeaveChatModal = ref(false)
 const opDeleteMsgModal = ref(false)
@@ -145,14 +147,19 @@ defineExpose({ addMsg })
 onMounted(async () => {
   //FIXME : 마이너스로 넘어오는 경우가 있어서 우선은 이렇게 처리
   if (props.selectedRoom.unread_count <= 0) {
-    fromId.value = props.selectedRoom.last_message?.id - 15
+    fromId.value = props.selectedRoom.last_message?.id - MAX_MSG_LIMIT + 1
   }
   await getMessages()
-
+  // isAddData.value = true
   if (!userInfo.value.setting.dm_alarm) {
     msgPolling.value = setInterval(async () => {
-      const newMsg = await getMessages()
-      console.log(newMsg, msgList.value)
+      const newest = msgList.value[msgList.value.length - 1]
+      fromId.value = newest.id + 1
+      const newMsg = await msgFetch()
+      if (newMsg.length) {
+        fromId.value = newMsg[newMsg.length - 1].id
+        // scrollToBottom()
+      }
     }, 3000)
   }
 
@@ -174,11 +181,13 @@ function scrollToBottom() {
   scrollContent.value.scrollTop = scrollContent.value?.scrollHeight
 }
 
+
+
 async function getMessages() {
 
   const payload = {
-    // from_id: fromId.value,
-    // limit: msgLimit.value,
+    from_id: fromId.value,
+    limit: msgLimit.value,
     order: 'asc'
   }
 
@@ -188,12 +197,40 @@ async function getMessages() {
 
   if (data.value) {
     const { messages } = data.value
-    msgList.value = messages
+
+    if (isAddData.value) {
+      if (messages.length > 0) {
+        msgList.value = [...msgList.value, ...messages]
+      } else if (messages.length === 0) {
+        isAddData.value = false
+      }
+    }
+    else {
+      msgList.value = messages
+      isAddData.value = true
+    }
     return messages
   }
 
 }
 
+async function msgFetch() {
+  const payload = {
+    from_id: fromId.value,
+    limit: msgLimit.value,
+    order: 'asc'
+  }
+
+  const { data, error } = await useCustomAsyncFetch<{ messages: IMessage[] }>(createQueryUrl(`/chat/room/${props.selectedRoom.id}`, payload), getComFetchOptions('get', true))
+
+  if (data.value) {
+    const { messages } = data.value
+    if (messages.length > 0) {
+      msgList.value = [...msgList.value, ...messages]
+    }
+    return messages
+  }
+}
 
 async function sendMsg() {
   if (!inputMsg.value) return
