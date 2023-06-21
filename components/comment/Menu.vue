@@ -1,10 +1,10 @@
 <template>
   <el-dropdown v-if="comment.user?.uid === user?.uid" trigger="click" popper-class="tapl-more-dropdown"
-    style="margin-top:0px">
+    style="margin-top:0px" ref="menuRef">
     <a slot="trigger"><i class="uil uil-ellipsis-h font25 pointer"></i></a>
     <template #dropdown>
       <div slot="body" class="more-list">
-        <a @click="isCommentEdit = !isCommentEdit" class="pointer">{{
+        <a @click="editComment" class="pointer">{{
           $t('comment.edit')
         }}</a>
         <a @click="showDeleteModal = true" class="pointer">
@@ -47,15 +47,22 @@ import { ElDropdown, ElDialog } from 'element-plus';
 const props = defineProps({
   comment: Object,
 })
-const emit = defineEmits(['deleteComment'])
+const emit = defineEmits(['deleteComment', 'editComment'])
+
 defineExpose({ closeDeleteModal })
 
 const showDeleteModal = ref(false)
+const menuRef = ref()
 
 const user = computed(() => useUser().user.value.info)
 
 function closeDeleteModal() {
   showDeleteModal.value = false
+}
+
+function editComment() {
+  emit('editComment')
+  menuRef.value.handleClose()
 }
 
 </script>

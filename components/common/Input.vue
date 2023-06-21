@@ -15,8 +15,15 @@ const inputText = ref('')
 
 defineEmits(['sendInput'])
 defineExpose({ initInput })
-defineProps({
-  placeholder: String
+const props = defineProps({
+  placeholder: String,
+  text: String
+})
+
+onMounted(() => {
+  if (props.text) {
+    inputText.value = props.text
+  }
 })
 
 function initInput() {

@@ -128,6 +128,7 @@ const deleteTgMsg = ref()
 const scrollContent = ref()
 
 const userInfo = computed(() => useUser().user.value.info)
+const msgPolling = ref(null)
 
 const emit = defineEmits(['deletedRoom'])
 
@@ -140,7 +141,12 @@ onMounted(async () => {
   if (props.selectedRoom.unread_count <= 0) {
     fromId.value = props.selectedRoom.last_message?.id - 15
   }
-  await getMessages()
+  if (!userInfo.value.setting.dm_alarm) {
+    msgPolling.value = setInterval(async () => {
+      await getMessages()
+      scrollToBottom()
+    }, 3000)
+  }
 
   nextTick(() => {
     if (props.selectedRoom.unread_count <= 0) {
@@ -149,6 +155,11 @@ onMounted(async () => {
     }
   })
 
+})
+
+
+onBeforeUnmount(() => {
+  clearInterval(msgPolling.value)
 })
 
 function scrollToBottom() {

@@ -182,6 +182,9 @@ const offset = ref(0)
 const followingList = computed(() => userList.value)
 
 
+//polling
+const roomPolling = ref(null)
+
 
 watch(
   () => useAlarm().alarm.value.newDm,
@@ -217,7 +220,14 @@ watch(
 onMounted(async () => {
   nextTick(async () => {
     await fetch()
+    if (!userInfo.value.setting.dm_alarm) {
+      await pollingMsg()
+    }
   })
+})
+
+onBeforeUnmount(() => {
+  clearInterval(roomPolling.value)
 
 })
 
@@ -311,7 +321,10 @@ async function onClickUser(user: IUser) {
 
 
 async function onClickRoom(clickedRoom: IChat) {
+
   selectedRoom.value = clickedRoom
+
+
   // await getMessages()
 
   roomList.value = roomList.value.map((room) => {
@@ -324,7 +337,6 @@ async function onClickRoom(clickedRoom: IChat) {
       return room
     }
   })
-
 
 }
 
@@ -438,6 +450,14 @@ function onDeletedRoom(room: IChat) {
 
 }
 
+
+//유저가 fcm 알람 막아둔 경우 polling 해야됨
+async function pollingMsg() {
+
+  roomPolling.value = setInterval(async () => {
+    await fetch()
+  }, 5000)
+}
 
 
 </script>

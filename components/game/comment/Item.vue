@@ -5,20 +5,24 @@
       <div class="column right w100p">
         <div class="flex row justify-between w100p align-center" style="margin-top:0px">
           <span class="name">{{ comment.user?.nickname }} {{ comment.user?.name }}</span>
-          <CommentMenu v-if="hasOptions" :comment="comment" @delete-comment="deleteComment" ref="commentMenuRef" />
+          <CommentMenu v-if="hasOptions" :comment="comment" @delete-comment="deleteComment" ref="commentMenuRef"
+            @edit-comment="editComment" />
         </div>
         <span>{{ dateFormat(comment.created_at) }}</span>
       </div>
     </div>
-    <p class="comment">
+    <p v-if="!isEdit" class="comment">
       {{ comment.content }}
     </p>
+    <CommonInput v-else ref="inputRef" :text="comment?.content" @send-input="sendRecomment"
+      class="mt10 justify-between pr10" />
     <div class="options" v-if="hasOptions" style="justify-content: flex-start;">
+      <!-- TODO: 2차 대댓글  -->
       <!-- <p style="display: inline-block">
                       <i v-if="isLiked" @click="unsetLike()" class="xi-heart like-icon pointer" style="color: red"></i>
                       <i v-else class="uil uil-heart-sign pointer" @click="setLike()"></i>
                       <span class="ml5">{{ $t('like') }} {{ likeCnt }}{{ $t('like.unit') }}</span>
-                    </p> -->
+                    </p> 
       <p class="zem-color pointer mr10" v-if="comment?.count_reply" @click="onClickRecomment"
         :style="comment.deleted_at ? 'margin-left:35px' : ''">
         <i :class="isRecommentOpen ? 'uil uil-angle-up' : 'uil uil-angle-down'"></i>
@@ -26,7 +30,7 @@
       </p>
       <span class="pointer" @click="opRecomment">
         <i class="uil uil-edit-alt"></i>{{ $t('write.recomment') }}
-      </span>
+      </span>-->
 
     </div>
     <ul class="recomment" v-if="isRecommentOpen">
@@ -39,6 +43,7 @@
     </ul>
     <CommonInput v-if="showRecomment" ref="inputRef" placeholder="Message" @send-input="sendRecomment"
       class="mt10 justify-between pr10" />
+
   </li>
 </template>
 <script setup lang="ts">
@@ -70,6 +75,8 @@ const inputRef = ref()
 const recommentList = ref<IReply[]>([])
 const newReCmtList = ref<IReply[]>([])
 const commentMenuRef = ref()
+
+const isEdit = ref(false)
 
 function opRecomment() {
   showRecomment.value = true
@@ -149,6 +156,11 @@ function deleteRecomment(cmt) {
 
   commentMenuRef.value.closeDeleteModal()
 
+}
+
+function editComment() {
+  console.log('props', props.comment)
+  isEdit.value = true
 }
 </script>
 <style scoped lang="scss">
