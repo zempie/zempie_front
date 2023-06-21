@@ -30,7 +30,7 @@
       <el-dialog v-model="showCommentModal" class="modal-area-type" width="500px">
         <div class="modal-alert">
           <dl class="ma-header">
-            <dt>{{ $t('review') }}</dt>
+            <dt>{{ $t('review') }}({{ count }})</dt>
             <dd>
               <button @click="showCommentModal = false">
                 <i class="uil uil-times pointer"></i>
@@ -140,6 +140,7 @@ async function sendComment(text: string) {
     count.value += 1
     if (patialComments.value) {
       patialComments.value = [result, ...patialComments.value]
+      comments.value = [result, ...comments.value]
     } else {
       patialComments.value = [result]
     }
@@ -159,6 +160,7 @@ function deleteComment(cmt) {
       return comment
     }
   })
+  count.value -= 1
 }
 
 function initCommentList() {
