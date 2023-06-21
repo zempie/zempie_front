@@ -217,8 +217,6 @@ const profileStyle = computed(() => {
 
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
-
-
 async function uploadProfileFile() {
 
   profileImg.value.click()
@@ -313,7 +311,6 @@ async function onSubmit() {
 
   try {
     const { data } = await useCustomAsyncFetch<{ result: any }>('/user/update/info', getZempieFetchOptions('post', true, formData))
-
 
     const { result } = data.value;
     const { user: userInfo } = result;

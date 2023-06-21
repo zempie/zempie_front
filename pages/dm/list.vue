@@ -228,7 +228,6 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
   clearInterval(roomPolling.value)
-
 })
 
 async function fetch() {
@@ -409,8 +408,19 @@ async function findRoom(user_ids: Number[]) {
       await createRoom(user_ids)
     } else {
       //이미 방이 존재하는 경우
-      roomList.value = [rooms[0], ...roomList.value]
-      selectedRoom.value = rooms[0]
+      const existRoom = roomList.value.filter((room) => {
+        if (room.id === rooms[0].id) {
+          return room
+        }
+      })
+
+      if (existRoom) {
+        console.log('exist')
+        selectedRoom.value = existRoom[0]
+      } else {
+        roomList.value = [rooms[0], ...roomList.value]
+        selectedRoom.value = rooms[0]
+      }
     }
   }
 

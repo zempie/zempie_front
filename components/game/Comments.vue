@@ -40,7 +40,7 @@
           <div class="ma-content ta-coment-list">
             <ul ref="commentEl">
               <GameCommentItem v-if="comments.length" v-for="comment in comments" :comment="comment" :key="comment.id"
-                :game-id="game.id" @delete-comment="deleteComment" />
+                :game-id="game.id" @delete-comment="deleteComment" @update-comment="updateComment" />
             </ul>
             <div>
               <CommonInput @send-input="sendComment" ref="inputRef" placeholder="Message" />
@@ -166,4 +166,22 @@ function initCommentList() {
   comments.value = []
   isAddData.value = false
 }
+
+function updateComment(comment: IReply) {
+  console.log('updateComment', comment)
+
+  comments.value = comments.value.map((cmt: IReply) => {
+    if (cmt.id === comment.id) {
+      return {
+        ...cmt,
+        content: comment.content
+      }
+    } else {
+      return cmt
+    }
+
+  })
+
+}
+
 </script>

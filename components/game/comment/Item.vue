@@ -14,7 +14,7 @@
     <p v-if="!isEdit" class="comment">
       {{ comment.content }}
     </p>
-    <CommonInput v-else ref="inputRef" :text="comment?.content" @send-input="sendRecomment"
+    <CommonInput v-else ref="inputRef" :text="comment?.content" @send-input="updateComment"
       class="mt10 justify-between pr10" />
     <div class="options" v-if="hasOptions" style="justify-content: flex-start;">
       <!-- TODO: 2차 대댓글  -->
@@ -61,7 +61,7 @@ const props = defineProps({
   gameId: Number
 })
 
-const emit = defineEmits(['deleteComment'])
+const emit = defineEmits(['deleteComment', 'updateComment'])
 
 const replyCount = ref(props.comment.count_reply)
 
@@ -158,9 +158,27 @@ function deleteRecomment(cmt) {
 
 }
 
-function editComment() {
+async function editComment() {
   console.log('props', props.comment)
   isEdit.value = true
+
+
+
+}
+
+async function updateComment(text: string) {
+  if (!text) return
+  const payload = {
+    content: text
+  }
+  const { data, error } = await useCustomAsyncFetch<{ result: IReply }>(`/game/reply/${props.comment.id}`, getZempieFetchOptions('put', true, payload))
+
+  if (data.value) {
+    const { result } = data.value
+    emit('updateComment', result)
+    isEdit.value = false
+  }
+
 }
 </script>
 <style scoped lang="scss">
