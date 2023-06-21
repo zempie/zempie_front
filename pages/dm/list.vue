@@ -164,34 +164,28 @@ const openNewMsg = ref(false)
 const userKeyword = ref('')
 const userList = ref<IUser[]>()
 
-const msgOffset = ref(0)
-const msgLimit = ref(15)
 const msgList = ref<IMessage[]>()
 
 const roomPending = ref(true)
 const followPending = ref(true)
 const msgEl = ref<HTMLElement | null>(null)
 const userListRef = ref<HTMLElement | null>(null)
-const offset = ref(0)
-
-
+const fromId = ref(0)
+const isAddData = ref()
 
 // 초기데이터 저장용
 const followingList = computed(() => userList.value)
 
-
 //polling
 const roomPolling = ref(null)
-
-
 
 
 useInfiniteScroll(
   msgEl,
   async () => {
     if (isAddData.value) {
-      offset.value += limit.value
-      await getComments()
+      fromId.value = roomList.value[roomList.value.length - 1].id + 1
+      await fetch()
     }
   },
   { distance: 10 }
@@ -257,7 +251,7 @@ onBeforeUnmount(() => {
 async function fetch() {
   const payload = {
     limit: CHAT_LIMIT,
-    from_id: offset.value,
+    from_id: fromId.value,
     order: 'asc'
   }
 
@@ -267,7 +261,19 @@ async function fetch() {
 
     if (data.value) {
       const { rooms } = data.value
-      roomList.value = rooms
+      if (isAddData.value) {
+        if (rooms.length > 0) {
+          roomList.value = [...roomList.value, ...rooms]
+        } else if (rooms.length === 0) {
+          isAddData.value = false
+        }
+      }
+      else {
+        roomList.value = rooms
+        isAddData.value = true
+      }
+
+
     }
   }
   finally {
@@ -277,7 +283,7 @@ async function fetch() {
 
 
 
-
+//TODO:2차스펙
 const onInputMsg = debounce(async () => {
   await fetch()
 }, 300)
@@ -362,63 +368,6 @@ async function onClickRoom(clickedRoom: IChat) {
     }
   })
 
-}
-
-async function getMessages() {
-
-  const payload = {
-    offset: msgOffset.value,
-    limit: msgLimit.value
-  }
-
-  const { data, error } = await useCustomAsyncFetch<{ messages: IMessage[] }>(`/chat/room/${selectedRoom.value.id}`, getComFetchOptions('get', true, payload))
-
-  //TODO: 로딩 넣어야함
-
-  if (data.value) {
-    const { messages } = data.value
-    msgList.value = messages
-  }
-
-}
-
-async function sendMsg() {
-  const payload = {
-    room_id: selectedRoom.value.id,
-    // receiver_ids: [
-    //   userInfo.value.id
-    // ],
-    type: 0,
-    contents: inputMsg.value
-  }
-
-  const { data, error } = await useCustomAsyncFetch<{ message: IMessage }>(`/chat/room`, getComFetchOptions('post', true, payload))
-
-  if (data.value) {
-    initInputMsg()
-    if (msgList.value.length) {
-      msgList.value = [...msgList.value, data.value.message]
-    } else {
-      msgList.value = [data.value.message]
-    }
-  }
-
-
-}
-
-function initInputMsg() {
-  inputMsg.value = ''
-}
-
-async function deleteChat() {
-  const { data, error } = await useCustomAsyncFetch(`/chat/room_leave`, getComFetchOptions('delete', true)
-  )
-}
-
-
-async function deleteMsg() {
-  const { data, error } = await useCustomAsyncFetch(`/chat`, getComFetchOptions('delete', true)
-  )
 }
 
 async function findRoom(user_ids: Number[]) {

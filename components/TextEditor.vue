@@ -641,9 +641,8 @@ async function onSubmit() {
         '/community/att',
         getZempieFetchOptions('post', true, formData)
       )
-      console.log('data', data.value)
 
-      payload['attatchment_files'] = data.value.result
+      payload['attatchment_files'] = data.value?.result
     }
   }
   switch (props.type) {

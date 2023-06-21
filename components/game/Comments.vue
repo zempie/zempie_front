@@ -8,8 +8,8 @@
       <li class="mb10 comment-input">
         <CommonInput @send-input="sendComment" ref="inputRef" placeholder="Message" />
       </li>
-      <GameCommentItem v-if="patialComments.length" v-for="comment in patialComments" :comment="comment" :key="comment.id"
-        :has-options="false" @delete-comment="deleteComment" />
+      <GameCommentItem v-if="partialComments.length" v-for="comment in partialComments" :comment="comment"
+        :key="comment.id" :has-options="false" @delete-comment="deleteComment" />
 
       <li v-else-if="!isPending && comments.length === 0" class="no-list">
         {{ $t('no.comment.list') }}
@@ -30,7 +30,7 @@
       <el-dialog v-model="showCommentModal" class="modal-area-type" width="500px">
         <div class="modal-alert">
           <dl class="ma-header">
-            <dt>{{ $t('review') }}({{ count }})</dt>
+            <dt>{{ $t('comments') }} <span class="count">({{ count }})</span></dt>
             <dd>
               <button @click="showCommentModal = false">
                 <i class="uil uil-times pointer"></i>
@@ -59,7 +59,7 @@ import { useInfiniteScroll } from '@vueuse/core'
 
 const COMMENT_LIMIT = 10
 const inputRef = ref()
-const patialComments = ref<IReply[]>([])
+const partialComments = ref<IReply[]>([])
 const comments = ref<IReply[]>([])
 const count = ref(0)
 const isPending = ref(true)
@@ -90,7 +90,7 @@ useInfiniteScroll(
 onMounted(async () => {
   try {
     const replies = await getComments()
-    patialComments.value = replies.slice(0, 5)
+    partialComments.value = replies.slice(0, 5)
 
   } finally {
     isPending.value = false
@@ -138,11 +138,11 @@ async function sendComment(text: string) {
   if (data.value) {
     const { result } = data.value
     count.value += 1
-    if (patialComments.value) {
-      patialComments.value = [result, ...patialComments.value]
+    if (partialComments.value) {
+      partialComments.value = [result, ...partialComments.value]
       comments.value = [result, ...comments.value]
     } else {
-      patialComments.value = [result]
+      partialComments.value = [result]
     }
     inputRef.value.initInput()
   }
@@ -160,6 +160,14 @@ function deleteComment(cmt) {
       return comment
     }
   })
+
+  partialComments.value = partialComments.value.filter((comment) => {
+    if (comment.id !== cmt.id) {
+      return comment
+    }
+  })
+  partialComments.value = comments.value.slice(0, 5)
+
   count.value -= 1
 }
 
