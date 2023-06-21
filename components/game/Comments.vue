@@ -133,10 +133,15 @@ async function sendComment(text: string) {
     content: text
   }
 
+
   const { data } = await useCustomAsyncFetch<{ result: IReply }>('/game/reply', getZempieFetchOptions('post', true, payload))
   if (data.value) {
     const { result } = data.value
-    comments.value = [result, ...comments.value]
+    if (patialComments.value) {
+      patialComments.value = [result, ...patialComments.value]
+    } else {
+      patialComments.value = [result]
+    }
     inputRef.value.initInput()
   }
 }
