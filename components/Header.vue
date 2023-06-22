@@ -68,10 +68,10 @@
           </div>
           <div class="header-info ml0" v-if="!isLoading && isLogin" :key="user.id">
             <NotificationHeaderButton />
-            <button class="btn-circle-icon ml10" @click="$router.push($localePath('/dm/list'))">
+            <!-- <button class="btn-circle-icon ml10" @click="$router.push($localePath('/dm/list'))">
               <i class="uil uil-comment-alt"></i>
               <span class="new-dm-badge">99+</span>
-            </button>
+            </button> -->
 
             <UserMenu />
           </div>
