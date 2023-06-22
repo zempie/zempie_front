@@ -2,6 +2,7 @@ import { FetchOptions } from "ohmyfetch"
 import shared from "~~/scripts/shared";
 import { getAuth, getIdToken } from "firebase/auth";
 import FlutterBridge from '~~/scripts/flutterBridge'
+import { ex } from "~~/scripts/examples";
 
 const HOURTOSEC = 60 * 60;
 
@@ -20,16 +21,14 @@ const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
 export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions, retryCount: number = 0) => {
   const config = useRuntimeConfig()
+  console.log('url header', url, options)
 
   return await useFetch<T>(url, {
     initialCache: false,
     ...options,
     async onResponse({ request, response, options }) {
-
       useCommon().setLoadingDone()
-
-      console.log('[fetch response]')
-
+      console.log('[fetch response]', response._data)
     },
     async onResponseError({ request, response, options }) {
       console.log('[fetch response error]', response)
@@ -55,10 +54,10 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
               shared.removeCookies()
               console.log('check', config.public.ENV, 'env:', config.env === 'development', config.env == 'development')
             }
-
             break;
         }
       } else {
+        console.log('error throw here')
         throw response
       }
 
@@ -90,7 +89,7 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
       options.headers = options.headers || {}
 
       useCommon().setLoading()
-      console.log('[fetch request]')
+      console.log('[fetch request]', request)
     },
     async onRequestError({ request, options, error }) {
       console.log('[fetch request error]', error)
@@ -105,6 +104,10 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
   const { $cookies, $localePath } = useNuxtApp()
   const router = useRouter()
 
+  if (ex[url]) {
+    return Promise.resolve(ex[url][options.method].res);
+  }
+
 
   return await $fetch<T>(url, {
     ...options,
@@ -112,7 +115,7 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
 
       useCommon().setLoadingDone()
 
-      console.log('[fetch response]')
+      console.log('[fetch response]', response._data)
 
     },
     async onResponseError({ request, response, options }) {
@@ -171,7 +174,7 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
       options.headers = options.headers || {}
 
       useCommon().setLoading()
-      console.log('[fetch request]')
+      console.log('[fetch request]', request)
       return
     },
     async onRequestError({ request, options, error }) {

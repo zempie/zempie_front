@@ -11,7 +11,6 @@
               <h2>
                 <NuxtLink style="color:#000" :to="$localePath(`/${commentUser.nickname}`)">
                   {{ commentUser.nickname }}</NuxtLink>
-
                 <span class="font13">{{ dateFormat(comment.created_at) }}</span>
               </h2>
               <el-dropdown v-if="comment.user?.uid === user?.uid" trigger="click" ref="feedMenu"

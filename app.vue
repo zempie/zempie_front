@@ -2,7 +2,6 @@
   <NuxtLayout>
     <noscript v-html="tmIframeCode"></noscript>
     <NuxtPage />
-
   </NuxtLayout>
 </template>
 <script setup lang="ts">
@@ -46,15 +45,9 @@ onBeforeMount(async () => {
       await useUser().setUserInfo()
     }
 
-  } catch (err) {
+  } finally {
     useUser().setLoadDone()
   }
-
-
-
-
-
-
 
   //기존에 사용하던 쿠키가 있으면 삭제 -> 더 이상 사용하지 않음(기존 유저브라우저에 쿠키가 남았을 여부를 생각해서 남겨둠)
   if (cookie.value) {
@@ -105,6 +98,7 @@ onBeforeMount(async () => {
 
 body {
   margin: 0px !important;
+  //전체 페이지 자간 조정
   letter-spacing: -1px;
 
   .content {

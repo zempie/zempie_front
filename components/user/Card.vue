@@ -1,14 +1,14 @@
 <template>
   <li @click="$router.push($localePath(`/${user.nickname}`))">
-    <div class="cf-img" :style="
-      bannerImg
-        ? `background: url(${bannerImg}) center center / cover no-repeat; background-size: cover;`
-        : `background-color:orange; background-size:cover`
-    "></div>
+    <div class="cf-img" :style="bannerImg
+      ? `background: url(${bannerImg}) center center / cover no-repeat; background-size: cover;`
+      : `background-color:orange; background-size:cover`
+      "></div>
     <UserAvatar :user="userObj" :tag="'p'" :hasRouter="true"></UserAvatar>
     <div class="cf-info">
       <h3>{{ user.nickname }}</h3>
       <h4>{{ user.name }}</h4>
+      <span v-if="user.follow_you" class="badge">{{ $t('is.following') }}</span>
       <dl>
         <dd>
           <h4>{{ user.followers_cnt }}</h4>
@@ -56,4 +56,11 @@ const userObj = computed(() => {
 })
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.badge {
+  background-color: #e8e8e8;
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-size: 10px;
+}
+</style>

@@ -2072,7 +2072,15 @@ textarea:focus {
   padding-right: 5px !important;
 }
 
+.pr10 {
+  padding-right: 10px !important;
+}
+
 /* 폰트사이즈 */
+.font10 {
+  font-size: 10px !important;
+}
+
 .font11 {
   font-size: 11px !important;
 }

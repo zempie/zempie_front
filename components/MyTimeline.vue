@@ -10,7 +10,7 @@
       </dd>
       <dt>
         <div class="ta-groups" style="margin-top: 0px">
-          <h2>Community</h2>
+          <h2>{{ $t('community') }}</h2>
           <CommunityList :communities="channelInfo?.communities" :isLoading="isChannelLoading" />
         </div>
       </dt>

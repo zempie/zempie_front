@@ -72,22 +72,29 @@
       </a>
       <a v-else @click="onSubmit" class="btn-default w250">{{ $t('save') }}</a>
     </div>
-
     <div class="info-input">
       <div class="ii-title">
-        <h2>Notifications</h2>
+        <h2> {{ t('notification') }}</h2>
       </div>
       <div class="ii-form">
         <ol>
-          <li>Alarm</li>
+          <li>{{ $t('alarm') }}</li>
           <li>{{ $t('userSetting.alarm.info') }} </li>
           <li>
             <el-switch v-model="isAlarmOn" size="large" active-color="#ff6e17" @click="setAlarmStatus" />
           </li>
         </ol>
+        <ol>
+          <li>{{ $t('dm') }}</li>
+          <li>{{ $t('userSetting.alarm.info') }}</li>
+          <li>
+            <el-switch v-model="isDmAlarmOn" size="large" active-color="#ff6e17"
+              @click="setAlarmStatus(eNotificationType.dm)" />
+          </li>
+        </ol>
       </div>
-    </div>
 
+    </div>
 
     <div class="delete-account" v-if="signUpType === 'password'">
       <h2>{{ $t('userSetting.pwd.change') }}</h2>
@@ -125,6 +132,7 @@ import { useI18n } from 'vue-i18n'
 import { removeFcmToken, resigterFcmToken } from '~~/scripts/firebase-fcm';
 import shared from '~/scripts/shared'
 import { fileReader, nicknameRegex } from '~/scripts/utils'
+import { eNotificationType } from '~~/types';
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -160,7 +168,8 @@ const signUpType = computed(
 
 const userInfo = computed(() => useUser().user.value.info)
 
-const isAlarmOn = ref(useUser().user.value.info?.setting.alarm)
+const isAlarmOn = ref(userInfo.value?.setting.alarm)
+const isDmAlarmOn = ref(userInfo.value?.setting.dm_alarm)
 
 const currNickname = computed(() => userInfo.value?.nickname)
 const nickname = ref()
@@ -168,6 +177,19 @@ const newNickname = computed(() => currNickname.value)
 
 const userNameErr = ref('')
 const isUsernameErr = ref(false)
+
+
+
+watch(
+  () => userInfo.value,
+  async (info) => {
+    if (info?.id) {
+      isAlarmOn.value = info.setting.alarm
+      isDmAlarmOn.value = info.setting.dm_alarm
+    }
+  }
+)
+
 
 const userName = computed({
   get: () => userInfo.value?.name,
@@ -194,7 +216,6 @@ const profileStyle = computed(() => {
 })
 
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
-
 
 async function uploadProfileFile() {
 
@@ -291,7 +312,6 @@ async function onSubmit() {
   try {
     const { data } = await useCustomAsyncFetch<{ result: any }>('/user/update/info', getZempieFetchOptions('post', true, formData))
 
-
     const { result } = data.value;
     const { user: userInfo } = result;
 
@@ -312,18 +332,26 @@ async function onSubmit() {
   isUpdating.value = false
 }
 
-async function setAlarmStatus() {
+async function setAlarmStatus(type: number) {
   const userId = useUser().user.value.info.id
-  const response = await useCustomFetch<{ result: string }>('/alarm', getZempieFetchOptions('put', true, { alarm_state: isAlarmOn.value }))
-  // 해제 했으면 fcm도 같이 제거 해줘야함
+  let alarmState
+  switch (type) {
+    case eNotificationType.dm:
+      alarmState = isDmAlarmOn.value
+      break;
+    default:
+      alarmState = isAlarmOn.value
+
+  }
+  const response = await useCustomFetch<{ result: string }>('/user/alarm', getZempieFetchOptions('put', true, { alarm_state: alarmState, type }))
 
   if (response.result === 'success') {
     if (isAlarmOn.value) {
       await resigterFcmToken(userId)
-    } else {
-      await removeFcmToken()
     }
   }
+
+
 }
 
 

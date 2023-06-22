@@ -5,6 +5,7 @@ import * as fbFcm from '~~/scripts/firebase-fcm'
 import shared from '~~/scripts/shared'
 import { getMessaging, onMessage, getToken, isSupported } from "firebase/messaging";
 import { isObjEmpty } from '~~/scripts/utils'
+import { eNotificationType } from '~~/types';
 
 
 export default defineNuxtPlugin(async (nuxtApp) => {
@@ -50,6 +51,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   })
 
   const isSupport = await isSupported()
+  useCommon().setSupport(isSupport)
 
 
   if (isSupport) {
@@ -59,7 +61,15 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
     onMessage(messaging, (payload) => {
       console.log('Message received. ', payload);
-      useAlarm().setNewNoti(payload)
+
+      if (payload.data?.meta) {
+        const meta = JSON.parse(payload.data.meta)
+        if (meta.fcmType === String(eNotificationType.dm)) {
+          useAlarm().setNewDm(payload)
+        }
+      } else {
+        useAlarm().setNewNoti(payload)
+      }
     });
 
   }
