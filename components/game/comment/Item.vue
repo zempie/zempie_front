@@ -197,6 +197,7 @@ li {
     height: 35px;
     width: 35px;
     margin-right: 10px;
+    border-radius: 100%;
   }
 
   .options {
