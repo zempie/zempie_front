@@ -4,11 +4,13 @@
       <UserAvatar :user="comment.user" :has-router="true" tag="p" />
       <div class="column right w100p">
         <div class="flex row justify-between w100p align-center" style="margin-top:0px">
-          <span class="name">{{ comment.user?.nickname }} {{ comment.user?.name }}</span>
+          <div style="margin-top:0px">
+            <span class="name">{{ comment.user?.nickname }} {{ comment.user?.name }}</span>
+            <span class="ml5">{{ dateFormat(comment.created_at) }}</span>
+          </div>
           <CommentMenu v-if="hasOptions" :comment="comment" @delete-comment="deleteComment" ref="commentMenuRef"
             @edit-comment="editComment" />
         </div>
-        <span>{{ dateFormat(comment.created_at) }}</span>
       </div>
     </div>
     <p v-if="!isEdit" class="comment">
@@ -159,9 +161,6 @@ function deleteRecomment(cmt) {
 async function editComment() {
   console.log('props', props.comment)
   isEdit.value = true
-
-
-
 }
 
 async function updateComment(text: string) {

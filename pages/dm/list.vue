@@ -197,6 +197,13 @@ const isMobile = computed(() =>
 )
 const isFbSupported = computed(() => useCommon().setting.value.isFbSupported)
 
+
+definePageMeta({
+  title: 'dm',
+  name: 'dm',
+  middleware: 'auth',
+})
+
 useInfiniteScroll(
   msgEl,
   async () => {

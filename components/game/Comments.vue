@@ -71,6 +71,9 @@ const showCommentModal = ref(false)
 const commentEl = ref<HTMLElement | null>(null)
 const isAddData = ref(false)
 
+const isLogin = computed(() => useUser().user.value.isLogin)
+
+
 const props = defineProps({
   game: Object as PropType<IGame>
 })
@@ -126,6 +129,10 @@ async function getComments() {
 
 
 async function sendComment(text: string) {
+  if (!isLogin.value) {
+    useModal().openLoginModal()
+    return
+  }
   if (!text) return
 
   const payload = {
@@ -140,6 +147,7 @@ async function sendComment(text: string) {
     count.value += 1
     if (partialComments.value) {
       partialComments.value = [result, ...partialComments.value]
+      partialComments.value = partialComments.value.slice(0, 5)
       comments.value = [result, ...comments.value]
     } else {
       partialComments.value = [result]
@@ -152,6 +160,7 @@ async function opCommentsModal() {
   showCommentModal.value = true
   initCommentList()
   await getComments()
+  partialComments.value = comments.value.slice(0, 5)
 }
 
 function deleteComment(cmt) {
@@ -182,6 +191,18 @@ function updateComment(comment: IReply) {
   console.log('updateComment', comment)
 
   comments.value = comments.value.map((cmt: IReply) => {
+    if (cmt.id === comment.id) {
+      return {
+        ...cmt,
+        content: comment.content
+      }
+    } else {
+      return cmt
+    }
+
+  })
+
+  partialComments.value = partialComments.value.map((cmt: IReply) => {
     if (cmt.id === comment.id) {
       return {
         ...cmt,

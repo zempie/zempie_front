@@ -146,27 +146,12 @@ const isSending = ref(false)
 const { arrivedState, y } = useScroll(scrollContent, {
   offset: { top: 20, bottom: 10 }
 })
-const { top, bottom } = toRefs(arrivedState)
+const { top } = toRefs(arrivedState)
 
-
-const displayY = computed({
-  get() {
-    return y.value.toFixed(1)
-  },
-  set(val) {
-    y.value = Number.parseFloat(val)
-  },
-})
 
 const emit = defineEmits(['deletedRoom', 'openKeyboard', 'closeKeyboard'])
 
 defineExpose({ addMsg })
-
-definePageMeta({
-  title: t('dm'),
-  name: 'dm',
-  middleware: 'auth',
-})
 
 
 
