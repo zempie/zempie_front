@@ -1,10 +1,11 @@
 <template>
   <div class="content">
-
     <div class="dm-list">
       <div class="dl-title">
         <div>
-          <h2> {{ $t('dm') }}</h2>
+          <h2> <button :class="['mobile-btn', selectedRoom ? 'on' : 'off']" @click="initSelect"><i
+                class="uil uil-arrow-left"></i></button> {{
+                  $t('dm') }}</h2>
         </div>
         <p>
           <a :class="['pointer new-msg-btn-icon', { 'inactive': roomPending }]" @click="showNewMsg"><i
@@ -14,7 +15,7 @@
       </div>
 
       <dl class="dl-content">
-        <dd>
+        <dd :class="['room-container', selectedRoom ? 'off' : 'on']">
           <!-- TODO: 2차 스펙에서 진행함 -> -->
           <!-- <div>
             <div class="input-search-default" @input="onInputMsg">
@@ -65,7 +66,7 @@
             </ul>
           </template>
         </dd>
-        <dt>
+        <dt :class="['msg-container', selectedRoom ? 'on' : 'off']">
           <DmActiveRoom v-if="selectedRoom" :selectedRoom="selectedRoom" @deleted-room="onDeletedRoom"
             :key="selectedRoom.id" ref="activeRoomRef" />
           <div v-else class="dlc-chat-emptied">
@@ -80,7 +81,7 @@
     </div>
     <ClientOnly>
       <el-dialog v-model="openNewMsg" class="modal-area-type new-msg-modal" :show-close="false" width="380px"
-        @close="closeModal">
+        @close="closeModal" :fullscreen="isFullScreen">
         <div class="modal-alert">
           <dl class="ma-header">
             <dt>{{ t('new.message') }}</dt>
@@ -173,19 +174,28 @@ const userListRef = ref<HTMLElement | null>(null)
 const fromId = ref(0)
 const isAddData = ref()
 
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+
 // 초기데이터 저장용
 const followingList = computed(() => userList.value)
 
 //polling
 const roomPolling = ref(null)
 
+//반응형
+const isFullScreen = ref(false)
+
+
+const isMobile = computed(() =>
+  window.matchMedia('screen and (max-width: 767px)')
+)
 
 useInfiniteScroll(
   msgEl,
   async () => {
     if (isAddData.value) {
       fromId.value = roomList.value[roomList.value.length - 1].id + 1
-      await fetch()
+      await fetch(true)
     }
   },
   { distance: 10 }
@@ -235,20 +245,41 @@ watch(
   }
 )
 
+watch(
+  () => userKeyword.value,
+  async (val) => {
+    if (val && isFlutter.value) {
+      onInputUser()
+    }
+  }
+)
+
+
+
+
 onMounted(async () => {
   nextTick(async () => {
+    onResize()
     await fetch()
     if (!userInfo.value.setting.dm_alarm) {
       await pollingChat()
     }
   })
+  window.addEventListener('resize', onResize)
+
 })
 
 onBeforeUnmount(() => {
   clearInterval(roomPolling.value)
+  window.removeEventListener('resize', onResize)
+
 })
 
-async function fetch() {
+function onResize() {
+  isFullScreen.value = isMobile.value.matches ? true : false
+}
+async function fetch(isPolling: boolean = false) {
+
   const payload = {
     limit: CHAT_LIMIT,
     from_id: fromId.value,
@@ -265,10 +296,13 @@ async function fetch() {
         if (rooms.length > 0) {
           roomList.value = [...roomList.value, ...rooms]
         } else if (rooms.length === 0) {
-          isAddData.value = false
+          if (!isPolling)
+            isAddData.value = false
         }
       }
       else {
+        console.log(isAddData.value)
+        colorLog('here', 'pink')
         roomList.value = rooms
         isAddData.value = true
       }
@@ -280,6 +314,10 @@ async function fetch() {
     roomPending.value = false
   }
 }
+
+
+
+
 
 
 
@@ -437,48 +475,62 @@ function onDeletedRoom(room: IChat) {
 async function pollingChat() {
   roomPolling.value = setInterval(async () => {
     fromId.value = roomList.value[roomList.value.length - 1].id + 1
+    isAddData.value = true
     await fetch()
   }, 5000)
+}
+
+function initSelect() {
+  selectedRoom.value = null
+
 }
 
 
 </script>
 <style scoped lang="scss">
-.dl-content {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin-top: 30px;
-  border: 1px solid #e5e5e5;
-  border-radius: 10px;
-  overflow: hidden;
+.dm-list {
 
-  dd {
+  .mobile-btn {
+    display: none;
 
-    ul {
-      overflow-y: auto;
+  }
 
-      li {
-        padding: 13px;
+  .dl-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 30px;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    overflow: hidden;
 
-        &:hover {
-          background-color: #F9f9f9;
-        }
+    dd {
 
-        dl {
-          dd {
-            width: 15%;
+      ul {
+        overflow-y: auto;
+
+        li {
+          padding: 13px;
+
+          &:hover {
+            background-color: #F9f9f9;
           }
 
-          dt {
-            width: 70%
+          dl {
+            dd {
+              width: 15%;
+            }
+
+            dt {
+              width: 70%
+            }
           }
         }
       }
     }
+
+
   }
-
-
 }
 
 .new-msg-btn-icon {
@@ -530,5 +582,105 @@ async function pollingChat() {
     }
   }
 
+}
+
+@media all and (max-width: 767px) {
+  .content {
+    height: calc(100vh - 70px - 100px);
+    padding-bottom: 0px;
+
+    .dm-list {
+      padding: 20px 10px 10px 10px;
+      margin: 0px;
+      width: 100%;
+      height: 100%;
+      border-radius: 0px;
+      box-shadow: none;
+
+      .dl-title {
+        display: flex;
+        flex-direction: row;
+
+        .mobile-btn {
+          display: inline;
+          border: none;
+          background: transparent;
+          padding: 0px;
+          color: #333;
+          font-size: 25px;
+
+          &.off {
+            display: none;
+          }
+
+          &.on {
+            display: inline;
+          }
+        }
+      }
+
+      .dl-content {
+        border: none;
+        margin-top: 10px;
+
+        height: 90%;
+
+        .room-container {
+          &.off {
+            display: none;
+          }
+
+          &.on {
+            display: block;
+          }
+
+          .msg-list {
+            padding: 0px;
+            height: 100%;
+            overflow-y: scroll;
+
+            li {
+              // margin: 0px;
+            }
+          }
+        }
+
+        .msg-container {
+          &.off {
+            display: none;
+          }
+
+          &.on {
+            display: block;
+            border: 1px solid #eee;
+            border-radius: 10px;
+          }
+
+          ::v-deep(.dlc-chat-content) {
+            height: calc(100% - 120px);
+          }
+
+          ::v-deep(.dlc-send-message) {
+            height: 50px;
+
+            div {
+              width: 90%;
+            }
+
+            button {
+              height: 30px;
+              width: 30px;
+            }
+
+          }
+
+        }
+      }
+    }
+
+    ::v-deep(.new-msg-modal) {
+      border-radius: 0px !important;
+    }
+  }
 }
 </style>

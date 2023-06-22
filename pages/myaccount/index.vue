@@ -343,7 +343,7 @@ async function setAlarmStatus(type: number) {
       alarmState = isAlarmOn.value
 
   }
-  const response = await useCustomFetch<{ result: string }>('/alarm', getZempieFetchOptions('put', true, { alarm_state: alarmState, type }))
+  const response = await useCustomFetch<{ result: string }>('/user/alarm', getZempieFetchOptions('put', true, { alarm_state: alarmState, type }))
 
   if (response.result === 'success') {
     if (isAlarmOn.value) {

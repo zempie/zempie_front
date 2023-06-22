@@ -233,8 +233,9 @@ async function msgFetch() {
 }
 
 async function sendMsg() {
-  if (!inputMsg.value) return
+  // console.log(isSending.value)
   if (isSending.value) return
+  if (!inputMsg.value) return
   isSending.value = true
 
   const content = _.cloneDeep(inputMsg.value)
