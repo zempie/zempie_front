@@ -12,8 +12,8 @@
     </dt>
     <dd>
       <ClientOnly>
-        <el-dropdown trigger="click" ref="msgRef">
-          <button class="room-btn pointer"> <i class="uil uil-ellipsis-h font25"></i></button>
+        <el-dropdown trigger="click">
+          <button class=" room-btn pointer"> <i class="uil uil-ellipsis-h font25"></i></button>
           <template #dropdown>
             <div class="more-list fixed" style="min-width: 150px">
               <a @click="opLeaveChatModal = true" id="editFeed" class="pointer">{{ t('remove.chat') }}</a>
@@ -25,9 +25,8 @@
       <!-- <router-link to="#"><i class="uil uil-ellipsis-h font25"></i></router-link> -->
     </dd>
   </dl>
-
   <div class="dlc-chat-content" ref="scrollContent">
-    <div :class="msg.sender.id === userInfo.id ? 'receiver-chat' : 'sender-chat'" v-for="msg in msgList" ref="msgRef">
+    <div :class="msg.sender.id === userInfo.id ? 'receiver-chat' : 'sender-chat'" v-for="msg in msgList" ref="msgEl">
       <h4>{{ dateFormat(msg.created_at) }}</h4>
       <ul>
         <li class="flex">
@@ -41,7 +40,7 @@
     <div>
       <!-- TODO: 태그 보낼 수 있어야함  -->
       <input v-model="inputMsg" type="text" class="w100p" name="" title="" :placeholder="$t('send.msg')"
-        @keyup.enter="sendMsg" />
+        @keyup.enter="sendMsg" @focus="onFocus" @blur="onBlur" />
       <!-- TODO: 2차 스펙 -->
       <!-- <router-link to="#"><i class="uil uil-scenery font25 mr5"></i></router-link>
                 <router-link to="#"><i class="uil uil-camera font28"></i></router-link> -->
@@ -109,6 +108,8 @@ import { dateFormat } from '~~/scripts/utils'
 import { IChat, IMessage, IUser } from '~~/types'
 import { ElDropdown, ElDialog, ElMessage } from 'element-plus';
 import { PropType } from 'vue';
+import { useInfiniteScroll, useScroll } from '@vueuse/core'
+import FlutterBridge from '~~/scripts/flutterBridge'
 
 const props = defineProps({
   selectedRoom: Object as PropType<IChat>,
@@ -117,31 +118,91 @@ const props = defineProps({
 const { t, locale } = useI18n()
 
 const MAX_MSG_LIMIT = 15
-const msgRef = ref()
+const msgEl = ref<HTMLElement | null>(null)
 const inputMsg = ref('')
 const msgList = ref()
 
 const fromId = ref(0)
 const msgLimit = ref(MAX_MSG_LIMIT)
 const isAddData = ref(false)
+const order = ref('asc')
 
 const opLeaveChatModal = ref(false)
 const opDeleteMsgModal = ref(false)
 const deleteTgMsg = ref()
 
-const scrollContent = ref()
+const scrollContent = ref<HTMLElement | null>(null)
 
 const userInfo = computed(() => useUser().user.value.info)
 const msgPolling = ref(null)
+const isFbSupported = computed(() => useCommon().setting.value.isFbSupported)
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
 
 //중복호출 방지
 const isSending = ref(false)
 
-const emit = defineEmits(['deletedRoom'])
+//스크롤
+const { arrivedState, y } = useScroll(scrollContent, {
+  offset: { top: 20, bottom: 10 }
+})
+const { top, bottom } = toRefs(arrivedState)
+
+
+const displayY = computed({
+  get() {
+    return y.value.toFixed(1)
+  },
+  set(val) {
+    y.value = Number.parseFloat(val)
+  },
+})
+
+const emit = defineEmits(['deletedRoom', 'openKeyboard', 'closeKeyboard'])
 
 defineExpose({ addMsg })
 
+definePageMeta({
+  title: t('dm'),
+  name: 'dm',
+  middleware: 'auth',
+})
+
+
+
+watch(
+  () => top.value,
+  async (val) => {
+    if (val) {
+      if (msgList.value.length) {
+        const firstMsg = msgList.value[0]
+        console.log(firstMsg.id)
+        if (firstMsg) {
+          fromId.value = firstMsg.id - 1
+          order.value = 'desc'
+          // console.log('scrollContent.value?.scrollHeight', scrollContent.value?.scrollHeight)
+          const prevScroll = _.cloneDeep(scrollContent.value?.scrollHeight)
+          await msgFetch(prevScroll)
+        }
+
+      }
+    }
+    console.log('scroll', val)
+  }
+)
+
+
+
+// useInfiniteScroll(
+//   msgEl,
+//   async () => {
+//     if (isAddData.value) {
+//       fromId.value = roomList.value[roomList.value.length - 1].id + 1
+//       await fetch(true)
+//     }
+//   },
+//   { distance: 10 }
+// )
 
 
 onMounted(async () => {
@@ -151,12 +212,12 @@ onMounted(async () => {
   }
   await getMessages()
   // isAddData.value = true
-  if (!userInfo.value.setting.dm_alarm) {
+  if (!userInfo.value.setting.dm_alarm || !isFbSupported.value) {
     msgPolling.value = setInterval(async () => {
       const newest = msgList.value[msgList.value.length - 1]
       fromId.value = newest.id + 1
       const newMsg = await msgFetch()
-      if (newMsg.length) {
+      if (newMsg && newMsg.length) {
         fromId.value = newMsg[newMsg.length - 1].id
         // scrollToBottom()
       }
@@ -214,22 +275,32 @@ async function getMessages() {
 
 }
 
-async function msgFetch() {
+async function msgFetch(yPos?: number) {
   const payload = {
     from_id: fromId.value,
     limit: msgLimit.value,
-    order: 'asc'
+    order: order.value
   }
 
   const { data, error } = await useCustomAsyncFetch<{ messages: IMessage[] }>(createQueryUrl(`/chat/room/${props.selectedRoom.id}`, payload), getComFetchOptions('get', true))
 
   if (data.value) {
     const { messages } = data.value
-    if (messages.length > 0) {
-      msgList.value = [...msgList.value, ...messages]
+    if (order.value === 'asc') {
+      if (messages.length > 0) {
+        msgList.value = [...msgList.value, ...messages]
+      }
+    } else {
+      const msg = messages.reverse()
+      msgList.value = [...msg, ...msgList.value]
+      nextTick(() => {
+        scrollContent.value.scrollTop = scrollContent.value?.scrollHeight - yPos
+      })
+
     }
     return messages
   }
+
 }
 
 async function sendMsg() {
@@ -322,4 +393,18 @@ async function onDeleteMsg() {
   }
 }
 
+function onFocus() {
+  if (isFlutter.value) {
+    const kbHeight = FlutterBridge().getKeyHight()
+    emit('openKeyboard', kbHeight)
+  }
+}
+function onBlur() {
+  console.log('onBlur')
+  if (isFlutter.value) {
+
+    emit('closeKeyboard')
+  }
+
+}
 </script>

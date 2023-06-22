@@ -51,6 +51,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   })
 
   const isSupport = await isSupported()
+  useCommon().setSupport(isSupport)
 
 
   if (isSupport) {

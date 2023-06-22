@@ -66,9 +66,9 @@
             </ul>
           </template>
         </dd>
-        <dt :class="['msg-container', selectedRoom ? 'on' : 'off']">
+        <dt :class="['msg-container', selectedRoom ? 'on' : 'off']" ref="activeMsgRef">
           <DmActiveRoom v-if="selectedRoom" :selectedRoom="selectedRoom" @deleted-room="onDeletedRoom"
-            :key="selectedRoom.id" ref="activeRoomRef" />
+            @open-keyboard="openkeyboard" @close-keyboard="closeKeyboard" :key="selectedRoom.id" ref="activeRoomRef" />
           <div v-else class="dlc-chat-emptied">
             <p><i class="uil uil-comment-alt-dots" style="font-size:40px; color:#fff;"></i></p>
             <h2> {{ $t('no.selected.msg') }} </h2>
@@ -178,6 +178,8 @@ const userListRef = ref<HTMLElement | null>(null)
 const fromId = ref(0)
 const isAddData = ref()
 
+const activeMsgRef = ref()
+
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
 // 초기데이터 저장용
@@ -193,6 +195,7 @@ const isFullScreen = ref(false)
 const isMobile = computed(() =>
   window.matchMedia('screen and (max-width: 767px)')
 )
+const isFbSupported = computed(() => useCommon().setting.value.isFbSupported)
 
 useInfiniteScroll(
   msgEl,
@@ -265,7 +268,7 @@ onMounted(async () => {
   nextTick(async () => {
     onResize()
     await fetch()
-    if (!userInfo.value.setting.dm_alarm) {
+    if (!userInfo.value.setting.dm_alarm || !isFbSupported.value) {
       await pollingChat()
     }
   })
@@ -491,6 +494,14 @@ async function pollingChat() {
 function initSelect() {
   selectedRoom.value = null
 
+}
+
+function openkeyboard(height: number) {
+  activeMsgRef.value.style.paddingBottom = height + 'px'
+}
+
+function closeKeyboard() {
+  activeMsgRef.value.style.paddingBottom = '0px'
 }
 
 

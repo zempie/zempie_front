@@ -1,7 +1,8 @@
 
 export default function () {
   const setting = useState('setting', () => ({
-    lang: 'ko'
+    lang: 'ko',
+    isFbSupported: true
 
   }))
   const loading = useState('loading', () => {
@@ -18,12 +19,16 @@ export default function () {
   const setLoadingDone = () => {
     loading.value = false
   }
+  const setSupport = (state: boolean) => {
+    setting.value.isFbSupported = state
+  }
 
   return {
     setting,
     loading,
     setLang,
     setLoading,
-    setLoadingDone
+    setLoadingDone,
+    setSupport
   }
 }
