@@ -45,7 +45,19 @@
         <audio controls :src="file.url"></audio>
         <p>{{ file.name }}</p>
       </div>
-      <PostGridImg :images="initFiles" style="padding:10px" />
+      <!-- <PostGridImg :images="initFiles" style="padding:10px" /> -->
+      <img v-else-if="initFiles?.length === 1" style="width: 100%; margin: 0 auto; display: flex" :src="initFiles[0].url"
+        class="feed-img mt-3" />
+
+      <swiper v-else class="swiper" :modules="[Pagination]" style="height: 350px" :pagination="{ clickable: true }"
+        :options="swiperOption">
+        <swiper-slide v-for="file in initFiles" class="flex items-center" style="height:88%; ">
+          <img v-if="file.type === 'image'" style="max-height:100%; margin: 0 auto; display: flex" :src="file.url"
+            class="feed-img mt-3" />
+        </swiper-slide>
+        <div class="swiper-pagination" style="bottom: 10px; left: 0; width: 100%;" slot="pagination"></div>
+      </swiper>
+
     </template>
 
     <a v-if="!isObjEmpty(feed.metadata)" :href="feed.metadata?.url" target="_blank">

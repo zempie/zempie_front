@@ -202,10 +202,8 @@ onMounted(async () => {
       console.log('newest', newest.id)
       const newMsg = await msgFetch()
       if (newMsg && newMsg.length) {
-        console.log('has new message:', newMsg)
-
         fromId.value = newMsg[newMsg.length - 1].id
-        // scrollToBottom()
+        scrollToBottom()
       }
     }, 3000)
   }
@@ -337,7 +335,6 @@ function initInputMsg() {
 }
 
 function deleteMsg(msg: IMessage) {
-
   opDeleteMsgModal.value = true
   deleteTgMsg.value = msg
 }
@@ -354,9 +351,6 @@ async function leaveChat() {
     opLeaveChatModal.value = false
 
   }
-
-
-
 
 }
 
@@ -383,7 +377,8 @@ async function onDeleteMsg() {
 async function onFocus() {
   if (isFlutter.value) {
     const kbHeight = await FlutterBridge().getKeyHight()
-    emit('openKeyboard', kbHeight)
+    console.log('kbHeight', kbHeight)
+    emit('openKeyboard', Number(kbHeight))
   }
 }
 function onBlur() {

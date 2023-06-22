@@ -21,21 +21,15 @@
         <div v-if="snsAttachFiles.img?.length" class="mp-image" style="padding-bottom: 0px">
           <dd style="width: 100%">
 
-            <!-- <swiper :modules="[Pagination]" class="swiper-area" :slides-per-view="3" :space-between="10"
-              :pagination="{ clickable: true }"> -->
-            <!-- <swiper-slide v-for="(img, idx) in snsAttachFiles.img" :key="idx"
+            <swiper :modules="[Pagination]" class="swiper-area" :slides-per-view="3" :space-between="10"
+              :pagination="{ clickable: true }">
+              <swiper-slide v-for="(img, idx) in snsAttachFiles.img" :key="idx"
                 :style="`padding-bottom: 43px; background: url(${img.url}) center center / cover no-repeat; background-size:cover;`">
                 <span @click="deleteImg(idx)"><i class="uil uil-times-circle"></i></span>
-              </swiper-slide> -->
-            <!-- <div :class="snsAttachFiles.img?.length > 2 ? 'mul-grid' : 'grid'">
-                <div class="img-container" v-for="(img, idx) in snsAttachFiles.img" :key="idx">
-                  <span @click="deleteImg(idx)" class="pointer zem-color"><i class="uil uil-times-circle"></i></span>
-                  <img :src="img.url" />
-                </div>
-              </div> -->
-            <PostGridImg :images="snsAttachFiles.img" :isDelete="true" @delete-img="deleteImg" />
-            <!-- <div class="swiper-pagination" slot="pagination"></div> -->
-            <!-- </swiper> -->
+              </swiper-slide>
+              <!-- <PostGridImg :images="snsAttachFiles.img" :isDelete="true" @delete-img="deleteImg" /> -->
+              <div class="swiper-pagination" slot="pagination"></div>
+            </swiper>
           </dd>
         </div>
         <div v-if="isVideoUploading" class="video-loading">
