@@ -30,10 +30,10 @@
                 <dd>
                   <UserAvatarSk tag="p" />
                 </dd>
-                <dt>
+                <dt class="ml5">
                   <h3 class="grey-text w50p skeleton-animation">
                   </h3>
-                  <p class="grey-text  skeleton-animation"></p>
+                  <p class="grey-text skeleton-animation"></p>
                 </dt>
                 <dd>
                 </dd>
@@ -112,10 +112,7 @@
                 </dl>
               </li>
             </ul>
-            <ul v-if="findUserPending" class="flex row justify-center">
-              <ClipLoader color='#ff6e17' size="20px" />
-            </ul>
-            <ul v-else class="user-list">
+            <ul v-else-if="!followPending" class="user-list">
               <li v-if="userList?.length" v-for="user in userList" :key="user.id" class="pointer mb10"
                 @click="onClickUser(user)">
                 <dl class="row">
@@ -132,8 +129,10 @@
                 {{ $t('not.found.user') }}
               </li>
             </ul>
+            <ul v-if="findUserPending" class="flex row content-center">
+              <ClipLoader color='#ff6e17' size="20px" />
+            </ul>
           </div>
-
         </div>
       </el-dialog>
     </ClientOnly>
