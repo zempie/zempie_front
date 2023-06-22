@@ -176,18 +176,15 @@ watch(
     if (val) {
       if (msgList.value.length) {
         const firstMsg = msgList.value[0]
-        console.log(firstMsg.id)
         if (firstMsg) {
           fromId.value = firstMsg.id - 1
           order.value = 'desc'
-          // console.log('scrollContent.value?.scrollHeight', scrollContent.value?.scrollHeight)
           const prevScroll = _.cloneDeep(scrollContent.value?.scrollHeight)
           await msgFetch(prevScroll)
         }
 
       }
     }
-    console.log('scroll', val)
   }
 )
 
@@ -213,11 +210,15 @@ onMounted(async () => {
   await getMessages()
   // isAddData.value = true
   if (!userInfo.value.setting.dm_alarm || !isFbSupported.value) {
+
     msgPolling.value = setInterval(async () => {
       const newest = msgList.value[msgList.value.length - 1]
       fromId.value = newest.id + 1
+      console.log('newest', newest.id)
       const newMsg = await msgFetch()
       if (newMsg && newMsg.length) {
+        console.log('has new message:', newMsg)
+
         fromId.value = newMsg[newMsg.length - 1].id
         // scrollToBottom()
       }
@@ -291,6 +292,7 @@ async function msgFetch(yPos?: number) {
         msgList.value = [...msgList.value, ...messages]
       }
     } else {
+      order.value = 'asc'
       const msg = messages.reverse()
       msgList.value = [...msg, ...msgList.value]
       nextTick(() => {
