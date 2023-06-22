@@ -393,9 +393,9 @@ async function onDeleteMsg() {
   }
 }
 
-function onFocus() {
+async function onFocus() {
   if (isFlutter.value) {
-    const kbHeight = FlutterBridge().getKeyHight()
+    const kbHeight = await FlutterBridge().getKeyHight()
     emit('openKeyboard', kbHeight)
   }
 }
