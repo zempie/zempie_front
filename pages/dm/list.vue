@@ -112,6 +112,9 @@
                 </dl>
               </li>
             </ul>
+            <ul v-if="findUserPending" class="flex row justify-center">
+              <ClipLoader color='#ff6e17' size="20px" />
+            </ul>
             <ul v-else class="user-list">
               <li v-if="userList?.length" v-for="user in userList" :key="user.id" class="pointer mb10"
                 @click="onClickUser(user)">
@@ -134,7 +137,6 @@
         </div>
       </el-dialog>
     </ClientOnly>
-
   </div>
 </template>
 <script setup lang="ts">
@@ -143,6 +145,8 @@ import { dateFormat } from '~~/scripts/utils'
 import { IChat, IMessage, IUser } from '~~/types'
 import { debounce } from '~~/scripts/utils'
 import { useInfiniteScroll } from '@vueuse/core'
+import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
+
 
 const CHAT_LIMIT = 10
 
@@ -169,6 +173,7 @@ const msgList = ref<IMessage[]>()
 
 const roomPending = ref(true)
 const followPending = ref(true)
+const findUserPending = ref(false)
 const msgEl = ref<HTMLElement | null>(null)
 const userListRef = ref<HTMLElement | null>(null)
 const fromId = ref(0)
@@ -332,6 +337,7 @@ const onInputUser = debounce(async () => {
 
 async function getUsers() {
   let isPending = true
+  findUserPending.value = true
 
   if (userKeyword.value) {
     //TODO: 무한 스크롤 처리 해야됨 
@@ -342,11 +348,14 @@ async function getUsers() {
         const { result } = data.value
         userList.value = result
         isPending = pending.value
+        findUserPending.value = pending.value
       } else if (error.value) {
         isPending = pending.value
+        findUserPending.value = pending.value
       }
     } finally {
       followPending.value = isPending
+      findUserPending.value = isPending
 
     }
   } else {
