@@ -8,7 +8,7 @@
     <div class="cf-info">
       <h3>{{ user.nickname }}</h3>
       <h4>{{ user.name }}</h4>
-      <span v-if="user.follow_you" class="badge">{{ $t('is.following') }}</span>
+      <span v-if="user.follows_you" class="badge">{{ $t('is.following') }}</span>
       <dl>
         <dd>
           <h4>{{ user.followers_cnt }}</h4>
