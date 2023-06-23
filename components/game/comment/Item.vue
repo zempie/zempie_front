@@ -5,7 +5,8 @@
       <div class="column right w100p">
         <div class="flex row justify-between w100p align-center" style="margin-top:0px">
           <div style="margin-top:0px">
-            <span class="name">{{ comment.user?.nickname }} {{ comment.user?.name }}</span>
+            <NuxtLink class="name" :to="$localePath(`/${comment.user?.nickname}`)">
+              {{ comment.user?.nickname }}</NuxtLink>
             <span class="ml5">{{ dateFormat(comment.created_at) }}</span>
           </div>
           <CommentMenu v-if="hasOptions" :comment="comment" @delete-comment="deleteComment" ref="commentMenuRef"
@@ -16,8 +17,7 @@
     <p v-if="!isEdit" class="comment">
       {{ comment.content }}
     </p>
-    <CommonInput v-else ref="inputRef" :text="comment?.content" @send-input="updateComment"
-      class="mt10 justify-between pr10" />
+    <CommonInput v-else ref="inputRef" @send-input="updateComment" class="mt10 justify-between pr10" />
     <div class="options" v-if="hasOptions" style="justify-content: flex-start;">
       <!-- TODO: 2차 대댓글  -->
       <!-- <p style="display: inline-block">
@@ -49,10 +49,12 @@
   </li>
 </template>
 <script setup lang="ts">
-import { ElDropdown } from 'element-plus';
 import { PropType } from 'vue';
 import { dateFormat } from '~~/scripts/utils'
 import { IReply } from '~~/types';
+
+const { $localePath } = useNuxtApp()
+
 
 const props = defineProps({
   comment: Object as PropType<IReply>,
@@ -197,6 +199,7 @@ li {
     height: 35px;
     width: 35px;
     margin-right: 10px;
+    border-radius: 100%;
   }
 
   .options {
@@ -215,4 +218,4 @@ li {
 .recomment {
   margin-left: 45px;
 }
-</style>
+</style>``₩
