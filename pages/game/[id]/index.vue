@@ -199,6 +199,7 @@ function copyUrl() {
   .desc {
     color: #000;
     line-break: auto;
+    overflow-wrap: anywhere;
   }
 }
 </style>

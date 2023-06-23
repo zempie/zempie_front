@@ -23,10 +23,12 @@ const props = defineProps({
 onMounted(() => {
   if (props.text) {
     inputText.value = props.text
+    console.log('?props', props.text)
   }
 })
 
 function initInput() {
+  console.log('init')
   inputText.value = ''
 }
 
