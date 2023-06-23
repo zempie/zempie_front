@@ -86,6 +86,8 @@ async function fetch() {
         followings_cnt: user.followings_cnt,
         is_following: user.is_following,
         picture: user.profile_img,
+        follow_you: user.follow_you
+
       }
     })
   }

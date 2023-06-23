@@ -13,7 +13,7 @@
                   <template v-if="userList?.length">
                     <h2>{{ $t('user') }}</h2>
                     <el-dropdown-item v-for="user in userList" :key="user.id">
-                      <div @click="moveUserPage(user.nickname)">
+                      <div @click="moveUserPage(user?.nickname)">
                         <dl>
                           <dt>
                             <UserAvatar :user="user" :tag="'span'" style="width:40px" />

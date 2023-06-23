@@ -9,7 +9,7 @@
             <NuxtLink :to="$localePath('/terms')">{{ $t('terms') }}</NuxtLink>
             <NuxtLink :to="$localePath('/privacy')" style="color:#f97316">{{ $t('term.private') }}</NuxtLink>
           </p>
-          <div>
+          <div class="info">
             {{ $t('fromthered') }} &nbsp; | &nbsp; {{ $t('company.owner') }} :
             {{ $t('company.owner.name') }} &nbsp; | &nbsp;{{
               $t('company.id')
@@ -27,7 +27,7 @@
           </div>
 
         </dt>
-        <dd>
+        <dd class="link">
           <a :href="config.ZEMPIE_INSTA_URL" target="_blank" class="insta-icon" aria-label="Zempie instagram">
             <i class="uil uil-instagram"></i>
           </a>
@@ -63,5 +63,29 @@ const isPurchase = computed(() => (route.name as string).includes('purchase'))
 
 .facebook-icon:hover {
   color: #4267b2;
+}
+
+@media all and (max-width: 479px) {
+  .footer {
+    max-height: 160px;
+
+    dl {
+      padding: 15px 0px;
+
+      .info {
+        margin-top: 10px;
+      }
+
+      br:first-child {
+        display: none;
+      }
+
+      .link {
+        a {
+          margin-top: 10px;
+        }
+      }
+    }
+  }
 }
 </style>

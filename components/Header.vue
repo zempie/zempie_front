@@ -68,7 +68,11 @@
           </div>
           <div class="header-info ml0" v-if="!isLoading && isLogin" :key="user.id">
             <NotificationHeaderButton />
-            <!-- <DmHeaderButton /> -->
+            <!-- <button class="btn-circle-icon ml10" @click="$router.push($localePath('/dm/list'))">
+              <i class="uil uil-comment-alt"></i>
+              <span class="new-dm-badge">99+</span>
+            </button> -->
+
             <UserMenu />
           </div>
           <div v-else-if="!isLoading && !isLogin" class="header-login">
@@ -423,6 +427,16 @@ async function moveZemWorld() {
       display: none;
     }
   }
+}
+
+.new-dm-badge {
+  font-size: 12px;
+  padding: 0px 5px;
+  color: white;
+  width: auto;
+  height: auto;
+  z-index: 99;
+  border-radius: 10px;
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {

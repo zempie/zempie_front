@@ -2,6 +2,8 @@
   <NuxtLayout name="game-channel-header">
     <dl class="three-area">
       <dt>
+        <GameComments class="mb20" :game="game" />
+
         <div class="ta-game-list">
           <dl>
             <dt>{{ $t('game') }}</dt>
@@ -28,6 +30,7 @@
             <li>{{ $t('no.game') }}</li>
           </ul>
         </div>
+
       </dt>
       <dd>
         <PostTimeline type="game" :isMine="isMine" />
@@ -74,8 +77,7 @@ const isMine = computed(
 /**
  * seo 반영은 함수안에서 되지 않으므로 최상단에서 진행함
  */
-const { data } = await useAsyncData<{ result: { game: IGame } }>('gameInfo', () =>
-  $fetch(`/launch/game/${gamePath.value}`, getZempieFetchOptions('get', true)),
+const { data } = await useAsyncData<{ result: { game: IGame } }>('gameInfo', () => $fetch(`/launch/game/${gamePath.value}`, getZempieFetchOptions('get', true)),
   {
     initialCache: false
   }

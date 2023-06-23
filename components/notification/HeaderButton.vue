@@ -88,7 +88,7 @@ watch(
   () => useUser().user.value.info,
   (val) => {
 
-    if (val?.new_noti_count) hasNewNoti.value = true
+    if (val?.meta.unread_noti_count) hasNewNoti.value = true
   }
 )
 
@@ -113,7 +113,7 @@ async function showAlarmList() {
   needAlarmRefresh.value = false
 
   useAlarm().resetNewNoti()
-  useUser().updateUserKey('new_noti_count', 0)
+  useUser().updateUserKey('meta.unread_noti_count', 0)
 
   hasNewNoti.value = false
 }

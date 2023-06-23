@@ -1,6 +1,9 @@
 export default function () {
   const alarm = useState('alarm', () => ({
-    newNoti: null
+    newNoti: null,
+    // unread_dm:0,
+    newDm: null
+
   }))
 
   const setNewNoti = (noti) => {
@@ -11,10 +14,15 @@ export default function () {
     alarm.value.newNoti = null
   }
 
+  const setNewDm = (dm) => {
+    alarm.value.newDm = dm
+  }
+
   return {
     alarm,
     setNewNoti,
-    resetNewNoti
+    resetNewNoti,
+    setNewDm
   }
 
 }

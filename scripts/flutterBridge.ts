@@ -130,7 +130,11 @@ export default function () {
     async openFile(options?: { type: string, multiple: boolean }) {
       const response = await callHandler("openFile", options);
       return response;
-    }
+    },
+    async getKeyHight() {
+      return await callHandler("getKeyHight");
+    },
+
 
   };
 

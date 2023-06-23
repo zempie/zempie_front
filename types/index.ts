@@ -26,11 +26,15 @@ export interface IUser {
     like: boolean,
     reply: boolean,
     theme: number,
-    theme_extra: any
+    theme_extra: any,
+    dm_alarm: boolean
   },
   banner_img?: string,
   profile_img?: string,
-  new_noti_count?: number,
+  meta?: {
+    unread_noti_count?: number,
+    unread_dm_count?: number,
+  }
   nickname?: string
 }
 
@@ -317,7 +321,7 @@ export interface IComment {
   content: string,
   created_at: string,
   deleted_at: string,
-  dislike_cntt: number,
+  dislike_cnt: number,
   id: string,
   is_liked: boolean,
   is_pinned: boolean,
@@ -331,6 +335,62 @@ export interface IComment {
   user_id: number,
   user_uid: string,
   parent_id?: string,
+}
+
+export interface IChat {
+  id: number,
+  created_at: string,
+  unread_count: number,
+  is_read: boolean,
+  last_message: IMessage,
+  last_message_sent_at: string,
+  joined_users: IUser[],
+  is_group_room: boolean,
+  last_chat_id: number,
+  unread_start_id: number
+}
+
+export interface IMessage {
+  id: number,
+  contents: string,
+  text_html: string,
+  sender: IUser,
+  conversation_id: number,
+  created_at: string,
+  media_attachments?: [
+    {
+      id: number,
+      type: string,
+      url: string,
+      preview_url: string,
+      user_uid: string,
+      file_name: string,
+      content_type: string
+    }
+  ],
+  card?: {
+    id: number,
+    url: string,
+    title: string,
+    description: string,
+    type: string,
+    provider_user: IUser
+    preview_image: string
+  }
+
+}
+export interface IReply {
+  content: string,
+  count_bad: number,
+  count_good: number,
+  count_reply: number,
+  created_at: string,
+  id: number,
+  my_reply: number,
+  target: number,
+  updated_at: string
+  user: IUser,
+  game_id?: number
 }
 
 
@@ -373,7 +433,8 @@ export enum eNotificationType {
   report,
   retweet,
   follow,
-  recomment
+  recomment,
+  dm
 }
 
 export enum eMetadataType {

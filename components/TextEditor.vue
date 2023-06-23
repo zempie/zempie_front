@@ -27,6 +27,7 @@
                 :style="`padding-bottom: 43px; background: url(${img.url}) center center / cover no-repeat; background-size:cover;`">
                 <span @click="deleteImg(idx)"><i class="uil uil-times-circle"></i></span>
               </swiper-slide>
+              <!-- <PostGridImg :images="snsAttachFiles.img" :isDelete="true" @delete-img="deleteImg" /> -->
               <div class="swiper-pagination" slot="pagination"></div>
             </swiper>
           </dd>
@@ -206,6 +207,7 @@ const attachFileArr = computed(() => {
   }
 })
 
+const MAX_IMG_COUNT = 4
 const snsAttachFiles = ref({
   img: null,
   video: null,
@@ -633,9 +635,8 @@ async function onSubmit() {
         '/community/att',
         getZempieFetchOptions('post', true, formData)
       )
-      console.log('data', data.value)
 
-      payload['attatchment_files'] = data.value.result
+      payload['attatchment_files'] = data.value?.result
     }
   }
   switch (props.type) {
@@ -671,6 +672,14 @@ function getEditorContent(content: Editor) {
 
 async function uploadImageFile() {
 
+  if (snsAttachFiles.value.img?.length >= MAX_IMG_COUNT) {
+    ElMessage({
+      message: `${t('maxFile.count.text1')} ${MAX_IMG_COUNT}${t('maxFile.count.text2')}`,
+      type: 'warning',
+    })
+    return
+  }
+
   if (activeTab.value.toUpperCase() === 'SNS') {
     if (snsAttachFiles.value.video || snsAttachFiles.value.audio?.length) {
       ElMessage({
@@ -688,8 +697,23 @@ async function uploadImageFile() {
 
 function onSelectImageFile(event: Event) {
 
+  let files = (event.target as HTMLInputElement).files
 
-  const files = (event.target as HTMLInputElement).files
+  if (files.length > MAX_IMG_COUNT) {
+    ElMessage({
+      message: `${t('maxFile.count.text1')} ${MAX_IMG_COUNT}${t('maxFile.count.text2')}`,
+      type: 'warning',
+    })
+
+    const transfer = new DataTransfer();
+    Array.from(files)
+      .slice(0, MAX_IMG_COUNT)
+      .forEach(file => {
+        transfer.items.add(file)
+      })
+    files = transfer.files;
+  }
+
 
   for (const file of files) {
     if (file.type === 'image/svg+xml') {
@@ -1751,6 +1775,73 @@ function getFirstPostContent(content: string) {
     button {
       padding: 0px;
       width: 70px !important;
+    }
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(150px, 2fr));
+  grid-template-rows: repeat(1, minmax(150px, 2fr));
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
+
+  .img-container {
+    position: relative;
+
+    span {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      font-size: 20px;
+      color: #333;
+
+      &:hover {
+        color: #f97316;
+
+      }
+    }
+
+    img {
+      display: flex;
+      width: 100%;
+      object-fit: cover;
+      height: 150px;
+      border-radius: 10px;
+    }
+  }
+}
+
+.mul-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(150px, 2fr));
+  grid-template-rows: repeat(2, minmax(150px, 2fr));
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
+
+
+  .img-container {
+    position: relative;
+
+    span {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      font-size: 20px;
+      color: #333;
+
+      &:hover {
+        color: #f97316;
+
+      }
+    }
+
+    img {
+      display: flex;
+      width: 100%;
+      object-fit: cover;
+      height: 150px;
+      border-radius: 10px;
     }
   }
 }
