@@ -272,7 +272,10 @@ watch(
 
 
 onMounted(async () => {
+
   nextTick(async () => {
+    console.log('isFbSupported', isFbSupported.value)
+
     onResize()
     await fetch()
     if (!userInfo.value.setting.dm_alarm || !isFbSupported.value) {
@@ -317,7 +320,7 @@ async function fetch(isPolling: boolean = false) {
             if (room.updated_message.length) {
 
               room.updated_message.map((msg) => {
-                //-1인 경우 삭제된 메세지임 
+                //CASE 1: 삭제된 메세지가 업데이트 된 경우 : chat_idx : -1인 경우 삭제된 메세지임 
                 if (msg.chat_idx === -1 && (targetRoom.last_message.id === msg.id)) {
                   roomList.value = roomList.value.map((room3) => {
                     if (room3.id === room.id) {
@@ -333,6 +336,21 @@ async function fetch(isPolling: boolean = false) {
                       return room3
                     }
                   })
+                }
+                //CASE 2 : 새로운 메세지 수신 된 경우
+                else if (room.id === targetRoom.id) {
+                  roomList.value = roomList.value.map((room3) => {
+                    if (room3.id === room.id) {
+                      return {
+                        ...room3,
+                        last_message: msg,
+                        unread_count: room3.unread_count + 1
+                      }
+                    } else {
+                      return room3
+                    }
+                  })
+
                 }
               })
 
