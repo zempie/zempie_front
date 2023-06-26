@@ -26,31 +26,9 @@
                 games
               </NuxtLink>
             </li>
-            <ClientOnly>
-              <el-dropdown trigger="click" class="menu-dropdown uppercase font15">
-                <span class="el-dropdown-link ">
-                  GameJam
-                </span>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item class="header-menu" @click="router.push($localePath('/zem-jam'))">
-                      ZEMJAM
-                    </el-dropdown-item>
-                    <el-dropdown-item class="header-menu" @click="router.push($localePath('/game-jam-plus'))">
-                      GJ+
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-            </ClientOnly>
             <li class="uppercase pointer">
               <a id="zempieWorldMenu" @click="moveZemWorld">
                 Z-world
-              </a>
-            </li>
-            <li v-if="!isFlutter" class="uppercase pointer">
-              <a id="zempieWorldMenu" :href="config.ANDROID_DOWNLOAD_LINK">
-                App
               </a>
             </li>
           </ul>
@@ -72,7 +50,6 @@
               <i class="uil uil-comment-alt"></i>
               <!-- <span class="new-dm-badge">99+</span> -->
             </button>
-
             <UserMenu />
           </div>
           <div v-else-if="!isLoading && !isLogin" class="header-login">
@@ -107,19 +84,6 @@
               <a class="pointer" id="zempieWorldMenu" @click="moveZemWorld">
                 <i class="uil uil-globe"></i>
                 Zempie world
-              </a>
-              <NuxtLink :to="$localePath('/zem-jam')" @click.native="isHeaderSideMobile = false"><i
-                  class="uil uil-play"></i>
-                ZEMJAM
-              </NuxtLink>
-              <NuxtLink :to="$localePath('/game-jam-plus')" @click.native="isHeaderSideMobile = false"><i
-                  class="uil uil-keyboard"></i>
-                GJ+
-              </NuxtLink>
-
-              <a v-if="!isFlutter" class="pointer" id="zempieWorldMenu" :href="config.ANDROID_DOWNLOAD_LINK">
-                <i class="uil uil-globe"></i>
-                Zempie App
               </a>
             </div>
           </div>

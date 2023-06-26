@@ -55,7 +55,7 @@
                   </dt>
                   <dd>
                     <h4 class="font12"><i class="uis uis-clock" style="color:#c1c1c1;"></i>
-                      {{ dateFormat(room.last_chat_at) }} </h4>
+                      {{ dateFormat(room.last_chat_at ? room.last_chat_at : room.created_at) }} </h4>
                     <span v-if="room.unread_count > 0">{{ room.unread_count }}</span>
                   </dd>
                 </dl>
@@ -544,7 +544,7 @@ function onDeletedRoom(room: IChat) {
 //fcm이 작동하지 않는 경우 polling 해야됨
 async function pollingRoom() {
   roomPolling.value = setInterval(async () => {
-    fromId.value = roomList.value[roomList.value.length - 1].id + 1
+    fromId.value = roomList.value[roomList.value.length - 1]?.id + 1
     isAddData.value = true
     await fetch()
   }, 5000)

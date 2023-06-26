@@ -60,9 +60,7 @@ export default defineNuxtConfig({
     middleware: ['auth']
   },
   css: [
-    '@/assets/css/animate.css',
     '@/assets/css/jquery-ui.css',
-
     '@/assets/css/layout.css',
     '@/assets/css/style.css',
     '@/assets/css/fonts.css',
