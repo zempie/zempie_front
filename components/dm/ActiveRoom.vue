@@ -26,7 +26,8 @@
     </dd>
   </dl>
   <div class="dlc-chat-content" ref="scrollContent">
-    <div :class="msg.sender.id === userInfo.id ? 'receiver-chat' : 'sender-chat'" v-for="msg in msgList" ref="msgEl">
+    <div :class="msg.sender.id === userInfo.id ? 'receiver-chat' : 'sender-chat'" v-for="(msg, index) in msgList"
+      :ref="el => { divs[msg.id] = el }" :key="index">
       <h4>{{ dateFormat(msg.created_at) }}</h4>
       <ul>
         <li class="flex">
@@ -103,7 +104,7 @@
   </ClientOnly>
 </template>
 <script setup lang="ts">
-import _ from 'lodash'
+import _, { now } from 'lodash'
 import { dateFormat } from '~~/scripts/utils'
 import { IChat, IMessage, IUser } from '~~/types'
 import { ElDropdown, ElDialog, ElMessage } from 'element-plus';
@@ -119,6 +120,8 @@ const { t, locale } = useI18n()
 
 const MAX_MSG_LIMIT = 15
 const msgEl = ref<HTMLElement | null>(null)
+const divs = ref([])
+
 const inputMsg = ref('')
 const msgList = ref()
 
@@ -137,7 +140,7 @@ const userInfo = computed(() => useUser().user.value.info)
 const msgPolling = ref(null)
 const isFbSupported = computed(() => useCommon().setting.value.isFbSupported)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
-
+const unreadStartId = computed(() => props.selectedRoom.unread_start_id)
 
 
 //중복 클릭 방지용
@@ -149,8 +152,7 @@ const isSending = ref(false)
 const { arrivedState, y } = useScroll(scrollContent, {
   offset: { top: 20, bottom: 10 }
 })
-const { top } = toRefs(arrivedState)
-
+const { top, bottom } = toRefs(arrivedState)
 
 const emit = defineEmits(['deletedRoom', 'openKeyboard', 'closeKeyboard'])
 
@@ -178,34 +180,47 @@ watch(
 
 
 
-// useInfiniteScroll(
-//   msgEl,
-//   async () => {
-//     if (isAddData.value) {
-//       fromId.value = roomList.value[roomList.value.length - 1].id + 1
-//       await fetch(true)
-//     }
-//   },
-//   { distance: 10 }
-// )
+watch(
+  () => bottom.value,
+  async (val) => {
+    if (val) {
+      if (msgList.value.length) {
+        const lastMsg = msgList.value[msgList.value.length - 1]
+        console.log(lastMsg)
+        if (lastMsg) {
+          fromId.value = lastMsg.id + 1
+          order.value = 'asc'
+          await msgFetch()
+        }
+
+      }
+    }
+  }
+)
+
 
 
 onMounted(async () => {
   //FIXME : 마이너스로 넘어오는 경우가 있어서 우선은 이렇게 처리
   if (props.selectedRoom.unread_count <= 0) {
     fromId.value = props.selectedRoom.last_message?.id - MAX_MSG_LIMIT + 1
+  } else {
+    fromId.value = unreadStartId.value - MAX_MSG_LIMIT + 1
   }
-
-  await getMessages()
+  await msgFetch()
 
   nextTick(() => {
     if (props.selectedRoom.unread_count <= 0) {
       // 읽을 메세지가 없는 경우 스크롤 맨 하단
       scrollToBottom()
+    } else {
+      divs.value[unreadStartId.value].scrollIntoView()
     }
   })
-  if (!userInfo.value.setting.dm_alarm || !isFbSupported.value) {
 
+
+  if (!userInfo.value.setting.dm_alarm || !isFbSupported.value || !useCommon().setting.value.isNotiAllow) {
+    clearInterval(msgPolling.value)
     msgPolling.value = setInterval(async () => {
       if (msgList.value) {
         const newest = msgList.value[msgList.value?.length - 1]
@@ -238,36 +253,38 @@ function scrollToBottom() {
 
 
 
-async function getMessages() {
+// async function getMessages() {
 
-  const payload = {
-    from_id: fromId.value,
-    limit: msgLimit.value,
-    order: 'asc'
-  }
+//   const payload = {
+//     from_id: fromId.value,
+//     limit: msgLimit.value,
+//     order: 'asc'
+//   }
 
-  const { data, error } = await useCustomAsyncFetch<{ messages: IMessage[] }>(createQueryUrl(`/chat/room/${props.selectedRoom.id}`, payload), getComFetchOptions('get', true))
+//   console.log(payload)
 
-  //TODO: 로딩 넣어야함
+//   const { data, error } = await useCustomAsyncFetch<{ messages: IMessage[] }>(createQueryUrl(`/chat/room/${props.selectedRoom.id}`, payload), getComFetchOptions('get', true))
 
-  if (data.value) {
-    const { messages } = data.value
+//   //TODO: 로딩 넣어야함
 
-    if (isAddData.value) {
-      if (messages.length > 0) {
-        msgList.value = [...msgList.value, ...messages]
-      } else if (messages.length === 0) {
-        isAddData.value = false
-      }
-    }
-    else {
-      msgList.value = messages
-      isAddData.value = true
-    }
-    return messages
-  }
+//   if (data.value) {
+//     const { messages } = data.value
 
-}
+//     if (isAddData.value) {
+//       if (messages.length > 0) {
+//         msgList.value = [...msgList.value, ...messages]
+//       } else if (messages.length === 0) {
+//         isAddData.value = false
+//       }
+//     }
+//     else {
+//       msgList.value = messages
+//       isAddData.value = true
+//     }
+//     return messages
+//   }
+
+// }
 
 async function msgFetch(yPos?: number) {
   if (isSending.value) return
@@ -316,7 +333,6 @@ async function sendMsg() {
   msgAcceessableCnt -= 1
   isSending.value = true
 
-
   const content = _.cloneDeep(inputMsg.value)
   inputMsg.value = ''
 
@@ -350,8 +366,26 @@ async function sendMsg() {
 
 }
 
+function renderMsg() {
+  if (msgList.value?.length) {
+    msgList.value = [...msgList.value, {
+      contents: inputMsg.value,
+      created_at: new Date(),
+      sender: userInfo.value
+    }]
+  } else {
+    msgList.value = [{
+      contents: inputMsg.value,
+      created_at: new Date(),
+      sender: userInfo.value
+
+    }]
+  }
+}
 function addMsg(msg: IMessage) {
   msgList.value = [...msgList.value, ...newMsg([msg])]
+  console.log('msg', msgList.value)
+
   nextTick(() => {
     scrollToBottom()
   })

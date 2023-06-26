@@ -343,7 +343,7 @@ export interface IChat {
   unread_count: number,
   is_read: boolean,
   last_message: IMessage,
-  last_message_sent_at: string,
+  last_chat_at: string,
   joined_users: IUser[],
   is_group_room: boolean,
   last_chat_id: number,

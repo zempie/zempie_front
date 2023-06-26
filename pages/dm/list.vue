@@ -55,7 +55,7 @@
                   </dt>
                   <dd>
                     <h4 class="font12"><i class="uis uis-clock" style="color:#c1c1c1;"></i>
-                      {{ dateFormat(room.created_at) }} </h4>
+                      {{ dateFormat(room.last_chat_at) }} </h4>
                     <span v-if="room.unread_count > 0">{{ room.unread_count }}</span>
                   </dd>
                 </dl>
@@ -231,17 +231,14 @@ watch(
               return room
             }
           })
-          console.log('existRoom', existRoom)
 
           if (existRoom.length) {
             roomList.value = roomList.value.map((room) => {
               if (room.id === roomId) {
                 return {
                   ...room,
-                  unread_count: room.unread_count += 1,
-                  last_message: {
-                    contents: meta.contents
-                  }
+                  unread_count: increaseUnreadCount(room.unread_count),
+                  last_message: meta
                 }
               } else {
                 return room
@@ -272,10 +269,9 @@ watch(
 
 
 onMounted(async () => {
+  clearInterval(roomPolling.value)
 
   nextTick(async () => {
-    console.log('isFbSupported', isFbSupported.value)
-
     onResize()
     await fetch()
     if (!userInfo.value.setting.dm_alarm || !isFbSupported.value || !useCommon().setting.value.isNotiAllow) {
@@ -337,14 +333,16 @@ async function fetch(isPolling: boolean = false) {
                     }
                   })
                 }
+
                 //CASE 2 : 새로운 메세지 수신 된 경우
-                else if (room.id === targetRoom.id) {
+                else if (room.id === targetRoom?.id) {
                   roomList.value = roomList.value.map((room3) => {
                     if (room3.id === room.id) {
                       return {
                         ...room3,
                         last_message: msg,
-                        unread_count: room3.unread_count + 1
+                        unread_count: selectedRoom.value ? selectedRoom.value.id !== room3.id && isNotMyMsg(msg) && increaseUnreadCount(room3.unread_count) : isNotMyMsg(msg) && increaseUnreadCount(room3.unread_count),
+                        unread_start_id: room.unread_start_id
                       }
                     } else {
                       return room3
@@ -375,6 +373,13 @@ async function fetch(isPolling: boolean = false) {
   finally {
     roomPending.value = false
   }
+}
+const isNotMyMsg = (msg: IMessage) => {
+  return msg.sender.id !== userInfo.value.id
+}
+
+const increaseUnreadCount = (unreadCount: number) => {
+  return unreadCount + 1
 }
 
 const newRooms = ((rooms: IChat[]) => {
