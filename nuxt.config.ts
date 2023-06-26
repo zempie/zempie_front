@@ -73,8 +73,9 @@ export default defineNuxtConfig({
     'cookie-universal-nuxt',
     ['@nuxtjs/i18n', i18n],
     '@vueuse/nuxt',
-
+    ['nuxt-compress', { gzip: { threshold: 8192 } }]
   ],
+
 
   publicRuntimeConfig: {
     ENV: process.env.ENV,

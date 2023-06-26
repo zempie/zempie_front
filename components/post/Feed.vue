@@ -113,7 +113,6 @@
 </template>
 
 <script setup lang="ts">
-import Prism from '~/plugins/prism'
 import _ from 'lodash'
 import { PropType } from 'vue'
 import { IComment, IFeed } from '~~/types'
@@ -134,7 +133,6 @@ import {
 
 import { useI18n } from 'vue-i18n'
 
-// import hljs from 'highlight.js'
 import { useWindowScroll, useInfiniteScroll } from '@vueuse/core'
 
 const { $localePath } = useNuxtApp()
@@ -213,7 +211,6 @@ const isOverflow = computed(() => {
 const initFiles = _.cloneDeep(attatchment_files.value)
 
 onMounted(() => {
-  Prism.highlightAll()
   const dom = props.feed?.content && htmlToDomElem(props.feed.content)
 })
 

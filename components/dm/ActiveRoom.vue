@@ -30,7 +30,7 @@
       :ref="el => { divs[msg.id] = el }" :key="index">
       <h4>{{ dateFormat(msg.created_at) }}</h4>
       <ul>
-        <li class="flex">
+        <li class="flex" style="overflow:auto; word-break: break-all;">
           <DmMsgMenu :msg="msg" v-if="msg.sender.id === userInfo.id" @delete-msg="deleteMsg" />
           <span>{{ msg.contents }}</span>
         </li>
