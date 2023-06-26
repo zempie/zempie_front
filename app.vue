@@ -20,6 +20,8 @@ const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
 const tmIframeCode = `<iframe src="https://www.googletagmanager.com/ns.html?id=${config.TAG_MANAGER_ID}"
 height="0" width="0" style="display:none;visibility:hidden"></iframe>`
+
+const userSetting = computed(() => useCommon().setting.value)
 shared.createHeadMeta(
   t('seo.landing.title'),
   t('seo.landing.description')
@@ -54,22 +56,11 @@ onBeforeMount(async () => {
     cookie.value = null
   }
 
+  notiPerCheck()
 
+
+  //언어
   const lang = isFlutter.value ? await flutterBridge().currentLanguage() : navigator.language.split('-')[0]
-  // //TODO: 언어 확인
-  // if (isFlutter.value) {
-
-  //   const [lang] = await flutterBridge().currentLanguage()
-
-  // } else {
-
-  //   const lang = navigator.language.split('-')[0]
-  //   useCommon().setLang(locale.value)
-  //   router.replace(route.fullPath)
-
-  // }
-
-  console.log('lang', lang)
 
   if (lang === 'ko') {
     locale.value = 'ko'
@@ -83,6 +74,28 @@ onBeforeMount(async () => {
   router.replace(route.fullPath)
 
 })
+
+function notiPerCheck() {
+  const permissionCheck = Notification.permission;
+  switch (permissionCheck) {
+    case 'default':
+      Notification.requestPermission()
+        .then(result => {
+          if (result === 'denied') {
+            useCommon().setNoti(false)
+          } else {
+            useCommon().setNoti(true)
+          }
+        });
+      break;
+    case 'granted':
+      useCommon().setNoti(true)
+      break
+    case 'denied':
+      useCommon().setNoti(false)
+      break
+  }
+}
 </script>
 
 <style lang="scss">

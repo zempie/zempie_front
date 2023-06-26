@@ -278,7 +278,7 @@ onMounted(async () => {
 
     onResize()
     await fetch()
-    if (!userInfo.value.setting.dm_alarm || !isFbSupported.value) {
+    if (!userInfo.value.setting.dm_alarm || !isFbSupported.value || !useCommon().setting.value.isNotiAllow) {
       await pollingRoom()
     }
   })
