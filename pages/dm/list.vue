@@ -50,7 +50,7 @@
                     <UserAvatar :user="room.joined_users[0]" tag="p" />
                   </dd>
                   <dt>
-                    <h3>{{ room.joined_users[0]?.nickname }}</h3>
+                    <h3>{{ room.joined_users[0]?.name }}</h3>
                     <p>{{ room?.last_message?.contents }}</p>
                   </dt>
                   <dd>
@@ -276,7 +276,7 @@ onMounted(async () => {
     onResize()
     await fetch()
     if (!userInfo.value.setting.dm_alarm || !isFbSupported.value) {
-      await pollingChat()
+      await pollingRoom()
     }
   })
   window.addEventListener('resize', onResize)
@@ -292,6 +292,7 @@ onBeforeUnmount(() => {
 function onResize() {
   isFullScreen.value = isMobile.value.matches ? true : false
 }
+
 async function fetch(isPolling: boolean = false) {
 
   const payload = {
@@ -302,26 +303,25 @@ async function fetch(isPolling: boolean = false) {
 
   //TODO: limit 제한 걸어야됨 임시
   try {
-    const { data, error, pending } = await useCustomAsyncFetch<{ rooms: IChat[] }>(createQueryUrl(`/chat/rooms`, payload), getComFetchOptions('get', true))
+    const { data, error, pending } = await useCustomAsyncFetch<{ rooms: IChat[], updated_rooms: IChat[] }>(createQueryUrl(`/chat/rooms`, payload), getComFetchOptions('get', true))
 
     if (data.value) {
-      const { rooms } = data.value
+      const { rooms, updated_rooms } = data.value
       if (isAddData.value) {
+        if (updated_rooms.length > 0) {
+          roomList.value = [...newRooms(updated_rooms), ...roomList.value]
+        }
         if (rooms.length > 0) {
-          roomList.value = [...roomList.value, ...rooms]
+          roomList.value = [...roomList.value, ...newRooms(rooms)]
         } else if (rooms.length === 0) {
           if (!isPolling)
             isAddData.value = false
         }
       }
       else {
-        console.log(isAddData.value)
-        colorLog('here', 'pink')
         roomList.value = rooms
         isAddData.value = true
       }
-
-
     }
   }
   finally {
@@ -329,10 +329,9 @@ async function fetch(isPolling: boolean = false) {
   }
 }
 
-
-
-
-
+const newRooms = ((rooms: IChat[]) => {
+  return rooms.filter((room: IChat) => !roomList.value.some(existingRoom => existingRoom.id === room.id))
+})
 
 
 //TODO:2차스펙
@@ -395,7 +394,7 @@ async function getFollowings() {
     }
   } finally {
     followPending.value = isPending
-
+    findUserPending.value = isPending
   }
 }
 
@@ -489,8 +488,8 @@ function onDeletedRoom(room: IChat) {
 }
 
 
-//유저가 fcm 알람 막아둔 경우 polling 해야됨
-async function pollingChat() {
+//fcm이 작동하지 않는 경우 polling 해야됨
+async function pollingRoom() {
   roomPolling.value = setInterval(async () => {
     fromId.value = roomList.value[roomList.value.length - 1].id + 1
     isAddData.value = true

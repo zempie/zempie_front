@@ -139,7 +139,10 @@ const isFbSupported = computed(() => useCommon().setting.value.isFbSupported)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
 
-//중복호출 방지
+
+//중복 클릭 방지용
+let msgAcceessableCnt = 2
+
 const isSending = ref(false)
 
 //스크롤
@@ -192,21 +195,8 @@ onMounted(async () => {
   if (props.selectedRoom.unread_count <= 0) {
     fromId.value = props.selectedRoom.last_message?.id - MAX_MSG_LIMIT + 1
   }
-  await getMessages()
-  // isAddData.value = true
-  if (!userInfo.value.setting.dm_alarm || !isFbSupported.value) {
 
-    msgPolling.value = setInterval(async () => {
-      const newest = msgList.value[msgList.value.length - 1]
-      fromId.value = newest.id + 1
-      console.log('newest', newest.id)
-      const newMsg = await msgFetch()
-      if (newMsg && newMsg.length) {
-        fromId.value = newMsg[newMsg.length - 1].id
-        scrollToBottom()
-      }
-    }, 3000)
-  }
+  await getMessages()
 
   nextTick(() => {
     if (props.selectedRoom.unread_count <= 0) {
@@ -214,6 +204,24 @@ onMounted(async () => {
       scrollToBottom()
     }
   })
+  if (!userInfo.value.setting.dm_alarm || !isFbSupported.value) {
+
+    msgPolling.value = setInterval(async () => {
+      if (msgList.value) {
+        const newest = msgList.value[msgList.value?.length - 1]
+        if (newest) {
+          fromId.value = newest.id + 1
+        }
+      }
+      const newMessage = await msgFetch()
+
+
+      if (newMessage && newMessage.length) {
+        fromId.value = newMessage[newMessage.length - 1].id
+        scrollToBottom()
+      }
+    }, 3000)
+  }
 
 })
 
@@ -221,6 +229,8 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   clearInterval(msgPolling.value)
 })
+
+
 
 function scrollToBottom() {
   scrollContent.value.scrollTop = scrollContent.value?.scrollHeight
@@ -260,6 +270,8 @@ async function getMessages() {
 }
 
 async function msgFetch(yPos?: number) {
+  if (isSending.value) return
+
   const payload = {
     from_id: fromId.value,
     limit: msgLimit.value,
@@ -272,12 +284,23 @@ async function msgFetch(yPos?: number) {
     const { messages } = data.value
     if (order.value === 'asc') {
       if (messages.length > 0) {
-        msgList.value = [...msgList.value, ...messages]
+        if (msgList.value?.length) {
+          msgList.value = [...msgList.value, ...messages]
+        } else {
+          msgList.value = messages
+
+        }
       }
     } else {
       order.value = 'asc'
       const msg = messages.reverse()
-      msgList.value = [...msg, ...msgList.value]
+
+      const newMsg = msg.filter((msg: IMessage) => !msgList.value.some(existingMsg => existingMsg.id === msg.id))
+
+      msgList.value = [...newMsg, ...msgList.value]
+
+
+
       nextTick(() => {
         scrollContent.value.scrollTop = scrollContent.value?.scrollHeight - yPos
       })
@@ -289,10 +312,10 @@ async function msgFetch(yPos?: number) {
 }
 
 async function sendMsg() {
-  // console.log(isSending.value)
-  if (isSending.value) return
   if (!inputMsg.value) return
+  msgAcceessableCnt -= 1
   isSending.value = true
+
 
   const content = _.cloneDeep(inputMsg.value)
   inputMsg.value = ''
@@ -306,29 +329,38 @@ async function sendMsg() {
     contents: content
   }
 
-  const { data, error } = await useCustomAsyncFetch<{ message: IMessage }>(`/chat/room`, getComFetchOptions('post', true, payload))
+  try {
+    const { data, error } = await useCustomAsyncFetch<{ message: IMessage }>(`/chat/room`, getComFetchOptions('post', true, payload))
 
-  if (data.value) {
-    initInputMsg()
-    if (msgList.value?.length) {
-      addMsg(data.value.message)
-    } else {
-      msgList.value = [data.value.message]
+    if (data.value) {
+      initInputMsg()
+      if (msgList.value?.length) {
+        addMsg(data.value.message)
+      } else {
+        msgList.value = [data.value.message]
+      }
+    } else if (error.value) {
+      inputMsg.value = content
     }
-  } else if (error.value) {
-    inputMsg.value = content
+  } finally {
+    isSending.value = false
   }
 
-  isSending.value = false
+  msgAcceessableCnt += 1
+
 }
 
-function addMsg(msg) {
-  msgList.value = [...msgList.value, msg]
-
+function addMsg(msg: IMessage) {
+  msgList.value = [...msgList.value, ...newMsg([msg])]
   nextTick(() => {
     scrollToBottom()
   })
 }
+
+const newMsg = ((messages: IMessage[]) => {
+  return messages.filter((msg: IMessage) => !msgList.value.some(existingMsg => existingMsg.id === msg.id))
+})
+
 
 function initInputMsg() {
   inputMsg.value = ''

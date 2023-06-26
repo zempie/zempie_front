@@ -76,7 +76,6 @@ const isLogin = computed(() => useUser().user.value.isLogin)
 
 
 //중복 클릭 방지용
-
 let cmtAcceessableCnt = 2
 
 const props = defineProps({
