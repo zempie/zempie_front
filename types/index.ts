@@ -347,11 +347,13 @@ export interface IChat {
   joined_users: IUser[],
   is_group_room: boolean,
   last_chat_id: number,
-  unread_start_id: number
+  unread_start_id: number,
+  updated_message?: IMessage[]
 }
 
 export interface IMessage {
   id: number,
+  chat_idx?: number,
   contents: string,
   text_html: string,
   sender: IUser,

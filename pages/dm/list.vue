@@ -139,7 +139,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ElScrollbar, ElDialog } from 'element-plus'
+import { ElScrollbar, ElDialog, rowProps } from 'element-plus'
 import { dateFormat } from '~~/scripts/utils'
 import { IChat, IMessage, IUser } from '~~/types'
 import { debounce } from '~~/scripts/utils'
@@ -309,6 +309,36 @@ async function fetch(isPolling: boolean = false) {
       const { rooms, updated_rooms } = data.value
       if (isAddData.value) {
         if (updated_rooms.length > 0) {
+
+          updated_rooms.map((room) => {
+
+            const targetRoom = roomList.value.find((room2) => room2.id === room.id)
+
+            if (room.updated_message.length) {
+
+              room.updated_message.map((msg) => {
+                //-1인 경우 삭제된 메세지임 
+                if (msg.chat_idx === -1 && (targetRoom.last_message.id === msg.id)) {
+                  roomList.value = roomList.value.map((room3) => {
+                    if (room3.id === room.id) {
+                      return {
+                        ...room3,
+                        last_message: {
+                          ...room3.last_message,
+                          contents: t('deleted.message')
+                        },
+                        unread_count: room3.unread_count - 1
+                      }
+                    } else {
+                      return room3
+                    }
+                  })
+                }
+              })
+
+            }
+          })
+
           roomList.value = [...newRooms(updated_rooms), ...roomList.value]
         }
         if (rooms.length > 0) {
