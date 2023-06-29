@@ -1,5 +1,5 @@
 <template>
-  <dl>
+  <dl class="active-room-container">
     <dd>
       <UserAvatar :user="selectedRoom?.joined_users[0]" tag="p" />
     </dd>
@@ -12,11 +12,11 @@
     </dt>
     <dd>
       <ClientOnly>
-        <el-dropdown trigger="click" ref="msgRef">
-          <button class="room-btn pointer"> <i class="uil uil-ellipsis-h font25"></i></button>
+        <el-dropdown trigger="click">
+          <button class=" room-btn pointer"> <i class="uil uil-ellipsis-h font25"></i></button>
           <template #dropdown>
             <div class="more-list fixed" style="min-width: 150px">
-              <a @click="opLeaveChatModal = true" id="editFeed" class="pointer">채팅 삭제</a>
+              <a @click="opLeaveChatModal = true" id="editFeed" class="pointer">{{ t('remove.chat') }}</a>
             </div>
           </template>
         </el-dropdown>
@@ -25,34 +25,38 @@
       <!-- <router-link to="#"><i class="uil uil-ellipsis-h font25"></i></router-link> -->
     </dd>
   </dl>
-
-  <div class="dlc-chat-content" ref="scrollContent">
-    <div :class="msg.sender.id === userInfo.id ? 'receiver-chat' : 'sender-chat'" v-for="msg in msgList" ref="msgRef">
-      <h4>{{ dateFormat(msg.created_at) }}</h4>
-      <ul>
-        <li class="flex">
-          <DmMsgMenu :msg="msg" v-if="msg.sender.id === userInfo.id" @delete-msg="deleteMsg" />
-          <span>{{ msg.contents }}</span>
-        </li>
-      </ul>
+  <div class="dlc-chat-content">
+    <div class="inner" ref="scrollContent">
+      <div :class="msg.sender.id === userInfo.id ? 'receiver-chat' : 'sender-chat'" v-for="(msg, index) in msgList"
+        :ref="el => { divs[msg.id] = el }" :key="index">
+        <h4>{{ dateFormat(msg.created_at) }}</h4>
+        <ul>
+          <li class="flex" style="overflow:auto; word-break: break-all; max-width: 100%; ">
+            <DmMsgMenu :msg="msg" v-if="msg.sender.id === userInfo.id" @delete-msg="deleteMsg"
+              style="max-height: 100px;" />
+            <span>{{ msg.contents }}</span>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
   <div class="dlc-send-message">
     <div>
       <!-- TODO: 태그 보낼 수 있어야함  -->
-      <input v-model="inputMsg" type="text" class="w100p" name="" title="" placeholder="메시지 보내기" @keyup.enter="sendMsg" />
+      <input v-model="inputMsg" type="text" class="w100p" name="" title="" :placeholder="$t('send.msg')"
+        @keyup.enter="sendMsg" @focus="onFocus" @blur="onBlur" />
       <!-- TODO: 2차 스펙 -->
       <!-- <router-link to="#"><i class="uil uil-scenery font25 mr5"></i></router-link>
                 <router-link to="#"><i class="uil uil-camera font28"></i></router-link> -->
     </div>
-    <p><button><img src="/images/send_icon.png" alt="" title="" /></button></p>
+    <p><button @click="sendMsg"><img src="/images/send_icon.png" alt="" title="" /></button></p>
   </div>
 
   <ClientOnly>
     <el-dialog v-model="opLeaveChatModal" class="modal-area-type" width="380px">
       <div class="modal-alert">
         <dl class="ma-header">
-          <dt>대화 나가기</dt>
+          <dt>{{ t('leave.chat') }}</dt>
           <dd>
             <button @click="opLeaveChatModal = false">
               <i class="uil uil-times"></i>
@@ -61,7 +65,7 @@
         </dl>
         <div class="ma-content">
           <h2>
-            나가기를 하면 대화 내용이 모두 삭제되고 목록에서도 삭제됩니다.
+            {{ t('leave.chat.alert') }}
           </h2>
           <div>
             <button class="btn-gray w48p" @click="leaveChat">
@@ -78,7 +82,7 @@
     <el-dialog v-model="opDeleteMsgModal" class="modal-area-type" width="380px">
       <div class="modal-alert">
         <dl class="ma-header">
-          <dt>메시지 나가기</dt>
+          <dt> {{ t('leave.msg') }} </dt>
           <dd>
             <button class="pointer" @click="opDeleteMsgModal = false">
               <i class="uil uil-times"></i>
@@ -87,7 +91,7 @@
         </dl>
         <div class="ma-content">
           <h2>
-            이 작업은 해당 메시지를 모든 사람에게서 삭제됩니다.
+            {{ t('leave.msg.alert') }}
           </h2>
           <div>
             <button class="btn-gray w48p" @click="onDeleteMsg">
@@ -103,10 +107,13 @@
   </ClientOnly>
 </template>
 <script setup lang="ts">
+import _, { now } from 'lodash'
 import { dateFormat } from '~~/scripts/utils'
 import { IChat, IMessage, IUser } from '~~/types'
-import { ElDropdown, ElDialog, ElMessage } from 'element-plus';
+import { ElDropdown, ElDialog, ElMessage, linkEmits } from 'element-plus';
 import { PropType } from 'vue';
+import { useInfiniteScroll, useScroll } from '@vueuse/core'
+import FlutterBridge from '~~/scripts/flutterBridge'
 
 const props = defineProps({
   selectedRoom: Object as PropType<IChat>,
@@ -114,90 +121,323 @@ const props = defineProps({
 
 const { t, locale } = useI18n()
 
-const msgRef = ref()
+const MAX_MSG_LIMIT = 15
+const MAX_INPUT_LIMIT = 5000
+const msgEl = ref<HTMLElement | null>(null)
+const divs = ref([])
+
 const inputMsg = ref('')
-const msgList = ref()
+const msgList = ref<IMessage[]>()
 
 const fromId = ref(0)
-const msgLimit = ref(15)
+const msgLimit = ref(MAX_MSG_LIMIT)
+const isAddData = ref(false)
+const order = ref('desc')
+const offset = ref(0)
 
 const opLeaveChatModal = ref(false)
 const opDeleteMsgModal = ref(false)
 const deleteTgMsg = ref()
 
-const scrollContent = ref()
+const scrollContent = ref<HTMLElement | null>(null)
+const msgPolling = ref(null)
+const totalMsgCnt = ref(0)
 
 const userInfo = computed(() => useUser().user.value.info)
+const isFbSupported = computed(() => useCommon().setting.value.isFbSupported)
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+const unreadStartId = computed(() => props.selectedRoom.unread_start_id)
 
-const emit = defineEmits(['deletedRoom'])
+
+const lastMsg = computed({
+  get() {
+    return props.selectedRoom.last_message
+  },
+  set(value) {
+    props.selectedRoom.last_message = value;
+  }
+})
+
+const isLastMsg = computed(() => {
+  if (props.selectedRoom?.meta?.isLastMsg) {
+    return true
+  }
+  if (msgList.value) {
+    console.log(msgList.value, props.selectedRoom)
+    return msgList.value[msgList.value?.length - 1].id === lastMsg.value.id
+  }
+})
+
+
+//중복 클릭 방지용
+let msgAcceessableCnt = 2
+
+const isSending = ref(false)
+
+//스크롤
+const { arrivedState, y } = useScroll(scrollContent, {
+  offset: { top: 20, bottom: 10 }
+})
+const { top, bottom } = toRefs(arrivedState)
+
+const emit = defineEmits(['deletedRoom', 'openKeyboard', 'closeKeyboard'])
+
+defineExpose({ addMsg })
+
+watch(
+  () => top.value,
+  async (val) => {
+    if (val) {
+      colorLog('watch top', 'yellow')
+      if (msgList.value && msgList.value[0].chat_idx === 0) return
+      if (msgList.value.length) {
+        if (msgList.value[0].id === 0) return
+        offset.value += MAX_MSG_LIMIT
+        order.value = 'desc'
+        const prevScroll = _.cloneDeep(scrollContent.value?.scrollHeight)
+        console.log(prevScroll)
+        await msgFetch(prevScroll)
+
+      }
+    }
+  }
+)
+
+
+
+watch(
+  () => bottom.value,
+  async (val) => {
+    if (val) {
+      colorLog('watch bottom', 'yellow')
+      console.log('isLastMsg.value', isLastMsg.value)
+      if (isLastMsg.value) return
+
+      if (msgList.value.length) {
+        offset.value += MAX_MSG_LIMIT
+        order.value = 'asc'
+        await msgFetch()
+
+      }
+    }
+  }
+)
+
+
 
 onMounted(async () => {
-  //FIXME : 마이너스로 넘어오는 경우가 있어서 우선은 이렇게 처리
-  if (props.selectedRoom.unread_count <= 0) {
-    fromId.value = props.selectedRoom.last_message.id - 15
-    1
+  if (props.selectedRoom.unread_count) {
+    if (props.selectedRoom.unread_count > msgLimit.value) {
+      offset.value = props.selectedRoom.unread_count - msgLimit.value
+    }
+    order.value = 'desc'
   }
-  await getMessages()
+
+  await msgFetch()
 
   nextTick(() => {
-    if (props.selectedRoom.unread_count <= 0) {
+    if (props.selectedRoom.unread_count < msgLimit.value) {
       // 읽을 메세지가 없는 경우 스크롤 맨 하단
-      scrollContent.value.scrollTop = scrollContent.value.scrollHeight
+      scrollToBottom()
+    } else {
+      divs.value[unreadStartId.value].scrollIntoView()
     }
   })
+
+
+  if (!userInfo.value.setting.dm_alarm || !isFbSupported.value || !useCommon().setting.value.isNotiAllow) {
+    clearInterval(msgPolling.value)
+    msgPolling.value = setInterval(async () => {
+      // if (msgList.value) {
+      //   const newest = msgList.value[msgList.value?.length - 1]
+      //   if (newest) {
+      //     fromId.value = newest.id + 1
+      //   }
+      // }
+      order.value = 'asc'
+
+      const newMessage = await msgFetch(null, totalMsgCnt.value)
+
+
+      if (newMessage && newMessage.length) {
+        // fromId.value = newMessage[newMessage.length - 1].id
+        scrollToBottom()
+      }
+    }, 3000)
+  }
 
 })
 
 
-async function getMessages() {
+onBeforeUnmount(() => {
+  clearInterval(msgPolling.value)
+})
+
+
+
+function scrollToBottom() {
+  scrollContent.value.scrollTop = scrollContent.value?.scrollHeight
+}
+
+
+
+async function msgFetch(yPos?: number, customOffset?: number) {
+  if (isSending.value) return
 
   const payload = {
-    // from_id: fromId.value,
-    // limit: msgLimit.value,
-    order: 'asc'
+    offset: customOffset ? customOffset : offset.value,
+    limit: msgLimit.value,
+    order: order.value
   }
 
-  const { data, error } = await useCustomAsyncFetch<{ messages: IMessage[] }>(createQueryUrl(`/chat/room/${props.selectedRoom.id}`, payload), getComFetchOptions('get', true))
-
-  //TODO: 로딩 넣어야함
+  const { data, error } = await useCustomAsyncFetch<{ result: IMessage[], totalCount: number }>(createQueryUrl(`/chat/room/${props.selectedRoom.id}`, payload), getComFetchOptions('get', true))
 
   if (data.value) {
-    const { messages } = data.value
-    msgList.value = messages
+    const { result: messages, totalCount } = data.value
+    totalMsgCnt.value = totalCount
+
+    if (customOffset && messages.length) {
+      console.log('possling new message')
+      lastMsg.value = messages[messages.length - 1]
+    }
+    if (order.value === 'asc') {
+      if (messages.length > 0) {
+        if (msgList.value?.length) {
+          msgList.value = [...msgList.value, ...messages]
+        } else {
+          msgList.value = messages
+        }
+      }
+
+    } else {
+      if (messages.length > 0) {
+        if (msgList.value?.length) {
+          msgList.value = [...messages.reverse(), ...msgList.value]
+        } else {
+          msgList.value = messages.reverse()
+        }
+      }
+      // if (!msgPolling.value && yPos) {
+      nextTick(() => {
+        if (yPos)
+          scrollToPrev(yPos)
+      })
+      // }
+    }
+
+    return messages
   }
 
 }
 
+function scrollToPrev(yPos: number) {
+  console.log(yPos)
+  scrollContent.value.scrollTop = scrollContent.value?.scrollHeight - yPos
+
+}
+
+async function addMoreMsg() {
+
+
+  //처음 메시지가 아니고 총 메세지가 15개보다 작으면 메세지 로드 
+  if (msgList.value[0].chat_idx !== -1 && msgList.value.length < msgLimit.value) {
+    colorLog('add more mesf', 'pink')
+
+    fromId.value = msgList.value[0].id - msgLimit.value
+
+    await msgFetch()
+
+    // const prevScroll = _.cloneDeep(scrollContent.value?.scrollHeight)
+
+    // console.log('prevScroll', prevScroll)
+
+    // nextTick(() => {
+    //   scrollContent.value.scrollTop = scrollContent.value?.scrollHeight - prevScroll
+    // })
+  }
+
+}
 
 async function sendMsg() {
+  if (inputMsg.value.length > MAX_INPUT_LIMIT) {
+    ElMessage({
+      message: t('dm.msg.too.long'),
+      type: 'warning',
+    })
+    return
+  }
   if (!inputMsg.value) return
+  msgAcceessableCnt -= 1
+  isSending.value = true
+
+  const content = _.cloneDeep(inputMsg.value)
+  inputMsg.value = ''
+
   const payload = {
     room_id: props.selectedRoom.id,
     // receiver_ids: [
     //   userInfo.value.id
     // ],
     type: 0,
-    contents: inputMsg.value
+    contents: content
   }
 
-  const { data, error } = await useCustomAsyncFetch<{ message: IMessage }>(`/chat/room`, getComFetchOptions('post', true, payload))
+  try {
+    const { data, error } = await useCustomAsyncFetch<{ message: IMessage }>(`/chat/room`, getComFetchOptions('post', true, payload))
 
-  if (data.value) {
-    initInputMsg()
-    if (msgList.value?.length) {
-      msgList.value = [...msgList.value, data.value.message]
-    } else {
-      msgList.value = [data.value.message]
+    if (data.value) {
+      initInputMsg()
+      if (msgList.value?.length) {
+        addMsg(data.value.message)
+      } else {
+        msgList.value = [data.value.message]
+      }
+    } else if (error.value) {
+      inputMsg.value = content
     }
+  } finally {
+    isSending.value = false
+  }
+
+  msgAcceessableCnt += 1
+
+}
+
+function renderMsg() {
+  if (msgList.value?.length) {
+    msgList.value = [...msgList.value, {
+      contents: inputMsg.value,
+      created_at: new Date(),
+      sender: userInfo.value
+    }]
+  } else {
+    msgList.value = [{
+      contents: inputMsg.value,
+      created_at: new Date(),
+      sender: userInfo.value
+
+    }]
   }
 }
+function addMsg(msg: IMessage) {
+  msgList.value = [...msgList.value, ...newMsg([msg])]
+  console.log('msg', msgList.value)
+
+  nextTick(() => {
+    scrollToBottom()
+  })
+}
+
+const newMsg = ((messages: IMessage[]) => {
+  return messages.filter((msg: IMessage) => !msgList.value.some(existingMsg => existingMsg.id === msg.id))
+})
+
 
 function initInputMsg() {
   inputMsg.value = ''
 }
 
 function deleteMsg(msg: IMessage) {
-
   opDeleteMsgModal.value = true
   deleteTgMsg.value = msg
 }
@@ -214,9 +454,6 @@ async function leaveChat() {
     opLeaveChatModal.value = false
 
   }
-
-
-
 
 }
 
@@ -240,51 +477,19 @@ async function onDeleteMsg() {
   }
 }
 
+async function onFocus() {
+  if (isFlutter.value) {
+    const kbHeight = await FlutterBridge().getKeyHight()
+    console.log('kbHeight', kbHeight)
+    emit('openKeyboard', Number(kbHeight))
+  }
+}
+function onBlur() {
+  console.log('onBlur')
+  if (isFlutter.value) {
+
+    emit('closeKeyboard')
+  }
+
+}
 </script>
-<style scoped lang="scss">
-.room-btn {
-  background: none;
-  border: none;
-}
-
-.dlc-chat-content {
-  li {
-    &:hover {
-      ::v-deep(.msg-menu-btn) {
-        display: block;
-        cursor: pointer;
-
-      }
-    }
-
-    ::v-deep(.msg-menu-btn) {
-      display: none;
-      background: none;
-      border: none;
-    }
-
-  }
-}
-
-
-.dlc-send-message {
-  div {
-    justify-content: space-between;
-  }
-
-  button {
-    display: inline-block;
-    width: 50px;
-    height: 50px;
-    text-align: center;
-    border-radius: 8px;
-    background: #f4f0eb;
-    border: none;
-    cursor: pointer;
-
-    &:hover {
-      background: #f1f1f1;
-    }
-  }
-}
-</style>

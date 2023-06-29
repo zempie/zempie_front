@@ -4,7 +4,11 @@
       <UserCardSk v-for="user in 4" />
     </ul>
     <ul v-else class="card-follow">
-      <UserCard v-for="user in users" :user="user"></UserCard>
+      <UserCard v-for="user in users" :user="user">
+        <template #followBtn>
+          <UserFollowBtn :user="user" class="mt20" />
+        </template>
+      </UserCard>
     </ul>
   </transition>
 </template>

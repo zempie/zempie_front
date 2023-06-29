@@ -7,7 +7,7 @@
       {{ likeCnt }}</span>
   </li>
   <ClientOnly>
-    <el-dialog v-model="isLikeHistoryOpen" class="modal-area-type" width="500px">
+    <el-dialog v-model="isLikeHistoryOpen" class="modal-area-type" width="500px" :before-close="onCloseLike">
       <div class="modal-alert modal-like">
         <dl class="ma-header">
           <dt>{{ $t('like') }}</dt>
@@ -42,6 +42,8 @@ import _ from 'lodash'
 import { useInfiniteScroll } from '@vueuse/core'
 import { ElDialog } from 'element-plus'
 import { IUser } from '~~/types';
+import { debounce } from '~/scripts/utils'
+
 const { $localePath } = useNuxtApp()
 const router = useRouter()
 
@@ -79,6 +81,11 @@ useInfiniteScroll(
   { distance: 10 }
 )
 
+function onCloseLike() {
+  isLikeHistoryOpen.value = false
+  resetList()
+}
+
 async function setLike() {
   if (!isLogin.value) {
     useModal().openLoginModal()
@@ -109,7 +116,9 @@ async function unsetLike() {
   unlikeAcceessableCount = unlikeAcceessableCount + 1
 }
 
-async function showLikeFetch() {
+
+const showLikeFetch = debounce(async () => {
+
   if (likeCnt.value < 1) return
 
   const query = {
@@ -137,7 +146,7 @@ async function showLikeFetch() {
       isAddData.value = true
     }
   }
-}
+}, 300)
 
 function moveUserChannel(nickname: string) {
   router.push($localePath(`/${nickname}`))
@@ -146,10 +155,13 @@ function moveUserChannel(nickname: string) {
 function closeHistory() {
   isLikeHistoryOpen.value = false
 
+  resetList()
+
+}
+
+function resetList() {
   offset.value = 0;
   likeList.value = []
-
-
 }
 </script>
 

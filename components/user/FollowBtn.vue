@@ -7,13 +7,6 @@
       {{ $t('follow') }}
     </p>
   </div>
-  <div v-else>
-    <p :class="[customClass, 'btn-default uppercase my-channel']" @click.stop="
-      $router.push($localePath(`/${loginUser.nickname}`))
-    ">
-      {{ $t('myChannel') }}
-    </p>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -43,8 +36,6 @@ const isMine = computed(() => {
 const isFollowing = ref(props.user?.is_following)
 
 async function follow() {
-
-
 
   if (!isLogin.value) {
     useModal().openLoginModal()

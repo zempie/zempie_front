@@ -1,10 +1,9 @@
 <template>
-  <div v-if="gameInfo" class="visual-info-left" :style="
-    prevBanner
-      ? `background: url(${prevBanner + `?_=${Date.now()}`
-      }) center center / cover no-repeat; background-size: cover;`
-      : 'background-color: #f973165c'
-  ">
+  <div v-if="gameInfo" class="visual-info-left" :style="prevBanner
+    ? `background: url(${prevBanner + `?_=${Date.now()}`
+    }) center center / cover no-repeat; background-size: cover;`
+    : 'background-color: #f973165c'
+    ">
     <GameStageTag v-if="gameInfo.stage" :stage="gameInfo.stage" />
     <div v-if="isMine" style="display: flex; justify-content: flex-end; margin: 20px">
       <div style="height: 0px; overflow: hidden">
@@ -12,28 +11,25 @@
           accept="image/jpeg, image/png, image/svg, image/jpg, image/webp, image/bmp," ref="bannerImg" name="fileInput" />
       </div>
 
-      <span
-        style="
-                                                                                                                                                                                                                                                                                                border-radius: 50%;
-                                                                                                                                                                                                                                                                                                background-color: #888;
-                                                                                                                                                                                                                                                                                                width: 30px;
-                                                                                                                                                                                                                                                                                                height: 30px;
-                                                                                                                                                                                                                                                                                                display: flex;
-                                                                                                                                                                                                                                                                                                cursor: pointer;
-                                                                                                                                                                                                                                                                                                align-items: center;
-                                                                                                                                                                                                                                                                                              "
-        @click="uploadBanner">
-        <i class="uil uil-image-edit"
-          style="
-                                                                                                                                                                                                                                                                                                  font-size: 20px;
-                                                                                                                                                                                                                                                                                                  margin-right: 10px;
-                                                                                                                                                                                                                                                                                                  color: #fff;
-                                                                                                                                                                                                                                                                                                  margin: 0 auto;
-                                                                                                                                                                                                                                                                                                "></i>
+      <span style="
+                     border-radius: 50%;
+                     background-color: #888;
+                     width: 30px;
+                     height: 30px;
+                     display: flex;
+                     cursor: pointer;
+                     align-items: center;
+                   " @click="uploadBanner">
+        <i class="uil uil-image-edit" style="
+           font-size: 20px;
+           margin-right: 10px;
+           color: #fff;
+           margin: 0 auto;
+         "></i>
       </span>
     </div>
     <dl>
-      <dt class="header-left">
+      <dt class="header-left" :class="gameInfo?.stage === eGameStage.DEV && 'dev-header'">
         <dl>
           <dt class="game-profile-img">
             <div
@@ -45,69 +41,67 @@
             <h2 style="color: #fff; font-size: 20px; font-weight: bold">
               {{ gameInfo.title }}<span></span>
             </h2>
+            <!-- <div class="like-btn column">
+              <i v-if="!isLike" class="xi-heart-o like-icon pointer" style="font-size: 22px; color: #ff6e17; "
+                @click="setLike">
+              </i>
+              <i v-else class="xi-heart like-icon pointer" style="font-size: 22px; color: #ff6e17; " @click="unsetLike">
+              </i>
+              <p style="color: #fff">{{ likeCnt }}</p>
+            </div> -->
             <h3 @click="moveUserPage" style="cursor: pointer">
               By <span class="underline">@{{ gameInfo.user?.nickname }}</span>
             </h3>
+            <div class="play-btn-container row">
+              <a v-if="gameInfo.stage !== eGameStage.DEV && gameInfo.game_type === eGameType.Html" @click="playGame"
+                class="btn-default mr10">{{ $t('playgame') }}
+
+                <li v-if="gameInfo.game_type === eGameType.Html" style="margin-top: 2px;">
+                  <i class="uil uil-html5-alt"></i>
+                </li>
+              </a>
+
+              <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game"
+                class="btn-default download mr10" :class="isFlutter && 'disabled'" @click="downloadGame">
+                <span>{{ $t('download') }}</span>
+                <!-- <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small> -->
+                &nbsp;
+                <Icon icon="ri:kakao-talk-fill" class="icon" />
+                <GamePlatformIcon :platform="gameInfo.support_platform" color="#fff" />
+              </a>
+              <!--   <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default download mr10"
+          :class="isFlutter && 'disabled'" @click="downloadGame">
+          <span>{{ $t('download') }}</span>
+          <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small>
+          <GamePlatformIcon :platform="gameInfo.support_platform" color="#fff" />
+        </a>
+        <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default download mr10"
+          :class="isFlutter && 'disabled'" @click="downloadGame">
+          <span>{{ $t('download') }}</span>
+          <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small>
+          <GamePlatformIcon :platform="gameInfo.support_platform" color="#fff" />
+        </a>
+        <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default download mr10"
+          :class="isFlutter && 'disabled'" @click="downloadGame">
+          <span>{{ $t('download') }}</span>
+          <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small>
+          <GamePlatformIcon :platform="gameInfo.support_platform" color="#fff" />
+        </a>
+        <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default download mr10"
+          :class="isFlutter && 'disabled'" @click="downloadGame">
+          <span>{{ $t('download') }}</span>
+          <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small>
+          <GamePlatformIcon :platform="gameInfo.support_platform" color="#fff" />
+        </a> -->
+
+              <!-- <a v-for="hashtag in hashtags" :key="hashtag" @click="searchHashtag(hashtag)">#{{ hashtag }}
+              </a> -->
+            </div>
           </dd>
         </dl>
       </dt>
-      <div class="play-btn-container row ">
-        <a v-if="gameInfo.stage !== eGameStage.DEV && gameInfo.game_type === eGameType.Html" @click="playGame"
-          class="btn-default mr10">{{ $t('playgame') }}
-
-          <li v-if="gameInfo.game_type === eGameType.Html" style="margin-top: 2px;">
-            <i class="uil uil-html5-alt"></i>
-          </li>
-        </a>
-
-        <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default download mr10"
-          :class="isFlutter && 'disabled'" @click="downloadGame">
-          <span>{{ $t('download') }}</span>
-          <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small>
-          <Icon icon="ri:kakao-talk-fill" class="icon" />
-          <GamePlatformIcon :platform="gameInfo.support_platform" color="#fff" />
-        </a>
-        <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default download mr10"
-          :class="isFlutter && 'disabled'" @click="downloadGame">
-          <span>{{ $t('download') }}</span>
-          <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small>
-          <GamePlatformIcon :platform="gameInfo.support_platform" color="#fff" />
-        </a>
-        <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default download mr10"
-          :class="isFlutter && 'disabled'" @click="downloadGame">
-          <span>{{ $t('download') }}</span>
-          <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small>
-          <GamePlatformIcon :platform="gameInfo.support_platform" color="#fff" />
-        </a>
-        <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default download mr10"
-          :class="isFlutter && 'disabled'" @click="downloadGame">
-          <span>{{ $t('download') }}</span>
-          <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small>
-          <GamePlatformIcon :platform="gameInfo.support_platform" color="#fff" />
-        </a>
-        <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default download mr10"
-          :class="isFlutter && 'disabled'" @click="downloadGame">
-          <span>{{ $t('download') }}</span>
-          <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small>
-          <GamePlatformIcon :platform="gameInfo.support_platform" color="#fff" />
-        </a>
-
-        <!-- <a v-for="hashtag in hashtags" :key="hashtag" @click="searchHashtag(hashtag)">#{{ hashtag }}
-              </a> -->
-      </div>
-      <!-- <dd class="play-btn-container">
-        <div class="like-btn" style="flex-direction: column">
-          <i v-if="!isLike" class="xi-heart-o like-icon" style="font-size: 22px; color: #ff6e17; cursor: pointer"
-            @click="setLike">
-          </i>
-          <i v-else class="xi-heart like-icon" style="font-size: 22px; color: #ff6e17; cursor: pointer"
-            @click="unsetLike">
-          </i>
-          <p style="color: #fff">{{ likeCnt }}</p>
-        </div>
 
 
-      </dd> -->
     </dl>
     <el-dialog v-model="showChangeBanner" class="modal-area-game-banner">
       <div class="modal-alert">
@@ -384,9 +378,15 @@ function downloadGame() {
 </script>
 
 <style lang="scss" scoped>
+.header-left {
+  &.dev-header {
+    padding-bottom: 40px;
+  }
+}
+
 .like-btn {
-  height: 65px;
-  display: inline-flex;
+  // height: 65px;
+  display: inline-block;
   justify-content: center;
   align-items: center;
 }
@@ -426,7 +426,6 @@ function downloadGame() {
 }
 
 .play-btn-container {
-  position: relative;
   margin-top: 10px;
   left: 180px;
 
@@ -465,13 +464,21 @@ function downloadGame() {
 @media all and (max-width: 479px) {
   .visual-info-left {
     width: 100%;
+    height: 250px;
+
+    .header-left {
+      &.dev-header {
+        padding-bottom: 0px;
+      }
+    }
 
     dl {
       padding: 0px;
     }
 
     .play-btn-container {
-      margin-top: 0px;
+      justify-content: center;
+      margin-bottom: 10px;
     }
   }
 
@@ -494,31 +501,41 @@ function downloadGame() {
 
 @media all and (min-width: 480px) and (max-width: 767px) {
 
-
-
   .visual-info-left {
     width: 100%;
-
-
-    // height: 200px;
+    height: 250px;
 
     dl {
       padding: 0px;
     }
 
     .header-left {
+
       dl {
         flex-wrap: nowrap;
       }
 
       .game-profile-img {
         margin-left: 10px;
+        width: 40%;
+        display: flex;
+        justify-content: center;
 
         div {
-          background-color: red;
+          position: absolute;
+          width: 140px;
+          height: 140px;
+          margin: -30px 0 0 0 !important;
+          border: #fff 5px solid;
           margin: 0px;
-          position: relative;
         }
+      }
+
+      .game-tag {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin: 10px 0px 10px 20px;
       }
     }
   }
@@ -544,6 +561,7 @@ function downloadGame() {
 
   .play-btn-container {
     width: calc(100% - 180px);
+    justify-content: flex-start;
 
     a {
       font-size: 12px;

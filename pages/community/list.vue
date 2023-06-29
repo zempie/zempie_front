@@ -34,9 +34,10 @@
       <div class="card-timeline" style="margin: 0 auto;">
         <CommunityCardSk v-if="isPending" v-for="com in 4" />
         <TransitionGroup v-else name="fade">
-          <CommunityCard v-for="community in communities" :community="community" :key="community.id">
+          <CommunityCard v-for="community in communities" :community="community" :key="community.id"
+            :isSubModal="isSubModal" @is-sub-modal="(e) => isSubModal = e">
             <template v-slot:subBtn>
-              <CommunitySubscribeBtn :community="community" @refresh="fetch" />
+              <CommunitySubscribeBtn :community="community" @refresh="fetch" @is-sub-modal="(e) => isSubModal = e" />
             </template>
           </CommunityCard>
         </TransitionGroup>
@@ -65,6 +66,8 @@ const community = ref('')
 const sort = ref('')
 const observer = ref<IntersectionObserver>(null)
 const isAddData = ref(false)
+
+const isSubModal = ref()
 
 const triggerDiv = ref<Element>()
 definePageMeta({

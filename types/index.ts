@@ -321,7 +321,7 @@ export interface IComment {
   content: string,
   created_at: string,
   deleted_at: string,
-  dislike_cntt: number,
+  dislike_cnt: number,
   id: string,
   is_liked: boolean,
   is_pinned: boolean,
@@ -343,21 +343,24 @@ export interface IChat {
   unread_count: number,
   is_read: boolean,
   last_message: IMessage,
-  last_message_sent_at: string,
+  last_chat_at: string,
   joined_users: IUser[],
   is_group_room: boolean,
   last_chat_id: number,
-  unread_start_id: number
+  unread_start_id: number,
+  updated_message?: IMessage[]
+  meta?: { isLastMsg: boolean }
 }
 
 export interface IMessage {
   id: number,
+  chat_idx?: number,
   contents: string,
   text_html: string,
   sender: IUser,
   conversation_id: number,
   created_at: string,
-  media_attachments: [
+  media_attachments?: [
     {
       id: number,
       type: string,
@@ -368,7 +371,7 @@ export interface IMessage {
       content_type: string
     }
   ],
-  card: {
+  card?: {
     id: number,
     url: string,
     title: string,
@@ -379,6 +382,20 @@ export interface IMessage {
   }
 
 }
+export interface IReply {
+  content: string,
+  count_bad: number,
+  count_good: number,
+  count_reply: number,
+  created_at: string,
+  id: number,
+  my_reply: number,
+  target: number,
+  updated_at: string
+  user: IUser,
+  game_id?: number
+}
+
 
 export enum eGameStage {
   NONE = -1,
@@ -395,7 +412,7 @@ export enum eGameCategory {
   Affiliated,
   ZemJam,
   GJ,
-  GGJ
+  GGJ,
 }
 
 export enum eGameType {

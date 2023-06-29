@@ -67,6 +67,11 @@ export default function () {
     async getMessagingToken() {
       return await callHandler('getMessagingToken')
     },
+    async joinEmail(params: { email: string, password: string }) {
+      const response = await callHandler('joinEmail', params)
+      return JSON.parse(response)
+
+    },
 
     async initPurchase(products) {
       // const response = await webViewJavaScriptBridge.sendMessage({
@@ -94,6 +99,21 @@ export default function () {
       const result = JSON.parse(response);
       return result;
     },
+    async webLog(message) {
+      const response = await callHandler("webLog", { message });
+      const result = JSON.parse(response);
+      return result;
+    },
+    async currentLanguage() {
+      return await callHandler("currentLanguage");
+      // const result = JSON.parse(response);
+      // return result;
+    },
+    async currentPlatform() {
+      const response = await callHandler("currentPlatform");
+      const result = JSON.parse(response);
+      return result;
+    },
     async windowOpen(url) {
       // const response = await webViewJavaScriptBridge.sendMessage({
       //   action: "windowOpen",
@@ -110,7 +130,11 @@ export default function () {
     async openFile(options?: { type: string, multiple: boolean }) {
       const response = await callHandler("openFile", options);
       return response;
-    }
+    },
+    async getKeyHight() {
+      return await callHandler("getKeyHight");
+    },
+
 
   };
 

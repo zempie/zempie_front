@@ -3,14 +3,14 @@
     <dl class="three-area">
       <dt>
         <ChannelInfoBox :key="channelInfo.channel_id" />
-        <ChannelGameBox :key="channelInfo.channel_id" />
+        <ChannelGameBox :key="channelInfo.channel_id" :isLoading="isChannelLoading" />
       </dt>
       <dd>
         <PostTimeline type="userAll" :isMine="true" />
       </dd>
       <dt>
         <div class="ta-groups" style="margin-top: 0px">
-          <h2>Community</h2>
+          <h2>{{ $t('community') }}</h2>
           <CommunityList :communities="channelInfo?.communities" :isLoading="isChannelLoading" />
         </div>
       </dt>
@@ -72,32 +72,11 @@ onMounted(async () => {
   }
 }
 
-.ta-game-list {
-  display: block;
-  width: 100%;
-  border-radius: 10px;
-  background: #fff;
-  box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.1);
-}
 
-@media all and (max-width: 479px) {
-  // .ta-myinfo {
-  //   margin-bottom: 0px;
-  // }
-
-  .ta-game-list {
-    display: none;
-  }
-}
+@media all and (max-width: 479px) {}
 
 @media all and (min-width: 480px) and (max-width: 767px) {
-  // .ta-myinfo {
-  //   margin-bottom: 0px;
-  // }
 
-  .ta-game-list {
-    display: none;
-  }
 
   .area-title,
   .card-game {
@@ -105,15 +84,7 @@ onMounted(async () => {
   }
 }
 
-@media all and (min-width: 768px) and (max-width: 991px) {
-  // .ta-myinfo {
-  //   margin-bottom: 0px;
-  // }
-
-  .ta-game-list {
-    display: none;
-  }
-}
+@media all and (min-width: 768px) and (max-width: 991px) {}
 
 @media all and (min-width: 992px) and (max-width: 1199px) {}
 

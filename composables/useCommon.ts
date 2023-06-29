@@ -1,7 +1,9 @@
 
 export default function () {
   const setting = useState('setting', () => ({
-    lang: 'ko'
+    lang: 'ko',
+    isFbSupported: true,
+    isNotiAllow: false,
 
   }))
   const loading = useState('loading', () => {
@@ -18,12 +20,20 @@ export default function () {
   const setLoadingDone = () => {
     loading.value = false
   }
+  const setSupport = (state: boolean) => {
+    setting.value.isFbSupported = state
+  }
+  const setNoti = (state: boolean) => {
+    setting.value.isNotiAllow = state
+  }
 
   return {
     setting,
     loading,
     setLang,
     setLoading,
-    setLoadingDone
+    setLoadingDone,
+    setSupport,
+    setNoti
   }
 }

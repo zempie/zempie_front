@@ -13,6 +13,7 @@
       </div>
       <ClientOnly>
         <form class="lj-content">
+
           <ul>
             <li>
               <input type="text" name="register-email" v-model="v$.email.$model"
@@ -89,15 +90,17 @@ import { ElMessage } from 'element-plus'
 import { required, helpers, maxLength } from '@vuelidate/validators'
 import { emailRegex, passwordRegex, nicknameRegex } from '~/scripts/utils'
 import { useI18n } from 'vue-i18n';
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { browserLocalPersistence, createUserWithEmailAndPassword, setPersistence, signOut } from 'firebase/auth'
 import { onBeforeRouteLeave } from 'vue-router';
 import shared from '~~/scripts/shared';
-import { signOut } from 'firebase/auth'
+import { useGtag } from 'vue-gtag-next';
+import flutterBridge from '~~/scripts/flutterBridge'
 
 
 const { t, locale } = useI18n()
 const { $firebaseAuth, $cookies, $localePath } = useNuxtApp()
 const router = useRouter();
+const gtag = useGtag()
 
 const form = reactive({
   email: "",
@@ -114,6 +117,8 @@ const nicknameValidator = helpers.regex(nicknameRegex)
 
 const fUser = computed(() => useUser().user.value.fUser)
 const isLogin = computed(() => useUser().user.value.isLogin)
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+
 
 
 
@@ -165,11 +170,13 @@ definePageMeta({
 });
 
 onMounted(() => {
-  window.addEventListener('beforeunload', function (e) {
-    e.preventDefault();
-    e.returnValue = '';
-    removeFbUser()
-  });
+  // window.addEventListener('beforeunload', function (e) {
+  //   e.preventDefault();
+  //   e.returnValue = '';
+  //   removeFbUser()
+  // });
+
+  console.log('fUser.value', fUser.value)
   if (fUser.value) {
     form.email = fUser.value.email
     delete form.password
@@ -180,8 +187,14 @@ shared.createHeadMeta(t('seo.join.title'), t('seo.join.desc'))
 
 
 onBeforeRouteLeave((to, from, next) => {
+  // window.removeEventListener('beforeunload', function (e) {
+  //   e.preventDefault();
+  //   e.returnValue = '';
+  // });
+  console.log('router leave??')
   removeFbUser()
   next()
+
 })
 
 //소셜 로그인 회원가입 안 끝내고 페이지 이동하는 경우에 사용 
@@ -208,7 +221,6 @@ const isSubmitActive = computed(() => {
 
 
 async function register() {
-
   if (!isSubmitActive.value) return
 
   const result = await v$.value.$validate()
@@ -220,18 +232,20 @@ async function register() {
     if (!result) return;
   }
 
-  if (fUser.value) { await joinZempie(); return; }
-
   try {
 
-    const result = await createUserWithEmailAndPassword($firebaseAuth, form.email, form.password)
-    const { user } = result;
+    if (isFlutter.value && !fUser.value) {
+      await flutterBridge().joinEmail({ email: form.email, password: form.password })
+    } else {
+      if (fUser.value) { await joinZempie(); return; }
+      await createUserWithEmailAndPassword($firebaseAuth, form.email, form.password)
+    }
     await joinZempie();
 
   } catch (error: any) {
+
     const { message } = error
     if (message.includes('auth/email-already-in-use')) {
-
       ElMessage.error(`${t('fb.using.email')}`)
     }
     else if (message.includes('EMAIL_EXISTS')) {
@@ -248,6 +262,7 @@ async function register() {
  * zempie db 등록
  */
 async function joinZempie() {
+  console.log('join!')
   const payload = {
     name: form.username,
     nickname: form.nickname
@@ -259,15 +274,20 @@ async function joinZempie() {
     const { user } = data.value.result;
 
     if (user) {
+
       useUser().setUser(user);
       useUser().setLogin()
       router.push($localePath('/'))
 
-      // useUser().unsetSignup()
+      gtag.event('click', {
+        event_category: 'join',
+        event_label: fUser.value.providerData[0].providerId,
+      })
     }
 
   } else if (error.value) {
-    ElMessage.error((error.value as any).data.error)
+
+    ElMessage.error((error.value as any))
   }
 }
 </script>

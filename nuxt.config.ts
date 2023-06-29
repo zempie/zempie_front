@@ -31,13 +31,19 @@ export default defineNuxtConfig({
       script: [
         {
           src: process.env.KAKAO_SDK
+        },
+        {
+          children: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','${process.env.TAG_MANAGER_ID}');`
         }
-      ]
-    }
+      ],
+
+
+    },
   },
-  // experimental: {
-  //   writeEarlyHints: false,
-  // },
   hooks: {
     'pages:extend'(routes) {
       routes.push({
@@ -45,7 +51,18 @@ export default defineNuxtConfig({
         path: '/community/:id/:channel_name',
         file: resolve(__dirname, './pages/community/[id]/index.vue')
       })
-    }
+    },
+    'build:manifest': (manifest) => {
+      // find the app entry, css list
+      const css = manifest['node_modules/nuxt/dist/app/entry.js']?.css
+      if (css) {
+        // start from the end of the array and go to the beginning
+        for (let i = css.length - 1; i >= 0; i--) {
+          // if it starts with 'entry', remove it from the list
+          if (css[i].startsWith('entry')) css.splice(i, 1)
+        }
+      }
+    },
   },
   generate: {
     fallback: '404.html'
@@ -53,32 +70,31 @@ export default defineNuxtConfig({
   router: {
     middleware: ['auth']
   },
+
   css: [
-    '@/assets/css/animate.css',
     '@/assets/css/jquery-ui.css',
-    // '@/assets/css/fonts-jam.css',
-    // '@/assets/css/common.css',
-    // '@/assets/css/content.css',
     '@/assets/css/layout.css',
     '@/assets/css/style.css',
     '@/assets/css/fonts.css',
-    // '@/assets/css/common.scss',
-    // '@/assets/css/editor.scss',
     'element-plus/dist/index.css',
     'swiper/css',
     'swiper/css/pagination',
-    // '@/assets/css/prism.css'
   ],
-  // plugins: [
-  //   { src: '~/plugins/flutterBridge.client.ts', mode: 'client' }
-  // ],
 
   modules: [
     'cookie-universal-nuxt',
     ['@nuxtjs/i18n', i18n],
     '@vueuse/nuxt',
-
+    ['nuxt-compress', { gzip: { threshold: 8192 } }]
   ],
+  nitro: {
+    compressPublicAssets: true,
+    minify: true
+  },
+
+  build: {
+    extractCSS: true,
+  },
 
   publicRuntimeConfig: {
     ENV: process.env.ENV,
@@ -115,7 +131,8 @@ export default defineNuxtConfig({
     FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID,
     TWITTER_SHARE_URL: process.env.TWITTER_SHARE_URL,
     HOTJAR_ID: process.env.HOTJAR_ID,
-    BOOTPAY_JS_KEY: process.env.BOOTPAY_JS_KEY
+    BOOTPAY_JS_KEY: process.env.BOOTPAY_JS_KEY,
+    TAG_MANAGER_ID: process.env.TAG_MANAGER_ID
   },
 
 })

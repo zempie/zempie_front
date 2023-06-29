@@ -45,17 +45,19 @@
         <audio controls :src="file.url"></audio>
         <p>{{ file.name }}</p>
       </div>
+      <!-- <PostGridImg :images="initFiles" style="padding:10px" /> -->
       <img v-else-if="initFiles?.length === 1" style="width: 100%; margin: 0 auto; display: flex" :src="initFiles[0].url"
         class="feed-img mt-3" />
 
       <swiper v-else class="swiper" :modules="[Pagination]" style="height: 350px" :pagination="{ clickable: true }"
         :options="swiperOption">
-        <swiper-slide v-for="file in initFiles">
-          <img v-if="file.type === 'image'" style="height: 88%; margin: 0 auto; display: flex" :src="file.url"
+        <swiper-slide v-for="file in initFiles" class="flex items-center" style="height:88%; ">
+          <img v-if="file.type === 'image'" style="max-height:100%; margin: 0 auto; display: flex" :src="file.url"
             class="feed-img mt-3" />
         </swiper-slide>
         <div class="swiper-pagination" style="bottom: 10px; left: 0; width: 100%;" slot="pagination"></div>
       </swiper>
+
     </template>
 
     <a v-if="!isObjEmpty(feed.metadata)" :href="feed.metadata?.url" target="_blank">
@@ -111,7 +113,6 @@
 </template>
 
 <script setup lang="ts">
-import Prism from '~/plugins/prism'
 import _ from 'lodash'
 import { PropType } from 'vue'
 import { IComment, IFeed } from '~~/types'
@@ -132,7 +133,6 @@ import {
 
 import { useI18n } from 'vue-i18n'
 
-// import hljs from 'highlight.js'
 import { useWindowScroll, useInfiniteScroll } from '@vueuse/core'
 
 const { $localePath } = useNuxtApp()
@@ -211,7 +211,6 @@ const isOverflow = computed(() => {
 const initFiles = _.cloneDeep(attatchment_files.value)
 
 onMounted(() => {
-  Prism.highlightAll()
   const dom = props.feed?.content && htmlToDomElem(props.feed.content)
 })
 
@@ -288,6 +287,8 @@ async function openComments(isOpenComment: boolean) {
 
   if (isOpenComment) {
     await commentFetch()
+  } else {
+    newRecomments.value = []
   }
 }
 

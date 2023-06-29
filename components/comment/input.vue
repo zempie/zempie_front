@@ -6,7 +6,7 @@
         <div class="chip" v-if="parentComment?.user?.nickname">
           {{ '@' + parentComment?.user?.nickname }}
         </div>
-        <input type="text" v-model="content" :placeholder="parentComment ? '' : $t('comment.input.placeholder')"
+        <input type="text" v-model="content" :placeholder="parentComment?.id ? '' : $t('comment.input.placeholder')"
           :readonly="!isLogin" @input="onInputComment" @keydown.delete="backspaceDelete"
           @keyup.enter="isEdit ? editComment() : sendComment()" ref="commentInput" />
       </div>
@@ -45,9 +45,6 @@ const isLogin = computed(() => useUser().user.value.isLogin)
 
 const emit = defineEmits(['addComment', 'editComment'])
 
-
-
-
 function commentCheck(cmt: IComment) {
   if (cmt) {
     if (cmt.parent_id) {
@@ -69,6 +66,9 @@ function commentCheck(cmt: IComment) {
     }
   }
 }
+
+//중복호출 방지
+const isSending = ref(false)
 
 watch(() =>
   (props.recomment), (recomment) => {
@@ -98,11 +98,19 @@ async function editComment() {
   if (!error.value) {
     emit('editComment', data.value)
   }
+
+
+  nextTick(() => {
+    commentInput.value.blur()
+  })
+
 }
 
-
-const sendComment = _.debounce(async () => {
+async function sendComment() {
+  if (isSending.value) return
   if (!content.value) return
+
+  isSending.value = true
 
   const payload = {
     type: 'COMMENT',
@@ -112,15 +120,10 @@ const sendComment = _.debounce(async () => {
   }
 
 
-  console.log('parentComment', parentComment.value)
   if (parentComment.value?.id) {
     payload['parent_id'] = parentComment.value.parent_id ? parentComment.value?.parent_id : parentComment.value.id
     payload.content = `@${parentComment.value.user.nickname} ` + payload.content
   }
-
-
-  console.log(payload)
-  // return
 
   const { data, error } = await useCustomAsyncFetch(
     `/post/${props.postId}/comment`,
@@ -132,7 +135,51 @@ const sendComment = _.debounce(async () => {
     parentComment.value = null
     emit('addComment', data.value)
   }
-}, 300)
+
+  nextTick(() => {
+    commentInput.value.blur()
+  })
+
+  isSending.value = false
+
+}
+
+// const sendComment = _.debounce(async () => {
+
+
+//   if (!content.value) return
+
+//   const payload = {
+//     type: 'COMMENT',
+//     post_id: props.postId,
+//     content: content.value,
+//     is_private: isPrivate.value,
+//   }
+
+
+//   if (parentComment.value?.id) {
+//     payload['parent_id'] = parentComment.value.parent_id ? parentComment.value?.parent_id : parentComment.value.id
+//     payload.content = `@${parentComment.value.user.nickname} ` + payload.content
+//   }
+
+//   // return
+
+//   const { data, error } = await useCustomAsyncFetch(
+//     `/post/${props.postId}/comment`,
+//     getComFetchOptions('post', true, payload)
+//   )
+
+//   if (!error.value) {
+//     content.value = null
+//     parentComment.value = null
+//     emit('addComment', data.value)
+//   }
+
+//   nextTick(() => {
+//     commentInput.value.blur()
+//   })
+
+// }, 300)
 
 
 function onInputComment() {

@@ -2,6 +2,8 @@
   <NuxtLayout name="game-channel-header">
     <dl class="three-area">
       <dt>
+        <GameComments class="mb20" :game="game" />
+
         <div class="ta-game-list">
           <dl>
             <dt>{{ $t('game') }}</dt>
@@ -28,6 +30,7 @@
             <li>{{ $t('no.game') }}</li>
           </ul>
         </div>
+
       </dt>
       <dd>
         <PostTimeline type="game" :isMine="isMine" />
@@ -106,9 +109,10 @@ async function gameListFetch() {
 }
 
 function copyUrl() {
-  const url = game.game_type === eGameType.Download ? `${config.ZEMPIE_URL}/${locale.value}/game/${game.pathname}` : `${config.ZEMPIE_URL}/${locale.value}/play/${game.pathname}`
+  // const url = game.game_type === eGameType.Download ? `${config.ZEMPIE_URL}/${locale.value}/game/${game.pathname}` : `${config.ZEMPIE_URL}/${locale.value}/play/${game.pathname}`
 
-  execCommandCopy(url)
+  execCommandCopy(window.location.href)
+
   ElMessage.closeAll()
   ElMessage({
     message: t('copied.clipboard'),
@@ -195,6 +199,7 @@ function copyUrl() {
   .desc {
     color: #000;
     line-break: auto;
+    overflow-wrap: anywhere;
   }
 }
 </style>

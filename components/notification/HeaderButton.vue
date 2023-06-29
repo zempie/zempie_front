@@ -6,9 +6,9 @@
         <span v-if="hasNewNoti"></span>
       </button>
       <template #dropdown>
-        <div slot="body" class="header-message">
+        <div slot="body" class="header-message" style="max-width:95vw; ">
           <dl>
-            <dt>Notifications</dt>
+            <dt> {{ t('notification') }}</dt>
             <dd>
               <a @click="readAll"><i class="uil uil-comment-alt"></i><em>{{ t('mark.all') }}</em></a>
             </dd>

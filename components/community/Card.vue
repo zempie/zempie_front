@@ -1,5 +1,5 @@
 <template>
-  <li @click.stop="$router.push($localePath(`/community/${community.id}`))">
+  <li @click="goCommunity">
     <div :style="{
       background: 'url(' + bannerImg + ') center center / cover no-repeat',
       'background-size': 'cover',
@@ -46,18 +46,36 @@
 import { numToKMB } from '~/scripts/utils'
 
 const { $localePath } = useNuxtApp()
+const router = useRouter()
 
 const props = defineProps({
   community: Object,
+  isSubModal: Boolean
 })
+
+const emit = defineEmits(['isSubModal'])
+
 
 const bannerImg = computed(
   () => props.community.banner_img ?? '/images/1500_300_com_channel_default.png'
 )
 const profileImg = computed(
-  () => props.community.profile_img ?? '/images/100_100_com_profile_default.png'
+  () => props.community.profile_img ?? '/images/100_100_com_profile_default.jpeg'
 )
 const visitCount = computed(() => numToKMB(props.community.visit_cnt))
+
+function goCommunity(e) {
+  e.stopPropagation()
+  console.log('!!', props.isSubModal)
+
+  if (props.isSubModal) {
+
+    emit('isSubModal', false)
+    return
+  }
+
+  router.push($localePath(`/community/${props.community.id}`))
+}
 </script>
 
 <style lang="scss" scoped>

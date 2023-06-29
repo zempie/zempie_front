@@ -30,7 +30,7 @@
             </a>
           </div>
           <div class="swiper-slide" style="width: 50%; cursor: pointer">
-            <NuxtLink :to="$localePath(`/channel/${paramId}/games`)" :class="media === 'game' ? 'active' : ''">
+            <NuxtLink :to="$localePath(`/${paramId}/games`)" :class="media === 'game' ? 'active' : ''">
               <p><i class="uil uil-map-pin-alt"></i>GAME</p>
             </NuxtLink>
           </div>

@@ -13,7 +13,7 @@
     <Transition name="component-fade" mode="out-in">
       <div v-if="fileName">
         <p class="file-size">
-          {{ totalSize< 1? `${totalSize * 1000} KB` : `${totalSize} MB` }} </p>
+          {{ totalSize < 1 ? `${totalSize * 1000} KB` : `${totalSize} MB` }} </p>
 
             <p class="file-name">{{ $t('file.name') }} : {{ fileName }}</p>
       </div>
@@ -117,7 +117,7 @@ async function onFileChange(e: any) {
     indexFiles.sort((a, b) => a.length - b.length)
     startFile.value = indexFiles[0]
   } else {
-    startFile.value = startFileOptions[0]
+    startFile.value = startFileOptions.value[0]
   }
 
   if (startFileOptions.value.length) {
@@ -125,8 +125,8 @@ async function onFileChange(e: any) {
     fileName.value = e.target.files[0].name
   } else {
     ElMessage.error(t('notFoundHtml'))
-
-    fileName.value = ''
+    deleteFile()
+    return
     // this.uploadGameFileError = this.$t('projectAddVersion.error.notFoundHtml').toString();
   }
 

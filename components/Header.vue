@@ -5,8 +5,9 @@
         <div class="header-logo-menu">
           <p>
             <NuxtLink :to="$localePath('/')">
-              <img v-if="showMobileLogo" class="mobile-logo" src="/images/zempie_logo_154_155.png" alt="zempie-logo" />
-              <img v-else class="logo" src="/images/zempie-logo-black.png" alt="zempie-logo" />
+              <img v-if="showMobileLogo" class="mobile-logo" src="/images/zempie_logo_154_155.png" alt="zempie-logo"
+                loading="lazy" />
+              <img v-else class="logo" src="/images/zempie-logo-black.png" alt="zempie-logo" loading="lazy" />
             </NuxtLink>
           </p>
           <button class="btn-circle-none" @click="isHeaderSideMobile = true" v-if="showHamburger">
@@ -15,7 +16,7 @@
           <ul class="menu">
             <li class="uppercase">
               <NuxtLink :to="$localePath('/community/list')"
-                :class="$route.name.toString().includes('community-list') && 'active'">
+                :class="$route.name?.toString().includes('community-list') && 'active'">
                 community
               </NuxtLink>
             </li>
@@ -25,31 +26,9 @@
                 games
               </NuxtLink>
             </li>
-            <ClientOnly>
-              <el-dropdown trigger="click" class="menu-dropdown uppercase font15">
-                <span class="el-dropdown-link ">
-                  GameJam
-                </span>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item class="header-menu" @click="router.push($localePath('/zem-jam'))">
-                      ZEMJAM
-                    </el-dropdown-item>
-                    <el-dropdown-item class="header-menu" @click="router.push($localePath('/game-jam-plus'))">
-                      GJ+
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-            </ClientOnly>
             <li class="uppercase pointer">
               <a id="zempieWorldMenu" @click="moveZemWorld">
                 Z-world
-              </a>
-            </li>
-            <li class="uppercase pointer">
-              <a id="zempieWorldMenu" :href="config.ANDROID_DOWNLOAD_LINK">
-                App
               </a>
             </li>
           </ul>
@@ -69,9 +48,8 @@
             <NotificationHeaderButton />
             <button class="btn-circle-icon ml10" @click="$router.push($localePath('/dm/list'))">
               <i class="uil uil-comment-alt"></i>
-              <span class="new-dm-badge">99+</span>
+              <!-- <span class="new-dm-badge">99+</span> -->
             </button>
-
             <UserMenu />
           </div>
           <div v-else-if="!isLoading && !isLogin" class="header-login">
@@ -106,18 +84,6 @@
               <a class="pointer" id="zempieWorldMenu" @click="moveZemWorld">
                 <i class="uil uil-globe"></i>
                 Zempie world
-              </a>
-              <NuxtLink :to="$localePath('/zem-jam')" @click.native="isHeaderSideMobile = false"><i
-                  class="uil uil-play"></i>
-                ZEMJAM
-              </NuxtLink>
-              <NuxtLink :to="$localePath('/game-jam-plus')" @click.native="isHeaderSideMobile = false"><i
-                  class="uil uil-keyboard"></i>
-                GJ+
-              </NuxtLink>
-              <a class="pointer" id="zempieWorldMenu" :href="config.ANDROID_DOWNLOAD_LINK">
-                <i class="uil uil-globe"></i>
-                Zempie App
               </a>
             </div>
           </div>
@@ -181,6 +147,7 @@ const searchInput = ref()
 const isHeaderSideMobile = ref(false)
 const isHeaderSideBgMobile = ref(false)
 
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
 
 const isMobileSize = computed(() =>
@@ -200,7 +167,6 @@ const options = [
   { code: "en", label: "English" },
 ]
 const selectedLang = ref(locale.value)
-// console.log('currneLan', locale.value)
 
 const isOpen = ref(false)
 const { loginModal } = useModal()
@@ -216,6 +182,7 @@ watch(
 onMounted(() => {
   nextTick(() => {
     onResize()
+    selectedLang.value = locale.value
   })
   window.addEventListener("resize", onResize)
 })
