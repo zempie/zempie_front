@@ -68,7 +68,8 @@
         </dd>
         <dt :class="['msg-container', selectedRoom ? 'on' : 'off']" ref="activeMsgRef">
           <DmActiveRoom v-if="selectedRoom" :selectedRoom="selectedRoom" @deleted-room="onDeletedRoom"
-            @open-keyboard="openkeyboard" @close-keyboard="closeKeyboard" :key="selectedRoom.id" ref="activeRoomRef" />
+            @open-keyboard="openkeyboard" @update-last-msg="updateLastMsg" @close-keyboard="closeKeyboard"
+            :key="componentKey" ref="activeRoomRef" />
           <div v-else class="dlc-chat-emptied">
             <p><i class="uil uil-comment-alt-dots" style="font-size:40px; color:#fff;"></i></p>
             <h2> {{ $t('no.selected.msg') }} </h2>
@@ -149,6 +150,7 @@ import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
 
 const CHAT_LIMIT = 10
 
+const route = useRoute()
 const { $localePath } = useNuxtApp()
 const { t } = useI18n()
 
@@ -177,6 +179,7 @@ const msgEl = ref<HTMLElement | null>(null)
 const userListRef = ref<HTMLElement | null>(null)
 const fromId = ref(0)
 const isAddData = ref()
+const offset = ref(0)
 
 const activeMsgRef = ref()
 
@@ -191,6 +194,7 @@ const roomPolling = ref(null)
 //반응형
 const isFullScreen = ref(false)
 
+const componentKey = ref(0);
 
 const isMobile = computed(() =>
   window.matchMedia('screen and (max-width: 767px)')
@@ -208,7 +212,8 @@ useInfiniteScroll(
   msgEl,
   async () => {
     if (isAddData.value) {
-      fromId.value = roomList.value[roomList.value.length - 1].id + 1
+      // fromId.value = roomList.value[roomList.value.length - 1].id + 1
+      offset.value += CHAT_LIMIT
       await fetch(true)
     }
   },
@@ -221,10 +226,11 @@ watch(
   async (val) => {
     if (val) {
       const meta = JSON.parse(val.data.meta)
-      const roomId = Number(meta.room_id)
+      console.log(meta)
+      const roomId = Number(meta.room.id)
       if (meta) {
         if (selectedRoom.value?.id === roomId) {
-          activeRoomRef.value.addMsg(meta)
+          activeRoomRef.value.addMsg(meta.chat)
         } else {
           const existRoom = roomList.value.filter((room) => {
             if (room.id === roomId) {
@@ -238,19 +244,18 @@ watch(
                 return {
                   ...room,
                   unread_count: increaseUnreadCount(room.unread_count),
-                  last_message: meta
+                  last_message: meta.chat
                 }
               } else {
                 return room
               }
             })
           } else {
-            await createRoom([meta.sender_id])
+            await createRoom([meta.chat.sender_id])
           }
         }
       }
 
-      console.log(roomList.value)
       //  hasNewNoti.value = true
     }
   }
@@ -266,9 +271,8 @@ watch(
 )
 
 
-
-
 onMounted(async () => {
+
   clearInterval(roomPolling.value)
 
   nextTick(async () => {
@@ -277,7 +281,10 @@ onMounted(async () => {
     if (!userInfo.value.setting.dm_alarm || !isFbSupported.value || !useCommon().setting.value.isNotiAllow) {
       await pollingRoom()
     }
+    const userId = getQuery('user')
+    if (userId) { await findRoom([Number(userId)]) }
   })
+
   window.addEventListener('resize', onResize)
 
 })
@@ -285,8 +292,11 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   clearInterval(roomPolling.value)
   window.removeEventListener('resize', onResize)
-
 })
+
+function getQuery(query: string) {
+  return route.query ? route.query[query] : null
+}
 
 function onResize() {
   isFullScreen.value = isMobile.value.matches ? true : false
@@ -296,16 +306,17 @@ async function fetch(isPolling: boolean = false) {
 
   const payload = {
     limit: CHAT_LIMIT,
-    from_id: fromId.value,
+    offset: offset.value,
     order: 'asc'
   }
 
   //TODO: limit 제한 걸어야됨 임시
   try {
-    const { data, error, pending } = await useCustomAsyncFetch<{ rooms: IChat[], updated_rooms: IChat[] }>(createQueryUrl(`/chat/rooms`, payload), getComFetchOptions('get', true))
+    const { data, error, pending } = await useCustomAsyncFetch<{ result: IChat[], updated_rooms: IChat[], totalComment: number }>(createQueryUrl(`/chat/rooms`, payload), getComFetchOptions('get', true))
 
     if (data.value) {
-      const { rooms, updated_rooms } = data.value
+      const { result: rooms, updated_rooms } = data.value
+      console.log(rooms)
       if (isAddData.value) {
         if (updated_rooms.length > 0) {
 
@@ -316,6 +327,7 @@ async function fetch(isPolling: boolean = false) {
             if (room.updated_message.length) {
 
               room.updated_message.map((msg) => {
+
                 //CASE 1: 삭제된 메세지가 업데이트 된 경우 : chat_idx : -1인 경우 삭제된 메세지임 
                 if (msg.chat_idx === -1 && (targetRoom.last_message.id === msg.id)) {
                   roomList.value = roomList.value.map((room3) => {
@@ -326,7 +338,8 @@ async function fetch(isPolling: boolean = false) {
                           ...room3.last_message,
                           contents: t('deleted.message')
                         },
-                        unread_count: room3.unread_count - 1
+                        unread_count: room3.unread_count - 1,
+                        meta: { isLastMsg: msg.id === room3.last_message.id }
                       }
                     } else {
                       return room3
@@ -375,7 +388,7 @@ async function fetch(isPolling: boolean = false) {
   }
 }
 const isNotMyMsg = (msg: IMessage) => {
-  return msg.sender.id !== userInfo.value.id
+  return msg.sender?.id !== userInfo.value.id
 }
 
 const increaseUnreadCount = (unreadCount: number) => {
@@ -460,8 +473,9 @@ async function onClickUser(user: IUser) {
 
 async function onClickRoom(clickedRoom: IChat) {
 
-  selectedRoom.value = clickedRoom
 
+  selectedRoom.value = clickedRoom
+  forceRerender()
 
   // await getMessages()
 
@@ -478,14 +492,18 @@ async function onClickRoom(clickedRoom: IChat) {
 
 }
 
+function forceRerender() {
+  componentKey.value += 1;
+};
+
 async function findRoom(user_ids: Number[]) {
 
 
-  const { data, error } = await useCustomAsyncFetch<{ rooms: IChat[] }>(`/chat/rooms/search/user?user_ids=${user_ids}&perfact=true`, getComFetchOptions('get', true))
+  const { data, error } = await useCustomAsyncFetch<{ result: IChat[] }>(`/chat/rooms/search/user?user_ids=${user_ids}&perfact=true`, getComFetchOptions('get', true))
 
   if (data.value) {
     // TODO: 다이렉트 메시지만 1차 스펙에서는 가능 -> 추후 그룹 메시지로 변경 
-    const { rooms } = data.value
+    const { result: rooms } = data.value
     if (!rooms.length) {
       await createRoom(user_ids)
     } else {
@@ -502,6 +520,7 @@ async function findRoom(user_ids: Number[]) {
         selectedRoom.value = rooms[0]
         await createRoom([selectedRoom.value.joined_users[0].id])
       }
+      forceRerender()
     }
   }
 
@@ -517,6 +536,7 @@ async function createRoom(receiver_ids: Number[]) {
   if (data.value) {
     openNewMsg.value = false
     selectedRoom.value = data.value
+    forceRerender()
     if (roomList.value.length) {
       roomList.value = [data.value, ...roomList.value]
     } else {
@@ -563,7 +583,12 @@ function closeKeyboard() {
   activeMsgRef.value.style.paddingBottom = '0px'
 }
 
-
+// function updateLastMsg(msg: IMessage) {
+//   if (roomList.value[roomList.value.length - 1].last_message.id !== msg.id) {
+//     roomList.value[roomList.value.length - 1].last_message = msg
+//     forceRerender()
+//   }
+// }
 </script>
 <style scoped lang="scss">
 .dm-list {
@@ -724,6 +749,7 @@ function closeKeyboard() {
         }
 
         .msg-container {
+
           &.off {
             display: none;
           }

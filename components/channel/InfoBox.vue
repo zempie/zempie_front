@@ -20,8 +20,9 @@
       <UserAvatar :user="channelInfo" tag="p" />
       <h1>{{ channelInfo?.nickname }}</h1>
       <h2>{{ channelInfo?.name }}</h2>
-      <div class="mt10" v-if="user?.uid !== channelInfo?.channel_id">
-        <UserFollowBtn :user="channelInfo" />
+      <div class="mt10 flex justify-between" v-if="user?.uid !== channelInfo?.channel_id">
+        <UserFollowBtn :user="channelInfo" style="width: 48%;" />
+        <DmSendBtn :user="channelInfo" style="width: 48%;" />
       </div>
       <ul>
         <li>

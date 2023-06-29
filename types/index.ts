@@ -349,6 +349,7 @@ export interface IChat {
   last_chat_id: number,
   unread_start_id: number,
   updated_message?: IMessage[]
+  meta?: { isLastMsg: boolean }
 }
 
 export interface IMessage {

@@ -25,16 +25,19 @@
       <!-- <router-link to="#"><i class="uil uil-ellipsis-h font25"></i></router-link> -->
     </dd>
   </dl>
-  <div class="dlc-chat-content" ref="scrollContent">
-    <div :class="msg.sender.id === userInfo.id ? 'receiver-chat' : 'sender-chat'" v-for="(msg, index) in msgList"
-      :ref="el => { divs[msg.id] = el }" :key="index">
-      <h4>{{ dateFormat(msg.created_at) }}</h4>
-      <ul>
-        <li class="flex" style="overflow:auto; word-break: break-all;">
-          <DmMsgMenu :msg="msg" v-if="msg.sender.id === userInfo.id" @delete-msg="deleteMsg" />
-          <span>{{ msg.contents }}</span>
-        </li>
-      </ul>
+  <div class="dlc-chat-content">
+    <div class="inner" ref="scrollContent">
+      <div :class="msg.sender.id === userInfo.id ? 'receiver-chat' : 'sender-chat'" v-for="(msg, index) in msgList"
+        :ref="el => { divs[msg.id] = el }" :key="index">
+        <h4>{{ dateFormat(msg.created_at) }}</h4>
+        <ul>
+          <li class="flex" style="overflow:auto; word-break: break-all; max-width: 100%; ">
+            <DmMsgMenu :msg="msg" v-if="msg.sender.id === userInfo.id" @delete-msg="deleteMsg"
+              style="max-height: 100px;" />
+            <span>{{ msg.contents }}</span>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
   <div class="dlc-send-message">
@@ -107,7 +110,7 @@
 import _, { now } from 'lodash'
 import { dateFormat } from '~~/scripts/utils'
 import { IChat, IMessage, IUser } from '~~/types'
-import { ElDropdown, ElDialog, ElMessage } from 'element-plus';
+import { ElDropdown, ElDialog, ElMessage, linkEmits } from 'element-plus';
 import { PropType } from 'vue';
 import { useInfiniteScroll, useScroll } from '@vueuse/core'
 import FlutterBridge from '~~/scripts/flutterBridge'
@@ -119,28 +122,51 @@ const props = defineProps({
 const { t, locale } = useI18n()
 
 const MAX_MSG_LIMIT = 15
+const MAX_INPUT_LIMIT = 5000
 const msgEl = ref<HTMLElement | null>(null)
 const divs = ref([])
 
 const inputMsg = ref('')
-const msgList = ref()
+const msgList = ref<IMessage[]>()
 
 const fromId = ref(0)
 const msgLimit = ref(MAX_MSG_LIMIT)
 const isAddData = ref(false)
-const order = ref('asc')
+const order = ref('desc')
+const offset = ref(0)
 
 const opLeaveChatModal = ref(false)
 const opDeleteMsgModal = ref(false)
 const deleteTgMsg = ref()
 
 const scrollContent = ref<HTMLElement | null>(null)
+const msgPolling = ref(null)
+const totalMsgCnt = ref(0)
 
 const userInfo = computed(() => useUser().user.value.info)
-const msgPolling = ref(null)
 const isFbSupported = computed(() => useCommon().setting.value.isFbSupported)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 const unreadStartId = computed(() => props.selectedRoom.unread_start_id)
+
+
+const lastMsg = computed({
+  get() {
+    return props.selectedRoom.last_message
+  },
+  set(value) {
+    props.selectedRoom.last_message = value;
+  }
+})
+
+const isLastMsg = computed(() => {
+  if (props.selectedRoom?.meta?.isLastMsg) {
+    return true
+  }
+  if (msgList.value) {
+    console.log(msgList.value, props.selectedRoom)
+    return msgList.value[msgList.value?.length - 1].id === lastMsg.value.id
+  }
+})
 
 
 //중복 클릭 방지용
@@ -158,20 +184,19 @@ const emit = defineEmits(['deletedRoom', 'openKeyboard', 'closeKeyboard'])
 
 defineExpose({ addMsg })
 
-
-
 watch(
   () => top.value,
   async (val) => {
     if (val) {
+      colorLog('watch top', 'yellow')
+      if (msgList.value && msgList.value[0].chat_idx === 0) return
       if (msgList.value.length) {
-        const firstMsg = msgList.value[0]
-        if (firstMsg) {
-          fromId.value = firstMsg.id - 1
-          order.value = 'desc'
-          const prevScroll = _.cloneDeep(scrollContent.value?.scrollHeight)
-          await msgFetch(prevScroll)
-        }
+        if (msgList.value[0].id === 0) return
+        offset.value += MAX_MSG_LIMIT
+        order.value = 'desc'
+        const prevScroll = _.cloneDeep(scrollContent.value?.scrollHeight)
+        console.log(prevScroll)
+        await msgFetch(prevScroll)
 
       }
     }
@@ -184,14 +209,14 @@ watch(
   () => bottom.value,
   async (val) => {
     if (val) {
+      colorLog('watch bottom', 'yellow')
+      console.log('isLastMsg.value', isLastMsg.value)
+      if (isLastMsg.value) return
+
       if (msgList.value.length) {
-        const lastMsg = msgList.value[msgList.value.length - 1]
-        console.log(lastMsg)
-        if (lastMsg) {
-          fromId.value = lastMsg.id + 1
-          order.value = 'asc'
-          await msgFetch()
-        }
+        offset.value += MAX_MSG_LIMIT
+        order.value = 'asc'
+        await msgFetch()
 
       }
     }
@@ -201,16 +226,17 @@ watch(
 
 
 onMounted(async () => {
-  //FIXME : 마이너스로 넘어오는 경우가 있어서 우선은 이렇게 처리
-  if (props.selectedRoom.unread_count <= 0) {
-    fromId.value = props.selectedRoom.last_message?.id - MAX_MSG_LIMIT + 1
-  } else {
-    fromId.value = unreadStartId.value - MAX_MSG_LIMIT + 1
+  if (props.selectedRoom.unread_count) {
+    if (props.selectedRoom.unread_count > msgLimit.value) {
+      offset.value = props.selectedRoom.unread_count - msgLimit.value
+    }
+    order.value = 'desc'
   }
+
   await msgFetch()
 
   nextTick(() => {
-    if (props.selectedRoom.unread_count <= 0) {
+    if (props.selectedRoom.unread_count < msgLimit.value) {
       // 읽을 메세지가 없는 경우 스크롤 맨 하단
       scrollToBottom()
     } else {
@@ -222,17 +248,19 @@ onMounted(async () => {
   if (!userInfo.value.setting.dm_alarm || !isFbSupported.value || !useCommon().setting.value.isNotiAllow) {
     clearInterval(msgPolling.value)
     msgPolling.value = setInterval(async () => {
-      if (msgList.value) {
-        const newest = msgList.value[msgList.value?.length - 1]
-        if (newest) {
-          fromId.value = newest.id + 1
-        }
-      }
-      const newMessage = await msgFetch()
+      // if (msgList.value) {
+      //   const newest = msgList.value[msgList.value?.length - 1]
+      //   if (newest) {
+      //     fromId.value = newest.id + 1
+      //   }
+      // }
+      order.value = 'asc'
+
+      const newMessage = await msgFetch(null, totalMsgCnt.value)
 
 
       if (newMessage && newMessage.length) {
-        fromId.value = newMessage[newMessage.length - 1].id
+        // fromId.value = newMessage[newMessage.length - 1].id
         scrollToBottom()
       }
     }, 3000)
@@ -253,82 +281,91 @@ function scrollToBottom() {
 
 
 
-// async function getMessages() {
-
-//   const payload = {
-//     from_id: fromId.value,
-//     limit: msgLimit.value,
-//     order: 'asc'
-//   }
-
-//   console.log(payload)
-
-//   const { data, error } = await useCustomAsyncFetch<{ messages: IMessage[] }>(createQueryUrl(`/chat/room/${props.selectedRoom.id}`, payload), getComFetchOptions('get', true))
-
-//   //TODO: 로딩 넣어야함
-
-//   if (data.value) {
-//     const { messages } = data.value
-
-//     if (isAddData.value) {
-//       if (messages.length > 0) {
-//         msgList.value = [...msgList.value, ...messages]
-//       } else if (messages.length === 0) {
-//         isAddData.value = false
-//       }
-//     }
-//     else {
-//       msgList.value = messages
-//       isAddData.value = true
-//     }
-//     return messages
-//   }
-
-// }
-
-async function msgFetch(yPos?: number) {
+async function msgFetch(yPos?: number, customOffset?: number) {
   if (isSending.value) return
 
   const payload = {
-    from_id: fromId.value,
+    offset: customOffset ? customOffset : offset.value,
     limit: msgLimit.value,
     order: order.value
   }
 
-  const { data, error } = await useCustomAsyncFetch<{ messages: IMessage[] }>(createQueryUrl(`/chat/room/${props.selectedRoom.id}`, payload), getComFetchOptions('get', true))
+  const { data, error } = await useCustomAsyncFetch<{ result: IMessage[], totalCount: number }>(createQueryUrl(`/chat/room/${props.selectedRoom.id}`, payload), getComFetchOptions('get', true))
 
   if (data.value) {
-    const { messages } = data.value
+    const { result: messages, totalCount } = data.value
+    totalMsgCnt.value = totalCount
+
+    if (customOffset && messages.length) {
+      console.log('possling new message')
+      lastMsg.value = messages[messages.length - 1]
+    }
     if (order.value === 'asc') {
       if (messages.length > 0) {
         if (msgList.value?.length) {
           msgList.value = [...msgList.value, ...messages]
         } else {
           msgList.value = messages
-
         }
       }
+
     } else {
-      order.value = 'asc'
-      const msg = messages.reverse()
-
-      const newMsg = msg.filter((msg: IMessage) => !msgList.value.some(existingMsg => existingMsg.id === msg.id))
-
-      msgList.value = [...newMsg, ...msgList.value]
-
-
-
+      if (messages.length > 0) {
+        if (msgList.value?.length) {
+          msgList.value = [...messages.reverse(), ...msgList.value]
+        } else {
+          msgList.value = messages.reverse()
+        }
+      }
+      // if (!msgPolling.value && yPos) {
       nextTick(() => {
-        scrollContent.value.scrollTop = scrollContent.value?.scrollHeight - yPos
+        if (yPos)
+          scrollToPrev(yPos)
       })
-
+      // }
     }
+
     return messages
   }
 
 }
 
+function scrollToPrev(yPos: number) {
+  console.log(yPos)
+  scrollContent.value.scrollTop = scrollContent.value?.scrollHeight - yPos
+
+}
+
+async function addMoreMsg() {
+
+
+  //처음 메시지가 아니고 총 메세지가 15개보다 작으면 메세지 로드 
+  if (msgList.value[0].chat_idx !== -1 && msgList.value.length < msgLimit.value) {
+    colorLog('add more mesf', 'pink')
+
+    fromId.value = msgList.value[0].id - msgLimit.value
+
+    await msgFetch()
+
+    // const prevScroll = _.cloneDeep(scrollContent.value?.scrollHeight)
+
+    // console.log('prevScroll', prevScroll)
+
+    // nextTick(() => {
+    //   scrollContent.value.scrollTop = scrollContent.value?.scrollHeight - prevScroll
+    // })
+  }
+
+}
+
 async function sendMsg() {
+  if (inputMsg.value.length > MAX_INPUT_LIMIT) {
+    ElMessage({
+      message: t('dm.msg.too.long'),
+      type: 'warning',
+    })
+    return
+  }
   if (!inputMsg.value) return
   msgAcceessableCnt -= 1
   isSending.value = true

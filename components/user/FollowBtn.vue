@@ -37,8 +37,6 @@ const isFollowing = ref(props.user?.is_following)
 
 async function follow() {
 
-
-
   if (!isLogin.value) {
     useModal().openLoginModal()
     return

@@ -12,7 +12,10 @@
       <ul class="card-follow" v-else>
         <UserCard v-for="member in members" :key="member.id" :user="member">
           <template #followBtn>
-            <UserFollowBtn :user="member" class="mt20" />
+            <div class="flex w100p justify-between">
+              <UserFollowBtn :user="member" class="mt20" style="width: 48%;" />
+              <DmSendBtn :user="member" class="mt20" style="width: 48%;" />
+            </div>
           </template>
         </UserCard>
         <div ref="triggerDiv"></div>

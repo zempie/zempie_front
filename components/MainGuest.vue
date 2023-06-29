@@ -2,7 +2,7 @@
   <div class="main-bg">
     <div class="main-copy">
       <h1>
-        <img src="/images/main_copy.svg" width="500" alt="zempie" title="zempie" />
+        <img src="/images/main_copy.png" width="500" alt="zempie" title="zempie" />
       </h1>
     </div>
     <div class="main-visual">
@@ -17,7 +17,7 @@
       </ul>
     </div>
     <div class="main-visual">
-      <h2><span style="font: 36px/46px 'Jalnan'">Communities</span></h2>
+      <h2><span>Communities</span></h2>
 
       <div class="card-timeline">
         <CommunityCardSk v-if="cPending" v-for="commi in COMMUNITY_COUNT" />
@@ -31,7 +31,7 @@
       </ul>
     </div>
     <div v-else class="main-visual">
-      <h2><span style="font: 36px/46px 'Jalnan'">Recent posts</span></h2>
+      <h2><span>Recent posts</span></h2>
 
       <ul style="margin-top: 40px" class="post-container">
         <li class="thumbmail" v-for="post in posts?.result" :key="post.id"
@@ -112,7 +112,10 @@ const {
     height: auto !important;
   }
 
-  .game-jam-plus {}
+  h2 {
+    font-weight: bold;
+    font-size: 40px;
+  }
 
 }
 </style>

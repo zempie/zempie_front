@@ -13,6 +13,7 @@
       </div>
       <ClientOnly>
         <form class="lj-content">
+
           <ul>
             <li>
               <input type="text" name="register-email" v-model="v$.email.$model"
@@ -174,6 +175,8 @@ onMounted(() => {
   //   e.returnValue = '';
   //   removeFbUser()
   // });
+
+  console.log('fUser.value', fUser.value)
   if (fUser.value) {
     form.email = fUser.value.email
     delete form.password
@@ -230,7 +233,6 @@ async function register() {
   }
 
   try {
-
 
     if (isFlutter.value && !fUser.value) {
       await flutterBridge().joinEmail({ email: form.email, password: form.password })
