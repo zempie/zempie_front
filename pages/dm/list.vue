@@ -667,6 +667,7 @@ function closeKeyboard() {
         padding: 13px;
         border: 1px solid #ededed;
         border-radius: 10px;
+        text-align: left;
 
         dt {
           display: flex;

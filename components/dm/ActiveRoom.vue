@@ -297,13 +297,12 @@ async function msgFetch(yPos?: number, customOffset?: number) {
     totalMsgCnt.value = totalCount
 
     if (customOffset && messages.length) {
-      console.log('possling new message')
       lastMsg.value = messages[messages.length - 1]
     }
     if (order.value === 'asc') {
       if (messages.length > 0) {
         if (msgList.value?.length) {
-          msgList.value = [...msgList.value, ...messages]
+          msgList.value = [...msgList.value, ...newMsg(messages)]
         } else {
           msgList.value = messages
         }
@@ -312,7 +311,7 @@ async function msgFetch(yPos?: number, customOffset?: number) {
     } else {
       if (messages.length > 0) {
         if (msgList.value?.length) {
-          msgList.value = [...messages.reverse(), ...msgList.value]
+          msgList.value = [...newMsg(messages.reverse()), ...msgList.value]
         } else {
           msgList.value = messages.reverse()
         }
@@ -403,25 +402,8 @@ async function sendMsg() {
 
 }
 
-function renderMsg() {
-  if (msgList.value?.length) {
-    msgList.value = [...msgList.value, {
-      contents: inputMsg.value,
-      created_at: new Date(),
-      sender: userInfo.value
-    }]
-  } else {
-    msgList.value = [{
-      contents: inputMsg.value,
-      created_at: new Date(),
-      sender: userInfo.value
-
-    }]
-  }
-}
 function addMsg(msg: IMessage) {
   msgList.value = [...msgList.value, ...newMsg([msg])]
-  console.log('msg', msgList.value)
 
   nextTick(() => {
     scrollToBottom()
