@@ -201,6 +201,7 @@ const isMobile = computed(() =>
 )
 const isFbSupported = computed(() => useCommon().setting.value.isFbSupported)
 
+const totalRoomCnt = ref(0)
 
 definePageMeta({
   title: 'dm',
@@ -302,20 +303,21 @@ function onResize() {
   isFullScreen.value = isMobile.value.matches ? true : false
 }
 
-async function fetch(isPolling: boolean = false) {
+async function fetch(isPolling: boolean = false, customOffset?: number) {
 
   const payload = {
     limit: CHAT_LIMIT,
-    offset: offset.value,
+    offset: customOffset ? customOffset : offset.value,
     order: 'asc'
   }
 
   //TODO: limit 제한 걸어야됨 임시
   try {
-    const { data, error, pending } = await useCustomAsyncFetch<{ result: IChat[], updated_rooms: IChat[], totalComment: number }>(createQueryUrl(`/chat/rooms`, payload), getComFetchOptions('get', true))
+    const { data, error, pending } = await useCustomAsyncFetch<{ result: IChat[], updated_rooms: IChat[], totalCount: number }>(createQueryUrl(`/chat/rooms`, payload), getComFetchOptions('get', true))
 
     if (data.value) {
-      const { result: rooms, updated_rooms } = data.value
+      const { result: rooms, updated_rooms, totalCount } = data.value
+      totalRoomCnt.value = totalCount
       console.log(rooms)
       if (isAddData.value) {
         if (updated_rooms.length > 0) {
@@ -564,9 +566,7 @@ function onDeletedRoom(room: IChat) {
 //fcm이 작동하지 않는 경우 polling 해야됨
 async function pollingRoom() {
   roomPolling.value = setInterval(async () => {
-    fromId.value = roomList.value[roomList.value.length - 1]?.id + 1
-    isAddData.value = true
-    await fetch()
+    await fetch(true, totalRoomCnt.value)
   }, 5000)
 }
 
