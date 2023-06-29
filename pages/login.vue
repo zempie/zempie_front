@@ -299,6 +299,7 @@ async function appleLogin() {
     const provider = new OAuthProvider('apple.com')
     provider.addScope('email')
     provider.addScope('name');
+
     return socialLogin(provider)
   }
 }
@@ -322,7 +323,6 @@ async function flutterSocialLogin(info: any) {
 async function socialLogin(provider: AuthProvider) {
   try {
     const res = await signInWithPopup($firebaseAuth, provider)
-
     router.push($localePath('/'))
 
   } catch (err) {

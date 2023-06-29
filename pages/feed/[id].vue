@@ -145,7 +145,6 @@
 </template>
 
 <script setup lang="ts">
-import hljs from 'highlight.js'
 import _ from 'lodash'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
@@ -251,21 +250,7 @@ const postedGame = (posted_at) => {
 }
 
 onMounted(async () => {
-  hljs.configure({
-    ignoreUnescapedHTML: true,
-  })
-  document.querySelectorAll('pre').forEach((block) => {
-    hljs.highlightElement(block)
-  })
-  if (feed.value) {
-    // observer.value = new IntersectionObserver(
-    //   (entries) => {
-    //     handleIntersection(entries[0])
-    //   },
-    //   { root: null, threshold: 1 }
-    // )
-    // observer.value.observe(triggerDiv.value)
-  }
+
   await commentFetch()
 })
 

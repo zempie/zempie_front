@@ -1132,21 +1132,38 @@ $zempie-main-color-hover: #f974162a;
 }
 
 .dlc-chat-content {
-  li {
-    &:hover {
-      .msg-menu-btn {
-        display: block;
-        cursor: pointer;
+  .inner {
+    max-height: calc(560px - 90px);
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 30px;
+    overflow: auto;
 
+    li {
+      margin-top: 5px;
+
+      span {
+        padding: 11px 12px;
+        overflow: hidden;
+        background-color: #f1f1f1;
       }
-    }
 
-    .msg-menu-btn {
-      display: none;
-      background: none;
-      border: none;
-    }
+      &:hover {
+        .msg-menu-btn {
+          display: block;
+          cursor: pointer;
 
+        }
+      }
+
+      .msg-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+      }
+
+    }
   }
 }
 

@@ -1,7 +1,9 @@
 <template>
   <ClientOnly>
-    <el-dropdown trigger="click" ref="msgMenu">
-      <button class="msg-menu-btn"> <i class="uil uil-ellipsis-h font25"></i></button>
+    <el-dropdown trigger="click" ref="msgMenu" placement="bottom-end">
+      <div class="flex items-center" style="height: 50px;">
+        <button class="msg-menu-btn"> <i class="uil uil-ellipsis-h font25"></i></button>
+      </div>
       <template #dropdown>
         <div class="more-list fixed" style="min-width: 150px">
           <a @click="onDeleteMsg" id="editFeed" class="pointer">메시지 삭제</a>
@@ -22,7 +24,11 @@ const userInfo = computed(() => useUser().user.value.info)
 
 const emit = defineEmits(['deleteMsg'])
 
+const isShow = ref(true)
 
+onMounted(() => {
+  isShow.value = true
+})
 function openDeleteModal() {
   msgMenu.value.handleClose()
   opDeleteMsgModal.value = true
@@ -31,6 +37,7 @@ function openDeleteModal() {
 async function onDeleteMsg() {
 
   emit('deleteMsg', props.msg)
+  isShow.value = false
 
 }
 

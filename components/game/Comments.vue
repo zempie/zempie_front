@@ -43,7 +43,7 @@
                 :game-id="game.id" @delete-comment="deleteComment" @update-comment="updateComment" />
             </ul>
             <div>
-              <CommonInput @send-input="sendComment" ref="inputRef" placeholder="Message" />
+              <CommonInput @send-input="sendComment" ref="modalInputRef" placeholder="Message" />
             </div>
           </div>
         </div>
@@ -59,6 +59,7 @@ import { useInfiniteScroll } from '@vueuse/core'
 
 const COMMENT_LIMIT = 10
 const inputRef = ref()
+const modalInputRef = ref()
 const partialComments = ref<IReply[]>([])
 const comments = ref<IReply[]>([])
 const count = ref(0)
@@ -73,6 +74,9 @@ const isAddData = ref(false)
 
 const isLogin = computed(() => useUser().user.value.isLogin)
 
+
+//중복 클릭 방지용
+let cmtAcceessableCnt = 2
 
 const props = defineProps({
   game: Object as PropType<IGame>
@@ -129,12 +133,14 @@ async function getComments() {
 
 
 async function sendComment(text: string) {
+
   if (!isLogin.value) {
     useModal().openLoginModal()
     return
   }
   if (!text) return
 
+  cmtAcceessableCnt -= 1
   const payload = {
     game_id: props.game.id,
     content: text
@@ -142,6 +148,7 @@ async function sendComment(text: string) {
 
 
   const { data } = await useCustomAsyncFetch<{ result: IReply }>('/game/reply', getZempieFetchOptions('post', true, payload))
+
   if (data.value) {
     const { result } = data.value
     count.value += 1
@@ -153,7 +160,10 @@ async function sendComment(text: string) {
       partialComments.value = [result]
     }
     inputRef.value.initInput()
+    modalInputRef.value.initInput()
   }
+
+  cmtAcceessableCnt += 1
 }
 
 async function opCommentsModal() {

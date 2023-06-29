@@ -343,15 +343,18 @@ export interface IChat {
   unread_count: number,
   is_read: boolean,
   last_message: IMessage,
-  last_message_sent_at: string,
+  last_chat_at: string,
   joined_users: IUser[],
   is_group_room: boolean,
   last_chat_id: number,
-  unread_start_id: number
+  unread_start_id: number,
+  updated_message?: IMessage[]
+  meta?: { isLastMsg: boolean }
 }
 
 export interface IMessage {
   id: number,
+  chat_idx?: number,
   contents: string,
   text_html: string,
   sender: IUser,

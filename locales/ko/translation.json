@@ -871,7 +871,7 @@
   "mark.all": "전부 읽음",
   "no.alarm": "알람이 없습니다.",
   "view.all": "전체 보기",
-  "new.msg": "새로운 메세지.",
+  "new.msg": "새로운 메세지",
   "need.refresh": "새로고침 해주세요",
   "setting": "세팅",
   "userSetting.alarm.info": "오른쪽의 토글을 클릭하시면 알림이 비활성화됩니다. 언제든지 다시 활성화하실 수 있습니다.",
@@ -994,5 +994,7 @@
   "not.found.user": "검색된 계정이 없습니다.",
   "notFoundIndexHtml": "index.HTML 파일을 찾을 수 없습니다. 다시 한번 확인해주세요",
   "send.msg": "메시지 보내기",
-  "is.following": " 회원님을 팔로우 중"
+  "is.following": " 회원님을 팔로우 중",
+  "deleted.message": "삭제된 메세지입니다",
+  "dm.msg.too.long": "메시지가 너무 깁니다."
 }

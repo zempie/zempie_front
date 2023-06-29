@@ -51,7 +51,18 @@ export default defineNuxtConfig({
         path: '/community/:id/:channel_name',
         file: resolve(__dirname, './pages/community/[id]/index.vue')
       })
-    }
+    },
+    'build:manifest': (manifest) => {
+      // find the app entry, css list
+      const css = manifest['node_modules/nuxt/dist/app/entry.js']?.css
+      if (css) {
+        // start from the end of the array and go to the beginning
+        for (let i = css.length - 1; i >= 0; i--) {
+          // if it starts with 'entry', remove it from the list
+          if (css[i].startsWith('entry')) css.splice(i, 1)
+        }
+      }
+    },
   },
   generate: {
     fallback: '404.html'
@@ -59,10 +70,9 @@ export default defineNuxtConfig({
   router: {
     middleware: ['auth']
   },
-  css: [
-    '@/assets/css/animate.css',
-    '@/assets/css/jquery-ui.css',
 
+  css: [
+    '@/assets/css/jquery-ui.css',
     '@/assets/css/layout.css',
     '@/assets/css/style.css',
     '@/assets/css/fonts.css',
@@ -75,8 +85,16 @@ export default defineNuxtConfig({
     'cookie-universal-nuxt',
     ['@nuxtjs/i18n', i18n],
     '@vueuse/nuxt',
-
+    ['nuxt-compress', { gzip: { threshold: 8192 } }]
   ],
+  nitro: {
+    compressPublicAssets: true,
+    minify: true
+  },
+
+  build: {
+    extractCSS: true,
+  },
 
   publicRuntimeConfig: {
     ENV: process.env.ENV,

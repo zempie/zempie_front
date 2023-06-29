@@ -5359,25 +5359,19 @@
 }
 
 .dl-content>dt .dlc-chat-content {
-  width: 100%;
-  height: 560px;
-  padding: 30px;
+  height: calc(560px - 90px);
   overflow: auto;
+  position: relative;
+  right: 0
 }
 
 .dl-content>dt .dlc-chat-content>div>h4 {
-  /* font-size: 16px; */
   line-height: 25px;
 }
 
-.dl-content>dt .dlc-chat-content>div>ul>li {
-  margin-top: 5px;
-}
 
-.dl-content>dt .dlc-chat-content>div>ul>li>span {
-  padding: 11px 12px;
-  overflow: hidden;
-  background-color: #f1f1f1;
+.dl-content>dt .dlc-chat-content .receiver-chat {
+  text-align: right;
 }
 
 .dl-content>dt .dlc-chat-content .receiver-chat>h4 {
@@ -5386,6 +5380,11 @@
 
 .dl-content>dt .dlc-chat-content .receiver-chat>ul {
   display: flex;
+  justify-content: flex-end;
+}
+
+.dl-content>dt .dlc-chat-content .receiver-chat>ul>li {
+
   justify-content: flex-end;
 }
 
