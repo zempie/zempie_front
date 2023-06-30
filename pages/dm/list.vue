@@ -296,8 +296,6 @@ onBeforeRouteLeave((to, from, next) => {
   next()
 })
 
-})
-
 function getQuery(query: string) {
   return route.query ? route.query[query] : null
 }
