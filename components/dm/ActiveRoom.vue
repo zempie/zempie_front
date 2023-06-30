@@ -195,8 +195,8 @@ watch(
         offset.value += MAX_MSG_LIMIT
         order.value = 'desc'
         const prevScroll = _.cloneDeep(scrollContent.value?.scrollHeight)
-        console.log(prevScroll)
-        await msgFetch(prevScroll)
+        await msgFetch()
+        scrollToPrev(prevScroll)
 
       }
     }
@@ -247,24 +247,22 @@ onMounted(async () => {
 
   if (!userInfo.value.setting.dm_alarm || !isFbSupported.value || !useCommon().setting.value.isNotiAllow) {
     clearInterval(msgPolling.value)
+
     msgPolling.value = setInterval(async () => {
-      // if (msgList.value) {
-      //   const newest = msgList.value[msgList.value?.length - 1]
-      //   if (newest) {
-      //     fromId.value = newest.id + 1
-      //   }
-      // }
       order.value = 'asc'
-
-      const newMessage = await msgFetch(null, totalMsgCnt.value)
-
-
+      const newMessage = await msgFetch(totalMsgCnt.value)
       if (newMessage && newMessage.length) {
-        // fromId.value = newMessage[newMessage.length - 1].id
         scrollToBottom()
       }
     }, 3000)
   }
+
+  nextTick(() => {
+    if (props.selectedRoom.unread_count <= 0) {
+      // 읽을 메세지가 없는 경우 스크롤 맨 하단
+      scrollToBottom()
+    }
+  })
 
 })
 
@@ -281,7 +279,7 @@ function scrollToBottom() {
 
 
 
-async function msgFetch(yPos?: number, customOffset?: number) {
+async function msgFetch(customOffset?: number) {
   if (isSending.value) return
 
   const payload = {
@@ -312,17 +310,11 @@ async function msgFetch(yPos?: number, customOffset?: number) {
     } else {
       if (messages.length > 0) {
         if (msgList.value?.length) {
-          msgList.value = [...messages.reverse(), ...msgList.value]
+          msgList.value = [...newMsg(messages.reverse()), ...msgList.value]
         } else {
           msgList.value = messages.reverse()
         }
       }
-      // if (!msgPolling.value && yPos) {
-      nextTick(() => {
-        if (yPos)
-          scrollToPrev(yPos)
-      })
-      // }
     }
 
     return messages
@@ -336,38 +328,10 @@ function scrollToPrev(yPos: number) {
 
 }
 
-async function addMoreMsg() {
-
-
-  //처음 메시지가 아니고 총 메세지가 15개보다 작으면 메세지 로드 
-  if (msgList.value[0].chat_idx !== -1 && msgList.value.length < msgLimit.value) {
-    colorLog('add more mesf', 'pink')
-
-    fromId.value = msgList.value[0].id - msgLimit.value
-
-    await msgFetch()
-
-    // const prevScroll = _.cloneDeep(scrollContent.value?.scrollHeight)
-
-    // console.log('prevScroll', prevScroll)
-
-    // nextTick(() => {
-    //   scrollContent.value.scrollTop = scrollContent.value?.scrollHeight - prevScroll
-    // })
-  }
-
-}
-
 async function sendMsg() {
-  if (inputMsg.value.length > MAX_INPUT_LIMIT) {
-    ElMessage({
-      message: t('dm.msg.too.long'),
-      type: 'warning',
-    })
-    return
-  }
+  // console.log(isSending.value)
+  if (isSending.value) return
   if (!inputMsg.value) return
-  msgAcceessableCnt -= 1
   isSending.value = true
 
   const content = _.cloneDeep(inputMsg.value)
@@ -382,56 +346,34 @@ async function sendMsg() {
     contents: content
   }
 
-  try {
-    const { data, error } = await useCustomAsyncFetch<{ message: IMessage }>(`/chat/room`, getComFetchOptions('post', true, payload))
+  const { data, error } = await useCustomAsyncFetch<{ message: IMessage }>(`/chat/room`, getComFetchOptions('post', true, payload))
 
-    if (data.value) {
-      initInputMsg()
-      if (msgList.value?.length) {
-        addMsg(data.value.message)
-      } else {
-        msgList.value = [data.value.message]
-      }
-    } else if (error.value) {
-      inputMsg.value = content
+  if (data.value) {
+    initInputMsg()
+    if (msgList.value?.length) {
+      addMsg(data.value.message)
+    } else {
+      msgList.value = [data.value.message]
     }
-  } finally {
-    isSending.value = false
+  } else if (error.value) {
+    inputMsg.value = content
   }
 
-  msgAcceessableCnt += 1
-
+  isSending.value = false
 }
 
-function renderMsg() {
-  if (msgList.value?.length) {
-    msgList.value = [...msgList.value, {
-      contents: inputMsg.value,
-      created_at: new Date(),
-      sender: userInfo.value
-    }]
-  } else {
-    msgList.value = [{
-      contents: inputMsg.value,
-      created_at: new Date(),
-      sender: userInfo.value
-
-    }]
-  }
-}
 function addMsg(msg: IMessage) {
-  msgList.value = [...msgList.value, ...newMsg([msg])]
-  console.log('msg', msgList.value)
+  if (msgList.value && msgList.value.length) {
+    msgList.value = [...msgList.value, ...newMsg([msg])]
+
+  } else {
+    msgList.value = [msg]
+  }
 
   nextTick(() => {
     scrollToBottom()
   })
 }
-
-const newMsg = ((messages: IMessage[]) => {
-  return messages.filter((msg: IMessage) => !msgList.value.some(existingMsg => existingMsg.id === msg.id))
-})
-
 
 function initInputMsg() {
   inputMsg.value = ''
@@ -452,8 +394,9 @@ async function leaveChat() {
     }
   } finally {
     opLeaveChatModal.value = false
-
   }
+
+
 
 }
 

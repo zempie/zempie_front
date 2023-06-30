@@ -18,10 +18,12 @@ interface IRefreshToken {
   user_id: string
 }
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+const isFetching = ref(false)
 
 export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions, retryCount: number = 0) => {
+
+  isFetching.value = true
   const config = useRuntimeConfig()
-  console.log('url header', url, options)
 
   return await useFetch<T>(url, {
     initialCache: false,
@@ -29,6 +31,8 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
     async onResponse({ request, response, options }) {
       useCommon().setLoadingDone()
       console.log('[fetch response]', response._data)
+      isFetching.value = false
+
     },
     async onResponseError({ request, response, options }) {
       console.log('[fetch response error]', response)
@@ -60,8 +64,7 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
         console.log('error throw here')
         throw response
       }
-
-
+      isFetching.value = false
     },
 
     async onRequest({ request, options }) {

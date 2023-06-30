@@ -54,6 +54,11 @@ export default function () {
   const updateUserKey = (key: string, value?: any) => {
     user.value.info[key] = value
   }
+
+  const updateUserSetting = (key: string, value?: any) => {
+    user.value.info.setting[key] = value
+
+  }
   const updateFbToken = (token: string) => {
     user.value.fUser.accessToken = token
   }
@@ -131,6 +136,7 @@ export default function () {
     setUserInfo,
     updateUserKey,
     updateFbToken,
-    updateUserCoin
+    updateUserCoin,
+    updateUserSetting
   }
 }

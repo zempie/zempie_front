@@ -1,12 +1,12 @@
 <template>
   <ClientOnly>
     <el-dropdown trigger="click" ref="msgMenu" placement="bottom-end">
-      <div class="flex items-center" style="height: 50px;">
+      <div class="flex items-center" style="max-height: 50px;">
         <button class="msg-menu-btn"> <i class="uil uil-ellipsis-h font25"></i></button>
       </div>
       <template #dropdown>
         <div class="more-list fixed" style="min-width: 150px">
-          <a @click="onDeleteMsg" id="editFeed" class="pointer">메시지 삭제</a>
+          <a @click="onDeleteMsg" id="editFeed" class="pointer">{{ $t('delete.msg') }}</a>
         </div>
       </template>
     </el-dropdown>
@@ -50,5 +50,9 @@ async function onDeleteMsg() {
       border-radius: 5px;
     }
   }
+}
+
+::deep(.el-popper) {
+  z-index: 0;
 }
 </style>
