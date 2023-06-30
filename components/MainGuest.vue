@@ -2,7 +2,7 @@
   <div class="main-bg">
     <div class="main-copy">
       <h1>
-        <img src="/images/main_copy.png" width="500" alt="zempie" title="zempie" />
+        <img src="/images/main_copy.png" width="500" alt="zempie" title="zempie" height="256" />
       </h1>
     </div>
     <div class="main-visual">

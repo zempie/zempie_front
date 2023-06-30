@@ -6,7 +6,7 @@
           <p>
             <NuxtLink :to="$localePath('/')">
               <img v-if="showMobileLogo" class="mobile-logo" src="/images/zempie_logo_154_155.png" alt="zempie-logo"
-                loading="lazy" />
+                loading="lazy" height="25" width="120" />
               <img v-else class="logo" src="/images/zempie-logo-black.png" alt="zempie-logo" loading="lazy" />
             </NuxtLink>
           </p>
