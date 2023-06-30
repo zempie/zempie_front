@@ -305,7 +305,7 @@ async function msgFetch(customOffset?: number) {
     if (order.value === 'asc') {
       if (messages.length > 0) {
         if (msgList.value?.length) {
-          msgList.value = [...msgList.value, ...messages]
+          msgList.value = [...msgList.value, ...newMsg(messages)]
         } else {
           msgList.value = messages
         }

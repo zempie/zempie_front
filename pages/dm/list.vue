@@ -55,7 +55,7 @@
                   </dt>
                   <dd>
                     <h4 class="font12"><i class="uis uis-clock" style="color:#c1c1c1;"></i>
-                      {{ dateFormat(room.last_chat_at ? room.last_chat_at : room.created_at) }} </h4>
+                      {{ dmDateFormat(room.last_chat_at ? room.last_chat_at : room.created_at) }} </h4>
                     <span v-if="room.unread_count > 0">{{ room.unread_count }}</span>
                   </dd>
                 </dl>
@@ -141,7 +141,7 @@
 </template>
 <script setup lang="ts">
 import { ElScrollbar, ElDialog, rowProps } from 'element-plus'
-import { dateFormat } from '~~/scripts/utils'
+import { dmDateFormat } from '~~/scripts/utils'
 import { IChat, IMessage, IUser } from '~~/types'
 import { debounce } from '~~/scripts/utils'
 import { useInfiniteScroll } from '@vueuse/core'
