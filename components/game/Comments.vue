@@ -8,9 +8,9 @@
       <li class="mb10 comment-input">
         <CommonInput @send-input="sendComment" ref="inputRef" placeholder="Message" />
       </li>
+
       <GameCommentItem v-if="partialComments.length" v-for="comment in partialComments" :comment="comment"
         :key="comment.id" :has-options="false" @delete-comment="deleteComment" />
-
       <li v-else-if="!isPending && comments.length === 0" class="no-list">
         {{ $t('no.comment.list') }}
       </li>
@@ -56,6 +56,7 @@ import { ElDropdown, ElDialog } from 'element-plus'
 import { PropType } from 'vue'
 import { IGame, IReply } from '~~/types'
 import { useInfiniteScroll } from '@vueuse/core'
+import { debounce } from '~~/scripts/utils'
 
 const COMMENT_LIMIT = 10
 const inputRef = ref()
@@ -95,14 +96,17 @@ useInfiniteScroll(
 )
 
 onMounted(async () => {
+  await initFetch()
+})
+
+const initFetch = debounce(async () => {
   try {
     const replies = await getComments()
     partialComments.value = replies.slice(0, 5)
-
   } finally {
     isPending.value = false
   }
-})
+}, 300)
 
 async function getComments() {
   const payload = {

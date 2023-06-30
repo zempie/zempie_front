@@ -259,6 +259,8 @@ async function fetch() {
       return isAddData.value
 
     case 'game':
+      colorLog('fetch', 'red')
+
       const { data: gamePostData, error: gameError } = await useCustomAsyncFetch<{
         result: []
         totalCount: number
@@ -267,6 +269,8 @@ async function fetch() {
         getComFetchOptions('get', true)
       )
       if (gamePostData.value) {
+        console.table(gamePostData.value)
+
         dataPaging(gamePostData.value)
       }
       isPending.value = false

@@ -2,7 +2,7 @@
   <NuxtLayout name="user-setting">
     <div class="info-input">
       <div class="ii-title">
-        <h2>General Settings</h2>
+        <h2>{{ $t('general.settings') }}</h2>
         <h3>{{ $t('userSetting.title') }}</h3>
       </div>
 
@@ -16,7 +16,7 @@
             <input type="file" @change="onProfileFileChange" accept=image/* ref="profileImg" name="fileInput" />
           </div>
           <p><i class="uil uil-image-plus"></i></p>
-          <h2>Change Profile</h2>
+          <h2>{{ $t('change.profile') }}</h2>
           <h3>{{ profileFileName }}</h3>
           <div @click.stop="deleteProfileImg">
             <a><i class="uil uil-trash-alt"></i></a>
@@ -27,7 +27,7 @@
             <input type="file" @change="onBannerFileChange" accept=image/* ref="bannerImg" name="fileInput" />
           </div>
           <p><i class="uil uil-image-plus"></i></p>
-          <h2>Change Banner</h2>
+          <h2>{{ $t('change.banner') }}</h2>
           <h3>{{ bannerFileName }}</h3>
           <div @click.stop="deleteBannerImg">
             <a><i class="uil uil-trash-alt"></i></a>
@@ -36,7 +36,7 @@
       </dl>
       <div class="ii-form">
         <ol>
-          <li>Email</li>
+          <li>{{ $t('email') }}</li>
           <li>
             <input type="text" class="w100p" readonly :value="userInfo?.email" />
           </li>
@@ -343,13 +343,22 @@ async function setAlarmStatus(type: number) {
       alarmState = isAlarmOn.value
 
   }
-  const response = await useCustomFetch<{ result: string }>('/user/alarm', getZempieFetchOptions('put', true, { alarm_state: alarmState, type }))
+  const { data } = await useCustomAsyncFetch<{ result: { user_setting: { notify_chat: boolean, notify_alarm: boolean } } }>('/user/alarm', getZempieFetchOptions('put', true, { alarm_state: alarmState, type }))
 
-  if (response.result === 'success') {
-    if (isAlarmOn.value) {
-      await resigterFcmToken(userId)
-    }
+
+  console.log(data.value)
+  if (data.value) {
+
+    const { result } = data.value
+    useUser().updateUserSetting('dm_alarm', result.user_setting.notify_chat)
+    console.log(userInfo.value)
   }
+
+  // if (response.result === 'success') {
+  //   if (isAlarmOn.value) {
+  //     await resigterFcmToken(userId)
+  //   }
+  // }
 
 
 }

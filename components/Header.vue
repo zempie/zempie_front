@@ -48,7 +48,7 @@
             <NotificationHeaderButton />
             <button class="btn-circle-icon ml10" @click="$router.push($localePath('/dm/list'))">
               <i class="uil uil-comment-alt"></i>
-              <!-- <span class="new-dm-badge">99+</span> -->
+              <span class="new-dm-badge" v-if="unreadMsgCount">{{ unreadMsgCount }}</span>
             </button>
             <UserMenu />
           </div>
@@ -121,9 +121,6 @@ import _ from 'lodash'
 import { vOnClickOutside } from "@vueuse/components"
 import { useI18n } from "vue-i18n"
 import {
-  ElDropdown,
-  ElDropdownMenu,
-  ElDropdownItem,
   ElSelect,
   ElOption,
   ElDialog,
@@ -148,6 +145,9 @@ const isHeaderSideMobile = ref(false)
 const isHeaderSideBgMobile = ref(false)
 
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+const unreadMsgCount = computed(() => {
+  return user.value?.unread_msg_cnt > 99 ? '99+' : user.value.unread_msg_cnt
+})
 
 
 const isMobileSize = computed(() =>

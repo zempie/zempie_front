@@ -5,8 +5,8 @@
     </dd>
     <dt>
       <div>
-        <h2>{{ selectedRoom?.joined_users[0]?.name }}</h2>
-        <p>@{{ selectedRoom?.joined_users[0]?.nickname }}</p>
+        <h2>{{ selectedRoom?.joined_users[0]?.nickname }}</h2>
+        <p>{{ selectedRoom?.joined_users[0]?.name }}</p>
       </div>
       <!-- <p>Online</p> -->
     </dt>
@@ -21,7 +21,6 @@
           </template>
         </el-dropdown>
       </ClientOnly>
-
       <!-- <router-link to="#"><i class="uil uil-ellipsis-h font25"></i></router-link> -->
     </dd>
   </dl>
@@ -29,12 +28,12 @@
     <div class="inner" ref="scrollContent">
       <div :class="msg.sender.id === userInfo.id ? 'receiver-chat' : 'sender-chat'" v-for="(msg, index) in msgList"
         :ref="el => { divs[msg.id] = el }" :key="index">
-        <h4>{{ dateFormat(msg.created_at) }}</h4>
+        <h4>{{ dmDateFormat(msg.created_at) }}</h4>
         <ul>
-          <li class="flex" style="overflow:auto; word-break: break-all; max-width: 100%; ">
+          <li class="flex" style="overflow:visible; word-break: break-all; width: 100%; ">
             <DmMsgMenu :msg="msg" v-if="msg.sender.id === userInfo.id" @delete-msg="deleteMsg"
               style="max-height: 100px;" />
-            <span>{{ msg.contents }}</span>
+            <span style="max-width: 85%;">{{ msg.contents }}</span>
           </li>
         </ul>
       </div>
@@ -108,7 +107,7 @@
 </template>
 <script setup lang="ts">
 import _, { now } from 'lodash'
-import { dateFormat } from '~~/scripts/utils'
+import { dmDateFormat } from '~~/scripts/utils'
 import { IChat, IMessage, IUser } from '~~/types'
 import { ElDropdown, ElDialog, ElMessage, linkEmits } from 'element-plus';
 import { PropType } from 'vue';
@@ -195,8 +194,8 @@ watch(
         offset.value += MAX_MSG_LIMIT
         order.value = 'desc'
         const prevScroll = _.cloneDeep(scrollContent.value?.scrollHeight)
-        console.log(prevScroll)
-        await msgFetch(prevScroll)
+        await msgFetch()
+        scrollToPrev(prevScroll)
 
       }
     }
@@ -226,6 +225,7 @@ watch(
 
 
 onMounted(async () => {
+
   if (props.selectedRoom.unread_count) {
     if (props.selectedRoom.unread_count > msgLimit.value) {
       offset.value = props.selectedRoom.unread_count - msgLimit.value
@@ -234,7 +234,7 @@ onMounted(async () => {
   }
 
   await msgFetch()
-
+  await useUser().getUnreadMsg()
   nextTick(() => {
     if (props.selectedRoom.unread_count < msgLimit.value) {
       // 읽을 메세지가 없는 경우 스크롤 맨 하단
@@ -247,23 +247,19 @@ onMounted(async () => {
 
   if (!userInfo.value.setting.dm_alarm || !isFbSupported.value || !useCommon().setting.value.isNotiAllow) {
     clearInterval(msgPolling.value)
+
     msgPolling.value = setInterval(async () => {
-      // if (msgList.value) {
-      //   const newest = msgList.value[msgList.value?.length - 1]
-      //   if (newest) {
-      //     fromId.value = newest.id + 1
-      //   }
-      // }
       order.value = 'asc'
-
-      const newMessage = await msgFetch(null, totalMsgCnt.value)
-
-
+      const newMessage = await msgFetch(totalMsgCnt.value)
       if (newMessage && newMessage.length) {
-        // fromId.value = newMessage[newMessage.length - 1].id
         scrollToBottom()
       }
     }, 3000)
+  }
+
+  if (props.selectedRoom.unread_count <= 0) {
+    // 읽을 메세지가 없는 경우 스크롤 맨 하단
+    scrollToBottom()
   }
 
 })
@@ -274,14 +270,22 @@ onBeforeUnmount(() => {
 })
 
 
+const newMsg = ((messages: IMessage[]) => {
+  return messages.filter((msg: IMessage) => !msgList.value.some(existingMsg => existingMsg.id === msg.id))
+})
+
 
 function scrollToBottom() {
-  scrollContent.value.scrollTop = scrollContent.value?.scrollHeight
+  nextTick(() => {
+    if (scrollContent.value)
+      scrollContent.value.scrollTop = scrollContent.value?.scrollHeight
+  })
+
 }
 
 
 
-async function msgFetch(yPos?: number, customOffset?: number) {
+async function msgFetch(customOffset?: number) {
   if (isSending.value) return
 
   const payload = {
@@ -316,12 +320,6 @@ async function msgFetch(yPos?: number, customOffset?: number) {
           msgList.value = messages.reverse()
         }
       }
-      // if (!msgPolling.value && yPos) {
-      nextTick(() => {
-        if (yPos)
-          scrollToPrev(yPos)
-      })
-      // }
     }
 
     return messages
@@ -335,38 +333,10 @@ function scrollToPrev(yPos: number) {
 
 }
 
-async function addMoreMsg() {
-
-
-  //처음 메시지가 아니고 총 메세지가 15개보다 작으면 메세지 로드 
-  if (msgList.value[0].chat_idx !== -1 && msgList.value.length < msgLimit.value) {
-    colorLog('add more mesf', 'pink')
-
-    fromId.value = msgList.value[0].id - msgLimit.value
-
-    await msgFetch()
-
-    // const prevScroll = _.cloneDeep(scrollContent.value?.scrollHeight)
-
-    // console.log('prevScroll', prevScroll)
-
-    // nextTick(() => {
-    //   scrollContent.value.scrollTop = scrollContent.value?.scrollHeight - prevScroll
-    // })
-  }
-
-}
-
 async function sendMsg() {
-  if (inputMsg.value.length > MAX_INPUT_LIMIT) {
-    ElMessage({
-      message: t('dm.msg.too.long'),
-      type: 'warning',
-    })
-    return
-  }
+  // console.log(isSending.value)
+  if (isSending.value) return
   if (!inputMsg.value) return
-  msgAcceessableCnt -= 1
   isSending.value = true
 
   const content = _.cloneDeep(inputMsg.value)
@@ -381,39 +351,34 @@ async function sendMsg() {
     contents: content
   }
 
-  try {
-    const { data, error } = await useCustomAsyncFetch<{ message: IMessage }>(`/chat/room`, getComFetchOptions('post', true, payload))
+  const { data, error } = await useCustomAsyncFetch<{ message: IMessage }>(`/chat/room`, getComFetchOptions('post', true, payload))
 
-    if (data.value) {
-      initInputMsg()
-      if (msgList.value?.length) {
-        addMsg(data.value.message)
-      } else {
-        msgList.value = [data.value.message]
-      }
-    } else if (error.value) {
-      inputMsg.value = content
+  if (data.value) {
+    initInputMsg()
+    if (msgList.value?.length) {
+      addMsg(data.value.message)
+    } else {
+      msgList.value = [data.value.message]
     }
-  } finally {
-    isSending.value = false
+  } else if (error.value) {
+    inputMsg.value = content
   }
 
-  msgAcceessableCnt += 1
-
+  isSending.value = false
 }
 
 function addMsg(msg: IMessage) {
-  msgList.value = [...msgList.value, ...newMsg([msg])]
+  if (msgList.value && msgList.value.length) {
+    msgList.value = [...msgList.value, ...newMsg([msg])]
+
+  } else {
+    msgList.value = [msg]
+  }
 
   nextTick(() => {
     scrollToBottom()
   })
 }
-
-const newMsg = ((messages: IMessage[]) => {
-  return messages.filter((msg: IMessage) => !msgList.value.some(existingMsg => existingMsg.id === msg.id))
-})
-
 
 function initInputMsg() {
   inputMsg.value = ''
@@ -434,8 +399,9 @@ async function leaveChat() {
     }
   } finally {
     opLeaveChatModal.value = false
-
   }
+
+
 
 }
 

@@ -50,12 +50,12 @@
                     <UserAvatar :user="room.joined_users[0]" tag="p" />
                   </dd>
                   <dt>
-                    <h3>{{ room.joined_users[0]?.name }}</h3>
+                    <h3>{{ room.joined_users[0]?.nickname }}</h3>
                     <p>{{ room?.last_message?.contents }}</p>
                   </dt>
                   <dd>
                     <h4 class="font12"><i class="uis uis-clock" style="color:#c1c1c1;"></i>
-                      {{ dateFormat(room.last_chat_at ? room.last_chat_at : room.created_at) }} </h4>
+                      {{ dmDateFormat(room.last_chat_at ? room.last_chat_at : room.created_at) }} </h4>
                     <span v-if="room.unread_count > 0">{{ room.unread_count }}</span>
                   </dd>
                 </dl>
@@ -141,11 +141,12 @@
 </template>
 <script setup lang="ts">
 import { ElScrollbar, ElDialog, rowProps } from 'element-plus'
-import { dateFormat } from '~~/scripts/utils'
+import { dmDateFormat } from '~~/scripts/utils'
 import { IChat, IMessage, IUser } from '~~/types'
 import { debounce } from '~~/scripts/utils'
 import { useInfiniteScroll } from '@vueuse/core'
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
+import { onBeforeRouteLeave } from 'vue-router';
 
 
 const CHAT_LIMIT = 10
@@ -227,7 +228,6 @@ watch(
   async (val) => {
     if (val) {
       const meta = JSON.parse(val.data.meta)
-      console.log(meta)
       const roomId = Number(meta.room.id)
       if (meta) {
         if (selectedRoom.value?.id === roomId) {
@@ -290,9 +290,10 @@ onMounted(async () => {
 
 })
 
-onBeforeUnmount(() => {
-  clearInterval(roomPolling.value)
+onBeforeRouteLeave((to, from, next) => {
   window.removeEventListener('resize', onResize)
+  clearInterval(roomPolling.value)
+  next()
 })
 
 function getQuery(query: string) {
@@ -318,7 +319,6 @@ async function fetch(isPolling: boolean = false, customOffset?: number) {
     if (data.value) {
       const { result: rooms, updated_rooms, totalCount } = data.value
       totalRoomCnt.value = totalCount
-      console.log(rooms)
       if (isAddData.value) {
         if (updated_rooms.length > 0) {
 
@@ -455,7 +455,13 @@ async function getFollowings() {
     console.table(data.value)
     if (data.value) {
       const { result } = data.value
-      userList.value = result
+      userList.value = result.map((user) => {
+        console.log(user)
+        return {
+          ...user,
+          picture: user.profile_img
+        }
+      })
       isPending = pending.value
     } else if (error.value) {
       isPending = pending.value
@@ -508,6 +514,7 @@ async function findRoom(user_ids: Number[]) {
     const { result: rooms } = data.value
     if (!rooms.length) {
       await createRoom(user_ids)
+      selectedRoom.value = roomList.value[0]
     } else {
       //이미 방이 존재하는 경우
       const existRoom = roomList.value.filter((room) => {
@@ -537,7 +544,6 @@ async function createRoom(receiver_ids: Number[]) {
 
   if (data.value) {
     openNewMsg.value = false
-    selectedRoom.value = data.value
     forceRerender()
     if (roomList.value.length) {
       roomList.value = [data.value, ...roomList.value]
