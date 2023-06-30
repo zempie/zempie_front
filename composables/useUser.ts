@@ -111,6 +111,7 @@ export default function () {
         useUser().setLoadDone()
       }
 
+      await useUser().getUnreadMsg()
       return user.value.info
 
     } catch (error) {
@@ -118,6 +119,20 @@ export default function () {
     }
 
   }
+
+  const getUnreadMsg = async () => {
+    if (!user.value.info) return
+    const { data, error } = await useCustomAsyncFetch<{ count: number }>(`/chat/unread`, getComFetchOptions('get', true))
+
+    if (data.value) {
+      const { count } = data.value
+      user.value.info.unread_msg_cnt = count
+    }
+
+
+
+  }
+
 
 
   return {
@@ -137,6 +152,7 @@ export default function () {
     updateUserKey,
     updateFbToken,
     updateUserCoin,
-    updateUserSetting
+    updateUserSetting,
+    getUnreadMsg
   }
 }

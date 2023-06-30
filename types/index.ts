@@ -35,7 +35,8 @@ export interface IUser {
     unread_noti_count?: number,
     unread_dm_count?: number,
   }
-  nickname?: string
+  nickname?: string,
+  unread_msg_cnt?: number
 }
 
 

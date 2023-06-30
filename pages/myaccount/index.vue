@@ -2,7 +2,7 @@
   <NuxtLayout name="user-setting">
     <div class="info-input">
       <div class="ii-title">
-        <h2>{{ $t('general.settings') }}s</h2>
+        <h2>{{ $t('general.settings') }}</h2>
         <h3>{{ $t('userSetting.title') }}</h3>
       </div>
 

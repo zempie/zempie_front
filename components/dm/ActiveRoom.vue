@@ -5,8 +5,8 @@
     </dd>
     <dt>
       <div>
-        <h2>{{ selectedRoom?.joined_users[0]?.name }}</h2>
-        <p>@{{ selectedRoom?.joined_users[0]?.nickname }}</p>
+        <h2>{{ selectedRoom?.joined_users[0]?.nickname }}</h2>
+        <p>{{ selectedRoom?.joined_users[0]?.name }}</p>
       </div>
       <!-- <p>Online</p> -->
     </dt>
@@ -21,7 +21,6 @@
           </template>
         </el-dropdown>
       </ClientOnly>
-
       <!-- <router-link to="#"><i class="uil uil-ellipsis-h font25"></i></router-link> -->
     </dd>
   </dl>
@@ -29,12 +28,12 @@
     <div class="inner" ref="scrollContent">
       <div :class="msg.sender.id === userInfo.id ? 'receiver-chat' : 'sender-chat'" v-for="(msg, index) in msgList"
         :ref="el => { divs[msg.id] = el }" :key="index">
-        <h4>{{ dateFormat(msg.created_at) }}</h4>
+        <h4>{{ dmDateFormat(msg.created_at) }}</h4>
         <ul>
-          <li class="flex" style="overflow:auto; word-break: break-all; max-width: 100%; ">
+          <li class="flex" style="overflow:visible; word-break: break-all; width: 100%; ">
             <DmMsgMenu :msg="msg" v-if="msg.sender.id === userInfo.id" @delete-msg="deleteMsg"
               style="max-height: 100px;" />
-            <span>{{ msg.contents }}</span>
+            <span style="max-width: 85%;">{{ msg.contents }}</span>
           </li>
         </ul>
       </div>
@@ -108,7 +107,7 @@
 </template>
 <script setup lang="ts">
 import _, { now } from 'lodash'
-import { dateFormat } from '~~/scripts/utils'
+import { dmDateFormat } from '~~/scripts/utils'
 import { IChat, IMessage, IUser } from '~~/types'
 import { ElDropdown, ElDialog, ElMessage, linkEmits } from 'element-plus';
 import { PropType } from 'vue';
@@ -226,6 +225,7 @@ watch(
 
 
 onMounted(async () => {
+
   if (props.selectedRoom.unread_count) {
     if (props.selectedRoom.unread_count > msgLimit.value) {
       offset.value = props.selectedRoom.unread_count - msgLimit.value
@@ -234,7 +234,7 @@ onMounted(async () => {
   }
 
   await msgFetch()
-
+  await useUser().getUnreadMsg()
   nextTick(() => {
     if (props.selectedRoom.unread_count < msgLimit.value) {
       // 읽을 메세지가 없는 경우 스크롤 맨 하단
@@ -271,6 +271,10 @@ onBeforeUnmount(() => {
   clearInterval(msgPolling.value)
 })
 
+
+const newMsg = ((messages: IMessage[]) => {
+  return messages.filter((msg: IMessage) => !msgList.value.some(existingMsg => existingMsg.id === msg.id))
+})
 
 
 function scrollToBottom() {

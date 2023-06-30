@@ -50,7 +50,7 @@
                     <UserAvatar :user="room.joined_users[0]" tag="p" />
                   </dd>
                   <dt>
-                    <h3>{{ room.joined_users[0]?.name }}</h3>
+                    <h3>{{ room.joined_users[0]?.nickname }}</h3>
                     <p>{{ room?.last_message?.contents }}</p>
                   </dt>
                   <dd>

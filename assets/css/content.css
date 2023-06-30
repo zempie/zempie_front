@@ -3138,14 +3138,6 @@
     border-radius: 0% !important;
   }
 
-  /* .ta-post .tap-list .tapl-title>dt>dl {
-    align-items: flex-start;
-  } */
-
-  /* .ta-post .tap-list .tapl-title>dt>dl dt span {
-    width: 35px;
-    height: 35px;
-  } */
 
   .ta-post .tap-list .tapl-title>dt>dl dd h2 {
     font-size: 14px;
@@ -5104,7 +5096,7 @@
 
 /* dm-list 타이틀 */
 .dm-list {
-  width: 1200px;
+  width: 1440px;
   margin: 0px auto;
   padding: 40px 40px 30px 40px;
   border-radius: 10px;
