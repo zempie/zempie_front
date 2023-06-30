@@ -257,12 +257,10 @@ onMounted(async () => {
     }, 3000)
   }
 
-  nextTick(() => {
-    if (props.selectedRoom.unread_count <= 0) {
-      // 읽을 메세지가 없는 경우 스크롤 맨 하단
-      scrollToBottom()
-    }
-  })
+  if (props.selectedRoom.unread_count <= 0) {
+    // 읽을 메세지가 없는 경우 스크롤 맨 하단
+    scrollToBottom()
+  }
 
 })
 
@@ -278,7 +276,11 @@ const newMsg = ((messages: IMessage[]) => {
 
 
 function scrollToBottom() {
-  scrollContent.value.scrollTop = scrollContent.value?.scrollHeight
+  nextTick(() => {
+    if (scrollContent.value)
+      scrollContent.value.scrollTop = scrollContent.value?.scrollHeight
+  })
+
 }
 
 
