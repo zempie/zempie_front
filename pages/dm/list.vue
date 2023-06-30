@@ -145,6 +145,7 @@ import { IChat, IMessage, IUser } from '~~/types'
 import { debounce } from '~~/scripts/utils'
 import { useInfiniteScroll } from '@vueuse/core'
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
+import { onBeforeRouteLeave } from 'vue-router';
 
 
 const CHAT_LIMIT = 10
@@ -221,7 +222,7 @@ watch(
   async (val) => {
     if (val) {
       const meta = JSON.parse(val.data.meta)
-      const roomId = Number(meta.room_id)
+      const roomId = Number(meta.room.id)
       if (meta) {
         if (selectedRoom.value?.id === roomId) {
           activeRoomRef.value.addMsg(meta)
@@ -283,9 +284,11 @@ onMounted(async () => {
 
 })
 
-onBeforeUnmount(() => {
-  clearInterval(roomPolling.value)
+onBeforeRouteLeave((to, from, next) => {
   window.removeEventListener('resize', onResize)
+  clearInterval(roomPolling.value)
+  next()
+})
 
 })
 
@@ -305,7 +308,8 @@ async function fetch(isPolling: boolean = false) {
     const { data, error, pending } = await useCustomAsyncFetch<{ rooms: IChat[] }>(createQueryUrl(`/chat/rooms`, payload), getComFetchOptions('get', true))
 
     if (data.value) {
-      const { rooms } = data.value
+      const { result: rooms, updated_rooms, totalCount } = data.value
+      totalRoomCnt.value = totalCount
       if (isAddData.value) {
         if (rooms.length > 0) {
           roomList.value = [...roomList.value, ...rooms]
@@ -388,7 +392,13 @@ async function getFollowings() {
     console.table(data.value)
     if (data.value) {
       const { result } = data.value
-      userList.value = result
+      userList.value = result.map((user) => {
+        console.log(user)
+        return {
+          ...user,
+          picture: user.profile_img
+        }
+      })
       isPending = pending.value
     } else if (error.value) {
       isPending = pending.value
@@ -436,6 +446,7 @@ async function findRoom(user_ids: Number[]) {
     const { rooms } = data.value
     if (!rooms.length) {
       await createRoom(user_ids)
+      selectedRoom.value = roomList.value[0]
     } else {
       //이미 방이 존재하는 경우
       const existRoom = roomList.value.filter((room) => {
@@ -464,7 +475,8 @@ async function createRoom(receiver_ids: Number[]) {
 
   if (data.value) {
     openNewMsg.value = false
-    selectedRoom.value = data.value
+
+    forceRerender()
     if (roomList.value.length) {
       roomList.value = [data.value, ...roomList.value]
     } else {

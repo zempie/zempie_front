@@ -160,13 +160,12 @@ watch(
   async (val) => {
     if (val) {
       if (msgList.value.length) {
-        const firstMsg = msgList.value[0]
-        if (firstMsg) {
-          fromId.value = firstMsg.id - 1
-          order.value = 'desc'
-          const prevScroll = _.cloneDeep(scrollContent.value?.scrollHeight)
-          await msgFetch(prevScroll)
-        }
+        if (msgList.value[0].id === 0) return
+        offset.value += MAX_MSG_LIMIT
+        order.value = 'desc'
+        const prevScroll = _.cloneDeep(scrollContent.value?.scrollHeight)
+        await msgFetch()
+        scrollToPrev(prevScroll)
 
       }
     }
@@ -196,26 +195,38 @@ onMounted(async () => {
   // isAddData.value = true
   if (!userInfo.value.setting.dm_alarm || !isFbSupported.value) {
 
-    msgPolling.value = setInterval(async () => {
-      const newest = msgList.value[msgList.value.length - 1]
-      fromId.value = newest.id + 1
-      console.log('newest', newest.id)
-      const newMsg = await msgFetch()
-      if (newMsg && newMsg.length) {
-        fromId.value = newMsg[newMsg.length - 1].id
+    await msgFetch()
+
+    nextTick(() => {
+      if (props.selectedRoom.unread_count < msgLimit.value) {
+        // 읽을 메세지가 없는 경우 스크롤 맨 하단
+        scrollToBottom()
+      } else {
+        divs.value[unreadStartId.value].scrollIntoView()
+      }
+    })
+
+
+    if (!userInfo.value.setting.dm_alarm || !isFbSupported.value || !useCommon().setting.value.isNotiAllow) {
+      clearInterval(msgPolling.value)
+
+      msgPolling.value = setInterval(async () => {
+        order.value = 'asc'
+        const newMessage = await msgFetch(totalMsgCnt.value)
+        if (newMessage && newMessage.length) {
+          scrollToBottom()
+        }
+      }, 3000)
+    }
+
+    nextTick(() => {
+      if (props.selectedRoom.unread_count <= 0) {
+        // 읽을 메세지가 없는 경우 스크롤 맨 하단
         scrollToBottom()
       }
-    }, 3000)
-  }
+    })
 
-  nextTick(() => {
-    if (props.selectedRoom.unread_count <= 0) {
-      // 읽을 메세지가 없는 경우 스크롤 맨 하단
-      scrollToBottom()
-    }
   })
-
-})
 
 
 onBeforeUnmount(() => {
@@ -228,7 +239,8 @@ function scrollToBottom() {
 
 
 
-async function getMessages() {
+async function msgFetch(customOffset?: number) {
+  if (isSending.value) return
 
   const payload = {
     from_id: fromId.value,
@@ -249,6 +261,15 @@ async function getMessages() {
       } else if (messages.length === 0) {
         isAddData.value = false
       }
+
+    } else {
+      if (messages.length > 0) {
+        if (msgList.value?.length) {
+          msgList.value = [...newMsg(messages.reverse()), ...msgList.value]
+        } else {
+          msgList.value = messages.reverse()
+        }
+      }
     }
     else {
       msgList.value = messages
@@ -268,125 +289,111 @@ async function msgFetch(yPos?: number) {
 
   const { data, error } = await useCustomAsyncFetch<{ messages: IMessage[] }>(createQueryUrl(`/chat/room/${props.selectedRoom.id}`, payload), getComFetchOptions('get', true))
 
-  if (data.value) {
-    const { messages } = data.value
-    if (order.value === 'asc') {
-      if (messages.length > 0) {
-        msgList.value = [...msgList.value, ...messages]
+  async function sendMsg() {
+    // console.log(isSending.value)
+    if (isSending.value) return
+    if (!inputMsg.value) return
+    isSending.value = true
+
+    const content = _.cloneDeep(inputMsg.value)
+    inputMsg.value = ''
+
+    const payload = {
+      room_id: props.selectedRoom.id,
+      // receiver_ids: [
+      //   userInfo.value.id
+      // ],
+      type: 0,
+      contents: content
+    }
+
+    const { data, error } = await useCustomAsyncFetch<{ message: IMessage }>(`/chat/room`, getComFetchOptions('post', true, payload))
+
+    if (data.value) {
+      initInputMsg()
+      if (msgList.value?.length) {
+        addMsg(data.value.message)
+      } else {
+        msgList.value = [data.value.message]
       }
+    } else if (error.value) {
+      inputMsg.value = content
+    }
+
+    isSending.value = false
+  }
+
+  function addMsg(msg: IMessage) {
+    if (msgList.value && msgList.value.length) {
+      msgList.value = [...msgList.value, ...newMsg([msg])]
+
     } else {
-      order.value = 'asc'
-      const msg = messages.reverse()
-      msgList.value = [...msg, ...msgList.value]
-      nextTick(() => {
-        scrollContent.value.scrollTop = scrollContent.value?.scrollHeight - yPos
-      })
-
-    }
-    return messages
-  }
-
-}
-
-async function sendMsg() {
-  // console.log(isSending.value)
-  if (isSending.value) return
-  if (!inputMsg.value) return
-  isSending.value = true
-
-  const content = _.cloneDeep(inputMsg.value)
-  inputMsg.value = ''
-
-  const payload = {
-    room_id: props.selectedRoom.id,
-    // receiver_ids: [
-    //   userInfo.value.id
-    // ],
-    type: 0,
-    contents: content
-  }
-
-  const { data, error } = await useCustomAsyncFetch<{ message: IMessage }>(`/chat/room`, getComFetchOptions('post', true, payload))
-
-  if (data.value) {
-    initInputMsg()
-    if (msgList.value?.length) {
-      addMsg(data.value.message)
-    } else {
-      msgList.value = [data.value.message]
-    }
-  } else if (error.value) {
-    inputMsg.value = content
-  }
-
-  isSending.value = false
-}
-
-function addMsg(msg) {
-  msgList.value = [...msgList.value, msg]
-
-  nextTick(() => {
-    scrollToBottom()
-  })
-}
-
-function initInputMsg() {
-  inputMsg.value = ''
-}
-
-function deleteMsg(msg: IMessage) {
-  opDeleteMsgModal.value = true
-  deleteTgMsg.value = msg
-}
-
-async function leaveChat() {
-
-  try {
-    const { data, error } = await useCustomAsyncFetch<{ message: IMessage }>(`/chat/rooms/${props.selectedRoom.id}`, getComFetchOptions('delete', true))
-
-    if (data.value) {
-      emit('deletedRoom', props.selectedRoom)
-    }
-  } finally {
-    opLeaveChatModal.value = false
-
-  }
-
-}
-
-
-async function onDeleteMsg() {
-
-  try {
-    const { data, error } = await useCustomAsyncFetch(`/chat/room/${deleteTgMsg.value.id}`, getComFetchOptions('delete', true))
-    if (data.value) {
-      msgList.value = msgList.value.filter((elem) => {
-        return elem.id !== deleteTgMsg.value.id
-      })
+      msgList.value = [msg]
     }
 
-  } catch (error) {
-    ElMessage.error(error.message)
-  }
-  finally {
-    opDeleteMsgModal.value = false
-    deleteTgMsg.value = null
-  }
-}
-
-async function onFocus() {
-  if (isFlutter.value) {
-    const kbHeight = await FlutterBridge().getKeyHight()
-    console.log('kbHeight', kbHeight)
-    emit('openKeyboard', Number(kbHeight))
-  }
-}
-function onBlur() {
-  console.log('onBlur')
-  if (isFlutter.value) {
-
-    emit('closeKeyboard')
+    nextTick(() => {
+      scrollToBottom()
+    })
   }
 
-}
+  function initInputMsg() {
+    inputMsg.value = ''
+  }
+
+  function deleteMsg(msg: IMessage) {
+    opDeleteMsgModal.value = true
+    deleteTgMsg.value = msg
+  }
+
+  async function leaveChat() {
+
+    try {
+      const { data, error } = await useCustomAsyncFetch<{ message: IMessage }>(`/chat/rooms/${props.selectedRoom.id}`, getComFetchOptions('delete', true))
+
+      if (data.value) {
+        emit('deletedRoom', props.selectedRoom)
+      }
+    } finally {
+      opLeaveChatModal.value = false
+    }
+
+
+
+  }
+
+
+  async function onDeleteMsg() {
+
+    try {
+      const { data, error } = await useCustomAsyncFetch(`/chat/room/${deleteTgMsg.value.id}`, getComFetchOptions('delete', true))
+      if (data.value) {
+        msgList.value = msgList.value.filter((elem) => {
+          return elem.id !== deleteTgMsg.value.id
+        })
+      }
+
+    } catch (error) {
+      ElMessage.error(error.message)
+    }
+    finally {
+      opDeleteMsgModal.value = false
+      deleteTgMsg.value = null
+    }
+  }
+
+  async function onFocus() {
+    if (isFlutter.value) {
+      const kbHeight = await FlutterBridge().getKeyHight()
+      console.log('kbHeight', kbHeight)
+      emit('openKeyboard', Number(kbHeight))
+    }
+  }
+  function onBlur() {
+    console.log('onBlur')
+    if (isFlutter.value) {
+
+      emit('closeKeyboard')
+    }
+
+  }
 </script>

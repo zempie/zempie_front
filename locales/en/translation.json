@@ -996,5 +996,11 @@
   "not.found.user": "There is no result with a keyword above.",
   "notFoundIndexHtml": "index.HTML file is unavailble to find. Please check out one more time.",
   "send.msg": "Message...",
-  "is.following": "Follow you"
+  "is.following": "Follow you",
+  "deleted.message": "Deleted message",
+  "dm.msg.too.long": "Message is too long.",
+  "delete.msg": "Delete message",
+  "general.settings": "General settings",
+  "change.profile": "Change profile",
+  "change.banner": "Change banner"
 }

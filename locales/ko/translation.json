@@ -994,5 +994,11 @@
   "not.found.user": "검색된 계정이 없습니다.",
   "notFoundIndexHtml": "index.HTML 파일을 찾을 수 없습니다. 다시 한번 확인해주세요",
   "send.msg": "메시지 보내기",
-  "is.following": " 회원님을 팔로우 중"
+  "is.following": " 회원님을 팔로우 중",
+  "deleted.message": "삭제된 메세지입니다",
+  "dm.msg.too.long": "메시지가 너무 깁니다.",
+  "delete.msg": "메세지 삭제",
+  "general.settings": "일반 설정",
+  "change.profile": "프로필 변경",
+  "change.banner": "배너 변경"
 }

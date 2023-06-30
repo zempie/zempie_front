@@ -6,7 +6,10 @@
     <ul v-else class="card-follow">
       <UserCard v-for="user in users" :user="user">
         <template #followBtn>
-          <UserFollowBtn :user="user" class="mt20" />
+          <div class="flex w100p justify-between">
+            <UserFollowBtn :user="user" class="mt20" style="width: 48%;" />
+            <DmSendBtn :user="user" class="mt20" style="width: 48%;" />
+          </div>
         </template>
       </UserCard>
     </ul>
