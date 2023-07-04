@@ -1002,5 +1002,6 @@
   "delete.msg": "Delete message",
   "general.settings": "General settings",
   "change.profile": "Change profile",
-  "change.banner": "Change banner"
+  "change.banner": "Change banner",
+  "users":"Users"
 }

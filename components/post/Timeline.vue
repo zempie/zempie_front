@@ -45,7 +45,8 @@
       <ul class="ta-post">
         <PostFeedSk v-if="isPending" v-for="feed in 6" :key="feed" />
         <TransitionGroup name="fade" v-else-if="!isPending && feeds?.length">
-          <PostFeed v-for="feed in feeds" :feed="feed" :key="feed.id" @refresh="refresh">
+          <PostFeed v-for="feed in feeds" :feed="feed" :key="feed.id" @refresh="refresh"
+            @update-blind="(img) => updateBlind(feed, img)">
             <template #followBtn>
               <UserFollowBtn :user="feed.user" :key="`${feed.user.is_following}`" class="follow-btn-feed"
                 @refresh="refreshFollow" />
@@ -320,6 +321,28 @@ function refreshFollow(user_id: number) {
     .map((feed) => {
       feed.user.is_following = !feed.user.is_following
       return feed
+    })
+}
+
+function updateBlind(feed: IFeed, img) {
+  feeds.value = feeds.value
+    .map((feed1) => {
+      if (feed1.id === feed.id) {
+        return {
+          ...feed1,
+          attatchment_files: feed1.attatchment_files
+            .map((file) => {
+              if (file.url === img.url) {
+                return {
+                  ...file,
+                  is_blind: !file.is_blind
+                }
+              }
+              return file
+            })
+        }
+      }
+      return feed1
     })
 }
 </script>

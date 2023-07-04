@@ -1000,5 +1000,6 @@
   "delete.msg": "메세지 삭제",
   "general.settings": "일반 설정",
   "change.profile": "프로필 변경",
-  "change.banner": "배너 변경"
+  "change.banner": "배너 변경",
+  "users":"유저"
 }

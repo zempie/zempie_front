@@ -3199,8 +3199,9 @@
 .modal-post .mp-image {
   display: flex;
   align-items: center;
-  padding: 20px;
+  padding: 20px 20px 0px 20px;
   border-top: #e9e9e9 1px solid;
+
 }
 
 .modal-post .mp-image dt {
@@ -3221,7 +3222,7 @@
 }
 
 .modal-post .mp-image dd {
-  width: 80%;
+  width: 100%;
   overflow: hidden;
 }
 
@@ -3229,16 +3230,44 @@
   position: relative;
   width: auto;
   height: 90px;
+  padding-bottom: 43px;
   border-radius: 6px;
+  background-size: cover;
+}
+
+
+.modal-post .mp-image dd .swiper-area .swiper-slide img {
+  width: 100%;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+
+.modal-post .mp-image dd .swiper-area .swiper-slide .blur {
+  filter: blur(10px);
+  -webkit-filter: blur(10px);
+  border-radius: 6px;
+
 }
 
 .modal-post .mp-image dd .swiper-area .swiper-slide span {
   position: absolute;
-  top: 5px;
-  right: 5px;
   font-size: 20px;
   color: #333;
   cursor: pointer;
+}
+
+
+.modal-post .mp-image dd .swiper-area .swiper-slide span:first-child {
+  top: 5px;
+  right: 5px;
+}
+
+
+.modal-post .mp-image dd .swiper-area .swiper-slide span:nth-child(2) {
+  top: 5px;
+  right: 25px;
 }
 
 .modal-post .mp-image dd .swiper-area .swiper-slide span:hover {

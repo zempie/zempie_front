@@ -8,8 +8,8 @@
         {{ isEdit ? $t('edit.post') : $t('new.post') }}
       </li>
       <li class="close-btn" @click="closeTextEditor">
-        <span class="material-symbols-outlined">
-          close
+        <span>
+          <i class="uil uil-multiply"></i>
         </span>
       </li>
     </ul>
@@ -17,45 +17,45 @@
       <Tiptap @editorContent="getEditorContent" @send-tag-info="getTagInfo" :postType="activeTab" :feed="feed"
         :key="activeTab" ref="tiptapRef" />
 
-      <template v-if="activeTab === 'SNS'">
-        <div v-if="snsAttachFiles.img?.length" class="mp-image" style="padding-bottom: 0px">
-          <dd style="width: 100%">
-
-            <swiper :modules="[Pagination]" class="swiper-area" :slides-per-view="3" :space-between="10"
-              :pagination="{ clickable: true }">
-              <swiper-slide v-for="(img, idx) in snsAttachFiles.img" :key="idx"
-                :style="`padding-bottom: 43px; background: url(${img.url}) center center / cover no-repeat; background-size:cover;`">
+      <div v-if="snsAttachFiles.img?.length" class="mp-image">
+        <dd>
+          <swiper :modules="[Pagination]" class="swiper-area" :slides-per-view="3" :space-between="10"
+            :pagination="{ clickable: true }">
+            <swiper-slide v-for="(img, idx) in snsAttachFiles.img" :key="idx">
+              <img :src="img.url" :class="img.is_blind ? 'blur' : ''">
+              <div>
                 <span @click="deleteImg(idx)"><i class="uil uil-times-circle"></i></span>
-              </swiper-slide>
-              <!-- <PostGridImg :images="snsAttachFiles.img" :isDelete="true" @delete-img="deleteImg" /> -->
-              <div class="swiper-pagination" slot="pagination"></div>
-            </swiper>
-          </dd>
-        </div>
-        <div v-if="isVideoUploading" class="video-loading">
-          <BeatLoader :color="'#ff6e17'" size="20px" />
-        </div>
-        <div v-else-if="!isVideoUploading && snsAttachFiles.video?.url" class="mp-midi">
-          <span @click="deleteVideo" class="delete-video-btn"><i class="uis uis-times-circle"></i></span>
+                <span @click="blindImg(idx)"><i class="uil uil-eye"></i></span>
+              </div>
+            </swiper-slide>
+            <!-- <PostGridImg :images="snsAttachFiles.img" :isDelete="true" @delete-img="deleteImg" /> -->
+            <div class="swiper-pagination" slot="pagination"></div>
+          </swiper>
+        </dd>
+      </div>
+      <div v-if="isVideoUploading" class="video-loading">
+        <BeatLoader :color="'#ff6e17'" size="20px" />
+      </div>
+      <div v-else-if="!isVideoUploading && snsAttachFiles.video?.url" class="mp-midi">
+        <span @click="deleteVideo" class="delete-video-btn"><i class="uis uis-times-circle"></i></span>
 
-          <video style="width: 100%" :src="snsAttachFiles.video?.url" title="YouTube video player" frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen></video>
-        </div>
-        <div v-if="isAudioUploading" class="video-loading">
-          <BeatLoader :color="'#ff6e17'" size="20px" />
-        </div>
+        <video style="width: 100%" :src="snsAttachFiles.video?.url" title="YouTube video player" frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen></video>
+      </div>
+      <div v-if="isAudioUploading" class="video-loading">
+        <BeatLoader :color="'#ff6e17'" size="20px" />
+      </div>
 
-        <div v-if="!isAudioUploading && snsAttachFiles.audio?.length" class="mp-midi">
-          <ul v-for="(audio, idx) in snsAttachFiles.audio" class="audio-wrapper">
-            <div class="btn-container">
-              <audio controls :src="audio.url"></audio>
-              <span class="delete-audio-btn" @click="deleteAudio(idx)"><i class="uis uis-times-circle"></i></span>
-            </div>
-            <p>{{ audio.name || audio.file.name }}</p>
-          </ul>
-        </div>
-      </template>
+      <div v-if="!isAudioUploading && snsAttachFiles.audio?.length" class="mp-midi">
+        <ul v-for="(audio, idx) in snsAttachFiles.audio" class="audio-wrapper">
+          <div class="btn-container">
+            <audio controls :src="audio.url"></audio>
+            <span class="delete-audio-btn" @click="deleteAudio(idx)"><i class="uis uis-times-circle"></i></span>
+          </div>
+          <p>{{ audio.name || audio.file.name }}</p>
+        </ul>
+      </div>
       <ClientOnly>
         <el-cascader class="mp-category" id="cascader" :props="props" v-model="selectedGroup" style="width:100%"
           placeholder="Select cagetory" :options="categoryList">
@@ -252,6 +252,7 @@ const saveId = ref(Date.now())
 
 const gameInfo = computed(() => useGame().game.value.info)
 const communityInfo = computed(() => useCommunity().community.value.info)
+const userGames = computed(() => useUser().user.value.info.games)
 
 await communityFetch()
 
@@ -398,14 +399,12 @@ onMounted(async () => {
     }
 
 
-    if (activeTab.value === 'SNS') {
-      const attFileFilter = (type: string) => attachFileArr.value?.filter((file: { type: string, name: string, priority: number, size: number, url: string }) => file.type === type)
+    const attFileFilter = (type: string) => attachFileArr.value?.filter((file: { type: string, name: string, priority: number, size: number, url: string }) => file.type === type)
 
-      snsAttachFiles.value = {
-        img: attFileFilter('image'),
-        video: attachFileArr.value?.find((file: { type: string, name: string, priority: number, size: number, url: string }) => file.type === 'video') || null,
-        audio: attFileFilter('sounc'),
-      }
+    snsAttachFiles.value = {
+      img: attFileFilter('image'),
+      video: attachFileArr.value?.find((file: { type: string, name: string, priority: number, size: number, url: string }) => file.type === 'video') || null,
+      audio: attFileFilter('sounc'),
     }
     metaTagInfo.value = props.feed.metadata
 
@@ -452,38 +451,7 @@ function refreshPage(event: { preventDefault: () => void; returnValue: string })
   event.returnValue = `${t('leave.router.warning')}` //안뜨는 거 같음
 }
 
-function postingType(type: string) {
-  if (
-    snsAttachFiles.value.img?.length ||
-    snsAttachFiles.value.audio?.length ||
-    snsAttachFiles.value.video ||
-    form.post_contents?.length > 7
-  ) {
-    ElMessageBox.confirm(
-      `${t('post.noSave.text1')}${t('post.noSave.text2')}`,
-      'Warning',
-      {
-        confirmButtonText: 'Cancel',
-        cancelButtonText: 'Yes',
-        type: 'warning',
-      }
-    ).catch(() => {
-      snsAttachFiles.value.img = null
-      snsAttachFiles.value.audio = null
-      snsAttachFiles.value.video = null
-      form.post_contents = ''
-      activeTab.value = type
-      usePost().setType(type)
-    })
-  } else {
-    activeTab.value = type
-    usePost().setType(type)
-  }
-}
-
 async function onSubmit() {
-
-
   //태그 인포 넘기고
 
   const payload = {
@@ -508,6 +476,7 @@ async function onSubmit() {
     customClass: 'loading-spinner',
     background: 'rgba(0, 0, 0, 0.7)',
   })
+  console.log('snsAttachF111`1les', snsAttachFiles.value)
 
   const dom = htmlToDomElem(form.post_contents)
 
@@ -516,128 +485,38 @@ async function onSubmit() {
   audioArr.value = [...dom.getElementsByTagName('audio')]
 
 
+  if (
+    snsAttachFiles.value.img?.length ||
+    snsAttachFiles.value.audio?.length ||
+    snsAttachFiles.value?.video
+  ) {
+    const formData = new FormData()
 
-  if (activeTab.value.toLocaleUpperCase() === 'BLOG') {
-    const imgFiles = []
-    const videoFiles = []
-    const audioFiles = []
-    let payloadFiles = []
-
-
-
-
-    for (const img of imgArr.value) {
-
-      if (!isImageUrl(img.src)) {
-        // const result = await fetch(img.src)
-        // const blob = await result.blob()
-        // const blobUrl = URL.createObjectURL(blob)
-        // const isImage = blob.type.startsWith('image')
-        // if (isImage) {
-        //   const formData = new FormData()
-        //   formData.append(img.title, blob)
-        //   const response = await useCustomFetch<{ result: { name: string, priority: number, size: number, type: string, url: string }[] }>('community/att', getZempieFetchOptions('post', true, formData))
-
-        //   if (response) {
-        //     const { result } = response
-        //     const [imgObj] = result
-        //     form.post_contents = form.post_contents.replace(
-        //       img.src,
-        //       imgObj.url
-        //     )
-        //   }
-
-        // }
+    if (snsAttachFiles.value.img) {
+      for (const img of snsAttachFiles.value.img) {
+        formData.append(img.name, img.file)
+        formData.append('is_blind', img.is_blind)
       }
     }
-    payload.post_contents = form.post_contents
-    payloadFiles = [...payloadFiles, ...imgFiles]
-    for (const video of videoArr.value) {
-      if (
-        video.src.substring(0, 4) === 'blob' ||
-        video.src.substring(0, 4) === 'data'
-      ) {
-        const formData = new FormData()
 
-        await fetch(video.src).then(async (result) => {
-          formData.append(video.title, await result.blob())
-        })
-
-        const { data, error, pending } = await useCustomAsyncFetch<{ result: [] }>(
-          '/community/att',
-          getZempieFetchOptions('post', true, formData)
-        )
-        if (data.value) {
-          form.post_contents = form.post_contents.replace(
-            video.src,
-            data.value.result[0].url
-          )
-          videoFiles.push(...data.value.result)
-        }
+    if (snsAttachFiles.value.audio) {
+      for (const audio of snsAttachFiles.value.audio) {
+        formData.append(audio.name, audio.file)
       }
     }
-    payload.post_contents = form.post_contents
-    payloadFiles = [...payloadFiles, ...videoFiles]
-    for (const audio of audioArr.value) {
-      if (
-        audio.src.substring(0, 4) === 'blob' ||
-        audio.src.substring(0, 4) === 'data'
-      ) {
-        const formData = new FormData()
-
-        await fetch(audio.src).then(async (result) => {
-          formData.append(audio.title, await result.blob())
-        })
-
-        const { data, error, pending } = await useCustomAsyncFetch<{ result: [] }>(
-          '/community/att',
-          getZempieFetchOptions('post', true, formData)
-        )
-        if (data.value) {
-          form.post_contents = form.post_contents.replace(
-            audio.src,
-            data.value.result[0].url
-          )
-          audioFiles.push(...data.value.result)
-        }
-      }
-    }
-    payload.post_contents = form.post_contents
-    payloadFiles = [...payloadFiles, ...audioFiles]
-    payload['attatchment_files'] = payloadFiles
-  } else {
-    if (
-      snsAttachFiles.value.img?.length ||
-      snsAttachFiles.value.audio?.length ||
-      snsAttachFiles.value?.video
-    ) {
-      const formData = new FormData()
-
-      if (snsAttachFiles.value.img) {
-        for (const img of snsAttachFiles.value.img) {
-          formData.append(img.name, img.file)
-        }
-      }
-
-      if (snsAttachFiles.value.audio) {
-        for (const audio of snsAttachFiles.value.audio) {
-          formData.append(audio.name, audio.file)
-        }
-      }
-      if (snsAttachFiles.value.video) {
-        formData.append(
-          snsAttachFiles.value.video.name,
-          snsAttachFiles.value.video.file
-        )
-      }
-
-      const { data, error, pending } = await useCustomAsyncFetch<{ result: [] }>(
-        '/community/att',
-        getZempieFetchOptions('post', true, formData)
+    if (snsAttachFiles.value.video) {
+      formData.append(
+        snsAttachFiles.value.video.name,
+        snsAttachFiles.value.video.file
       )
-
-      payload['attatchment_files'] = data.value?.result
     }
+
+    const { data, error, pending } = await useCustomAsyncFetch<{ result: [] }>(
+      '/community/att',
+      getZempieFetchOptions('post', true, formData)
+    )
+
+    payload['attatchment_files'] = data.value?.result
   }
   switch (props.type) {
     case 'community':
@@ -672,26 +551,17 @@ function getEditorContent(content: Editor) {
 
 async function uploadImageFile() {
 
-  if (snsAttachFiles.value.img?.length >= MAX_IMG_COUNT) {
+  if (!validateImgCount(snsAttachFiles.value.img)) return
+
+  if (snsAttachFiles.value.video || snsAttachFiles.value.audio?.length) {
     ElMessage({
-      message: `${t('maxFile.count.text1')} ${MAX_IMG_COUNT}${t('maxFile.count.text2')}`,
+      message: t('post.fileType.err.text1'),
       type: 'warning',
     })
     return
   }
-
-  if (activeTab.value.toUpperCase() === 'SNS') {
-    if (snsAttachFiles.value.video || snsAttachFiles.value.audio?.length) {
-      ElMessage({
-        message: t('post.fileType.err.text1'),
-        type: 'warning',
-      })
-      return
-    }
-  }
   image.value.click()
 }
-
 
 
 
@@ -699,11 +569,7 @@ function onSelectImageFile(event: Event) {
 
   let files = (event.target as HTMLInputElement).files
 
-  if (files.length > MAX_IMG_COUNT) {
-    ElMessage({
-      message: `${t('maxFile.count.text1')} ${MAX_IMG_COUNT}${t('maxFile.count.text2')}`,
-      type: 'warning',
-    })
+  if (!validateImgCount(files)) {
 
     const transfer = new DataTransfer();
     Array.from(files)
@@ -713,6 +579,7 @@ function onSelectImageFile(event: Event) {
       })
     files = transfer.files;
   }
+
 
 
   for (const file of files) {
@@ -726,25 +593,10 @@ function onSelectImageFile(event: Event) {
 
       const url = e.target!.result as string
 
-      if (activeTab.value.toUpperCase() === 'BLOG') {
-        const response = await fileUpload(file)
 
-        if (response) {
-          const { url, name, priority } = response.result[0]
-
-          editor.value
-            .chain()
-            .focus(null)
-            .setImage({ src: url, alt: file.name, title: file.name })
-            .setHardBreak()
-            .setHardBreak()
-            .run()
-        }
-      } else {
-        snsAttachFiles.value.img = [...(snsAttachFiles.value.img || []),
-        { file, name: file.name, url }
-        ]
-      }
+      snsAttachFiles.value.img = [...(snsAttachFiles.value.img || []),
+      { file, name: file.name, url, is_blind: false }
+      ]
     }
 
     reader.readAsDataURL(file)
@@ -753,23 +605,33 @@ function onSelectImageFile(event: Event) {
   (event.target as HTMLInputElement).value = ''
 }
 
+function validateImgCount(images: [] | FileList) {
+  if ((images && images.length) >= MAX_IMG_COUNT) {
+    ElMessage({
+      message: `${t('maxFile.count.text1')} ${MAX_IMG_COUNT}${t('maxFile.count.text2')}`,
+      type: 'warning',
+    })
+    return false
+  } else {
+    return true
+  }
+}
+
 function deleteImg(idx: number) {
   snsAttachFiles.value.img.splice(idx, 1)
 }
 
 async function uploaVideoFile() {
 
-  if (activeTab.value.toUpperCase() === 'SNS') {
-    if (
-      snsAttachFiles.value.img?.length ||
-      snsAttachFiles.value.audio?.length
-    ) {
-      ElMessage({
-        message: t('post.fileType.err.text1'),
-        type: 'warning',
-      })
-      return
-    }
+  if (
+    snsAttachFiles.value.img?.length ||
+    snsAttachFiles.value.audio?.length
+  ) {
+    ElMessage({
+      message: t('post.fileType.err.text1'),
+      type: 'warning',
+    })
+    return
   }
   video.value.click()
 }
@@ -808,14 +670,12 @@ function deleteVideo() {
 
 async function uploadAudioFile() {
 
-  if (activeTab.value.toUpperCase() === 'SNS') {
-    if (snsAttachFiles.value.video || snsAttachFiles.value.img?.length) {
-      ElMessage({
-        message: t('post.fileType.err.text1'),
-        type: 'warning',
-      })
-      return
-    }
+  if (snsAttachFiles.value.video || snsAttachFiles.value.img?.length) {
+    ElMessage({
+      message: t('post.fileType.err.text1'),
+      type: 'warning',
+    })
+    return
   }
   audio.value.click()
 }
@@ -831,30 +691,22 @@ function onSelectAudioFile(event: any) {
       const url = e.target!.result as any
       const result = await fetch(url)
       const blob = await result.blob()
-      const blobUrl = URL.createObjectURL(blob)
 
-      if (activeTab.value === 'BLOG') {
-        editor.value
-          .chain()
-          .focus(null)
-          .setAudio({ src: blobUrl, title: file.name })
-          .run()
+
+      if (snsAttachFiles.value.audio) {
+        snsAttachFiles.value.audio.push({
+          file: file,
+          name: file.name,
+          url: url,
+        })
       } else {
-        if (snsAttachFiles.value.audio) {
-          snsAttachFiles.value.audio.push({
+        snsAttachFiles.value.audio = [
+          {
             file: file,
             name: file.name,
             url: url,
-          })
-        } else {
-          snsAttachFiles.value.audio = [
-            {
-              file: file,
-              name: file.name,
-              url: url,
-            },
-          ]
-        }
+          },
+        ]
       }
       isAudioUploading.value = false
     }
@@ -894,7 +746,6 @@ async function onUpdatePost() {
   if (selectedGroup.value) {
     const pl = setCategoryPayload(payload)
 
-    console.log('pl', pl)
     payload.community = pl.community;
     payload.game = pl.game
   }
@@ -1038,7 +889,9 @@ async function onUpdatePost() {
             img.url.search('data:') !== -1
           ) {
             formData.append(img.name, img.file)
+            formData.append('is_blind', img.is_blind)
           } else {
+            img['is_blind'] = img['is_blind'] || false;
             attachedFile.push(img)
           }
         }
@@ -1049,7 +902,8 @@ async function onUpdatePost() {
               url: string
               type: string
               name: string
-              size: number
+              size: number,
+              is_blind: boolean
             }[]
           }>('/community/att', getZempieFetchOptions('post', true, formData))
 
@@ -1063,6 +917,7 @@ async function onUpdatePost() {
                 type: data.type,
                 name: data.name,
                 size: data.size,
+                is_blind: data.is_blind
               })
             }
           }
@@ -1131,6 +986,7 @@ async function onUpdatePost() {
                 type: data.type,
                 name: data.name,
                 size: data.size,
+
               })
             }
           }
@@ -1266,7 +1122,7 @@ async function communityFetch() {
       }
     })
   }
-  if (useUser().user.value.info.games.length) {
+  if (userGames.value?.length) {
     categoryList.value.push({
       value: "game",
       label: t('game'),
@@ -1275,7 +1131,7 @@ async function communityFetch() {
   }
 
 
-  const gameList = useUser().user.value.info.games?.map((game: IGame) => {
+  const gameList = userGames.value?.map((game: IGame) => {
     return {
       value: {
         type: 'game',
@@ -1510,6 +1366,11 @@ function getFirstPostContent(content: string) {
       'Video') ||
     (stringToDomElem(content).getElementsByTagName('audio')[0]?.src && 'Audio')
   )
+}
+
+function blindImg(index: number) {
+  snsAttachFiles.value.img[index]['is_blind'] = !snsAttachFiles.value.img[index]['is_blind']
+
 }
 </script>
 

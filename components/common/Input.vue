@@ -28,7 +28,6 @@ onMounted(() => {
 })
 
 function initInput() {
-  console.log('init')
   inputText.value = ''
 }
 

@@ -8,7 +8,6 @@
         <h2>{{ selectedRoom?.joined_users[0]?.nickname }}</h2>
         <p>{{ selectedRoom?.joined_users[0]?.name }}</p>
       </div>
-      <!-- <p>Online</p> -->
     </dt>
     <dd>
       <ClientOnly>
@@ -106,7 +105,7 @@
   </ClientOnly>
 </template>
 <script setup lang="ts">
-import _, { now } from 'lodash'
+import _ from 'lodash'
 import { dmDateFormat } from '~~/scripts/utils'
 import { IChat, IMessage, IUser } from '~~/types'
 import { ElDropdown, ElDialog, ElMessage, linkEmits } from 'element-plus';
