@@ -78,7 +78,7 @@ import _ from 'lodash'
 import { PropType } from 'vue'
 import { IComChannel, ICommunity, IFeed } from '~~/types'
 import { useI18n } from 'vue-i18n'
-
+import shared from '~~/scripts/shared'
 const { t, locale } = useI18n()
 
 const LIMIT_SIZE = 30
@@ -127,6 +127,7 @@ const props = defineProps({
 const isMobile = computed(() =>
   window.matchMedia('screen and (max-width: 767px)')
 )
+
 
 const watcher = watch(
   () => route.query,
@@ -328,9 +329,10 @@ function updateBlind(feed: IFeed, img) {
   feeds.value = feeds.value
     .map((feed1) => {
       if (feed1.id === feed.id) {
+        const attFiles = shared.toArray(feed1.attatchment_files)
         return {
           ...feed1,
-          attatchment_files: feed1.attatchment_files
+          attatchment_files: attFiles
             .map((file) => {
               if (file.url === img.url) {
                 return {
