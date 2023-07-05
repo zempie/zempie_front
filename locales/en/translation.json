@@ -1003,5 +1003,9 @@
   "general.settings": "General settings",
   "change.profile": "Change profile",
   "change.banner": "Change banner",
-  "users":"Users"
+  "users": "Users",
+  "comment.report": "Report comment",
+  "report.game": "Report game",
+  "banner": "banner",
+  "user.report": "Report user"
 }

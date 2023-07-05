@@ -13,16 +13,20 @@
                   {{ commentUser.nickname }}</NuxtLink>
                 <span class="font13">{{ dateFormat(comment.created_at) }}</span>
               </h2>
-              <el-dropdown v-if="comment.user?.uid === user?.uid" trigger="click" ref="feedMenu"
-                popper-class="tapl-more-dropdown">
+              <el-dropdown trigger="click" ref="feedMenu" popper-class="tapl-more-dropdown">
                 <a slot="trigger"><i class="uil uil-ellipsis-h font25 pointer"></i></a>
                 <template #dropdown>
                   <div slot="body" class="more-list">
-                    <a @click="isCommentEdit = !isCommentEdit" class="pointer">{{
-                      $t('comment.edit')
-                    }}</a>
-                    <a @click="showDeleteModal = true" class="pointer">
-                      {{ $t('comment.delete') }}
+                    <template v-if="comment.user?.uid === user?.uid">
+                      <a @click="isCommentEdit = !isCommentEdit" class="pointer">{{
+                        $t('comment.edit')
+                      }}</a>
+                      <a @click="showDeleteModal = true" class="pointer">
+                        {{ $t('comment.delete') }}
+                      </a>
+                    </template>
+                    <a v-else @click="onClickReport" class="pointer">
+                      {{ $t('comment.report') }}
                     </a>
                   </div>
                 </template>
@@ -100,12 +104,14 @@
 
   <CommentInput v-if="isCommentEdit" @refresh="refresh" @editComment="editComment" :postId="comment.post_id"
     :comment="comment" :isEdit="true" />
+
+  <ReportModal :openModal="showReportModal" :reportInfo="reportInfo" @closeModal="showReportModal = false" />
 </template>
 
 <script setup lang="ts">
 import _ from 'lodash'
 import { ElDropdown, ElDialog } from 'element-plus'
-import { IComment } from '~~/types';
+import { IComment, eReportType } from '~~/types';
 import { dateFormat } from '~~/scripts/utils'
 import { PropType } from 'vue';
 
@@ -137,6 +143,12 @@ const isLiked = ref(props.comment.is_liked)
 const likeCnt = ref(props.comment.like_cnt)
 
 const isRecommentOpen = ref(false)
+
+const showReportModal = ref(false)
+const reportInfo = ref()
+
+
+
 const commentUser = computed(() => props.comment?.user)
 
 
@@ -265,6 +277,42 @@ function deleteRecomment(comment: IComment) {
   })
   emit('deleteComment', comment)
 
+}
+
+function onClickReport() {
+  reportInfo.value = {
+    type: eReportType.comment,
+    title: '댓글 신고',
+    desc: '신고 사유를 선택해주세요. 신고 사유에 맞지 않는 신고일 경우, 해당 신소는 처리되지 않습니다. 검토까지는 최대 24시간이 소요됩니다.',
+    list: [
+      {
+        value: 10,
+        title: '개인정보보호 위반'
+      },
+      {
+        value: 11,
+        title: '불쾌하거나 민감한 콘텐츠'
+      },
+      {
+        value: 12,
+        title: '불법 콘텐츠'
+      },
+      {
+        value: 13,
+        title: '허가되지 않은 광고'
+      },
+      {
+        value: 14,
+        title: '지식재산권 침해'
+      },
+      {
+        value: 15,
+        title: '기타'
+      }
+
+    ]
+  }
+  showReportModal.value = true
 }
 
 

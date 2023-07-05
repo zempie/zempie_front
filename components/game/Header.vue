@@ -38,17 +38,27 @@
             </div>
           </dt>
           <dd class="game-tag">
-            <h2 style="color: #fff; font-size: 20px; font-weight: bold">
-              {{ gameInfo.title }}<span></span>
-            </h2>
-            <!-- <div class="like-btn column">
-              <i v-if="!isLike" class="xi-heart-o like-icon pointer" style="font-size: 22px; color: #ff6e17; "
-                @click="setLike">
-              </i>
-              <i v-else class="xi-heart like-icon pointer" style="font-size: 22px; color: #ff6e17; " @click="unsetLike">
-              </i>
-              <p style="color: #fff">{{ likeCnt }}</p>
-            </div> -->
+            <div class="inner">
+              <h2>
+                {{ gameInfo.title }}
+              </h2>
+              <div class="menu">
+                <div class="like-btn row">
+                  <i v-if="!isLike" class="xi-heart-o like-icon pointer mr5" style="font-size: 22px; color: #ff6e17; "
+                    @click="setLike">
+                  </i>
+                  <i v-else class="xi-heart like-icon pointer" style="font-size: 22px; color: #ff6e17; "
+                    @click="unsetLike">
+                  </i>
+                  <p style="color: #fff">{{ likeCnt }}</p>
+                </div>
+                <CommonDropdown class="flex">
+                  <template #options>
+                    <li @click="onClickReport">{{ $t('report.game') }}</li>
+                  </template>
+                </CommonDropdown>
+              </div>
+            </div>
             <h3 @click="moveUserPage" style="cursor: pointer">
               By <span class="underline">@{{ gameInfo.user?.nickname }}</span>
             </h3>
@@ -69,33 +79,6 @@
                 <Icon icon="ri:kakao-talk-fill" class="icon" />
                 <GamePlatformIcon :platform="gameInfo.support_platform" color="#fff" />
               </a>
-              <!--   <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default download mr10"
-          :class="isFlutter && 'disabled'" @click="downloadGame">
-          <span>{{ $t('download') }}</span>
-          <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small>
-          <GamePlatformIcon :platform="gameInfo.support_platform" color="#fff" />
-        </a>
-        <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default download mr10"
-          :class="isFlutter && 'disabled'" @click="downloadGame">
-          <span>{{ $t('download') }}</span>
-          <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small>
-          <GamePlatformIcon :platform="gameInfo.support_platform" color="#fff" />
-        </a>
-        <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default download mr10"
-          :class="isFlutter && 'disabled'" @click="downloadGame">
-          <span>{{ $t('download') }}</span>
-          <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small>
-          <GamePlatformIcon :platform="gameInfo.support_platform" color="#fff" />
-        </a>
-        <a v-if="gameInfo.game_type === eGameType.Download" :href="gameInfo.url_game" class="btn-default download mr10"
-          :class="isFlutter && 'disabled'" @click="downloadGame">
-          <span>{{ $t('download') }}</span>
-          <small style="font-size:10px; font-weight: 300;">&nbsp;( 20 )&nbsp;</small>
-          <GamePlatformIcon :platform="gameInfo.support_platform" color="#fff" />
-        </a> -->
-
-              <!-- <a v-for="hashtag in hashtags" :key="hashtag" @click="searchHashtag(hashtag)">#{{ hashtag }}
-              </a> -->
             </div>
           </dd>
         </dl>
@@ -119,19 +102,19 @@
         <div class="btn-container">
           <div>
             <button v-if="prevBanner" class="btn-gray uppercase" @click="showDeleteBanner = true">
-              delete <span>banner</span>
+              {{ $t('delete') }} <span> {{ $t('banner') }} </span>
             </button>
           </div>
           <div>
             <button class="btn-line mr10 uppercase" @click="bannerImg.click()">
-              change <span>banner </span>
+              {{ $t('change') }} <span>{{ $t('banner') }} </span>
             </button>
 
             <button v-if="prevBanner" class="btn-default uppercase" @click="updateBannerImg">
-              update
+              {{ $t('update') }}
             </button>
             <button v-else class="btn-default uppercase" @click="saveBannerImg">
-              save
+              {{ $t('save') }}
             </button>
           </div>
         </div>
@@ -162,6 +145,7 @@
       </div>
     </el-dialog>
   </div>
+  <ReportModal :openModal="showReportModal" :reportInfo="reportInfo" @closeModal="showReportModal = false" />
 </template>
 
 <script setup lang="ts">
@@ -169,7 +153,7 @@ import _ from 'lodash'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
 import { ElMessage, ElMessageBox, ElTag, ElDialog } from 'element-plus'
-import { ePlatformType, eGameStage, eGameType } from '~~/types'
+import { ePlatformType, eGameStage, eGameType, eReportType } from '~~/types'
 
 import { PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -208,6 +192,9 @@ const editBanner = ref()
 const editBannerUrl = ref()
 const cropper = ref()
 const showDeleteBanner = ref(false)
+
+const showReportModal = ref(false)
+const reportInfo = ref()
 
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
@@ -375,18 +362,81 @@ function downloadGame() {
   }
 }
 
+function onClickReport() {
+
+  reportInfo.value = {
+    type: eReportType.comment,
+    title: '게임 신고',
+    desc: '신고 사유를 선택해주세요. 신고 사유에 맞지 않는 신고일 경우, 해당 신소는 처리되지 않습니다. 검토까지는 최대 24시간이 소요됩니다.',
+    list: [
+      {
+        value: 10,
+        title: '개인정보보호 위반'
+      },
+      {
+        value: 11,
+        title: '불쾌하거나 민감한 콘텐츠'
+      },
+      {
+        value: 12,
+        title: '불법 콘텐츠'
+      },
+      {
+        value: 13,
+        title: '허가되지 않은 광고'
+      },
+      {
+        value: 14,
+        title: '지식재산권 침해'
+      },
+      {
+        value: 15,
+        title: '기타'
+      }
+
+    ]
+  }
+  showReportModal.value = true
+}
+
 </script>
 
 <style lang="scss" scoped>
 .header-left {
+
   &.dev-header {
     padding-bottom: 40px;
   }
 }
 
+.game-tag {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 10px 0px 10px 20px;
+
+  .inner {
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    justify-content: space-between;
+
+    h2 {
+      display: inline;
+      color: #fff;
+      font-size: 20px !important;
+      font-weight: bold
+    }
+
+    .menu {
+      display: flex;
+    }
+  }
+}
+
+
 .like-btn {
-  // height: 65px;
-  display: inline-block;
   justify-content: center;
   align-items: center;
 }
@@ -467,17 +517,36 @@ function downloadGame() {
     height: 250px;
 
     .header-left {
+      width: 100%;
+
       &.dev-header {
         padding-bottom: 0px;
       }
     }
+
+    .game-profile-img {
+      margin-left: 10px;
+      width: 40%;
+      display: flex;
+      justify-content: center;
+
+      div {
+        position: absolute;
+        width: 140px;
+        height: 140px;
+        margin: -30px 0 0 0 !important;
+        border: #fff 5px solid;
+        margin: 0px;
+      }
+    }
+
 
     dl {
       padding: 0px;
     }
 
     .play-btn-container {
-      justify-content: center;
+      // margin-left: 10px;
       margin-bottom: 10px;
     }
   }
@@ -497,6 +566,12 @@ function downloadGame() {
       }
     }
   }
+}
+
+:deep(.more-list) {
+  right: -25px;
+  top: 30px;
+  width: 150px;
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
@@ -589,14 +664,14 @@ function downloadGame() {
 
 @media all and (min-width: 992px) and (max-width: 1199px) {
   .header-left {
-    width: 70%;
+    width: 100%;
 
     .game-profile-img {
-      width: 30%;
+      width: 20%;
     }
 
     .game-tag {
-      width: 70%;
+      width: 100%;
     }
   }
 
@@ -628,14 +703,13 @@ function downloadGame() {
 
 @media all and (min-width: 1200px) {
   .header-left {
-    width: 70%;
 
     .game-profile-img {
-      width: 24%;
+      width: 18%;
     }
 
     .game-tag {
-      width: 70%;
+      width: 100%;
     }
   }
 

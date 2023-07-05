@@ -1,7 +1,7 @@
 <template>
   <div class="custom-dropdown" ref="dropdownContainer">
-    <button class="msg-menu-btn" @click="toggleDropdown"> <i class="uil uil-ellipsis-h font25"></i></button>
-    <ul v-if="isDropdownOpen" class="more-list">
+    <button class="menu-btn" @click="toggleDropdown"> <i class="uil uil-ellipsis-h font25"></i></button>
+    <ul v-if="isDropdownOpen" class="more-list" @click="onClickOption">
       <slot name="options"></slot>
     </ul>
   </div>
@@ -34,6 +34,10 @@ function handleClickOutside(event) {
   }
 }
 
+function onClickOption() {
+  isDropdownOpen.value = false;
+}
+
 </script>
 <style scoped lang="scss">
 .custom-dropdown {
@@ -44,13 +48,19 @@ function handleClickOutside(event) {
   min-width: 10px;
   word-wrap: break-word;
   visibility: visible;
+  cursor: pointer;
 
 }
 
 .selected-option {
-  cursor: pointer;
   padding: 10px;
   border-radius: 8px;
+}
+
+.menu-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
 
 }
 
@@ -65,8 +75,6 @@ function handleClickOutside(event) {
   border-radius: 10px;
   right: 10px;
   top: 23px;
-
-
 
 }
 </style>

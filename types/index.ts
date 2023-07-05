@@ -446,6 +446,13 @@ export enum eMetadataType {
   video
 }
 
+export enum eReportType {
+  post = 1,
+  comment,
+  game,
+  user
+}
+
 
 
 declare global {

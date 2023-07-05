@@ -1,14 +1,18 @@
 <template>
-  <el-dropdown v-if="comment.user?.uid === user?.uid" trigger="click" popper-class="tapl-more-dropdown"
-    style="margin-top:0px" ref="menuRef">
+  <el-dropdown trigger="click" popper-class="tapl-more-dropdown" style="margin-top:0px" ref="menuRef">
     <a slot="trigger"><i class="uil uil-ellipsis-h font25 pointer"></i></a>
     <template #dropdown>
       <div slot="body" class="more-list">
-        <a @click="editComment" class="pointer">{{
-          $t('comment.edit')
-        }}</a>
-        <a @click="showDeleteModal = true" class="pointer">
-          {{ $t('comment.delete') }}
+        <template v-if="comment.user?.uid === user?.uid">
+          <a @click="editComment" class="pointer">{{
+            $t('comment.edit')
+          }}</a>
+          <a @click="showDeleteModal = true" class="pointer">
+            {{ $t('comment.delete') }}
+          </a>
+        </template>
+        <a v-else @click="onClickReport" class="pointer">
+          {{ $t('comment.report') }}
         </a>
       </div>
     </template>
@@ -39,9 +43,11 @@
       </div>
     </el-dialog>
   </ClientOnly>
+  <ReportModal :openModal="showReportModal" :reportInfo="reportInfo" @closeModal="showReportModal = false" />
 </template>
 <script setup lang="ts">
 import { ElDropdown, ElDialog } from 'element-plus';
+import { eReportType } from '~~/types';
 
 
 const props = defineProps({
@@ -54,6 +60,8 @@ defineExpose({ closeDeleteModal })
 const showDeleteModal = ref(false)
 const menuRef = ref()
 
+const showReportModal = ref(false)
+const reportInfo = ref()
 const user = computed(() => useUser().user.value.info)
 
 function closeDeleteModal() {
@@ -63,6 +71,43 @@ function closeDeleteModal() {
 function editComment() {
   emit('editComment')
   menuRef.value.handleClose()
+}
+
+
+function onClickReport() {
+  reportInfo.value = {
+    type: eReportType.comment,
+    title: '댓글 신고',
+    desc: '신고 사유를 선택해주세요. 신고 사유에 맞지 않는 신고일 경우, 해당 신소는 처리되지 않습니다. 검토까지는 최대 24시간이 소요됩니다.',
+    list: [
+      {
+        value: 10,
+        title: '개인정보보호 위반'
+      },
+      {
+        value: 11,
+        title: '불쾌하거나 민감한 콘텐츠'
+      },
+      {
+        value: 12,
+        title: '불법 콘텐츠'
+      },
+      {
+        value: 13,
+        title: '허가되지 않은 광고'
+      },
+      {
+        value: 14,
+        title: '지식재산권 침해'
+      },
+      {
+        value: 15,
+        title: '기타'
+      }
+
+    ]
+  }
+  showReportModal.value = true
 }
 
 </script>

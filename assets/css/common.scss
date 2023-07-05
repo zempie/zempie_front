@@ -1132,6 +1132,8 @@ $zempie-main-color-hover: #f974162a;
 }
 
 .dlc-chat-content {
+  overflow-x: hidden;
+
   .inner {
     max-height: calc(560px - 90px);
     position: absolute;
@@ -1150,19 +1152,11 @@ $zempie-main-color-hover: #f974162a;
       }
 
       &:hover {
-        .msg-menu-btn {
+        .menu-btn {
           display: block;
           cursor: pointer;
-
         }
       }
-
-      .msg-menu-btn {
-        display: none;
-        background: none;
-        border: none;
-      }
-
     }
   }
 }

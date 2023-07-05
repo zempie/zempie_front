@@ -1001,5 +1001,9 @@
   "general.settings": "일반 설정",
   "change.profile": "프로필 변경",
   "change.banner": "배너 변경",
-  "users":"유저"
+  "users": "유저",
+  "comment.report": "댓글 신고",
+  "report.game": "게임 신고",
+  "banner": "배너",
+  "user.report": "유저 신고"
 }

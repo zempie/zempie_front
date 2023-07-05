@@ -6,7 +6,6 @@
   </CommonDropdown>
 </template>
 <script setup lang="ts">
-import { ElDropdown, ElDialog } from 'element-plus';
 const props = defineProps({
   msg: Object
 })
