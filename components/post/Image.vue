@@ -54,9 +54,8 @@ div {
     }
 
     &.hide-btn {
-      background: none;
-      color: #000;
-      font-weight: bold;
+      background: #333 !important;
+      color: #fff !important;
       bottom: 10%;
       right: 10%;
     }
