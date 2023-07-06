@@ -248,7 +248,7 @@
   }
 
   .header-logo-menu p a img {
-    min-width: 100px;
+    min-width: 32;
   }
 
   .header-logo-menu ul {
@@ -292,7 +292,7 @@
   }
 
   .header-logo-menu p a img {
-    min-width: 100px;
+    min-width: 32px;
   }
 
   .header-logo-menu ul {

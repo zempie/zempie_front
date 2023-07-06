@@ -2,7 +2,12 @@
   <li class="game-info" v-if="gameInfo" @mouseenter="enterCard" @mouseleave="leaveCard" style="position: relative">
     <img v-if="gameInfo.game_jam?.is_awarded" src="/images/medal2.png" alt="zem-jam-winner"
       style="position: absolute; right: 10px; top: 10px" />
-    <GameStageTag v-if="gameInfo.stage" :stage="gameInfo.stage" />
+    <div class="tag-container">
+      <el-tag class="count-tag mx-1 uppercase mr10" effect="dark" color="#B53BFF" style="top:10px; max-width: 100px;">
+        play {{ gameInfo.count_over }}
+      </el-tag>
+      <GameStageTag v-if="gameInfo.stage" :stage="gameInfo.stage" />
+    </div>
 
     <div @click="moveGamePage" class="thumbnail"
       :style="`background: url( ${thumbnail} ) center center / cover no-repeat; background-size: cover;`"></div>
@@ -20,7 +25,7 @@
         </h2>
         <p @click="moveUserPage">{{ gameInfo.user?.nickname }}</p>
         <ul>
-          <template v-for="platform in support_platforms">
+          <template v-for="  platform   in   support_platforms  ">
             <GamePlatformIcon :platform="platform" color="#000" />
           </template>
 
@@ -38,8 +43,9 @@
 </template>
 
 <script setup lang="ts">
+import { ElTag } from 'element-plus';
 import { PropType } from 'vue'
-import { IGame, eGameType, ePlatformType } from '~~/types'
+import { IGame, eGameType, eGameStage } from '~~/types'
 const { $localePath } = useNuxtApp()
 
 const router = useRouter()
@@ -90,6 +96,16 @@ function moveUserPage() {
 
 <style scoped lang="scss">
 .game-info {
+  .tag-container {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+
+    .count-tag {
+      border-color: transparent;
+
+    }
+  }
 
   dl {
     dt {

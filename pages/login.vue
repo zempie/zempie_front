@@ -49,7 +49,7 @@
           <dt></dt>
         </dl>
         <ul>
-          <li @click="googleLogin" v-if="!isNotGoogleSupport.value">
+          <li @click="googleLogin" v-if="!isNotGoogleSupport">
             <img src="/images/login/google_login.jpeg" alt="google-login" title="" />
           </li>
           <li @click="facebookLogin" class="mt10">

@@ -4,57 +4,9 @@
       <li @click="showReportModal = true">{{ $t('report.user') }}</li>
       <li v-if="!user.is_blocked" @click="onBlockUser">{{ $t('block.user') }}</li>
       <li v-else @click="onUnBlockUser">{{ $t('cancel.block') }}</li>
-
     </template>
   </CommonDropdown>
-
-
-  <el-dialog v-model="showReportModal" class="modal-area-type" width="380px">
-    <div class="modal-report">
-      <dl class="mr-header">
-        <dt>{{ $t('user.report') }}</dt>
-        <dd>
-          <button class="pointer" @click="showReportModal = false"><i class="uil uil-times"></i></button>
-        </dd>
-      </dl>
-      <div class="mr-content">
-        <p class="desc w100p">{{ $t('report.user.title') }} </p>
-        <ul>
-          <li>
-            <input type="radio" v-model="reportReason" value="1" id="report1" />
-
-            <span><label for="report1">{{ $t('report.user.info1') }} </label></span>
-          </li>
-          <li>
-            <input type="radio" v-model="reportReason" value="2" id="report2" /> <span><label for="report2"> {{
-              $t('report.user.info2') }}</label></span>
-          </li>
-          <li>
-            <input type="radio" v-model="reportReason" value="3" id="report3" /> <span><label for="report3">{{
-              $t('report.user.info3') }} </label></span>
-          </li>
-          <li>
-            <input type="radio" v-model="reportReason" value="4" id="report4" /> <span><label for="report4">{{
-              $t('report.user.info4') }} </label></span>
-          </li>
-          <li>
-            <input type="radio" v-model="reportReason" value="5" id="report5" /> <span><label for="report5">{{
-              $t('ect') }}기타</label></span>
-          </li>
-          <li>
-            <textarea class="w100p" name="" v-model="additionalReportReason"
-              :placeholder="`${$t('add.additional.info')}`"></textarea>
-          </li>
-        </ul>
-        <div class="flex row justify-between">
-          <button class="btn-gray" style="width: 48% !important;" @click="showReportModal = false">{{ $t('cancel')
-          }}</button>
-          <button class="btn-default" style="width: 48% !important;" @click="onSubmitReport">{{ $t('post.report.btn')
-          }}</button>
-        </div>
-      </div>
-    </div>
-  </el-dialog>
+  <UserReportModal :openModal="showReportModal" @closeModal="closeReportModal" :user="user" />
   <CommonModal :openModal="showReportComModal" :title="$t('finish.report.title')" :desc="$t('finish.report.desc')"
     @closeModal="closeModal" />
 </template>
@@ -66,8 +18,6 @@ import { IUser } from '~~/types';
 const { t, locale } = useI18n()
 
 const showReportModal = ref(false)
-const reportReason = ref()
-const additionalReportReason = ref()
 const showReportComModal = ref(false)
 
 
@@ -75,29 +25,15 @@ const props = defineProps({
   user: Object as PropType<IUser>
 })
 
-const userInfo = computed(() => useUser().user.value.info)
-
-async function onSubmitReport() {
-  if (!reportReason.value) return
-
-  const formData = new FormData();
-  formData.append('target_id', String(props.user.id));
-  formData.append('reporter_id', String(userInfo.value.id));
-  formData.append('reason_num', reportReason.value);
-  if (additionalReportReason.value) {
-    formData.append('reason', additionalReportReason.value);
-  }
-
-  const { data } = await useCustomAsyncFetch('/report/user', getZempieFetchOptions('post', true, formData))
-  if (data.value) {
-    showReportModal.value = false
-    showReportComModal.value = true
-  }
-
-}
 
 function closeModal() {
   showReportComModal.value = false
+
+}
+
+
+function closeReportModal() {
+  showReportModal.value = false
 
 }
 async function onBlockUser() {
@@ -114,8 +50,8 @@ async function onUnBlockUser() {
     .then(() => {
       useChannel().updateChannelBlockInfo(false)
     })
-
 }
+
 </script>
 <style scoped lang="scss">
 li {
@@ -148,33 +84,6 @@ li {
   left: -35px;
 }
 
-.mr-header {
-  // height: 50px;
-}
-
-.mr-content {
-  text-align: left;
-
-  .desc {
-    height: auto !important;
-  }
-
-  ul {
-    li {
-      display: flex;
-      align-items: center;
-
-      span {
-        font-size: 14px !important;
-      }
-
-      textarea {
-        resize: none;
-      }
-    }
-
-  }
-}
 
 :deep(.modal-area-type) {
 

@@ -10,5 +10,6 @@
   },
   "[scss]": {
     "editor.defaultFormatter": "vscode.css-language-features"
-  }
+  },
+  "vue.codeActions.enabled": false
 }

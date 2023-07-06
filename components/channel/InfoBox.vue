@@ -17,7 +17,7 @@
   </div>
 
   <div v-else class="ta-myinfo mb20">
-    <div class="avatar">
+    <div class="avatar ">
       <UserAvatar :user="channelInfo" tag="p" style="width:100px; height:100px" />
       <UserSetting :user="channelInfo" v-if="!isMine" />
     </div>

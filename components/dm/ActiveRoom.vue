@@ -16,6 +16,9 @@
           <template #dropdown>
             <div class="more-list fixed" style="min-width: 150px">
               <a @click="opLeaveChatModal = true" id="editFeed" class="pointer">{{ t('remove.chat') }}</a>
+              <a @click="onBlockUser" class="pointer">{{ t('block.user')
+              }}</a>
+              <a @click="onReportUser" class="pointer">{{ t('report.user') }}</a>
             </div>
           </template>
         </el-dropdown>
@@ -25,7 +28,7 @@
   </dl>
   <div class="dlc-chat-content">
     <div class="inner" ref="scrollContent">
-      <div :class="msg.sender.id === userInfo.id ? 'receiver-chat' : 'sender-chat'" v-for="(msg, index) in msgList"
+      <div :class="msg.sender?.id === userInfo.id ? 'receiver-chat' : 'sender-chat'" v-for="( msg, index ) in  msgList "
         :ref="el => { divs[msg.id] = el }" :key="index">
         <h4>{{ dmDateFormat(msg.created_at) }}</h4>
         <ul>
@@ -49,6 +52,8 @@
     </div>
     <p><button @click="sendMsg"><img src="/images/send_icon.png" alt="" title="" /></button></p>
   </div>
+  <UserReportModal :openModal="showReportModal" @closeModal="closeReportModal"
+    :user="props.selectedRoom?.joined_users[0]" />
 
   <ClientOnly>
     <el-dialog v-model="opLeaveChatModal" class="modal-area-type" width="380px">
@@ -140,6 +145,7 @@ const deleteTgMsg = ref()
 const scrollContent = ref<HTMLElement | null>(null)
 const msgPolling = ref(null)
 const totalMsgCnt = ref(0)
+const showReportModal = ref(false)
 
 const userInfo = computed(() => useUser().user.value.info)
 const isFbSupported = computed(() => useCommon().setting.value.isFbSupported)
@@ -365,6 +371,10 @@ async function sendMsg() {
     }
   } else if (error.value) {
     inputMsg.value = content
+    ElMessage({
+      message: t('fail.send.msg'),
+      type: 'error',
+    })
   }
 
   isSending.value = false
@@ -442,5 +452,23 @@ function onBlur() {
     emit('closeKeyboard')
   }
 
+}
+
+function onReportUser() {
+  showReportModal.value = true
+}
+
+
+
+function closeReportModal() {
+  showReportModal.value = false
+}
+
+async function onBlockUser() {
+  await useUser().blockUser(props.selectedRoom?.joined_users[0].id)
+    .then(() => {
+      useChannel().updateChannelBlockInfo(true)
+
+    })
 }
 </script>

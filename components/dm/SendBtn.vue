@@ -19,8 +19,6 @@ const isMine = computed(() => {
 })
 
 function sendMsg() {
-  console.log('props.user.nickname', props.user.nickname)
-
   router.push($localePath({ path: `/dm/list`, query: { user: props.user.id } }))
 }
 </script>
