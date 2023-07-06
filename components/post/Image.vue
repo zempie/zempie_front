@@ -4,8 +4,8 @@
       <img :src="img.url" />
     </div>
     <template v-if="initStatus">
-      <button v-if="isBlind" class="btn-default-samll show-btn" @click="openBlind">민감한 컨텐츠</button>
-      <button v-else class="btn-default-samll hide-btn" @click="openBlind">숨기기</button>
+      <button v-if="isBlind" class="btn-default-samll show-btn" @click="openBlind">{{ $t('violent.contents') }}</button>
+      <button v-else class="btn-default-samll hide-btn" @click="openBlind">{{ $t('hide') }}</button>
     </template>
   </div>
 </template>
@@ -31,6 +31,7 @@ function openBlind() {
 <style scoped lang="scss">
 .post-img {
 
+  position:relative;
   .feed-img {
     max-height: 300px;
     padding: 10px;
