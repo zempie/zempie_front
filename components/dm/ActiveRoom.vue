@@ -1,7 +1,7 @@
 <template>
   <dl class="active-room-container">
     <dd>
-      <UserAvatar :user="selectedRoom?.joined_users[0]" tag="p" />
+      <UserAvatar :user="selectedRoom?.joined_users[0]" tag="p" :hasRouter="true" />
     </dd>
     <dt>
       <div>
@@ -342,11 +342,14 @@ async function sendMsg() {
   const content = _.cloneDeep(inputMsg.value)
   inputMsg.value = ''
 
+  const receiver_ids = props.selectedRoom.joined_users.map((user) => {
+    return user.id
+  })
+
+
   const payload = {
     room_id: props.selectedRoom.id,
-    // receiver_ids: [
-    //   userInfo.value.id
-    // ],
+    receiver_ids,
     type: 0,
     contents: content
   }

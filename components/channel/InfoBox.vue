@@ -20,11 +20,10 @@
       <div class="avatar">
         <UserAvatar :user="channelInfo" tag="p" />
         <UserSetting :user="channelInfo" v-if="!isMine" />
-        <!-- <span class="user-setting"><i class="uil uil-ellipsis-h"></i></span> -->
       </div>
       <h1>{{ channelInfo?.nickname }}</h1>
       <h2>{{ channelInfo?.name }}</h2>
-      <div class="mt10 flex justify-between" v-if="user?.uid !== channelInfo?.channel_id">
+      <div class="mt10 flex justify-between" v-if="!isMine && !channelInfo.is_blocked">
         <UserFollowBtn :user="channelInfo" style="width: 48%;" />
         <DmSendBtn :user="channelInfo" style="width: 48%;" />
       </div>
@@ -66,6 +65,7 @@ const userId = computed(() => route.params.id as string || channelInfo.value.nic
 const user = computed(() => useUser().user.value.info)
 
 
+
 const isMine = computed(() => {
   return channelInfo.value.id === user.value.id
 })
@@ -84,7 +84,7 @@ const isMine = computed(() => {
       margin: 0 auto;
       border: #fff 3px solid;
       border-radius: 50%;
-    }
+  }
 
     .custom-dropdown {
       cursor: pointer;

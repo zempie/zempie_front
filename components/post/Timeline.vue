@@ -92,7 +92,6 @@ const feeds = ref<IFeed[]>([])
 const isPending = ref(true)
 
 const isTextEditorOpen = ref(false)
-const isEditorDestroy = ref(false)
 
 const observer = ref<IntersectionObserver>(null)
 const triggerDiv = ref<Element>()
@@ -103,9 +102,15 @@ const isAddData = ref(false)
 
 const user = computed(() => useUser().user.value.info)
 const isLogin = computed(() => useUser().user.value.isLogin)
-const gameInfo = computed(() => useGame().game.value.info)
 
 const paramId = computed(() => route.params.id as string)
+
+const isBlocked = computed(() => {
+  return useChannel().userChannel.value.info.is_blocked
+})
+
+
+
 // const gameId = computed(() => route.params.id as string)
 
 const props = defineProps({
@@ -152,6 +157,11 @@ const userWatcher = watch(
 )
 
 onMounted(async () => {
+  if (isBlocked.value) {
+    isPending.value = false
+    return
+  }
+
   const result = await fetch()
   if (result && triggerDiv.value) {
     observer.value = new IntersectionObserver(
@@ -228,6 +238,7 @@ async function fetch() {
 
     case 'user':
       const channelId = computed(() => useChannel().userChannel.value.info.channel_id)
+
       if (!channelId.value) {
         const userId = route.params.id as string
         await useChannel().getChannelInfo(userId)

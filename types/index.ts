@@ -36,7 +36,8 @@ export interface IUser {
     unread_dm_count?: number,
   }
   nickname?: string,
-  unread_msg_cnt?: number
+  unread_msg_cnt?: number,
+  is_blocked?: boolean
 }
 
 
@@ -175,7 +176,8 @@ export interface IUserChannel {
     banner_img: string
   },
   communities: ICommunity[]
-  games: IGame[]
+  games: IGame[],
+  is_blocked?: boolean,
 }
 
 export interface IFile {

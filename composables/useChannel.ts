@@ -81,6 +81,9 @@ export default function () {
     userChannel.value.info.following_cnt -= 1
   }
 
+  const updateChannelBlockInfo = (status: boolean) => {
+    userChannel.value.info.is_blocked = status
+  }
   return {
     userChannel,
     setUserChannel,
@@ -91,6 +94,7 @@ export default function () {
     increaseFollowerCnt,
     increaseFollowingCnt,
     decreaseFollowerCnt,
-    decreaseFollowingCnt
+    decreaseFollowingCnt,
+    updateChannelBlockInfo
   }
 }

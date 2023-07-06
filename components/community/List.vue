@@ -5,7 +5,7 @@
     </dl>
   </div>
   <ClientOnly v-else>
-    <div v-if="communities?.length">
+    <div v-if="communities?.length && !isBlocked">
       <dl v-for="community in communities" :key="community.id"
         @click="$router.push($localePath(`/community/${community.id}`))">
         <dt>
@@ -32,6 +32,10 @@ import { PropType } from 'vue'
 import { ICommunity } from '~~/types'
 const { $localePath } = useNuxtApp()
 
+
+const isBlocked = computed(() => {
+  return useChannel().userChannel.value.info.is_blocked
+})
 defineProps({
   communities: {
     type: Array as PropType<ICommunity[]>,

@@ -5,7 +5,7 @@
             background-size: cover;
           ">
       <div class="title">
-        <h1>Communities</h1>
+        <h1> {{ $t('communities') }}</h1>
         <!-- TODO: 커뮤니티 전체 개수 -->
         <!-- <span v-if="communityList && communityList.length > 0">({{ communityList.length }})</span> -->
       </div>

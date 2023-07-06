@@ -41,6 +41,7 @@ const bannerImg = computed(() =>
 )
 
 const userObj = computed(() => {
+
   return {
     name: props.user.name,
     picture: props.user.profile_img

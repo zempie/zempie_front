@@ -47,7 +47,7 @@
                 :class="{ active: room?.id === selectedRoom?.id }">
                 <dl>
                   <dd v-if="!room.is_group_room" class="mr10">
-                    <UserAvatar :user="room.joined_users[0]" tag="p" />
+                    <UserAvatar :user="room.joined_users[0]" tag="p" :hasRouter="true" />
                   </dd>
                   <dt>
                     <h3>{{ room.joined_users[0]?.nickname }}</h3>
@@ -537,9 +537,11 @@ async function findRoom(user_ids: Number[]) {
 
 
 async function createRoom(receiver_ids: Number[]) {
+
   const payload = {
     receiver_ids
   }
+
   const { data, error } = await useCustomAsyncFetch<IChat>(`/chat/rooms`, getComFetchOptions('post', true, payload))
 
   if (data.value) {

@@ -29,8 +29,8 @@
       </div>
     </div>
   </el-dialog>
-  <CommonModal :openModal="showReportComModal" :title="'신고 접수 완료'" :desc="'신고하신 내용이 정상적으로 접수완료되었습니다.'"
-    @closeModal="showReportComModal = false" :isAppendBody="true" />
+  <CommonModal :openModal="showReportComModal" :title="`${$t('finish.report.title')}`"
+    :desc="`${$t('finish.report.desc')}`" @closeModal="showReportComModal = false" :isAppendBody="true" />
 </template>
 <script setup lang="ts">
 import { ElDialog } from 'element-plus'

@@ -174,10 +174,6 @@ const hashtags = computed(
     gameInfo.value.hashtags?.length > 0 && gameInfo.value.hashtags?.split(',')
 )
 
-// const props = defineProps({
-//   gameInfo: Object as PropType<IGame>,
-// })
-
 const isMine = computed(
   () => gameInfo.value.user?.id === useUser().user.value.info?.id
 )
@@ -196,6 +192,10 @@ const showDeleteBanner = ref(false)
 const showReportModal = ref(false)
 const reportInfo = ref()
 
+//중복 클릭 방지용
+let likeAcceessableCnt = 2
+let unlikeAcceessableCnt = 2
+
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
 
@@ -203,8 +203,10 @@ function playGame() {
   window.open(`/play/${gameInfo.value.pathname}`, '_blank')
 }
 
-//TODO: 중복 클릭 처리는 디바운스로 할지 세마포어로 할지 모르겟음
-const setLike = _.debounce(async () => {
+
+async function setLike() {
+  likeAcceessableCnt -= 1
+
   isLike.value = true
 
   const payload = {
@@ -218,9 +220,12 @@ const setLike = _.debounce(async () => {
   if (!error.value) {
     likeCnt.value++
   }
-}, 300)
+  likeAcceessableCnt += 1
 
-const unsetLike = _.debounce(async () => {
+}
+async function unsetLike() {
+  unlikeAcceessableCnt -= 1
+
   isLike.value = false
 
   const payload = {
@@ -234,7 +239,10 @@ const unsetLike = _.debounce(async () => {
   if (!error.value) {
     likeCnt.value--
   }
-}, 300)
+  unlikeAcceessableCnt += 1
+
+}
+
 
 async function uploadBanner() {
   if (prevBanner.value) {
@@ -366,32 +374,32 @@ function onClickReport() {
 
   reportInfo.value = {
     type: eReportType.comment,
-    title: '게임 신고',
-    desc: '신고 사유를 선택해주세요. 신고 사유에 맞지 않는 신고일 경우, 해당 신소는 처리되지 않습니다. 검토까지는 최대 24시간이 소요됩니다.',
+    title: t('report.game.title'),
+    desc: t('report.post.desc'),
     list: [
       {
         value: 10,
-        title: '개인정보보호 위반'
+        title: t('report.post.options1'),//'개인정보보호 위반'
       },
       {
         value: 11,
-        title: '불쾌하거나 민감한 콘텐츠'
+        title: t('report.post.options2'),//'불쾌하거나 민감한 콘텐츠'
       },
       {
         value: 12,
-        title: '불법 콘텐츠'
+        title: t('report.post.options3'),//'불법 콘텐츠'
       },
       {
         value: 13,
-        title: '허가되지 않은 광고'
+        title: t('report.post.options4'),//'허가되지 않은 광고'
       },
       {
         value: 14,
-        title: '지식재산권 침해'
+        title: t('report.post.options5'),//'지식재산권 침해'
       },
       {
         value: 15,
-        title: '기타'
+        title: t('etc'),//'기타'
       }
 
     ]
