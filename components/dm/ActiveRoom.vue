@@ -1,14 +1,13 @@
 <template>
   <dl class="active-room-container">
     <dd>
-      <UserAvatar :user="selectedRoom?.joined_users[0]" tag="p" />
+      <UserAvatar :user="selectedRoom?.joined_users[0]" tag="p" :hasRouter="true" />
     </dd>
     <dt>
       <div>
         <h2>{{ selectedRoom?.joined_users[0]?.nickname }}</h2>
         <p>{{ selectedRoom?.joined_users[0]?.name }}</p>
       </div>
-      <!-- <p>Online</p> -->
     </dt>
     <dd>
       <ClientOnly>
@@ -17,6 +16,9 @@
           <template #dropdown>
             <div class="more-list fixed" style="min-width: 150px">
               <a @click="opLeaveChatModal = true" id="editFeed" class="pointer">{{ t('remove.chat') }}</a>
+              <a @click="onBlockUser" class="pointer">{{ t('block.user') }}</a>
+              <!-- <a @click="onUnBlockUser" class="pointer">{{ t('cancel.block') }}</a> -->
+              <a @click="onReportUser" class="pointer">{{ t('report.user') }}</a>
             </div>
           </template>
         </el-dropdown>
@@ -26,12 +28,12 @@
   </dl>
   <div class="dlc-chat-content">
     <div class="inner" ref="scrollContent">
-      <div :class="msg.sender.id === userInfo.id ? 'receiver-chat' : 'sender-chat'" v-for="(msg, index) in msgList"
+      <div :class="msg.sender?.id === userInfo.id ? 'receiver-chat' : 'sender-chat'" v-for="( msg, index ) in  msgList "
         :ref="el => { divs[msg.id] = el }" :key="index">
         <h4>{{ dmDateFormat(msg.created_at) }}</h4>
         <ul>
           <li class="flex" style="overflow:visible; word-break: break-all; width: 100%; ">
-            <DmMsgMenu :msg="msg" v-if="msg.sender.id === userInfo.id" @delete-msg="deleteMsg"
+            <DmMsgMenu :msg="msg" v-if="msg.sender?.id === userInfo.id" @delete-msg="deleteMsg"
               style="max-height: 100px;" />
             <span style="max-width: 85%;">{{ msg.contents }}</span>
           </li>
@@ -50,6 +52,8 @@
     </div>
     <p><button @click="sendMsg"><img src="/images/send_icon.png" alt="" title="" /></button></p>
   </div>
+  <UserReportModal :openModal="showReportModal" @closeModal="closeReportModal"
+    :user="props.selectedRoom?.joined_users[0]" />
 
   <ClientOnly>
     <el-dialog v-model="opLeaveChatModal" class="modal-area-type" width="380px">
@@ -106,7 +110,7 @@
   </ClientOnly>
 </template>
 <script setup lang="ts">
-import _, { now } from 'lodash'
+import _ from 'lodash'
 import { dmDateFormat } from '~~/scripts/utils'
 import { IChat, IMessage, IUser } from '~~/types'
 import { ElDropdown, ElDialog, ElMessage, linkEmits } from 'element-plus';
@@ -141,6 +145,7 @@ const deleteTgMsg = ref()
 const scrollContent = ref<HTMLElement | null>(null)
 const msgPolling = ref(null)
 const totalMsgCnt = ref(0)
+const showReportModal = ref(false)
 
 const userInfo = computed(() => useUser().user.value.info)
 const isFbSupported = computed(() => useCommon().setting.value.isFbSupported)
@@ -328,7 +333,6 @@ async function msgFetch(customOffset?: number) {
 }
 
 function scrollToPrev(yPos: number) {
-  console.log(yPos)
   scrollContent.value.scrollTop = scrollContent.value?.scrollHeight - yPos
 
 }
@@ -342,11 +346,14 @@ async function sendMsg() {
   const content = _.cloneDeep(inputMsg.value)
   inputMsg.value = ''
 
+  const receiver_ids = props.selectedRoom.joined_users.map((user) => {
+    return user.id
+  })
+
+
   const payload = {
     room_id: props.selectedRoom.id,
-    // receiver_ids: [
-    //   userInfo.value.id
-    // ],
+    receiver_ids,
     type: 0,
     contents: content
   }
@@ -362,6 +369,10 @@ async function sendMsg() {
     }
   } else if (error.value) {
     inputMsg.value = content
+    ElMessage({
+      message: t('fail.send.msg'),
+      type: 'error',
+    })
   }
 
   isSending.value = false
@@ -428,7 +439,6 @@ async function onDeleteMsg() {
 async function onFocus() {
   if (isFlutter.value) {
     const kbHeight = await FlutterBridge().getKeyHight()
-    console.log('kbHeight', kbHeight)
     emit('openKeyboard', Number(kbHeight))
   }
 }
@@ -439,5 +449,29 @@ function onBlur() {
     emit('closeKeyboard')
   }
 
+}
+
+function onReportUser() {
+  showReportModal.value = true
+}
+
+
+
+function closeReportModal() {
+  showReportModal.value = false
+}
+
+async function onBlockUser() {
+  await useUser().blockUser(props.selectedRoom?.joined_users[0].id)
+    .then(() => {
+
+    })
+}
+
+async function onUnBlockUser() {
+  await useUser().blockUser(props.selectedRoom?.joined_users[0].id)
+    .then(() => {
+
+    })
 }
 </script>

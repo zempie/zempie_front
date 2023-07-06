@@ -222,6 +222,8 @@ async function fetch() {
 
   if (selectedFilter.value) {
     payload['filter'] = selectedFilter.value
+  } else {
+    payload['sort'] = 'recommend'
   }
 
   if (currPlatform.value) {

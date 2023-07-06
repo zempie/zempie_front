@@ -1,6 +1,5 @@
 import { i18n } from './modules/i18n'
 import { resolve } from 'pathe'
-
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
   app: {
@@ -24,7 +23,6 @@ export default defineNuxtConfig({
         { hid: 'icon', rel: 'icon', type: 'image/x-icon', href: '~/static/favicon.ico' },
         { rel: 'stylesheet', href: 'https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Two+Tone' },
         { rel: 'stylesheet', href: 'https://unicons.iconscout.com/release/v3.0.3/css/line.css' },
-        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0' },
         { rel: "apple-touch-icon", href: 'https://s3.ap-northeast-2.amazonaws.com/zempie.com/icons/favicon-32x32.png' },
         { rel: "apple-touch-icon-precomposed", href: 'https://s3.ap-northeast-2.amazonaws.com/zempie.com/icons/favicon-32x32.png' },
       ],
@@ -82,10 +80,9 @@ export default defineNuxtConfig({
   ],
 
   modules: [
-    'cookie-universal-nuxt',
     ['@nuxtjs/i18n', i18n],
     '@vueuse/nuxt',
-    ['nuxt-compress', { gzip: { threshold: 8192 } }]
+    ['nuxt-compress', { gzip: { threshold: 8192 } }],
   ],
   nitro: {
     compressPublicAssets: true,

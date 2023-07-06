@@ -49,7 +49,7 @@
           <dt></dt>
         </dl>
         <ul>
-          <li @click="googleLogin">
+          <li @click="googleLogin" v-if="!isNotGoogleSupport">
             <img src="/images/login/google_login.jpeg" alt="google-login" title="" />
           </li>
           <li @click="facebookLogin" class="mt10">
@@ -99,6 +99,8 @@ const config = useRuntimeConfig()
 
 const currUser = ref()
 const isPageLoading = ref(true)
+
+const isNotGoogleSupport = ref()
 
 
 definePageMeta({
@@ -177,6 +179,8 @@ onBeforeMount(() => {
 
 onMounted(() => {
   nextTick(() => {
+    isNotGoogleSupport.value = navigator.userAgent.includes('kakao') || navigator.userAgent.includes('naver')
+
     window.addEventListener("message", receiveMessage, false);
   })
 })

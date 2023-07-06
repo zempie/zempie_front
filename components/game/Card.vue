@@ -2,7 +2,12 @@
   <li class="game-info" v-if="gameInfo" @mouseenter="enterCard" @mouseleave="leaveCard" style="position: relative">
     <img v-if="gameInfo.game_jam?.is_awarded" src="/images/medal2.png" alt="zem-jam-winner"
       style="position: absolute; right: 10px; top: 10px" />
-    <GameStageTag v-if="gameInfo.stage" :stage="gameInfo.stage" />
+    <div class="tag-container" v-if="!isMain">
+      <el-tag class="count-tag mx-1 uppercase mr10" effect="dark" color="#B53BFF" style="top:10px; max-width: 100px;">
+        play &nbsp;{{ gameInfo.count_over }}
+      </el-tag>
+      <GameStageTag v-if="gameInfo.stage" :stage="gameInfo.stage" />
+    </div>
 
     <div @click="moveGamePage" class="thumbnail"
       :style="`background: url( ${thumbnail} ) center center / cover no-repeat; background-size: cover;`"></div>
@@ -14,26 +19,13 @@
         </NuxtLink>
       </dt>
       <dd>
-
-        <h2 @click="playGame">
+        <h2 @click="moveGamePage">
           {{ gameInfo.title }}
         </h2>
         <p @click="moveUserPage">{{ gameInfo.user?.nickname }}</p>
         <ul>
-          <template v-for="platform in support_platforms">
+          <template v-for="  platform   in   support_platforms  ">
             <GamePlatformIcon :platform="platform" color="#000" />
-            <!-- <li v-if="Number(platform) === ePlatformType.Android">
-              <i class="uil uil-android"></i>
-            </li>
-            <li v-if="Number(platform) === ePlatformType.Window">
-              <img src="/icons/window_os.svg" alt="window" />
-            </li>
-            <li v-if="Number(platform) === ePlatformType.Mac">
-              <i class="uil uil-apple"></i>
-            </li>
-            <li v-if="Number(platform) === ePlatformType.Ios">
-              <img src="/icons/ios.svg" alt="ios" />
-            </li> -->
           </template>
 
           <li v-if="gameInfo.game_type === eGameType.Download" style="margin-top: 2px;">
@@ -50,11 +42,13 @@
 </template>
 
 <script setup lang="ts">
+import { ElTag } from 'element-plus';
 import { PropType } from 'vue'
-import { IGame, eGameType, ePlatformType } from '~~/types'
+import { IGame, eGameType, eGameStage } from '~~/types'
 const { $localePath } = useNuxtApp()
 
 const router = useRouter()
+const route = useRoute()
 
 const props = defineProps({
   gameInfo: Object as PropType<IGame>,
@@ -62,6 +56,8 @@ const props = defineProps({
 const support_platforms = computed(() => {
   return props.gameInfo.support_platform?.split(',')
 })
+
+const isMain = computed(() => route.meta.name === 'main')
 
 const thumbnail = ref(
   props.gameInfo?.url_thumb_webp ||
@@ -90,6 +86,7 @@ function playGame() {
 }
 
 function moveGamePage() {
+  console.log('??')
   useGame().setGame(props.gameInfo)
   router.push($localePath(`/game/${props.gameInfo?.pathname}`))
 }
@@ -101,6 +98,17 @@ function moveUserPage() {
 
 <style scoped lang="scss">
 .game-info {
+  .tag-container {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    max-height: 40px;
+
+    .count-tag {
+      border-color: transparent;
+
+    }
+  }
 
   dl {
     dt {
@@ -162,9 +170,21 @@ function moveUserPage() {
 
   .game-info {
     dl {
+      dt {
+        display: none;
+      }
+
       dd {
+        width: 100%;
+        margin: 0px;
+
         h2 {
-          width: 100px
+          width: 100%;
+          font-size: 14px;
+        }
+
+        p {
+          font-size: 12px;
         }
       }
     }
@@ -178,14 +198,29 @@ function moveUserPage() {
 
   .game-info {
     dl {
+      padding: 10px;
+
+      dt {
+        display: none;
+      }
+
       dd {
+        width: 100%;
+        margin: 0px;
+
         h2 {
-          width: 160px
+          width: 100%;
+          font-size: 14px;
+        }
+
+        p {
+          font-size: 12px;
         }
       }
     }
   }
 }
+
 
 @media all and (min-width: 768px) and (max-width: 991px) {
   .game-info {

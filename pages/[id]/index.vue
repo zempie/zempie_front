@@ -5,7 +5,6 @@
         <dt :key="channelInfo.nickname">
           <ChannelInfoBox :key="channelInfo.channel_id" />
           <ChannelGameBox :key="channelInfo.channel_id" :isLoading="isLoading" />
-
         </dt>
         <dd>
           <PostTimeline type="user" :isMine="isMine" :key="userId" />
@@ -22,6 +21,8 @@
 </template>
 
 <script setup lang="ts">
+import { onBeforeRouteLeave } from 'vue-router';
+
 const route = useRoute()
 
 const userChannel = computed(() => useChannel().userChannel.value)
@@ -40,13 +41,12 @@ definePageMeta({
   name: 'userChannel',
 })
 
-onBeforeUnmount(() => {
-  // useChannel().resetUserChannel()
-  console.log('unmount', useChannel().userChannel.value.info)
+
+
+onBeforeRouteLeave((to, from, next) => {
+  useChannel().resetUserChannel()
+  next()
 })
-
-
-
 </script>
 
 <style lang="scss" scoped>

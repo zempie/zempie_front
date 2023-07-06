@@ -128,8 +128,32 @@ export default function () {
       const { count } = data.value
       user.value.info.unread_msg_cnt = count
     }
+  }
 
+  const blockUser = async (userId: number) => {
+    const { data } = await useCustomAsyncFetch(`/member/${userId}/block`, getComFetchOptions('post', true))
 
+    if (data.value) {
+
+      ElMessage({
+        message: '차단되었습니다.',
+        type: 'success',
+      })
+      return data.value
+    }
+
+  }
+
+  const unblockUser = async (userId: number) => {
+    const { data } = await useCustomAsyncFetch(`/member/${userId}/unblock`, getComFetchOptions('post', true))
+
+    if (data.value) {
+      ElMessage({
+        message: '차단해제되었습니다.',
+        type: 'success',
+      })
+      return data.value
+    }
 
   }
 
@@ -153,6 +177,8 @@ export default function () {
     updateFbToken,
     updateUserCoin,
     updateUserSetting,
-    getUnreadMsg
+    getUnreadMsg,
+    blockUser,
+    unblockUser
   }
 }

@@ -229,8 +229,6 @@ export default {
     const h3Tag = content.querySelector('h3');
     const pTag = content.querySelector('p');
 
-
-
     let title = h1Tag?.innerText || h2Tag?.innerText || h3Tag?.innerText || pTag?.innerText;
 
     const firstDom = getFirstDomElementByServer(feed.content)
@@ -244,9 +242,15 @@ export default {
       desc
     }
 
+  },
 
+  /**
+   * 
+   * @param arr : db 버전 차이로 Json 인식을 못하는 경우가 있음 -> convert
+   * @returns : array
+   */
+  toArray: (arr: string | []) => {
+    return Array.isArray(arr) ? arr : JSON.parse(arr)
   }
-
-
 
 }

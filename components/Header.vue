@@ -7,7 +7,8 @@
             <NuxtLink :to="$localePath('/')">
               <img v-if="showMobileLogo" class="mobile-logo" src="/images/zempie_logo_154_155.png" alt="zempie-logo"
                 loading="lazy" height="25" width="120" />
-              <img v-else class="logo" src="/images/zempie-logo-black.png" alt="zempie-logo" loading="lazy" />
+              <img v-else class="logo" src="/images/zempie-logo-black.png" alt="zempie-logo" loading="lazy" width="120"
+                height="25" />
             </NuxtLink>
           </p>
           <button class="btn-circle-none" @click="isHeaderSideMobile = true" v-if="showHamburger">

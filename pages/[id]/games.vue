@@ -52,7 +52,7 @@ const isMine = computed(() => {
  * seo 반영은 함수안에서 되지 않으므로 최상단에서 진행함
  */
 const { data } = await useAsyncData<{ result: { target: IUserChannel } }>('channelInfo', () =>
-  $fetch(`/user/${userId.value}`, getZempieFetchOptions('get', true)),
+  $fetch(`/user/${userId.value}`, getZempieFetchOptions('get', false)),
   {
     initialCache: false
   }

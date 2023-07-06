@@ -7,8 +7,11 @@
       <UserCard v-for="user in users" :user="user">
         <template #followBtn>
           <div class="flex w100p justify-between">
-            <UserFollowBtn :user="user" class="mt20" style="width: 48%;" />
-            <DmSendBtn :user="user" class="mt20" style="width: 48%;" />
+            <UserBlockBtn v-if="user.is_blocked" :user="user" @updateList="updateList" />
+            <template v-else>
+              <UserFollowBtn :user="user" class="mt20" style="width: 48%;" />
+              <DmSendBtn :user="user" class="mt20" style="width: 48%;" />
+            </template>
           </div>
         </template>
       </UserCard>
@@ -27,6 +30,11 @@ const props = defineProps({
     default: true,
   }
 })
+const emit = defineEmits(['updateList'])
+
+function updateList(user: any) {
+  emit('updateList', user)
+}
 
 </script>
 

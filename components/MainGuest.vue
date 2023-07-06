@@ -1,4 +1,10 @@
 <template>
+  <!-- <div style="width:100vw; height:70vh;">
+    <div style="min-height: 300px; background-color: blue;"></div>
+    <input v-model="test1" style="position: absolute; bottom: 100px; background-color: red; height: 100px;" type="number">
+    <input v-model="test" style="position: absolute; bottom: 300px; background-color: red; height: 100px;" type="number">
+
+  </div> -->
   <div class="main-bg">
     <div class="main-copy">
       <h1>
@@ -7,7 +13,7 @@
     </div>
     <div class="main-visual">
       <h2>
-        <span>Recent games</span>
+        <span>Recent games </span>
       </h2>
       <ul style="margin: 40px 0px">
         <span class="card-game">
@@ -49,11 +55,14 @@ const { $localePath } = useNuxtApp()
 const GAME_COUNT = 8
 const COMMUNITY_COUNT = 4
 const POST_COUNT = 12
+const test1 = ref()
+const test = ref()
 
 const { data, pending, error } = await useCustomAsyncFetch<any>(
   createQueryUrl('/games', { limit: GAME_COUNT }),
   getZempieFetchOptions('get', false)
 )
+
 
 const {
   data: communities,
@@ -96,6 +105,7 @@ const {
   }
 
 }
+
 
 .mv-animal02 {
   z-index: 998 !important;
