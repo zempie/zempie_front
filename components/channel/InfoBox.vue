@@ -15,43 +15,42 @@
       </div>
     </ul>
   </div>
-  <ClientOnly v-else>
-    <div class="ta-myinfo mb20">
-      <div class="avatar">
-        <UserAvatar :user="channelInfo" tag="p" style="width:100px; height:100px" />
-        <UserSetting :user="channelInfo" v-if="!isMine" />
-      </div>
-      <h1>{{ channelInfo?.nickname }}</h1>
-      <h2>{{ channelInfo?.name }}</h2>
-      <div class="mt10 flex justify-between" v-if="!isMine && !channelInfo.is_blocked">
-        <UserFollowBtn :user="channelInfo" style="width: 48%;" />
-        <DmSendBtn :user="channelInfo" style="width: 48%;" />
-      </div>
-      <ul>
-        <li>
-          <NuxtLink :to="$localePath(`/${userId}`)">
-            <ChannelPostIcon />
-            <h2>{{ channelInfo?.post_cnt }}</h2>
-            <h3>{{ $t('posts') }}</h3>
-          </NuxtLink>
-        </li>
-        <li>
-          <NuxtLink :to="$localePath(`/${userId}/followers`)">
-            <ChannelFollowIcon />
-            <h2>{{ channelInfo?.follower_cnt }}</h2>
-            <h3>{{ $t('follower') }}</h3>
-          </NuxtLink>
-        </li>
-        <li>
-          <NuxtLink :to="$localePath(`/${userId}/following`)">
-            <ChannelFollowIcon />
-            <h2>{{ channelInfo?.following_cnt }}</h2>
-            <h3>{{ $t('following') }}</h3>
-          </NuxtLink>
-        </li>
-      </ul>
+
+  <div v-else class="ta-myinfo mb20">
+    <div class="avatar">
+      <UserAvatar :user="channelInfo" tag="p" style="width:100px; height:100px" />
+      <UserSetting :user="channelInfo" v-if="!isMine" />
     </div>
-  </ClientOnly>
+    <h1>{{ channelInfo?.nickname }}</h1>
+    <h2>{{ channelInfo?.name }}</h2>
+    <div class="mt10 flex justify-between" v-if="!isMine && !channelInfo.is_blocked">
+      <UserFollowBtn :user="channelInfo" style="width: 48%;" />
+      <DmSendBtn :user="channelInfo" style="width: 48%;" />
+    </div>
+    <ul>
+      <li>
+        <NuxtLink :to="$localePath(`/${userId}`)">
+          <ChannelPostIcon />
+          <h2>{{ channelInfo?.post_cnt }}</h2>
+          <h3>{{ $t('posts') }}</h3>
+        </NuxtLink>
+      </li>
+      <li>
+        <NuxtLink :to="$localePath(`/${userId}/followers`)">
+          <ChannelFollowIcon />
+          <h2>{{ channelInfo?.follower_cnt }}</h2>
+          <h3>{{ $t('follower') }}</h3>
+        </NuxtLink>
+      </li>
+      <li>
+        <NuxtLink :to="$localePath(`/${userId}/following`)">
+          <ChannelFollowIcon />
+          <h2>{{ channelInfo?.following_cnt }}</h2>
+          <h3>{{ $t('following') }}</h3>
+        </NuxtLink>
+      </li>
+    </ul>
+  </div>
 </template>
 <script setup lang="ts">
 import UserSetting from '~~/components/user/Setting.vue'
@@ -64,10 +63,8 @@ const isLoading = computed(() => useChannel().userChannel.value.isLoading)
 const userId = computed(() => route.params.id as string || channelInfo.value.nickname)
 const user = computed(() => useUser().user.value.info)
 
-
-
 const isMine = computed(() => {
-  return channelInfo.value.id === user.value.id
+  return channelInfo.value.id === user.value?.id
 })
 
 </script>
