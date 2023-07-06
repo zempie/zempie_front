@@ -2,7 +2,7 @@
   <li class="game-info" v-if="gameInfo" @mouseenter="enterCard" @mouseleave="leaveCard" style="position: relative">
     <img v-if="gameInfo.game_jam?.is_awarded" src="/images/medal2.png" alt="zem-jam-winner"
       style="position: absolute; right: 10px; top: 10px" />
-    <div class="tag-container">
+    <div class="tag-container" v-if="!isMain">
       <el-tag class="count-tag mx-1 uppercase mr10" effect="dark" color="#B53BFF" style="top:10px; max-width: 100px;">
         play &nbsp;{{ gameInfo.count_over }}
       </el-tag>
@@ -19,7 +19,6 @@
         </NuxtLink>
       </dt>
       <dd>
-
         <h2 @click="moveGamePage">
           {{ gameInfo.title }}
         </h2>
@@ -57,6 +56,8 @@ const props = defineProps({
 const support_platforms = computed(() => {
   return props.gameInfo.support_platform?.split(',')
 })
+
+const isMain = computed(() => route.meta.name === 'main')
 
 const thumbnail = ref(
   props.gameInfo?.url_thumb_webp ||

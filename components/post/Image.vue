@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="post-img">
     <div :class="[isBlind ? 'blur' : '', 'feed-img mt-3']">
       <img :src="img.url" />
     </div>
@@ -29,7 +29,7 @@ function openBlind() {
 }
 </script>
 <style scoped lang="scss">
-div {
+.post-img {
 
   .feed-img {
     max-height: 300px;
@@ -38,8 +38,6 @@ div {
   .blur::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
     backdrop-filter: blur(5px);
