@@ -74,6 +74,10 @@ async function onSubmitReport() {
       }
       break;
     // case eReportType.
+    default:
+      //TODO: 임시
+      showReportComModal.value = true
+      break;
   }
 
   emit('closeModal')

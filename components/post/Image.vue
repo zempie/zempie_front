@@ -33,15 +33,21 @@ function openBlind() {
 
   .feed-img {
     max-height: 300px;
+    padding: 10px;
   }
 
-  .blur::before {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
+  // .blur::before {
+  //   content: "";
+  //   position: absolute;
+  //   width: 100%;
+  //   height: 100%;
+  //   backdrop-filter: blur(5px);
+  //   -webkit-backdrop-filter: blur(5px);
+  // }
+
+  .blur {
     backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
+    filter: blur(5px);
   }
 
   img {

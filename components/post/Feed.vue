@@ -51,7 +51,8 @@
 
       <swiper v-else class="swiper" :modules="[Pagination]" style="height: 350px" :pagination="{ clickable: true }"
         :options="swiperOption">
-        <swiper-slide v-for="file in attatchment_files" class="flex items-center" style="height:88%;">
+        <swiper-slide v-for="file in attatchment_files" class="flex items-center content-center w100p"
+          style="height:88%;">
           <PostImage v-if="file.type === 'image'" :img="file" @update-blind="updateBlind" />
           <!-- <img v-if="file.type === 'image'" style="max-height:100%; margin: 0 auto; display: flex" :src="file.url"
             class="feed-img mt-3" /> -->
