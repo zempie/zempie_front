@@ -22,18 +22,6 @@
         <ul>
           <template v-for="platform in support_platforms">
             <GamePlatformIcon :platform="platform" color="#000" />
-            <!-- <li v-if="Number(platform) === ePlatformType.Android">
-              <i class="uil uil-android"></i>
-            </li>
-            <li v-if="Number(platform) === ePlatformType.Window">
-              <img src="/icons/window_os.svg" alt="window" />
-            </li>
-            <li v-if="Number(platform) === ePlatformType.Mac">
-              <i class="uil uil-apple"></i>
-            </li>
-            <li v-if="Number(platform) === ePlatformType.Ios">
-              <img src="/icons/ios.svg" alt="ios" />
-            </li> -->
           </template>
 
           <li v-if="gameInfo.game_type === eGameType.Download" style="margin-top: 2px;">
@@ -55,6 +43,7 @@ import { IGame, eGameType, ePlatformType } from '~~/types'
 const { $localePath } = useNuxtApp()
 
 const router = useRouter()
+const route = useRoute()
 
 const props = defineProps({
   gameInfo: Object as PropType<IGame>,
@@ -162,9 +151,21 @@ function moveUserPage() {
 
   .game-info {
     dl {
+      dt {
+        display: none;
+      }
+
       dd {
+        width: 100%;
+        margin: 0px;
+
         h2 {
-          width: 100px
+          width: 100%;
+          font-size: 14px;
+        }
+
+        p {
+          font-size: 12px;
         }
       }
     }
@@ -178,14 +179,29 @@ function moveUserPage() {
 
   .game-info {
     dl {
+      padding: 10px;
+
+      dt {
+        display: none;
+      }
+
       dd {
+        width: 100%;
+        margin: 0px;
+
         h2 {
-          width: 160px
+          width: 100%;
+          font-size: 14px;
+        }
+
+        p {
+          font-size: 12px;
         }
       }
     }
   }
 }
+
 
 @media all and (min-width: 768px) and (max-width: 991px) {
   .game-info {

@@ -18,7 +18,7 @@
   <ClientOnly v-else>
     <div class="ta-myinfo mb20">
       <div class="avatar">
-        <UserAvatar :user="channelInfo" tag="p" />
+        <UserAvatar :user="channelInfo" tag="p" style="width:100px; height:100px" />
         <UserSetting :user="channelInfo" v-if="!isMine" />
       </div>
       <h1>{{ channelInfo?.nickname }}</h1>
@@ -84,7 +84,7 @@ const isMine = computed(() => {
       margin: 0 auto;
       border: #fff 3px solid;
       border-radius: 50%;
-  }
+    }
 
     .custom-dropdown {
       cursor: pointer;

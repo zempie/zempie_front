@@ -13,7 +13,7 @@
     </div>
     <div class="main-visual">
       <h2>
-        <span>Recent games</span>
+        <span>Recent games </span>
       </h2>
       <ul style="margin: 40px 0px">
         <span class="card-game">
@@ -63,9 +63,6 @@ const { data, pending, error } = await useCustomAsyncFetch<any>(
   getZempieFetchOptions('get', false)
 )
 
-onMounted(() => {
-
-})
 
 const {
   data: communities,
@@ -108,6 +105,7 @@ const {
   }
 
 }
+
 
 .mv-animal02 {
   z-index: 998 !important;

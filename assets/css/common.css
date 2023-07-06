@@ -304,6 +304,9 @@
   background: rgba(0, 0, 0, 0.7);
 }
 
+.visual-info-left>dl>dt {
+  /* width: 50%; */
+}
 
 .visual-info-left>dl>dt dl {
   display: flex;

@@ -229,9 +229,10 @@
 }
 
 @media all and (max-width: 479px) {
+
   .header>dl {
-    width: 90%;
-    padding: 15px 0;
+    width: 100%;
+    padding: 15px 10px;
   }
 
   .header-logo-menu p {
@@ -247,7 +248,7 @@
   }
 
   .header-logo-menu p a img {
-    width: 100px;
+    min-width: 100px;
   }
 
   .header-logo-menu ul {
@@ -255,10 +256,6 @@
   }
 
   .header-search {
-    display: none;
-  }
-
-  .header-language {
     display: none;
   }
 
@@ -276,9 +273,10 @@
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
+
   .header>dl {
-    width: 470px;
-    padding: 15px 0;
+    width: 100%;
+    padding: 15px 10px;
   }
 
   .header-logo-menu p {
@@ -294,7 +292,7 @@
   }
 
   .header-logo-menu p a img {
-    width: 100px;
+    min-width: 100px;
   }
 
   .header-logo-menu ul {
@@ -302,10 +300,6 @@
   }
 
   .header-search {
-    display: none;
-  }
-
-  .header-language {
     display: none;
   }
 
@@ -331,9 +325,6 @@
     display: none;
   }
 
-  .header-language {
-    display: none;
-  }
 
   .header-login {
     display: none;

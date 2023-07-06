@@ -1,9 +1,9 @@
 <template>
   <CommonDropdown>
     <template #options>
-      <li @click="showReportModal = true">{{ $t('report.user') }}유저 신고</li>
-      <li v-if="!user.is_blocked" @click="onBlockUser">{{ $t('block.user') }}유저 차단</li>
-      <li v-else @click="onUnBlockUser">{{ $t('cancel.block') }}차단 해제</li>
+      <li @click="showReportModal = true">{{ $t('report.user') }}</li>
+      <li v-if="!user.is_blocked" @click="onBlockUser">{{ $t('block.user') }}</li>
+      <li v-else @click="onUnBlockUser">{{ $t('cancel.block') }}</li>
 
     </template>
   </CommonDropdown>
