@@ -78,32 +78,33 @@ function editComment() {
 function onClickReport() {
   reportInfo.value = {
     type: eReportType.comment,
-    title: t('report.comment.title'),//'댓글 신고',
-    desc: t('report.post.desc'),//'신고 사유를 선택해주세요. 신고 사유에 맞지 않는 신고일 경우, 해당 신소는 처리되지 않습니다. 검토까지는 최대 24시간이 소요됩니다.',
+    target_id: props.comment.id,
+    title: t('report.comment.title'),
+    desc: t('report.post.desc'),
     list: [
       {
         value: 10,
-        title: t('report.post.options1'),//'개인정보보호 위반'
+        title: t('report.post.options1'),
       },
       {
         value: 11,
-        title: t('report.post.options2'),//'불쾌하거나 민감한 콘텐츠'
+        title: t('report.post.options2'),
       },
       {
         value: 12,
-        title: t('report.post.options3'),//'불법 콘텐츠'
+        title: t('report.post.options3'),
       },
       {
         value: 13,
-        title: t('report.post.options4'),//'허가되지 않은 광고'
+        title: t('report.post.options4'),
       },
       {
         value: 14,
-        title: t('report.post.options5'),//'지식재산권 침해'
+        title: t('report.post.options5'),
       },
       {
         value: 15,
-        title: t('etc'),//'기타'
+        title: t('etc'),
       }
 
     ]

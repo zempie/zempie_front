@@ -4,7 +4,7 @@
       style="position: absolute; right: 10px; top: 10px" />
     <div class="tag-container">
       <el-tag class="count-tag mx-1 uppercase mr10" effect="dark" color="#B53BFF" style="top:10px; max-width: 100px;">
-        play {{ gameInfo.count_over }}
+        play &nbsp;{{ gameInfo.count_over }}
       </el-tag>
       <GameStageTag v-if="gameInfo.stage" :stage="gameInfo.stage" />
     </div>
@@ -20,7 +20,7 @@
       </dt>
       <dd>
 
-        <h2 @click="playGame">
+        <h2 @click="moveGamePage">
           {{ gameInfo.title }}
         </h2>
         <p @click="moveUserPage">{{ gameInfo.user?.nickname }}</p>
@@ -85,6 +85,7 @@ function playGame() {
 }
 
 function moveGamePage() {
+  console.log('??')
   useGame().setGame(props.gameInfo)
   router.push($localePath(`/game/${props.gameInfo?.pathname}`))
 }
@@ -100,6 +101,7 @@ function moveUserPage() {
     position: absolute;
     left: 10px;
     top: 10px;
+    max-height: 40px;
 
     .count-tag {
       border-color: transparent;

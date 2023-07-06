@@ -45,6 +45,8 @@
       </div>
     </div>
   </el-dialog>
+  <CommonModal :openModal="showReportComModal" :title="`${$t('finish.report.title')}`"
+    :desc="`${$t('finish.report.desc')}`" @closeModal="showReportComModal = false" :isAppendBody="true" />
 </template>
 <script setup lang="ts">
 import { ElDialog } from 'element-plus'
@@ -53,6 +55,7 @@ import { IUser } from '~~/types';
 
 const reportReason = ref()
 const additionalReportReason = ref()
+const showReportComModal = ref(false)
 
 const props = defineProps({
   openModal: {
@@ -79,6 +82,7 @@ async function onSubmitReport() {
 
   const { data } = await useCustomAsyncFetch('/report/user', getZempieFetchOptions('post', true, formData))
   if (data.value) {
+    showReportComModal.value = true
     emit('closeModal')
   }
 

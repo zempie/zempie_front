@@ -34,6 +34,8 @@
 </template>
 <script setup lang="ts">
 import { ElDialog } from 'element-plus'
+import { eReportType } from '~~/types';
+
 
 const reportReason = ref()
 const showReportComModal = ref(false)
@@ -55,10 +57,26 @@ const emit = defineEmits(['closeModal'])
 const showModal = computed(() => props.openModal)
 
 
-function onSubmitReport() {
+async function onSubmitReport() {
   if (!reportReason.value) return
+  let payload
+
+  switch (props.reportInfo.type) {
+    case eReportType.post:
+      payload = {
+        targetType: props.reportInfo.type,
+        post_id: props.reportInfo.target_id,
+        report_reason: reportReason.value
+      }
+      const { data, error, pending } = await useCustomAsyncFetch(`/post/report`, getComFetchOptions('post', true, payload))
+      if (data.value) {
+        showReportComModal.value = true
+      }
+      break;
+    // case eReportType.
+  }
+
   emit('closeModal')
-  showReportComModal.value = true
 
 }
 

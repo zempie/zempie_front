@@ -16,8 +16,8 @@
           <template #dropdown>
             <div class="more-list fixed" style="min-width: 150px">
               <a @click="opLeaveChatModal = true" id="editFeed" class="pointer">{{ t('remove.chat') }}</a>
-              <a @click="onBlockUser" class="pointer">{{ t('block.user')
-              }}</a>
+              <a @click="onBlockUser" class="pointer">{{ t('block.user') }}</a>
+              <!-- <a @click="onUnBlockUser" class="pointer">{{ t('cancel.block') }}</a> -->
               <a @click="onReportUser" class="pointer">{{ t('report.user') }}</a>
             </div>
           </template>
@@ -33,7 +33,7 @@
         <h4>{{ dmDateFormat(msg.created_at) }}</h4>
         <ul>
           <li class="flex" style="overflow:visible; word-break: break-all; width: 100%; ">
-            <DmMsgMenu :msg="msg" v-if="msg.sender.id === userInfo.id" @delete-msg="deleteMsg"
+            <DmMsgMenu :msg="msg" v-if="msg.sender?.id === userInfo.id" @delete-msg="deleteMsg"
               style="max-height: 100px;" />
             <span style="max-width: 85%;">{{ msg.contents }}</span>
           </li>
@@ -334,7 +334,6 @@ async function msgFetch(customOffset?: number) {
 }
 
 function scrollToPrev(yPos: number) {
-  console.log(yPos)
   scrollContent.value.scrollTop = scrollContent.value?.scrollHeight - yPos
 
 }
@@ -441,7 +440,6 @@ async function onDeleteMsg() {
 async function onFocus() {
   if (isFlutter.value) {
     const kbHeight = await FlutterBridge().getKeyHight()
-    console.log('kbHeight', kbHeight)
     emit('openKeyboard', Number(kbHeight))
   }
 }
@@ -467,7 +465,13 @@ function closeReportModal() {
 async function onBlockUser() {
   await useUser().blockUser(props.selectedRoom?.joined_users[0].id)
     .then(() => {
-      useChannel().updateChannelBlockInfo(true)
+
+    })
+}
+
+async function onUnBlockUser() {
+  await useUser().blockUser(props.selectedRoom?.joined_users[0].id)
+    .then(() => {
 
     })
 }

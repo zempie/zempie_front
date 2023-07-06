@@ -22,13 +22,14 @@
           <swiper :modules="[Pagination]" class="swiper-area" :slides-per-view="3" :space-between="10"
             :pagination="{ clickable: true }">
             <swiper-slide v-for="(img, idx) in snsAttachFiles.img" :key="idx">
-              <img :src="img.url" :class="img.is_blind ? 'blur' : ''">
+              <div class="img-container" :class="img.is_blind ? 'blur' : ''">
+                <img :src="img.url">
+              </div>
               <div>
                 <span @click="deleteImg(idx)"><i class="uil uil-times-circle"></i></span>
                 <span @click="blindImg(idx)"><i class="uil uil-eye"></i></span>
               </div>
             </swiper-slide>
-            <!-- <PostGridImg :images="snsAttachFiles.img" :isDelete="true" @delete-img="deleteImg" /> -->
             <div class="swiper-pagination" slot="pagination"></div>
           </swiper>
         </dd>

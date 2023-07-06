@@ -374,6 +374,7 @@ function onClickReport() {
 
   reportInfo.value = {
     type: eReportType.comment,
+    target_id: gameInfo.value.id,
     title: t('report.game.title'),
     desc: t('report.post.desc'),
     list: [

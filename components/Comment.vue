@@ -283,6 +283,7 @@ function deleteRecomment(comment: IComment) {
 function onClickReport() {
   reportInfo.value = {
     type: eReportType.comment,
+    target_id: props.comment.id,
     title: t('report.comment.title'),
     desc: t('report.post.desc'),
 

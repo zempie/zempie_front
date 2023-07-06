@@ -106,6 +106,7 @@ const isLogin = computed(() => useUser().user.value.isLogin)
 const paramId = computed(() => route.params.id as string)
 
 const isBlocked = computed(() => {
+  console.log('useChannel().userChannel.valu', useChannel().userChannel.value)
   return useChannel().userChannel.value.info.is_blocked
 })
 
@@ -157,6 +158,7 @@ const userWatcher = watch(
 )
 
 onMounted(async () => {
+  console.log('isBlocked', isBlocked)
   if (isBlocked.value) {
     isPending.value = false
     return

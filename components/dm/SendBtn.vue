@@ -1,6 +1,6 @@
 <template>
   <p v-if="!isMine" class="btn-default uppercase" @click.stop="sendMsg">
-    {{ $t('send.msg') }}
+    {{ $t('send.msg.btn') }}
   </p>
 </template>
 <script setup lang="ts">

@@ -30,13 +30,10 @@ function openBlind() {
 </script>
 <style scoped lang="scss">
 div {
-  width: auto;
-  height: 100%;
-  position: relative;
-  display: flex;
-  margin: 0 auto;
-  flex-direction: column;
 
+  .feed-img {
+    max-height: 300px;
+  }
 
   .blur::before {
     content: "";
@@ -51,8 +48,7 @@ div {
 
   img {
     object-fit: cover;
-
-
+    width: 100%;
   }
 
   button {

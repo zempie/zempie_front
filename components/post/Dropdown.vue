@@ -130,6 +130,7 @@ function onClickEdit() {
 function onClickReport() {
   reportInfo.value = {
     type: eReportType.post,
+    target_id: props.feed.id,
     title: t('report.post.title'),//'게시물 신고'
     desc: t('report.post.desc'),//'신고 사유를 선택해주세요. 신고 사유에 맞지 않는 신고일 경우, 해당 신소는 처리되지 않습니다. 검토까지는 최대 24시간이 소요됩니다.',
     list: [
@@ -157,7 +158,6 @@ function onClickReport() {
         value: 15,
         title: t('etc'),//'기타'
       }
-
     ]
   }
   showReportModal.value = true

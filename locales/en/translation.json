@@ -1038,5 +1038,6 @@
   "seo.profile.block.desc": "__STRING_NOT_TRANSLATED__",
   "ect": "Etc.",
   "fail.send.msg": "__STRING_NOT_TRANSLATED__",
-  "block.done": "__STRING_NOT_TRANSLATED__"
+  "block.done": "__STRING_NOT_TRANSLATED__",
+  "send.msg.btn": "__STRING_NOT_TRANSLATED__"
 }

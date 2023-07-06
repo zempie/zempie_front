@@ -993,7 +993,7 @@
   "enter.keyword": "검색어를 입력하세요.",
   "not.found.user": "검색된 계정이 없습니다.",
   "notFoundIndexHtml": "index.HTML 파일을 찾을 수 없습니다. 다시 한번 확인해주세요",
-  "send.msg": "__STRING_NOT_TRANSLATED__",
+  "send.msg": "메세지를 입력해주세요.",
   "is.following": " 회원님을 팔로우 중",
   "deleted.message": "삭제된 메세지입니다",
   "dm.msg.too.long": "메시지가 너무 깁니다.",
@@ -1035,6 +1035,7 @@
   "seo.profile.block.title": "차단 목록",
   "seo.profile.block.desc": "차단 유저 리스트",
   "ect": "기타",
-  "fail.send.msg": "메세지를 보낼 수 없는 유저입니다.",
-  "block.done": "해당 유저를 블락했습니다."
+  "fail.send.msg": "메시지를 보낼 수 없는 유저입니다.",
+  "block.done": "해당 유저를 블락했습니다.",
+  "send.msg.btn": "메시지 보내기"
 }
