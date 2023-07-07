@@ -42,7 +42,7 @@
           </dt>
         </dl>
       </div>
-      <div class="la-bottom">
+      <div class="la-bottom flex column" style="overflow:hidden">
         <dl>
           <dt></dt>
           <dd>{{ $t('login.text3') }}</dd>

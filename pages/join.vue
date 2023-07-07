@@ -31,7 +31,7 @@
                 <i class="uil uil-check"></i>{{ error.$message }}
               </h3>
             </li>
-            <li>
+            <li v-if="isFlutter === false">
               <input type="text" name="register-username" v-model="v$.username.$model" title="" :placeholder="$t('name')"
                 class="w100p h60" autocomplete="off" />
               <h3 class="input-errors" v-for="error of v$.username.$errors" :key="error.$uid">
@@ -39,15 +39,16 @@
               </h3>
             </li>
             <li>
-              <input type="text" name="register-nickname" v-model="v$.nickname.$model" title=""
-                :placeholder="$t('nickname')" class="w100p h60" autocomplete="off" />
-              <h3 class="input-errors" v-for="error of v$.nickname.$errors" :key="error.$uid">
+              <!-- <input type="text" name="register-nickname" v-model="v$.nickname.$model" title=""
+                :placeholder="$t('nickname')" class="w100p h60" autocomplete="off" /> -->
+                <CommonPrefixInput @change-input="onChangeNickname" :inputValue="form.nickname" :placeholder="$t('name')" />
+            <small class="text-red" v-if="isUsernameErr">{{ userNameErr }}</small>
+              <!-- <h3 class="input-errors" v-for="error of v$.nickname.$errors" :key="error.$uid">
                 <i class="uil uil-check"></i>{{ error.$message }}
-              </h3>
+              </h3> -->
             </li>
           </ul>
           <div class="login-agreement-container">
-
             <div class="lam-content">
               <ul>
                 <li>
@@ -96,6 +97,7 @@ import shared from '~~/scripts/shared';
 import { useGtag } from 'vue-gtag-next';
 import flutterBridge from '~~/scripts/flutterBridge'
 
+const specialCharRegex = /[\{\}\[\]\/?,;:|\)*~`!^\-+<>@\#$%&\\\=\(\'\"]/;
 
 const { t, locale } = useI18n()
 const { $firebaseAuth, $cookies, $localePath } = useNuxtApp()
@@ -110,6 +112,9 @@ const form = reactive({
   policyAgreement: false
 })
 const errorAgree = ref(false);
+const userNameErr = ref('')
+const isUsernameErr = ref(false)
+
 
 const emailValidator = helpers.regex(emailRegex);
 const pwdValidator = helpers.regex(passwordRegex);
@@ -132,13 +137,12 @@ const rules = computed(() => {
       required: helpers.withMessage(t('login.empty.pwd'), required),
       pwdValidator: helpers.withMessage(t('login.pwd.format.err'), pwdValidator)
     },
-    nickname: {
-      required: helpers.withMessage(t('join.empty.nickname'), required),
-      pwdValidator: helpers.withMessage(t('join.nickname.format.err'), nicknameValidator),
-
-    },
+    // nickname: {
+    //   required: helpers.withMessage(t('join.empty.nickname'), required),
+    //   pwdValidator: helpers.withMessage(t('join.nickname.format.err'), nicknameValidator),
+    // },
     username: {
-      required: helpers.withMessage(t('join.name.empty.err'), required),
+      required: !isFlutter.value ? helpers.withMessage(t('join.name.empty.err'), required) : false,
       maxLength: helpers.withMessage(t('join.name.format.err'), maxLength(100)),
     }
   }
@@ -170,13 +174,6 @@ definePageMeta({
 });
 
 onMounted(() => {
-  // window.addEventListener('beforeunload', function (e) {
-  //   e.preventDefault();
-  //   e.returnValue = '';
-  //   removeFbUser()
-  // });
-
-  console.log('fUser.value', fUser.value)
   if (fUser.value) {
     form.email = fUser.value.email
     delete form.password
@@ -187,11 +184,6 @@ shared.createHeadMeta(t('seo.join.title'), t('seo.join.desc'))
 
 
 onBeforeRouteLeave((to, from, next) => {
-  // window.removeEventListener('beforeunload', function (e) {
-  //   e.preventDefault();
-  //   e.returnValue = '';
-  // });
-  console.log('router leave??')
   removeFbUser()
   next()
 
@@ -215,6 +207,7 @@ const isSubmitActive = computed(() => {
   if (fUser.value) {
     v$.value.email.$validate()
   }
+  if(isUsernameErr.value) return false
   return !!form.policyAgreement && !!v$.value.$dirty
 })
 
@@ -262,7 +255,9 @@ async function register() {
  * zempie db 등록
  */
 async function joinZempie() {
-  console.log('join!')
+  if(isFlutter.value){
+    form.usernmae = form.nickname
+  }
   const payload = {
     name: form.username,
     nickname: form.nickname
@@ -290,9 +285,70 @@ async function joinZempie() {
     ElMessage.error((error.value as any))
   }
 }
+
+
+
+
+async function onChangeNickname(input?: string) {
+  const MAX_LIMIT = 15;
+  const MIN_LIMIT = 4;
+
+  form.nickname = input
+  clearError();
+
+
+  if (!nicknameRegex.test(form.nickname)) {
+    console.log('?')
+    if ( form.nickname.length > MAX_LIMIT) {
+      showError(`${t('username.max.err1')} ${MAX_LIMIT}${t('username.max.err2')}`);
+    } else if ( form.nickname.length < MIN_LIMIT) {
+      showError(`${t('username.max.err1')} ${MIN_LIMIT}${t('username.min.err2')}`);
+    } else if (specialCharRegex.test( form.nickname)) {
+      showError(t('join.nickname.format.err'));
+    } else {
+      showError(t('join.nickname.format.err'));
+    }
+    return
+  }
+
+  try {
+    const { data } = await useCustomAsyncFetch<{ result: { success: boolean } }>(
+      '/user/has-nickname',
+      getZempieFetchOptions('post', false, { nickname:  form.nickname })
+    );
+    if (data.value.result.success) {
+      showError(t('used.id'));
+    } else {
+  clearError();
+
+    }
+  } catch (error) {
+    console.error(error);
+  }
+
+}
+
+function showError(message: string) {
+  isUsernameErr.value = true;
+  userNameErr.value = message;
+}
+
+function clearError() {
+  isUsernameErr.value = false;
+  userNameErr.value = '';
+}
+
 </script>
 
 <style lang="scss" scoped>
+:deep(.input-box){
+  height:60px;
+  padding:0px;
+  .custom-input{
+    padding:0px 15px;
+  } 
+
+}
 /*약관 동의*/
 .lam-content h3 {
   color: #C5292A;

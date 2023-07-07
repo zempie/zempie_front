@@ -13,7 +13,7 @@
               {{ t('visit.userChannel') }}
             </NuxtLink>
             <NuxtLink class="pointer" v-if="user" @click="onClickReport">{{ t('post.report') }}</NuxtLink>
-            <!-- <a v-if="user" @click="userReportModalOpen">{{ t('post.report') }}유저 신고하기</a> -->
+            <a v-if="user" class="pointer" @click="showUserReportModal = true">{{ t('user.report') }}</a>
           </template>
         </div>
       </template>
@@ -56,6 +56,10 @@
   </PostModal>
 
   <ReportModal :openModal="showReportModal" :reportInfo="reportInfo" @closeModal="showReportModal = false" />
+
+  <UserReportModal  :openModal="showUserReportModal" @closeModal="closeUserReportModal"
+    :user="feed.user" />
+
 </template>
 <script lang="ts" setup>
 import { PropType } from 'vue'
@@ -76,6 +80,7 @@ const isTextEditorOpen = ref(false)
 const showDeletePostModal = ref(false)
 
 const showReportModal = ref(false)
+const showUserReportModal= ref(false)
 const reportInfo = ref()
 
 const props = defineProps({
@@ -161,6 +166,11 @@ function onClickReport() {
     ]
   }
   showReportModal.value = true
+}
+
+
+function closeUserReportModal() {
+  showUserReportModal.value = false
 }
 </script>
 

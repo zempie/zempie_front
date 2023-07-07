@@ -1,7 +1,7 @@
 <template>
   <div class="input-box">
     <span class="prefix">{{ prefix }}</span>
-    <input type="text" class="w100p" v-model="inputData" @input="onInputDebounce()" />
+    <input  type="text" class="w100p custom-input" v-model="inputData" @input="onInputDebounce()" :placeholder=placeholder />
   </div>
 </template>
 <script setup lang="ts">
@@ -9,7 +9,8 @@ import { debounce } from '~/scripts/utils'
 
 const props = defineProps({
   prefix: String,
-  inputValue: String
+  inputValue: String,
+  placeholder:String
 })
 
 const inputData = ref(props.inputValue)
