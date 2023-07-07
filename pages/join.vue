@@ -296,7 +296,6 @@ async function onChangeNickname(input?: string) {
 
 
   if (!nicknameRegex.test(form.nickname)) {
-    console.log('?')
     if ( form.nickname.length > MAX_LIMIT) {
       showError(`${t('username.max.err1')} ${MAX_LIMIT}${t('username.max.err2')}`);
     } else if ( form.nickname.length < MIN_LIMIT) {
@@ -317,8 +316,8 @@ async function onChangeNickname(input?: string) {
     if (data.value.result.success) {
       showError(t('used.id'));
       if(isFlutter.value){
-    form.username = form.nickname
-  }
+      form.nickname = form.username
+    }
     } else {
   clearError();
 
