@@ -1041,5 +1041,6 @@
   "block.done": "That user is already blocked.",
   "send.msg.btn": "Send",
   "violent.contents": "Sensitive content",
-  "hide": "Hide"
+  "hide": "Hide",
+  "unblock.done":"Unblocked"
 }

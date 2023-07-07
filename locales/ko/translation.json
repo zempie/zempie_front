@@ -1038,7 +1038,7 @@
   "fail.send.msg": "메세지를 보낼 수 없는 유저입니다.",
   "block.done": "해당 유저를 블락했습니다.",
   "send.msg.btn": "메시지 보내기",
-
   "violent.contents": "민감한 컨텐츠",
-  "hide": "숨기기"
+  "hide": "숨기기",
+  "unblock.done":"차단해제되었습니다"
 }
