@@ -47,11 +47,6 @@
   }
 }
 
-@media all and (min-width: 768px) and (max-width: 991px) {}
-
-@media all and (min-width: 992px) and (max-width: 1199px) {}
-
-@media all and (min-width: 1200px) {}
 
 /* 상단영역 - PC */
 .header {
@@ -441,11 +436,6 @@
   }
 }
 
-@media all and (min-width: 768px) and (max-width: 991px) {}
-
-@media all and (min-width: 992px) and (max-width: 1199px) {}
-
-@media all and (min-width: 1200px) {}
 
 /* 상단영역 - [드롭다운] 메시지 */
 .header-message-dropdown .v-dropdown-menu__container {
@@ -529,37 +519,6 @@
 .header-message>ul>li.active {
   background-color: #f1f1f1;
 }
-
-/* 
-.header-message>ul>li>dl {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-.header-message>ul>li>dl>dd {
-  position: relative;
-  width: 23%;
-  text-align: right;
-} */
-
-/* .header-message>ul>li>dl>dd>span {
-  display: inline-block;
-  position: absolute;
-  margin: -25px 0 0 -30px;
-  width: 50px;
-  height: 50px;
-  text-align: center;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 50px;
-  color: #ff6e17;
-  border-radius: 50%;
-  background: rgba(249, 115, 22, 0.15);
-  border: 2px solid #fff;
-  box-shadow: 0px 4px 9px rgba(0, 0, 0, 0.06);
-} */
 
 .header-message>ul>li>dl>dd>h4 {
   margin-bottom: 5px;
@@ -690,11 +649,6 @@
   }
 }
 
-@media all and (min-width: 768px) and (max-width: 991px) {}
-
-@media all and (min-width: 992px) and (max-width: 1199px) {}
-
-@media all and (min-width: 1200px) {}
 
 /* 상단영역 - [드롭다운] 설정 */
 .header-setting-dropdown .v-dropdown-menu__container {
@@ -765,16 +719,6 @@
 .header-setting>p {
   margin-top: 30px;
 }
-
-@media all and (max-width: 479px) {}
-
-@media all and (min-width: 480px) and (max-width: 767px) {}
-
-@media all and (min-width: 768px) and (max-width: 991px) {}
-
-@media all and (min-width: 992px) and (max-width: 1199px) {}
-
-@media all and (min-width: 1200px) {}
 
 /* 하단영역 */
 .footer {
@@ -1154,7 +1098,3 @@
     display: none;
   }
 }
-
-@media all and (min-width: 992px) and (max-width: 1199px) {}
-
-@media all and (min-width: 1200px) {}

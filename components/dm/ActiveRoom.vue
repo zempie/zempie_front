@@ -306,7 +306,6 @@ async function msgFetch(customOffset?: number) {
     totalMsgCnt.value = totalCount
 
     if (customOffset && messages.length) {
-      console.log('possling new message')
       lastMsg.value = messages[messages.length - 1]
     }
     if (order.value === 'asc') {
