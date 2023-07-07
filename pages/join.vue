@@ -31,7 +31,7 @@
                 <i class="uil uil-check"></i>{{ error.$message }}
               </h3>
             </li>
-            <li v-if="isFlutter !== false">
+            <li v-if="isFlutter === false">
               <input type="text" name="register-username" v-model="v$.username.$model" title="" :placeholder="$t('name')"
                 class="w100p h60" autocomplete="off" />
               <h3 class="input-errors" v-for="error of v$.username.$errors" :key="error.$uid">
