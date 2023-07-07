@@ -255,9 +255,7 @@ async function register() {
  * zempie db 등록
  */
 async function joinZempie() {
-  if(isFlutter.value){
-    form.usernmae = form.nickname
-  }
+  
   const payload = {
     name: form.username,
     nickname: form.nickname
@@ -318,6 +316,9 @@ async function onChangeNickname(input?: string) {
     );
     if (data.value.result.success) {
       showError(t('used.id'));
+      if(isFlutter.value){
+    form.usernmae = form.nickname
+  }
     } else {
   clearError();
 
