@@ -31,7 +31,7 @@
                 <i class="uil uil-check"></i>{{ error.$message }}
               </h3>
             </li>
-            <li v-if="isFlutter === false">
+            <li v-if="isFlutter !== false">
               <input type="text" name="register-username" v-model="v$.username.$model" title="" :placeholder="$t('name')"
                 class="w100p h60" autocomplete="off" />
               <h3 class="input-errors" v-for="error of v$.username.$errors" :key="error.$uid">
@@ -119,7 +119,6 @@ const isUsernameErr = ref(false)
 
 const emailValidator = helpers.regex(emailRegex);
 const pwdValidator = helpers.regex(passwordRegex);
-const nicknameValidator = helpers.regex(nicknameRegex)
 
 const fUser = computed(() => useUser().user.value.fUser)
 const isLogin = computed(() => useUser().user.value.isLogin)
@@ -138,10 +137,6 @@ const rules = computed(() => {
       required: helpers.withMessage(t('login.empty.pwd'), required),
       pwdValidator: helpers.withMessage(t('login.pwd.format.err'), pwdValidator)
     },
-    // nickname: {
-    //   required: helpers.withMessage(t('join.empty.nickname'), required),
-    //   pwdValidator: helpers.withMessage(t('join.nickname.format.err'), nicknameValidator),
-    // },
     username: {
       maxLength: helpers.withMessage(t('join.name.format.err'), maxLength(100)),
     }
@@ -207,7 +202,7 @@ function removeFbUser() {
 const v$ = useVuelidate(rules, form)
 
 const isSubmitActive = computed(() => {
-  if (!form.email || !form.password) {
+  if (!form.email || !form.password || !form.policyAgreement) {
     return false;
   }
   if (fUser.value) {
@@ -215,8 +210,10 @@ const isSubmitActive = computed(() => {
   }
   if (isUsernameErr.value) return false
 
-
-  return !!form.policyAgreement && !!v$.value.$dirty
+  if (v$.value.email.$error || v$.value.password.$error) {
+    return false;
+  }
+  return true
 })
 
 
