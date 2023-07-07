@@ -41,8 +41,9 @@
             <li>
               <!-- <input type="text" name="register-nickname" v-model="v$.nickname.$model" title=""
                 :placeholder="$t('nickname')" class="w100p h60" autocomplete="off" /> -->
-                <CommonPrefixInput @change-input="onChangeNickname" :inputValue="form.nickname" :placeholder="$t('name')" />
-            <small class="text-red" v-if="isUsernameErr">{{ userNameErr }}</small>
+              <CommonPrefixInput @change-input="onChangeNickname" :inputValue="form.nickname"
+                :placeholder="$t('nickname')" />
+              <small class="text-red" v-if="isUsernameErr">{{ userNameErr }}</small>
               <!-- <h3 class="input-errors" v-for="error of v$.nickname.$errors" :key="error.$uid">
                 <i class="uil uil-check"></i>{{ error.$message }}
               </h3> -->
@@ -142,10 +143,12 @@ const rules = computed(() => {
     //   pwdValidator: helpers.withMessage(t('join.nickname.format.err'), nicknameValidator),
     // },
     username: {
-      required: !isFlutter.value ? helpers.withMessage(t('join.name.empty.err'), required) : false,
       maxLength: helpers.withMessage(t('join.name.format.err'), maxLength(100)),
     }
   }
+
+  if (!isFlutter.value)
+    formRule.username['required'] = helpers.withMessage(t('join.name.empty.err'), required)
 
   if (fUser.value) {
     delete formRule.password
@@ -204,10 +207,15 @@ function removeFbUser() {
 const v$ = useVuelidate(rules, form)
 
 const isSubmitActive = computed(() => {
+  if (!form.email || !form.password) {
+    return false;
+  }
   if (fUser.value) {
     v$.value.email.$validate()
   }
-  if(isUsernameErr.value) return false
+  if (isUsernameErr.value) return false
+
+
   return !!form.policyAgreement && !!v$.value.$dirty
 })
 
@@ -255,7 +263,7 @@ async function register() {
  * zempie db 등록
  */
 async function joinZempie() {
-  
+
   const payload = {
     name: form.username,
     nickname: form.nickname
@@ -296,11 +304,11 @@ async function onChangeNickname(input?: string) {
 
 
   if (!nicknameRegex.test(form.nickname)) {
-    if ( form.nickname.length > MAX_LIMIT) {
+    if (form.nickname.length > MAX_LIMIT) {
       showError(`${t('username.max.err1')} ${MAX_LIMIT}${t('username.max.err2')}`);
-    } else if ( form.nickname.length < MIN_LIMIT) {
+    } else if (form.nickname.length < MIN_LIMIT) {
       showError(`${t('username.max.err1')} ${MIN_LIMIT}${t('username.min.err2')}`);
-    } else if (specialCharRegex.test( form.nickname)) {
+    } else if (specialCharRegex.test(form.nickname)) {
       showError(t('join.nickname.format.err'));
     } else {
       showError(t('join.nickname.format.err'));
@@ -311,15 +319,16 @@ async function onChangeNickname(input?: string) {
   try {
     const { data } = await useCustomAsyncFetch<{ result: { success: boolean } }>(
       '/user/has-nickname',
-      getZempieFetchOptions('post', false, { nickname:  form.nickname })
+      getZempieFetchOptions('post', false, { nickname: form.nickname })
     );
     if (data.value.result.success) {
+      console.log('suss')
       showError(t('used.id'));
-      if(isFlutter.value){
-      form.nickname = form.username
-    }
     } else {
-  clearError();
+      if (isFlutter.value) {
+        form.username = form.nickname
+      }
+      clearError();
 
     }
   } catch (error) {
@@ -341,14 +350,16 @@ function clearError() {
 </script>
 
 <style lang="scss" scoped>
-:deep(.input-box){
-  height:60px;
-  padding:0px;
-  .custom-input{
-    padding:0px 15px;
-  } 
+:deep(.input-box) {
+  height: 60px;
+  padding: 0px;
+
+  .custom-input {
+    padding: 0px 15px;
+  }
 
 }
+
 /*약관 동의*/
 .lam-content h3 {
   color: #C5292A;
