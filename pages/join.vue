@@ -317,7 +317,7 @@ async function onChangeNickname(input?: string) {
     if (data.value.result.success) {
       showError(t('used.id'));
       if(isFlutter.value){
-    form.usernmae = form.nickname
+    form.username = form.nickname
   }
     } else {
   clearError();
