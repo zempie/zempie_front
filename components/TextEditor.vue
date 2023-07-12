@@ -71,7 +71,7 @@
               <input type="file" @change="onSelectImageFile" multiple id="image-selector" accept=image/* ref="image" />
             </div>
           </div>
-          <div style="width: 30px" @click="uploaVideoFile">
+          <div v-if="!isIOS" style="width: 30px" @click="uploaVideoFile">
             <a><i class="uil uil-play-circle pointer"></i></a>
             <div style="height: 0px; overflow: hidden">
               <input type="file" @change="onSelectVideoFile" accept=video/* ref="video" />
@@ -251,6 +251,8 @@ const textInterval = ref()
 const prevText = ref()
 const saveId = ref(Date.now())
 
+const isIOS = ref(false)
+
 const gameInfo = computed(() => useGame().game.value.info)
 const communityInfo = computed(() => useCommunity().community.value.info)
 const userGames = computed(() => useUser().user.value.info.games)
@@ -280,6 +282,10 @@ onBeforeMount(() => {
 })
 
 onMounted(async () => {
+  nextTick(() => {
+    isIOS.value = /(iPhone|iPod|iPad)/i.test(navigator.userAgent);
+    // navigator.userAgent.includes('kakao') || navigator.userAgent.includes('naver')
+  })
 
   colorLog('text editor', 'pink')
   //새로고침 시 알람
