@@ -6,7 +6,7 @@ import { isObjEmpty } from "~~/scripts/utils";
 import flutterBridge from "~~/scripts/flutterBridge";
 
 export default function () {
-  const { $firebaseAuth, $cookies } = useNuxtApp()
+  const { $firebaseAuth, $i18n } = useNuxtApp()
   const config = useRuntimeConfig()
   const router = useRouter();
 
@@ -134,9 +134,10 @@ export default function () {
     const { data } = await useCustomAsyncFetch(`/member/${userId}/block`, getComFetchOptions('post', true))
 
     if (data.value) {
+      console.log()
 
       ElMessage({
-        message: '차단되었습니다.',
+        message: $i18n.t('block.done'),
         type: 'success',
       })
       return data.value
@@ -149,7 +150,7 @@ export default function () {
 
     if (data.value) {
       ElMessage({
-        message: '차단해제되었습니다.',
+        message: $i18n.t('unblock.done'),
         type: 'success',
       })
       return data.value

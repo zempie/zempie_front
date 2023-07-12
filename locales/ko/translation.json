@@ -1042,5 +1042,6 @@
   "hide": "숨기기",
   "sort.recommend": "추천 순",
   "sort.latest": "최신 순",
-  "all": "전체"
+  "all": "전체",
+  "unblock.done":"차단해제되었습니다"
 }

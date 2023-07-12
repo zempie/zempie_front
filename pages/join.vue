@@ -201,20 +201,63 @@ function removeFbUser() {
 
 const v$ = useVuelidate(rules, form)
 
-const isSubmitActive = computed(() => {
-  if (!form.email || !form.password || !form.policyAgreement) {
-    return false;
-  }
-  if (fUser.value) {
-    v$.value.email.$validate()
-  }
-  if (isUsernameErr.value) return false
 
-  if (v$.value.email.$error || v$.value.password.$error) {
-    return false;
+watch(form,
+  async (newValue) => {
+    if (isFlutter.value) {
+      if (!form.email || !form.policyAgreement) {
+        console.log(1)
+        return isSubmitActive.value = false;
+      }
+    } else {
+      if (!form.email || !form.policyAgreement) {
+        console.log(2)
+        return isSubmitActive.value = false;
+      }
+
+    }
+
+    if (fUser.value) {
+      v$.value.email.$validate()
+      if (!isFlutter.value) {
+        if (v$.value.email.$error) {
+          console.log(3)
+          return isSubmitActive.value = false;
+        }
+      }
+    } else {
+      if (v$.value.password.$error || !form.password) {
+        console.log(4)
+
+        return isSubmitActive.value = false;
+      }
+    }
+    if (isUsernameErr.value) {
+      console.log(5)
+
+      return isSubmitActive.value = false;
+    }
+    return isSubmitActive.value = true;
+
   }
-  return true
-})
+)
+
+
+const isSubmitActive = ref(false)
+// computed(() => {
+//   if (!form.email || !form.password || !form.policyAgreement) {
+//     return false;
+//   }
+//   if (fUser.value) {
+//     v$.value.email.$validate()
+//   }
+//   if (isUsernameErr.value) return false
+
+//   if (v$.value.email.$error || v$.value.password.$error) {
+//     return false;
+//   }
+//   return true
+// })
 
 
 
