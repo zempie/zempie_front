@@ -1,0 +1,261 @@
+<template>
+  <div class="studio-upload-input">
+    <div class="sui-input">
+      <div class="suii-title">{{ $t('addGameInfo.title') }}</div>
+      <dl class="suii-content">
+        <dt>
+          {{ $t('addGameInfo.game.title') }}
+          <span class="text-red">*</span>
+        </dt>
+        <dd>
+          <input v-model="v$.name.$model" type="text" name="title" title="game title" id="gameTitle"
+            :placeholder="$t('addGameInfo.game.title')" class="w100p" />
+          <TransitionGroup name="fade">
+            <p class="input-errors" v-for="error of v$.name.$errors" :key="error.$uid">
+              <i class="uil uil-check"></i>{{ error.$message }}
+            </p>
+          </TransitionGroup>
+        </dd>
+      </dl>
+
+      <dl class="suii-content">
+        <dt>
+          {{ $t('addGameInfo.game.desc') }}<span class="text-red">*</span>
+        </dt>
+        <dd>
+          <textarea v-model="v$.description.$model" name="description" title="game description" id="gameDesc"
+            :placeholder="$t('addGameInfo.game.desc')" class="w100p h100"></textarea>
+
+          <TransitionGroup name="fade">
+            <p class="input-errors" v-for="error of v$.description.$errors" :key="error.$uid">
+              <i class="uil uil-check"></i>{{ error.$message }}
+            </p>
+          </TransitionGroup>
+        </dd>
+      </dl>
+      <dl class="suii-content">
+        <dt>
+          {{ $t('addGameInfo.game.tags') }}<span class="text-red">*</span>
+        </dt>
+        <dd>
+          <div class="chip-container">
+            <div class="chip" v-for="(chip, i) of hashtagsArr" :key="chip.id">
+              {{ chip }}
+              <i class="uil uil-times" @click="deleteChip(i)"></i>
+            </div>
+
+            <input id="gameTag" v-model="chipInput" @blur="saveChip" @keyup.enter="saveChip"
+              @keydown.delete="backspaceDelete" />
+          </div>
+          <TransitionGroup name="fade">
+            <p class="input-errors" v-for="error of v$.hashtags.$errors" :key="error.$uid">
+              <i class="uil uil-check"></i>{{ error.$message }}
+            </p>
+          </TransitionGroup>
+          <p class="mt10">
+            {{ $t('addGameInfo.game.tags.info') }}
+          </p>
+        </dd>
+      </dl>
+
+      <dl class="suii-content">
+        <dt>
+          {{ $t('addGameInfo.game.thumbnail') }}
+          <span class="text-red">*</span>
+        </dt>
+        <dd>
+          <ul class="image-upload">
+            <li>
+              <div :style="prevThumbnail && {
+                background:
+                  'url(' +
+                  prevThumbnail +
+                  ') center center / cover no-repeat',
+                'background-size': 'cover',
+                border: '#e9e9e9 2px solid',
+              }
+                ">
+                <div style="height: 0px; overflow: hidden">
+                  <input id="image-selector" type="file" @change="onImgChange"
+                    accept="image/jpeg, image/png, image/svg, image/jpg, image/webp, image/bmp," ref="thumbnail"
+                    name="fileInput" />
+                </div>
+                <template v-if="!prevThumbnail">
+                  <p><i class="uil uil-image-v"></i></p>
+                  <h2>
+                    {{ $t('addGameInfo.game.thumbnail.size') }} 512* 512<br />
+                    (up to 4MB)
+                  </h2>
+                </template>
+              </div>
+
+              <transition name="component-fade" mode="out-in">
+                <p class="valid-err" :class="isThumbErr ? 'active' : ''">
+                  {{ $t('addGameInfo.game.thumbnail.err') }}
+                </p>
+              </transition>
+              <p style="
+                                                                                                 width: 100%;
+                                                                                                 display: flex;
+                                                                                                 justify-content: space-around;
+                                                                                               ">
+                <button class="btn-gray" @click="uploadThumbnail">
+                  <i class="uil uil-upload"></i>&nbsp;
+                  {{ $t('addGameInfo.game.thumbnail') }}
+                </button>
+                <button v-if="prevThumbnail" class="btn-circle-icon" @click="deleteThumbnail">
+                  <i class="uil uil-trash-alt"></i>
+                </button>
+              </p>
+            </li>
+          </ul>
+        </dd>
+      </dl>
+      <dl class="suii-content">
+        <dt>
+          {{ $t('previewImage.title') }}
+          <el-tooltip effect="customized" :content="$t('studio.preview.info')" placement="bottom">
+            <i class="uil uil-question-circle" style="color: #999"></i>
+          </el-tooltip>
+        </dt>
+
+        <dd>
+          <ul class="image-upload">
+            <li>
+              <div :style="prevGif && {
+                background:
+                  'url(' +
+                  prevGif +
+                  ') center center / cover no-repeat',
+                'background-size': 'cover',
+                border: '#e9e9e9 2px solid',
+              }
+                ">
+                <div style="height: 0px; overflow: hidden">
+                  <input type="file" @change="onGifChange" accept=image/gif ref="gifThumbnail" name="fileInput" />
+                </div>
+                <template v-if="!prevGif">
+                  <p><i class="uil uil-image-v"></i></p>
+                  <h2>
+                    {{ $t('addGameInfo.game.thumbnail.size') }} 512* 512<br />
+                    (up to 4MB)
+                  </h2>
+                </template>
+              </div>
+              <p style="
+                                                                                  width: 100%;
+                                                                                  display: flex;
+                                                                                  justify-content: space-around;
+                                                                                ">
+                <button class="btn-gray" @click="uploadGif">
+                  <i class="uil uil-upload"></i>
+                  {{ $t('addGameInfo.game.thumbnail') }}
+                </button>
+                <button v-if="prevGif" class="btn-circle-icon" @click="deleteGif">
+                  <i class="uil uil-trash-alt"></i>
+                </button>
+              </p>
+            </li>
+          </ul>
+        </dd>
+      </dl>
+
+      <dl class="suii-content">
+        <dt style="padding-top: 5px">{{ $t('auto.game.id.generator') }}</dt>
+        <dd>
+          <label class="switch-button">
+            <input type="checkbox" v-model="isAuthGamePath" />
+            <span class="onoff-switch"></span>
+          </label>
+        </dd>
+      </dl>
+      <transition name="component-fade" mode="out-in">
+        <dl class="suii-content" v-if="!isAuthGamePath">
+          <dt>
+            {{ $t('addGameInfo.game.id') }}
+          </dt>
+          <dd>
+            <input v-model="v$.pathname.$model" type="text" class="game-id-input w90p" :title="$t('addGameInfo.game.id')"
+              :placeholder="$t('addGameInfo.game.id')" @input="onInputPathname" />
+            <transition name="component-fade" mode="out-in">
+              <p class="valid-err" :class="hasPathnameErr && 'active'">
+                {{ pathnameValidErrMsg }}
+              </p>
+            </transition>
+          </dd>
+
+          <!-- <ClipLoader v-if="waitGamePath" :color="'#ff6e17'" :size="'20px'"></ClipLoader> -->
+          <!-- <a @click="checkPathName" class="btn-default w150">
+                {{ $t('addGameInfo.game.id.check') }}
+              </a> -->
+        </dl>
+      </transition>
+    </div>
+    <!-- <ul class="sui-btn">
+      <li>
+        <a @click="prevPage" class="btn-line w150"><i class="uil uil-angle-left-b"></i>
+          {{ $t('previous') }}
+        </a>
+      </li>
+      <li>
+        <a v-if="isEditInfo" @click="updateGame" class="btn-default w150">
+          {{ $t('update') }}
+        </a>
+        <a v-else-if="uploadProject.form.stage === eGameStage.DEV" @click="uploadGame" class="btn-default w150">
+          {{ $t('upload') }}
+        </a>
+        <a v-else @click="save" class="btn-default w150">
+          {{ $t('next') }}
+          <i class="uil uil-angle-right-b"></i></a>
+      </li>
+    </ul> -->
+    <div v-if="editProject.info?.id" class="sui-input" style="margin-top: 100px">
+      <dl class="suii-content delete-area">
+        <dt>
+          {{ $t('addGameInfo.delete.game') }}
+        </dt>
+        <dd class="game-delete-btn">
+          <a @click="isDeleteModalOpen = true" class="btn-default w150">
+            {{ $t('addGameInfo.delete') }}
+          </a>
+        </dd>
+      </dl>
+    </div>
+
+  </div>
+</template>
+<script setup lang="ts">
+import { required, helpers, maxLength } from '@vuelidate/validators'
+import useVuelidate from '@vuelidate/core'
+
+const { t, locale } = useI18n()
+
+let form = reactive({
+  name: '',
+  pathname: '',
+  description: '',
+  hashtags: '',
+  project_picture: null,
+  project_picture2: null,
+})
+
+const rules = computed(() => {
+  const formRule = {
+    name: {
+      required: helpers.withMessage(t('addGameInfo.game.title.err'), required),
+    },
+    pathname: { required },
+    description: {
+      required: helpers.withMessage(t('addGameInfo.game.desc.err'), required),
+    },
+    hashtags: {
+      required: helpers.withMessage(t('addGameInfo.game.tags.err'), required),
+    },
+  }
+
+  return formRule
+})
+
+const v$ = useVuelidate(rules, form)
+</script>
+<style scoped lang="scss"></style>
