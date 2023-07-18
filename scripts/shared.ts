@@ -251,6 +251,34 @@ export default {
    */
   toArray: (arr: string | []) => {
     return Array.isArray(arr) ? arr : JSON.parse(arr)
+  },
+
+  /**
+   * 
+   * @param to 변경하고자 하는 언어
+   * @returns 
+   */
+  switchLang: (to: string) => {
+    const route = useRoute()
+    const router = useRouter()
+    const { $i18n } = useNuxtApp()
+
+    const currLang = $i18n.locale.value
+    if (currLang === to) return
+
+    if (to === 'ko') {
+      if (route.path.startsWith('/en')) {
+        router.replace(`/${to}${route.fullPath.replace(/^\/en/, '')}`);
+      } else {
+        router.replace(`/ko${route.fullPath}`);
+      }
+    } else {
+      if (route.path.startsWith('/ko')) {
+        router.replace(`/${to}${route.fullPath.replace(/^\/ko/, '')}`);
+      } else {
+        router.replace(`/en${route.fullPath}`);
+      }
+    }
   }
 
 }

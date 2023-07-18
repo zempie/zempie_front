@@ -61,17 +61,7 @@ onBeforeMount(async () => {
 
   //언어
   const lang = isFlutter.value ? await flutterBridge().currentLanguage() : navigator.language.split('-')[0]
-
-  if (lang === 'ko') {
-    locale.value = 'ko'
-    switchLocalePath('ko')
-  } else {
-    locale.value = 'en'
-    switchLocalePath('en')
-  }
-
-  useCommon().setLang(locale.value)
-  router.replace(route.fullPath)
+  shared.switchLang(lang)
 
 })
 

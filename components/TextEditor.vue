@@ -96,7 +96,7 @@
           <button v-if="draftList.length > 0" class="btn-line-small w100 mr10" id="loadPostBtn" @click="onLoadPost">
             {{ $t('load.post') }}
           </button>
-          <button class="btn-line-small w100 mr10" id="draftPostBtn" @click="saveDraftCloseModal()">
+          <button class="btn-line-small w100 mr10" id="draftPostBtn" @click="saveDraftCloseModal">
             {{ $t('draft.post') }}
           </button>
           <button v-if="isEdit" class="btn-default-samll w100" id="updatePostBtn" @click="onUpdatePost">
@@ -252,6 +252,7 @@ const prevText = ref()
 const saveId = ref(Date.now())
 
 const isIOS = ref(false)
+
 
 const gameInfo = computed(() => useGame().game.value.info)
 const communityInfo = computed(() => useCommunity().community.value.info)
@@ -1194,7 +1195,7 @@ async function communityFetch() {
   isCommunityListVisible.value = true
 }
 
-//임시저장 후 모달 종료
+//임시저장 후 포스팅 모달 종료
 function saveDraftCloseModal() {
   if (editor.value.isEmpty) return
   localStorage.removeItem(
