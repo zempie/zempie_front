@@ -73,7 +73,18 @@ async function onSubmitReport() {
         showReportComModal.value = true
       }
       break;
-    // case eReportType.
+    case eReportType.comment:
+      payload = {
+        comment_id: props.reportInfo.target_id,
+        targetType: props.reportInfo.type,
+        // post_id: props.reportInfo.target_id,
+        report_reason: reportReason.value
+      }
+      const { data: cmtData } = await useCustomAsyncFetch(`/comment/report`, getComFetchOptions('post', true, payload))
+      if (cmtData.value) {
+        showReportComModal.value = true
+      }
+      break;
     default:
       //TODO: 임시
       showReportComModal.value = true
