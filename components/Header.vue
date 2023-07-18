@@ -206,6 +206,7 @@ function onResize() {
 async function moveSearchPage() {
   isHeaderSideMobile.value = false
   await useSearch().getSearch(searchInput.value)
+
   router.push({ path: $localePath(`/search`), query: { q: searchInput.value } })
   searchInput.value = ""
 }
