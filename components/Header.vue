@@ -41,8 +41,7 @@
           <SearchHeader />
           <div class="header-language">
             <el-select class="hl-select-box" v-model="selectedLang" :placeholder="t('korean')">
-              <el-option v-for="item in options" :key="item.code" :label="item.label" :value="item.code"
-                @click="switchLangauge" />
+              <el-option v-for="item in options" :key="item.code" :label="item.label" :value="item.code" />
             </el-select>
           </div>
           <div class="header-info ml0" v-if="!isLoading && isLogin" :key="user.id">
@@ -128,11 +127,11 @@ import {
 } from "element-plus"
 
 import { isMobile } from "../scripts/utils"
+import shared from '~/scripts/shared'
 
 const config = useRuntimeConfig()
 const { $localePath } = useNuxtApp()
 const { t, locale } = useI18n()
-const switchLocalePath = useSwitchLocalePath()
 
 const router = useRouter()
 const route = useRoute()
@@ -167,7 +166,13 @@ const options = [
   { code: "ko", label: "한국어" },
   { code: "en", label: "English" },
 ]
-const selectedLang = ref(locale.value)
+const selectedLang = computed({
+  get: () => locale.value,
+  set: newValue => {
+    shared.switchLang(newValue)
+    locale.value = newValue;
+  }
+})
 
 const isOpen = ref(false)
 const { loginModal } = useModal()
@@ -183,7 +188,6 @@ watch(
 onMounted(() => {
   nextTick(() => {
     onResize()
-    selectedLang.value = locale.value
   })
   window.addEventListener("resize", onResize)
 })
@@ -196,12 +200,6 @@ onBeforeUnmount(() => {
 function onResize() {
   showMobileLogo.value = isMobileSize.value.matches ? true : false
   showHamburger.value = isTablet.value.matches ? true : false
-}
-
-function switchLangauge() {
-  switchLocalePath(selectedLang.value)
-  locale.value = selectedLang.value
-  router.replace(route.fullPath)
 }
 
 

@@ -32,7 +32,6 @@ export default function () {
     },
     async signInFacebook() {
       const response = await callHandler("signInFacebook");
-      console.log('respon', response)
       const result = JSON.parse(response);
       return result;
 
@@ -106,8 +105,6 @@ export default function () {
     },
     async currentLanguage() {
       return await callHandler("currentLanguage");
-      // const result = JSON.parse(response);
-      // return result;
     },
     async currentPlatform() {
       const response = await callHandler("currentPlatform");
