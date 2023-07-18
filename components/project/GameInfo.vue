@@ -1,5 +1,9 @@
 <template>
   <div class="studio-upload-input">
+    <div class="save-notice">
+      <p><i class="uil uil-info-circle"></i> {{ new Date() }}에 자동 저장된 파일이 있습니다.</p>
+      <p class="ml15">저장된 파일을 불러와 이어서 작성할 수 있습니다. <span>이어서 작성하기 ></span></p>
+    </div>
     <div class="sui-input">
       <div class="suii-title">{{ $t('addGameInfo.title') }}</div>
       <dl class="suii-content">
@@ -191,25 +195,14 @@
         </dl>
       </transition>
     </div>
-    <!-- <ul class="sui-btn">
+    <ul class="sui-btn" style="justify-content: flex-end">
       <li>
-        <a @click="prevPage" class="btn-line w150"><i class="uil uil-angle-left-b"></i>
-          {{ $t('previous') }}
-        </a>
-      </li>
-      <li>
-        <a v-if="isEditInfo" @click="updateGame" class="btn-default w150">
-          {{ $t('update') }}
-        </a>
-        <a v-else-if="uploadProject.form.stage === eGameStage.DEV" @click="uploadGame" class="btn-default w150">
+        <a @click="uploadGame" class="btn-default w150">
           {{ $t('upload') }}
         </a>
-        <a v-else @click="save" class="btn-default w150">
-          {{ $t('next') }}
-          <i class="uil uil-angle-right-b"></i></a>
       </li>
-    </ul> -->
-    <div v-if="editProject.info?.id" class="sui-input" style="margin-top: 100px">
+    </ul>
+    <div v-if="editProject?.info?.id" class="sui-input" style="margin-top: 100px">
       <dl class="suii-content delete-area">
         <dt>
           {{ $t('addGameInfo.delete.game') }}
@@ -229,6 +222,9 @@ import { required, helpers, maxLength } from '@vuelidate/validators'
 import useVuelidate from '@vuelidate/core'
 
 const { t, locale } = useI18n()
+
+const isAuthGamePath = ref(true)
+
 
 let form = reactive({
   name: '',
@@ -258,4 +254,54 @@ const rules = computed(() => {
 
 const v$ = useVuelidate(rules, form)
 </script>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.save-notice {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px 30px;
+  margin-bottom: 20px;
+
+  span {
+    color: #ff6e17;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+}
+
+.chip-container {
+  min-height: 48px;
+  padding: 0 15px;
+  border: #e9e9e9 1px solid;
+  border-radius: 5px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  .chip {
+    height: 30px;
+    color: #fff;
+    margin: 4px;
+    background: #ff6e17;
+    padding: 0px 10px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+
+    i {
+      cursor: pointer;
+      opacity: 0.56;
+      margin-left: 8px;
+    }
+  }
+
+  input {
+    flex: 1 1 auto;
+    width: 30px;
+    border: none;
+    outline: none;
+    padding: 4px;
+  }
+}
+</style>

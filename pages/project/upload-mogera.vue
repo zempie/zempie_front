@@ -12,11 +12,29 @@
   </NuxtLayout>
 </template>
 <script setup lang="ts">
+import { onBeforeRouteLeave } from 'vue-router';
 
 definePageMeta({
   middleware: 'auth',
 })
 
+onMounted(async () => {
+  window.addEventListener('beforeunload', leavePage)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('beforeunload', leavePage)
+})
+
+function leavePage(event) {
+  console.log('lenave')
+  event.returnValue = '';
+}
+
+
+onBeforeRouteLeave((to, from, next) => {
+  window.open(to.path, '_blank')
+})
 </script>
 <style scoped lang="scss">
 .studio-banner {
@@ -25,8 +43,6 @@ definePageMeta({
   display: flex;
   flex-direction: column;
   justify-content: center;
-
-
 
   h2 {
     color: #fff;
