@@ -85,7 +85,7 @@ onMounted(async () => {
     { root: null, threshold: 1 }
   )
   observer.value.observe(triggerDiv.value)
-  await fetch()
+  // await fetch()
 })
 
 async function handleIntersection(target) {
