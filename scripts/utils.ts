@@ -96,6 +96,25 @@ export const enDateFormat = (sec: number | string) => {
   }
 }
 
+export const dmDateFormat = (sec: number | string) => {
+
+  if (dayjs().diff(dayjs(sec), 'm') < 5) {
+    return '방금 전'
+  } else if (dayjs().diff(dayjs(sec), 'h') < 1) {
+    return dayjs().diff(dayjs(sec), 'm') + '분 전'
+  } else if (dayjs().diff(dayjs(sec), 'd') < 1) {
+    return dayjs().diff(dayjs(sec), 'h') + '시간 전'
+  } else if (dayjs().diff(dayjs(sec), 'd') <= 7) {
+    return dayjs().diff(dayjs(sec), 'd') + '일 전'
+  } else if (dayjs().diff(dayjs(sec), 'w') <= 4) {
+    return dayjs().diff(dayjs(sec), 'w') + '주전'
+  } else if (dayjs().diff(dayjs(sec), 'M') < 12) {
+    return dayjs().diff(dayjs(sec), 'M') + '개월 전'
+  } else if (dayjs().diff(dayjs(sec), 'y') >= 1) {
+    return dayjs().diff(dayjs(sec), 'y') + '년 전'
+  }
+}
+
 export const numToKMB = (num: number) => {
   let result: any = num;
 

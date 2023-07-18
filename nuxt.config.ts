@@ -1,6 +1,5 @@
 import { i18n } from './modules/i18n'
 import { resolve } from 'pathe'
-
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
   app: {
@@ -24,7 +23,6 @@ export default defineNuxtConfig({
         { hid: 'icon', rel: 'icon', type: 'image/x-icon', href: '~/static/favicon.ico' },
         { rel: 'stylesheet', href: 'https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Two+Tone' },
         { rel: 'stylesheet', href: 'https://unicons.iconscout.com/release/v3.0.3/css/line.css' },
-        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0' },
         { rel: "apple-touch-icon", href: 'https://s3.ap-northeast-2.amazonaws.com/zempie.com/icons/favicon-32x32.png' },
         { rel: "apple-touch-icon-precomposed", href: 'https://s3.ap-northeast-2.amazonaws.com/zempie.com/icons/favicon-32x32.png' },
       ],
@@ -51,7 +49,18 @@ export default defineNuxtConfig({
         path: '/community/:id/:channel_name',
         file: resolve(__dirname, './pages/community/[id]/index.vue')
       })
-    }
+    },
+    'build:manifest': (manifest) => {
+      // find the app entry, css list
+      const css = manifest['node_modules/nuxt/dist/app/entry.js']?.css
+      if (css) {
+        // start from the end of the array and go to the beginning
+        for (let i = css.length - 1; i >= 0; i--) {
+          // if it starts with 'entry', remove it from the list
+          if (css[i].startsWith('entry')) css.splice(i, 1)
+        }
+      }
+    },
   },
   generate: {
     fallback: '404.html'
@@ -59,10 +68,9 @@ export default defineNuxtConfig({
   router: {
     middleware: ['auth']
   },
-  css: [
-    '@/assets/css/animate.css',
-    '@/assets/css/jquery-ui.css',
 
+  css: [
+    '@/assets/css/jquery-ui.css',
     '@/assets/css/layout.css',
     '@/assets/css/style.css',
     '@/assets/css/fonts.css',
@@ -72,11 +80,18 @@ export default defineNuxtConfig({
   ],
 
   modules: [
-    'cookie-universal-nuxt',
     ['@nuxtjs/i18n', i18n],
     '@vueuse/nuxt',
-
+    ['nuxt-compress', { gzip: { threshold: 8192 } }],
   ],
+  nitro: {
+    compressPublicAssets: true,
+    minify: true
+  },
+
+  build: {
+    extractCSS: true,
+  },
 
   publicRuntimeConfig: {
     ENV: process.env.ENV,

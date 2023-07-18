@@ -25,6 +25,9 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
   isFetching.value = true
   const config = useRuntimeConfig()
 
+  if (url !== '/chat/unread')
+    await useUser().getUnreadMsg()
+
   return await useFetch<T>(url, {
     initialCache: false,
     ...options,
@@ -110,7 +113,8 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
   if (ex[url]) {
     return Promise.resolve(ex[url][options.method].res);
   }
-
+  if (url !== '/chat/unread')
+    await useUser().getUnreadMsg()
 
   return await $fetch<T>(url, {
     ...options,

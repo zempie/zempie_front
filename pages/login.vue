@@ -42,14 +42,14 @@
           </dt>
         </dl>
       </div>
-      <div class="la-bottom">
+      <div class="la-bottom flex column" style="overflow:hidden">
         <dl>
           <dt></dt>
           <dd>{{ $t('login.text3') }}</dd>
           <dt></dt>
         </dl>
         <ul>
-          <li @click="googleLogin">
+          <li @click="googleLogin" v-if="!isNotGoogleSupport">
             <img src="/images/login/google_login.jpeg" alt="google-login" title="" />
           </li>
           <li @click="facebookLogin" class="mt10">
@@ -99,6 +99,8 @@ const config = useRuntimeConfig()
 
 const currUser = ref()
 const isPageLoading = ref(true)
+
+const isNotGoogleSupport = ref()
 
 
 definePageMeta({
@@ -177,6 +179,8 @@ onBeforeMount(() => {
 
 onMounted(() => {
   nextTick(() => {
+    isNotGoogleSupport.value = navigator.userAgent.includes('kakao') || navigator.userAgent.includes('naver')
+
     window.addEventListener("message", receiveMessage, false);
   })
 })
@@ -299,6 +303,7 @@ async function appleLogin() {
     const provider = new OAuthProvider('apple.com')
     provider.addScope('email')
     provider.addScope('name');
+
     return socialLogin(provider)
   }
 }
@@ -322,7 +327,6 @@ async function flutterSocialLogin(info: any) {
 async function socialLogin(provider: AuthProvider) {
   try {
     const res = await signInWithPopup($firebaseAuth, provider)
-
     router.push($localePath('/'))
 
   } catch (err) {

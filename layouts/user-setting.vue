@@ -24,13 +24,18 @@
           <NuxtLink :to="$localePath(`/myaccount/following`)" class="swiper-slide">
             <a :class="$route.meta.name === 'myFollowing' ? 'active' : ''">
               <i class="uil uil-users-alt"></i>
-              <span style="border: 0"> {{ $t('following') }}</span>
+              <span> {{ $t('following') }}</span>
             </a>
           </NuxtLink>
-
+          <NuxtLink :to="$localePath(`/myaccount/blocks`)" class="swiper-slide">
+            <a :class="$route.meta.name === 'blockList' ? 'active' : ''">
+              <i class="uil uil-ban"></i><span>
+                {{ $t('block.list') }}
+              </span></a>
+          </NuxtLink>
           <NuxtLink :to="$localePath(`/myaccount/communities`)" class="swiper-slide">
             <a :class="$route.meta.name === 'myCommunities' ? 'active' : ''">
-              <i class="uil uil-comments"></i><span style="border: 0">
+              <i class="uil uil-comments"></i><span>
                 {{ $t('community') }}
               </span></a>
           </NuxtLink>

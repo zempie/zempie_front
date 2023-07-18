@@ -41,9 +41,9 @@ const tagName = computed(() => {
 </script>
 <style scoped lang="scss">
 .stage-tag {
-  position: absolute;
-  top: 10px;
-  left: 10px;
+  // position: absolute;
+  // top: 10px;
+  // left: 70px;
   border-color: transparent;
 }
 </style>

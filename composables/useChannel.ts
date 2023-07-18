@@ -40,6 +40,7 @@ export default function () {
    * @param userId : 유저 닉네임(프론트에서는 id 로 사용하고 있고 백엔드에서는 nickname 으로 사용중임...)
    */
   const getChannelInfo = async (userId: string) => {
+    console.log(userId)
 
     const data = await useCustomFetch<{ result: { target: IUserChannel } }>(`/user/${userId}`, getZempieFetchOptions('get', false))
 
@@ -81,6 +82,9 @@ export default function () {
     userChannel.value.info.following_cnt -= 1
   }
 
+  const updateChannelBlockInfo = (status: boolean) => {
+    userChannel.value.info.is_blocked = status
+  }
   return {
     userChannel,
     setUserChannel,
@@ -91,6 +95,7 @@ export default function () {
     increaseFollowerCnt,
     increaseFollowingCnt,
     decreaseFollowerCnt,
-    decreaseFollowingCnt
+    decreaseFollowingCnt,
+    updateChannelBlockInfo
   }
 }

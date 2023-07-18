@@ -87,9 +87,10 @@ function onResize() {
 }
 
 function onChangedToken() {
+  console.log(' userInfo.value',  userInfo.value)
   toMessage({
     type: '@updateToken',
-    token: useCookie(config.COOKIE_NAME).value,
+    token: userInfo.value?.uid && useUser().user.value.fUser?.accessToken
   })
 }
 

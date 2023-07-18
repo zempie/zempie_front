@@ -12,8 +12,9 @@
             <NuxtLink :to="$localePath(`/${feed.user && feed.user.nickname}`)">
               {{ t('visit.userChannel') }}
             </NuxtLink>
-            <!-- <a v-if="user" @click="report">{{ t('post.report') }}</a>
-            <a v-if="user" @click="userReportModalOpen">{{ t('post.report') }}유저 신고하기</a> -->
+            <NuxtLink class="pointer" v-if="user" @click="onClickReport">{{ t('post.report') }}</NuxtLink>
+            <a v-if="user" class="pointer" @click="showUserReportModal = true">{{ t('user.report') }}</a>
+            <a v-if="user" class="pointer" @click="onUserBlock">{{ t('block.user') }}</a>
           </template>
         </div>
       </template>
@@ -54,10 +55,14 @@
         :isFullScreen="usePost().post.value.isFullScreen" />
     </template>
   </PostModal>
+
+  <ReportModal :openModal="showReportModal" :reportInfo="reportInfo" @closeModal="showReportModal = false" />
+
+  <UserReportModal :openModal="showUserReportModal" @closeModal="closeUserReportModal" :user="feed.user" />
 </template>
 <script lang="ts" setup>
 import { PropType } from 'vue'
-import { IFeed } from '~~/types'
+import { IFeed, eReportType } from '~~/types'
 import {
   ElDropdown,
   ElMessage,
@@ -72,6 +77,10 @@ const { t, locale } = useI18n()
 
 const isTextEditorOpen = ref(false)
 const showDeletePostModal = ref(false)
+
+const showReportModal = ref(false)
+const showUserReportModal = ref(false)
+const reportInfo = ref()
 
 const props = defineProps({
   feed: Object as PropType<IFeed>,
@@ -120,6 +129,56 @@ function onClickEdit() {
     isTextEditorOpen.value = true
 
   }
+}
+
+function onClickReport() {
+  reportInfo.value = {
+    type: eReportType.post,
+    target_id: props.feed.id,
+    title: t('report.post.title'),//'게시물 신고'
+    desc: t('report.post.desc'),//'신고 사유를 선택해주세요. 신고 사유에 맞지 않는 신고일 경우, 해당 신소는 처리되지 않습니다. 검토까지는 최대 24시간이 소요됩니다.',
+    list: [
+      {
+        value: 10,
+        title: t('report.post.options1'),//'개인정보보호 위반'
+      },
+      {
+        value: 11,
+        title: t('report.post.options2'),//'불쾌하거나 민감한 콘텐츠'
+      },
+      {
+        value: 12,
+        title: t('report.post.options3'),//'불법 콘텐츠'
+      },
+      {
+        value: 13,
+        title: t('report.post.options4'),//'허가되지 않은 광고'
+      },
+      {
+        value: 14,
+        title: t('report.post.options5'),//'지식재산권 침해'
+      },
+      {
+        value: 15,
+        title: t('etc'),//'기타'
+      }
+    ]
+  }
+  showReportModal.value = true
+}
+
+
+function closeUserReportModal() {
+  showUserReportModal.value = false
+}
+
+async function onUserBlock() {
+  await useUser().blockUser(props.feed.user.id)
+    .then(() => {
+      useChannel().updateChannelBlockInfo(false)
+    })
+
+
 }
 </script>
 

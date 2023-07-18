@@ -8,24 +8,27 @@
     </div>
     <dl class="area-title" v-if="userList?.length" style="margin-top: 12.5px">
       <dt>
-        Users <span>{{ userList.length }}</span>
+        {{ $t('users') }} <span>{{ userList.length }}</span>
       </dt>
     </dl>
     <ul class="user-list" v-if="userList">
       <ul class="card-follow">
         <TransitionGroup name="list-complete">
-          <UserCard v-for="user in userList" :key="user.id" :user="user" />
-          <!-- <li class="more-card" v-if="userList?.length > 2">
-            <h3><i class="uil uil-plus"></i></h3>
-            <h4>{{ $t('search.viewAll') }}</h4>
-          </li> -->
+          <UserCard v-for="user in userList" :key="user.id" :user="user">
+            <template #followBtn>
+              <div class="flex w100p justify-between">
+                <UserFollowBtn :user="user" class="mt20" style="width: 48%;" />
+                <DmSendBtn :user="user" class="mt20" style="width: 48%;" />
+              </div>
+            </template>
+          </UserCard>
         </TransitionGroup>
       </ul>
     </ul>
 
     <dl class="area-title" v-if="gameList?.length">
       <dt>
-        Games <span>{{ gameList?.length }}</span>
+        {{ $t('games') }} <span>{{ gameList?.length }}</span>
       </dt>
     </dl>
 
@@ -37,15 +40,13 @@
 
     <dl class="area-title" v-if="postList?.length">
       <dt>
-        Posts <span>{{ postList?.length }}</span>
+        {{ $t('posts') }} <span>{{ postList?.length }}</span>
       </dt>
     </dl>
     <div class="ta-search-post" v-if="postList?.length" :style="postList?.length ? 'padding:0px ;' : ''">
       <ul class="ta-post">
         <div v-for="feed in postList" :key="feed.id">
-          <PostFeed :feed="feed">
-
-          </PostFeed>
+          <PostFeed :feed="feed" @update-blind="(img) => updateBlind(feed, img)"></PostFeed>
         </div>
       </ul>
     </div>
@@ -77,6 +78,9 @@ if (!useSearch().search.value.results) {
 shared.createHeadMeta(`${keyword.value}${t('seo.search.title')}`, `${t('seo.search.desc1')}${keyword.value}${t('seo.search.desc2')}`)
 
 
+function updateBlind(feed, img) {
+  useSearch().updateResult(feed, img)
+}
 </script>
 
 <style scoped lang="scss">

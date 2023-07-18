@@ -35,7 +35,9 @@ export interface IUser {
     unread_noti_count?: number,
     unread_dm_count?: number,
   }
-  nickname?: string
+  nickname?: string,
+  unread_msg_cnt?: number,
+  is_blocked?: boolean
 }
 
 
@@ -174,7 +176,8 @@ export interface IUserChannel {
     banner_img: string
   },
   communities: ICommunity[]
-  games: IGame[]
+  games: IGame[],
+  is_blocked?: boolean,
 }
 
 export interface IFile {
@@ -343,15 +346,18 @@ export interface IChat {
   unread_count: number,
   is_read: boolean,
   last_message: IMessage,
-  last_message_sent_at: string,
+  last_chat_at: string,
   joined_users: IUser[],
   is_group_room: boolean,
   last_chat_id: number,
-  unread_start_id: number
+  unread_start_id: number,
+  updated_message?: IMessage[]
+  meta?: { isLastMsg: boolean }
 }
 
 export interface IMessage {
   id: number,
+  chat_idx?: number,
   contents: string,
   text_html: string,
   sender: IUser,
@@ -440,6 +446,13 @@ export enum eNotificationType {
 export enum eMetadataType {
   website = 1,
   video
+}
+
+export enum eReportType {
+  post = 1,
+  comment,
+  game,
+  user
 }
 
 

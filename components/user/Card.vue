@@ -22,7 +22,9 @@
           <p>{{ $t('following') }}</p>
         </dd>
       </dl>
-      <slot name="followBtn"></slot>
+      <div class="interaction-btn-container">
+        <slot name="followBtn"></slot>
+      </div>
     </div>
   </li>
 </template>
@@ -39,6 +41,7 @@ const bannerImg = computed(() =>
 )
 
 const userObj = computed(() => {
+
   return {
     name: props.user.name,
     picture: props.user.profile_img
@@ -62,5 +65,17 @@ const userObj = computed(() => {
   padding: 5px 10px;
   border-radius: 10px;
   font-size: 10px;
+}
+
+.cf-info {
+  min-height: 280px;
+
+  .interaction-btn-container {
+    position: absolute;
+    bottom: 30px;
+    display: flex;
+    width: calc(100% - 40px);
+
+  }
 }
 </style>

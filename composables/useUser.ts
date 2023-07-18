@@ -6,7 +6,7 @@ import { isObjEmpty } from "~~/scripts/utils";
 import flutterBridge from "~~/scripts/flutterBridge";
 
 export default function () {
-  const { $firebaseAuth, $cookies } = useNuxtApp()
+  const { $firebaseAuth, $i18n } = useNuxtApp()
   const config = useRuntimeConfig()
   const router = useRouter();
 
@@ -111,6 +111,7 @@ export default function () {
         useUser().setLoadDone()
       }
 
+      await useUser().getUnreadMsg()
       return user.value.info
 
     } catch (error) {
@@ -118,6 +119,45 @@ export default function () {
     }
 
   }
+
+  const getUnreadMsg = async () => {
+    if (!user.value.info) return
+    const { data, error } = await useCustomAsyncFetch<{ count: number }>(`/chat/unread`, getComFetchOptions('get', true))
+
+    if (data.value) {
+      const { count } = data.value
+      user.value.info.unread_msg_cnt = count
+    }
+  }
+
+  const blockUser = async (userId: number) => {
+    const { data } = await useCustomAsyncFetch(`/member/${userId}/block`, getComFetchOptions('post', true))
+
+    if (data.value) {
+      console.log()
+
+      ElMessage({
+        message: $i18n.t('block.done'),
+        type: 'success',
+      })
+      return data.value
+    }
+
+  }
+
+  const unblockUser = async (userId: number) => {
+    const { data } = await useCustomAsyncFetch(`/member/${userId}/unblock`, getComFetchOptions('post', true))
+
+    if (data.value) {
+      ElMessage({
+        message: $i18n.t('unblock.done'),
+        type: 'success',
+      })
+      return data.value
+    }
+
+  }
+
 
 
   return {
@@ -137,6 +177,9 @@ export default function () {
     updateUserKey,
     updateFbToken,
     updateUserCoin,
-    updateUserSetting
+    updateUserSetting,
+    getUnreadMsg,
+    blockUser,
+    unblockUser
   }
 }

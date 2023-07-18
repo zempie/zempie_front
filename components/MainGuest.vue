@@ -1,13 +1,19 @@
 <template>
+  <!-- <div style="width:100vw; height:70vh;">
+    <div style="min-height: 300px; background-color: blue;"></div>
+    <input v-model="test1" style="position: absolute; bottom: 100px; background-color: red; height: 100px;" type="number">
+    <input v-model="test" style="position: absolute; bottom: 300px; background-color: red; height: 100px;" type="number">
+
+  </div> -->
   <div class="main-bg">
     <div class="main-copy">
       <h1>
-        <img src="/images/main_copy.svg" width="500" alt="zempie" title="zempie" />
+        <img src="/images/main_copy.png" width="500" alt="zempie" title="zempie" height="256" />
       </h1>
     </div>
     <div class="main-visual">
       <h2>
-        <span style="font: 36px/46px 'Jalnan'">Recent games</span>
+        <span>Recent games </span>
       </h2>
       <ul style="margin: 40px 0px">
         <span class="card-game">
@@ -17,7 +23,7 @@
       </ul>
     </div>
     <div class="main-visual">
-      <h2><span style="font: 36px/46px 'Jalnan'">Communities</span></h2>
+      <h2><span>Communities</span></h2>
 
       <div class="card-timeline">
         <CommunityCardSk v-if="cPending" v-for="commi in COMMUNITY_COUNT" />
@@ -31,7 +37,7 @@
       </ul>
     </div>
     <div v-else class="main-visual">
-      <h2><span style="font: 36px/46px 'Jalnan'">Recent posts</span></h2>
+      <h2><span>Recent posts</span></h2>
 
       <ul style="margin-top: 40px" class="post-container">
         <li class="thumbmail" v-for="post in posts?.result" :key="post.id"
@@ -49,11 +55,14 @@ const { $localePath } = useNuxtApp()
 const GAME_COUNT = 8
 const COMMUNITY_COUNT = 4
 const POST_COUNT = 12
+const test1 = ref()
+const test = ref()
 
 const { data, pending, error } = await useCustomAsyncFetch<any>(
   createQueryUrl('/games', { limit: GAME_COUNT }),
   getZempieFetchOptions('get', false)
 )
+
 
 const {
   data: communities,
@@ -97,6 +106,7 @@ const {
 
 }
 
+
 .mv-animal02 {
   z-index: 998 !important;
 }
@@ -112,7 +122,10 @@ const {
     height: auto !important;
   }
 
-  .game-jam-plus {}
+  h2 {
+    font-weight: bold;
+    font-size: 40px;
+  }
 
 }
 </style>
