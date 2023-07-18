@@ -16,7 +16,7 @@
           </li>
           <li>
             <textarea class="w100p" maxlength="50" v-model="additionalReportReason"
-              placeholder="추가적인 정보를 작성해주세요."></textarea>
+              :placeholder="`${$t('add.additional.info')}`"></textarea>
           </li>
         </ul>
 
