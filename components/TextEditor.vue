@@ -71,7 +71,7 @@
               <input type="file" @change="onSelectImageFile" multiple id="image-selector" accept=image/* ref="image" />
             </div>
           </div>
-          <div style="width: 30px" @click="uploaVideoFile">
+          <div v-if="!isIOS" style="width: 30px" @click="uploaVideoFile">
             <a><i class="uil uil-play-circle pointer"></i></a>
             <div style="height: 0px; overflow: hidden">
               <input type="file" @change="onSelectVideoFile" accept=video/* ref="video" />
@@ -251,6 +251,8 @@ const textInterval = ref()
 const prevText = ref()
 const saveId = ref(Date.now())
 
+const isIOS = ref(false)
+
 const gameInfo = computed(() => useGame().game.value.info)
 const communityInfo = computed(() => useCommunity().community.value.info)
 const userGames = computed(() => useUser().user.value.info.games)
@@ -280,6 +282,10 @@ onBeforeMount(() => {
 })
 
 onMounted(async () => {
+  nextTick(() => {
+    isIOS.value = /(iPhone|iPod|iPad)/i.test(navigator.userAgent);
+    // navigator.userAgent.includes('kakao') || navigator.userAgent.includes('naver')
+  })
 
   colorLog('text editor', 'pink')
   //새로고침 시 알람
@@ -505,12 +511,7 @@ async function onSubmit() {
         formData.append(audio.name, audio.file)
       }
     }
-    if (snsAttachFiles.value.video) {
-      formData.append(
-        snsAttachFiles.value.video.name,
-        snsAttachFiles.value.video.file
-      )
-    }
+
 
     const { data, error, pending } = await useCustomAsyncFetch<{ result: [] }>(
       '/community/att',
@@ -518,6 +519,14 @@ async function onSubmit() {
     )
 
     payload['attatchment_files'] = data.value?.result
+
+    if (snsAttachFiles.value.video) {
+      payload['attatchment_files'] = [snsAttachFiles.value.video]
+      // formData.append(
+      //   snsAttachFiles.value.video.name,
+      //   snsAttachFiles.value.video.file
+      // )
+    }
   }
   switch (props.type) {
     case 'community':
@@ -637,30 +646,44 @@ async function uploaVideoFile() {
   video.value.click()
 }
 
-function onSelectVideoFile(event: any) {
+async function onSelectVideoFile(event: any) {
   isVideoUploading.value = true
+
+  const formData = new FormData()
+
+
 
   const files = event.target.files
 
+
   for (const file of files) {
-    const reader = new FileReader()
 
-    reader.onload = async (e) => {
-      const url = e.target!.result as any
-      const result = await fetch(url)
-      const blob = await result.blob()
-      const blobUrl = URL.createObjectURL(blob)
+    formData.append(
+      file.name,
+      file
+    )
 
+    try {
+      const { data, error, pending } = await useCustomAsyncFetch<{
+        result: {
+          priority: number
+          url: string
+          type: string
+          name: string
+          size: number
+        }[]
+      }>('/community/att', getZempieFetchOptions('post', true, formData))
 
+      if (data.value) {
 
-      snsAttachFiles.value.video = {
-        file: file,
-        name: file.name,
-        url: blobUrl,
+        if (data.value.result)
+          snsAttachFiles.value.video = data.value.result[0]
+
       }
+    } finally {
       isVideoUploading.value = false
     }
-    reader.readAsDataURL(file)
+
   }
   event.target.value = ''
 }
@@ -1009,6 +1032,7 @@ async function onUpdatePost() {
   attachedFile?.filter((file) => {
     return file?.size
   })
+  console.log('attachedFile', attachedFile)
 
   payload.attatchment_files = attachedFile
 

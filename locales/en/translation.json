@@ -1042,5 +1042,8 @@
   "send.msg.btn": "Send",
   "violent.contents": "Sensitive content",
   "hide": "Hide",
+  "sort.recommend": "Recommend",
+  "sort.latest": "Latest",
+  "all": "All",
   "unblock.done":"Unblocked"
 }
