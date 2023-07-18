@@ -774,7 +774,7 @@ function closeKeyboard() {
           }
 
           ::v-deep(.dlc-send-message) {
-            height: 50px;
+            // height: 50px;
 
             div {
               width: 90%;
