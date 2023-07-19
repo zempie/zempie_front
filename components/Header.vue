@@ -32,6 +32,11 @@
                 Z-world
               </a>
             </li>
+            <li class="uppercase pointer">
+              <NuxtLink id="zemtownMenu" :to="`/zemtown?token=${fUser?.accessToken}`">
+                Zemtown
+              </NuxtLink>
+            </li>
           </ul>
         </div>
       </dt>
@@ -140,6 +145,7 @@ const route = useRoute()
 const isLogin = computed(() => useUser().user.value.isLogin)
 const isLoading = computed(() => useUser().user.value.isLoading)
 const user = computed(() => useUser().user.value.info)
+const fUser = computed(() => useUser().user.value.fUser)
 
 const searchInput = ref()
 const isHeaderSideMobile = ref(false)
