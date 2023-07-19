@@ -77,7 +77,7 @@ async function onSubmitReport() {
       payload = {
         comment_id: props.reportInfo.target_id,
         targetType: props.reportInfo.type,
-        post_id: props.reportInfo.target_id,
+        // post_id: props.reportInfo.target_id,
         report_reason: reportReason.value
       }
       const { data: cmtData } = await useCustomAsyncFetch(`/comment/report`, getComFetchOptions('post', true, payload))

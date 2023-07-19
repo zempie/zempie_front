@@ -439,14 +439,12 @@ async function onDeleteMsg() {
 
 async function onFocus() {
   inputRef.value.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  console.log('focus')
   if (isFlutter.value) {
     const kbHeight = await FlutterBridge().getKeyHight()
     emit('openKeyboard', Number(kbHeight))
   }
 }
 function onBlur() {
-  console.log('onBlur')
   if (isFlutter.value) {
 
     emit('closeKeyboard')
