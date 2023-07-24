@@ -1,7 +1,7 @@
 <template>
   <div>
-    <!-- <ZemtownUserModal :user="targetUser" :isOpen="isOpenProfile" /> -->
-    <ZemtownGameModal :isOpen="isOpenGame" />
+    <ZemtownUserModal :isOpen="isOpenProfile" :user="targetUser" />
+    <ZemtownGameModal :isOpen="isOpenGame" :game="targetGame" />
     <ZemtownDmModal :isOpen="isOpenDm" />
   </div>
 </template>
@@ -11,6 +11,7 @@ const targetUser = ref()
 const isOpenProfile = ref(false)
 const isOpenDm = ref(false)
 const isOpenGame = ref(false)
+const targetGame = ref()
 
 const zemtown = computed(() => useZemtown().zemtown.value)
 
@@ -56,15 +57,30 @@ function closeMyProfile() {
   useZemtown().closeMyProfile()
 }
 async function onMessage(msg: MessageEvent) {
-  const { type, target_type, data } = JSON.parse(msg.data)
-  const userId = data && data.user_id
+  console.log(msg)
+
+  const { type, target_type, data: parsedData } = JSON.parse(msg.data)
+
 
   switch (target_type) {
-    case 'player':
+    case 'thumbnail':
+      const gameId = parsedData && parsedData.game_id
 
+      closeMyProfile()
       isOpenGame.value = true
+      const { data: gameData, error, pending } = await useCustomAsyncFetch<{
+        result: { game: {}; my_emotions: {}; my_heart: boolean }
+      }>(`/launch/game/${gameId}`, getZempieFetchOptions('get', false))
+
+      if (gameData.value) {
+        const { game, my_emotions, my_heart } = gameData.value.result
+        targetGame.value = game
+
+      }
       break;
     case 'player':
+      const userId = parsedData && parsedData.user_id
+      isOpenGame.value = false
 
       const { data } = await useCustomAsyncFetch<{ result: { target: IUserChannel } }>(`/user/info/${userId}`, getZempieFetchOptions('get', true))
 

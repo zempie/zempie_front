@@ -1,19 +1,20 @@
 <template>
   <div class="zemtown-modal">
     <div v-if="isOpen" class="info-container">
-      <div class="user-header">
-        <NuxtLink class="user-link font20 mb10" :to="$localePath('/')">{{ }}</NuxtLink>
-        <NuxtLink class="user-link mt5 mb10" :to="$localePath('/')">{{}}</NuxtLink>
-      </div>
-      <div class="user-body">
 
-        <img :src="game?.url_thumb" />
-      </div>
-      <div class="user-actions">
+      <div class="zemtown-header mb10">
+        <h2 class="font20  text-center flex content-center">{{ game.title }}</h2>
 
-        <button class="action-btn btn-default">play</button>
+        <div class="thumbnail">
+          <img :src="game?.url_thumb" />
+        </div>
+      </div>
+      <div class="zemtown-body text-center flex content-center">
+        {{ game.description }}
+      </div>
+      <div class="actions mt10">
+        <GamePlayBtn :gameInfo="game" class="action-btn" />
         <NuxtLink class="action-btn btn-default" :to="$localePath(`/game/${props.game?.pathname}`)">게임페이지이동</NuxtLink>
-
       </div>
     </div>
   </div>
@@ -35,10 +36,6 @@ const props = defineProps({
 
 const emit = defineEmits(['closeModal'])
 
-function logout() {
-  useUser().logout()
-  emit('closeModal')
-}
 </script>ㅋ
 <style scoped lang="scss">
 .info-container {
@@ -53,17 +50,21 @@ function logout() {
   display: flex;
   flex-direction: column;
   padding: 30px 20px;
+  color: #000;
 
-  .user-header {
+  .thumbnail {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
 
-    .user-link {
-      color: #000;
+    img {
+      border-radius: 10px;
+      margin: 20px 0px;
     }
   }
 
-  .user-body {
+  .zemtown-body {
+
+
 
     a {
       color: #000 !important;
@@ -91,9 +92,19 @@ function logout() {
     }
   }
 
-  .user-actions {
+  .actions {
     display: flex;
     justify-content: space-between;
+
+    :deep(.play-btn) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      li {
+        margin-left: 10px;
+      }
+    }
 
     .action-btn {
       width: 48%;
