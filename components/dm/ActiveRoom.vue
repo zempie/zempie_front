@@ -30,14 +30,16 @@
     <div class="inner" ref="scrollContent">
       <div :class="msg.sender?.id === userInfo.id ? 'receiver-chat' : 'sender-chat'" v-for="( msg, index ) in  msgList "
         :ref="el => { divs[msg.id] = el }" :key="index">
-        <h4>{{ dmDateFormat(msg.created_at) }}</h4>
-        <ul>
-          <li class="flex" style="overflow:visible; word-break: break-all; width: 100%; ">
-            <DmMsgMenu :msg="msg" v-if="msg.sender?.id === userInfo.id" @delete-msg="deleteMsg"
-              style="max-height: 100px;" />
-            <span style="max-width: 85%;">{{ msg.contents }}</span>
-          </li>
-        </ul>
+        <template v-if="msg?.chat_idx !== -1">
+          <h4>{{ dmDateFormat(msg.created_at) }}</h4>
+          <ul>
+            <li class="flex" style="overflow:visible; word-break: break-all; width: 100%; ">
+              <DmMsgMenu :msg="msg" v-if="msg.sender?.id === userInfo.id" @delete-msg="deleteMsg"
+                style="max-height: 100px;" />
+              <span style="max-width: 85%;">{{ msg.contents }}</span>
+            </li>
+          </ul>
+        </template>
       </div>
     </div>
   </div>
