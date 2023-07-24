@@ -1128,6 +1128,7 @@ $zempie-main-color-hover: #f974162a;
 
 }
 
+
 .dlc-chat-content {
   overflow-x: hidden;
   height: calc(100% - 85px);
@@ -1182,6 +1183,104 @@ $zempie-main-color-hover: #f974162a;
 }
 
 
+
+@media all and (max-width: 767px) {
+
+
+  .dm-list {
+    padding: 20px 10px 10px 10px;
+    margin: 0px;
+    width: 100%;
+    height: 100%;
+    border-radius: 0px;
+    box-shadow: none;
+
+    .dl-title {
+      display: flex;
+      flex-direction: row;
+
+      .mobile-btn {
+        display: inline;
+        border: none;
+        background: transparent;
+        padding: 0px;
+        color: #333;
+        font-size: 25px;
+
+        &.off {
+          display: none;
+        }
+
+        &.on {
+          display: inline;
+        }
+      }
+    }
+
+    .dl-content {
+      border: none;
+      margin-top: 10px;
+
+      height: 90%;
+
+      .room-container {
+        &.off {
+          display: none;
+        }
+
+        &.on {
+          display: block;
+        }
+
+        .msg-list {
+          padding: 0px;
+          height: 100%;
+          overflow-y: scroll;
+
+          li {
+            // margin: 0px;
+          }
+        }
+      }
+
+      .msg-container {
+
+        &.off {
+          display: none;
+        }
+
+        &.on {
+          display: block;
+          border: 1px solid #eee;
+          border-radius: 10px;
+        }
+
+        ::v-deep(.dlc-chat-content) {
+          height: calc(100% - 120px);
+        }
+
+        ::v-deep(.dlc-send-message) {
+          // height: 50px;
+
+          div {
+            width: 90%;
+          }
+
+          button {
+            height: 30px;
+            width: 30px;
+          }
+
+        }
+
+      }
+    }
+  }
+
+  ::v-deep(.new-msg-modal) {
+    border-radius: 0px !important;
+  }
+}
 
 /* zemtown */
 

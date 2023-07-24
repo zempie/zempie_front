@@ -223,6 +223,9 @@
 }
 
 @media all and (max-width: 479px) {
+  .header {
+    display: none;
+  }
 
   .header>dl {
     width: 100%;
@@ -267,6 +270,9 @@
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
+  .header {
+    display: none;
+  }
 
   .header>dl {
     width: 100%;

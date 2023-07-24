@@ -392,9 +392,7 @@ async function moveZemWorld() {
     }
   }
 
-  .header {
-    display: none;
-  }
+
 
 
 }
@@ -433,9 +431,7 @@ async function moveZemWorld() {
     }
   }
 
-  .header {
-    display: none;
-  }
+
 
 }
 
