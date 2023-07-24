@@ -1,46 +1,93 @@
 <template>
-  <div class="zemtown-frame" style="width: 100vw; height: 100vh;">
-    <ClientOnly>
-      <iframe ref="zemtownRef" :src="`${config.ZEMTOWN_URL}?token=${token}`" style="width: 100%; height: 99%;" />
-    </ClientOnly>
+  <div>
+    <!-- <ZemtownUserModal :user="targetUser" :isOpen="isOpenProfile" /> -->
+    <ZemtownGameModal :isOpen="isOpenGame" />
+    <ZemtownDmModal :isOpen="isOpenDm" />
   </div>
 </template>
 <script setup lang="ts">
 
-const config = useRuntimeConfig()
-const route = useRoute()
+const targetUser = ref()
+const isOpenProfile = ref(false)
+const isOpenDm = ref(false)
+const isOpenGame = ref(false)
+
+const zemtown = computed(() => useZemtown().zemtown.value)
+
+watch(() =>
+  (zemtown.value.isOpenMyProfile), (state) => {
+    if (state) {
+      openMyProfile()
+    } else {
+      closeMyProfile()
+    }
+  })
 
 
-const zemtownRef = ref(null)
 
-const token = computed(() => route.query.token)
-definePageMeta({
-  layout: 'header-only',
-})
+watch(() =>
+  (zemtown.value.isOpenDm), (state) => {
+    if (state) {
+      isOpenDm.value = true
+    } else {
+      isOpenDm.value = false
+    }
+  })
+
 
 onMounted(() => {
-  console.log('message')
+  if (zemtown.value.isOpenMyProfile) {
+    openMyProfile()
+  }
+  if (zemtown.value.isOpenDm) {
+    isOpenDm.value = true
+  }
   window.addEventListener('message', onMessage)
 })
 
+function openMyProfile() {
+  isOpenProfile.value = true
+  targetUser.value = useUser().user.value.info
+}
+
+function closeMyProfile() {
+  isOpenProfile.value = false
+  targetUser.value = null
+  useZemtown().closeMyProfile()
+}
 async function onMessage(msg: MessageEvent) {
   const { type, target_type, data } = JSON.parse(msg.data)
-
+  const userId = data && data.user_id
 
   switch (target_type) {
-    case 'thumbnail':
+    case 'player':
+
+      isOpenGame.value = true
       break;
     case 'player':
 
+      const { data } = await useCustomAsyncFetch<{ result: { target: IUserChannel } }>(`/user/info/${userId}`, getZempieFetchOptions('get', true))
+
+      if (data) {
+        const { result } = data.value
+        targetUser.value = result.target
+        isOpenProfile.value = true
+      }
+
       break;
 
+    default:
+      closeMyProfile()
+      isOpenDm.value = false
+      isOpenGame.value = false
+
+      break;
 
   }
 
-  console.log(type, msg.data)
-
 
 }
+
 
 </script>
 <style scoped lang="scss"></style>

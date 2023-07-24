@@ -1180,3 +1180,41 @@ $zempie-main-color-hover: #f974162a;
     }
   }
 }
+
+
+
+/* zemtown */
+
+
+.zemtown-modal {
+  position: fixed;
+  bottom: 70px;
+  width: 100%;
+  z-index: 999;
+
+  >div {
+    max-width: 450px;
+    width: 50%;
+  }
+}
+
+
+@media all and (max-width: 479px) {
+  .zemtown-modal {
+
+    >div {
+      width: 100%;
+
+    }
+  }
+}
+
+@media all and (min-width: 480px) and (max-width: 767px) {
+  .zemtown-modal {
+
+    >div {
+      width: 80%;
+
+    }
+  }
+}

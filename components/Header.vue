@@ -11,9 +11,9 @@
                 height="25" />
             </NuxtLink>
           </p>
-          <button class="btn-circle-none" @click="isHeaderSideMobile = true" v-if="showHamburger">
+          <!-- <button class="btn-circle-none" @click="isHeaderSideMobile = true" v-if="showHamburger">
             <i class="uil uil-bars"></i>
-          </button>
+          </button> -->
           <ul class="menu">
             <li class="uppercase">
               <NuxtLink :to="$localePath('/community/list')"
@@ -28,12 +28,7 @@
               </NuxtLink>
             </li>
             <li class="uppercase pointer">
-              <a id="zempieWorldMenu" @click="moveZemWorld">
-                Z-world
-              </a>
-            </li>
-            <li class="uppercase pointer">
-              <NuxtLink id="zemtownMenu" :to="`/zemtown?token=${fUser?.accessToken}`">
+              <NuxtLink id="zemtownMenu" to="/zemtown">
                 Zemtown
               </NuxtLink>
             </li>
@@ -87,10 +82,6 @@
               <NuxtLink :to="$localePath('/game/list')" @click.native="isHeaderSideMobile = false"><i
                   class="uil uil-robot"></i> Games
               </NuxtLink>
-              <a class="pointer" id="zempieWorldMenu" @click="moveZemWorld">
-                <i class="uil uil-globe"></i>
-                Zempie world
-              </a>
             </div>
           </div>
           <div class="header-side-bg-mobile" :style="isHeaderSideBgMobile && 'display:block;'" id="headerSideBgMobile">
@@ -120,6 +111,7 @@
       </div>
     </el-dialog>
   </div>
+  <MobileMenu />
 </template>
 
 <script setup lang="ts">
@@ -240,6 +232,7 @@ async function moveZemWorld() {
 
 <style lang="scss" scoped>
 .header {
+
   .header-info {
     display: flex;
     align-items: center;
@@ -398,6 +391,12 @@ async function moveZemWorld() {
       display: none;
     }
   }
+
+  .header {
+    display: none;
+  }
+
+
 }
 
 .new-dm-badge {
@@ -433,6 +432,11 @@ async function moveZemWorld() {
       display: none;
     }
   }
+
+  .header {
+    display: none;
+  }
+
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
