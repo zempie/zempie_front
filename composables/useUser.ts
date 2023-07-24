@@ -101,9 +101,10 @@ export default function () {
       const response = await useCustomFetch<{ result: { user: IUser } }>('/user/info', getZempieFetchOptions('get', true))
 
       if (response) {
-        const { user: userResult } = response.result
-        user.value.info = { ...userResult }
+        const { result: userResult } = response
 
+        user.value.info = { ...userResult.user }
+        console.log(user.value)
         user.value.isLogin = true;
         useUser().setLoadDone()
       }
@@ -111,7 +112,7 @@ export default function () {
         useUser().setLoadDone()
       }
 
-      await useUser().getUnreadMsg()
+      // await useUser().getUnreadMsg()
       return user.value.info
 
     } catch (error) {
@@ -126,7 +127,7 @@ export default function () {
 
     if (data.value) {
       const { count } = data.value
-      user.value.info.unread_msg_cnt = count
+      user.value.info = { ...user.value.info, unread_msg_cnt: count }
     }
   }
 

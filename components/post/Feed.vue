@@ -292,6 +292,7 @@ async function openComments(isOpenComment: boolean) {
     await commentFetch()
   } else {
     newRecomments.value = []
+    recomment.value = []
   }
 }
 

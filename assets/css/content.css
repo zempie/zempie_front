@@ -5351,7 +5351,7 @@
 }
 
 .dl-content>dt .dlc-chat-content {
-  height: 100%;
+  height: calc(100% - 85px - 90px);
   overflow-x: hidden;
   overflow-y: auto;
   position: relative;

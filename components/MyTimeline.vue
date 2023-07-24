@@ -39,7 +39,7 @@ const isChannelLoading = computed(
 watch(
   () => userInfo.value,
   async (info) => {
-    if (info?.id) {
+    if (info && info.id) {
       await useChannel().getChannelInfo(info.channel_id)
       games.value = info.games
     }

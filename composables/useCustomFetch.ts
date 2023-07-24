@@ -25,15 +25,13 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
   isFetching.value = true
   const config = useRuntimeConfig()
 
-  if (url !== '/chat/unread')
-    await useUser().getUnreadMsg()
-
   return await useFetch<T>(url, {
     initialCache: false,
     ...options,
     async onResponse({ request, response, options }) {
       useCommon().setLoadingDone()
       console.log('[fetch response]', response._data)
+      
       isFetching.value = false
 
     },
@@ -113,21 +111,16 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
   if (ex[url]) {
     return Promise.resolve(ex[url][options.method].res);
   }
-  if (url !== '/chat/unread')
-    await useUser().getUnreadMsg()
 
   return await $fetch<T>(url, {
     ...options,
     async onResponse({ request, response, options }) {
 
       useCommon().setLoadingDone()
-
       console.log('[fetch response]', response._data)
-
     },
     async onResponseError({ request, response, options }) {
       console.log('[fetch response error]', response)
-
 
 
       //사용자 uid error
@@ -154,9 +147,6 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
           }
           break;
       }
-
-
-
     },
 
     async onRequest({ request, options }) {

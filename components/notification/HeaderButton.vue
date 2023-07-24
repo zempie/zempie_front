@@ -1,7 +1,7 @@
 <template>
   <client-only>
     <el-dropdown ref="notiDropdown" id="notiList" trigger="click">
-      <button class="btn-circle-icon ml10" @click="showAlarmList">
+      <button class="btn-circle-icon ml10 flex items-center content-center" @click="showAlarmList">
         <i class="uil uil-bell" style="font-size:21px;"></i>
         <span v-if="hasNewNoti"></span>
       </button>

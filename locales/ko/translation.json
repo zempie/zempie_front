@@ -1043,5 +1043,6 @@
   "sort.recommend": "추천 순",
   "sort.latest": "최신 순",
   "all": "전체",
-  "unblock.done":"차단해제되었습니다"
+  "unblock.done":"차단해제되었습니다",
+  "download.pc.env":"pc 환경에서 다운로드 해주세요"
 }

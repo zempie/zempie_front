@@ -45,7 +45,7 @@
     <div>
       <!-- TODO: 태그 보낼 수 있어야함  -->
       <input v-model="inputMsg" type="text" class="w100p" name="" title="" :placeholder="$t('send.msg')"
-        @keyup.enter="sendMsg" @focus="onFocus" @blur="onBlur" />
+        @keyup.enter="sendMsg" @focus="onFocus" @blur="onBlur" ref="inputRef" />
       <!-- TODO: 2차 스펙 -->
       <!-- <router-link to="#"><i class="uil uil-scenery font25 mr5"></i></router-link>
                 <router-link to="#"><i class="uil uil-camera font28"></i></router-link> -->
@@ -130,6 +130,7 @@ const msgEl = ref<HTMLElement | null>(null)
 const divs = ref([])
 
 const inputMsg = ref('')
+const inputRef = ref(null)
 const msgList = ref<IMessage[]>()
 
 const fromId = ref(0)
@@ -437,13 +438,13 @@ async function onDeleteMsg() {
 }
 
 async function onFocus() {
+  inputRef.value.scrollIntoView({ behavior: 'smooth', block: 'center' });
   if (isFlutter.value) {
     const kbHeight = await FlutterBridge().getKeyHight()
     emit('openKeyboard', Number(kbHeight))
   }
 }
 function onBlur() {
-  console.log('onBlur')
   if (isFlutter.value) {
 
     emit('closeKeyboard')

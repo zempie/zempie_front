@@ -365,7 +365,7 @@ function downloadGame() {
   if (isFlutter.value) {
     ElMessage({
       type: 'error',
-      message: 'pc 환경에서 다운로드 해주세요 '
+      message: t('download.pc.env')
     })
   }
 }

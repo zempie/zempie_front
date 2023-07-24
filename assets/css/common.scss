@@ -1130,6 +1130,7 @@ $zempie-main-color-hover: #f974162a;
 
 .dlc-chat-content {
   overflow-x: hidden;
+  height: calc(100% - 85px);
 
   .inner {
     max-height: 100%;

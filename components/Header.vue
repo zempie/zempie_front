@@ -46,7 +46,8 @@
           </div>
           <div class="header-info ml0" v-if="!isLoading && isLogin" :key="user.id">
             <NotificationHeaderButton />
-            <button class="btn-circle-icon ml10" @click="$router.push($localePath('/dm/list'))">
+            <button class="btn-circle-icon ml10 flex items-center content-center"
+              @click="$router.push($localePath('/dm/list'))">
               <i class="uil uil-comment-alt"></i>
               <span class="new-dm-badge" v-if="unreadMsgCount">{{ unreadMsgCount }}</span>
             </button>
