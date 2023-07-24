@@ -11,9 +11,9 @@
                 height="25" />
             </NuxtLink>
           </p>
-          <button class="btn-circle-none" @click="isHeaderSideMobile = true" v-if="showHamburger">
+          <!-- <button class="btn-circle-none" @click="isHeaderSideMobile = true" v-if="showHamburger">
             <i class="uil uil-bars"></i>
-          </button>
+          </button> -->
           <ul class="menu">
             <li class="uppercase">
               <NuxtLink :to="$localePath('/community/list')"
@@ -28,9 +28,9 @@
               </NuxtLink>
             </li>
             <li class="uppercase pointer">
-              <a id="zempieWorldMenu" @click="moveZemWorld">
-                Z-world
-              </a>
+              <NuxtLink id="zemtownMenu" to="/zemtown">
+                Zemtown
+              </NuxtLink>
             </li>
           </ul>
         </div>
@@ -82,10 +82,6 @@
               <NuxtLink :to="$localePath('/game/list')" @click.native="isHeaderSideMobile = false"><i
                   class="uil uil-robot"></i> Games
               </NuxtLink>
-              <a class="pointer" id="zempieWorldMenu" @click="moveZemWorld">
-                <i class="uil uil-globe"></i>
-                Zempie world
-              </a>
             </div>
           </div>
           <div class="header-side-bg-mobile" :style="isHeaderSideBgMobile && 'display:block;'" id="headerSideBgMobile">
@@ -115,6 +111,7 @@
       </div>
     </el-dialog>
   </div>
+  <MobileMenu />
 </template>
 
 <script setup lang="ts">
@@ -140,6 +137,7 @@ const route = useRoute()
 const isLogin = computed(() => useUser().user.value.isLogin)
 const isLoading = computed(() => useUser().user.value.isLoading)
 const user = computed(() => useUser().user.value.info)
+const fUser = computed(() => useUser().user.value.fUser)
 
 const searchInput = ref()
 const isHeaderSideMobile = ref(false)
@@ -234,6 +232,7 @@ async function moveZemWorld() {
 
 <style lang="scss" scoped>
 .header {
+
   .header-info {
     display: flex;
     align-items: center;
@@ -392,6 +391,12 @@ async function moveZemWorld() {
       display: none;
     }
   }
+
+  .header {
+    display: none;
+  }
+
+
 }
 
 .new-dm-badge {
@@ -427,6 +432,11 @@ async function moveZemWorld() {
       display: none;
     }
   }
+
+  .header {
+    display: none;
+  }
+
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
