@@ -78,7 +78,7 @@ const router = useRouter()
 const currUser = ref()
 const isPageLoading = ref(true)
 
-const isNotGoogleSupport = ref()
+const isNotGoogleSupport = computed(() => navigator.userAgent.includes('kakao') || navigator.userAgent.includes('naver'))
 
 const isLoading = ref(false)
 
@@ -158,7 +158,6 @@ onBeforeMount(() => {
 
 
 onMounted(() => {
-  isNotGoogleSupport.value = navigator.userAgent.includes('kakao') || navigator.userAgent.includes('naver')
   nextTick(() => {
     window.addEventListener("message", receiveMessage, false);
   })
@@ -223,6 +222,10 @@ async function receiveMessage(message: any) {
 }
 
 async function googleLogin() {
+  if (isNotGoogleSupport.value) {
+    ElMessage.error(`해당 브라우저는 구글로그인을 지원하지않습니다.`)
+    return
+  }
   isLoading.value = true
   if (isFlutter.value) {
     flutterSocialLogin('google')

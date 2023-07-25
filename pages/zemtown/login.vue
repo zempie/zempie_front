@@ -50,7 +50,7 @@ function guestMode() {
 
 :deep(.login-area) {
   background: transparent;
-  padding-top: 0px;
+  padding: 0px;
 
   .la-content {
     border: none;
@@ -58,5 +58,12 @@ function guestMode() {
     padding-top: 0px;
 
   }
+}
+
+@media all and (max-width: 767px) {
+  .login-container {
+    width: 70%;
+  }
+
 }
 </style>
