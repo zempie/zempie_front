@@ -1299,8 +1299,10 @@ $zempie-main-color-hover: #f974162a;
 .zemtown-modal {
   position: fixed;
   bottom: 70px;
-  width: 100%;
+  width: auto;
   z-index: 999;
+
+  transform: translate(100%, 0%);
 
   >div {
     max-width: 450px;
