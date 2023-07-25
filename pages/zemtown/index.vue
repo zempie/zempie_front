@@ -71,45 +71,49 @@ function closeMyProfile() {
 async function onMessage(msg: MessageEvent) {
   console.log(msg)
 
-  const { type, target_type, data: parsedData } = JSON.parse(msg.data)
+  try {
+    const { type, target_type, data: parsedData } = JSON.parse(msg.data)
 
 
-  switch (target_type) {
-    case 'thumbnail':
-      const gameId = parsedData && parsedData.game_id
+    switch (target_type) {
+      case 'thumbnail':
+        const gameId = parsedData && parsedData.game_id
 
-      closeMyProfile()
-      isOpenGame.value = true
-      const { data: gameData, error, pending } = await useCustomAsyncFetch<{
-        result: { game: {}; my_emotions: {}; my_heart: boolean }
-      }>(`/launch/game/${gameId}`, getZempieFetchOptions('get', false))
+        closeMyProfile()
+        isOpenGame.value = true
+        const { data: gameData, error, pending } = await useCustomAsyncFetch<{
+          result: { game: {}; my_emotions: {}; my_heart: boolean }
+        }>(`/launch/game/${gameId}`, getZempieFetchOptions('get', false))
 
-      if (gameData.value) {
-        const { game, my_emotions, my_heart } = gameData.value.result
-        targetGame.value = game
+        if (gameData.value) {
+          const { game, my_emotions, my_heart } = gameData.value.result
+          targetGame.value = game
 
-      }
-      break;
-    case 'player':
-      const userId = parsedData && parsedData.user_id
-      isOpenGame.value = false
+        }
+        break;
+      case 'player':
+        const userId = parsedData && parsedData.user_id
+        isOpenGame.value = false
 
-      const { data } = await useCustomAsyncFetch<{ result: { target: IUserChannel } }>(`/user/info/${userId}`, getZempieFetchOptions('get', true))
+        const { data } = await useCustomAsyncFetch<{ result: { target: IUserChannel } }>(`/user/info/${userId}`, getZempieFetchOptions('get', true))
 
-      if (data) {
-        const { result } = data.value
-        targetUser.value = result.target
-        isOpenProfile.value = true
-      }
+        if (data) {
+          const { result } = data.value
+          targetUser.value = result.target
+          isOpenProfile.value = true
+        }
 
-      break;
+        break;
 
-    default:
-      closeMyProfile()
-      isOpenDm.value = false
-      isOpenGame.value = false
+      default:
+        closeMyProfile()
+        isOpenDm.value = false
+        isOpenGame.value = false
 
-      break;
+        break;
+
+    }
+  } catch (err) {
 
   }
 
