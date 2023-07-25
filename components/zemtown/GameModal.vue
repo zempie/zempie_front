@@ -13,8 +13,10 @@
         {{ game.description }}
       </div>
       <div class="actions mt10">
-        <GamePlayBtn :gameInfo="game" class="action-btn" />
-        <NuxtLink class="action-btn btn-default" :to="$localePath(`/game/${props.game?.pathname}`)">게임페이지이동</NuxtLink>
+        <!-- <GamePlayBtn :gameInfo="game" class="action-btn" /> -->
+        <a v-if="game?.game_type === eGameType.Html && game?.stage !== eGameStage.DEV" class="action-btn btn-default"
+          :href="`https://zempie.com/ko/${props.game?.pathname}`">게임 플레이</a>
+        <a class="action-btn btn-default" :href="`https://zempie.com/ko/${props.game?.pathname}`">게임페이지이동</a>
       </div>
     </div>
   </div>
@@ -22,6 +24,7 @@
 <script setup lang="ts">
 import { PropType } from 'vue';
 import { IGame } from '~~/types';
+import { IGame, eGameStage, eGameType } from '~~/types';
 
 const { $localePath } = useNuxtApp()
 
