@@ -6,7 +6,7 @@
         <h2 class="font20  text-center flex content-center">{{ game.title }}</h2>
 
         <div class="thumbnail">
-          <img :src="game?.url_thumb" />
+          <img :src="game?.url_thumb" style="max-width:150px" />
         </div>
       </div>
       <div class="zemtown-body text-center flex content-center">
