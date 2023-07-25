@@ -55,11 +55,18 @@ onMounted(() => {
 function openMyProfile() {
   isOpenProfile.value = true
   targetUser.value = useUser().user.value.info
+  isOpenGame.value = false
+  isOpenDm.value = false
+
+
 }
 
 function openDm() {
   closeMyProfile()
   isOpenDm.value = true
+  isOpenGame.value = false
+  targetUser.value = null
+
 }
 
 function closeMyProfile() {

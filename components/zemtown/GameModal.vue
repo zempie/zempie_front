@@ -15,8 +15,9 @@
       <div class="actions mt10">
         <!-- <GamePlayBtn :gameInfo="game" class="action-btn" /> -->
         <a v-if="game?.game_type === eGameType.Html && game?.stage !== eGameStage.DEV" class="action-btn btn-default"
-          :href="`https://zempie.com/ko/${props.game?.pathname}`">게임 플레이</a>
-        <a class="action-btn btn-default" :href="`https://zempie.com/ko/${props.game?.pathname}`">게임페이지이동</a>
+          :href="`https://zempie.com/play/${props.game?.pathname}`" target="_blank">게임 플레이</a>
+        <a class="action-btn btn-default" :href="`https://zempie.com/ko/game/${props.game?.pathname}`" target="_blank"
+          style="font-size:14px">게임페이지이동</a>
       </div>
     </div>
   </div>
@@ -38,7 +39,7 @@ const props = defineProps({
 
 const emit = defineEmits(['closeModal'])
 
-</script>ㅋ
+</script>
 <style scoped lang="scss">
 .info-container {
 
