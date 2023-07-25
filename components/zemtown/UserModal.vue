@@ -48,7 +48,6 @@ function logout() {
 .info-container {
 
   max-width: 450px;
-  width: 50%;
   background-color: #e99415;
   min-height: 100px;
   display: flex;

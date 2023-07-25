@@ -1301,7 +1301,8 @@ $zempie-main-color-hover: #f974162a;
   bottom: 70px;
   width: auto;
   z-index: 999;
-  left: 40%;
+  left: 50%;
+  transform: translateX(-50%);
 
   >div {
     width: 100%;
