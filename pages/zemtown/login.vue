@@ -2,7 +2,7 @@
   <div class="login-container">
     <div class="logo">
       <img src="/images/zemtown/zemtown_logo.png" class="mb30" />
-      <img src="/images/zemtown/zemtown_char.png" />
+      <img src="/images/zemtown/zemtown_char.png" class="char-logo" />
     </div>
     <div class="mt30">
       <LoginForm :isSimple="true">
@@ -31,6 +31,7 @@ function guestMode() {
   transform: translate(-50%, -50%);
   top: 50%;
   left: 50%;
+
 
   .logo {
     display: flex;
@@ -63,6 +64,10 @@ function guestMode() {
 @media all and (max-width: 767px) {
   .login-container {
     width: 70%;
+
+    .char-logo {
+      display: none
+    }
   }
 
 }
