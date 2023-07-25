@@ -270,7 +270,7 @@ pre[class*=language-].line-numbers>code {
 .token.lf:before,
 .token.space:before,
 .token.tab:not(:empty):before {
-  color: grey;
+  color: gray;
   opacity: .6;
   position: absolute
 }

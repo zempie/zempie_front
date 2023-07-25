@@ -7,6 +7,10 @@
 </template>
 <script setup lang="ts">
 
+const router = useRouter()
+const { $localePath } = useNuxtApp()
+
+
 const targetUser = ref()
 const isOpenProfile = ref(false)
 const isOpenDm = ref(false)
@@ -14,6 +18,8 @@ const isOpenGame = ref(false)
 const targetGame = ref()
 
 const zemtown = computed(() => useZemtown().zemtown.value)
+const isLogin = computed(() => useUser().user.value.isLogin)
+
 
 watch(() =>
   (zemtown.value.isOpenMyProfile), (state) => {
@@ -29,7 +35,7 @@ watch(() =>
 watch(() =>
   (zemtown.value.isOpenDm), (state) => {
     if (state) {
-      isOpenDm.value = true
+      openDm()
     } else {
       isOpenDm.value = false
     }
@@ -41,7 +47,7 @@ onMounted(() => {
     openMyProfile()
   }
   if (zemtown.value.isOpenDm) {
-    isOpenDm.value = true
+    openDm()
   }
   window.addEventListener('message', onMessage)
 })
@@ -51,11 +57,17 @@ function openMyProfile() {
   targetUser.value = useUser().user.value.info
 }
 
+function openDm() {
+  closeMyProfile()
+  isOpenDm.value = true
+}
+
 function closeMyProfile() {
   isOpenProfile.value = false
   targetUser.value = null
   useZemtown().closeMyProfile()
 }
+
 async function onMessage(msg: MessageEvent) {
   console.log(msg)
 

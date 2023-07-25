@@ -30,9 +30,9 @@
                 <UserAvatarSk tag="p" />
               </dd>
               <dt class="ml5">
-                <h3 class="grey-text w50p skeleton-animation">
+                <h3 class="gray-text w50p skeleton-animation">
                 </h3>
-                <p class="grey-text skeleton-animation"></p>
+                <p class="gray-text skeleton-animation"></p>
               </dt>
               <dd>
               </dd>
@@ -106,8 +106,8 @@
                   <UserAvatarSk tag="p" style="width:45px; height: 45px;" />
                 </dd>
                 <dt class="w100p">
-                  <h3 class="grey-text w50p skeleton-animation"> </h3>
-                  <p class="grey-text mt10 skeleton-animation"></p>
+                  <h3 class="gray-text w50p skeleton-animation"> </h3>
+                  <p class="gray-text mt10 skeleton-animation"></p>
                 </dt>
               </dl>
             </li>

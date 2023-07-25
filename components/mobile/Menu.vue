@@ -35,8 +35,11 @@ const router = useRouter()
 const isOpenDm = ref(false)
 
 const isZemtown = computed(() => String(route.name).includes('zemtown'))
+const isLogin = computed(() => useUser().user.value.isLogin)
 
 function openMyProfile() {
+  if (!loginCheck()) return
+
   if (!isZemtown.value) {
     router.push($localePath('/zemtown'))
     useZemtown().openMyProfile()
@@ -52,6 +55,7 @@ function openMyProfile() {
 }
 
 function openDm() {
+  if (!loginCheck()) return
 
   if (!isZemtown.value) {
     router.push($localePath('/zemtown'))
@@ -66,7 +70,15 @@ function openDm() {
 
     }
   }
+}
 
+function loginCheck() {
+  if (isLogin.value) {
+    return true
+  } else {
+    router.push($localePath('/zemtown/login'))
+    return false
+  }
 }
 </script>
 <style scoped lang="scss">

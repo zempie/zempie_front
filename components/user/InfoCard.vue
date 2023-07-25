@@ -1,7 +1,7 @@
 <template>
   <div class="ta-myinfo">
     <UserAvatarSk tag="p" />
-    <h2 style="width: 100%; height: 16px; border-radius: 10px" class="bg-grey-1"></h2>
+    <h2 style="width: 100%; height: 16px; border-radius: 10px" class="bg-gray-1"></h2>
     <ul>
       <li>
         <p style="background: #feb100; cursor: pointer">

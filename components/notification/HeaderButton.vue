@@ -20,8 +20,8 @@
                   <UserAvatarSk style="width:50px; height:50px;" />
                 </dd>
                 <dt>
-                  <h3 class="grey-text skeleton-animation" style="height:20px"></h3>
-                  <p class="grey-text skeleton-animation" style="height:20px; width: 300px;"></p>
+                  <h3 class="gray-text skeleton-animation" style="height:20px"></h3>
+                  <p class="gray-text skeleton-animation" style="height:20px; width: 300px;"></p>
                 </dt>
                 <dd>
                 </dd>

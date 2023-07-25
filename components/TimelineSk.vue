@@ -6,7 +6,7 @@
           <p>
             <UserAvatarSk style="width:40px; height:40px" />
           </p>
-          <div class="bg-grey-1" style="width:100%; height:30px; border-radius: 10px;"></div>
+          <div class="bg-gray-1" style="width:100%; height:30px; border-radius: 10px;"></div>
         </div>
         <ul class="ta-post">
           <FeedSk v-for="feed in 4" />
