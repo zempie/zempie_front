@@ -23,7 +23,6 @@
 </template>
 <script setup lang="ts">
 import { PropType } from 'vue';
-import { IGame } from '~~/types';
 import { IGame, eGameStage, eGameType } from '~~/types';
 
 const { $localePath } = useNuxtApp()
