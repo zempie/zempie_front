@@ -1301,12 +1301,10 @@ $zempie-main-color-hover: #f974162a;
   bottom: 70px;
   width: auto;
   z-index: 999;
-
-  transform: translate(100%, 0%);
+  left: 40%;
 
   >div {
-    max-width: 450px;
-    width: 50%;
+    width: 100%;
   }
 }
 
@@ -1325,7 +1323,7 @@ $zempie-main-color-hover: #f974162a;
   .zemtown-modal {
 
     >div {
-      width: 80%;
+      // width: 80%;
 
     }
   }
