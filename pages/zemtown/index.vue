@@ -80,10 +80,25 @@ async function onMessage(msg: MessageEvent) {
         const gameId = parsedData && parsedData.game_id
 
         closeMyProfile()
+
         isOpenGame.value = true
-        const { data: gameData, error, pending } = await useCustomAsyncFetch<{
-          result: { game: {}; my_emotions: {}; my_heart: boolean }
-        }>(`/launch/game/${gameId}`, getZempieFetchOptions('get', false))
+
+
+
+        const { data: gameData, error, pending } = await useAsyncData<any>('game', () =>
+          $fetch(`/launch/game/${gameId}`, {
+            baseURL: 'https://api.zempie.com/api/v1',
+            method: 'get'
+          }),
+          {
+            initialCache: false
+          }
+        )
+
+
+        // const { data: gameData, error, pending } = await useCustomAsyncFetch<{
+        //   result: { game: {}; my_emotions: {}; my_heart: boolean }
+        // }>(`/launch/game/${gameId}`, getZempieFetchOptions('get', false))
 
         if (gameData.value) {
           const { game, my_emotions, my_heart } = gameData.value.result
