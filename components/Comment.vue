@@ -155,11 +155,9 @@ const commentUser = computed(() => props.comment?.user)
 
 const filteredRecomments = computed(() => {
   const result = props.newRecomments?.filter((cmt) => {
-    console.log(cmt)
     return cmt.parent_id === props.comment.id
   })
 
-  console.log(result)
   return result
 })
 
