@@ -317,9 +317,6 @@
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
-  .header>dl {
-    width: 750px;
-  }
 
   .header-search {
     display: none;
@@ -340,9 +337,6 @@
 }
 
 @media all and (min-width: 992px) and (max-width: 1199px) {
-  .header>dl {
-    width: 970px;
-  }
 
   .header-info-mobile {
     display: none;

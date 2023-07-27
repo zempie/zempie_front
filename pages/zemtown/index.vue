@@ -37,7 +37,7 @@ watch(() =>
     if (state) {
       openDm()
     } else {
-      isOpenDm.value = false
+      closeDm()
     }
   })
 
@@ -52,11 +52,12 @@ onMounted(() => {
   window.addEventListener('message', onMessage)
 })
 
+
 function openMyProfile() {
   isOpenProfile.value = true
   targetUser.value = useUser().user.value.info
   isOpenGame.value = false
-  isOpenDm.value = false
+  closeDm()
 
 
 }
@@ -75,8 +76,13 @@ function closeMyProfile() {
   useZemtown().closeMyProfile()
 }
 
+function closeDm() {
+  isOpenDm.value = false
+  targetGame.value = null
+  useZemtown().closeDm()
+}
+
 async function onMessage(msg: MessageEvent) {
-  console.log(msg)
 
   try {
     const { type, target_type, data: parsedData } = JSON.parse(msg.data)
@@ -129,6 +135,7 @@ async function onMessage(msg: MessageEvent) {
 
       default:
         closeMyProfile()
+        closeDm()
         isOpenDm.value = false
         isOpenGame.value = false
 

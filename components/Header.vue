@@ -439,11 +439,6 @@ async function moveZemWorld() {
   .mobile-logo {
     display: none;
   }
-
-  .header>dl {
-    width: 90%;
-  }
-
   .header-login {
     display: block !important;
 

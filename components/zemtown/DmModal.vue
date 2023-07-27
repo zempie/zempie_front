@@ -1,6 +1,6 @@
 <template>
   <div class="zemtown-modal">
-    <DmList v-if="isOpen" />
+    <DmList v-if="isOpen"  />
   </div>
 </template>
 <script setup lang="ts">

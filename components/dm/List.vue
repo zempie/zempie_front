@@ -202,11 +202,19 @@ const isFbSupported = computed(() => useCommon().setting.value.isFbSupported)
 
 const totalRoomCnt = ref(0)
 
-definePageMeta({
-  title: 'dm',
-  name: 'dm',
-  middleware: 'auth',
-})
+const isAllowPolling = ref(true)
+const zemtown = computed(() => useZemtown().zemtown.value)
+
+
+watch(  () =>
+(zemtown.value.isOpenDm),
+  (val) => {
+    if (!val) {
+      removeWindowEvent()
+      isAllowPolling.value = false
+    }
+  }
+)
 
 useInfiniteScroll(
   msgEl,
@@ -277,7 +285,9 @@ onMounted(async () => {
   nextTick(async () => {
     onResize()
     await fetch()
-    if (!userInfo.value.setting.dm_alarm || !isFbSupported.value || !useCommon().setting.value.isNotiAllow) {
+    console.log('isAllowPolling', isAllowPolling.value)
+    // if (!userInfo.value.setting.dm_alarm || !isFbSupported.value || !useCommon().setting.value.isNotiAllow) {
+    if(isAllowPolling.value){
       await pollingRoom()
     }
     const userId = getQuery('user')
@@ -291,16 +301,21 @@ onMounted(async () => {
 
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', onResize)
-  clearInterval(roomPolling.value)
+  removeWindowEvent()
 })
 
 
 onBeforeRouteLeave((to, from, next) => {
-  window.removeEventListener('resize', onResize)
-  clearInterval(roomPolling.value)
+  removeWindowEvent()
   next()
 })
+
+
+function removeWindowEvent() {
+  window.removeEventListener('resize', onResize)
+  clearInterval(roomPolling.value)
+}
+
 
 function getQuery(query: string) {
   return route.query ? route.query[query] : null
