@@ -30,9 +30,9 @@
                 <UserAvatarSk tag="p" />
               </dd>
               <dt class="ml5">
-                <h3 class="grey-text w50p skeleton-animation">
+                <h3 class="gray-text w50p skeleton-animation">
                 </h3>
-                <p class="grey-text skeleton-animation"></p>
+                <p class="gray-text skeleton-animation"></p>
               </dt>
               <dd>
               </dd>
@@ -106,8 +106,8 @@
                   <UserAvatarSk tag="p" style="width:45px; height: 45px;" />
                 </dd>
                 <dt class="w100p">
-                  <h3 class="grey-text w50p skeleton-animation"> </h3>
-                  <p class="grey-text mt10 skeleton-animation"></p>
+                  <h3 class="gray-text w50p skeleton-animation"> </h3>
+                  <p class="gray-text mt10 skeleton-animation"></p>
                 </dt>
               </dl>
             </li>
@@ -202,11 +202,19 @@ const isFbSupported = computed(() => useCommon().setting.value.isFbSupported)
 
 const totalRoomCnt = ref(0)
 
-definePageMeta({
-  title: 'dm',
-  name: 'dm',
-  middleware: 'auth',
-})
+const isAllowPolling = ref(true)
+const zemtown = computed(() => useZemtown().zemtown.value)
+
+
+watch(  () =>
+(zemtown.value.isOpenDm),
+  (val) => {
+    if (!val) {
+      removeWindowEvent()
+      isAllowPolling.value = false
+    }
+  }
+)
 
 useInfiniteScroll(
   msgEl,
@@ -277,7 +285,9 @@ onMounted(async () => {
   nextTick(async () => {
     onResize()
     await fetch()
-    if (!userInfo.value.setting.dm_alarm || !isFbSupported.value || !useCommon().setting.value.isNotiAllow) {
+    console.log('isAllowPolling', isAllowPolling.value)
+    // if (!userInfo.value.setting.dm_alarm || !isFbSupported.value || !useCommon().setting.value.isNotiAllow) {
+    if(isAllowPolling.value){
       await pollingRoom()
     }
     const userId = getQuery('user')
@@ -291,16 +301,21 @@ onMounted(async () => {
 
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', onResize)
-  clearInterval(roomPolling.value)
+  removeWindowEvent()
 })
 
 
 onBeforeRouteLeave((to, from, next) => {
-  window.removeEventListener('resize', onResize)
-  clearInterval(roomPolling.value)
+  removeWindowEvent()
   next()
 })
+
+
+function removeWindowEvent() {
+  window.removeEventListener('resize', onResize)
+  clearInterval(roomPolling.value)
+}
+
 
 function getQuery(query: string) {
   return route.query ? route.query[query] : null
@@ -700,103 +715,5 @@ function closeKeyboard() {
     }
   }
 
-}
-
-@media all and (max-width: 767px) {
-
-
-  .dm-list {
-    padding: 20px 10px 10px 10px;
-    margin: 0px;
-    width: 100%;
-    height: 100%;
-    border-radius: 0px;
-    box-shadow: none;
-
-    .dl-title {
-      display: flex;
-      flex-direction: row;
-
-      .mobile-btn {
-        display: inline;
-        border: none;
-        background: transparent;
-        padding: 0px;
-        color: #333;
-        font-size: 25px;
-
-        &.off {
-          display: none;
-        }
-
-        &.on {
-          display: inline;
-        }
-      }
-    }
-
-    .dl-content {
-      border: none;
-      margin-top: 10px;
-
-      height: 90%;
-
-      .room-container {
-        &.off {
-          display: none;
-        }
-
-        &.on {
-          display: block;
-        }
-
-        .msg-list {
-          padding: 0px;
-          height: 100%;
-          overflow-y: scroll;
-
-          li {
-            // margin: 0px;
-          }
-        }
-      }
-
-      .msg-container {
-
-        &.off {
-          display: none;
-        }
-
-        &.on {
-          display: block;
-          border: 1px solid #eee;
-          border-radius: 10px;
-        }
-
-        ::v-deep(.dlc-chat-content) {
-          height: calc(100% - 120px);
-        }
-
-        ::v-deep(.dlc-send-message) {
-          // height: 50px;
-
-          div {
-            width: 90%;
-          }
-
-          button {
-            height: 30px;
-            width: 30px;
-          }
-
-        }
-
-      }
-    }
-  }
-
-  ::v-deep(.new-msg-modal) {
-    border-radius: 0px !important;
-  }
 }
 </style>

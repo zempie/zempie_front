@@ -2,11 +2,14 @@
   <div class="login-container">
     <div class="logo">
       <img src="/images/zemtown/zemtown_logo.png" class="mb30" />
-      <img src="/images/zemtown/zemtown_char.png" />
+      <img src="/images/zemtown/zemtown_char.png" class="char-logo" />
     </div>
     <div class="mt30">
-      <LoginForm />
-      <button class="btn-default-big text-white" @click="guestMode">Guest</button>
+      <LoginForm :isSimple="true">
+        <template #actions>
+          <button class="btn-default-big text-white w100p bg-gray mt10 mb10" @click="guestMode">Guest</button>
+        </template>
+      </LoginForm>
     </div>
   </div>
 </template>
@@ -16,7 +19,7 @@ const router = useRouter()
 
 function guestMode() {
 
-  router.push('/zemtown/guest')
+  router.push('/zemtown')
 
 
 }
@@ -29,6 +32,7 @@ function guestMode() {
   top: 50%;
   left: 50%;
 
+
   .logo {
     display: flex;
     flex-direction: column;
@@ -39,5 +43,32 @@ function guestMode() {
       width: 70%;
     }
   }
+}
+
+.btn-default-big {
+  border-radius: 50px
+}
+
+:deep(.login-area) {
+  background: transparent;
+  padding: 0px;
+
+  .la-content {
+    border: none;
+    margin-top: 0px;
+    padding-top: 0px;
+
+  }
+}
+
+@media all and (max-width: 767px) {
+  .login-container {
+    width: 70%;
+
+    .char-logo {
+      display: none
+    }
+  }
+
 }
 </style>

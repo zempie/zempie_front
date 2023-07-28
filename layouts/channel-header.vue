@@ -104,7 +104,7 @@ try {
 
 @media all and (min-width: 480px) and (max-width: 767px) {
   .content {
-    padding-top: 60px;
+    padding-top: 30px;
 
     .tab-search-swiper {
       width: 100%;

@@ -1,26 +1,30 @@
 <template>
   <div class="zemtown-modal">
     <div v-if="isOpen" class="info-container">
-      <div class="user-header">
-        <NuxtLink class="user-link font20 mb10" :to="$localePath('/')">{{ }}</NuxtLink>
-        <NuxtLink class="user-link mt5 mb10" :to="$localePath('/')">{{}}</NuxtLink>
+
+      <div class="zemtown-header mb10">
+        <h2 class="font20  text-center flex content-center">{{ game.title }}</h2>
+
+        <div class="thumbnail">
+          <img :src="game?.url_thumb" style="max-width:150px" />
+        </div>
       </div>
-      <div class="user-body">
-
-        <img :src="game?.url_thumb" />
+      <div class="zemtown-body text-center flex content-center">
+        {{ game.description }}
       </div>
-      <div class="user-actions">
-
-        <button class="action-btn btn-default">play</button>
-        <NuxtLink class="action-btn btn-default" :to="$localePath(`/game/${props.game?.pathname}`)">게임페이지이동</NuxtLink>
-
+      <div class="actions mt10">
+        <!-- <GamePlayBtn :gameInfo="game" class="action-btn" /> -->
+        <a v-if="game?.game_type === eGameType.Html && game?.stage !== eGameStage.DEV" class="action-btn btn-default"
+          :href="`https://zempie.com/play/${props.game?.pathname}`" target="_blank">게임 플레이</a>
+        <a class="action-btn btn-default" :href="`https://zempie.com/ko/game/${props.game?.pathname}`" target="_blank"
+          style="font-size:14px">게임페이지이동</a>
       </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import { PropType } from 'vue';
-import { IGame } from '~~/types';
+import { IGame, eGameStage, eGameType } from '~~/types';
 
 const { $localePath } = useNuxtApp()
 
@@ -35,16 +39,11 @@ const props = defineProps({
 
 const emit = defineEmits(['closeModal'])
 
-function logout() {
-  useUser().logout()
-  emit('closeModal')
-}
-</script>ㅋ
+</script>
 <style scoped lang="scss">
 .info-container {
 
   max-width: 450px;
-  width: 50%;
   background-color: #e99415;
   min-height: 100px;
   display: flex;
@@ -53,17 +52,21 @@ function logout() {
   display: flex;
   flex-direction: column;
   padding: 30px 20px;
+  color: #000;
 
-  .user-header {
+  .thumbnail {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
 
-    .user-link {
-      color: #000;
+    img {
+      border-radius: 10px;
+      margin: 20px 0px;
     }
   }
 
-  .user-body {
+  .zemtown-body {
+
+
 
     a {
       color: #000 !important;
@@ -91,9 +94,19 @@ function logout() {
     }
   }
 
-  .user-actions {
+  .actions {
     display: flex;
     justify-content: space-between;
+
+    :deep(.play-btn) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      li {
+        margin-left: 10px;
+      }
+    }
 
     .action-btn {
       width: 48%;

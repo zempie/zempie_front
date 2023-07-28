@@ -1,6 +1,6 @@
 <template>
   <div class="zemtown-modal">
-    <DmList v-if="isOpen" />
+    <DmList v-if="isOpen"  />
   </div>
 </template>
 <script setup lang="ts">
@@ -15,6 +15,7 @@ const props = defineProps({
 .zemtown-modal {
   max-height: calc(100vh - 70px);
   padding-bottom: 0px;
+  min-width: 350px;
 
   :deep(.dm-list) {
     border-radius: 10px;

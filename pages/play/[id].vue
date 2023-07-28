@@ -2,8 +2,8 @@
   <div id="gamePage">
     <ClientOnly>
       <iframe ref="game" class="iframe" :style="`height:${iframeHeight};`" :src="config.ENV === 'local' || config.ENV === 'development'
-          ? `${config.LAUNCHER_URL}/#/game/${gamePath}`
-          : `${config.LAUNCHER_URL}/game/${gamePath}`
+        ? `${config.LAUNCHER_URL}/#/game/${gamePath}`
+        : `${config.LAUNCHER_URL}/game/${gamePath}`
         "></iframe>
     </ClientOnly>
   </div>
@@ -30,6 +30,7 @@ const initLauncher = ref(false)
 const gameData = computed(() => data.value.result.game)
 const gamePath = computed(() => route.params.id)
 const userInfo = computed(() => useUser().user.value.info)
+const fUser = computed(() => useUser().user.value.fUser)
 
 definePageMeta({
   layout: 'layout-none',
@@ -51,11 +52,21 @@ shared.createHeadMeta(data.value?.result?.game.title, data.value?.result?.game.d
 watch(
   () => userInfo.value,
   (info) => {
-    if (info) {
+    if (info && fUser.value) {
       onChangedToken()
     }
   }
 )
+
+watch(
+  () => fUser.value,
+  (info) => {
+    if (info && userInfo.value) {
+      onChangedToken()
+    }
+  }
+)
+
 
 onMounted(async () => {
   if (process.client) {
@@ -63,6 +74,7 @@ onMounted(async () => {
     window.addEventListener('resize', onResize)
     onResize()
   }
+
   // await fetch()
 })
 
@@ -71,27 +83,17 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', onResize)
 })
 
-async function fetch() {
-  const { data, error, pending } = await useCustomAsyncFetch<{
-    result: { game: {}; my_emotions: {}; my_heart: boolean }
-  }>(`/game/${gamePath.value}`, getZempieFetchOptions('get', false))
-
-  if (data.value) {
-    const { game, my_emotions, my_heart } = data.value.result
-    // gameData.value = game
-  }
-}
 
 function onResize() {
   iframeHeight.value = `${window.innerHeight}px`
 }
 
 function onChangedToken() {
-  console.log(' userInfo.value',  userInfo.value)
-  toMessage({
-    type: '@updateToken',
-    token: userInfo.value?.uid && useUser().user.value.fUser?.accessToken
-  })
+  if (userInfo.value)
+    toMessage({
+      type: '@updateToken',
+      token: userInfo.value.uid && useUser().user.value.fUser?.accessToken
+    })
 }
 
 async function onMessage(msg: MessageEvent) {

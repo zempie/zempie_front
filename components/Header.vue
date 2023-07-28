@@ -32,6 +32,11 @@
                 Zemtown
               </NuxtLink>
             </li>
+            <li class="uppercase pointer">
+              <a id="mogeradMenu" @click="moveMogera">
+                Mogera
+              </a>
+            </li>
           </ul>
         </div>
       </dt>
@@ -217,15 +222,22 @@ function clickOutside() {
 
 
 async function moveZemWorld() {
+  const { result } = await getGameToken()
+  if (result) {
+    window.open(`${config.ZEMPIE_METAVERSE}?key=${result.token}`, "_blank");
+  }
+}
+
+async function moveMogera() {
+  window.open(`${config.MOGERA_URL}?key=${fUser.value.accessToken}`, "_blank");
+}
+
+async function getGameToken() {
   if (isLogin.value) {
-    const { result } = await useCustomFetch<{ result: { token: string } }>("/create/token", getZempieFetchOptions("post", true))
-    if (result) {
-      window.open(`${config.ZEMPIE_METAVERSE}?key=${result.token}`, "_blank");
-    }
+    return await useCustomFetch<{ result: { token: string } }>("/create/token", getZempieFetchOptions("post", true))
   } else {
     router.push($localePath("/login"))
   }
-
 }
 
 </script>
@@ -392,9 +404,7 @@ async function moveZemWorld() {
     }
   }
 
-  .header {
-    display: none;
-  }
+
 
 
 }
@@ -433,9 +443,7 @@ async function moveZemWorld() {
     }
   }
 
-  .header {
-    display: none;
-  }
+
 
 }
 
@@ -443,11 +451,6 @@ async function moveZemWorld() {
   .mobile-logo {
     display: none;
   }
-
-  .header>dl {
-    width: 90%;
-  }
-
   .header-login {
     display: block !important;
 
