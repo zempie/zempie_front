@@ -229,12 +229,7 @@ async function moveZemWorld() {
 }
 
 async function moveMogera() {
-  // const { result } = await getGameToken()
-  // if (result) {
-  // const temp = useCustomFetch<{ result: { token: string } }>(`/m/user/info?token=${result.token}`, getZempieFetchOptions("get", true))
-
   window.open(`${config.MOGERA_URL}?key=${fUser.value.accessToken}`, "_blank");
-  // }
 }
 
 async function getGameToken() {
