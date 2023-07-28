@@ -1,9 +1,6 @@
 <template>
   <div class="studio-upload-input">
-    <div class="save-notice">
-      <p><i class="uil uil-info-circle"></i> {{ new Date() }}에 자동 저장된 파일이 있습니다.</p>
-      <p class="ml15">저장된 파일을 불러와 이어서 작성할 수 있습니다. <span>이어서 작성하기 ></span></p>
-    </div>
+  
     <div class="sui-input">
       <div class="suii-title">{{ $t('addGameInfo.title') }}</div>
       <dl class="suii-content">
@@ -99,10 +96,10 @@
                 </p>
               </transition>
               <p style="
-                                                                                                 width: 100%;
-                                                                                                 display: flex;
-                                                                                                 justify-content: space-around;
-                                                                                               ">
+                            width: 100%;
+                            display: flex;
+                            justify-content: space-around;
+                          ">
                 <button class="btn-gray" @click="uploadThumbnail">
                   <i class="uil uil-upload"></i>&nbsp;
                   {{ $t('addGameInfo.game.thumbnail') }}
@@ -202,29 +199,32 @@
         </a>
       </li>
     </ul>
-    <div v-if="editProject?.info?.id" class="sui-input" style="margin-top: 100px">
-      <dl class="suii-content delete-area">
-        <dt>
-          {{ $t('addGameInfo.delete.game') }}
-        </dt>
-        <dd class="game-delete-btn">
-          <a @click="isDeleteModalOpen = true" class="btn-default w150">
-            {{ $t('addGameInfo.delete') }}
-          </a>
-        </dd>
-      </dl>
-    </div>
 
   </div>
 </template>
 <script setup lang="ts">
+import axios from 'axios'
 import { required, helpers, maxLength } from '@vuelidate/validators'
 import useVuelidate from '@vuelidate/core'
+import { eGameType, eGameCategory, eGameStage } from '~~/types';
+import { ElMessage, ElLoading, ElProgress, ElTooltip } from 'element-plus'
 
 const { t, locale } = useI18n()
+const config = useRuntimeConfig()
 
 const isAuthGamePath = ref(true)
 
+const hashtagsArr = ref([])
+const chipInput = ref('')
+
+const thumbnail = ref<HTMLElement>()
+const thumbFile = ref<File>()
+const prevThumbnail = ref<String | ArrayBuffer>('')
+const isThumbErr = ref(false)
+
+const gifThumbnail = ref<HTMLElement>()
+const gifThumFile = ref<File>()
+const prevGif = ref<String | ArrayBuffer>('')
 
 let form = reactive({
   name: '',
@@ -253,21 +253,82 @@ const rules = computed(() => {
 })
 
 const v$ = useVuelidate(rules, form)
-</script>
-<style scoped lang="scss">
-.save-notice {
-  background-color: #fff;
-  border-radius: 10px;
-  padding: 20px 30px;
-  margin-bottom: 20px;
 
-  span {
-    color: #ff6e17;
-    cursor: pointer;
-    text-decoration: underline;
+const props = defineProps({
+  savedFileId:Number
+})
+function saveChip() {
+  if (
+    !hashtagsArr.value.includes(chipInput.value.trim()) &&
+    !!chipInput.value.trim()
+  ) {
+    hashtagsArr.value.indexOf(chipInput.value) === -1 &&
+      hashtagsArr.value.push(chipInput.value.trim())
   }
 
+  chipInput.value = ''
 }
+
+
+
+function backspaceDelete({ which }) {
+  which == 8 &&
+    chipInput.value === '' &&
+    hashtagsArr.value.splice(hashtagsArr.value.length - 1)
+}
+function loadAutoSave() {
+
+}
+
+async function uploadGame( ){
+  const formData = new FormData()
+
+
+  for (let k in form) {
+    formData.append(k, form[k])
+  }
+
+  formData.append('category', eGameCategory.Challenge)
+  formData.append('file_type', eGameType.Html)
+  formData.append('support_platform', '0')
+  formData.append('mogera_file_id', props.savedFileId)
+  formData.append('stage', String(eGameStage.EARLY))
+
+  const loading = ElLoading.service({
+    lock: true,
+    text: `Loading...`,
+    customClass: 'loading-spinner',
+    background: 'rgba(0, 0, 0, 0.7)',
+  })
+    //onUploadProgress 사용을 위해서 axios 사용.. ohmyfetch가 지원하면 그때 수정
+    axios('/studio/project', {
+    method: 'post',
+    baseURL: config.STUDIO_API,
+    data: formData,
+    headers: {
+      'Context-Type': 'multipart/form-data',
+      Authorization: `Bearer ${useUser().user.value.fUser.accessToken}`
+    },
+    onUploadProgress: (e) => {
+      const percentage = Math.round((e.loaded * 100) / e.total)
+      loading.setText(`Loading...${percentage}%`)
+
+      if (Number(percentage) === 100) {
+        loading.setText('파일이 업로드되었습니다. 잠시만 기다려주세요')
+
+      }
+    }
+  })
+    .then(() => {
+      router.push($localePath('/project/list'))
+    })
+    .finally(() => {
+      loading.close()
+    })
+}
+</script>
+<style scoped lang="scss">
+
 
 .chip-container {
   min-height: 48px;
