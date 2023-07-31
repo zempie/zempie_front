@@ -32,11 +32,11 @@
                 Z-world
               </a>
             </li>
-            <!-- <li v-if="showMogera" class="uppercase pointer">
+            <li v-if="showMogera" class="uppercase pointer">
               <a id="mogeradMenu" @click="moveMogera">
                 Mogera
               </a>
-            </li> -->
+            </li>
           </ul>
         </div>
       </dt>
@@ -196,6 +196,7 @@ watch(
 onMounted(() => {
   nextTick(() => {
     onResize()
+    onPressMogera()
   })
   window.addEventListener("resize", onResize)
 })
@@ -251,6 +252,15 @@ async function getGameToken() {
 
 
 
+function onPressMogera() {
+  window.addEventListener('keydown', (e) => {
+
+    if (e.which === 13 && e.ctrlKey) {
+      showMogera.value = !showMogera.value
+    }
+    // console.log(e.keyCode, e.key)
+  })
+}
 
 </script>
 
