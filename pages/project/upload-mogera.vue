@@ -7,11 +7,13 @@
       </div>
       <dl class="studio-upload-area">
         <div v-if="showSavedInfo" class="save-notice">
-      <p><i class="uil uil-info-circle"></i> {{ dayjs(savedFile?.created_at).format('YYYY-MM-DD HH:MM:ss') }}에 자동 저장된 파일이 있습니다.</p>
-      <p class="ml15">저장된 파일을 불러와 이어서 작성할 수 있습니다. <span @click="loadAutoSave">이어서 작성하기 ></span></p>
-    </div>
-    <ProjectAddGameInfo :savedFile="savedFile" :isMogera="true"/>
-        <!-- <ProjectGameInfo :savedFileId="savedFile?.id"/> -->
+          <p><i class="uil uil-info-circle"></i> {{ dayjs(savedFile?.created_at).format('YYYY-MM-DD HH:MM:ss') }}에 자동 저장된
+            파일이 있습니다.</p>
+          <p class="ml15">저장된 파일을 불러와 이어서 작성할 수 있습니다. <span @click="loadAutoSave">이어서 작성하기 ></span></p>
+        </div>
+        <ClientOnly>
+          <ProjectAddGameInfo :savedFile="savedFile" :isMogera="true" />
+        </ClientOnly>
       </dl>
     </div>
   </NuxtLayout>
@@ -22,9 +24,11 @@ import { onBeforeRouteLeave } from 'vue-router';
 import { isObjEmpty } from '~~/scripts/utils';
 
 const route = useRoute()
+const router = useRouter()
+const { $localePath } = useNuxtApp()
 
 const savedFile = ref()
-const fromMogera = computed(()=> Boolean(route.query.direct))
+const fromMogera = computed(() => Boolean(route.query.direct))
 const showSavedInfo = ref(false)
 
 definePageMeta({
@@ -32,10 +36,10 @@ definePageMeta({
 })
 
 onMounted(async () => {
- 
+
   await getMogeraFile()
   window.addEventListener('beforeunload', leavePage)
-  if(fromMogera.value){
+  if (fromMogera.value) {
     showSavedInfo.value = false
   }
 })
@@ -45,7 +49,7 @@ onBeforeUnmount(() => {
 })
 
 onBeforeRouteLeave((to, from, next) => {
-  window.open(to.path, '_blank')
+  next()
 })
 
 function leavePage(event) {
@@ -54,19 +58,22 @@ function leavePage(event) {
 }
 
 async function getMogeraFile() {
-  const { data } = await useCustomAsyncFetch<{reulst:any}>('/mogera/game-file',getStudioFetchOptions('get', true) )
-  
-  if(data.value){
+  const { data } = await useCustomAsyncFetch<{ reulst: any }>('/mogera/game-file', getStudioFetchOptions('get', true))
+
+  if (data.value) {
     const { result } = data.value
-    if(result.length){
+
+    if (result.length) {
       const [firstSaved] = result
       savedFile.value = firstSaved
       showSavedInfo.value = true
+    } else {
+      router.replace($localePath('/project/upload'))
     }
   }
 }
 
-function loadAutoSave(){
+function loadAutoSave() {
   showSavedInfo.value = false
 }
 
@@ -91,7 +98,7 @@ function loadAutoSave(){
 }
 
 .save-notice {
-  width:100%;
+  width: 100%;
   background-color: #fff;
   border-radius: 10px;
   padding: 20px 30px;
@@ -105,9 +112,9 @@ function loadAutoSave(){
 
 }
 
-:deep(.studio-upload-area){
-  dd{
-    width:100%
+:deep(.studio-upload-area) {
+  dd {
+    width: 100%
   }
 }
 </style>

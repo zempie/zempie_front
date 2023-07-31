@@ -81,16 +81,15 @@
             <dd>
               <ul class="image-upload">
                 <li>
-                  <div :style="
-                    prevThumbnail && {
-                      background:
-                        'url(' +
-                        prevThumbnail +
-                        ') center center / cover no-repeat',
-                      'background-size': 'cover',
-                      border: '#e9e9e9 2px solid',
-                    }
-                  ">
+                  <div :style="prevThumbnail && {
+                    background:
+                      'url(' +
+                      prevThumbnail +
+                      ') center center / cover no-repeat',
+                    'background-size': 'cover',
+                    border: '#e9e9e9 2px solid',
+                  }
+                    ">
                     <div style="height: 0px; overflow: hidden">
                       <input id="image-selector" type="file" @change="onImgChange"
                         accept="image/jpeg, image/png, image/svg, image/jpg, image/webp, image/bmp," ref="thumbnail"
@@ -138,16 +137,15 @@
             <dd>
               <ul class="image-upload">
                 <li>
-                  <div :style="
-                    prevGif && {
-                      background:
-                        'url(' +
-                        prevGif +
-                        ') center center / cover no-repeat',
-                      'background-size': 'cover',
-                      border: '#e9e9e9 2px solid',
-                    }
-                  ">
+                  <div :style="prevGif && {
+                    background:
+                      'url(' +
+                      prevGif +
+                      ') center center / cover no-repeat',
+                    'background-size': 'cover',
+                    border: '#e9e9e9 2px solid',
+                  }
+                    ">
                     <div style="height: 0px; overflow: hidden">
                       <input type="file" @change="onGifChange" accept=image/gif ref="gifThumbnail" name="fileInput" />
                     </div>
@@ -218,7 +216,8 @@
             <a v-if="isEditInfo" @click="updateGame" class="btn-default w150">
               {{ $t('update') }}
             </a>
-            <a v-else-if="uploadProject.form.stage === eGameStage.DEV || isMogera" @click="uploadGame" class="btn-default w150">
+            <a v-else-if="uploadProject.form.stage === eGameStage.DEV || isMogera" @click="uploadGame"
+              class="btn-default w150">
               {{ $t('upload') }}
             </a>
             <a v-else @click="save" class="btn-default w150">
@@ -373,10 +372,10 @@ const waitGamePath = ref(false)
 const isDeleteModalOpen = ref(false)
 
 const props = defineProps({
-  savedFile:Object,
-  isMogera:{
-    type:Boolean,
-    default:false
+  savedFile: Object,
+  isMogera: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -490,8 +489,8 @@ async function save() {
   // if (!thumbFile.value) isThumbErr.value = true
 
   // if (!isValid || isThumbErr.value) return
-  const res = await saveForm() 
-  if(!res) return
+  const res = await saveForm()
+  if (!res) return
 
   setForm(form)
   isFormDone.value = true
@@ -511,17 +510,17 @@ async function saveForm() {
 
   if (!isValid || isThumbErr.value) {
     return false
-  }else{
+  } else {
     return true
   }
 }
 
 async function uploadGame() {
-  if(props.isMogera) {
-    const res = await saveForm() 
-   if(!res) return
-   await mogeraUpload()
-    return 
+  if (props.isMogera) {
+    const res = await saveForm()
+    if (!res) return
+    await mogeraUpload()
+    return
   }
   form.hashtags = hashtagsArr.value.toString()
 
@@ -531,7 +530,7 @@ async function uploadGame() {
 
   //  const {gameInfoObj, gameFileInfoObj, uploadGameFiles} = this.$store.getters;
   const formData = new FormData()
-  
+
   for (let k in form) {
     formData.append(k, form[k])
   }
@@ -579,7 +578,7 @@ async function mogeraUpload() {
     background: 'rgba(0, 0, 0, 0.7)',
   })
 
-    axios('/studio/project', {
+  axios('/studio/project', {
     method: 'post',
     baseURL: config.STUDIO_API,
     data: formData,
@@ -599,6 +598,9 @@ async function mogeraUpload() {
   })
     .then(() => {
       router.push($localePath('/project/list'))
+    })
+    .catch((err) => {
+      console.log(err)
     })
     .finally(() => {
       loading.close()
