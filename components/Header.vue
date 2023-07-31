@@ -32,7 +32,7 @@
                 Zemtown
               </NuxtLink>
             </li>
-            <li class="uppercase pointer">
+            <li v-if="showMogera" class="uppercase pointer">
               <a id="mogeradMenu" @click="moveMogera">
                 Mogera
               </a>
@@ -147,6 +147,7 @@ const fUser = computed(() => useUser().user.value.fUser)
 const searchInput = ref()
 const isHeaderSideMobile = ref(false)
 const isHeaderSideBgMobile = ref(false)
+const showMogera = ref(false)
 
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 const unreadMsgCount = computed(() => {
@@ -192,6 +193,7 @@ watch(
 onMounted(() => {
   nextTick(() => {
     onResize()
+    onPressMogera()
   })
   window.addEventListener("resize", onResize)
 })
@@ -238,6 +240,17 @@ async function getGameToken() {
   } else {
     router.push($localePath("/login"))
   }
+}
+
+
+
+function onPressMogera() {
+  window.addEventListener('keydown', (e) => {
+
+    if (e.which === 13 && e.ctrlKey) {
+      showMogera.value = !showMogera.value
+    }
+  })
 }
 
 </script>
