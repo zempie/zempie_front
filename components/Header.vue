@@ -32,11 +32,11 @@
                 Z-world
               </a>
             </li>
-            <li class="uppercase pointer">
+            <!-- <li v-if="showMogera" class="uppercase pointer">
               <a id="mogeradMenu" @click="moveMogera">
                 Mogera
               </a>
-            </li>
+            </li> -->
           </ul>
         </div>
       </dt>
@@ -150,6 +150,7 @@ const fUser = computed(() => useUser().user.value.fUser)
 const searchInput = ref()
 const isHeaderSideMobile = ref(false)
 const isHeaderSideBgMobile = ref(false)
+const showMogera = ref(false)
 
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 const unreadMsgCount = computed(() => {
@@ -247,6 +248,9 @@ async function getGameToken() {
     router.push($localePath("/login"))
   }
 }
+
+
+
 
 </script>
 
