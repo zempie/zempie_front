@@ -24,10 +24,20 @@ const props = defineProps({
     &.on {
       height: calc(100vh - 50px);
       border-radius: 0px;
-      max-width: 100vw;
+      width: 100vw;
+
 
       .dl-content {
-        height: calc(100vh - 100px);
+        .active-room-container{
+          height:10%;
+        }
+        // height: calc(100vh - 100px);
+        .dlc-chat-content{
+          height:80%;
+        }
+        .dlc-send-message{
+          height:10%;
+        }
       }
 
     }
@@ -36,7 +46,6 @@ const props = defineProps({
 
   :deep(.new-msg-modal) {
     border-radius: 0px !important;
-
   }
 }
 </style>

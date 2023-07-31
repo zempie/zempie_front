@@ -1,5 +1,5 @@
 <template>
-  <div class="content" style="padding-top: 65px">
+  <div class="content" >
     <slot />
   </div>
 </template>
@@ -69,6 +69,10 @@ async function getChannelHeaderInfo() {
 }
 
 @media all and (max-width: 479px) {
+
+.content {
+  padding-top: 0px;
+}
   .tab-search-swiper {
     .swiper-slide {
       .mobile {
