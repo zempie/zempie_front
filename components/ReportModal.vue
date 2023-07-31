@@ -16,7 +16,7 @@
           </li>
           <li>
             <textarea class="w100p" maxlength="50" v-model="additionalReportReason"
-              placeholder="추가적인 정보를 작성해주세요."></textarea>
+              :placeholder="`${$t('add.additional.info')}`"></textarea>
           </li>
         </ul>
 
@@ -73,7 +73,18 @@ async function onSubmitReport() {
         showReportComModal.value = true
       }
       break;
-    // case eReportType.
+    case eReportType.comment:
+      payload = {
+        comment_id: props.reportInfo.target_id,
+        targetType: props.reportInfo.type,
+        // post_id: props.reportInfo.target_id,
+        report_reason: reportReason.value
+      }
+      const { data: cmtData } = await useCustomAsyncFetch(`/comment/report`, getComFetchOptions('post', true, payload))
+      if (cmtData.value) {
+        showReportComModal.value = true
+      }
+      break;
     default:
       //TODO: 임시
       showReportComModal.value = true

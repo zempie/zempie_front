@@ -4,6 +4,10 @@ export default function () {
   }))
 
   const getSearch = async (keyword: string) => {
+    if (!keyword) {
+      resetResults()
+      return
+    }
     const { data, error, pending } = await useCustomAsyncFetch(`/search?q=${keyword}`, getComFetchOptions('get', false))
     if (data.value) {
       console.log(keyword, data.value)

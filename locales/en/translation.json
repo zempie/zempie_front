@@ -1042,5 +1042,9 @@
   "send.msg.btn": "Send",
   "violent.contents": "Sensitive content",
   "hide": "Hide",
-  "unblock.done":"Unblocked"
+  "sort.recommend": "Recommend",
+  "sort.latest": "Latest",
+  "all": "All",
+  "unblock.done":"Unblocked",
+  "download.pc.env":"Please download it on your PC"
 }

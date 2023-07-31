@@ -30,14 +30,16 @@
     <div class="inner" ref="scrollContent">
       <div :class="msg.sender?.id === userInfo.id ? 'receiver-chat' : 'sender-chat'" v-for="( msg, index ) in  msgList "
         :ref="el => { divs[msg.id] = el }" :key="index">
-        <h4>{{ dmDateFormat(msg.created_at) }}</h4>
-        <ul>
-          <li class="flex" style="overflow:visible; word-break: break-all; width: 100%; ">
-            <DmMsgMenu :msg="msg" v-if="msg.sender?.id === userInfo.id" @delete-msg="deleteMsg"
-              style="max-height: 100px;" />
-            <span style="max-width: 85%;">{{ msg.contents }}</span>
-          </li>
-        </ul>
+        <template v-if="msg?.chat_idx !== -1">
+          <h4>{{ dmDateFormat(msg.created_at) }}</h4>
+          <ul>
+            <li class="flex" style="overflow:visible; word-break: break-all; width: 100%; ">
+              <DmMsgMenu :msg="msg" v-if="msg.sender?.id === userInfo.id" @delete-msg="deleteMsg"
+                style="max-height: 100px;" />
+              <span style="max-width: 85%;">{{ msg.contents }}</span>
+            </li>
+          </ul>
+        </template>
       </div>
     </div>
   </div>
@@ -45,7 +47,7 @@
     <div>
       <!-- TODO: 태그 보낼 수 있어야함  -->
       <input v-model="inputMsg" type="text" class="w100p" name="" title="" :placeholder="$t('send.msg')"
-        @keyup.enter="sendMsg" @focus="onFocus" @blur="onBlur" />
+        @keyup.enter="sendMsg" @focus="onFocus" @blur="onBlur" ref="inputRef" />
       <!-- TODO: 2차 스펙 -->
       <!-- <router-link to="#"><i class="uil uil-scenery font25 mr5"></i></router-link>
                 <router-link to="#"><i class="uil uil-camera font28"></i></router-link> -->
@@ -130,6 +132,7 @@ const msgEl = ref<HTMLElement | null>(null)
 const divs = ref([])
 
 const inputMsg = ref('')
+const inputRef = ref(null)
 const msgList = ref<IMessage[]>()
 
 const fromId = ref(0)
@@ -437,13 +440,13 @@ async function onDeleteMsg() {
 }
 
 async function onFocus() {
+  inputRef.value.scrollIntoView({ behavior: 'smooth', block: 'center' });
   if (isFlutter.value) {
     const kbHeight = await FlutterBridge().getKeyHight()
     emit('openKeyboard', Number(kbHeight))
   }
 }
 function onBlur() {
-  console.log('onBlur')
   if (isFlutter.value) {
 
     emit('closeKeyboard')

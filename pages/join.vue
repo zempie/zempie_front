@@ -184,7 +184,6 @@ shared.createHeadMeta(t('seo.join.title'), t('seo.join.desc'))
 onBeforeRouteLeave((to, from, next) => {
   removeFbUser()
   next()
-
 })
 
 //소셜 로그인 회원가입 안 끝내고 페이지 이동하는 경우에 사용 
