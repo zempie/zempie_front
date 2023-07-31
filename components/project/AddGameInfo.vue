@@ -1,5 +1,5 @@
 <template>
-  <ProjectStepMenu>
+  <ProjectStepMenu v-if="!isMogera">
     <template #uploadGameBtn>
       <li v-if="isEditInfo" class="publish-btn">
         <h4 class="active" @click="updateGame">{{ $t('update') }}</h4>
@@ -210,7 +210,7 @@
         </div>
         <ul class="sui-btn">
           <li>
-            <a @click="prevPage" class="btn-line w150"><i class="uil uil-angle-left-b"></i>
+            <a v-if="!isMogera" @click="prevPage" class="btn-line w150"><i class="uil uil-angle-left-b"></i>
               {{ $t('previous') }}
             </a>
           </li>
@@ -218,7 +218,7 @@
             <a v-if="isEditInfo" @click="updateGame" class="btn-default w150">
               {{ $t('update') }}
             </a>
-            <a v-else-if="uploadProject.form.stage === eGameStage.DEV" @click="uploadGame" class="btn-default w150">
+            <a v-else-if="uploadProject.form.stage === eGameStage.DEV || isMogera" @click="uploadGame" class="btn-default w150">
               {{ $t('upload') }}
             </a>
             <a v-else @click="save" class="btn-default w150">
@@ -276,6 +276,8 @@
 </template>
 
 <script setup lang="ts">
+import axios from 'axios'
+
 import {
   ElMessage,
   ElMessageBox,
@@ -285,7 +287,7 @@ import {
 } from 'element-plus'
 
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
-import { eGameCategory, eGameStage } from '~~/types'
+import { eGameCategory, eGameStage, eGameType } from '~~/types'
 import useVuelidate from '@vuelidate/core'
 import { required, helpers, maxLength } from '@vuelidate/validators'
 import { useI18n } from 'vue-i18n'
@@ -293,6 +295,7 @@ import { debounce, randomString } from '~~/scripts/utils.js'
 const { $localePath } = useNuxtApp()
 
 const IMAGE_MAX_SIZE = 4
+const config = useRuntimeConfig()
 
 const { t, locale } = useI18n()
 const router = useRouter()
@@ -369,6 +372,13 @@ const waitGamePath = ref(false)
 
 const isDeleteModalOpen = ref(false)
 
+const props = defineProps({
+  savedFile:Object,
+  isMogera:{
+    type:Boolean,
+    default:false
+  }
+})
 
 onMounted(() => {
   // console.log('useProject().uploadProject.value.form', editProject.value.info)
@@ -468,23 +478,51 @@ async function checkPathName() {
   waitGamePath.value = false
 }
 
+
+
 async function save() {
-  form.hashtags = hashtagsArr.value.toString()
-  form.project_picture = thumbFile.value
-  form.project_picture2 = gifThumFile.value
-  await createGamePath()
-  const isValid = await v$.value.$validate()
+  // form.hashtags = hashtagsArr.value.toString()
+  // form.project_picture = thumbFile.value
+  // form.project_picture2 = gifThumFile.value
+  // await createGamePath()
+  // const isValid = await v$.value.$validate()
 
-  if (!thumbFile.value) isThumbErr.value = true
+  // if (!thumbFile.value) isThumbErr.value = true
 
-  if (!isValid || isThumbErr.value) return
+  // if (!isValid || isThumbErr.value) return
+  const res = await saveForm() 
+  if(!res) return
+
   setForm(form)
   isFormDone.value = true
 
   useProject().setStepFour()
 }
 
+async function saveForm() {
+  form.hashtags = hashtagsArr.value.toString()
+  form.project_picture = thumbFile.value
+  form.project_picture2 = gifThumFile.value
+
+  await createGamePath()
+  const isValid = await v$.value.$validate()
+
+  if (!thumbFile.value) isThumbErr.value = true
+
+  if (!isValid || isThumbErr.value) {
+    return false
+  }else{
+    return true
+  }
+}
+
 async function uploadGame() {
+  if(props.isMogera) {
+    const res = await saveForm() 
+   if(!res) return
+   await mogeraUpload()
+    return 
+  }
   form.hashtags = hashtagsArr.value.toString()
 
   if (uploadProject.value.form.stage !== eGameStage.DEV) return
@@ -493,6 +531,7 @@ async function uploadGame() {
 
   //  const {gameInfoObj, gameFileInfoObj, uploadGameFiles} = this.$store.getters;
   const formData = new FormData()
+  
   for (let k in form) {
     formData.append(k, form[k])
   }
@@ -514,20 +553,57 @@ async function uploadGame() {
       router.push($localePath('/project/list'))
     }, 1000)
   }
-
-  //  this.$api.createProject(
-  //      gameInfoObj,
-  //      gameFileInfoObj,
-  //      uploadGameFiles
-  //  )
-  //      .then((res) => {
-  //          this.toast.successToast(`${this.$t('devLog.upload.done')}`);
-  //          this.$router.push(`/${this.$i18n.locale}/projectList`)
-  //      })
-  //      .catch((err) => {
-  //      })
 }
 
+
+async function mogeraUpload() {
+
+  const formData = new FormData()
+
+  for (let k in form) {
+    formData.append(k, form[k])
+  }
+
+  formData.append('category', eGameCategory.Challenge)
+  formData.append('file_type', eGameType.Html)
+  formData.append('support_platform', '0')
+  formData.append('mogera_file_id', props.savedFile.id)
+  formData.append('size', props.savedFile.size)
+
+  formData.set("stage", String(eGameStage.EARLY));
+
+  const loading = ElLoading.service({
+    lock: true,
+    text: `Loading...`,
+    customClass: 'loading-spinner',
+    background: 'rgba(0, 0, 0, 0.7)',
+  })
+
+    axios('/studio/project', {
+    method: 'post',
+    baseURL: config.STUDIO_API,
+    data: formData,
+    headers: {
+      'Context-Type': 'multipart/form-data',
+      Authorization: `Bearer ${useUser().user.value.fUser.accessToken}`
+    },
+    onUploadProgress: (e) => {
+      const percentage = Math.round((e.loaded * 100) / e.total)
+      loading.setText(`Loading...${percentage}%`)
+
+      if (Number(percentage) === 100) {
+        loading.setText('파일이 업로드되었습니다. 잠시만 기다려주세요')
+
+      }
+    }
+  })
+    .then(() => {
+      router.push($localePath('/project/list'))
+    })
+    .finally(() => {
+      loading.close()
+    })
+}
 async function createGamePath() {
   let count = 0
   while (!confirmedGamePath.value && count < 10) {

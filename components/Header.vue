@@ -32,6 +32,11 @@
                 Z-world
               </a>
             </li>
+            <li class="uppercase pointer">
+              <a id="mogeradMenu" @click="moveMogera">
+                Mogera
+              </a>
+            </li>
           </ul>
         </div>
       </dt>
@@ -140,6 +145,7 @@ const route = useRoute()
 const isLogin = computed(() => useUser().user.value.isLogin)
 const isLoading = computed(() => useUser().user.value.isLoading)
 const user = computed(() => useUser().user.value.info)
+const fUser = computed(() => useUser().user.value.fUser)
 
 const searchInput = ref()
 const isHeaderSideMobile = ref(false)
@@ -219,15 +225,27 @@ function clickOutside() {
 
 
 async function moveZemWorld() {
+  const { result } = await getGameToken()
+  if (result) {
+    window.open(`${config.ZEMPIE_METAVERSE}?key=${result.token}`, "_blank");
+  }
+}
+
+async function moveMogera() {
+  // const { result } = await getGameToken()
+  // if (result) {
+  // const temp = useCustomFetch<{ result: { token: string } }>(`/m/user/info?token=${result.token}`, getZempieFetchOptions("get", true))
+
+  window.open(`${config.MOGERA_URL}?key=${fUser.value.accessToken}`, "_blank");
+  // }
+}
+
+async function getGameToken() {
   if (isLogin.value) {
-    const { result } = await useCustomFetch<{ result: { token: string } }>("/create/token", getZempieFetchOptions("post", true))
-    if (result) {
-      window.open(`${config.ZEMPIE_METAVERSE}?key=${result.token}`, "_blank");
-    }
+    return await useCustomFetch<{ result: { token: string } }>("/create/token", getZempieFetchOptions("post", true))
   } else {
     router.push($localePath("/login"))
   }
-
 }
 
 </script>
