@@ -234,12 +234,15 @@ async function moveZemWorld() {
 }
 
 async function moveMogera() {
-  // const { result } = await getGameToken()
-  // if (result) {
-  // const temp = useCustomFetch<{ result: { token: string } }>(`/m/user/info?token=${result.token}`, getZempieFetchOptions("get", true))
+  const { data } = await useCustomAsyncFetch<{ result: { token: string } }>("/create/token", getZempieFetchOptions("post", true))
 
-  window.open(`${config.MOGERA_URL}?key=${fUser.value.accessToken}`, "_blank");
-  // }
+  if (data.value) {
+    const { result } = data.value
+    if (result) {
+      window.open(`${config.MOGERA_URL}?key=${result.token}`, "_blank");
+    }
+
+  }
 }
 
 async function getGameToken() {
