@@ -258,7 +258,6 @@ function onPressMogera() {
     if (e.which === 13 && e.ctrlKey) {
       showMogera.value = !showMogera.value
     }
-    // console.log(e.keyCode, e.key)
   })
 }
 
