@@ -28,7 +28,6 @@
           <hr class="dot-line" />
         </span>
       </div>
-
       <div v-else class="more-container">
         <span>
           <hr class="dot-line" />
@@ -37,23 +36,26 @@
         </span>
       </div>
     </template>
-    <template v-if="initFiles?.length && feed.post_type === 'SNS'">
-      <div class="video" v-if="initFiles[0].type === 'video'">
-        <video style="width: 100%; height: auto" controls :src="initFiles[0].url"></video>
+    <template v-if="attatchment_files?.length && feed.post_type === 'SNS'">
+      <div class="video" v-if="attatchment_files[0].type === 'video'">
+        <video style="width: 100%; height: auto" controls :src="attatchment_files[0].url"></video>
       </div>
-      <div v-else-if="initFiles[0].type === 'sound'" v-for="file in initFiles" class="audio">
+      <div v-else-if="attatchment_files[0].type === 'sound'" v-for="file in attatchment_files" class="audio">
         <audio controls :src="file.url"></audio>
         <p>{{ file.name }}</p>
       </div>
-      <!-- <PostGridImg :images="initFiles" style="padding:10px" /> -->
-      <img v-else-if="initFiles?.length === 1" style="width: 100%; margin: 0 auto; display: flex" :src="initFiles[0].url"
-        class="feed-img mt-3" />
+      <!-- <PostGridImg :images="attatchment_files" style="padding:10px" /> -->
+      <!-- <img v-else-if="attatchment_files?.length === 1" style="width: 100%; margin: 0 auto; display: flex" :src="attatchment_files[0].url"
+        class="feed-img mt-3" /> -->
+      <PostImage v-else-if="attatchment_files?.length === 1" :img="attatchment_files[0]" @update-blind="updateBlind" />
 
       <swiper v-else class="swiper" :modules="[Pagination]" style="height: 350px" :pagination="{ clickable: true }"
         :options="swiperOption">
-        <swiper-slide v-for="file in initFiles" class="flex items-center" style="height:88%; ">
-          <img v-if="file.type === 'image'" style="max-height:100%; margin: 0 auto; display: flex" :src="file.url"
-            class="feed-img mt-3" />
+        <swiper-slide v-for="file in attatchment_files" class="flex items-center content-center w100p"
+          style="height:88%;">
+          <PostImage v-if="file.type === 'image'" :img="file" @update-blind="updateBlind" />
+          <!-- <img v-if="file.type === 'image'" style="max-height:100%; margin: 0 auto; display: flex" :src="file.url"
+            class="feed-img mt-3" /> -->
         </swiper-slide>
         <div class="swiper-pagination" style="bottom: 10px; left: 0; width: 100%;" slot="pagination"></div>
       </swiper>
@@ -163,6 +165,7 @@ const isAddData = ref(false)
 const isCommentEdit = ref(false)
 const totalComment = ref(0)
 
+
 useInfiniteScroll(
   commentEl,
   async () => {
@@ -189,7 +192,7 @@ const user = ref(props.feed?.user)
 
 const feedContent = ref(props.feed?.content || '')
 
-const emit = defineEmits(['refresh'])
+const emit = defineEmits(['refresh', 'updateBlind'])
 
 //대댓글
 const recomment = ref()
@@ -208,7 +211,7 @@ const isOverflow = computed(() => {
   return feedDiv.value?.clientHeight > MAX_FEED_HEIGHT ? true : false
 })
 
-const initFiles = _.cloneDeep(attatchment_files.value)
+// const initFiles = _.cloneDeep(attatchment_files.value)
 
 onMounted(() => {
   const dom = props.feed?.content && htmlToDomElem(props.feed.content)
@@ -289,6 +292,7 @@ async function openComments(isOpenComment: boolean) {
     await commentFetch()
   } else {
     newRecomments.value = []
+    recomment.value = []
   }
 }
 
@@ -385,6 +389,11 @@ function getRecomment(comment: IComment) {
   recomment.value = comment
 }
 
+function updateBlind(img) {
+  emit('updateBlind', img)
+
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -416,43 +425,6 @@ function getRecomment(comment: IComment) {
   margin: 20px;
   cursor: pointer;
 }
-
-// /transition
-
-// 더보기
-// .gradient {
-//   background: linear-gradient(to top, #fff, #ededed00);
-//   height: 50px;
-//   width: 100%;
-//   position: relative;
-//   bottom: 50px;
-// }
-
-// .more-container {
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   padding: 20px 20px 0 20px;
-
-//   span,
-//   a {
-//     flex: 1;
-//   }
-
-//   a {
-//     display: flex;
-//     align-items: center;
-//     justify-content: center;
-//   }
-
-//   .dot-line {
-//     border-top: 1px dashed;
-//   }
-// }
-// .tapl-content {
-//   max-height: 500px;
-// }
-// /더보기
 
 .tapl-comment {
   ul {

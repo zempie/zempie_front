@@ -229,8 +229,6 @@ export default {
     const h3Tag = content.querySelector('h3');
     const pTag = content.querySelector('p');
 
-
-
     let title = h1Tag?.innerText || h2Tag?.innerText || h3Tag?.innerText || pTag?.innerText;
 
     const firstDom = getFirstDomElementByServer(feed.content)
@@ -244,9 +242,43 @@ export default {
       desc
     }
 
+  },
 
+  /**
+   * 
+   * @param arr : db 버전 차이로 Json 인식을 못하는 경우가 있음 -> convert
+   * @returns : array
+   */
+  toArray: (arr: string | []) => {
+    return Array.isArray(arr) ? arr : JSON.parse(arr)
+  },
+
+  /**
+   * 
+   * @param to 변경하고자 하는 언어
+   * @returns 
+   */
+  switchLang: (to: string) => {
+    const route = useRoute()
+    const router = useRouter()
+    const { $i18n } = useNuxtApp()
+
+    const currLang = $i18n.locale.value
+    if (currLang === to) return
+
+    if (to === 'ko') {
+      if (route.path.startsWith('/en')) {
+        router.replace(`/${to}${route.fullPath.replace(/^\/en/, '')}`);
+      } else {
+        router.replace(`/ko${route.fullPath}`);
+      }
+    } else {
+      if (route.path.startsWith('/ko')) {
+        router.replace(`/${to}${route.fullPath.replace(/^\/ko/, '')}`);
+      } else {
+        router.replace(`/en${route.fullPath}`);
+      }
+    }
   }
-
-
 
 }

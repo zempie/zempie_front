@@ -1,14 +1,11 @@
 <template>
   <div class="content">
     <ClientOnly>
-      <div
-        class="visual-menu"
-        :style="{
-          background: 'url(/images/1200_240_setting.png) center no-repeat',
-          'background-size': 'cover',
-        }"
-      >
-        <p class="title">Settings</p>
+      <div class="visual-menu" :style="{
+        background: 'url(/images/1200_240_setting.png) center no-repeat',
+        'background-size': 'cover',
+      }">
+        <p class="title">{{ $t('setting') }}</p>
 
         <div class="swiper-area uppercase">
           <NuxtLink class="swiper-slide" :to="$localePath(`/myaccount`)">
@@ -17,37 +14,30 @@
               <span> {{ $t('account') }}</span>
             </a>
           </NuxtLink>
-          <NuxtLink
-            class="swiper-slide"
-            :to="$localePath(`/myaccount/followers`)"
-          >
+          <NuxtLink class="swiper-slide" :to="$localePath(`/myaccount/followers`)">
             <a :class="$route.meta.name === 'myFollowers' ? 'active' : ''">
               <i class="uil uil-users-alt"></i>
 
-              <span>{{ $t('follower') }} </span></a
-            >
+              <span>{{ $t('follower') }} </span></a>
           </NuxtLink>
 
-          <NuxtLink
-            :to="$localePath(`/myaccount/following`)"
-            class="swiper-slide"
-          >
+          <NuxtLink :to="$localePath(`/myaccount/following`)" class="swiper-slide">
             <a :class="$route.meta.name === 'myFollowing' ? 'active' : ''">
               <i class="uil uil-users-alt"></i>
-              <span style="border: 0"> {{ $t('following') }}</span>
+              <span> {{ $t('following') }}</span>
             </a>
           </NuxtLink>
-
-          <NuxtLink
-            :to="$localePath(`/myaccount/communities`)"
-            class="swiper-slide"
-          >
+          <NuxtLink :to="$localePath(`/myaccount/blocks`)" class="swiper-slide">
+            <a :class="$route.meta.name === 'blockList' ? 'active' : ''">
+              <i class="uil uil-ban"></i><span>
+                {{ $t('block.list') }}
+              </span></a>
+          </NuxtLink>
+          <NuxtLink :to="$localePath(`/myaccount/communities`)" class="swiper-slide">
             <a :class="$route.meta.name === 'myCommunities' ? 'active' : ''">
-              <i class="uil uil-comments"></i
-              ><span style="border: 0">
+              <i class="uil uil-comments"></i><span>
                 {{ $t('community') }}
-              </span></a
-            >
+              </span></a>
           </NuxtLink>
         </div>
       </div>
@@ -104,12 +94,9 @@ const userInfo = computed(() => useUser().user.value.info)
   }
 }
 
-@media all and (min-width: 768px) and (max-width: 991px) {
-}
+@media all and (min-width: 768px) and (max-width: 991px) {}
 
-@media all and (min-width: 992px) and (max-width: 1199px) {
-}
+@media all and (min-width: 992px) and (max-width: 1199px) {}
 
-@media all and (min-width: 1200px) {
-}
+@media all and (min-width: 1200px) {}
 </style>

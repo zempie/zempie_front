@@ -42,14 +42,14 @@
           </dt>
         </dl>
       </div>
-      <div class="la-bottom">
+      <div class="la-bottom flex column" style="overflow:hidden">
         <dl>
           <dt></dt>
           <dd>{{ $t('login.text3') }}</dd>
           <dt></dt>
         </dl>
         <ul>
-          <li @click="googleLogin">
+          <li @click="googleLogin" v-if="!isNotGoogleSupport">
             <img src="/images/login/google_login.jpeg" alt="google-login" title="" />
           </li>
           <li @click="facebookLogin" class="mt10">
@@ -65,6 +65,7 @@
         </p>
       </div>
     </div>
+    <Loading :is-loading="isLoading" />
   </div>
 </template>
 
@@ -100,6 +101,9 @@ const config = useRuntimeConfig()
 const currUser = ref()
 const isPageLoading = ref(true)
 
+const isNotGoogleSupport = ref()
+
+const isLoading = ref(false)
 
 definePageMeta({
   layout: 'layout-none',
@@ -177,6 +181,8 @@ onBeforeMount(() => {
 
 onMounted(() => {
   nextTick(() => {
+    isNotGoogleSupport.value = navigator.userAgent.includes('kakao') || navigator.userAgent.includes('naver')
+
     window.addEventListener("message", receiveMessage, false);
   })
 })
@@ -190,12 +196,16 @@ async function onSubmit() {
 
   if (isFlutter.value) {
 
-    const result = await FlutterBridge().signInEmail({ email: form.email, password: form.password })
-    currUser.value = result
-    console.log('email login', result)
-    router.push($localePath('/'))
-    await useUser().setUserInfo()
-    await setFirebaseToken()
+    try {
+      const result = await FlutterBridge().signInEmail({ email: form.email, password: form.password })
+      currUser.value = result
+      router.push($localePath('/'))
+      await useUser().setUserInfo()
+      await setFirebaseToken()
+    }
+    catch (err) {
+      firebaseLoginErr(err)
+    }
 
 
   } else {
@@ -211,25 +221,7 @@ async function onSubmit() {
             }
           })
           .catch((err: any) => {
-            const errorCode = err.code
-            const errorMessage = err.message
-            let message = errorCode ? errorCode : errorMessage
-
-            switch (errorCode) {
-              case 'auth/weak-password':
-                message = `${t('login.pwd.format.err')}`
-                break
-              case 'auth/wrong-password':
-                ElMessage.error(`${t('fb.wrong.info')}`)
-                break
-              case 'auth/user-not-found':
-                ElMessage.error(`${t('fb.not.found')}`)
-                break
-              default:
-                ElMessage.error(errorCode)
-                break
-            }
-            throw { message }
+            firebaseLoginErr(err)
           })
       })
       .catch((err: any) => {
@@ -250,15 +242,17 @@ async function receiveMessage(message: any) {
 }
 
 async function googleLogin() {
+  isLoading.value = true
   if (isFlutter.value) {
-    try {
-      const result = await FlutterBridge().signInGoogle()
-      await flutterSocialLogin(result)
-    } catch (err) {
-      if (err.message.includes('auth/account-exists-with-different-credential')) {
-        ElMessage.error(`${t('exist.wt.diff.email')}`)
-      }
-    }
+    flutterSocialLogin('google')
+    // try {
+    //   const result = await FlutterBridge().signInGoogle()
+    //   await flutterSocialLogin(result)
+    // } catch (err) {
+    //   if (err.message.includes('auth/account-exists-with-different-credential')) {
+    //     ElMessage.error(`${t('exist.wt.diff.email')}`)
+    //   }
+    // }
   }
   else {
     const provider = new GoogleAuthProvider()
@@ -267,15 +261,20 @@ async function googleLogin() {
 }
 
 async function facebookLogin() {
+  isLoading.value = true
+
   if (isFlutter.value) {
-    try {
-      const result = await FlutterBridge().signInFacebook()
-      await flutterSocialLogin(result)
-    } catch (err) {
-      if (err.message.includes('auth/account-exists-with-different-credential')) {
-        ElMessage.error(`${t('exist.wt.diff.email')}`)
-      }
-    }
+    flutterSocialLogin('facebook')
+
+    // try {
+    //   const result = await FlutterBridge().signInFacebook()
+    //   await flutterSocialLogin(result)
+    // } catch (err) {
+    //   if (err.message.includes('auth/account-exists-with-different-credential')) {
+    //     ElMessage.error(`${t('exist.wt.diff.email')}`)
+    //   }
+    // }
+
   } else {
     const provider = new FacebookAuthProvider()
     provider.addScope('email')
@@ -286,15 +285,19 @@ async function facebookLogin() {
 
 
 async function appleLogin() {
+  isLoading.value = true
+
   if (isFlutter.value) {
-    try {
-      const result = await FlutterBridge().signInApple()
-      await flutterSocialLogin(result)
-    } catch (err) {
-      if (err.message.includes('auth/account-exists-with-different-credential')) {
-        ElMessage.error(`${t('exist.wt.diff.email')}`)
-      }
-    }
+    flutterSocialLogin('apple')
+
+    // try {
+    //   const result = await FlutterBridge().signInApple()
+    //   await flutterSocialLogin(result)
+    // } catch (err) {
+    //   if (err.message.includes('auth/account-exists-with-different-credential')) {
+    //     ElMessage.error(`${t('exist.wt.diff.email')}`)
+    //   }
+    // }
   } else {
     const provider = new OAuthProvider('apple.com')
     provider.addScope('email')
@@ -303,35 +306,91 @@ async function appleLogin() {
     return socialLogin(provider)
   }
 }
-async function flutterSocialLogin(info: any) {
+async function flutterSocialLogin(type: string) {
 
-  const firebaseUser = {
-    ...info.additionalUserInfo.profile,
-    accessToken: info.credential.accessToken
-  }
+  let info = undefined
+  try {
 
-  useUser().setFirebaseUser(firebaseUser)
+    switch (type) {
+      case 'apple':
+        info = await FlutterBridge().signInApple()
+        break;
+      case 'google':
+        info = await FlutterBridge().signInGoogle()
+        break;
+      case 'facebook':
+        info = await FlutterBridge().signInFacebook()
+        break;
+    }
 
-  const userInfo = await useUser().setUserInfo()
-  if (userInfo) {
-    await setFirebaseToken()
-    router.push($localePath('/'))
+    if (info) {
+      const firebaseUser = {
+        ...info.additionalUserInfo.profile,
+        accessToken: info.credential.accessToken
+      }
+
+      useUser().setFirebaseUser(firebaseUser)
+
+      const userInfo = await useUser().setUserInfo()
+      if (userInfo) {
+        await setFirebaseToken()
+        router.push($localePath('/'))
+      }
+    } else {
+      throw "Firebase information does not exist"
+    }
+  } catch (err) {
+    firebaseJoinErr(err)
+  } finally {
+    isLoading.value = false
   }
 
 }
 
 async function socialLogin(provider: AuthProvider) {
+  console.log('socialLogin1')
+
   try {
     const res = await signInWithPopup($firebaseAuth, provider)
+    console.log('socialLogin', res)
     router.push($localePath('/'))
 
   } catch (err) {
-    const errorCode = err.code
-
-    if (err.message.includes('auth/account-exists-with-different-credential')) {
-      ElMessage.error(`${t('exist.wt.diff.email')}`)
-    }
+    firebaseJoinErr(err)
   }
+  finally {
+    isLoading.value = false
+  }
+}
+
+function firebaseJoinErr(err: any) {
+  if (err && err.message?.includes('auth/account-exists-with-different-credential')) {
+    ElMessage.error(`${t('exist.wt.diff.email')}`)
+  } else {
+    ElMessage.error(err)
+  }
+}
+
+function firebaseLoginErr(err: any) {
+  const errorCode = err.code
+  const errorMessage = err.message
+  let message = errorCode ? errorCode : errorMessage
+
+  switch (errorCode) {
+    case 'auth/weak-password':
+      message = `${t('login.pwd.format.err')}`
+      break
+    case 'auth/wrong-password':
+      ElMessage.error(`${t('fb.wrong.info')}`)
+      break
+    case 'auth/user-not-found':
+      ElMessage.error(`${t('fb.not.found')}`)
+      break
+    default:
+      ElMessage.error(err)
+      break
+  }
+  throw { message }
 }
 
 </script>

@@ -9,19 +9,19 @@
           <li>
             <NuxtLink :to="$localePath(`/${userInfo.nickname}`)">
               <h2>{{ userInfo.post_cnt }}</h2>
-              <h3>Posts</h3>
+              <h3> {{ $t('posts') }}</h3>
             </NuxtLink>
           </li>
           <li>
             <NuxtLink :to="$localePath(`/${userInfo.nickname}/followers`)">
               <h2>{{ userInfo.follower_cnt }}</h2>
-              <h3>Followers</h3>
+              <h3>{{ $t('followers') }}</h3>
             </NuxtLink>
           </li>
           <li>
             <NuxtLink :to="$localePath(`/${userInfo.nickname}/following`)">
               <h2>{{ userInfo.following_cnt }}</h2>
-              <h3>Followings</h3>
+              <h3>{{ $t('followings') }}</h3>
             </NuxtLink>
           </li>
         </ul>

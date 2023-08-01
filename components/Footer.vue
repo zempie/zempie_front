@@ -1,7 +1,7 @@
 <template>
   <ClientOnly>
     <div class="footer">
-      <dl>
+    <dl>
         <dt>
           <p>
             <a :href="config.FTR_PAGE_URL" target="_blank" aria-label="Fromthered website">{{ $t('company.info.title')
@@ -15,10 +15,8 @@
               $t('company.id')
             }}
             : 178-88-00617
-            <template v-if="isPurchase">
-              &nbsp; | &nbsp; {{ $t('company.numbers') }} : 02-393-2574 <br />
-              {{ $t('company.address') }} &nbsp; | {{ $t('sales.number') }} : {{ $t('sales.number.info') }}
-            </template>
+            &nbsp; | &nbsp; {{ $t('company.numbers') }} : 02-393-2574 <br />
+            {{ $t('company.address') }} &nbsp; | {{ $t('sales.number') }} : {{ $t('sales.number.info') }}
             <br />
             <br />
             <a :href="'mailto:' + config.SUPPORT_EMAIL" style="color: #30a6d8" aria-label="Support mail">

@@ -32,16 +32,12 @@
     <!--  TODO: 게임 갯수 표현: 게임 100개 이상일때 주석 제거
       <dt>Games <span>{{ games.length }}</span></dt> -->
     <dl class="area-title">
-      <!-- <dt class="mr10">
+      <dt>
         <ClientOnly>
-          <el-select v-model="selectedSort" class="m-2" placeholder="All">
+          <el-select v-model="selectedSort" class="m-2 mr10" placeholder="All">
             <el-option v-for="item in sortOptions" :key="item.value" :label="item.label" :value="item.value"
               @click="handleGameSort" />
           </el-select>
-        </ClientOnly>
-      </dt> -->
-      <dt>
-        <ClientOnly>
           <el-select v-model="selectedFilter" class="m-2" placeholder="All">
             <el-option v-for="item in stageOptions" :key="item.value" :label="item.label" :value="item.value"
               @click="handleGameFilter" />
@@ -101,20 +97,20 @@ const isInitPending = ref(true)
 
 const sortOptions = [
   {
-    value: 1,
-    label: '인기 순'
+    value: 'recommend',
+    label: t('sort.recommend')
   },
   {
-    value: 2,
-    label: '출시 순',
+    value: 'latest',
+    label: t('sort.latest'),
   },
 ]
-const selectedSort = ref(1)
+const selectedSort = ref('recommend')
 
 const stageOptions = [
   {
     value: '',
-    label: '전체'
+    label: t('all')
   },
   {
     value: 3,
@@ -127,7 +123,6 @@ const stageOptions = [
 
 ]
 const selectedFilter = ref('')
-const headerImgClass = ref()
 
 onMounted(async () => {
   createObserver()
@@ -223,6 +218,9 @@ async function fetch() {
   if (selectedFilter.value) {
     payload['filter'] = selectedFilter.value
   }
+  if (selectedSort.value) {
+    payload['sort'] = selectedSort.value
+  }
 
   if (currPlatform.value) {
     payload['support_platform'] = currPlatform.value
@@ -286,11 +284,13 @@ async function handleGameFilter() {
   observer.value.unobserve(triggerDiv.value)
   createObserver()
   await fetch()
-
-
 }
 
 async function handleGameSort() {
+  initPaging()
+  observer.value.unobserve(triggerDiv.value)
+  createObserver()
+
   await fetch()
 }
 

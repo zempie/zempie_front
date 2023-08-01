@@ -3,7 +3,6 @@
     <dl class="three-area">
       <dt>
         <GameComments class="mb20" :game="game" />
-
         <div class="ta-game-list">
           <dl>
             <dt>{{ $t('game') }}</dt>

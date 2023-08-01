@@ -13,16 +13,20 @@
                   {{ commentUser.nickname }}</NuxtLink>
                 <span class="font13">{{ dateFormat(comment.created_at) }}</span>
               </h2>
-              <el-dropdown v-if="comment.user?.uid === user?.uid" trigger="click" ref="feedMenu"
-                popper-class="tapl-more-dropdown">
+              <el-dropdown trigger="click" ref="feedMenu" popper-class="tapl-more-dropdown">
                 <a slot="trigger"><i class="uil uil-ellipsis-h font25 pointer"></i></a>
                 <template #dropdown>
                   <div slot="body" class="more-list">
-                    <a @click="isCommentEdit = !isCommentEdit" class="pointer">{{
-                      $t('comment.edit')
-                    }}</a>
-                    <a @click="showDeleteModal = true" class="pointer">
-                      {{ $t('comment.delete') }}
+                    <template v-if="comment.user?.uid === user?.uid">
+                      <a @click="isCommentEdit = !isCommentEdit" class="pointer">{{
+                        $t('comment.edit')
+                      }}</a>
+                      <a @click="showDeleteModal = true" class="pointer">
+                        {{ $t('comment.delete') }}
+                      </a>
+                    </template>
+                    <a v-else @click="onClickReport" class="pointer">
+                      {{ $t('comment.report') }}
                     </a>
                   </div>
                 </template>
@@ -100,14 +104,17 @@
 
   <CommentInput v-if="isCommentEdit" @refresh="refresh" @editComment="editComment" :postId="comment.post_id"
     :comment="comment" :isEdit="true" />
+
+  <ReportModal :openModal="showReportModal" :reportInfo="reportInfo" @closeModal="showReportModal = false" />
 </template>
 
 <script setup lang="ts">
 import _ from 'lodash'
 import { ElDropdown, ElDialog } from 'element-plus'
-import { IComment } from '~~/types';
+import { IComment, eReportType } from '~~/types';
 import { dateFormat } from '~~/scripts/utils'
 import { PropType } from 'vue';
+const { t, locale } = useI18n()
 
 const { $localePath } = useNuxtApp()
 const parentUser = reactive({
@@ -137,16 +144,20 @@ const isLiked = ref(props.comment.is_liked)
 const likeCnt = ref(props.comment.like_cnt)
 
 const isRecommentOpen = ref(false)
+
+const showReportModal = ref(false)
+const reportInfo = ref()
+
+
+
 const commentUser = computed(() => props.comment?.user)
 
 
 const filteredRecomments = computed(() => {
   const result = props.newRecomments?.filter((cmt) => {
-    console.log(cmt)
     return cmt.parent_id === props.comment.id
   })
 
-  console.log(result)
   return result
 })
 
@@ -265,6 +276,44 @@ function deleteRecomment(comment: IComment) {
   })
   emit('deleteComment', comment)
 
+}
+
+function onClickReport() {
+  reportInfo.value = {
+    type: eReportType.comment,
+    target_id: props.comment.id,
+    title: t('report.comment.title'),
+    desc: t('report.post.desc'),
+
+    list: [
+      {
+        value: 10,
+        title: t('report.post.options1'),
+      },
+      {
+        value: 11,
+        title: t('report.post.options2'),
+      },
+      {
+        value: 12,
+        title: t('report.post.options3'),
+      },
+      {
+        value: 13,
+        title: t('report.post.options4'),
+      },
+      {
+        value: 14,
+        title: t('report.post.options5'),
+      },
+      {
+        value: 15,
+        title: t('etc'),
+      }
+
+    ]
+  }
+  showReportModal.value = true
 }
 
 

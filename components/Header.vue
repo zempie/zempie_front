@@ -6,8 +6,9 @@
           <p>
             <NuxtLink :to="$localePath('/')">
               <img v-if="showMobileLogo" class="mobile-logo" src="/images/zempie_logo_154_155.png" alt="zempie-logo"
-                loading="lazy" />
-              <img v-else class="logo" src="/images/zempie-logo-black.png" alt="zempie-logo" loading="lazy" />
+                loading="lazy" height="25" width="120" />
+              <img v-else class="logo" src="/images/zempie-logo-black.png" alt="zempie-logo" loading="lazy" width="120"
+                height="25" />
             </NuxtLink>
           </p>
           <button class="btn-circle-none" @click="isHeaderSideMobile = true" v-if="showHamburger">
@@ -40,15 +41,15 @@
           <SearchHeader />
           <div class="header-language">
             <el-select class="hl-select-box" v-model="selectedLang" :placeholder="t('korean')">
-              <el-option v-for="item in options" :key="item.code" :label="item.label" :value="item.code"
-                @click="switchLangauge" />
+              <el-option v-for="item in options" :key="item.code" :label="item.label" :value="item.code" />
             </el-select>
           </div>
           <div class="header-info ml0" v-if="!isLoading && isLogin" :key="user.id">
             <NotificationHeaderButton />
-            <button class="btn-circle-icon ml10" @click="$router.push($localePath('/dm/list'))">
+            <button class="btn-circle-icon ml10 flex items-center content-center"
+              @click="$router.push($localePath('/dm/list'))">
               <i class="uil uil-comment-alt"></i>
-              <!-- <span class="new-dm-badge">99+</span> -->
+              <span class="new-dm-badge" v-if="unreadMsgCount">{{ unreadMsgCount }}</span>
             </button>
             <UserMenu />
           </div>
@@ -121,20 +122,17 @@ import _ from 'lodash'
 import { vOnClickOutside } from "@vueuse/components"
 import { useI18n } from "vue-i18n"
 import {
-  ElDropdown,
-  ElDropdownMenu,
-  ElDropdownItem,
   ElSelect,
   ElOption,
   ElDialog,
 } from "element-plus"
 
 import { isMobile } from "../scripts/utils"
+import shared from '~/scripts/shared'
 
 const config = useRuntimeConfig()
 const { $localePath } = useNuxtApp()
 const { t, locale } = useI18n()
-const switchLocalePath = useSwitchLocalePath()
 
 const router = useRouter()
 const route = useRoute()
@@ -148,6 +146,9 @@ const isHeaderSideMobile = ref(false)
 const isHeaderSideBgMobile = ref(false)
 
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+const unreadMsgCount = computed(() => {
+  return user.value?.unread_msg_cnt > 99 ? '99+' : user.value.unread_msg_cnt
+})
 
 
 const isMobileSize = computed(() =>
@@ -166,7 +167,13 @@ const options = [
   { code: "ko", label: "한국어" },
   { code: "en", label: "English" },
 ]
-const selectedLang = ref(locale.value)
+const selectedLang = computed({
+  get: () => locale.value,
+  set: newValue => {
+    shared.switchLang(newValue)
+    locale.value = newValue;
+  }
+})
 
 const isOpen = ref(false)
 const { loginModal } = useModal()
@@ -182,7 +189,6 @@ watch(
 onMounted(() => {
   nextTick(() => {
     onResize()
-    selectedLang.value = locale.value
   })
   window.addEventListener("resize", onResize)
 })
@@ -197,16 +203,11 @@ function onResize() {
   showHamburger.value = isTablet.value.matches ? true : false
 }
 
-function switchLangauge() {
-  switchLocalePath(selectedLang.value)
-  locale.value = selectedLang.value
-  router.replace(route.fullPath)
-}
-
 
 async function moveSearchPage() {
   isHeaderSideMobile.value = false
   await useSearch().getSearch(searchInput.value)
+
   router.push({ path: $localePath(`/search`), query: { q: searchInput.value } })
   searchInput.value = ""
 }

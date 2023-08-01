@@ -1,6 +1,6 @@
 <template>
   <p v-if="!isMine" class="btn-default uppercase" @click.stop="sendMsg">
-    {{ $t('send.msg') }}
+    {{ $t('send.msg.btn') }}
   </p>
 </template>
 <script setup lang="ts">
@@ -19,8 +19,6 @@ const isMine = computed(() => {
 })
 
 function sendMsg() {
-  console.log('props.user.nickname', props.user.nickname)
-
   router.push($localePath({ path: `/dm/list`, query: { user: props.user.id } }))
 }
 </script>

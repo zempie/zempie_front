@@ -22,6 +22,9 @@ const tmIframeCode = `<iframe src="https://www.googletagmanager.com/ns.html?id=$
 height="0" width="0" style="display:none;visibility:hidden"></iframe>`
 
 const userSetting = computed(() => useCommon().setting.value)
+
+const userInfo = computed(() => useUser().user.value.info)
+
 shared.createHeadMeta(
   t('seo.landing.title'),
   t('seo.landing.description')
@@ -35,7 +38,6 @@ provide(ID_INJECTION_KEY, {
 
 onBeforeMount(async () => {
   await useMobile().setMobileState()
-  const userInfo = useUser().user.value.info
 
   try {
     const fUser = await getCurrentUser()
@@ -43,7 +45,7 @@ onBeforeMount(async () => {
       useUser().setLoadDone()
     }
 
-    if (isFlutter.value && fUser && !userInfo) {
+    if (isFlutter.value && fUser && !userInfo.value) {
       await useUser().setUserInfo()
     }
 
@@ -60,18 +62,10 @@ onBeforeMount(async () => {
 
 
   //언어
-  const lang = isFlutter.value ? await flutterBridge().currentLanguage() : navigator.language.split('-')[0]
-
-  if (lang === 'ko') {
-    locale.value = 'ko'
-    switchLocalePath('ko')
-  } else {
-    locale.value = 'en'
-    switchLocalePath('en')
+  if (isFlutter.value) {
+    const lang = await flutterBridge().currentLanguage()
+    shared.switchLang(lang)
   }
-
-  useCommon().setLang(locale.value)
-  router.replace(route.fullPath)
 
 })
 
@@ -96,6 +90,9 @@ function notiPerCheck() {
       break
   }
 }
+
+
+
 </script>
 
 <style lang="scss">

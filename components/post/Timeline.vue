@@ -45,7 +45,8 @@
       <ul class="ta-post">
         <PostFeedSk v-if="isPending" v-for="feed in 6" :key="feed" />
         <TransitionGroup name="fade" v-else-if="!isPending && feeds?.length">
-          <PostFeed v-for="feed in feeds" :feed="feed" :key="feed.id" @refresh="refresh">
+          <PostFeed v-for="feed in feeds" :feed="feed" :key="feed.id" @refresh="refresh"
+            @update-blind="(img) => updateBlind(feed, img)">
             <template #followBtn>
               <UserFollowBtn :user="feed.user" :key="`${feed.user.is_following}`" class="follow-btn-feed"
                 @refresh="refreshFollow" />
@@ -77,7 +78,7 @@ import _ from 'lodash'
 import { PropType } from 'vue'
 import { IComChannel, ICommunity, IFeed } from '~~/types'
 import { useI18n } from 'vue-i18n'
-
+import shared from '~~/scripts/shared'
 const { t, locale } = useI18n()
 
 const LIMIT_SIZE = 30
@@ -91,7 +92,6 @@ const feeds = ref<IFeed[]>([])
 const isPending = ref(true)
 
 const isTextEditorOpen = ref(false)
-const isEditorDestroy = ref(false)
 
 const observer = ref<IntersectionObserver>(null)
 const triggerDiv = ref<Element>()
@@ -102,9 +102,16 @@ const isAddData = ref(false)
 
 const user = computed(() => useUser().user.value.info)
 const isLogin = computed(() => useUser().user.value.isLogin)
-const gameInfo = computed(() => useGame().game.value.info)
 
 const paramId = computed(() => route.params.id as string)
+
+const isBlocked = computed(() => {
+  console.log('useChannel().userChannel.valu', useChannel().userChannel.value)
+  return useChannel().userChannel.value.info.is_blocked
+})
+
+
+
 // const gameId = computed(() => route.params.id as string)
 
 const props = defineProps({
@@ -126,6 +133,7 @@ const props = defineProps({
 const isMobile = computed(() =>
   window.matchMedia('screen and (max-width: 767px)')
 )
+
 
 const watcher = watch(
   () => route.query,
@@ -150,6 +158,12 @@ const userWatcher = watch(
 )
 
 onMounted(async () => {
+  console.log('isBlocked', isBlocked)
+  if (isBlocked.value) {
+    isPending.value = false
+    return
+  }
+
   const result = await fetch()
   if (result && triggerDiv.value) {
     observer.value = new IntersectionObserver(
@@ -226,6 +240,7 @@ async function fetch() {
 
     case 'user':
       const channelId = computed(() => useChannel().userChannel.value.info.channel_id)
+
       if (!channelId.value) {
         const userId = route.params.id as string
         await useChannel().getChannelInfo(userId)
@@ -259,6 +274,8 @@ async function fetch() {
       return isAddData.value
 
     case 'game':
+      colorLog('fetch', 'red')
+
       const { data: gamePostData, error: gameError } = await useCustomAsyncFetch<{
         result: []
         totalCount: number
@@ -267,6 +284,8 @@ async function fetch() {
         getComFetchOptions('get', true)
       )
       if (gamePostData.value) {
+        console.table(gamePostData.value)
+
         dataPaging(gamePostData.value)
       }
       isPending.value = false
@@ -316,6 +335,29 @@ function refreshFollow(user_id: number) {
     .map((feed) => {
       feed.user.is_following = !feed.user.is_following
       return feed
+    })
+}
+
+function updateBlind(feed: IFeed, img) {
+  feeds.value = feeds.value
+    .map((feed1) => {
+      if (feed1.id === feed.id) {
+        const attFiles = shared.toArray(feed1.attatchment_files)
+        return {
+          ...feed1,
+          attatchment_files: attFiles
+            .map((file) => {
+              if (file.url === img.url) {
+                return {
+                  ...file,
+                  is_blind: !file.is_blind
+                }
+              }
+              return file
+            })
+        }
+      }
+      return feed1
     })
 }
 </script>
