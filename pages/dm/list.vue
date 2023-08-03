@@ -96,7 +96,7 @@
               <p><i class="uil uil-search"></i>
               </p>
               <div class="mt0">
-                <CommonChipInput ref="chipRef" @currChip="getCurrChip">
+                <CommonChipInput ref="chipRef" @currChip="getCurrChip" class="mt0">
                   <template #input>
                     <input class="chip-input" v-model="userKeyword" type="text" name="" title="keywords"
                       :placeholder="$t('enter.keyword')" @blur="saveChip" @keyup.enter="saveChip"
