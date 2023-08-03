@@ -39,9 +39,7 @@ onMounted(async () => {
 
   await getMogeraFile()
   window.addEventListener('beforeunload', leavePage)
-  if (fromMogera.value) {
-    showSavedInfo.value = false
-  }
+
 })
 
 onBeforeUnmount(() => {
@@ -58,15 +56,18 @@ function leavePage(event) {
 }
 
 async function getMogeraFile() {
-  const { data } = await useCustomAsyncFetch<{ reulst: any }>('/mogera/game-file', getStudioFetchOptions('get', true))
+  const { data } = await useCustomAsyncFetch<{ result: any }>('/mogera/game-file', getStudioFetchOptions('get', true))
 
   if (data.value) {
     const { result } = data.value
+    console.log(result.length)
 
     if (result.length) {
       const [firstSaved] = result
+
       savedFile.value = firstSaved
-      showSavedInfo.value = true
+      if (result.length >= 2)
+        showSavedInfo.value = true
     } else {
       router.replace($localePath('/project/upload'))
     }
