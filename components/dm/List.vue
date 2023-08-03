@@ -1,143 +1,141 @@
 <template>
-  <div class="content">
-    <div class="dm-list">
-      <div class="dl-title">
-        <div>
-          <h2> <button :class="['mobile-btn', selectedRoom ? 'on' : 'off']" @click="initSelect"><i
-                class="uil uil-arrow-left"></i></button> {{
-                  $t('dm') }}</h2>
-        </div>
-        <p>
-          <a :class="['pointer new-msg-btn-icon', { 'inactive': roomPending }]" @click="showNewMsg"><i
-              class="uil uil-comment-alt-plus"></i> </a>
-          <NuxtLink :to="$localePath(`/myaccount`)"><i class="uil uil-setting"></i> </NuxtLink>
-        </p>
+  <div :class="['dm-list', selectedRoom ? 'on' : 'off']">
+    <div class="dl-title">
+      <div>
+        <h2> <button :class="['mobile-btn', selectedRoom ? 'on' : 'off']" @click="initSelect"><i
+              class="uil uil-arrow-left"></i></button> {{
+                $t('dm') }}</h2>
       </div>
+      <p>
+        <a :class="['pointer new-msg-btn-icon', { 'inactive': roomPending }]" @click="showNewMsg"><i
+            class="uil uil-comment-alt-plus"></i> </a>
+        <NuxtLink :to="$localePath(`/myaccount`)"><i class="uil uil-setting"></i> </NuxtLink>
+      </p>
+    </div>
 
-      <dl class="dl-content">
-        <dd :class="['room-container', selectedRoom ? 'off' : 'on']">
-          <!-- TODO: 2차 스펙에서 진행함 -> -->
-          <!-- <div>
+    <dl class="dl-content">
+      <dd :class="['room-container', selectedRoom ? 'off' : 'on']">
+        <!-- TODO: 2차 스펙에서 진행함 -> -->
+        <!-- <div>
             <div class="input-search-default" @input="onInputMsg">
               <p><i class="uil uil-search"></i>
               </p>
               <div><input v-model="dmKeyword" type="text" name="" title="keywords" placeholder="검색어를 입력하세요." /></div>
             </div>
           </div> -->
-          <ul v-if="roomPending">
-            <li v-for="i in 7">
+        <ul v-if="roomPending">
+          <li v-for="i in 7">
+            <dl>
+              <dd>
+                <UserAvatarSk tag="p" />
+              </dd>
+              <dt class="ml5">
+                <h3 class="gray-text w50p skeleton-animation">
+                </h3>
+                <p class="gray-text skeleton-animation"></p>
+              </dt>
+              <dd>
+              </dd>
+            </dl>
+          </li>
+        </ul>
+        <template v-else>
+          <ul v-if="roomList" class="msg-list" ref="msgEl">
+            <!-- <el-scrollbar tag="ul" wrap-class="msg-list" height="650px"> -->
+            <li v-for="room in roomList" :key="room.id" @click="onClickRoom(room)"
+              :class="{ active: room?.id === selectedRoom?.id }">
               <dl>
-                <dd>
-                  <UserAvatarSk tag="p" />
+                <dd v-if="!room.is_group_room" class="mr10">
+                  <UserAvatar :user="room.joined_users[0]" tag="p" :hasRouter="true" />
                 </dd>
-                <dt class="ml5">
-                  <h3 class="gray-text w50p skeleton-animation">
-                  </h3>
-                  <p class="gray-text skeleton-animation"></p>
+                <dt>
+                  <h3>{{ room.joined_users[0]?.nickname }}</h3>
+                  <p>{{ room?.last_message?.contents }}</p>
                 </dt>
                 <dd>
+                  <h4 class="font12"><i class="uis uis-clock" style="color:#c1c1c1;"></i>
+                    {{ dmDateFormat(room.last_chat_at ? room.last_chat_at : room.created_at) }} </h4>
+                  <span v-if="room.unread_count > 0">{{ room.unread_count }}</span>
                 </dd>
               </dl>
             </li>
           </ul>
-          <template v-else>
-            <ul v-if="roomList" class="msg-list" ref="msgEl">
-              <!-- <el-scrollbar tag="ul" wrap-class="msg-list" height="650px"> -->
-              <li v-for="room in roomList" :key="room.id" @click="onClickRoom(room)"
-                :class="{ active: room?.id === selectedRoom?.id }">
-                <dl>
-                  <dd v-if="!room.is_group_room" class="mr10">
-                    <UserAvatar :user="room.joined_users[0]" tag="p" :hasRouter="true" />
-                  </dd>
-                  <dt>
-                    <h3>{{ room.joined_users[0]?.nickname }}</h3>
-                    <p>{{ room?.last_message?.contents }}</p>
-                  </dt>
-                  <dd>
-                    <h4 class="font12"><i class="uis uis-clock" style="color:#c1c1c1;"></i>
-                      {{ dmDateFormat(room.last_chat_at ? room.last_chat_at : room.created_at) }} </h4>
-                    <span v-if="room.unread_count > 0">{{ room.unread_count }}</span>
-                  </dd>
-                </dl>
-              </li>
-            </ul>
-            <ul v-else class="flex items-center content-center">
-              {{ $t('no.msg') }}
-            </ul>
-          </template>
-        </dd>
-        <dt :class="['msg-container', selectedRoom ? 'on' : 'off']" ref="activeMsgRef">
-          <DmActiveRoom v-if="selectedRoom" :selectedRoom="selectedRoom" @deleted-room="onDeletedRoom"
-            @open-keyboard="openkeyboard" @update-last-msg="updateLastMsg" @close-keyboard="closeKeyboard"
-            :key="componentKey" ref="activeRoomRef" />
-          <div v-else class="dlc-chat-emptied">
-            <p><i class="uil uil-comment-alt-dots" style="font-size:40px; color:#fff;"></i></p>
-            <h2> {{ $t('no.selected.msg') }} </h2>
-            <h3> {{ $t('new.msg.info') }} </h3>
-            <div><button @click="showNewMsg" :class="['btn-default new-msg-btn', { 'inactive': roomPending }]"
-                style="width:100%;">{{ $t('new.msg') }}</button></div>
-          </div>
-        </dt>
-      </dl>
-    </div>
-    <ClientOnly>
-      <el-dialog v-model="openNewMsg" class="modal-area-type new-msg-modal" :show-close="false" width="380px"
-        @close="closeModal" :fullscreen="isFullScreen">
-        <div class="modal-alert">
-          <dl class="ma-header">
-            <dt>{{ t('new.message') }}</dt>
-            <dd>
-              <button class="pointer" @click="openNewMsg = false">
-                <i class="uil uil-times"></i>
-              </button>
-            </dd>
-          </dl>
-          <div class="ma-content">
-            <div class="input-search-default mt0" @input="onInputUser">
-              <p><i class="uil uil-search"></i>
-              </p>
-              <div class="mt0"><input v-model="userKeyword" type="text" name="" title="keywords"
-                  :placeholder="$t('enter.keyword')" />
-              </div>
-            </div>
-            <ul v-if="followPending" class="user-list" ref="userListRef">
-              <li>
-                <dl class="row">
-                  <dd class="mr10">
-                    <UserAvatarSk tag="p" style="width:45px; height: 45px;" />
-                  </dd>
-                  <dt class="w100p">
-                    <h3 class="gray-text w50p skeleton-animation"> </h3>
-                    <p class="gray-text mt10 skeleton-animation"></p>
-                  </dt>
-                </dl>
-              </li>
-            </ul>
-            <ul v-else-if="!followPending" class="user-list">
-              <li v-if="userList?.length" v-for="user in userList" :key="user.id" class="pointer mb10"
-                @click="onClickUser(user)">
-                <dl class="row">
-                  <dd class="mr10">
-                    <UserAvatar :user="user" tag="p" style="width:45px; height:45px; border-radius: 50%;" />
-                  </dd>
-                  <dt>
-                    <h3 class="font16">{{ user.name }}</h3>
-                    <p class="font13 nickname">@{{ user.nickname }}</p>
-                  </dt>
-                </dl>
-              </li>
-              <li v-else>
-                {{ $t('not.found.user') }}
-              </li>
-            </ul>
-            <ul v-if="findUserPending" class="flex row content-center">
-              <ClipLoader color='#ff6e17' size="20px" />
-            </ul>
-          </div>
+          <ul v-else class="flex items-center content-center">
+            {{ $t('no.msg') }}
+          </ul>
+        </template>
+      </dd>
+      <dt :class="['msg-container', selectedRoom ? 'on' : 'off']" ref="activeMsgRef">
+        <DmActiveRoom v-if="selectedRoom" :selectedRoom="selectedRoom" @deleted-room="onDeletedRoom"
+          @open-keyboard="openkeyboard" @update-last-msg="updateLastMsg" @close-keyboard="closeKeyboard"
+          :key="componentKey" ref="activeRoomRef" />
+        <div v-else class="dlc-chat-emptied">
+          <p><i class="uil uil-comment-alt-dots" style="font-size:40px; color:#fff;"></i></p>
+          <h2> {{ $t('no.selected.msg') }} </h2>
+          <h3> {{ $t('new.msg.info') }} </h3>
+          <div><button @click="showNewMsg" :class="['btn-default new-msg-btn', { 'inactive': roomPending }]"
+              style="width:100%;">{{ $t('new.msg') }}</button></div>
         </div>
-      </el-dialog>
-    </ClientOnly>
+      </dt>
+    </dl>
   </div>
+  <ClientOnly>
+    <el-dialog v-model="openNewMsg" class="modal-area-type new-msg-modal" :show-close="false" width="380px"
+      @close="closeModal" :fullscreen="isFullScreen">
+      <div class="modal-alert">
+        <dl class="ma-header">
+          <dt>{{ t('new.message') }}</dt>
+          <dd>
+            <button class="pointer" @click="openNewMsg = false">
+              <i class="uil uil-times"></i>
+            </button>
+          </dd>
+        </dl>
+        <div class="ma-content">
+          <div class="input-search-default mt0" @input="onInputUser">
+            <p><i class="uil uil-search"></i>
+            </p>
+            <div class="mt0"><input v-model="userKeyword" type="text" name="" title="keywords"
+                :placeholder="$t('enter.keyword')" />
+            </div>
+          </div>
+          <ul v-if="followPending" class="user-list" ref="userListRef">
+            <li>
+              <dl class="row">
+                <dd class="mr10">
+                  <UserAvatarSk tag="p" style="width:45px; height: 45px;" />
+                </dd>
+                <dt class="w100p">
+                  <h3 class="gray-text w50p skeleton-animation"> </h3>
+                  <p class="gray-text mt10 skeleton-animation"></p>
+                </dt>
+              </dl>
+            </li>
+          </ul>
+          <ul v-else-if="!followPending" class="user-list">
+            <li v-if="userList?.length" v-for="user in userList" :key="user.id" class="pointer mb10"
+              @click="onClickUser(user)">
+              <dl class="row">
+                <dd class="mr10">
+                  <UserAvatar :user="user" tag="p" style="width:45px; height:45px; border-radius: 50%;" />
+                </dd>
+                <dt>
+                  <h3 class="font16">{{ user.name }}</h3>
+                  <p class="font13 nickname">@{{ user.nickname }}</p>
+                </dt>
+              </dl>
+            </li>
+            <li v-else>
+              {{ $t('not.found.user') }}
+            </li>
+          </ul>
+          <ul v-if="findUserPending" class="flex row content-center">
+            <ClipLoader color='#ff6e17' size="20px" />
+          </ul>
+        </div>
+      </div>
+    </el-dialog>
+  </ClientOnly>
 </template>
 <script setup lang="ts">
 import { ElScrollbar, ElDialog, rowProps } from 'element-plus'
@@ -204,11 +202,19 @@ const isFbSupported = computed(() => useCommon().setting.value.isFbSupported)
 
 const totalRoomCnt = ref(0)
 
-definePageMeta({
-  title: 'dm',
-  name: 'dm',
-  middleware: 'auth',
-})
+const isAllowPolling = ref(true)
+const zemtown = computed(() => useZemtown().zemtown.value)
+
+
+watch(  () =>
+(zemtown.value.isOpenDm),
+  (val) => {
+    if (!val) {
+      removeWindowEvent()
+      isAllowPolling.value = false
+    }
+  }
+)
 
 useInfiniteScroll(
   msgEl,
@@ -279,7 +285,9 @@ onMounted(async () => {
   nextTick(async () => {
     onResize()
     await fetch()
-    if (!userInfo.value.setting.dm_alarm || !isFbSupported.value || !useCommon().setting.value.isNotiAllow) {
+    console.log('isAllowPolling', isAllowPolling.value)
+    // if (!userInfo.value.setting.dm_alarm || !isFbSupported.value || !useCommon().setting.value.isNotiAllow) {
+    if(isAllowPolling.value){
       await pollingRoom()
     }
     const userId = getQuery('user')
@@ -290,11 +298,24 @@ onMounted(async () => {
 
 })
 
+
+
+onBeforeUnmount(() => {
+  removeWindowEvent()
+})
+
+
 onBeforeRouteLeave((to, from, next) => {
-  window.removeEventListener('resize', onResize)
-  clearInterval(roomPolling.value)
+  removeWindowEvent()
   next()
 })
+
+
+function removeWindowEvent() {
+  window.removeEventListener('resize', onResize)
+  clearInterval(roomPolling.value)
+}
+
 
 function getQuery(query: string) {
   return route.query ? route.query[query] : null
@@ -600,7 +621,6 @@ function closeKeyboard() {
 </script>
 <style scoped lang="scss">
 .dm-list {
-
   .mobile-btn {
     display: none;
 
@@ -663,6 +683,7 @@ function closeKeyboard() {
 }
 
 .new-msg-modal {
+
   .ma-content {
     .input-search-default {
       justify-content: left
@@ -694,106 +715,5 @@ function closeKeyboard() {
     }
   }
 
-}
-
-@media all and (max-width: 767px) {
-  .content {
-    height: calc(100vh - 70px - 100px);
-    padding-bottom: 0px;
-
-    .dm-list {
-      padding: 20px 10px 10px 10px;
-      margin: 0px;
-      width: 100%;
-      height: 100%;
-      border-radius: 0px;
-      box-shadow: none;
-
-      .dl-title {
-        display: flex;
-        flex-direction: row;
-
-        .mobile-btn {
-          display: inline;
-          border: none;
-          background: transparent;
-          padding: 0px;
-          color: #333;
-          font-size: 25px;
-
-          &.off {
-            display: none;
-          }
-
-          &.on {
-            display: inline;
-          }
-        }
-      }
-
-      .dl-content {
-        border: none;
-        margin-top: 10px;
-
-        height: 90%;
-
-        .room-container {
-          &.off {
-            display: none;
-          }
-
-          &.on {
-            display: block;
-          }
-
-          .msg-list {
-            padding: 0px;
-            height: 100%;
-            overflow-y: scroll;
-
-            li {
-              // margin: 0px;
-            }
-          }
-        }
-
-        .msg-container {
-
-          &.off {
-            display: none;
-          }
-
-          &.on {
-            display: block;
-            border: 1px solid #eee;
-            border-radius: 10px;
-          }
-
-          ::v-deep(.dlc-chat-content) {
-            height: calc(100% - 120px);
-          }
-
-          ::v-deep(.dlc-send-message) {
-            // height: 50px;
-
-            div {
-              width: 90%;
-            }
-
-            button {
-              height: 30px;
-              width: 30px;
-            }
-
-          }
-
-        }
-      }
-    }
-
-    ::v-deep(.new-msg-modal) {
-      border-radius: 0px !important;
-    }
-  }
 }
 </style>

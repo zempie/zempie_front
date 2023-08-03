@@ -14,21 +14,7 @@
           </dl>
           <div>
             <h2>{{ $t('myProfile') }}</h2>
-            <div>
-              <NuxtLink id="myChannel" :to="$localePath(`/${user?.nickname}`)">
-                <!-- <i class="uil uil-user"></i> -->
-                {{ $t('myChannel') }}
-              </NuxtLink>
-              <NuxtLink id="gameStudio" :to="$localePath('/project/list')">
-                <!-- <i class="uil uil-robot"></i> -->
-                {{ $t('gameStudio') }}
-              </NuxtLink>
-
-              <NuxtLink :to="$localePath(`/myaccount`)">
-                <!-- <i class="uil uil-setting"></i> -->
-                {{ $t('my.account') }}
-              </NuxtLink>
-            </div>
+            <UserMenuProfile :user="user" />
           </div>
           <div>
             <h2>{{ $t('group') }}</h2>

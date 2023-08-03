@@ -167,7 +167,6 @@ const router = useRouter()
 
 const gameInfo = computed(() => useGame().game.value.info)
 
-console.log('gameInfo:', gameInfo.value)
 
 const hashtags = computed(
   () =>
