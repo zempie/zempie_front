@@ -62,11 +62,12 @@ async function getMogeraFile() {
     const { result } = data.value
 
     if (result.length) {
-      const [firstSaved] = result
-
+      const [firstSaved, second] = result
       savedFile.value = firstSaved
-      if (result.length >= 2)
+      if (result.length >= 2) {
+        savedFile.value = second
         showSavedInfo.value = true
+      }
     } else {
       router.replace($localePath('/project/upload'))
     }
