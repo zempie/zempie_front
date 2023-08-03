@@ -21,7 +21,7 @@ interface IChip {
 
 
 const chipsArr = ref<IChip[]>([])
-defineExpose({ saveChip, backspaceDelete, backspaceDelete, chipsArr, clearArr })
+defineExpose({ saveChip, backspaceDelete, chipsArr, clearArr })
 
 
 function deleteChip(index: number) {
@@ -37,8 +37,13 @@ function clearArr() {
 
 function saveChip(chipInfo?: IChip) {
   if (chipInfo) {
-    chipsArr.value = [...chipsArr.value, chipInfo]
-    emit('currChip', chipsArr.value)
+    const duplicated = chipsArr.value.find((elem) => {
+      return elem.id === chipInfo.id
+    })
+    if (!duplicated) {
+      chipsArr.value = [...chipsArr.value, chipInfo]
+      emit('currChip', chipsArr.value)
+    }
   }
 
 }
@@ -49,41 +54,4 @@ function backspaceDelete() {
 
 }
 </script>
-<style scoped lang="scss">
-.chip-container {
-  min-height: 48px;
-  padding: 5px 15px;
-  border-radius: 5px;
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  margin-top: 0px !important;
-  justify-content: flex-start !important;
-
-  .chip {
-    height: 30px;
-    color: #fff;
-    margin: 4px;
-    background: #ff6e17;
-    padding: 0px 10px;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-
-    i {
-      cursor: pointer;
-      opacity: 0.56;
-      margin-left: 8px;
-    }
-  }
-
-  :deep(.chip-input) {
-    flex: 1 1 auto;
-    // width: 30px;
-    border: none;
-    outline: none;
-    padding: 4px;
-  }
-}
-</style>
+<style scoped lang="scss"></style>
