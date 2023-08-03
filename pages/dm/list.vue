@@ -16,14 +16,8 @@
 
       <dl class="dl-content">
         <dd :class="['room-container', selectedRoom ? 'off' : 'on']">
-          <!-- TODO: 2차 스펙에서 진행함 -> -->
-          <!-- <div>
-            <div class="input-search-default" @input="onInputMsg">
-              <p><i class="uil uil-search"></i>
-              </p>
-              <div><input v-model="dmKeyword" type="text" name="" title="keywords" placeholder="검색어를 입력하세요." /></div>
-            </div>
-          </div> -->
+          <!-- <DmSearchMsg @searchMsg="updateRooms" /> -->
+          <!-- <DmVoiceCalling /> -->
           <ul v-if="roomPending">
             <li v-for="i in 7">
               <dl>
@@ -46,11 +40,16 @@
               <li v-for="room in roomList" :key="room.id" @click="onClickRoom(room)"
                 :class="{ active: room?.id === selectedRoom?.id }">
                 <dl>
-                  <dd v-if="!room.is_group_room" class="mr10">
-                    <UserAvatar :user="room.joined_users[0]" tag="p" :hasRouter="true" />
+                  <dd v-if="room.is_group_room" style="position: relative; top:-10px">
+                    <UserAvatar class="mr10" :user="room.joined_users[0]" tag="p" :hasRouter="true" />
+                    <UserAvatar class="mr10" :user="room.joined_users[1]" tag="p" :hasRouter="true"
+                      style="position: absolute; top:15px; left:10px" />
+                  </dd>
+                  <dd v-else>
+                    <UserAvatar class="mr10" :user="room.joined_users[0]" tag="p" :hasRouter="true" />
                   </dd>
                   <dt>
-                    <h3>{{ room.joined_users[0]?.nickname }}</h3>
+                    <h3>{{ getJoinedUserName(room.joined_users) }}</h3>
                     <p>{{ room?.last_message?.contents }}</p>
                   </dt>
                   <dd>
@@ -96,8 +95,14 @@
             <div class="input-search-default mt0" @input="onInputUser">
               <p><i class="uil uil-search"></i>
               </p>
-              <div class="mt0"><input v-model="userKeyword" type="text" name="" title="keywords"
-                  :placeholder="$t('enter.keyword')" />
+              <div class="mt0">
+                <CommonChipInput ref="chipRef" @currChip="getCurrChip">
+                  <template #input>
+                    <input class="chip-input" v-model="userKeyword" type="text" name="" title="keywords"
+                      :placeholder="$t('enter.keyword')" @blur="saveChip" @keyup.enter="saveChip"
+                      @keydown.delete="backspaceDelete" />
+                  </template>
+                </CommonChipInput>
               </div>
             </div>
             <ul v-if="followPending" class="user-list" ref="userListRef">
@@ -113,7 +118,7 @@
                 </dl>
               </li>
             </ul>
-            <ul v-else-if="!followPending" class="user-list">
+            <ul v-else-if="!followPending && !findUserPending" class="user-list">
               <li v-if="userList?.length" v-for="user in userList" :key="user.id" class="pointer mb10"
                 @click="onClickUser(user)">
                 <dl class="row">
@@ -133,6 +138,8 @@
             <ul v-if="findUserPending" class="flex row content-center">
               <ClipLoader color='#ff6e17' size="20px" />
             </ul>
+            <!-- selectedUsers -->
+            <button :class="[selectedUsers ? 'btn-default' : 'inactive-btn', 'mt20 w100p']" @click="startChat">채팅</button>
           </div>
         </div>
       </el-dialog>
@@ -150,6 +157,7 @@ import { onBeforeRouteLeave } from 'vue-router';
 
 
 const CHAT_LIMIT = 10
+const DISPLAY_USER_LIMIT = 2
 
 const route = useRoute()
 const { $localePath } = useNuxtApp()
@@ -169,7 +177,9 @@ const inputMsg = ref('')
 
 const openNewMsg = ref(false)
 const userKeyword = ref('')
+const chipRef = ref()
 const userList = ref<IUser[]>()
+const selectedUsers = ref()
 
 const msgList = ref<IMessage[]>()
 
@@ -201,6 +211,7 @@ const isMobile = computed(() =>
   window.matchMedia('screen and (max-width: 767px)')
 )
 const isFbSupported = computed(() => useCommon().setting.value.isFbSupported)
+
 
 const totalRoomCnt = ref(0)
 
@@ -309,7 +320,7 @@ async function fetch(isPolling: boolean = false, customOffset?: number) {
   const payload = {
     limit: CHAT_LIMIT,
     offset: customOffset ? customOffset : offset.value,
-    order: 'asc'
+    order: 'desc'
   }
 
   //TODO: limit 제한 걸어야됨 임시
@@ -402,10 +413,6 @@ const newRooms = ((rooms: IChat[]) => {
 })
 
 
-//TODO:2차스펙
-const onInputMsg = debounce(async () => {
-  await fetch()
-}, 300)
 
 const onInputUser = debounce(async () => {
   await getUsers()
@@ -474,13 +481,13 @@ async function getFollowings() {
 
 
 async function onClickUser(user: IUser) {
-  openNewMsg.value = false
-  await findRoom([user.id])
+
+  chipRef.value.saveChip({ id: user.id, name: user.name })
+  // await findRoom([user.id])
 }
 
 
 async function onClickRoom(clickedRoom: IChat) {
-
 
   selectedRoom.value = clickedRoom
   forceRerender()
@@ -510,11 +517,14 @@ async function findRoom(user_ids: Number[]) {
   const { data, error } = await useCustomAsyncFetch<{ result: IChat[] }>(`/chat/rooms/search/user?user_ids=${user_ids}&perfact=true`, getComFetchOptions('get', true))
 
   if (data.value) {
-    // TODO: 다이렉트 메시지만 1차 스펙에서는 가능 -> 추후 그룹 메시지로 변경 
     const { result: rooms } = data.value
+    console.log(rooms)
     if (!rooms.length) {
       await createRoom(user_ids)
+      console.log('roomList.value[0]', roomList.value[0])
       selectedRoom.value = roomList.value[0]
+      forceRerender()
+
     } else {
       //이미 방이 존재하는 경우
       const existRoom = roomList.value.filter((room) => {
@@ -560,6 +570,7 @@ async function createRoom(receiver_ids: Number[]) {
 function closeModal() {
   userList.value = followingList.value
   userKeyword.value = ''
+  chipRef.value.clearArr()
 }
 
 function onDeletedRoom(room: IChat) {
@@ -591,12 +602,54 @@ function closeKeyboard() {
   activeMsgRef.value.style.paddingBottom = '0px'
 }
 
-// function updateLastMsg(msg: IMessage) {
-//   if (roomList.value[roomList.value.length - 1].last_message.id !== msg.id) {
-//     roomList.value[roomList.value.length - 1].last_message = msg
-//     forceRerender()
-//   }
-// }
+function updateRooms(list: IChat[]) {
+
+
+}
+
+function backspaceDelete({ which }) {
+  if (which == 8 && userKeyword.value === '')
+    chipRef.value.backspaceDelete()
+}
+
+function saveChip() {
+  chipRef.value.saveChip()
+}
+
+async function startChat() {
+  const ids = chipRef.value.chipsArr.map((chip) => chip.id)
+  await findRoom(ids)
+}
+
+function getCurrChip(chips) {
+  selectedUsers.value = chips
+}
+
+function getJoinedUserName(users?: any) {
+  if (users) {
+    const total = users.length
+    let roomName = ''
+
+    if (total >= DISPLAY_USER_LIMIT) {
+      for (let i = 0; i < DISPLAY_USER_LIMIT; i++) {
+        roomName += users[i].nickname
+        if (i < DISPLAY_USER_LIMIT - 1)
+          roomName += ', '
+      }
+
+      if (total > DISPLAY_USER_LIMIT) {
+        roomName += `외 ${total - 2}명`
+      }
+
+      return roomName
+    } else {
+      return users[0].nickname
+    }
+  }
+
+}
+
+provide('joinedUser', { getJoinedUserName })
 </script>
 <style scoped lang="scss">
 .dm-list {
@@ -735,7 +788,7 @@ function closeKeyboard() {
         border: none;
         margin-top: 10px;
 
-        height: 90%;
+        height: 85%;
 
         .room-container {
           &.off {
@@ -748,12 +801,9 @@ function closeKeyboard() {
 
           .msg-list {
             padding: 0px;
-            height: 100%;
+            height: 90%;
             overflow-y: scroll;
 
-            li {
-              // margin: 0px;
-            }
           }
         }
 
