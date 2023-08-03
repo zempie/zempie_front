@@ -5381,11 +5381,17 @@
   justify-content: flex-end;
 }
 
-.dl-content>dt .dlc-chat-content .receiver-chat>ul>li>span {
+.dl-content>dt .dlc-chat-content .receiver-chat>ul>li>div>span {
   display: inline-block;
   color: #333;
   background-color: #f1f1f1;
   border-radius: 12px 0px 12px 12px;
+}
+
+.dl-content>dt .dlc-chat-content .receiver-chat>ul>li>div {
+  justify-content: flex-end;
+  align-items: flex-end;
+
 }
 
 .dl-content>dt .dlc-chat-content .sender-chat {
@@ -5393,7 +5399,12 @@
   text-align: left;
 }
 
-.dl-content>dt .dlc-chat-content .sender-chat>ul>li>span {
+.dl-content>dt .dlc-chat-content .sender-chat>ul>li>div {
+  align-items: center;
+
+}
+
+.dl-content>dt .dlc-chat-content .sender-chat>ul>li>div>span {
   display: inline-block;
   color: #fff;
   background-color: #feb100;

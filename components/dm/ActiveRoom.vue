@@ -5,10 +5,11 @@
     </dd>
     <dt>
       <div>
-        <h2>{{ selectedRoom?.joined_users[0]?.nickname }}</h2>
+        <h2> {{ getJoinedUserName(selectedRoom?.joined_users) }}</h2>
         <p>{{ selectedRoom?.joined_users[0]?.name }}</p>
       </div>
     </dt>
+    <!-- <DmSearchMsg :room_id="selectedRoom.id" @searchMsg="searchMsg" /> -->
     <dd>
       <ClientOnly>
         <el-dropdown trigger="click">
@@ -30,13 +31,22 @@
     <div class="inner" ref="scrollContent">
       <div :class="msg.sender?.id === userInfo.id ? 'receiver-chat' : 'sender-chat'" v-for="( msg, index ) in  msgList "
         :ref="el => { divs[msg.id] = el }" :key="index">
+
         <template v-if="msg?.chat_idx !== -1">
-          <h4>{{ dmDateFormat(msg.created_at) }}</h4>
           <ul>
-            <li class="flex" style="overflow:visible; word-break: break-all; width: 100%; ">
-              <DmMsgMenu :msg="msg" v-if="msg.sender?.id === userInfo.id" @delete-msg="deleteMsg"
-                style="max-height: 100px;" />
-              <span style="max-width: 85%;">{{ msg.contents }}</span>
+            <li class="flex column" style="overflow:visible; word-break: break-all; width: 100%; ">
+              <p class="mb5" v-if="msg.sender?.id !== userInfo.id">{{ msg.sender.nickname }}</p>
+              <div class="flex">
+                <UserAvatar v-if="msg.sender?.id !== userInfo.id" :user="msg.sender" tag="span"
+                  style="width:40px; height:40px" class="mr5" />
+
+                <template v-if="msg.sender?.id === userInfo.id" class="mr5">
+                  <DmMsgMenu :msg="msg" @delete-msg="deleteMsg" style="max-height: 100px;" />
+                  <h4 class="mr5">{{ dmDateFormat(msg.created_at) }}</h4>
+                </template>
+                <span style="max-width: 85%;">{{ msg.contents }}</span>
+                <h4 class="ml5" v-if="msg.sender?.id !== userInfo.id">{{ dmDateFormat(msg.created_at) }}</h4>
+              </div>
             </li>
           </ul>
         </template>
@@ -48,9 +58,8 @@
       <!-- TODO: 태그 보낼 수 있어야함  -->
       <input v-model="inputMsg" type="text" class="w100p" name="" title="" :placeholder="$t('send.msg')"
         @keyup.enter="sendMsg" @focus="onFocus" @blur="onBlur" ref="inputRef" />
-      <!-- TODO: 2차 스펙 -->
       <!-- <router-link to="#"><i class="uil uil-scenery font25 mr5"></i></router-link>
-                <router-link to="#"><i class="uil uil-camera font28"></i></router-link> -->
+      <router-link to="#"><i class="uil uil-camera font28"></i></router-link> -->
     </div>
     <p><button @click="sendMsg"><img src="/images/send_icon.png" alt="" title="" /></button></p>
   </div>
@@ -155,6 +164,8 @@ const isFbSupported = computed(() => useCommon().setting.value.isFbSupported)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 const unreadStartId = computed(() => props.selectedRoom.unread_start_id)
 
+const { getJoinedUserName } = inject('joinedUser')
+
 
 const lastMsg = computed({
   get() {
@@ -234,6 +245,8 @@ watch(
 
 onMounted(async () => {
 
+  console.log(props.selectedRoom)
+
   if (props.selectedRoom.unread_count) {
     if (props.selectedRoom.unread_count > msgLimit.value) {
       offset.value = props.selectedRoom.unread_count - msgLimit.value
@@ -262,7 +275,7 @@ onMounted(async () => {
       if (newMessage && newMessage.length) {
         scrollToBottom()
       }
-    }, 3000)
+    }, 5000)
   }
 
   if (props.selectedRoom.unread_count <= 0) {
@@ -476,5 +489,11 @@ async function onUnBlockUser() {
     .then(() => {
 
     })
+}
+
+
+function searchMsg(msg) {
+  console.log(msg)
+
 }
 </script>
