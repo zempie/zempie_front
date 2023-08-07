@@ -627,7 +627,7 @@ function getCurrChip(chips) {
 }
 
 function getJoinedUserName(room: IChat) {
-  if (room.has_name) return room.name
+  if (room.has_name || Number(room.has_name) === 1) return room.name
   const users = room.joined_users
   if (users) {
     const total = users.length
