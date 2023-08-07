@@ -49,7 +49,7 @@
                     <UserAvatar class="mr10" :user="room.joined_users[0]" tag="p" :hasRouter="true" />
                   </dd>
                   <dt>
-                    <h3>{{ getJoinedUserName(room.joined_users) }}</h3>
+                    <h3>{{ getJoinedUserName(room) }}</h3>
                     <p v-if="room?.last_message?.type === eChatType.IMAGE">{{ $t('dm.sent.img') }}</p>
                     <p v-else-if="room?.last_message?.type === eChatType.TEXT">{{ room?.last_message?.contents }}</p>
                   </dt>
@@ -69,7 +69,7 @@
         <dt :class="['flex column msg-container', selectedRoom ? 'on' : 'off']" ref="activeMsgRef">
           <DmActiveRoom v-if="selectedRoom" :selectedRoom="selectedRoom" @deleted-room="onDeletedRoom"
             @open-keyboard="openkeyboard" @update-last-msg="updateLastMsg" @close-keyboard="closeKeyboard"
-            :key="componentKey" ref="activeRoomRef" />
+            :key="componentKey" @update-group-name="updateGroupName" ref="activeRoomRef" />
           <div v-else class="dlc-chat-emptied">
             <p><i class="uil uil-comment-alt-dots" style="font-size:40px; color:#fff;"></i></p>
             <h2> {{ $t('no.selected.msg') }} </h2>
@@ -626,7 +626,9 @@ function getCurrChip(chips) {
   selectedUsers.value = chips
 }
 
-function getJoinedUserName(users?: any) {
+function getJoinedUserName(room: IChat) {
+  if (room.has_name) return room.name
+  const users = room.joined_users
   if (users) {
     const total = users.length
     let roomName = ''
@@ -651,6 +653,17 @@ function getJoinedUserName(users?: any) {
 }
 
 provide('joinedUser', { getJoinedUserName })
+
+function updateGroupName(roomName: string) {
+  roomList.value = roomList.value.map((room) => {
+    if (room.id === selectedRoom.value.id) {
+      room.name = roomName
+      selectedRoom.value = room
+    }
+    return room
+
+  })
+}
 </script>
 <style scoped lang="scss">
 .dm-list {
@@ -816,13 +829,19 @@ provide('joinedUser', { getJoinedUserName })
           }
 
           &.on {
-            display: block;
+            display: flex;
             border: 1px solid #eee;
             border-radius: 10px;
           }
 
+
           ::v-deep(.dlc-chat-content) {
-            height: calc(100% - 120px);
+            height: auto;
+            flex: 1;
+            overflow-x: hidden;
+            overflow-y: auto;
+            position: relative;
+            right: 0
           }
 
           ::v-deep(.dlc-send-message) {

@@ -2,7 +2,7 @@
   <div @click="uploadImageFile">
     <button><i class="uil uil-scenery font25"></i></button>
     <div style="height: 0px; overflow: hidden">
-      <input type="file" @change="onSelectImageFile" multiple accept=image/* ref="image" />
+      <input type="file" @change="onSelectImageFile" multiple accept="image/*" ref="image" />
     </div>
   </div>
 </template>
@@ -41,7 +41,10 @@ function onSelectImageFile(event: Event) {
 
   const files = (event.target as HTMLInputElement).files
 
-  if (!isValidImgCount(files)) {
+  const newFiles = Array.from(files)
+
+
+  if (!isValidImgCount(newFiles)) {
     ElMessage({
       message: `${t('maxFile.count.text1')} ${MAX_LIMIT}${t('maxFile.count.text2')}`,
       type: 'warning',
@@ -49,10 +52,14 @@ function onSelectImageFile(event: Event) {
     return
   }
 
-  rawFiles.value = Array.from(files)
+  if (rawFiles.value) {
+    rawFiles.value = [...rawFiles.value, ...newFiles]
+  } else {
+    rawFiles.value = newFiles
+  }
 
 
-  for (const file of rawFiles.value) {
+  for (const file of newFiles) {
     if (file.type === 'image/svg+xml') {
       alert('svg는 지원하지 않는 확장자 형식입니다')
       continue
@@ -66,6 +73,8 @@ function onSelectImageFile(event: Event) {
       imageFiles.value = [...imageFiles.value,
       { file, name: file.name, url, is_blind: false, type: eChatType.IMAGE }
       ]
+
+      console.log(imageFiles.value)
       emit('uploadImage', imageFiles.value)
 
     }
@@ -78,7 +87,7 @@ function onSelectImageFile(event: Event) {
 
 
 
-function isValidImgCount(images: [] | FileList) {
+function isValidImgCount(images: File[]) {
   console.log(images.length)
   //첨부하는 이미지의 갯수는 max를 넘길 수 없음
   if ((images && images.length) > MAX_LIMIT) {
@@ -89,6 +98,8 @@ function isValidImgCount(images: [] | FileList) {
     return false
   }
   if (images.length + imageFiles.value.length > MAX_LIMIT) {
+    console.log(MAX_LIMIT - imageFiles.value.length)
+    images.slice(0, MAX_LIMIT - imageFiles.value.length - 1)
     return false
   }
 

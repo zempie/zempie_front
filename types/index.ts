@@ -352,7 +352,9 @@ export interface IChat {
   last_chat_id: number,
   unread_start_id: number,
   updated_message?: IMessage[]
-  meta?: { isLastMsg: boolean }
+  meta?: { isLastMsg: boolean },
+  has_name: Boolean,
+  name: String
 }
 
 export interface IMessage {
