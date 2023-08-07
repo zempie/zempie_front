@@ -1181,6 +1181,36 @@ $zempie-main-color-hover: #f974162a;
   }
 }
 
+.msg-img-container {
+  width: 30%;
+  min-height: 100px;
+  display: flex;
+  justify-content: flex-end;
+  border-radius: 10px;
+  border: 1px solid #e5e5e5;
+  // background-color: #e5e5e5;
+
+  img {
+    width: 100%;
+    object-fit: contain;
+    border-radius: 10px;
+  }
+}
+
+
+.dm-image-uploader {
+  width: 50px;
+
+  button {
+    background: transparent;
+
+    &:hover {
+      background: transparent;
+      color: #f97316
+    }
+  }
+}
+
 /* chips */
 .chip-container {
   min-height: 48px;

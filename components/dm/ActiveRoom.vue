@@ -75,7 +75,7 @@
           <input type="file" @change="onSelectImageFile" multiple id="image-selector" accept=image/* ref="image" />
         </div>
       </div> -->
-        <CommonImageUploader @uploadImage="uploadImage" ref="imgUploaderRef" class="image-uploader" />
+        <CommonImageUploader @uploadImage="uploadImage" ref="imgUploaderRef" class="dm-image-uploader" />
         <!-- <div style="width: 30px" @click="uploadAudioFile">
           <button><i class="uil uil-microphone font25 mr5"></i></button>
           <div style="height: 0px; overflow: hidden">
@@ -577,35 +577,6 @@ function deleteImage(idx: number) {
 </script>
 
 <style scoped lang="scss">
-.msg-img-container {
-  width: 30%;
-  min-height: 100px;
-  display: flex;
-  justify-content: flex-end;
-  border-radius: 10px;
-  border: 1px solid #e5e5e5;
-  // background-color: #e5e5e5;
-
-  img {
-    width: 100%;
-    object-fit: contain;
-    border-radius: 10px;
-  }
-}
-
-.image-uploader {
-  width: 50px;
-
-  :deep(button) {
-    background: transparent;
-
-    &:hover {
-      background: transparent;
-      color: #f97316
-    }
-  }
-}
-
 .input-container {
   display: flex;
   align-items: center;
