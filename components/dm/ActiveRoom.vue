@@ -39,12 +39,17 @@
               <div class="flex">
                 <UserAvatar v-if="msg.sender?.id !== userInfo.id" :user="msg.sender" tag="span"
                   style="width:40px; height:40px" class="mr5" />
-
                 <template v-if="msg.sender?.id === userInfo.id" class="mr5">
                   <DmMsgMenu :msg="msg" @delete-msg="deleteMsg" style="max-height: 100px;" />
                   <h4 class="mr5">{{ dmDateFormat(msg.created_at) }}</h4>
                 </template>
-                <span style="max-width: 85%;">{{ msg.contents }}</span>
+                <span v-if="msg.type === eChatType.TEXT" style="max-width: 85%;">{{ msg.contents }}</span>
+                <div class="msg-img-container" v-else-if="msg.type === eChatType.IMAGE">
+                  <img :src="msg.contents" @click-="" />
+                </div>
+                <!-- <div v-if="msg.attached_files" v-for="file in msg.attached_files">
+                  <img :src="file.url" style="height:150px; width:150px" />
+                </div> -->
                 <h4 class="ml5" v-if="msg.sender?.id !== userInfo.id">{{ dmDateFormat(msg.created_at) }}</h4>
               </div>
             </li>
@@ -53,15 +58,34 @@
       </div>
     </div>
   </div>
-  <div class="dlc-send-message">
-    <div>
-      <!-- TODO: 태그 보낼 수 있어야함  -->
-      <input v-model="inputMsg" type="text" class="w100p" name="" title="" :placeholder="$t('send.msg')"
-        @keyup.enter="sendMsg" @focus="onFocus" @blur="onBlur" ref="inputRef" />
-      <!-- <router-link to="#"><i class="uil uil-scenery font25 mr5"></i></router-link>
-      <router-link to="#"><i class="uil uil-camera font28"></i></router-link> -->
+
+  <div class="dlc-send-message column">
+    <div class="attr-container" v-if="attr && attr.length">
+      <ImageSwiperPreview :images="attr" @deleteImage="deleteImage" />
     </div>
-    <p><button @click="sendMsg"><img src="/images/send_icon.png" alt="" title="" /></button></p>
+    <div class="flex row">
+      <!-- TODO: 태그 보낼 수 있어야함  -->
+      <div class="input-container">
+
+        <input v-model="inputMsg" type="text" class="w100p" name="" title="" :placeholder="$t('send.msg')"
+          @keyup.enter="onSubmitMsg" @focus="onFocus" @blur="onBlur" ref="inputRef" />
+        <!-- <div style="width: 30px" @click="uploadImageFile">
+        <button><i class="uil uil-scenery font25 mr5"></i></button>
+        <div style="height: 0px; overflow: hidden">
+          <input type="file" @change="onSelectImageFile" multiple id="image-selector" accept=image/* ref="image" />
+        </div>
+      </div> -->
+        <CommonImageUploader @uploadImage="uploadImage" ref="imgUploaderRef" class="image-uploader" />
+        <!-- <div style="width: 30px" @click="uploadAudioFile">
+          <button><i class="uil uil-microphone font25 mr5"></i></button>
+          <div style="height: 0px; overflow: hidden">
+            <input type="file" @change="onSelectAudioFile" multiple accept=".mp3" ref="audio" />
+          </div>
+        </div> -->
+      </div>
+      <button @click="onSubmitMsg"><img src="/images/send_icon.png" alt="" title="" /></button>
+
+    </div>
   </div>
   <UserReportModal :openModal="showReportModal" @closeModal="closeReportModal"
     :user="props.selectedRoom?.joined_users[0]" />
@@ -123,11 +147,13 @@
 <script setup lang="ts">
 import _ from 'lodash'
 import { dmDateFormat } from '~~/scripts/utils'
-import { IChat, IMessage, IUser } from '~~/types'
+import { IChat, IMessage, IUser, eChatType } from '~~/types'
 import { ElDropdown, ElDialog, ElMessage, linkEmits } from 'element-plus';
 import { PropType } from 'vue';
 import { useInfiniteScroll, useScroll } from '@vueuse/core'
 import FlutterBridge from '~~/scripts/flutterBridge'
+
+
 
 const props = defineProps({
   selectedRoom: Object as PropType<IChat>,
@@ -159,10 +185,15 @@ const msgPolling = ref(null)
 const totalMsgCnt = ref(0)
 const showReportModal = ref(false)
 
+const attr = ref()
+const imgUploaderRef = ref()
+
+
 const userInfo = computed(() => useUser().user.value.info)
 const isFbSupported = computed(() => useCommon().setting.value.isFbSupported)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 const unreadStartId = computed(() => props.selectedRoom.unread_start_id)
+
 
 const { getJoinedUserName } = inject('joinedUser')
 
@@ -343,6 +374,15 @@ async function msgFetch(customOffset?: number) {
       }
     }
 
+    //TODO: 마지막 메세지 테스트
+    // msgList.value[0].attached_files = [{
+    //   "priority": 0,
+    //   "url": "https://dev-zempie.s3.ap-northeast-2.amazonaws.com/v1/umMiE5uEskeRlakbOLqnQiwiZ1W2/c/3zjza1r5tlkwbewn9",
+    //   "size": 32704,
+    //   "type": "image",
+    //   "name": "모게라 게입 업로드 배너 2.jpg",
+    //   "is_blind": false
+    // }]
     return messages
   }
 
@@ -353,36 +393,63 @@ function scrollToPrev(yPos: number) {
 
 }
 
-async function sendMsg() {
-  // console.log(isSending.value)
+async function onSubmitMsg() {
   if (isSending.value) return
-  if (!inputMsg.value) return
-  isSending.value = true
-
-  const content = _.cloneDeep(inputMsg.value)
-  inputMsg.value = ''
 
   const receiver_ids = props.selectedRoom.joined_users.map((user) => {
     return user.id
   })
 
-
   const payload = {
     room_id: props.selectedRoom.id,
     receiver_ids,
-    type: 0,
-    contents: content
+    type: eChatType.TEXT,
+    contents: '',
   }
+
+  //첨부파일이 있는경우 첨부파일 갯수만큼 보내고 텍스트도 보내야함
+  if (attr.value) {
+
+    if (attr.value[0].type === eChatType.IMAGE) {
+      const imgUrls = await imgUploaderRef.value.fetchImage()
+      for (const img of imgUrls) {
+        payload.contents = img.url
+        payload.type = eChatType.IMAGE
+        await sendMsg(payload)
+      }
+    }
+  }
+
+
+  //빈 텍스트는 보내지 않음
+  if (!inputMsg.value) return
+
+
+  isSending.value = true
+
+
+  payload.contents = _.cloneDeep(inputMsg.value)
+  payload.type = eChatType.TEXT
+  sendMsg(payload)
+
+  inputMsg.value = ''
+
+
+  isSending.value = false
+}
+
+async function sendMsg(payload: any) {
+  const content = _.cloneDeep(inputMsg.value)
 
   const { data, error } = await useCustomAsyncFetch<{ message: IMessage }>(`/chat/room`, getComFetchOptions('post', true, payload))
 
   if (data.value) {
-    initInputMsg()
     if (msgList.value?.length) {
       addMsg(data.value.message)
     } else {
       msgList.value = [data.value.message]
     }
+    attr.value = undefined
   } else if (error.value) {
     inputMsg.value = content
     ElMessage({
@@ -390,9 +457,9 @@ async function sendMsg() {
       type: 'error',
     })
   }
-
-  isSending.value = false
 }
+
+
 
 function addMsg(msg: IMessage) {
   if (msgList.value && msgList.value.length) {
@@ -496,4 +563,64 @@ function searchMsg(msg) {
   console.log(msg)
 
 }
+
+function uploadImage(images) {
+  console.log(images)
+  attr.value = images
+}
+
+function deleteImage(idx: number) {
+
+  imgUploaderRef.value.deleteImage(idx)
+
+}
 </script>
+
+<style scoped lang="scss">
+.msg-img-container {
+  width: 30%;
+  min-height: 100px;
+  display: flex;
+  justify-content: flex-end;
+  border-radius: 10px;
+  border: 1px solid #e5e5e5;
+  // background-color: #e5e5e5;
+
+  img {
+    width: 100%;
+    object-fit: contain;
+    border-radius: 10px;
+  }
+}
+
+.image-uploader {
+  width: 50px;
+
+  :deep(button) {
+    background: transparent;
+
+    &:hover {
+      background: transparent;
+      color: #f97316
+    }
+  }
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  width: 90%;
+  padding: 2px 10px;
+  border: 1.5px solid #e5e5e5;
+  border-radius: 8px;
+}
+
+.attr-container {
+  // overflow-x: scroll;
+  overflow-y: hidden;
+  max-height: 100px;
+  margin: 0px 10px 15px 10px;
+
+
+}
+</style>

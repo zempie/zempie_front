@@ -65,7 +65,7 @@ function onClickOption() {
 }
 
 .more-list {
-  min-width: 100px;
+  min-width: 130px;
   position: absolute;
   background-color: #fff;
   list-style: none;

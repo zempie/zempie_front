@@ -50,7 +50,8 @@
                   </dd>
                   <dt>
                     <h3>{{ getJoinedUserName(room.joined_users) }}</h3>
-                    <p>{{ room?.last_message?.contents }}</p>
+                    <p v-if="room?.last_message?.type === eChatType.IMAGE">{{ $t('dm.sent.img') }}</p>
+                    <p v-else-if="room?.last_message?.type === eChatType.TEXT">{{ room?.last_message?.contents }}</p>
                   </dt>
                   <dd>
                     <h4 class="font12"><i class="uis uis-clock" style="color:#c1c1c1;"></i>
@@ -65,7 +66,7 @@
             </ul>
           </template>
         </dd>
-        <dt :class="['msg-container', selectedRoom ? 'on' : 'off']" ref="activeMsgRef">
+        <dt :class="['flex column msg-container', selectedRoom ? 'on' : 'off']" ref="activeMsgRef">
           <DmActiveRoom v-if="selectedRoom" :selectedRoom="selectedRoom" @deleted-room="onDeletedRoom"
             @open-keyboard="openkeyboard" @update-last-msg="updateLastMsg" @close-keyboard="closeKeyboard"
             :key="componentKey" ref="activeRoomRef" />
@@ -149,7 +150,7 @@
 <script setup lang="ts">
 import { ElScrollbar, ElDialog, rowProps } from 'element-plus'
 import { dmDateFormat } from '~~/scripts/utils'
-import { IChat, IMessage, IUser } from '~~/types'
+import { IChat, IMessage, IUser, eChatType } from '~~/types'
 import { debounce } from '~~/scripts/utils'
 import { useInfiniteScroll } from '@vueuse/core'
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
@@ -808,6 +809,7 @@ provide('joinedUser', { getJoinedUserName })
         }
 
         .msg-container {
+
 
           &.off {
             display: none;

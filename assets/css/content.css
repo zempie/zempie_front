@@ -5321,7 +5321,8 @@
 }
 
 .dl-content>dt .dlc-chat-content {
-  height: calc(100% - 85px - 90px);
+  height: auto;
+  flex: 1;
   overflow-x: hidden;
   overflow-y: auto;
   position: relative;
@@ -5334,6 +5335,8 @@
 
 
 .dl-content>dt .dlc-chat-content .receiver-chat {
+  display: flex;
+  justify-content: flex-end;
   text-align: right;
 }
 
@@ -5408,14 +5411,6 @@
   border-top: 1px solid #f1f1f1;
 }
 
-.dl-content>dt .dlc-send-message>div {
-  display: flex;
-  align-items: center;
-  width: 90%;
-  padding: 2px 10px;
-  border: 1.5px solid #e5e5e5;
-  border-radius: 8px;
-}
 
 .dl-content>dt .dlc-send-message>div input {
   width: 85%;
