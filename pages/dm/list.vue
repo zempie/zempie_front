@@ -646,7 +646,7 @@ function getJoinedUserName(room: IChat) {
 
       return roomName
     } else {
-      return users[0].nickname
+      return room.joined_users[0].nickname
     }
   }
 
