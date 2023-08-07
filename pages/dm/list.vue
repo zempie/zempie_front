@@ -627,26 +627,29 @@ function getCurrChip(chips) {
 }
 
 function getJoinedUserName(room: IChat) {
-  if (room.has_name) return room.name
-  const users = room.joined_users
-  if (users) {
-    const total = users.length
-    let roomName = ''
+  if (room.has_name || Number(room.has_name) === 1) {
+    return room.name
+  } else {
+    const users = room.joined_users
+    if (users) {
+      const total = users.length
+      let roomName = ''
 
-    if (total >= DISPLAY_USER_LIMIT) {
-      for (let i = 0; i < DISPLAY_USER_LIMIT; i++) {
-        roomName += users[i].nickname
-        if (i < DISPLAY_USER_LIMIT - 1)
-          roomName += ', '
+      if (total >= DISPLAY_USER_LIMIT) {
+        for (let i = 0; i < DISPLAY_USER_LIMIT; i++) {
+          roomName += users[i].nickname
+          if (i < DISPLAY_USER_LIMIT - 1)
+            roomName += ', '
+        }
+
+        if (total > DISPLAY_USER_LIMIT) {
+          roomName += `외 ${total - 2}명`
+        }
+
+        return roomName
+      } else {
+        return room.joined_users[0]?.nickname
       }
-
-      if (total > DISPLAY_USER_LIMIT) {
-        roomName += `외 ${total - 2}명`
-      }
-
-      return roomName
-    } else {
-      return room.joined_users[0].nickname
     }
   }
 
