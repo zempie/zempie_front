@@ -575,23 +575,3 @@ function deleteImage(idx: number) {
 
 }
 </script>
-
-<style scoped lang="scss">
-.input-container {
-  display: flex;
-  align-items: center;
-  width: 90%;
-  padding: 2px 10px;
-  border: 1.5px solid #e5e5e5;
-  border-radius: 8px;
-}
-
-.attr-container {
-  // overflow-x: scroll;
-  overflow-y: hidden;
-  max-height: 100px;
-  margin: 0px 10px 15px 10px;
-
-
-}
-</style>
