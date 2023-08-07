@@ -658,6 +658,7 @@ function updateGroupName(roomName: string) {
   roomList.value = roomList.value.map((room) => {
     if (room.id === selectedRoom.value.id) {
       room.name = roomName
+      room.has_name = true
       selectedRoom.value = room
     }
     return room
