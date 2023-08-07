@@ -1181,6 +1181,21 @@ $zempie-main-color-hover: #f974162a;
   }
 }
 
+.attr-container {
+  overflow-y: hidden;
+  max-height: 100px;
+  margin: 0px 10px 15px 10px;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  width: 90%;
+  padding: 2px 10px;
+  border: 1.5px solid #e5e5e5;
+  border-radius: 8px;
+}
+
 .msg-img-container {
   width: 30%;
   min-height: 100px;
