@@ -91,6 +91,10 @@ $zempie-main-color-hover: #f974162a;
   background-color: #e4e6ef;
 }
 
+.text-left {
+  text-align: left;
+}
+
 .text-red {
   color: #c5292a;
 }
@@ -1179,7 +1183,21 @@ $zempie-main-color-hover: #f974162a;
       background: #f1f1f1;
     }
   }
+
+  .dm-image-uploader {
+    width: 50px;
+
+    button {
+      background: transparent;
+
+      &:hover {
+        background: transparent;
+        color: #f97316
+      }
+    }
+  }
 }
+
 
 .attr-container {
   overflow-y: hidden;
@@ -1212,16 +1230,69 @@ $zempie-main-color-hover: #f974162a;
   }
 }
 
+@media all and (max-width: 479px) {
+  .dlc-send-message {
+    div:first-child {
+      width: 98% !important;
 
-.dm-image-uploader {
-  width: 50px;
+      .input-container {
+        margin-right: 10px;
+      }
+    }
 
-  button {
-    background: transparent;
 
-    &:hover {
-      background: transparent;
-      color: #f97316
+    .dm-image-uploader {
+      width: 50px !important;
+
+
+    }
+  }
+}
+
+@media all and (min-width: 480px) and (max-width: 767px) {
+
+  .dlc-send-message {
+    div:first-child {
+      width: 100% !important;
+
+      .input-container {
+        margin-right: 10px;
+      }
+    }
+
+    .dm-image-uploader {
+      width: 50px !important;
+
+
+    }
+  }
+}
+
+@media all and (min-width: 768px) and (max-width: 991px) {
+  .dlc-send-message {
+    div:first-child {
+      width: 100% !important;
+
+      .input-container {
+        margin-right: 10px;
+      }
+
+      .dm-image-uploader {
+        width: 50px !important;
+      }
+    }
+  }
+}
+
+
+@media all and (min-width: 992px) and (max-width: 1199px) {
+  .dlc-send-message {
+    div:first-child {
+      width: 100% !important;
+
+      .input-container {
+        margin-right: 10px;
+      }
     }
   }
 }

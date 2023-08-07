@@ -5,26 +5,14 @@
     </dd>
     <dt>
       <div>
-        <h2> {{ getJoinedUserName(selectedRoom?.joined_users) }}</h2>
+        <h2> {{ getJoinedUserName(selectedRoom) }}</h2>
         <p>{{ selectedRoom?.joined_users[0]?.name }}</p>
       </div>
     </dt>
     <!-- <DmSearchMsg :room_id="selectedRoom.id" @searchMsg="searchMsg" /> -->
     <dd>
-      <ClientOnly>
-        <el-dropdown trigger="click">
-          <button class=" room-btn pointer"> <i class="uil uil-ellipsis-h font25"></i></button>
-          <template #dropdown>
-            <div class="more-list fixed" style="min-width: 150px">
-              <a @click="opLeaveChatModal = true" id="editFeed" class="pointer">{{ t('remove.chat') }}</a>
-              <a @click="onBlockUser" class="pointer">{{ t('block.user') }}</a>
-              <!-- <a @click="onUnBlockUser" class="pointer">{{ t('cancel.block') }}</a> -->
-              <a @click="onReportUser" class="pointer">{{ t('report.user') }}</a>
-            </div>
-          </template>
-        </el-dropdown>
-      </ClientOnly>
-      <!-- <router-link to="#"><i class="uil uil-ellipsis-h font25"></i></router-link> -->
+      <DmChatMenu :selectedRoom="selectedRoom" @deleted-room="$emit('deletedRoom', props.selectedRoom)"
+        @update-group-name="(roomName) => $emit('updateGroupName', roomName)" />
     </dd>
   </dl>
   <div class="dlc-chat-content">
@@ -66,7 +54,6 @@
     <div class="flex row">
       <!-- TODO: 태그 보낼 수 있어야함  -->
       <div class="input-container">
-
         <input v-model="inputMsg" type="text" class="w100p" name="" title="" :placeholder="$t('send.msg')"
           @keyup.enter="onSubmitMsg" @focus="onFocus" @blur="onBlur" ref="inputRef" />
         <!-- <div style="width: 30px" @click="uploadImageFile">
@@ -87,35 +74,9 @@
 
     </div>
   </div>
-  <UserReportModal :openModal="showReportModal" @closeModal="closeReportModal"
-    :user="props.selectedRoom?.joined_users[0]" />
+
 
   <ClientOnly>
-    <el-dialog v-model="opLeaveChatModal" class="modal-area-type" width="380px">
-      <div class="modal-alert">
-        <dl class="ma-header">
-          <dt>{{ t('leave.chat') }}</dt>
-          <dd>
-            <button @click="opLeaveChatModal = false">
-              <i class="uil uil-times"></i>
-            </button>
-          </dd>
-        </dl>
-        <div class="ma-content">
-          <h2>
-            {{ t('leave.chat.alert') }}
-          </h2>
-          <div>
-            <button class="btn-gray w48p" @click="leaveChat">
-              {{ $t('yes') }}
-            </button>
-            <button class="btn-default w48p" @click="opLeaveChatModal = false">
-              {{ $t('no') }}
-            </button>
-          </div>
-        </div>
-      </div>
-    </el-dialog>
 
     <el-dialog v-model="opDeleteMsgModal" class="modal-area-type" width="380px">
       <div class="modal-alert">
@@ -142,18 +103,17 @@
         </div>
       </div>
     </el-dialog>
+
   </ClientOnly>
 </template>
 <script setup lang="ts">
 import _ from 'lodash'
 import { dmDateFormat } from '~~/scripts/utils'
 import { IChat, IMessage, IUser, eChatType } from '~~/types'
-import { ElDropdown, ElDialog, ElMessage, linkEmits } from 'element-plus';
+import { ElDropdown, ElDialog, ElMessage } from 'element-plus';
 import { PropType } from 'vue';
 import { useInfiniteScroll, useScroll } from '@vueuse/core'
 import FlutterBridge from '~~/scripts/flutterBridge'
-
-
 
 const props = defineProps({
   selectedRoom: Object as PropType<IChat>,
@@ -176,14 +136,13 @@ const isAddData = ref(false)
 const order = ref('desc')
 const offset = ref(0)
 
-const opLeaveChatModal = ref(false)
 const opDeleteMsgModal = ref(false)
 const deleteTgMsg = ref()
 
 const scrollContent = ref<HTMLElement | null>(null)
 const msgPolling = ref(null)
 const totalMsgCnt = ref(0)
-const showReportModal = ref(false)
+const opReportModal = ref(false)
 
 const attr = ref()
 const imgUploaderRef = ref()
@@ -229,7 +188,7 @@ const { arrivedState, y } = useScroll(scrollContent, {
 })
 const { top, bottom } = toRefs(arrivedState)
 
-const emit = defineEmits(['deletedRoom', 'openKeyboard', 'closeKeyboard'])
+const emit = defineEmits(['deletedRoom', 'updateGroupName', 'openKeyboard', 'closeKeyboard'])
 
 defineExpose({ addMsg })
 
@@ -395,6 +354,7 @@ function scrollToPrev(yPos: number) {
 
 async function onSubmitMsg() {
   if (isSending.value) return
+  isSending.value = true
 
   const receiver_ids = props.selectedRoom.joined_users.map((user) => {
     return user.id
@@ -423,9 +383,6 @@ async function onSubmitMsg() {
 
   //빈 텍스트는 보내지 않음
   if (!inputMsg.value) return
-
-
-  isSending.value = true
 
 
   payload.contents = _.cloneDeep(inputMsg.value)
@@ -483,23 +440,6 @@ function deleteMsg(msg: IMessage) {
   deleteTgMsg.value = msg
 }
 
-async function leaveChat() {
-
-  try {
-    const { data, error } = await useCustomAsyncFetch<{ message: IMessage }>(`/chat/rooms/${props.selectedRoom.id}`, getComFetchOptions('delete', true))
-
-    if (data.value) {
-      emit('deletedRoom', props.selectedRoom)
-    }
-  } finally {
-    opLeaveChatModal.value = false
-  }
-
-
-
-}
-
-
 async function onDeleteMsg() {
 
   try {
@@ -532,23 +472,6 @@ function onBlur() {
     emit('closeKeyboard')
   }
 
-}
-
-function onReportUser() {
-  showReportModal.value = true
-}
-
-
-
-function closeReportModal() {
-  showReportModal.value = false
-}
-
-async function onBlockUser() {
-  await useUser().blockUser(props.selectedRoom?.joined_users[0].id)
-    .then(() => {
-
-    })
 }
 
 async function onUnBlockUser() {
