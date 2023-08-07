@@ -6,7 +6,7 @@
     <dt>
       <div>
         <h2> {{ getJoinedUserName(selectedRoom) }}</h2>
-        <p>{{ selectedRoom?.joined_users[0]?.name }}</p>
+        <p v-if="!selectedRoom.is_group_room">{{ selectedRoom?.joined_users[0]?.name }}</p>
       </div>
     </dt>
     <!-- <DmSearchMsg :room_id="selectedRoom.id" @searchMsg="searchMsg" /> -->
@@ -74,8 +74,6 @@
 
     </div>
   </div>
-
-
   <ClientOnly>
 
     <el-dialog v-model="opDeleteMsgModal" class="modal-area-type" width="380px">
@@ -376,6 +374,8 @@ async function onSubmitMsg() {
         payload.contents = img.url
         payload.type = eChatType.IMAGE
         await sendMsg(payload)
+        isSending.value = false
+
       }
     }
   }
