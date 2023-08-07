@@ -363,6 +363,7 @@ export interface IMessage {
   sender: IUser,
   conversation_id: number,
   created_at: string,
+  type: eChatType,
   media_attachments?: [
     {
       id: number,
@@ -453,6 +454,14 @@ export enum eReportType {
   comment,
   game,
   user
+}
+
+export enum eChatType {
+  TEXT = 0,
+  IMAGE = 1,
+  VIDEO = 2,
+  AUDIO = 3,
+  HTML = 4,
 }
 
 

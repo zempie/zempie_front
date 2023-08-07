@@ -1044,5 +1044,6 @@
   "sort.latest": "최신 순",
   "all": "전체",
   "unblock.done":"차단해제되었습니다",
-  "download.pc.env":"pc 환경에서 다운로드 해주세요"
+  "download.pc.env":"pc 환경에서 다운로드 해주세요",
+  "dm.sent.img":"사진을 보냈습니다."
 }
