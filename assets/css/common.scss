@@ -1130,6 +1130,19 @@ $zempie-main-color-hover: #f974162a;
     border: none;
   }
 
+  .more-list {
+    right: auto;
+    z-index: 3;
+    max-height: 500px;
+    overflow-y: scroll;
+
+    li {
+      background-color: #fff;
+      min-width: 300px;
+      justify-content: space-between;
+    }
+  }
+
 }
 
 .dlc-chat-content {
@@ -1209,19 +1222,18 @@ $zempie-main-color-hover: #f974162a;
   display: flex;
   align-items: center;
   width: 90%;
-  padding: 2px 10px;
+  padding: 2px 0px 2px 10px;
   border: 1.5px solid #e5e5e5;
   border-radius: 8px;
 }
 
 .msg-img-container {
-  width: 30%;
+  max-width: 30%;
   min-height: 100px;
   display: flex;
   justify-content: flex-end;
   border-radius: 10px;
   border: 1px solid #e5e5e5;
-  // background-color: #e5e5e5;
 
   img {
     width: 100%;
@@ -1333,4 +1345,42 @@ $zempie-main-color-hover: #f974162a;
     outline: none;
     padding: 4px;
   }
+}
+
+/* 이미지 모달 */
+.img-modal-area {
+  background: transparent;
+  box-shadow: none;
+  width: 95vw;
+  height: 95vh;
+  left: 50%;
+  top: 50%;
+  margin: 0px;
+  transform: translate(-50%, -50%);
+  max-width: 100%;
+  min-width: 380px;
+  border-radius: 10px;
+  position: absolute;
+}
+
+
+@media all and (max-width: 768px) {
+
+  .img-modal-area {
+    background-color: #fff;
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0px;
+    z-index: 999;
+
+    .el-dialog__header {
+      display: none;
+    }
+
+    .el-dialog__body {
+      padding-bottom: 0px;
+      height: 100%;
+    }
+  }
+
 }

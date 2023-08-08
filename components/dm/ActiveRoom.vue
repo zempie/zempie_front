@@ -5,7 +5,18 @@
     </dd>
     <dt>
       <div>
-        <h2> {{ getJoinedUserName(selectedRoom) }}</h2>
+        <CommonDropdown :is-custom-btn="true" ref="memDropdownRef" style="width:auto">
+          <template #btn>
+            <h2 class="font16 text-bold fontColor-black" @click="memDropdownRef.toggleDropdown"> {{
+              getJoinedUserName(selectedRoom) }}
+            </h2>
+          </template>
+
+          <template #options>
+            <UserOdList :users="selectedRoom.joined_users" />
+            <!-- <li @click="onDeleteMsg">{{ $t('delete.msg') }}</li> -->
+          </template>
+        </CommonDropdown>
         <p v-if="!selectedRoom.is_group_room">{{ selectedRoom?.joined_users[0]?.name }}</p>
       </div>
     </dt>
@@ -19,26 +30,28 @@
     <div class="inner" ref="scrollContent">
       <div :class="msg.sender?.id === userInfo.id ? 'receiver-chat' : 'sender-chat'" v-for="( msg, index ) in  msgList "
         :ref="el => { divs[msg.id] = el }" :key="index">
-
         <template v-if="msg?.chat_idx !== -1">
           <ul>
             <li class="flex column" style="overflow:visible; word-break: break-all; width: 100%; ">
               <p class="mb5" v-if="msg.sender?.id !== userInfo.id">{{ msg.sender.nickname }}</p>
-              <div class="flex">
+              <div class="flex pos-relative msg-box ">
                 <UserAvatar v-if="msg.sender?.id !== userInfo.id" :user="msg.sender" tag="span"
-                  style="width:40px; height:40px" class="mr5" />
+                  style="width:40px; height:40px; position:absolute; top:0px;" class="mr5" />
                 <template v-if="msg.sender?.id === userInfo.id" class="mr5">
                   <DmMsgMenu :msg="msg" @delete-msg="deleteMsg" style="max-height: 100px;" />
                   <h4 class="mr5">{{ dmDateFormat(msg.created_at) }}</h4>
                 </template>
                 <span v-if="msg.type === eChatType.TEXT" style="max-width: 85%;">{{ msg.contents }}</span>
-                <div class="msg-img-container" v-else-if="msg.type === eChatType.IMAGE">
-                  <img :src="msg.contents" @click-="" />
+                <div class="msg-img-container" v-else-if="msg.type === eChatType.IMAGE"
+                  :style="msg.sender?.id !== userInfo.id && 'margin-left:45px'">
+                  <img class="pointer" :src="msg.contents" @click="onClickImg(msg)" />
                 </div>
                 <!-- <div v-if="msg.attached_files" v-for="file in msg.attached_files">
                   <img :src="file.url" style="height:150px; width:150px" />
                 </div> -->
-                <h4 class="ml5" v-if="msg.sender?.id !== userInfo.id">{{ dmDateFormat(msg.created_at) }}</h4>
+                <h4 class="ml5" v-if="msg.sender?.id !== userInfo.id">{{
+                  dmDateFormat(msg.created_at)
+                }}</h4>
               </div>
             </li>
           </ul>
@@ -102,6 +115,8 @@
       </div>
     </el-dialog>
 
+    <ImageOriginModal :msg="activeMsg" :open-modal="showOriginImg" @close-modal="showOriginImg = false" />
+
   </ClientOnly>
 </template>
 <script setup lang="ts">
@@ -140,10 +155,13 @@ const deleteTgMsg = ref()
 const scrollContent = ref<HTMLElement | null>(null)
 const msgPolling = ref(null)
 const totalMsgCnt = ref(0)
-const opReportModal = ref(false)
+const showOriginImg = ref(false)
+const activeMsg = ref()
 
 const attr = ref()
 const imgUploaderRef = ref()
+
+const memDropdownRef = ref()
 
 
 const userInfo = computed(() => useUser().user.value.info)
@@ -493,8 +511,11 @@ function uploadImage(images) {
 }
 
 function deleteImage(idx: number) {
-
   imgUploaderRef.value.deleteImage(idx)
+}
 
+function onClickImg(msg: IMessage) {
+  activeMsg.value = msg
+  showOriginImg.value = true
 }
 </script>
