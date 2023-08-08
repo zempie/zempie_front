@@ -2368,3 +2368,7 @@ textarea:focus {
 .fontColor-17 {
   color: #343a40 !important;
 }
+
+.fontColor-black {
+  color: #000 !important;
+}

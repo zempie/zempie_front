@@ -48,7 +48,7 @@
                   <dd v-else>
                     <UserAvatar class="mr10" :user="room.joined_users[0]" tag="p" :hasRouter="true" />
                   </dd>
-                  <dt>
+                  <dt class="dm-info-box">
                     <h3>{{ getJoinedUserName(room) }}</h3>
                     <p v-if="room?.last_message?.type === eChatType.IMAGE">{{ $t('dm.sent.img') }}</p>
                     <p v-else-if="room?.last_message?.type === eChatType.TEXT">{{ room?.last_message?.contents }}</p>
@@ -81,7 +81,7 @@
       </dl>
     </div>
     <ClientOnly>
-      <el-dialog v-model="openNewMsg" class="modal-area-type new-msg-modal" :show-close="false" width="380px"
+      <el-dialog v-model="openNewMsg" class="modal-area-type new-msg-modal" :show-close="false" width="450px"
         @close="closeModal" :fullscreen="isFullScreen">
         <div class="modal-alert">
           <dl class="ma-header">
@@ -120,18 +120,7 @@
               </li>
             </ul>
             <ul v-else-if="!followPending && !findUserPending" class="user-list">
-              <li v-if="userList?.length" v-for="user in userList" :key="user.id" class="pointer mb10"
-                @click="onClickUser(user)">
-                <dl class="row">
-                  <dd class="mr10">
-                    <UserAvatar :user="user" tag="p" style="width:45px; height:45px; border-radius: 50%;" />
-                  </dd>
-                  <dt>
-                    <h3 class="font16">{{ user.name }}</h3>
-                    <p class="font13 nickname">@{{ user.nickname }}</p>
-                  </dt>
-                </dl>
-              </li>
+              <UserOdList v-if="userList?.length" :users="userList" />
               <li v-else>
                 {{ $t('not.found.user') }}
               </li>
@@ -140,7 +129,8 @@
               <ClipLoader color='#ff6e17' size="20px" />
             </ul>
             <!-- selectedUsers -->
-            <button :class="[selectedUsers ? 'btn-default' : 'inactive-btn', 'mt20 w100p']" @click="startChat">채팅</button>
+            <button :class="[selectedUsers ? 'btn-default' : 'inactive-btn', 'mt20 w100p']" @click="startChat">{{
+              $t('chatting') }}</button>
           </div>
         </div>
       </el-dialog>
@@ -220,6 +210,7 @@ definePageMeta({
   title: 'dm',
   name: 'dm',
   middleware: 'auth',
+  layout: 'header-only',
 })
 
 useInfiniteScroll(
@@ -618,7 +609,9 @@ function saveChip() {
 }
 
 async function startChat() {
+
   const ids = chipRef.value.chipsArr.map((chip) => chip.id)
+  if (!ids.length) return
   await findRoom(ids)
 }
 
@@ -670,48 +663,52 @@ function updateGroupName(roomName: string) {
 }
 </script>
 <style scoped lang="scss">
-.dm-list {
+.content {
+  height: 100vh;
 
-  .mobile-btn {
-    display: none;
+  .dm-list {
 
-  }
+    .mobile-btn {
+      display: none;
 
-  .dl-content {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin-top: 30px;
-    border: 1px solid #e5e5e5;
-    border-radius: 10px;
-    overflow: hidden;
+    }
 
-    dd {
+    .dl-content {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: 30px;
+      border: 1px solid #e5e5e5;
+      border-radius: 10px;
+      overflow: hidden;
 
-      ul {
-        overflow-y: auto;
+      dd {
 
-        li {
-          padding: 13px;
+        ul {
+          overflow-y: auto;
 
-          &:hover {
-            background-color: #F9f9f9;
-          }
+          li {
+            padding: 13px;
 
-          dl {
-            dd {
-              width: 15%;
+            &:hover {
+              background-color: #F9f9f9;
             }
 
-            dt {
-              width: 70%
+            dl {
+              dd {
+                width: 15%;
+              }
+
+              dt {
+                width: 70%;
+              }
             }
           }
         }
       }
+
+
     }
-
-
   }
 }
 
@@ -769,7 +766,7 @@ function updateGroupName(roomName: string) {
 
 @media all and (max-width: 767px) {
   .content {
-    height: calc(100vh - 70px - 100px);
+    height: 100vh;
     padding-bottom: 0px;
 
     .dm-list {
@@ -805,8 +802,11 @@ function updateGroupName(roomName: string) {
       .dl-content {
         border: none;
         margin-top: 10px;
-
         height: 85%;
+
+        .dm-info-box {
+          width: 55% !important;
+        }
 
         .room-container {
           &.off {
@@ -819,7 +819,7 @@ function updateGroupName(roomName: string) {
 
           .msg-list {
             padding: 0px;
-            height: 90%;
+            height: 100%;
             overflow-y: scroll;
 
           }
@@ -868,6 +868,31 @@ function updateGroupName(roomName: string) {
 
     ::v-deep(.new-msg-modal) {
       border-radius: 0px !important;
+    }
+  }
+}
+
+@media all and (min-width: 768px) and (max-width: 991px) {
+  .content {
+    .msg-list {
+      :deep(.picture) {
+        width: 40px;
+        height: 40px;
+      }
+
+      .dm-info-box {
+        width: 50% !important;
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+@media all and (min-width: 992px) and (max-width: 1199px) {
+
+  .content {
+    .dm-info-box {
+      width: 55% !important;
     }
   }
 }

@@ -1045,6 +1045,11 @@
   "sort.recommend": "Recommend",
   "sort.latest": "Latest",
   "all": "All",
-  "unblock.done":"Unblocked",
-  "download.pc.env":"Please download it on your PC"
+  "unblock.done": "Unblocked",
+  "download.pc.env": "Please download it on your PC",
+  "set.group.chat.name": "__STRING_NOT_TRANSLATED__",
+  "set.group.chat.name.info": "__STRING_NOT_TRANSLATED__",
+  "set.name": "__STRING_NOT_TRANSLATED__",
+  "dm.sent.img": "__STRING_NOT_TRANSLATED__",
+  "chatting":"Chat"
 }

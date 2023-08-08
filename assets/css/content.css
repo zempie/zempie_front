@@ -5347,6 +5347,7 @@
 .dl-content>dt .dlc-chat-content .receiver-chat>ul {
   display: flex;
   justify-content: flex-end;
+  width: 100%;
 }
 
 .dl-content>dt .dlc-chat-content .receiver-chat>ul>li {
@@ -5370,6 +5371,12 @@
 .dl-content>dt .dlc-chat-content .sender-chat {
   /* margin-top: 40px; */
   text-align: left;
+}
+
+
+.dl-content>dt .dlc-chat-content .sender-chat .msg-box {
+  align-items: flex-end;
+
 }
 
 .dl-content>dt .dlc-chat-content .sender-chat>ul>li>div {
