@@ -114,7 +114,8 @@ function onImgDownload() {
     img {
       height: auto;
       border-radius: 20px;
-      max-width: 100%;
+      max-width: 90%;
+      max-height: 90vh;
 
     }
   }
