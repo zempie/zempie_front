@@ -193,6 +193,8 @@ onBeforeUnmount(() => {
 
 async function onSubmit() {
   const isValid = await v$.value.$validate()
+  if (!isValid) return
+  isLoading.value = true
 
   if (isFlutter.value) {
 
@@ -206,10 +208,13 @@ async function onSubmit() {
     catch (err) {
       firebaseLoginErr(err)
     }
+    finally {
+      isLoading.value = false
+    }
 
 
   } else {
-    if (!isValid) return
+
     setPersistence($firebaseAuth, browserLocalPersistence)
       .then((res) => {
         signInWithEmailAndPassword($firebaseAuth, form.email, form.password)
@@ -223,9 +228,15 @@ async function onSubmit() {
           .catch((err: any) => {
             firebaseLoginErr(err)
           })
+          .finally(() => {
+            isLoading.value = false
+          })
       })
       .catch((err: any) => {
         ElMessage.error(err.message)
+      })
+      .finally(() => {
+        isLoading.value = false
       })
   }
 }

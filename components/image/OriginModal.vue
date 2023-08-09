@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="showModal" class="img-modal-area" :show-close="false">
+  <el-dialog v-model="showModal" class="img-modal-area" :show-close="false" append-to-body>
     <div class="column">
       <button class="close-btn pointer" @click="closeModal">
         <i class="uil uil-times"></i>
@@ -8,17 +8,19 @@
         <button class="mr10 pointer"><span class="material-icons">
             arrow_back
           </span></button>
-        <UserAvatar :user="msg?.sender" tag="p" style="width:45px; height: 45px;" class="mr10" :has-router="true"
-          ref="ignoreElRef" />
-        <div>
-          <p class="text-bold font15">{{ msg?.sender?.nickname }}</p>
-          <h4 class="mr5">{{ dmDateFormat(msg.created_at) }}</h4>
-        </div>
+        <template v-if="imgInfo.user">
+          <UserAvatar :user="msg?.sender" tag="p" style="width:45px; height: 45px;" class="mr10" :has-router="true"
+            ref="ignoreElRef" />
+          <div>
+            <p class="text-bold font15">{{ msg?.sender?.nickname }}</p>
+            <h4 class="mr5">{{ dmDateFormat(msg.created_at) }}</h4>
+          </div>
+        </template>
       </div>
-
       <div class="orgin-img-container mb15 mt15">
-        <img :src="msg?.contents" ref="target" />
+        <img :src="imgInfo?.url" ref="target" />
       </div>
+      <!-- TODO: 업데이트 진핼 -->
       <!-- <div class="img-options w100p row justify-between">
         <div>
         </div>
@@ -42,8 +44,10 @@ import { PropType } from 'nuxt/dist/app/compat/capi';
 import { dmDateFormat } from '~~/scripts/utils'
 import { IMessage } from '~~/types';
 
+
+
 const props = defineProps({
-  msg: Object as PropType<IMessage>,
+  imgInfo: Object,
   openModal: {
     type: Boolean,
     default: false
@@ -135,9 +139,11 @@ function onImgDownload() {
 
     .user-info {
       display: flex;
-      border-bottom: 1px solid #ededed;
+      <<<<<<< HEAD border-bottom: 1px solid #ededed;
 
 
+      ======= // border-bottom: 1px solid #ededed;
+      >>>>>>>hotfix1
     }
 
     .orgin-img-container {
