@@ -9,11 +9,11 @@
             arrow_back
           </span></button>
         <template v-if="imgInfo.user">
-          <UserAvatar :user="msg?.sender" tag="p" style="width:45px; height: 45px;" class="mr10" :has-router="true"
+          <UserAvatar :user="imgInfo?.user" tag="p" style="width:45px; height: 45px;" class="mr10" :has-router="true"
             ref="ignoreElRef" />
           <div>
-            <p class="text-bold font15">{{ msg?.sender?.nickname }}</p>
-            <h4 class="mr5">{{ dmDateFormat(msg.created_at) }}</h4>
+            <p class="text-bold font15">{{ imgInfo?.user?.nickname }}</p>
+            <h4 class="mr5">{{ dmDateFormat(imgInfo?.created_at) }}</h4>
           </div>
         </template>
       </div>
@@ -26,7 +26,7 @@
         </div>
         <div ref="ignoreElRef">
           <button class="pointer" @click="onImgDownload">
-            <a target="_blank" download="" :href="msg?.contents">
+            <a target="_blank" download="" :href="imgInfo?.contents">
               <span class="material-icons">
                 save_alt
               </span>
@@ -72,102 +72,3 @@ function onImgDownload() {
 }
 
 </script>
-<style scoped lang="scss">
-.img-modal-area {
-  div:first-child {
-    width: 95%;
-    height: 90vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .close-btn {
-    background: transparent;
-    color: #fff;
-    font-size: 30px;
-    border: none;
-    top: 0px;
-    right: 0px;
-    position: absolute;
-    border-radius: 5px;
-  }
-
-  .user-info {
-    display: none;
-  }
-
-  .img-options {
-    display: none;
-  }
-
-  button {
-    background: transparent;
-    border: none;
-  }
-
-  .orgin-img-container {
-    display: flex;
-    justify-content: center;
-
-
-    img {
-      height: auto;
-      border-radius: 20px;
-      max-width: 100vw;
-
-    }
-  }
-}
-
-
-
-
-@media all and (max-width: 768px) {
-
-  .img-modal-area {
-
-    div:first-child {
-      display: flex;
-      width: 100%;
-      height: 100%;
-    }
-
-    .close-btn {
-      display: none;
-    }
-
-    .user-info {
-      display: flex;
-      <<<<<<< HEAD border-bottom: 1px solid #ededed;
-
-
-      ======= // border-bottom: 1px solid #ededed;
-      >>>>>>>hotfix1
-    }
-
-    .orgin-img-container {
-      display: flex;
-      justify-content: center;
-      width: 100%;
-      height: 88%;
-
-      img {
-        border-radius: 20px;
-        object-fit: contain;
-
-      }
-    }
-
-    .img-options {
-      display: flex;
-      padding: 10px;
-      border-top: 1px solid #ededed;
-
-    }
-  }
-
-
-
-}
-</style>

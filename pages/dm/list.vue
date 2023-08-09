@@ -113,14 +113,14 @@
                     <UserAvatarSk tag="p" style="width:45px; height: 45px;" />
                   </dd>
                   <dt class="w100p">
-                    <h3 class="grey-text w50p skeleton-animation"> </h3>
+                    <h3 class="grey-text w50p skeleton-animation"></h3>
                     <p class="grey-text mt10 skeleton-animation"></p>
                   </dt>
                 </dl>
               </li>
             </ul>
             <ul v-else-if="!followPending && !findUserPending" class="user-list">
-              <UserOdList v-if="userList?.length" :users="userList" />
+              <UserOdList v-if="userList?.length" :users="userList" @onClickUser="onClickUser" />
               <li v-else>
                 {{ $t('not.found.user') }}
               </li>
