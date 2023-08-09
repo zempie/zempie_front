@@ -47,6 +47,10 @@
                   :style="msg.sender?.id !== userInfo.id && 'margin-left:45px'">
                   <img class="pointer" :src="msg.contents" @click="onClickImg(msg)" />
                 </div>
+                <div class="msg-video-container" v-else-if="msg.type === eChatType.VIDEO"
+                  :style="msg.sender?.id !== userInfo.id && 'margin-left:45px'">
+                  <video :src="msg.contents" width="320" height="240" controls />
+                </div>
                 <!-- <div v-if="msg.attached_files" v-for="file in msg.attached_files">
                   <img :src="file.url" style="height:150px; width:150px" />
                 </div> -->
@@ -62,7 +66,11 @@
   </div>
 
   <div class="dlc-send-message column">
-    <div class="attr-container" v-if="attr && attr.length">
+    <div v-if="attr && attr[0]?.type === 'video'" class="video-container w100p flex mb30">
+      <video :src="attr[0].url" width="320" height="240" controls />
+    </div>
+
+    <div class="img-container" v-else-if="attr && attr.length">
       <ImageSwiperPreview :images="attr" @deleteImage="deleteImage" />
     </div>
     <div class="flex row">
@@ -70,19 +78,8 @@
       <div class="input-container">
         <input v-model="inputMsg" type="text" class="w100p" name="" title="" :placeholder="$t('send.msg')"
           @keyup.enter="onSubmitMsg" @focus="onFocus" @blur="onBlur" ref="inputRef" />
-        <!-- <div style="width: 30px" @click="uploadImageFile">
-        <button><i class="uil uil-scenery font25 mr5"></i></button>
-        <div style="height: 0px; overflow: hidden">
-          <input type="file" @change="onSelectImageFile" multiple id="image-selector" accept=image/* ref="image" />
-        </div>
-      </div> -->
-        <CommonImageUploader @uploadImage="uploadImage" ref="imgUploaderRef" class="dm-image-uploader" />
-        <!-- <div style="width: 30px" @click="uploadAudioFile">
-          <button><i class="uil uil-microphone font25 mr5"></i></button>
-          <div style="height: 0px; overflow: hidden">
-            <input type="file" @change="onSelectAudioFile" multiple accept=".mp3" ref="audio" />
-          </div>
-        </div> -->
+        <ImageUploader @uploadImage="uploadImage" ref="imgUploaderRef" class="dm-uploader-btn" />
+        <VideoUploader @uploadVideo="uploadVideo" ref="videoUploaderRef" class="dm-uploader-btn" />
       </div>
       <button @click="onSubmitMsg"><img src="/images/send_icon.png" alt="" title="" /></button>
 
@@ -161,6 +158,7 @@ const activeMsg = ref()
 
 const attr = ref()
 const imgUploaderRef = ref()
+const videoUploaderRef = ref()
 
 const memDropdownRef = ref()
 
@@ -384,10 +382,19 @@ async function onSubmitMsg() {
     contents: '',
   }
 
+
+
   //첨부파일이 있는경우 첨부파일 갯수만큼 보내고 텍스트도 보내야함
   if (attr.value) {
 
-    if (attr.value[0].type === eChatType.IMAGE) {
+    if (attr.value[0].type === 'video') {
+      payload.contents = attr.value[0].url
+      payload.type = eChatType.VIDEO
+      await sendMsg(payload)
+      isSending.value = false
+    }
+
+    else if (attr.value[0].type === eChatType.IMAGE) {
       const imgUrls = await imgUploaderRef.value.fetchImage()
       for (const img of imgUrls) {
         payload.contents = img.url
@@ -507,7 +514,6 @@ function searchMsg(msg) {
 }
 
 function uploadImage(images) {
-  console.log(images)
   attr.value = images
 }
 
@@ -524,5 +530,12 @@ function onClickImg(msg: IMessage) {
   }
 
   showOriginImg.value = true
+}
+
+function uploadVideo(video) {
+  console.log('video', video)
+
+  attr.value = video
+
 }
 </script>

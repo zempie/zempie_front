@@ -72,3 +72,99 @@ function onImgDownload() {
 }
 
 </script>
+<style scoped lang="scss">
+.img-modal-area {
+  div:first-child {
+    // width: 95%;
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .close-btn {
+    background: transparent;
+    color: #fff;
+    font-size: 30px;
+    border: none;
+    top: 0px;
+    right: 0px;
+    position: absolute;
+    border-radius: 5px;
+  }
+
+  .user-info {
+    display: none;
+  }
+
+  .img-options {
+    display: none;
+  }
+
+  button {
+    background: transparent;
+    border: none;
+  }
+
+  .orgin-img-container {
+    display: flex;
+    justify-content: center;
+
+
+    img {
+      height: auto;
+      border-radius: 20px;
+      max-width: 90%;
+      max-height: 90vh;
+
+    }
+  }
+}
+
+
+
+
+@media all and (max-width: 768px) {
+
+  .img-modal-area {
+
+    div:first-child {
+      display: flex;
+      width: 100%;
+      height: 100%;
+    }
+
+    .close-btn {
+      display: none;
+    }
+
+    .user-info {
+      display: flex;
+      // border-bottom: 1px solid #ededed;
+    }
+
+    .orgin-img-container {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      height: 88%;
+
+      img {
+        border-radius: 20px;
+        object-fit: contain;
+
+      }
+    }
+
+    .img-options {
+      display: flex;
+      padding: 10px;
+      border-top: 1px solid #ededed;
+
+    }
+  }
+
+
+
+}
+</style>
