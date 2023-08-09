@@ -32,7 +32,7 @@
                 Z-world
               </a>
             </li>
-            <li v-if="showMogera" class="uppercase pointer">
+            <li class="uppercase pointer">
               <a id="mogeradMenu" @click="moveMogera">
                 Mogera
               </a>

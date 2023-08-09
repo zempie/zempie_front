@@ -75,7 +75,7 @@ function onImgDownload() {
 <style scoped lang="scss">
 .img-modal-area {
   div:first-child {
-    width: 95%;
+    // width: 95%;
     height: 90vh;
     display: flex;
     justify-content: center;
@@ -114,7 +114,7 @@ function onImgDownload() {
     img {
       height: auto;
       border-radius: 20px;
-      max-width: 100vw;
+      max-width: 100%;
 
     }
   }
