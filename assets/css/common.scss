@@ -1180,3 +1180,40 @@ $zempie-main-color-hover: #f974162a;
     }
   }
 }
+
+.img-modal-area {
+  background: transparent;
+  box-shadow: none;
+  width: 95vw;
+  height: 95vh;
+  left: 50%;
+  top: 50%;
+  margin: 0px;
+  transform: translate(-50%, -50%);
+  max-width: 100%;
+  min-width: 380px;
+  border-radius: 10px;
+  position: absolute;
+}
+
+
+@media all and (max-width: 768px) {
+
+  .img-modal-area {
+    background-color: #fff;
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0px;
+    z-index: 999;
+
+    .el-dialog__header {
+      display: none;
+    }
+
+    .el-dialog__body {
+      padding-bottom: 0px;
+      height: 100%;
+    }
+  }
+
+}
