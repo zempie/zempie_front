@@ -3,14 +3,15 @@
     <div :class="[isBlind ? 'blur' : '', 'feed-img mt-3']">
       <img :src="img.url" @click="onClickImg" />
     </div>
-    <button class="expand-btn" @click="onClickImg">
-      <i class="uil uil-expand-arrows"></i>
-    </button>
+
     <template v-if="initStatus">
       <button v-if="isBlind" class="btn-default-samll show-btn" @click="openBlind">{{ $t('violent.contents') }}</button>
       <button v-else class="btn-default-samll hide-btn" @click="openBlind">{{ $t('hide') }}</button>
     </template>
   </div>
+  <button class="expand-btn" @click="onClickImg">
+    <i class="uil uil-expand-arrows"></i>
+  </button>
   <ImageOriginModal :imgInfo="imgInfo" :open-modal="showOriginImg" @close-modal="showOriginImg = false" />
 </template>
 <script setup lang="ts">
@@ -37,6 +38,9 @@ function openBlind() {
 
 
 function onClickImg() {
+  if (isBlind.value) return
+
+
   const info = {
     url: props.img.url
   }
@@ -47,37 +51,12 @@ function onClickImg() {
 </script>
 <style scoped lang="scss">
 .post-img {
+  position: relative;
 
   .feed-img {
     max-height: 300px;
     padding: 10px;
   }
-
-  .expand-btn {
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
-    background: #ffffff44;
-    border: none;
-    font-size: 16px;
-    color: #000;
-    border-radius: 5px;
-    cursor: pointer;
-
-    &:hover {
-      color: #f97316;
-      background-color: #fff;
-    }
-  }
-
-  // .blur::before {
-  //   content: "";
-  //   position: absolute;
-  //   width: 100%;
-  //   height: 100%;
-  //   backdrop-filter: blur(5px);
-  //   -webkit-backdrop-filter: blur(5px);
-  // }
 
   .blur {
     backdrop-filter: blur(5px);
@@ -104,6 +83,23 @@ function onClickImg() {
       bottom: 10%;
       right: 10%;
     }
+  }
+}
+
+.expand-btn {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background: #ffffff44;
+  border: none;
+  font-size: 16px;
+  color: #000;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    color: #f97316;
+    background-color: #fff;
   }
 }
 </style>
