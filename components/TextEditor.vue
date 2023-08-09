@@ -66,7 +66,7 @@
       <dl class="mp-type">
         <dt>
           <div style="width: 30px" @click="uploadImageFile">
-            <a><i class="uil uil-image pointer"></i></a>
+            <a><i class="uil uil-scenery pointer"></i></a>
             <div style="height: 0px; overflow: hidden">
               <input type="file" @change="onSelectImageFile" multiple id="image-selector" accept=image/* ref="image" />
             </div>

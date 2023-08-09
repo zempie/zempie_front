@@ -138,7 +138,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ElScrollbar, ElDialog, rowProps } from 'element-plus'
+import { ElScrollbar, ElDialog, rowProps, ElMessage } from 'element-plus'
 import { dmDateFormat } from '~~/scripts/utils'
 import { IChat, IMessage, IUser, eChatType } from '~~/types'
 import { debounce } from '~~/scripts/utils'
@@ -205,6 +205,10 @@ const isFbSupported = computed(() => useCommon().setting.value.isFbSupported)
 
 
 const totalRoomCnt = ref(0)
+
+
+let createRoomCount = 2
+
 
 definePageMeta({
   title: 'dm',
@@ -506,33 +510,36 @@ function forceRerender() {
 async function findRoom(user_ids: Number[]) {
 
 
-  const { data, error } = await useCustomAsyncFetch<{ result: IChat[] }>(`/chat/rooms/search/user?user_ids=${user_ids}&perfact=true`, getComFetchOptions('get', true))
+  try {
+    const { data, error } = await useCustomAsyncFetch<{ result: IChat[] }>(`/chat/rooms/search/user?user_ids=${user_ids}&perfact=true`, getComFetchOptions('get', true))
 
-  if (data.value) {
-    const { result: rooms } = data.value
-    console.log(rooms)
-    if (!rooms.length) {
-      await createRoom(user_ids)
-      console.log('roomList.value[0]', roomList.value[0])
-      selectedRoom.value = roomList.value[0]
-      forceRerender()
+    if (data.value) {
+      const { result: rooms } = data.value
+      if (!rooms.length) {
+        await createRoom(user_ids)
+        selectedRoom.value = roomList.value[0]
+        forceRerender()
 
-    } else {
-      //이미 방이 존재하는 경우
-      const existRoom = roomList.value.filter((room) => {
-        if (room.id === rooms[0].id) {
-          return room
-        }
-      })
-
-      if (existRoom.length) {
-        selectedRoom.value = existRoom[0]
       } else {
-        selectedRoom.value = rooms[0]
-        await createRoom([selectedRoom.value.joined_users[0].id])
+        //이미 방이 존재하는 경우
+        const existRoom = roomList.value.filter((room) => {
+          if (room.id === rooms[0].id) {
+            return room
+          }
+        })
+
+        if (existRoom.length) {
+          selectedRoom.value = existRoom[0]
+        } else {
+          selectedRoom.value = rooms[0]
+          await createRoom([selectedRoom.value.joined_users[0].id])
+        }
+        forceRerender()
       }
-      forceRerender()
     }
+  } finally {
+    openNewMsg.value = false
+
   }
 
 }
@@ -547,7 +554,7 @@ async function createRoom(receiver_ids: Number[]) {
   const { data, error } = await useCustomAsyncFetch<IChat>(`/chat/rooms`, getComFetchOptions('post', true, payload))
 
   if (data.value) {
-    openNewMsg.value = false
+
     forceRerender()
     if (roomList.value.length) {
       roomList.value = [data.value, ...roomList.value]
@@ -556,6 +563,16 @@ async function createRoom(receiver_ids: Number[]) {
     }
 
   }
+  else if (error.value) {
+
+    ElMessage({
+      message: error.value._data.message,
+      type: 'error'
+    })
+
+  }
+
+
 
 }
 
@@ -610,9 +627,16 @@ function saveChip() {
 
 async function startChat() {
 
-  const ids = chipRef.value.chipsArr.map((chip) => chip.id)
-  if (!ids.length) return
-  await findRoom(ids)
+  createRoomCount = createRoomCount - 1
+
+
+  if (createRoomCount > 0) {
+    const ids = chipRef.value.chipsArr.map((chip) => chip.id)
+    if (!ids.length) return
+    await findRoom(ids)
+  }
+  createRoomCount = createRoomCount + 1
+
 }
 
 function getCurrChip(chips) {
