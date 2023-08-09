@@ -41,7 +41,8 @@
                   <DmMsgMenu :msg="msg" @delete-msg="deleteMsg" style="max-height: 100px;" />
                   <h4 class="mr5">{{ dmDateFormat(msg.created_at) }}</h4>
                 </template>
-                <span v-if="msg.type === eChatType.TEXT" style="max-width: 85%;">{{ msg.contents }}</span>
+                <span v-if="msg.type === eChatType.TEXT" style="max-width: 85%;"
+                  :style="msg.sender?.id !== userInfo.id && 'margin-left:45px'">{{ msg.contents }}</span>
                 <div class="msg-img-container" v-else-if="msg.type === eChatType.IMAGE"
                   :style="msg.sender?.id !== userInfo.id && 'margin-left:45px'">
                   <img class="pointer" :src="msg.contents" @click="onClickImg(msg)" />
@@ -115,7 +116,7 @@
       </div>
     </el-dialog>
 
-    <ImageOriginModal :msg="activeMsg" :open-modal="showOriginImg" @close-modal="showOriginImg = false" />
+    <ImageOriginModal :imgInfo="activeMsg" :open-modal="showOriginImg" @close-modal="showOriginImg = false" />
 
   </ClientOnly>
 </template>
@@ -515,7 +516,13 @@ function deleteImage(idx: number) {
 }
 
 function onClickImg(msg: IMessage) {
-  activeMsg.value = msg
+
+  activeMsg.value = {
+    url: msg.contents,
+    user: msg.sender,
+    created_at: msg.created_at
+  }
+
   showOriginImg.value = true
 }
 </script>
