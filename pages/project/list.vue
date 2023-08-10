@@ -7,9 +7,9 @@
       </div>
 
       <div class="mogera-info">
-        <p><span class="mogera-color">Mogera(모게라)</span>로 별도의 다운로드 없이 게임 개발을 체험해보세요.</p>
-        <p>원하는 게임 장르를 선택하고, 여러분만의 게임을 만드세요. <span @click="moveMogera" class="mogera-color pointer underline">프로토타입 체험해보러
-            가기 ></span></p>
+        <p><span class="mogera-color">Mogera(모게라)</span>와 함께라면, 게임 개발은 어렵지 않습니다. </p>
+        <p>코딩을 할 필요 없이, 간단한 선택과 조작만으로 게임을 만들 수 있습니다. <span @click="moveMogera" class="mogera-color pointer underline">무료로
+            시작하기 ></span></p>
       </div>
 
       <div class="studio-all-game">
@@ -434,6 +434,10 @@ function sortDescListByGame(key: string) {
 }
 
 @media all and (max-width: 479px) {
+  .mogera-info {
+    width: 90%;
+  }
+
   .studio-all-game {
     width: 90%;
     margin: 20px auto;
@@ -500,6 +504,11 @@ function sortDescListByGame(key: string) {
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
+
+  .mogera-info {
+    width: 470px;
+  }
+
   .studio-all-game {
     width: 470px;
     margin: 20px auto;
@@ -570,6 +579,10 @@ function sortDescListByGame(key: string) {
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
+  .mogera-info {
+    width: 750px;
+  }
+
   .studio-all-game {
     width: 750px;
 
@@ -592,9 +605,12 @@ function sortDescListByGame(key: string) {
 }
 
 @media all and (min-width: 992px) and (max-width: 1199px) {
-  .studio-all-game {
+
+  .studio-all-game,
+  .mogera-info {
     width: 970px;
   }
 }
 
-@media all and (min-width: 1200px) {}</style>
+@media all and (min-width: 1200px) {}
+</style>
