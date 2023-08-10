@@ -18,12 +18,12 @@ export const i18n = {
     code: 'ko',
     iso: 'kr'
   },],
-  defaultLocale: 'en',
+  defaultLocale: 'ko',
 
   vueI18n: {
     legacy: false,
     silentTranslationWarn: true,
-    fallbackLocale: 'en',
+    fallbackLocale: 'ko',
     messages
   }
 
