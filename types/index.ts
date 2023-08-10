@@ -361,10 +361,9 @@ export interface IMessage {
   id: number,
   chat_idx?: number,
   contents: string,
-  text_html: string,
   sender: IUser,
-  conversation_id: number,
-  created_at: string,
+  room_id: number,
+  created_at: string | number,
   type: eChatType,
   media_attachments?: [
     {

@@ -68,8 +68,8 @@
         </dd>
         <dt :class="['flex column msg-container', selectedRoom ? 'on' : 'off']" ref="activeMsgRef">
           <DmActiveRoom v-if="selectedRoom" :selectedRoom="selectedRoom" @deleted-room="onDeletedRoom"
-            @open-keyboard="openkeyboard" @update-last-msg="updateLastMsg" @close-keyboard="closeKeyboard"
-            :key="componentKey" @update-group-name="updateGroupName" ref="activeRoomRef" />
+            @open-keyboard="openkeyboard" @close-keyboard="closeKeyboard" :key="componentKey"
+            @update-group-name="updateGroupName" ref="activeRoomRef" />
           <div v-else class="dlc-chat-emptied">
             <p><i class="uil uil-comment-alt-dots" style="font-size:40px; color:#fff;"></i></p>
             <h2> {{ $t('no.selected.msg') }} </h2>

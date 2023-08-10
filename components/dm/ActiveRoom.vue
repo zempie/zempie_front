@@ -31,7 +31,7 @@
       <div :class="msg.sender?.id === userInfo.id ? 'receiver-chat' : 'sender-chat'" v-for="( msg, index ) in  msgList "
         :ref="el => { divs[msg.id] = el }" :key="index">
         <template v-if="msg?.chat_idx !== -1">
-          <DmMessage :msg="msg" />
+          <DmMessage :msg="msg" @delete-msg="deleteMsg" />
         </template>
       </div>
     </div>
@@ -66,37 +66,7 @@
 
     </div>
   </div>
-  <ClientOnly>
-
-    <el-dialog v-model="opDeleteMsgModal" class="modal-area-type" width="380px">
-      <div class="modal-alert">
-        <dl class="ma-header">
-          <dt> {{ t('leave.msg') }} </dt>
-          <dd>
-            <button class="pointer" @click="opDeleteMsgModal = false">
-              <i class="uil uil-times"></i>
-            </button>
-          </dd>
-        </dl>
-        <div class="ma-content">
-          <h2>
-            {{ t('leave.msg.alert') }}
-          </h2>
-          <div>
-            <button class="btn-gray w48p" @click="onDeleteMsg">
-              {{ $t('yes') }}
-            </button>
-            <button class="btn-default w48p" @click="opDeleteMsgModal = false">
-              {{ $t('no') }}
-            </button>
-          </div>
-        </div>
-      </div>
-    </el-dialog>
-
-    <ImageOriginModal :imgInfo="activeMsg" :open-modal="showOriginImg" @close-modal="showOriginImg = false" />
-
-  </ClientOnly>
+  <ImageOriginModal :imgInfo="activeMsg" :open-modal="showOriginImg" @close-modal="showOriginImg = false" />
 </template>
 <script setup lang="ts">
 import _ from 'lodash'
@@ -124,7 +94,7 @@ const msgList = ref<IMessage[]>()
 const fromId = ref(0)
 const msgLimit = ref(MAX_MSG_LIMIT)
 const isAddData = ref(false)
-const order = ref('desc')
+const order = ref('asc')
 const offset = ref(0)
 
 const opDeleteMsgModal = ref(false)
@@ -246,11 +216,13 @@ onMounted(async () => {
 
   await msgFetch()
   await useUser().getUnreadMsg()
+
   nextTick(() => {
     if (props.selectedRoom.unread_count < msgLimit.value) {
       // 읽을 메세지가 없는 경우 스크롤 맨 하단
       scrollToBottom()
     } else {
+
       divs.value[unreadStartId.value].scrollIntoView()
     }
   })
@@ -287,11 +259,8 @@ const newMsg = ((messages: IMessage[]) => {
 
 
 function scrollToBottom() {
-  nextTick(() => {
-    if (scrollContent.value)
-      scrollContent.value.scrollTop = scrollContent.value?.scrollHeight
-  })
-
+  if (scrollContent.value)
+    scrollContent.value.scrollTop = scrollContent.value?.scrollHeight
 }
 
 
@@ -354,7 +323,7 @@ function scrollToPrev(yPos: number) {
 
 async function onSubmitMsg() {
 
-  if (isSending.value) return
+  // if (isSending.value) return
   isSending.value = true
 
   const receiver_ids = props.selectedRoom.joined_users.map((user) => {
@@ -372,11 +341,8 @@ async function onSubmitMsg() {
 
   //첨부파일이 있는경우 첨부파일 갯수만큼 보내고 텍스트도 보내야함
   if (attr.value) {
-    console.log(attr.value)
     if (attr.value.type?.includes('audio')) {
       const audio = await recorderRef.value.fetchRecord()
-      console.log(audio)
-
     }
 
 
@@ -388,6 +354,14 @@ async function onSubmitMsg() {
     }
 
     else if (attr.value[0].type === eChatType.IMAGE) {
+
+
+      for (const [index, img] of attr.value.entries()) {
+        const prevMsg = { id: props.selectedRoom.last_chat_id + 1 + index, room_id: props.selectedRoom.id, contents: img.url, sender: userInfo.value, type: eChatType.IMAGE, created_at: Date.now() }
+        //optimistic ui
+        addMsg(prevMsg)
+      }
+
       const imgUrls = await imgUploaderRef.value.fetchImage()
       for (const img of imgUrls) {
         payload.contents = img.url
@@ -410,12 +384,21 @@ async function onSubmitMsg() {
 
   inputMsg.value = ''
 
-
   isSending.value = false
 }
 
+const tempId = ref(0)
 async function sendMsg(payload: any) {
+
   const content = _.cloneDeep(inputMsg.value)
+  if (payload.type === eChatType.TEXT) {
+
+    const prevMsg = { id: msgList.value.at(-1).id + 1, room_id: props.selectedRoom.id, contents: content, sender: userInfo.value, type: payload.type, created_at: Date.now() }
+
+    //optimistic ui
+    addMsg(prevMsg)
+  }
+
 
   const { data, error } = await useCustomAsyncFetch<{ message: IMessage }>(`/chat/room`, getComFetchOptions('post', true, payload))
 
@@ -424,9 +407,11 @@ async function sendMsg(payload: any) {
       addMsg(data.value.message)
     } else {
       msgList.value = [data.value.message]
+      tempId.value = msgList.value.length
     }
     attr.value = undefined
   } else if (error.value) {
+
     inputMsg.value = content
     ElMessage({
       message: t('fail.send.msg'),
@@ -450,14 +435,16 @@ function addMsg(msg: IMessage) {
   })
 }
 
+function deleteMsg(msg: IMessage) {
+  msgList.value = msgList.value.filter((elem) => {
+    return elem.id !== msg.id
+  })
+
+}
 function initInputMsg() {
   inputMsg.value = ''
 }
 
-function deleteMsg(msg: IMessage) {
-  opDeleteMsgModal.value = true
-  deleteTgMsg.value = msg
-}
 
 async function onDeleteMsg() {
 

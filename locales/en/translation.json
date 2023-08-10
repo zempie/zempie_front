@@ -1051,5 +1051,10 @@
   "set.group.chat.name.info": "",
   "set.name": "Please set your name.",
   "dm.sent.img": "Image is sent.",
-  "chatting": "Chat"
+  "chatting": "Chat",
+  "group.name.err.msg1": "__STRING_NOT_TRANSLATED__",
+  "group.name.err.msg2": "__STRING_NOT_TRANSLATED__",
+  "mogera.info1": "__STRING_NOT_TRANSLATED__",
+  "mogera.info2": "__STRING_NOT_TRANSLATED__",
+  "mogera.cta": "__STRING_NOT_TRANSLATED__"
 }

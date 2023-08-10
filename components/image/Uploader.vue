@@ -116,7 +116,6 @@ async function fetchImage() {
   let result = []
 
   for (const file of rawFiles.value) {
-    console.log(file)
 
     formData.append(
       file.name,
