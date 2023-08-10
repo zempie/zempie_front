@@ -9,11 +9,11 @@
             arrow_back
           </span></button>
         <template v-if="imgInfo.user">
-          <UserAvatar :user="msg?.sender" tag="p" style="width:45px; height: 45px;" class="mr10" :has-router="true"
+          <UserAvatar :user="imgInfo?.user" tag="p" style="width:45px; height: 45px;" class="mr10" :has-router="true"
             ref="ignoreElRef" />
           <div>
-            <p class="text-bold font15">{{ msg?.sender?.nickname }}</p>
-            <h4 class="mr5">{{ dmDateFormat(msg.created_at) }}</h4>
+            <p class="text-bold font15">{{ imgInfo?.user?.nickname }}</p>
+            <h4 class="mr5">{{ dmDateFormat(imgInfo?.created_at) }}</h4>
           </div>
         </template>
       </div>
@@ -26,7 +26,7 @@
         </div>
         <div ref="ignoreElRef">
           <button class="pointer" @click="onImgDownload">
-            <a target="_blank" download="" :href="msg?.contents">
+            <a target="_blank" download="" :href="imgInfo?.contents">
               <span class="material-icons">
                 save_alt
               </span>

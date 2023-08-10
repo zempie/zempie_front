@@ -267,7 +267,7 @@
   "dashboard.update.info": "Dashboard service will be updated in the mid-February",
   "posting.placeholder": "Share your cool ideas",
   "maxFile.count.text1": "Maximum number of files is ",
-  "maxFile.count.text2": "[ number ]",
+  "maxFile.count.text2": "",
   "maxFile.count.ten.text": "Maximum number of files is 10",
   "maxFile.size.ten.text": "Maximum file size is 10mb",
   "delete": "Delete",
@@ -1045,6 +1045,11 @@
   "sort.recommend": "Recommend",
   "sort.latest": "Latest",
   "all": "All",
-  "unblock.done":"Unblocked",
-  "download.pc.env":"Please download it on your PC"
+  "unblock.done": "Unblocked",
+  "download.pc.env": "Please download it on your PC",
+  "set.group.chat.name": "__STRING_NOT_TRANSLATED__",
+  "set.group.chat.name.info": "__STRING_NOT_TRANSLATED__",
+  "set.name": "__STRING_NOT_TRANSLATED__",
+  "dm.sent.img": "__STRING_NOT_TRANSLATED__",
+  "chatting":"Chat"
 }

@@ -5,25 +5,25 @@
     </dd>
     <dt>
       <div>
-        <h2>{{ selectedRoom?.joined_users[0]?.nickname }}</h2>
-        <p>{{ selectedRoom?.joined_users[0]?.name }}</p>
+        <CommonDropdown :is-custom-btn="true" ref="memDropdownRef" style="width:auto">
+          <template #btn>
+            <h2 class="font16 text-bold fontColor-black" @click="memDropdownRef.toggleDropdown"> {{
+              getJoinedUserName(selectedRoom) }}
+            </h2>
+          </template>
+
+          <template #options>
+            <UserOdList :users="selectedRoom.joined_users" />
+            <!-- <li @click="onDeleteMsg">{{ $t('delete.msg') }}</li> -->
+          </template>
+        </CommonDropdown>
+        <p v-if="!selectedRoom.is_group_room">{{ selectedRoom?.joined_users[0]?.name }}</p>
       </div>
     </dt>
+    <!-- <DmSearchMsg :room_id="selectedRoom.id" @searchMsg="searchMsg" /> -->
     <dd>
-      <ClientOnly>
-        <el-dropdown trigger="click">
-          <button class=" room-btn pointer"> <i class="uil uil-ellipsis-h font25"></i></button>
-          <template #dropdown>
-            <div class="more-list fixed" style="min-width: 150px">
-              <a @click="opLeaveChatModal = true" id="editFeed" class="pointer">{{ t('remove.chat') }}</a>
-              <a @click="onBlockUser" class="pointer">{{ t('block.user') }}</a>
-              <!-- <a @click="onUnBlockUser" class="pointer">{{ t('cancel.block') }}</a> -->
-              <a @click="onReportUser" class="pointer">{{ t('report.user') }}</a>
-            </div>
-          </template>
-        </el-dropdown>
-      </ClientOnly>
-      <!-- <router-link to="#"><i class="uil uil-ellipsis-h font25"></i></router-link> -->
+      <DmChatMenu :selectedRoom="selectedRoom" @deleted-room="$emit('deletedRoom', props.selectedRoom)"
+        @update-group-name="(roomName) => $emit('updateGroupName', roomName)" />
     </dd>
   </dl>
   <div class="dlc-chat-content">
@@ -31,58 +31,61 @@
       <div :class="msg.sender?.id === userInfo.id ? 'receiver-chat' : 'sender-chat'" v-for="( msg, index ) in  msgList "
         :ref="el => { divs[msg.id] = el }" :key="index">
         <template v-if="msg?.chat_idx !== -1">
-          <h4>{{ dmDateFormat(msg.created_at) }}</h4>
           <ul>
-            <li class="flex" style="overflow:visible; word-break: break-all; width: 100%; ">
-              <DmMsgMenu :msg="msg" v-if="msg.sender?.id === userInfo.id" @delete-msg="deleteMsg"
-                style="max-height: 100px;" />
-              <span style="max-width: 85%;">{{ msg.contents }}</span>
+            <li class="flex column" style="overflow:visible; word-break: break-all; width: 100%; ">
+              <p class="mb5" v-if="msg.sender?.id !== userInfo.id">{{ msg.sender.nickname }}</p>
+              <div class="flex pos-relative msg-box ">
+                <UserAvatar v-if="msg.sender?.id !== userInfo.id" :user="msg.sender" tag="span"
+                  style="width:40px; height:40px; position:absolute; top:0px;" class="mr5" />
+                <template v-if="msg.sender?.id === userInfo.id" class="mr5">
+                  <DmMsgMenu :msg="msg" @delete-msg="deleteMsg" style="max-height: 100px;" />
+                  <h4 class="mr5">{{ dmDateFormat(msg.created_at) }}</h4>
+                </template>
+                <span v-if="msg.type === eChatType.TEXT" style="max-width: 85%;"
+                  :style="msg.sender?.id !== userInfo.id && 'margin-left:45px'">{{ msg.contents }}</span>
+                <div class="msg-img-container" v-else-if="msg.type === eChatType.IMAGE"
+                  :style="msg.sender?.id !== userInfo.id && 'margin-left:45px'">
+                  <img class="pointer" :src="msg.contents" @click="onClickImg(msg)" />
+                </div>
+                <div class="msg-video-container" v-else-if="msg.type === eChatType.VIDEO"
+                  :style="msg.sender?.id !== userInfo.id && 'margin-left:45px'">
+                  <video :src="msg.contents" width="320" height="240" controls />
+                </div>
+                <!-- <div v-if="msg.attached_files" v-for="file in msg.attached_files">
+                  <img :src="file.url" style="height:150px; width:150px" />
+                </div> -->
+                <h4 class="ml5" v-if="msg.sender?.id !== userInfo.id">{{
+                  dmDateFormat(msg.created_at)
+                }}</h4>
+              </div>
             </li>
           </ul>
         </template>
       </div>
     </div>
   </div>
-  <div class="dlc-send-message">
-    <div>
-      <!-- TODO: 태그 보낼 수 있어야함  -->
-      <input v-model="inputMsg" type="text" class="w100p" name="" title="" :placeholder="$t('send.msg')"
-        @keyup.enter="sendMsg" @focus="onFocus" @blur="onBlur" ref="inputRef" />
-      <!-- TODO: 2차 스펙 -->
-      <!-- <router-link to="#"><i class="uil uil-scenery font25 mr5"></i></router-link>
-                <router-link to="#"><i class="uil uil-camera font28"></i></router-link> -->
-    </div>
-    <p><button @click="sendMsg"><img src="/images/send_icon.png" alt="" title="" /></button></p>
-  </div>
-  <UserReportModal :openModal="showReportModal" @closeModal="closeReportModal"
-    :user="props.selectedRoom?.joined_users[0]" />
 
-  <ClientOnly>
-    <el-dialog v-model="opLeaveChatModal" class="modal-area-type" width="380px">
-      <div class="modal-alert">
-        <dl class="ma-header">
-          <dt>{{ t('leave.chat') }}</dt>
-          <dd>
-            <button @click="opLeaveChatModal = false">
-              <i class="uil uil-times"></i>
-            </button>
-          </dd>
-        </dl>
-        <div class="ma-content">
-          <h2>
-            {{ t('leave.chat.alert') }}
-          </h2>
-          <div>
-            <button class="btn-gray w48p" @click="leaveChat">
-              {{ $t('yes') }}
-            </button>
-            <button class="btn-default w48p" @click="opLeaveChatModal = false">
-              {{ $t('no') }}
-            </button>
-          </div>
-        </div>
+  <div class="dlc-send-message column">
+    <div v-if="attr && attr[0]?.type === 'video'" class="video-container w100p flex mb30">
+      <video :src="attr[0].url" width="320" height="240" controls />
+    </div>
+
+    <div class="img-container" v-else-if="attr && attr.length">
+      <ImageSwiperPreview :images="attr" @deleteImage="deleteImage" />
+    </div>
+    <div class="flex row">
+      <!-- TODO: 태그 보낼 수 있어야함  -->
+      <div class="input-container">
+        <input v-model="inputMsg" type="text" class="w100p" name="" title="" :placeholder="$t('send.msg')"
+          @keyup.enter="onSubmitMsg" @focus="onFocus" @blur="onBlur" ref="inputRef" />
+        <ImageUploader @uploadImage="uploadImage" ref="imgUploaderRef" class="dm-uploader-btn" />
+        <VideoUploader @uploadVideo="uploadVideo" ref="videoUploaderRef" class="dm-uploader-btn" />
       </div>
-    </el-dialog>
+      <button @click="onSubmitMsg"><img src="/images/send_icon.png" alt="" title="" /></button>
+
+    </div>
+  </div>
+  <ClientOnly>
 
     <el-dialog v-model="opDeleteMsgModal" class="modal-area-type" width="380px">
       <div class="modal-alert">
@@ -109,13 +112,16 @@
         </div>
       </div>
     </el-dialog>
+
+    <ImageOriginModal :imgInfo="activeMsg" :open-modal="showOriginImg" @close-modal="showOriginImg = false" />
+
   </ClientOnly>
 </template>
 <script setup lang="ts">
 import _ from 'lodash'
 import { dmDateFormat } from '~~/scripts/utils'
-import { IChat, IMessage, IUser } from '~~/types'
-import { ElDropdown, ElDialog, ElMessage, linkEmits } from 'element-plus';
+import { IChat, IMessage, IUser, eChatType } from '~~/types'
+import { ElDropdown, ElDialog, ElMessage } from 'element-plus';
 import { PropType } from 'vue';
 import { useInfiniteScroll, useScroll } from '@vueuse/core'
 import FlutterBridge from '~~/scripts/flutterBridge'
@@ -141,19 +147,29 @@ const isAddData = ref(false)
 const order = ref('desc')
 const offset = ref(0)
 
-const opLeaveChatModal = ref(false)
 const opDeleteMsgModal = ref(false)
 const deleteTgMsg = ref()
 
 const scrollContent = ref<HTMLElement | null>(null)
 const msgPolling = ref(null)
 const totalMsgCnt = ref(0)
-const showReportModal = ref(false)
+const showOriginImg = ref(false)
+const activeMsg = ref()
+
+const attr = ref()
+const imgUploaderRef = ref()
+const videoUploaderRef = ref()
+
+const memDropdownRef = ref()
+
 
 const userInfo = computed(() => useUser().user.value.info)
 const isFbSupported = computed(() => useCommon().setting.value.isFbSupported)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 const unreadStartId = computed(() => props.selectedRoom.unread_start_id)
+
+
+const { getJoinedUserName } = inject('joinedUser')
 
 
 const lastMsg = computed({
@@ -187,7 +203,7 @@ const { arrivedState, y } = useScroll(scrollContent, {
 })
 const { top, bottom } = toRefs(arrivedState)
 
-const emit = defineEmits(['deletedRoom', 'openKeyboard', 'closeKeyboard'])
+const emit = defineEmits(['deletedRoom', 'updateGroupName', 'openKeyboard', 'closeKeyboard'])
 
 defineExpose({ addMsg })
 
@@ -234,6 +250,8 @@ watch(
 
 onMounted(async () => {
 
+  console.log(props.selectedRoom)
+
   if (props.selectedRoom.unread_count) {
     if (props.selectedRoom.unread_count > msgLimit.value) {
       offset.value = props.selectedRoom.unread_count - msgLimit.value
@@ -262,7 +280,7 @@ onMounted(async () => {
       if (newMessage && newMessage.length) {
         scrollToBottom()
       }
-    }, 3000)
+    }, 5000)
   }
 
   if (props.selectedRoom.unread_count <= 0) {
@@ -330,6 +348,15 @@ async function msgFetch(customOffset?: number) {
       }
     }
 
+    //TODO: 마지막 메세지 테스트
+    // msgList.value[0].attached_files = [{
+    //   "priority": 0,
+    //   "url": "https://dev-zempie.s3.ap-northeast-2.amazonaws.com/v1/umMiE5uEskeRlakbOLqnQiwiZ1W2/c/3zjza1r5tlkwbewn9",
+    //   "size": 32704,
+    //   "type": "image",
+    //   "name": "모게라 게입 업로드 배너 2.jpg",
+    //   "is_blind": false
+    // }]
     return messages
   }
 
@@ -340,36 +367,72 @@ function scrollToPrev(yPos: number) {
 
 }
 
-async function sendMsg() {
-  // console.log(isSending.value)
+async function onSubmitMsg() {
   if (isSending.value) return
-  if (!inputMsg.value) return
   isSending.value = true
-
-  const content = _.cloneDeep(inputMsg.value)
-  inputMsg.value = ''
 
   const receiver_ids = props.selectedRoom.joined_users.map((user) => {
     return user.id
   })
 
-
   const payload = {
     room_id: props.selectedRoom.id,
     receiver_ids,
-    type: 0,
-    contents: content
+    type: eChatType.TEXT,
+    contents: '',
   }
+
+
+
+  //첨부파일이 있는경우 첨부파일 갯수만큼 보내고 텍스트도 보내야함
+  if (attr.value) {
+
+    if (attr.value[0].type === 'video') {
+      payload.contents = attr.value[0].url
+      payload.type = eChatType.VIDEO
+      await sendMsg(payload)
+      isSending.value = false
+    }
+
+    else if (attr.value[0].type === eChatType.IMAGE) {
+      const imgUrls = await imgUploaderRef.value.fetchImage()
+      for (const img of imgUrls) {
+        payload.contents = img.url
+        payload.type = eChatType.IMAGE
+        await sendMsg(payload)
+        isSending.value = false
+
+      }
+    }
+  }
+
+
+  //빈 텍스트는 보내지 않음
+  if (!inputMsg.value) return
+
+
+  payload.contents = _.cloneDeep(inputMsg.value)
+  payload.type = eChatType.TEXT
+  sendMsg(payload)
+
+  inputMsg.value = ''
+
+
+  isSending.value = false
+}
+
+async function sendMsg(payload: any) {
+  const content = _.cloneDeep(inputMsg.value)
 
   const { data, error } = await useCustomAsyncFetch<{ message: IMessage }>(`/chat/room`, getComFetchOptions('post', true, payload))
 
   if (data.value) {
-    initInputMsg()
     if (msgList.value?.length) {
       addMsg(data.value.message)
     } else {
       msgList.value = [data.value.message]
     }
+    attr.value = undefined
   } else if (error.value) {
     inputMsg.value = content
     ElMessage({
@@ -377,9 +440,9 @@ async function sendMsg() {
       type: 'error',
     })
   }
-
-  isSending.value = false
 }
+
+
 
 function addMsg(msg: IMessage) {
   if (msgList.value && msgList.value.length) {
@@ -402,23 +465,6 @@ function deleteMsg(msg: IMessage) {
   opDeleteMsgModal.value = true
   deleteTgMsg.value = msg
 }
-
-async function leaveChat() {
-
-  try {
-    const { data, error } = await useCustomAsyncFetch<{ message: IMessage }>(`/chat/rooms/${props.selectedRoom.id}`, getComFetchOptions('delete', true))
-
-    if (data.value) {
-      emit('deletedRoom', props.selectedRoom)
-    }
-  } finally {
-    opLeaveChatModal.value = false
-  }
-
-
-
-}
-
 
 async function onDeleteMsg() {
 
@@ -454,27 +500,42 @@ function onBlur() {
 
 }
 
-function onReportUser() {
-  showReportModal.value = true
-}
-
-
-
-function closeReportModal() {
-  showReportModal.value = false
-}
-
-async function onBlockUser() {
-  await useUser().blockUser(props.selectedRoom?.joined_users[0].id)
-    .then(() => {
-
-    })
-}
-
 async function onUnBlockUser() {
   await useUser().blockUser(props.selectedRoom?.joined_users[0].id)
     .then(() => {
 
     })
+}
+
+
+function searchMsg(msg) {
+  console.log(msg)
+
+}
+
+function uploadImage(images) {
+  attr.value = images
+}
+
+function deleteImage(idx: number) {
+  imgUploaderRef.value.deleteImage(idx)
+}
+
+function onClickImg(msg: IMessage) {
+
+  activeMsg.value = {
+    url: msg.contents,
+    user: msg.sender,
+    created_at: msg.created_at
+  }
+
+  showOriginImg.value = true
+}
+
+function uploadVideo(video) {
+  console.log('video', video)
+
+  attr.value = video
+
 }
 </script>
