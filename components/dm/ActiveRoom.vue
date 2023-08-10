@@ -31,36 +31,7 @@
       <div :class="msg.sender?.id === userInfo.id ? 'receiver-chat' : 'sender-chat'" v-for="( msg, index ) in  msgList "
         :ref="el => { divs[msg.id] = el }" :key="index">
         <template v-if="msg?.chat_idx !== -1">
-          <ul>
-            <li class="flex column" style="overflow:visible; word-break: break-all; width: 100%; ">
-              <p class="mb5" v-if="msg.sender?.id !== userInfo.id">{{ msg.sender.nickname }}</p>
-              <div class="flex pos-relative msg-box ">
-                <UserAvatar v-if="msg.sender?.id !== userInfo.id" :user="msg.sender" tag="span"
-                  style="width:40px; height:40px; position:absolute; top:0px;" class="mr5" />
-                <template v-if="msg.sender?.id === userInfo.id" class="mr5">
-                  <DmMsgMenu :msg="msg" @delete-msg="deleteMsg" style="max-height: 100px;" />
-                  <h4 class="mr5">{{ dmDateFormat(msg.created_at) }}</h4>
-                </template>
-                <span v-if="msg.type === eChatType.TEXT" style="max-width: 85%;"
-                  :style="msg.sender?.id !== userInfo.id && 'margin-left:45px'">{{ msg.contents }}</span>
-                <div class="msg-img-container" v-else-if="msg.type === eChatType.IMAGE"
-                  :style="msg.sender?.id !== userInfo.id && 'margin-left:45px'">
-                  <img class="pointer" :src="msg.contents" @click="onClickImg(msg)" />
-                </div>
-                <div class="msg-video-container" v-else-if="msg.type === eChatType.VIDEO"
-                  :style="msg.sender?.id !== userInfo.id && 'margin-left:45px'">
-                  <video :src="msg.contents" width="320" height="240" controls />
-                </div>
-
-                <!-- <div v-if="msg.attached_files" v-for="file in msg.attached_files">
-                  <img :src="file.url" style="height:150px; width:150px" />
-                </div> -->
-                <h4 class="ml5" v-if="msg.sender?.id !== userInfo.id">{{
-                  dmDateFormat(msg.created_at)
-                }}</h4>
-              </div>
-            </li>
-          </ul>
+          <DmMessage :msg="msg" />
         </template>
       </div>
     </div>
@@ -129,7 +100,6 @@
 </template>
 <script setup lang="ts">
 import _ from 'lodash'
-import { dmDateFormat } from '~~/scripts/utils'
 import { IChat, IMessage, IUser, eChatType } from '~~/types'
 import { ElProgress, ElDialog, ElMessage } from 'element-plus';
 import { PropType } from 'vue';
