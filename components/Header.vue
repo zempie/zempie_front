@@ -32,11 +32,6 @@
                 Z-world
               </a>
             </li>
-            <li class="uppercase pointer">
-              <a id="mogeradMenu" @click="moveMogera">
-                Mogera
-              </a>
-            </li>
           </ul>
         </div>
       </dt>
@@ -233,17 +228,6 @@ async function moveZemWorld() {
   }
 }
 
-async function moveMogera() {
-  const { data } = await useCustomAsyncFetch<{ result: { token: string } }>("/create/token", getZempieFetchOptions("post", true))
-
-  if (data.value) {
-    const { result } = data.value
-    if (result) {
-      window.open(`${config.MOGERA_URL}?key=${result.token}`, "_blank");
-    }
-
-  }
-}
 
 async function getGameToken() {
   if (isLogin.value) {
