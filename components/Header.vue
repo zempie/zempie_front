@@ -140,10 +140,12 @@ const route = useRoute()
 const isLogin = computed(() => useUser().user.value.isLogin)
 const isLoading = computed(() => useUser().user.value.isLoading)
 const user = computed(() => useUser().user.value.info)
+const fUser = computed(() => useUser().user.value.fUser)
 
 const searchInput = ref()
 const isHeaderSideMobile = ref(false)
 const isHeaderSideBgMobile = ref(false)
+const showMogera = ref(false)
 
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 const unreadMsgCount = computed(() => {
@@ -189,6 +191,7 @@ watch(
 onMounted(() => {
   nextTick(() => {
     onResize()
+    onPressMogera()
   })
   window.addEventListener("resize", onResize)
 })
@@ -219,15 +222,30 @@ function clickOutside() {
 
 
 async function moveZemWorld() {
+  const { result } = await getGameToken()
+  if (result) {
+    window.open(`${config.ZEMPIE_METAVERSE}?key=${result.token}`, "_blank");
+  }
+}
+
+
+async function getGameToken() {
   if (isLogin.value) {
-    const { result } = await useCustomFetch<{ result: { token: string } }>("/create/token", getZempieFetchOptions("post", true))
-    if (result) {
-      window.open(`${config.ZEMPIE_METAVERSE}?key=${result.token}`, "_blank");
-    }
+    return await useCustomFetch<{ result: { token: string } }>("/create/token", getZempieFetchOptions("post", true))
   } else {
     router.push($localePath("/login"))
   }
+}
 
+
+
+function onPressMogera() {
+  window.addEventListener('keydown', (e) => {
+
+    if (e.which === 13 && e.ctrlKey) {
+      showMogera.value = !showMogera.value
+    }
+  })
 }
 
 </script>

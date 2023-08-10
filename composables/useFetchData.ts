@@ -29,6 +29,22 @@ export const createQueryUrl = (url: string, queries: object) => {
   return url
 }
 
+export const fetchOptions = (target = 'zempie', method = 'get', withCredentials = false, body?: object) => {
+  const config = useRuntimeConfig();
+  const options = baseOption(method, withCredentials, body)
+
+  switch (target) {
+    case 'zempie:':
+      options['baseURL'] = config.BASE_API
+      break;
+    case 'mogera':
+      options['baseURL'] = config.BASE_API
+      options.headers['Authorization'] = `Bearer ${token}`
+  }
+
+  return options
+}
+
 export const getZempieFetchOptions = (method = 'get', withCredentials = false, body?: object) => {
   const config = useRuntimeConfig();
   const options = baseOption(method, withCredentials, body)

@@ -1043,6 +1043,11 @@
   "sort.recommend": "추천 순",
   "sort.latest": "최신 순",
   "all": "전체",
-  "unblock.done":"차단해제되었습니다",
-  "download.pc.env":"pc 환경에서 다운로드 해주세요"
+  "unblock.done": "차단해제되었습니다",
+  "download.pc.env": "pc 환경에서 다운로드 해주세요",
+  "set.group.chat.name": "그룹 이름 변경",
+  "set.group.chat.name.info": "당신이 속한 그룹명이 수정됩니다.",
+  "set.name": "이름을 작성해주세요.",
+  "dm.sent.img": "사진을 보냈습니다.",
+  "chatting": "채팅"
 }

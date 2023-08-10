@@ -81,7 +81,7 @@ import { useI18n } from 'vue-i18n'
 import shared from '~~/scripts/shared'
 const { t, locale } = useI18n()
 
-const LIMIT_SIZE = 30
+const LIMIT_SIZE = 10
 
 const route = useRoute()
 const { $localePath } = useNuxtApp()

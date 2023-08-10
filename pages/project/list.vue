@@ -6,6 +6,12 @@
         <p>{{ $t('projectList.banner.info') }}</p>
       </div>
 
+      <div class="mogera-info">
+        <p><span class="mogera-color">Mogera(모게라)</span>로 별도의 다운로드 없이 게임 개발을 체험해보세요.</p>
+        <p>원하는 게임 장르를 선택하고, 여러분만의 게임을 만드세요. <span @click="moveMogera" class="mogera-color pointer underline">프로토타입 체험해보러
+            가기 ></span></p>
+      </div>
+
       <div class="studio-all-game">
         <dl>
           <dt>
@@ -36,10 +42,10 @@
             {{ $t('game.uploadDate') }}
             <i v-if="isDateSortAsc" class="uil uil-angle-up" style="font-size: 20px; cursor: pointer" @click="
               sortAscList('created_at'), (isDateSortAsc = !isDateSortAsc)
-            "></i>
+              "></i>
             <i v-else class="uil uil-angle-down" style="font-size: 20px; cursor: pointer" @click="
               sortDescList('created_at'), (isDateSortAsc = !isDateSortAsc)
-            "></i>
+              "></i>
           </li>
           <li>
             {{ $t('game.status') }}
@@ -53,22 +59,22 @@
             <i v-if="isPlayCountSortAsc" class="uil uil-angle-up" style="font-size: 20px; cursor: pointer" @click="
               sortAscListByGame('count_start'),
               (isPlayCountSortAsc = !isPlayCountSortAsc)
-            "></i>
+              "></i>
             <i v-else class="uil uil-angle-down" style="font-size: 20px; cursor: pointer" @click="
               sortDescListByGame('count_start'),
               (isPlayCountSortAsc = !isPlayCountSortAsc)
-            "></i>
+              "></i>
           </li>
           <li>
             {{ $t('game.likeCnt') }}
             <i v-if="isLikeCountSortAsc" class="uil uil-angle-up" style="font-size: 20px; cursor: pointer" @click="
               sortAscListByGame('count_heart'),
               (isLikeCountSortAsc = !isLikeCountSortAsc)
-            "></i>
+              "></i>
             <i v-else class="uil uil-angle-down" style="font-size: 20px; cursor: pointer" @click="
               sortDescListByGame('count_heart'),
               (isLikeCountSortAsc = !isLikeCountSortAsc)
-            "></i>
+              "></i>
           </li>
         </ul>
 
@@ -187,6 +193,7 @@ const currPage = ref(1)
 const totalCount = ref(0)
 const originProjects = ref()
 const totalPage = computed(() => Math.ceil(totalCount.value / PAGE_SIZE))
+const fUser = computed(() => useUser().user.value.fUser)
 
 shared.createHeadMeta(t('seo.project.list.title'), t('seo.project.list.desc'))
 
@@ -234,6 +241,19 @@ function prevPage() {
 function firstPage() {
   currPage.value = 1
   pagingByClient()
+}
+
+
+async function moveMogera() {
+  const { data } = await useCustomAsyncFetch<{ result: { token: string } }>("/create/token", getZempieFetchOptions("post", true))
+
+  if (data.value) {
+    const { result } = data.value
+    if (result) {
+      window.open(`${config.MOGERA_URL}?key=${result.token}`, "_blank");
+    }
+
+  }
 }
 
 function lastPage() {
@@ -302,6 +322,24 @@ function sortDescListByGame(key: string) {
 .next-btn.disabled {
   pointer-events: none;
   opacity: 0.5;
+}
+
+.mogera-color {
+  color: #b43df9;
+}
+
+.mogera-info {
+  width: 1200px;
+  background-color: #fff;
+  margin: 30px auto;
+  border-radius: 10px;
+  border-left: 10px solid #b43df9;
+  padding: 20px 10px;
+
+  p {
+    padding-left: 30px;
+  }
+
 }
 
 //transition으로 인한 css 수정
@@ -559,5 +597,4 @@ function sortDescListByGame(key: string) {
   }
 }
 
-@media all and (min-width: 1200px) {}
-</style>
+@media all and (min-width: 1200px) {}</style>

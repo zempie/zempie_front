@@ -352,7 +352,9 @@ export interface IChat {
   last_chat_id: number,
   unread_start_id: number,
   updated_message?: IMessage[]
-  meta?: { isLastMsg: boolean }
+  meta?: { isLastMsg: boolean },
+  has_name: Boolean,
+  name: String
 }
 
 export interface IMessage {
@@ -363,6 +365,7 @@ export interface IMessage {
   sender: IUser,
   conversation_id: number,
   created_at: string,
+  type: eChatType,
   media_attachments?: [
     {
       id: number,
@@ -453,6 +456,14 @@ export enum eReportType {
   comment,
   game,
   user
+}
+
+export enum eChatType {
+  TEXT = 0,
+  IMAGE = 1,
+  VIDEO = 2,
+  AUDIO = 3,
+  HTML = 4,
 }
 
 
