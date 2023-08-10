@@ -403,7 +403,7 @@ async function onSubmitMsg() {
   //첨부파일이 있는경우 첨부파일 갯수만큼 보내고 텍스트도 보내야함
   if (attr.value) {
     console.log(attr.value)
-    if (attr.value.type.includes('audio')) {
+    if (attr.value.type?.includes('audio')) {
       const audio = await recorderRef.value.fetchRecord()
       console.log(audio)
 
