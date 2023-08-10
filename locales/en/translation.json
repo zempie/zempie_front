@@ -1037,8 +1037,8 @@
   "seo.profile.block.title": "People You've Blocked",
   "seo.profile.block.desc": "Users You;ve Blocked",
   "ect": "ETC.",
-  "fail.send.msg": "Sorry. You cannot send a personal message to that user.",
-  "block.done": "That user is already blocked.",
+  "fail.send.msg": "Sorry. You cannot send a direct message to such user.",
+  "block.done": "Such user is already blocked.",
   "send.msg.btn": "Send",
   "violent.contents": "Sensitive content",
   "hide": "Hide",
@@ -1047,9 +1047,9 @@
   "all": "All",
   "unblock.done": "Unblocked",
   "download.pc.env": "Please download it on your PC",
-  "set.group.chat.name": "__STRING_NOT_TRANSLATED__",
-  "set.group.chat.name.info": "__STRING_NOT_TRANSLATED__",
-  "set.name": "__STRING_NOT_TRANSLATED__",
-  "dm.sent.img": "__STRING_NOT_TRANSLATED__",
-  "chatting":"Chat"
+  "set.group.chat.name": "Group Chat Name Edit",
+  "set.group.chat.name.info": "",
+  "set.name": "Please set your name.",
+  "dm.sent.img": "Image is sent.",
+  "chatting": "Chat"
 }

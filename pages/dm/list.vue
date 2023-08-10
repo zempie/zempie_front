@@ -876,7 +876,7 @@ function updateGroupName(roomName: string) {
             // height: 50px;
 
             div {
-              width: 90%;
+              // width: 90%;
             }
 
             button {

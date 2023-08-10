@@ -21,7 +21,6 @@ const isImgUploading = ref(false)
 
 
 const emit = defineEmits(['uploadVideo'])
-defineExpose({ fetchImage, deleteImage })
 
 
 function uploaVideoFile() {
@@ -83,57 +82,6 @@ function isValidImgCount(images: File[]) {
 
   return true
 
-}
-
-
-async function fetchImage() {
-  isImgUploading.value = true
-
-  const formData = new FormData()
-  let result = []
-
-  for (const file of rawFiles.value) {
-    console.log(file)
-
-    formData.append(
-      file.name,
-      file
-    )
-
-    try {
-      const { data, error, pending } = await useCustomAsyncFetch<{
-        result: {
-          priority: number
-          url: string
-          type: string
-          name: string
-          size: number
-        }[]
-      }>('/community/att', getZempieFetchOptions('post', true, formData))
-
-      if (data.value) {
-
-        result = data.value.result
-
-      }
-    } finally {
-      isImgUploading.value = false
-      initFiles()
-    }
-
-  }
-
-  return result
-}
-
-async function deleteImage(idx: number) {
-  rawFiles.value.splice(idx, 1)
-}
-
-function initFiles() {
-  rawFiles.value = undefined
-  imageFiles.value = []
-  isImgUploading.value = false
 }
 </script>
 <style scoped lang="scss"></style>
