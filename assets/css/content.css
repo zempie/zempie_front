@@ -5321,6 +5321,7 @@
 }
 
 .dl-content>dt .dlc-chat-content {
+  min-height: 50vh;
   height: auto;
   flex: 1;
   overflow-x: hidden;

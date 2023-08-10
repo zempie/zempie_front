@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="content" style="height: auto">
     <div class="dm-list">
       <div class="dl-title">
         <div>
@@ -876,7 +876,7 @@ function updateGroupName(roomName: string) {
             // height: 50px;
 
             div {
-              width: 90%;
+              // width: 90%;
             }
 
             button {

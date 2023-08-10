@@ -937,6 +937,7 @@
 .more-list {
   width: 100%;
   padding: 10px;
+  z-index: 999;
 }
 
 .more-list a,

@@ -1,7 +1,7 @@
 <template>
   <dl class="active-room-container">
     <dd>
-      <UserAvatar :user="selectedRoom?.joined_users[0]" tag="p" :hasRouter="true" />
+      <UserAvatar :user="selectedRoom?.joined_users[0]" tag="p" :hasRouter="selectedRoom.is_group_room ? false : true" />
     </dd>
     <dt>
       <div>
@@ -31,55 +31,36 @@
       <div :class="msg.sender?.id === userInfo.id ? 'receiver-chat' : 'sender-chat'" v-for="( msg, index ) in  msgList "
         :ref="el => { divs[msg.id] = el }" :key="index">
         <template v-if="msg?.chat_idx !== -1">
-          <ul>
-            <li class="flex column" style="overflow:visible; word-break: break-all; width: 100%; ">
-              <p class="mb5" v-if="msg.sender?.id !== userInfo.id">{{ msg.sender.nickname }}</p>
-              <div class="flex pos-relative msg-box ">
-                <UserAvatar v-if="msg.sender?.id !== userInfo.id" :user="msg.sender" tag="span"
-                  style="width:40px; height:40px; position:absolute; top:0px;" class="mr5" />
-                <template v-if="msg.sender?.id === userInfo.id" class="mr5">
-                  <DmMsgMenu :msg="msg" @delete-msg="deleteMsg" style="max-height: 100px;" />
-                  <h4 class="mr5">{{ dmDateFormat(msg.created_at) }}</h4>
-                </template>
-                <span v-if="msg.type === eChatType.TEXT" style="max-width: 85%;"
-                  :style="msg.sender?.id !== userInfo.id && 'margin-left:45px'">{{ msg.contents }}</span>
-                <div class="msg-img-container" v-else-if="msg.type === eChatType.IMAGE"
-                  :style="msg.sender?.id !== userInfo.id && 'margin-left:45px'">
-                  <img class="pointer" :src="msg.contents" @click="onClickImg(msg)" />
-                </div>
-                <div class="msg-video-container" v-else-if="msg.type === eChatType.VIDEO"
-                  :style="msg.sender?.id !== userInfo.id && 'margin-left:45px'">
-                  <video :src="msg.contents" width="320" height="240" controls />
-                </div>
-                <!-- <div v-if="msg.attached_files" v-for="file in msg.attached_files">
-                  <img :src="file.url" style="height:150px; width:150px" />
-                </div> -->
-                <h4 class="ml5" v-if="msg.sender?.id !== userInfo.id">{{
-                  dmDateFormat(msg.created_at)
-                }}</h4>
-              </div>
-            </li>
-          </ul>
+          <DmMessage :msg="msg" />
         </template>
       </div>
     </div>
   </div>
 
+
   <div class="dlc-send-message column">
     <div v-if="attr && attr[0]?.type === 'video'" class="video-container w100p flex mb30">
       <video :src="attr[0].url" width="320" height="240" controls />
     </div>
+    <!-- <div class="msg-record-container flex items-center content-cent" v-else-if="recorderRef?.formattedRecordingTime">
+      <i class="uil uil-play font20 mr10 zem-color"></i>
+      <el-progress :percentage="recordingProgressPercentage">
+        <span class="font15 ml10"> {{ recorderRef?.formattedRecordingTime }}</span>
+      </el-progress>
+    </div> -->
 
     <div class="img-container" v-else-if="attr && attr.length">
       <ImageSwiperPreview :images="attr" @deleteImage="deleteImage" />
     </div>
-    <div class="flex row">
-      <!-- TODO: 태그 보낼 수 있어야함  -->
+    <div class="flex row msg-container">
+      <!-- TODO: 태그 보낼 수 있어야함, 음성녹음 코덱 처리하고  -->
       <div class="input-container">
         <input v-model="inputMsg" type="text" class="w100p" name="" title="" :placeholder="$t('send.msg')"
           @keyup.enter="onSubmitMsg" @focus="onFocus" @blur="onBlur" ref="inputRef" />
         <ImageUploader @uploadImage="uploadImage" ref="imgUploaderRef" class="dm-uploader-btn" />
         <VideoUploader @uploadVideo="uploadVideo" ref="videoUploaderRef" class="dm-uploader-btn" />
+        <!-- <DmRecorder @uploadRecord="uploadRecord" ref="recorderRef" class="dm-uploader-btn" /> -->
+
       </div>
       <button @click="onSubmitMsg"><img src="/images/send_icon.png" alt="" title="" /></button>
 
@@ -119,9 +100,8 @@
 </template>
 <script setup lang="ts">
 import _ from 'lodash'
-import { dmDateFormat } from '~~/scripts/utils'
 import { IChat, IMessage, IUser, eChatType } from '~~/types'
-import { ElDropdown, ElDialog, ElMessage } from 'element-plus';
+import { ElProgress, ElDialog, ElMessage } from 'element-plus';
 import { PropType } from 'vue';
 import { useInfiniteScroll, useScroll } from '@vueuse/core'
 import FlutterBridge from '~~/scripts/flutterBridge'
@@ -159,6 +139,7 @@ const activeMsg = ref()
 const attr = ref()
 const imgUploaderRef = ref()
 const videoUploaderRef = ref()
+const recorderRef = ref()
 
 const memDropdownRef = ref()
 
@@ -190,6 +171,10 @@ const isLastMsg = computed(() => {
     return msgList.value[msgList.value?.length - 1].id === lastMsg.value.id
   }
 })
+
+const recordingProgressPercentage = computed(() => {
+  return (recorderRef.value?.recordingDuration / 600) * 100; // 600 seconds (10 minutes)
+});
 
 
 //중복 클릭 방지용
@@ -368,6 +353,7 @@ function scrollToPrev(yPos: number) {
 }
 
 async function onSubmitMsg() {
+
   if (isSending.value) return
   isSending.value = true
 
@@ -386,8 +372,15 @@ async function onSubmitMsg() {
 
   //첨부파일이 있는경우 첨부파일 갯수만큼 보내고 텍스트도 보내야함
   if (attr.value) {
+    console.log(attr.value)
+    if (attr.value.type?.includes('audio')) {
+      const audio = await recorderRef.value.fetchRecord()
+      console.log(audio)
 
-    if (attr.value[0].type === 'video') {
+    }
+
+
+    else if (attr.value[0].type === 'video') {
       payload.contents = attr.value[0].url
       payload.type = eChatType.VIDEO
       await sendMsg(payload)
@@ -537,5 +530,10 @@ function uploadVideo(video) {
 
   attr.value = video
 
+}
+
+function uploadRecord(record) {
+  console.log('rec', record)
+  attr.value = record
 }
 </script>
