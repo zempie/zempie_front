@@ -40,7 +40,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog v-model="opSetGroupChatName" class="modal-area-type" width="380px">
+    <el-dialog v-model="opSetGroupChatName" class="modal-area-type" width="380px" @close="closeModal">
       <div class="modal-alert">
         <dl class="ma-header">
           <dt>{{ t('set.group.chat.name') }}</dt>
@@ -54,7 +54,7 @@
           <div class="flex column mt10">
             <p class="mb20 text-left">{{ t('set.group.chat.name.info') }}</p>
             <input type="text" v-model="groupName" :placeholder="t('set.name')" class="w100p" @input="onChangeName" />
-            <small v-if="groupNameErr" class="text-red text-left">그룹명은 50자 이내만 가능합니다.</small>
+            <small v-if="isGroupNameErr" class="text-red text-left">{{ groupNameErr }}</small>
           </div>
           <div>
             <button class="btn-gray w48p" @click="opSetGroupChatName = false">
@@ -90,8 +90,8 @@ const opReportModal = ref(false)
 const opSetGroupChatName = ref(false)
 
 const groupName = ref(props.selectedRoom.name)
-const groupNameErr = ref(false)
-
+const isGroupNameErr = ref(false)
+const groupNameErr = ref('')
 
 async function leaveChat() {
 
@@ -115,15 +115,29 @@ async function onBlockUser() {
 
 function onChangeName() {
 
+  if (isEmptyGroupName()) return
+
   if (groupName.value.length > MAX_NAME_LIMIT) {
-    groupNameErr.value = true
+    isGroupNameErr.value = true
+    groupNameErr.value = t('group.name.err.msg1')
     groupName.value = groupName.value.slice(0, 50)
   } else {
-    groupNameErr.value = false
+    isGroupNameErr.value = false
   }
 }
 
+function isEmptyGroupName() {
+  if (groupName.value.length === 0) {
+    isGroupNameErr.value = true
+    groupNameErr.value = t('group.name.err.msg2')
+    return true
+  }
+  return false
+}
+
 async function setGroupName() {
+  if (isEmptyGroupName()) return
+  if (isGroupNameErr.value) return
   try {
     const payload = {
       room_id: props.selectedRoom.id,
@@ -139,6 +153,12 @@ async function setGroupName() {
     opSetGroupChatName.value = false
   }
 
+}
+
+function closeModal() {
+  groupName.value = ''
+  isGroupNameErr.value = false
+  groupNameErr.value = ''
 }
 
 </script>

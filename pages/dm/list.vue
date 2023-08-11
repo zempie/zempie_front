@@ -1,5 +1,5 @@
 <template>
-  <div class="content" style="height: auto">
+  <div class="content" style="height: 100vh;">
     <div class="dm-list">
       <div class="dl-title">
         <div>
@@ -50,7 +50,9 @@
                   </dd>
                   <dt class="dm-info-box">
                     <h3>{{ getJoinedUserName(room) }}</h3>
+
                     <p v-if="room?.last_message?.type === eChatType.IMAGE">{{ $t('dm.sent.img') }}</p>
+                    <p v-else-if="room?.last_message?.type === eChatType.VIDEO">{{ $t('dm.sent.video') }}</p>
                     <p v-else-if="room?.last_message?.type === eChatType.TEXT">{{ room?.last_message?.contents }}</p>
                   </dt>
                   <dd>
@@ -68,8 +70,8 @@
         </dd>
         <dt :class="['flex column msg-container', selectedRoom ? 'on' : 'off']" ref="activeMsgRef">
           <DmActiveRoom v-if="selectedRoom" :selectedRoom="selectedRoom" @deleted-room="onDeletedRoom"
-            @open-keyboard="openkeyboard" @update-last-msg="updateLastMsg" @close-keyboard="closeKeyboard"
-            :key="componentKey" @update-group-name="updateGroupName" ref="activeRoomRef" />
+            @open-keyboard="openkeyboard" @close-keyboard="closeKeyboard" :key="componentKey"
+            @update-group-name="updateGroupName" @update-last-msg="updateLastMsg" ref="activeRoomRef" />
           <div v-else class="dlc-chat-emptied">
             <p><i class="uil uil-comment-alt-dots" style="font-size:40px; color:#fff;"></i></p>
             <h2> {{ $t('no.selected.msg') }} </h2>
@@ -119,7 +121,7 @@
                 </dl>
               </li>
             </ul>
-            <ul v-else-if="!followPending && !findUserPending" class="user-list">
+            <ul v-else-if="!followPending" class="user-list" ref="userListEl">
               <UserOdList v-if="userList?.length" :users="userList" @onClickUser="onClickUser" />
               <li v-else>
                 {{ $t('not.found.user') }}
@@ -149,6 +151,7 @@ import { onBeforeRouteLeave } from 'vue-router';
 
 const CHAT_LIMIT = 10
 const DISPLAY_USER_LIMIT = 2
+const USER_LIMIT = 10
 
 const route = useRoute()
 const { $localePath } = useNuxtApp()
@@ -172,13 +175,11 @@ const chipRef = ref()
 const userList = ref<IUser[]>()
 const selectedUsers = ref()
 
-const msgList = ref<IMessage[]>()
+const userListEl = ref<HTMLElement | null>(null)
 
 const roomPending = ref(true)
 const followPending = ref(true)
 const findUserPending = ref(false)
-const msgEl = ref<HTMLElement | null>(null)
-const userListRef = ref<HTMLElement | null>(null)
 const fromId = ref(0)
 const isAddData = ref()
 const offset = ref(0)
@@ -207,6 +208,12 @@ const isFbSupported = computed(() => useCommon().setting.value.isFbSupported)
 const totalRoomCnt = ref(0)
 
 
+const userOffset = ref(0)
+const isAddUserData = ref(false)
+const userListRef = ref<HTMLElement | null>(null)
+
+
+
 let createRoomCount = 2
 
 
@@ -218,17 +225,15 @@ definePageMeta({
 })
 
 useInfiniteScroll(
-  msgEl,
+  userListEl,
   async () => {
-    if (isAddData.value) {
-      // fromId.value = roomList.value[roomList.value.length - 1].id + 1
-      offset.value += CHAT_LIMIT
-      await fetch(true)
+    if (isAddUserData.value && !findUserPending.value) {
+      userOffset.value += USER_LIMIT
+      await getUsers()
     }
   },
   { distance: 10 }
 )
-
 
 watch(
   () => useAlarm().alarm.value.newDm,
@@ -264,7 +269,6 @@ watch(
         }
       }
 
-      //  hasNewNoti.value = true
     }
   }
 )
@@ -415,17 +419,34 @@ const onInputUser = debounce(async () => {
 }, 300)
 
 async function getUsers() {
+  //   userOffset = ref(0)
+  // const isAddUserData
   let isPending = true
   findUserPending.value = true
+
+  const payload = {
+    offset: userOffset.value,
+    limit: USER_LIMIT,
+    username: userKeyword.value
+  }
 
   if (userKeyword.value) {
     //TODO: 무한 스크롤 처리 해야됨 
     try {
-      const { data, error, pending } = await useCustomAsyncFetch<{ totalCount: number, result: IUser[] }>(`/search?username=${userKeyword.value}`, getComFetchOptions('get', false))
+      const { data, error, pending } = await useCustomAsyncFetch<{ totalCount: number, result: IUser[] }>(createQueryUrl(`/search`, payload), getComFetchOptions('get', false))
 
       if (data.value) {
-        const { result } = data.value
-        userList.value = result
+        const { result, totalCount } = data.value
+        if (isAddUserData.value) {
+          if (result.length > 0) {
+            userList.value = [...userList.value, ...result]
+          } else {
+            isAddUserData.value = false
+          }
+        } else {
+          userList.value = result
+          isAddUserData.value = true
+        }
         isPending = pending.value
         findUserPending.value = pending.value
       } else if (error.value) {
@@ -580,6 +601,8 @@ function closeModal() {
   userList.value = followingList.value
   userKeyword.value = ''
   chipRef.value.clearArr()
+  isAddUserData.value = false
+  userOffset.value = 0
 }
 
 function onDeletedRoom(room: IChat) {
@@ -685,10 +708,25 @@ function updateGroupName(roomName: string) {
 
   })
 }
+
+function updateLastMsg(msg: IMessage) {
+  console.log('ipdte', msg)
+  roomList.value = roomList.value.map((room) => {
+
+    if (room?.id === msg.room_id) {
+      return {
+        ...room,
+        last_message: msg
+      }
+    } else {
+      return room
+    }
+  })
+
+}
 </script>
 <style scoped lang="scss">
 .content {
-  height: 100vh;
 
   .dm-list {
 
@@ -754,14 +792,21 @@ function updateGroupName(roomName: string) {
 
 }
 
+::v-deep(.new-msg-modal) {
+  max-height: 90vh;
+}
+
 .new-msg-modal {
+
   .ma-content {
     .input-search-default {
       justify-content: left
     }
 
     .user-list {
-      margin-top: 20px;
+      max-height: 500px;
+      overflow-y: scroll;
+      padding-top: 20px;
 
       li {
         padding: 13px;
@@ -890,9 +935,7 @@ function updateGroupName(roomName: string) {
       }
     }
 
-    ::v-deep(.new-msg-modal) {
-      border-radius: 0px !important;
-    }
+
   }
 }
 

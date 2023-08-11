@@ -14,7 +14,6 @@
 
           <template #options>
             <UserOdList :users="selectedRoom.joined_users" />
-            <!-- <li @click="onDeleteMsg">{{ $t('delete.msg') }}</li> -->
           </template>
         </CommonDropdown>
         <p v-if="!selectedRoom.is_group_room">{{ selectedRoom?.joined_users[0]?.name }}</p>
@@ -31,7 +30,7 @@
       <div :class="msg.sender?.id === userInfo.id ? 'receiver-chat' : 'sender-chat'" v-for="( msg, index ) in  msgList "
         :ref="el => { divs[msg.id] = el }" :key="index">
         <template v-if="msg?.chat_idx !== -1">
-          <DmMessage :msg="msg" />
+          <DmMessage :msg="msg" @delete-msg="deleteMsg" />
         </template>
       </div>
     </div>
@@ -39,9 +38,10 @@
 
 
   <div class="dlc-send-message column">
-    <div v-if="attr && attr[0]?.type === 'video'" class="video-container w100p flex mb30">
-      <video :src="attr[0].url" width="320" height="240" controls />
+    <div v-if="attr && attr[0]?.type === eChatType.VIDEO" class=" video-container w100p flex mb30">
+      <VideoPreview :videos="attr" @delete-video="deleteVideo" />
     </div>
+    <!-- TODO: 음성녹음 -->
     <!-- <div class="msg-record-container flex items-center content-cent" v-else-if="recorderRef?.formattedRecordingTime">
       <i class="uil uil-play font20 mr10 zem-color"></i>
       <el-progress :percentage="recordingProgressPercentage">
@@ -49,7 +49,7 @@
       </el-progress>
     </div> -->
 
-    <div class="img-container" v-else-if="attr && attr.length">
+    <div class="img-container" v-else-if="attr && attr[0]?.type === eChatType.IMAGE">
       <ImageSwiperPreview :images="attr" @deleteImage="deleteImage" />
     </div>
     <div class="flex row msg-container">
@@ -63,40 +63,9 @@
 
       </div>
       <button @click="onSubmitMsg"><img src="/images/send_icon.png" alt="" title="" /></button>
-
     </div>
   </div>
-  <ClientOnly>
-
-    <el-dialog v-model="opDeleteMsgModal" class="modal-area-type" width="380px">
-      <div class="modal-alert">
-        <dl class="ma-header">
-          <dt> {{ t('leave.msg') }} </dt>
-          <dd>
-            <button class="pointer" @click="opDeleteMsgModal = false">
-              <i class="uil uil-times"></i>
-            </button>
-          </dd>
-        </dl>
-        <div class="ma-content">
-          <h2>
-            {{ t('leave.msg.alert') }}
-          </h2>
-          <div>
-            <button class="btn-gray w48p" @click="onDeleteMsg">
-              {{ $t('yes') }}
-            </button>
-            <button class="btn-default w48p" @click="opDeleteMsgModal = false">
-              {{ $t('no') }}
-            </button>
-          </div>
-        </div>
-      </div>
-    </el-dialog>
-
-    <ImageOriginModal :imgInfo="activeMsg" :open-modal="showOriginImg" @close-modal="showOriginImg = false" />
-
-  </ClientOnly>
+  <ImageOriginModal :imgInfo="activeMsg" :open-modal="showOriginImg" @close-modal="showOriginImg = false" />
 </template>
 <script setup lang="ts">
 import _ from 'lodash'
@@ -150,6 +119,7 @@ const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 const unreadStartId = computed(() => props.selectedRoom.unread_start_id)
 
 
+//pages > dm > list에서 provide됨 
 const { getJoinedUserName } = inject('joinedUser')
 
 
@@ -163,12 +133,10 @@ const lastMsg = computed({
 })
 
 const isLastMsg = computed(() => {
-  if (props.selectedRoom?.meta?.isLastMsg) {
-    return true
-  }
+
+  console.log(msgList.value.at(-1).id, lastMsg.value.id)
   if (msgList.value) {
-    console.log(msgList.value, props.selectedRoom)
-    return msgList.value[msgList.value?.length - 1].id === lastMsg.value.id
+    return msgList.value.at(-1).id === lastMsg.value.id
   }
 })
 
@@ -188,7 +156,7 @@ const { arrivedState, y } = useScroll(scrollContent, {
 })
 const { top, bottom } = toRefs(arrivedState)
 
-const emit = defineEmits(['deletedRoom', 'updateGroupName', 'openKeyboard', 'closeKeyboard'])
+const emit = defineEmits(['deletedRoom', 'updateGroupName', 'openKeyboard', 'closeKeyboard', 'updateLastMsg'])
 
 defineExpose({ addMsg })
 
@@ -235,7 +203,6 @@ watch(
 
 onMounted(async () => {
 
-  console.log(props.selectedRoom)
 
   if (props.selectedRoom.unread_count) {
     if (props.selectedRoom.unread_count > msgLimit.value) {
@@ -246,11 +213,13 @@ onMounted(async () => {
 
   await msgFetch()
   await useUser().getUnreadMsg()
+
   nextTick(() => {
     if (props.selectedRoom.unread_count < msgLimit.value) {
       // 읽을 메세지가 없는 경우 스크롤 맨 하단
       scrollToBottom()
     } else {
+
       divs.value[unreadStartId.value].scrollIntoView()
     }
   })
@@ -287,11 +256,8 @@ const newMsg = ((messages: IMessage[]) => {
 
 
 function scrollToBottom() {
-  nextTick(() => {
-    if (scrollContent.value)
-      scrollContent.value.scrollTop = scrollContent.value?.scrollHeight
-  })
-
+  if (scrollContent.value)
+    scrollContent.value.scrollTop = scrollContent.value?.scrollHeight
 }
 
 
@@ -332,16 +298,6 @@ async function msgFetch(customOffset?: number) {
         }
       }
     }
-
-    //TODO: 마지막 메세지 테스트
-    // msgList.value[0].attached_files = [{
-    //   "priority": 0,
-    //   "url": "https://dev-zempie.s3.ap-northeast-2.amazonaws.com/v1/umMiE5uEskeRlakbOLqnQiwiZ1W2/c/3zjza1r5tlkwbewn9",
-    //   "size": 32704,
-    //   "type": "image",
-    //   "name": "모게라 게입 업로드 배너 2.jpg",
-    //   "is_blind": false
-    // }]
     return messages
   }
 
@@ -354,7 +310,7 @@ function scrollToPrev(yPos: number) {
 
 async function onSubmitMsg() {
 
-  if (isSending.value) return
+  // if (isSending.value) return
   isSending.value = true
 
   const receiver_ids = props.selectedRoom.joined_users.map((user) => {
@@ -372,22 +328,36 @@ async function onSubmitMsg() {
 
   //첨부파일이 있는경우 첨부파일 갯수만큼 보내고 텍스트도 보내야함
   if (attr.value) {
-    console.log(attr.value)
     if (attr.value.type?.includes('audio')) {
       const audio = await recorderRef.value.fetchRecord()
-      console.log(audio)
-
     }
 
 
-    else if (attr.value[0].type === 'video') {
-      payload.contents = attr.value[0].url
-      payload.type = eChatType.VIDEO
-      await sendMsg(payload)
-      isSending.value = false
+    else if (attr.value[0].type === eChatType.VIDEO) {
+      const prevMsg = { id: props.selectedRoom.last_message.id + 1, room_id: props.selectedRoom.id, contents: attr.value[0].url, sender: userInfo.value, type: eChatType.VIDEO, created_at: Date.now() }
+      //optimistic ui
+      addMsg(prevMsg)
+
+      const videoUrls = await videoUploaderRef.value.fetchVideo()
+      console.log(videoUrls)
+      for (const video of videoUrls) {
+
+        payload.contents = video.url
+        payload.type = eChatType.VIDEO
+        await sendMsg(payload)
+        isSending.value = false
+      }
     }
 
     else if (attr.value[0].type === eChatType.IMAGE) {
+
+
+      for (const [index, img] of attr.value.entries()) {
+        const prevMsg = { id: props.selectedRoom.last_message.id + 1 + index, room_id: props.selectedRoom.id, contents: img.url, sender: userInfo.value, type: eChatType.IMAGE, created_at: Date.now() }
+        //optimistic ui
+        addMsg(prevMsg)
+      }
+
       const imgUrls = await imgUploaderRef.value.fetchImage()
       for (const img of imgUrls) {
         payload.contents = img.url
@@ -410,23 +380,35 @@ async function onSubmitMsg() {
 
   inputMsg.value = ''
 
-
   isSending.value = false
 }
 
 async function sendMsg(payload: any) {
+
   const content = _.cloneDeep(inputMsg.value)
+  if (payload.type === eChatType.TEXT) {
+
+    const prevMsg = { id: msgList.value.at(-1).id + 1, room_id: props.selectedRoom.id, contents: content, sender: userInfo.value, type: payload.type, created_at: Date.now() }
+
+    //optimistic ui
+    addMsg(prevMsg)
+  }
+
 
   const { data, error } = await useCustomAsyncFetch<{ message: IMessage }>(`/chat/room`, getComFetchOptions('post', true, payload))
 
   if (data.value) {
     if (msgList.value?.length) {
       addMsg(data.value.message)
+
     } else {
       msgList.value = [data.value.message]
     }
     attr.value = undefined
+    lastMsg.value = data.value.message
+
   } else if (error.value) {
+
     inputMsg.value = content
     ElMessage({
       message: t('fail.send.msg'),
@@ -438,6 +420,8 @@ async function sendMsg(payload: any) {
 
 
 function addMsg(msg: IMessage) {
+  emit('updateLastMsg', msg)
+
   if (msgList.value && msgList.value.length) {
     msgList.value = [...msgList.value, ...newMsg([msg])]
 
@@ -450,33 +434,16 @@ function addMsg(msg: IMessage) {
   })
 }
 
+function deleteMsg(msg: IMessage) {
+  msgList.value = msgList.value.filter((elem) => {
+    return elem.id !== msg.id
+  })
+
+}
 function initInputMsg() {
   inputMsg.value = ''
 }
 
-function deleteMsg(msg: IMessage) {
-  opDeleteMsgModal.value = true
-  deleteTgMsg.value = msg
-}
-
-async function onDeleteMsg() {
-
-  try {
-    const { data, error } = await useCustomAsyncFetch(`/chat/room/${deleteTgMsg.value.id}`, getComFetchOptions('delete', true))
-    if (data.value) {
-      msgList.value = msgList.value.filter((elem) => {
-        return elem.id !== deleteTgMsg.value.id
-      })
-    }
-
-  } catch (error) {
-    ElMessage.error(error.message)
-  }
-  finally {
-    opDeleteMsgModal.value = false
-    deleteTgMsg.value = null
-  }
-}
 
 async function onFocus() {
   inputRef.value.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -526,7 +493,6 @@ function onClickImg(msg: IMessage) {
 }
 
 function uploadVideo(video) {
-  console.log('video', video)
 
   attr.value = video
 
@@ -535,5 +501,9 @@ function uploadVideo(video) {
 function uploadRecord(record) {
   console.log('rec', record)
   attr.value = record
+}
+
+function deleteVideo(idx: number) {
+  videoUploaderRef.value.deleteVideo(idx)
 }
 </script>
