@@ -1,5 +1,5 @@
 <template>
-  <div class="content" style="height: auto">
+  <div class="content" style="height: 100vh;">
     <div class="dm-list">
       <div class="dl-title">
         <div>
@@ -50,7 +50,9 @@
                   </dd>
                   <dt class="dm-info-box">
                     <h3>{{ getJoinedUserName(room) }}</h3>
+
                     <p v-if="room?.last_message?.type === eChatType.IMAGE">{{ $t('dm.sent.img') }}</p>
+                    <p v-else-if="room?.last_message?.type === eChatType.VIDEO">{{ $t('dm.sent.video') }}</p>
                     <p v-else-if="room?.last_message?.type === eChatType.TEXT">{{ room?.last_message?.contents }}</p>
                   </dt>
                   <dd>
@@ -69,7 +71,7 @@
         <dt :class="['flex column msg-container', selectedRoom ? 'on' : 'off']" ref="activeMsgRef">
           <DmActiveRoom v-if="selectedRoom" :selectedRoom="selectedRoom" @deleted-room="onDeletedRoom"
             @open-keyboard="openkeyboard" @close-keyboard="closeKeyboard" :key="componentKey"
-            @update-group-name="updateGroupName" ref="activeRoomRef" />
+            @update-group-name="updateGroupName" @update-last-msg="updateLastMsg" ref="activeRoomRef" />
           <div v-else class="dlc-chat-emptied">
             <p><i class="uil uil-comment-alt-dots" style="font-size:40px; color:#fff;"></i></p>
             <h2> {{ $t('no.selected.msg') }} </h2>
@@ -267,7 +269,6 @@ watch(
         }
       }
 
-      //  hasNewNoti.value = true
     }
   }
 )
@@ -707,10 +708,25 @@ function updateGroupName(roomName: string) {
 
   })
 }
+
+function updateLastMsg(msg: IMessage) {
+  console.log('ipdte', msg)
+  roomList.value = roomList.value.map((room) => {
+
+    if (room?.id === msg.room_id) {
+      return {
+        ...room,
+        last_message: msg
+      }
+    } else {
+      return room
+    }
+  })
+
+}
 </script>
 <style scoped lang="scss">
 .content {
-  height: 100vh;
 
   .dm-list {
 

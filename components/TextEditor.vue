@@ -38,7 +38,7 @@
         <BeatLoader :color="'#ff6e17'" size="20px" />
       </div>
       <div v-else-if="!isVideoUploading && snsAttachFiles.video?.url" class="mp-midi">
-        <span @click="deleteVideo" class="delete-video-btn"><i class="uis uis-times-circle"></i></span>
+        <span @click="deleteVideo" class="delete-video-btn"><i class="uil uil-times-circle"></i></span>
 
         <video style="width: 100%" :src="snsAttachFiles.video?.url" title="YouTube video player" frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -52,7 +52,7 @@
         <ul v-for="(audio, idx) in snsAttachFiles.audio" class="audio-wrapper">
           <div class="btn-container">
             <audio controls :src="audio.url"></audio>
-            <span class="delete-audio-btn" @click="deleteAudio(idx)"><i class="uis uis-times-circle"></i></span>
+            <span class="delete-audio-btn" @click="deleteAudio(idx)"><i class="uil uil-times-circle"></i></span>
           </div>
           <p>{{ audio.name || audio.file.name }}</p>
         </ul>

@@ -1,6 +1,5 @@
 <template>
   <ul>
-    {{ msg.id }}
     <li class="flex column" style="overflow:visible; word-break: break-all; width: 100%; " @mousemove="openMenu"
       @mouseleave="closeMenu">
       <p class="mb5" v-if="msg.sender?.id !== userInfo.id">{{ msg.sender.nickname }}</p>

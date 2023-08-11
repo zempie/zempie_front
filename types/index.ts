@@ -349,7 +349,6 @@ export interface IChat {
   last_chat_at: string,
   joined_users: IUser[],
   is_group_room: boolean,
-  last_chat_id: number,
   unread_start_id: number,
   updated_message?: IMessage[]
   meta?: { isLastMsg: boolean },
