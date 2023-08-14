@@ -69,7 +69,7 @@ import shared from '~~/scripts/shared';
 const { t, locale } = useI18n()
 
 definePageMeta({
-  layout: 'default',
+  layout: 'header-only',
 })
 
 shared.createHeadMeta(t('seo.game.list.title'), t('seo.game.list.desc'))

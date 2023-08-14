@@ -27,6 +27,8 @@
   width: 100%;
   padding: 105px 0 30px 0;
   background: #f9f9f9;
+  height: auto;
+  min-height: 100vh;
 }
 
 @media all and (max-width: 479px) {

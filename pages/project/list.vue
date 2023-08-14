@@ -175,6 +175,7 @@ const { $localePath } = useNuxtApp()
 
 definePageMeta({
   middleware: 'auth',
+  layout: 'header-only',
 })
 
 const projects = ref([])

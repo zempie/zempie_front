@@ -71,7 +71,7 @@ const isSubModal = ref()
 
 const triggerDiv = ref<Element>()
 definePageMeta({
-  layout: 'default',
+  layout: 'header-only',
 })
 
 shared.createHeadMeta(t('communityList'), t('communityList.desc'))

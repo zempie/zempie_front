@@ -33,6 +33,7 @@ const showSavedInfo = ref(false)
 
 definePageMeta({
   middleware: 'auth',
+  layout: 'header-only',
 })
 
 onMounted(async () => {
@@ -51,7 +52,6 @@ onBeforeRouteLeave((to, from, next) => {
 })
 
 function leavePage(event) {
-  console.log('lenave')
   event.returnValue = '';
 }
 
