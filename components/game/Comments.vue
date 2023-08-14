@@ -109,6 +109,7 @@ const initFetch = debounce(async () => {
 }, 300)
 
 async function getComments() {
+  console.log('props', props.game)
   const payload = {
     game_id: props.game.id,
     limit: limit.value,
