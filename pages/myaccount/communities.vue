@@ -39,6 +39,7 @@ definePageMeta({
   title: 'my-communities',
   name: 'myCommunities',
   middleware: 'auth',
+  layout: 'header-only',
 })
 
 shared.createHeadMeta(t('seo.profile.communities.title'), t('seo.profile.communities.desc'))

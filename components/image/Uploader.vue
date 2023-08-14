@@ -61,7 +61,7 @@ function onSelectImageFile(event: Event) {
 
   for (const file of newFiles) {
     if (file.type === 'image/svg+xml') {
-      alert('svg는 지원하지 않는 확장자 형식입니다')
+      alert(t('not.support.ext'))
       continue
     }
     const reader = new FileReader()

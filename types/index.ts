@@ -87,7 +87,7 @@ export interface IGame {
   url_thumb: string,
   url_thumb_gif: string,
   url_thumb_webp: string,
-  banner_img: string,
+  url_banner: string,
   userId: number,
   user_id: number,
   version: string,

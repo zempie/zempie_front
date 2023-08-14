@@ -9,32 +9,32 @@
 
         <div class="swiper-area uppercase">
           <NuxtLink class="swiper-slide" :to="$localePath(`/myaccount`)">
-            <a :class="$route.meta.name === 'myAccount' ? 'active' : ''">
+            <a :class="$route.meta.name === 'myAccount' && 'active'">
               <i class="uil uil-setting"></i>
               <span> {{ $t('account') }}</span>
             </a>
           </NuxtLink>
           <NuxtLink class="swiper-slide" :to="$localePath(`/myaccount/followers`)">
-            <a :class="$route.meta.name === 'myFollowers' ? 'active' : ''">
+            <a :class="$route.meta.name === 'myFollowers' && 'active'">
               <i class="uil uil-users-alt"></i>
 
               <span>{{ $t('follower') }} </span></a>
           </NuxtLink>
 
           <NuxtLink :to="$localePath(`/myaccount/following`)" class="swiper-slide">
-            <a :class="$route.meta.name === 'myFollowing' ? 'active' : ''">
+            <a :class="$route.meta.name === 'myFollowing' && 'active'">
               <i class="uil uil-users-alt"></i>
               <span> {{ $t('following') }}</span>
             </a>
           </NuxtLink>
           <NuxtLink :to="$localePath(`/myaccount/blocks`)" class="swiper-slide">
-            <a :class="$route.meta.name === 'blockList' ? 'active' : ''">
+            <a :class="$route.meta.name === 'blockList' && 'active'">
               <i class="uil uil-ban"></i><span>
                 {{ $t('block.list') }}
               </span></a>
           </NuxtLink>
           <NuxtLink :to="$localePath(`/myaccount/communities`)" class="swiper-slide">
-            <a :class="$route.meta.name === 'myCommunities' ? 'active' : ''">
+            <a :class="$route.meta.name === 'myCommunities' && 'active'">
               <i class="uil uil-comments"></i><span>
                 {{ $t('community') }}
               </span></a>
