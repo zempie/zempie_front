@@ -2,7 +2,7 @@
   <NuxtLayout name="game-channel-header">
     <dl class="three-area">
       <dt>
-        <GameComments class="mb20" :game="game" />
+        <GameComments v-if="gameInfo" class="mb20" :game="gameInfo" />
         <div class="ta-game-list">
           <dl>
             <dt>{{ $t('game') }}</dt>
@@ -20,7 +20,7 @@
               </li>
             </ul>
             <div v-if="games.length > 5">
-              <NuxtLink :to="$localePath(`/${game?.user.nickname}/games`)" class="btn-default-samll w100p">
+              <NuxtLink :to="$localePath(`/${gameInfo?.user.nickname}/games`)" class="btn-default-samll w100p">
                 {{ $t('moreView') }}
               </NuxtLink>
             </div>
@@ -38,11 +38,11 @@
         <div class="ta-about">
           <h2>{{ $t('about.game') }}</h2>
           <div class="desc">
-            {{ game?.description }}
+            {{ gameInfo?.description }}
           </div>
           <dl>
             <dt>{{ $t('version') }}</dt>
-            <dd>{{ game?.version }}</dd>
+            <dd>{{ gameInfo?.version }}</dd>
           </dl>
         </div>
         <div class="ta-copy-link">
@@ -69,14 +69,20 @@ const games = ref()
 
 const gamePath = computed(() => route.params.id as string)
 const gameInfo = ref()
+
+definePageMeta({
+  layout: 'header-only',
+})
 /**
  * seo 반영은 함수안에서 되지 않으므로 최상단에서 진행함
  */
+console.log(gamePath.value)
 const { data } = await useAsyncData<{ result: { game: IGame } }>('gameInfo', () => $fetch(`/launch/game/${gamePath.value}`, getZempieFetchOptions('get', true)),
   {
     initialCache: false
   }
 )
+
 if (data.value) {
   const { game } = data.value?.result
   gameInfo.value = game
@@ -92,7 +98,7 @@ const isMine = computed(
 )
 
 onMounted(async () => {
-  if (game) await gameListFetch()
+  if (gameInfo.value) await gameListFetch()
 })
 
 onBeforeUnmount(() => {
@@ -101,12 +107,12 @@ onBeforeUnmount(() => {
 
 async function gameListFetch() {
   try {
-    const response = await useCustomFetch<{ result: any }>(`/channel/${game.user.channel_id}`, getZempieFetchOptions('get', false))
+    const response = await useCustomFetch<{ result: any }>(`/channel/${gameInfo.value?.user.channel_id}`, getZempieFetchOptions('get', false))
 
     const target = response?.result?.target
     const gamesList = target?.games ?? []
 
-    games.value = gamesList.filter((gm: IGame) => gm.id !== game?.id)
+    games.value = gamesList.filter((gm: IGame) => gm.id !== gameInfo.value?.id)
   } catch (error) {
     console.error(error)
   }
