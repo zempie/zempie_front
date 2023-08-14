@@ -68,38 +68,29 @@ const { t, locale } = useI18n()
 const games = ref()
 
 const gamePath = computed(() => route.params.id as string)
-const gameInfo = ref()
+const gameInfo = computed(() => useGame().game.value.info)
+
+watch(
+  () => gameInfo.value,
+  async (game) => {
+    if (game) {
+      await gameListFetch()
+      shared.createHeadMeta(game.title, game.description, game.url_thumb)
+    }
+  },
+  {
+    deep: true,
+    immediate: true,
+  }
+)
 
 definePageMeta({
   layout: 'header-only',
 })
-/**
- * seo 반영은 함수안에서 되지 않으므로 최상단에서 진행함
- */
-console.log(gamePath.value)
-const { data } = await useAsyncData<{ result: { game: IGame } }>('gameInfo', () => $fetch(`/launch/game/${gamePath.value}`, getZempieFetchOptions('get', true)),
-  {
-    initialCache: false
-  }
-)
-
-if (data.value) {
-  const { game } = data.value?.result
-  gameInfo.value = game
-
-  if (game) {
-    shared.createHeadMeta(game.title, game.description, game.url_thumb)
-  }
-
-}
 
 const isMine = computed(
   () => gameInfo.value?.user?.id === useUser().user.value?.info?.id
 )
-
-onMounted(async () => {
-  if (gameInfo.value) await gameListFetch()
-})
 
 onBeforeUnmount(() => {
   useGame().resetGame()
@@ -113,6 +104,7 @@ async function gameListFetch() {
     const gamesList = target?.games ?? []
 
     games.value = gamesList.filter((gm: IGame) => gm.id !== gameInfo.value?.id)
+    console.log('game', games.value)
   } catch (error) {
     console.error(error)
   }
