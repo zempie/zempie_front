@@ -421,8 +421,6 @@ function clearError() {
       margin-right: 0px;
     }
   }
-
-
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {

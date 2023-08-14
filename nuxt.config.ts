@@ -130,7 +130,6 @@ export default defineNuxtConfig({
     HOTJAR_ID: process.env.HOTJAR_ID,
     BOOTPAY_JS_KEY: process.env.BOOTPAY_JS_KEY,
     TAG_MANAGER_ID: process.env.TAG_MANAGER_ID,
-    ZEMTOWN_URL: process.env.ZEMTOWN_URL,
     MOGERA_URL: process.env.MOGERA_URL
 
   },

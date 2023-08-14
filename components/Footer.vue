@@ -1,7 +1,7 @@
 <template>
   <ClientOnly>
     <div class="footer">
-      <dl>
+    <dl>
         <dt>
           <p>
             <a :href="config.FTR_PAGE_URL" target="_blank" aria-label="Fromthered website">{{ $t('company.info.title')
@@ -63,16 +63,9 @@ const isPurchase = computed(() => (route.name as string).includes('purchase'))
   color: #4267b2;
 }
 
-.footer {
-  min-height: 215px;
-  background: #000;
-
-}
-
 @media all and (max-width: 479px) {
   .footer {
     max-height: 160px;
-    display: none;
 
     dl {
       padding: 15px 0px;
@@ -91,12 +84,6 @@ const isPurchase = computed(() => (route.name as string).includes('purchase'))
         }
       }
     }
-  }
-}
-
-@media all and (min-width: 480px) and (max-width: 767px) {
-  .footer {
-    display: none;
   }
 }
 </style>

@@ -122,7 +122,7 @@ onBeforeUnmount(() => {
 })
 
 
-const { data: comList, pending } = await useCustomAsyncFetch<any>(
+const { data: comList, pending } = await useFetch<any>(
   createQueryUrl(`/community/list`, { limit: limit.value, }), getComFetchOptions('get', true)
 )
 

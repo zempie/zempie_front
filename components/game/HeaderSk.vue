@@ -4,11 +4,11 @@
       <dt>
         <dl>
           <dt>
-            <div class="bg-gray-1"></div>
+            <div class="bg-grey-1"></div>
 
           </dt>
           <dd>
-            <h2 style="min-height: 30px;" class="gray-text">
+            <h2 style="min-height: 30px;" class="grey-text">
               <span></span>
             </h2>
             <!-- <h3>by@ </h3> -->

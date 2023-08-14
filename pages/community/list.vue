@@ -70,7 +70,6 @@ const isAddData = ref(false)
 const isSubModal = ref()
 
 const triggerDiv = ref<Element>()
-
 definePageMeta({
   layout: 'default',
 })
@@ -192,9 +191,10 @@ svg {
   .visual-img {
     width: 100% !important;
     border-radius: 0 !important;
-    display: none;
   }
+}
 
+@media all and (max-width: 479px) {
   .area-search-sort {
     width: 100%;
   }
@@ -207,7 +207,9 @@ svg {
     width: 100%;
     margin-top: 10px;
   }
+}
 
+@media all and (max-width: 479px) {
   .card-timeline {
     width: 100%;
   }
@@ -217,8 +219,6 @@ svg {
     margin: 2% 0 2% 0;
   }
 }
-
-@media all and (min-width: 480px) and (max-width: 767px) {}
 
 .uil-times {
   display: inline-block;

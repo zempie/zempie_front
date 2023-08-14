@@ -11,9 +11,9 @@
                 height="25" />
             </NuxtLink>
           </p>
-          <!-- <button class="btn-circle-none" @click="isHeaderSideMobile = true" v-if="showHamburger">
+          <button class="btn-circle-none" @click="isHeaderSideMobile = true" v-if="showHamburger">
             <i class="uil uil-bars"></i>
-          </button> -->
+          </button>
           <ul class="menu">
             <li class="uppercase">
               <NuxtLink :to="$localePath('/community/list')"
@@ -28,13 +28,8 @@
               </NuxtLink>
             </li>
             <li class="uppercase pointer">
-              <NuxtLink id="zemtownMenu" to="/zemtown">
-                Zemtown
-              </NuxtLink>
-            </li>
-            <li v-if="showMogera" class="uppercase pointer">
-              <a id="mogeradMenu" @click="moveMogera">
-                Mogera
+              <a id="zempieWorldMenu" @click="moveZemWorld">
+                Z-world
               </a>
             </li>
           </ul>
@@ -87,6 +82,10 @@
               <NuxtLink :to="$localePath('/game/list')" @click.native="isHeaderSideMobile = false"><i
                   class="uil uil-robot"></i> Games
               </NuxtLink>
+              <a class="pointer" id="zempieWorldMenu" @click="moveZemWorld">
+                <i class="uil uil-globe"></i>
+                Zempie world
+              </a>
             </div>
           </div>
           <div class="header-side-bg-mobile" :style="isHeaderSideBgMobile && 'display:block;'" id="headerSideBgMobile">
@@ -116,7 +115,6 @@
       </div>
     </el-dialog>
   </div>
-  <MobileMenu />
 </template>
 
 <script setup lang="ts">
@@ -230,19 +228,6 @@ async function moveZemWorld() {
   }
 }
 
-async function moveMogera() {
-
-  const { data } = await useCustomAsyncFetch<{ result: { token: string } }>("/create/token", getZempieFetchOptions("post", true))
-
-  if (data.value) {
-    const { result } = data.value
-    if (result) {
-      window.open(`${config.MOGERA_URL}?key=${result.token}`, "_blank");
-    }
-
-  }
-
-}
 
 async function getGameToken() {
   if (isLogin.value) {
@@ -267,7 +252,6 @@ function onPressMogera() {
 
 <style lang="scss" scoped>
 .header {
-
   .header-info {
     display: flex;
     align-items: center;
@@ -426,10 +410,6 @@ function onPressMogera() {
       display: none;
     }
   }
-
-
-
-
 }
 
 .new-dm-badge {
@@ -465,14 +445,15 @@ function onPressMogera() {
       display: none;
     }
   }
-
-
-
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
   .mobile-logo {
     display: none;
+  }
+
+  .header>dl {
+    width: 90%;
   }
 
   .header-login {

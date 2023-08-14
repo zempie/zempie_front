@@ -1,4 +1,10 @@
 <template>
+  <!-- <div style="width:100vw; height:70vh;">
+    <div style="min-height: 300px; background-color: blue;"></div>
+    <input v-model="test1" style="position: absolute; bottom: 100px; background-color: red; height: 100px;" type="number">
+    <input v-model="test" style="position: absolute; bottom: 300px; background-color: red; height: 100px;" type="number">
+
+  </div> -->
   <div class="main-bg">
     <div class="main-copy">
       <h1>

@@ -83,6 +83,16 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', onResize)
 })
 
+async function fetch() {
+  const { data, error, pending } = await useCustomAsyncFetch<{
+    result: { game: {}; my_emotions: {}; my_heart: boolean }
+  }>(`/game/${gamePath.value}`, getZempieFetchOptions('get', false))
+
+  if (data.value) {
+    const { game, my_emotions, my_heart } = data.value.result
+    // gameData.value = game
+  }
+}
 
 function onResize() {
   iframeHeight.value = `${window.innerHeight}px`

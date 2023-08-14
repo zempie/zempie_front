@@ -1,6 +1,10 @@
 <template>
   <div class="custom-dropdown" ref="dropdownContainer">
-    <button class="menu-btn" @click="toggleDropdown"> <i class="uil uil-ellipsis-h font25"></i></button>
+    <slot v-if="isCustomBtn" name="btn"></slot>
+
+    <button v-else class="menu-btn" @click="toggleDropdown">
+      <i class="uil uil-ellipsis-h font25"></i>
+    </button>
     <ul v-if="isDropdownOpen" class="more-list" @click="onClickOption">
       <slot name="options"></slot>
     </ul>
@@ -11,8 +15,14 @@ const isDropdownOpen = ref(false)
 const dropdownContainer = ref()
 
 defineProps({
-  options: Array<String>
+  options: Array<String>,
+  isCustomBtn: {
+    type: Boolean,
+    default: false
+  }
 })
+
+defineExpose({ toggleDropdown })
 
 onMounted(() => {
   document.addEventListener("click", handleClickOutside);
@@ -65,7 +75,7 @@ function onClickOption() {
 }
 
 .more-list {
-  min-width: 100px;
+  min-width: 130px;
   position: absolute;
   background-color: #fff;
   list-style: none;
@@ -75,6 +85,7 @@ function onClickOption() {
   border-radius: 10px;
   right: 10px;
   top: 23px;
+  width: auto;
 
 }
 </style>

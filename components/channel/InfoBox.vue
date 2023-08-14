@@ -1,17 +1,17 @@
 <template>
   <div class="ta-myinfo mb20" v-if="isLoading">
     <UserAvatarSk style="width: 100px; height: 100px; margin:0 auto" />
-    <div class="gray-text skeleton-animation"></div>
-    <div class="gray-text mt10 skeleton-animation"></div>
+    <div class="grey-text skeleton-animation"></div>
+    <div class="grey-text mt10 skeleton-animation"></div>
     <ul>
       <div style="width:32%">
-        <p class="gray-text mt10 skeleton-animation"></p>
+        <p class="grey-text mt10 skeleton-animation"></p>
       </div>
       <div style="width:32%">
-        <p class="gray-text mt10 skeleton-animation"></p>
+        <p class="grey-text mt10 skeleton-animation"></p>
       </div>
       <div style="width:32%">
-        <p class="gray-text mt10 skeleton-animation"></p>
+        <p class="grey-text mt10 skeleton-animation"></p>
       </div>
     </ul>
   </div>

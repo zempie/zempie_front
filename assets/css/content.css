@@ -5321,7 +5321,9 @@
 }
 
 .dl-content>dt .dlc-chat-content {
-  height: calc(100% - 85px - 90px);
+  min-height: 50vh;
+  height: auto;
+  flex: 1;
   overflow-x: hidden;
   overflow-y: auto;
   position: relative;
@@ -5334,6 +5336,8 @@
 
 
 .dl-content>dt .dlc-chat-content .receiver-chat {
+  display: flex;
+  justify-content: flex-end;
   text-align: right;
 }
 
@@ -5344,6 +5348,7 @@
 .dl-content>dt .dlc-chat-content .receiver-chat>ul {
   display: flex;
   justify-content: flex-end;
+  width: 100%;
 }
 
 .dl-content>dt .dlc-chat-content .receiver-chat>ul>li {
@@ -5351,11 +5356,17 @@
   justify-content: flex-end;
 }
 
-.dl-content>dt .dlc-chat-content .receiver-chat>ul>li>span {
+.dl-content>dt .dlc-chat-content .receiver-chat>ul>li>div>span {
   display: inline-block;
   color: #333;
   background-color: #f1f1f1;
   border-radius: 12px 0px 12px 12px;
+}
+
+.dl-content>dt .dlc-chat-content .receiver-chat>ul>li>div {
+  justify-content: flex-end;
+  align-items: flex-end;
+
 }
 
 .dl-content>dt .dlc-chat-content .sender-chat {
@@ -5363,7 +5374,18 @@
   text-align: left;
 }
 
-.dl-content>dt .dlc-chat-content .sender-chat>ul>li>span {
+
+.dl-content>dt .dlc-chat-content .sender-chat .msg-box {
+  align-items: flex-end;
+
+}
+
+.dl-content>dt .dlc-chat-content .sender-chat>ul>li>div {
+  align-items: center;
+
+}
+
+.dl-content>dt .dlc-chat-content .sender-chat>ul>li>div>span {
   display: inline-block;
   color: #fff;
   background-color: #feb100;
@@ -5397,14 +5419,6 @@
   border-top: 1px solid #f1f1f1;
 }
 
-.dl-content>dt .dlc-send-message>div {
-  display: flex;
-  align-items: center;
-  width: 90%;
-  padding: 2px 10px;
-  border: 1.5px solid #e5e5e5;
-  border-radius: 8px;
-}
 
 .dl-content>dt .dlc-send-message>div input {
   width: 85%;

@@ -21,10 +21,10 @@
         </dt>
         <dd>
           <UserAvatarSk />
-          <h2 class="gray-text" style="width:50%; margin:0 auto;"> </h2>
+          <h2 class="grey-text" style="width:50%; margin:0 auto;"> </h2>
         </dd>
         <dt>
-          <button class="btn-default w48p bg-gray-1" />
+          <button class="btn-default w48p bg-grey-1" />
         </dt>
       </dl>
     </div>
