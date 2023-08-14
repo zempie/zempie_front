@@ -68,11 +68,7 @@ const { t, locale } = useI18n()
 const games = ref()
 
 const gamePath = computed(() => route.params.id as string)
-const isMine = computed(
-  () => game?.user.id === useUser().user.value.info?.id
-)
-
-
+const gameInfo = ref()
 /**
  * seo 반영은 함수안에서 되지 않으므로 최상단에서 진행함
  */
@@ -81,10 +77,19 @@ const { data } = await useAsyncData<{ result: { game: IGame } }>('gameInfo', () 
     initialCache: false
   }
 )
-const { game } = data.value?.result
+if (data.value) {
+  const { game } = data.value?.result
+  gameInfo.value = game
 
-if (game)
-  shared.createHeadMeta(game.title, game.description, game.url_thumb)
+  if (game) {
+    shared.createHeadMeta(game.title, game.description, game.url_thumb)
+  }
+
+}
+
+const isMine = computed(
+  () => gameInfo.value?.user?.id === useUser().user.value?.info?.id
+)
 
 onMounted(async () => {
   if (game) await gameListFetch()
