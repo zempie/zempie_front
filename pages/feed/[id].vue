@@ -54,19 +54,6 @@
 
           <ul class="tapl-option">
             <PostActions :feed="feed" :comment-cnt="commentCount" />
-            <!-- <li>
-              <ul>
-                <LikeBtn v-if="feed" :feed="feed" />
-                <li>
-                  <i class="uil uil-comment-alt-dots" style="font-size: 22px"></i>&nbsp;
-                  {{ feed?.comment_cnt }}
-                </li>
-                <li>
-                  <ShareMenu :feed="feed" />
-                </li>
-              </ul>
-            </li> -->
-
             <li>
               <PostDropdown :feed="feed" @deletePost="$router.back()" @refresh="refresh" />
             </li>

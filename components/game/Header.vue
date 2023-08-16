@@ -57,6 +57,7 @@
                     <li @click="onClickReport">{{ $t('report.game') }}</li>
                   </template>
                 </CommonDropdown>
+                <ShareMenu :shareInfo="shareInfo" type="game" />
               </div>
             </div>
             <h3 @click="moveUserPage" style="cursor: pointer">
@@ -159,6 +160,8 @@ import { PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const IMAGE_MAX_SIZE = 4
+
+const config = useRuntimeConfig()
 const { $localePath } = useNuxtApp()
 
 const { t, locale } = useI18n()
@@ -166,8 +169,6 @@ const { t, locale } = useI18n()
 const router = useRouter()
 
 const gameInfo = computed(() => useGame().game.value.info)
-
-console.log('gameInfo:', gameInfo.value)
 
 const hashtags = computed(
   () =>
@@ -197,6 +198,17 @@ let likeAcceessableCnt = 2
 let unlikeAcceessableCnt = 2
 
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+
+
+const shareInfo = computed(() => {
+  return {
+    img_url: gameInfo.value.url_thumb,
+    title: gameInfo.value.title,
+    desc: gameInfo.value.description,
+    user: gameInfo.value.user,
+    url: `${config.ZEMPIE_URL}/play/${gameInfo.value.pathname}}`
+  }
+})
 
 
 function playGame() {
