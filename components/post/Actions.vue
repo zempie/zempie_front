@@ -7,19 +7,19 @@
         {{ commentCnt }}
       </li>
       <li>
-        <ShareMenu :feed="feed" :url="url" />
+        <ShareMenu :shareInfo="shareInfo" />
       </li>
     </ul>
   </li>
 </template>
 <script setup lang="ts">
 import { PropType } from 'vue';
+import shared from '~~/scripts/shared';
 import { IFeed } from '~~/types';
 
 const config = useRuntimeConfig()
 
 const isOpenComment = ref(false)
-const url = ref('')
 
 const props = defineProps({
   feed: Object as PropType<IFeed>,
@@ -30,20 +30,41 @@ const props = defineProps({
   commentCnt: Number
 })
 
+const shareInfo = computed(() => {
+  return {
+    img_url: getImgObj()?.url,
+    title: shared.getFeedInfo(props.feed)?.title,
+    desc: shared.getFeedInfo(props.feed)?.desc,
+    user: props.feed?.user,
+    url: `${config.ZEMPIE_URL}/feed/${props.feed?.id}`
+  }
+})
+
 
 const emit = defineEmits([
   'openComment'
 ])
 
-onMounted(() => {
-  url.value = `${config.ZEMPIE_URL}/feed/${props.feed.id}`
-})
 
 
 function openComments() {
   if (props.isCommentClosed) {
     isOpenComment.value = !isOpenComment.value
     emit('openComment', isOpenComment.value)
+  }
+}
+
+function getImgObj(): { url: string, name: string, size: number, type: string, priority: number } | null {
+
+  let attatchment_files = props.feed.attatchment_files
+    && (Array.isArray(props.feed.attatchment_files)
+      ? props.feed.attatchment_files
+      : JSON.parse(props.feed.attatchment_files))
+
+  if (attatchment_files && attatchment_files.length) {
+    return attatchment_files.find((file: any) => file.type === 'image');
+  } else {
+    return null
   }
 }
 </script>

@@ -2,7 +2,7 @@
   <div>
     <Header />
     <slot />
-    <Footer v-if="!String(route.name).includes('zemtown')" />
+    <Footer />
   </div>
 </template>
 <script setup lang="ts">

@@ -37,7 +37,8 @@
                   </i>
                   <p class="fontColor-white">{{ likeCnt }}</p>
                 </div>
-                <CommonDropdown class="flex ">
+                <ShareMenu :shareInfo="shareInfo" type="game" />
+                <CommonDropdown style="display: flex;">
                   <template #options>
                     <li @click="onClickReport">{{ $t('report.game') }}</li>
                   </template>
@@ -144,6 +145,8 @@ import { PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const IMAGE_MAX_SIZE = 4
+
+const config = useRuntimeConfig()
 const { $localePath } = useNuxtApp()
 
 const { t, locale } = useI18n()
@@ -200,6 +203,17 @@ const prevBanner = computed({
       ...gameInfo.value,
       url_banner: value
     };
+  }
+})
+
+
+const shareInfo = computed(() => {
+  return {
+    img_url: gameInfo.value.url_thumb,
+    title: gameInfo.value.title,
+    desc: gameInfo.value.description,
+    user: gameInfo.value.user,
+    url: `${config.ZEMPIE_URL}/play/${gameInfo.value.pathname}}`
   }
 })
 
@@ -438,6 +452,26 @@ function onClickReport() {
         color: #fff;
         margin: 0 auto;
       }
+    }
+  }
+}
+
+:deep(.share-menu) {
+  a {
+    color: #888;
+    border: none;
+
+    &:hover {
+      color: #f97316;
+    }
+  }
+
+}
+
+:deep(.custom-dropdown) {
+  button {
+    &:hover {
+      color: #f97316;
     }
   }
 }
