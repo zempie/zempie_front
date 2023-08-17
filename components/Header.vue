@@ -11,9 +11,9 @@
                 height="25" />
             </NuxtLink>
           </p>
-          <button class="btn-circle-none" @click="isHeaderSideMobile = true" v-if="showHamburger">
+          <!-- <button class="btn-circle-none" @click="isHeaderSideMobile = true" v-if="showHamburger">
             <i class="uil uil-bars"></i>
-          </button>
+          </button> -->
           <ul class="menu">
             <li class="uppercase">
               <NuxtLink :to="$localePath('/community/list')"
@@ -52,7 +52,7 @@
               <i class="uil uil-comment-alt"></i>
               <span class="new-dm-badge" v-if="unreadMsgCount">{{ unreadMsgCount }}</span>
             </button>
-            <UserMenu />
+            <UserMenu class="user-menu-btn" />
           </div>
           <div v-else-if="!isLoading && !isLogin" class="header-login">
             <NuxtLink :to="$localePath('/login')">
@@ -60,36 +60,6 @@
                 <i class="uil uil-user"></i>{{ t('login') }}
               </button>
             </NuxtLink>
-          </div>
-          <div v-if="showHamburger" class="header-side-mobile" :style="isHeaderSideMobile && 'left:0px;'"
-            id="headerSideMobile" v-on-click-outside="clickOutside">
-            <div class="hsm-close">
-              <i class="uil uil-times" @click="isHeaderSideMobile = false"></i>
-            </div>
-            <div class="hsm-search">
-              <div class="input-search-line-mobile">
-                <p><i class="uil uil-search"></i></p>
-                <div>
-                  <input type="text" name="" title="keywords" v-model="searchInput" @keyup.enter="moveSearchPage"
-                    :placeholder="t('needSearchInput')" />
-                </div>
-              </div>
-            </div>
-            <div class="hsm-menu">
-              <NuxtLink :to="$localePath('/community/list')" @click.native="isHeaderSideMobile = false"><i
-                  class="uil uil-comment"></i>
-                Community
-              </NuxtLink>
-              <NuxtLink :to="$localePath('/game/list')" @click.native="isHeaderSideMobile = false"><i
-                  class="uil uil-robot"></i> Games
-              </NuxtLink>
-              <a class="pointer" id="zempieWorldMenu" @click="moveZemWorld">
-                <i class="uil uil-globe"></i>
-                Zempie world
-              </a>
-            </div>
-          </div>
-          <div class="header-side-bg-mobile" :style="isHeaderSideBgMobile && 'display:block;'" id="headerSideBgMobile">
           </div>
         </dd>
       </ClientOnly>
@@ -384,6 +354,16 @@ function onPressMogera() {
   cursor: pointer;
 }
 
+.new-dm-badge {
+  font-size: 12px;
+  padding: 0px 5px;
+  color: white;
+  width: auto;
+  height: auto;
+  z-index: 99;
+  border-radius: 10px;
+}
+
 @media all and (max-width: 479px) {
 
   .mobile-logo {
@@ -409,16 +389,10 @@ function onPressMogera() {
       display: none;
     }
   }
-}
 
-.new-dm-badge {
-  font-size: 12px;
-  padding: 0px 5px;
-  color: white;
-  width: auto;
-  height: auto;
-  z-index: 99;
-  border-radius: 10px;
+  .user-menu-btn {
+    display: none;
+  }
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
@@ -444,6 +418,10 @@ function onPressMogera() {
       display: none;
     }
   }
+
+  .user-menu-btn {
+    display: none;
+  }
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
@@ -451,8 +429,8 @@ function onPressMogera() {
     display: none;
   }
 
-  .header>dl {
-    width: 90%;
+  .header-language {
+    display: none;
   }
 
   .header-login {
