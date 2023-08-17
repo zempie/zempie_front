@@ -32,11 +32,6 @@
                 Zemtown
               </NuxtLink>
             </li>
-            <li class="uppercase pointer">
-              <a id="mogeradMenu" @click="moveMogera">
-                Mogera
-              </a>
-            </li>
           </ul>
         </div>
       </dt>
@@ -451,6 +446,7 @@ async function getGameToken() {
   .mobile-logo {
     display: none;
   }
+
   .header-login {
     display: block !important;
 
