@@ -130,10 +130,6 @@ const props = defineProps({
   },
 })
 
-const isMobile = computed(() =>
-  window.matchMedia('screen and (max-width: 767px)')
-)
-
 
 const watcher = watch(
   () => route.query,

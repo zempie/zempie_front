@@ -5,9 +5,16 @@
       <div>
         <ClientOnly v-if="!isSearchPage">
           <el-dropdown ref="searchDropdown" trigger="click">
-            <input type="text" title="keywords" :placeholder="$t('needSearchInput')" v-model="searchInput"
-              @input="onInputDebounce" @keyup.enter="moveSearchPage" autocomplete="off" />
+            <button v-if="isMobile" class="mobile-btn btn-circle-icon flex items-center content-center">
+              <i class="uil uil-search"></i>
+            </button>
+            <input v-else class="input-btn" type="text" title="keywords" :placeholder="$t('needSearchInput')"
+              v-model="searchInput" @input="onInputDebounce" @keyup.enter="moveSearchPage" autocomplete="off" />
             <template #dropdown>
+              <div v-if="isMobile" style="padding:10px" class="w100p">
+                <input type="text" title="keywords" class="w100p" :placeholder="$t('needSearchInput')"
+                  v-model="searchInput" @input="onInputDebounce" @keyup.enter="moveSearchPage" autocomplete="off" />
+              </div>
               <el-dropdown-menu class="header-search-list" style="min-width: 260px">
                 <div :class="hasResearchResult || 'no-result'">
                   <template v-if="userList?.length">
@@ -86,12 +93,35 @@ const route = useRoute()
 
 const searchInput = ref()
 const searchDropdown = ref()
+const searchMobileDropdown = ref()
+
+const searchInputDropdown = ref()
+const isOpenSearchDp = ref(false)
+
 
 const userList = computed(() => useSearch().search.value.results?.users)
 const gameList = computed(() => useSearch().search.value.results?.games)
 const communityList = computed(() => useSearch().search.value.results?.community)
 const isSearchPage = computed(() => (route.meta?.name as string)?.toLowerCase() === 'search')
 const hasResearchResult = computed(() => !!userList.value?.length || !!gameList.value?.length || !!communityList.value?.length ? true : false);
+
+const isMobileSize = computed(() =>
+  window.matchMedia('screen and (max-width: 767px)')
+)
+const isMobile = ref()
+
+
+onMounted(() => {
+  nextTick(() => {
+    onResize()
+  })
+  window.addEventListener("resize", onResize)
+})
+
+
+function onResize() {
+  isMobile.value = isMobileSize.value.matches ? true : false
+}
 
 
 function moveSearchPage() {
@@ -188,4 +218,32 @@ function initSearchData() {
 .header-search-list>div>li>div dl dd {
   font-size: 16px;
 }
+
+@media all and (max-width: 479px) {
+  .header-search {
+    .input-search-line {
+      border: none;
+      padding: 0px;
+
+      >i {
+        display: none;
+      }
+    }
+  }
+}
+
+@media all and (min-width: 480px) and (max-width: 767px) {
+  .header-search {
+    .input-search-line {
+      border: none;
+      padding: 0px;
+
+      >i {
+        display: none;
+      }
+    }
+  }
+}
+
+@media all and (min-width: 768px) and (max-width: 991px) {}
 </style>

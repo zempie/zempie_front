@@ -1,6 +1,6 @@
 <template>
   <ClientOnly>
-    <el-dropdown trigger="click" customClass="share-menu">
+    <el-dropdown trigger="click" class="share-menu">
       <a class="pointer"><i class="uil uil-share-alt" style="font-size: 20px"></i></a>
       <template #dropdown>
         <el-dropdown-menu>

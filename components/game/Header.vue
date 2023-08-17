@@ -52,12 +52,12 @@
                   </i>
                   <p style="color: #fff">{{ likeCnt }}</p>
                 </div>
-                <CommonDropdown class="flex">
+                <ShareMenu :shareInfo="shareInfo" type="game" />
+                <CommonDropdown style="display: flex;">
                   <template #options>
                     <li @click="onClickReport">{{ $t('report.game') }}</li>
                   </template>
                 </CommonDropdown>
-                <ShareMenu :shareInfo="shareInfo" type="game" />
               </div>
             </div>
             <h3 @click="moveUserPage" style="cursor: pointer">
@@ -423,6 +423,26 @@ function onClickReport() {
 </script>
 
 <style lang="scss" scoped>
+:deep(.share-menu) {
+  a {
+    color: #888;
+    border: none;
+
+    &:hover {
+      color: #f97316;
+    }
+  }
+
+}
+
+:deep(.custom-dropdown) {
+  button {
+    &:hover {
+      color: #f97316;
+    }
+  }
+}
+
 .header-left {
 
   &.dev-header {

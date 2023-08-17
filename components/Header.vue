@@ -5,15 +5,12 @@
         <div class="header-logo-menu">
           <p>
             <NuxtLink :to="$localePath('/')">
-              <img v-if="showMobileLogo" class="mobile-logo" src="/images/zempie_logo_154_155.png" alt="zempie-logo"
-                loading="lazy" height="25" width="120" />
-              <img v-else class="logo" src="/images/zempie-logo-black.png" alt="zempie-logo" loading="lazy" width="120"
+              <!-- <img v-if="showMobileLogo" class="mobile-logo" src="/images/zempie_logo_154_155.png" alt="zempie-logo"
+                loading="lazy" height="25" width="120" /> -->
+              <img class="logo" src="/images/zempie-logo-black.png" alt="zempie-logo" loading="lazy" width="120"
                 height="25" />
             </NuxtLink>
           </p>
-          <button class="btn-circle-none" @click="isHeaderSideMobile = true" v-if="showHamburger">
-            <i class="uil uil-bars"></i>
-          </button>
           <ul class="menu">
             <li class="uppercase">
               <NuxtLink :to="$localePath('/community/list')"
@@ -38,12 +35,13 @@
 
       <ClientOnly>
         <dd>
-          <SearchHeader />
-          <div class="header-language">
+          <div class="header-language mr10">
             <el-select class="hl-select-box" v-model="selectedLang" :placeholder="t('korean')">
               <el-option v-for="item in options" :key="item.code" :label="item.label" :value="item.code" />
             </el-select>
           </div>
+          <SearchHeader />
+
           <div class="header-info ml0" v-if="!isLoading && isLogin" :key="user.id">
             <NotificationHeaderButton />
             <button class="btn-circle-icon ml10 flex items-center content-center"
@@ -383,9 +381,6 @@ function onPressMogera() {
 }
 
 @media all and (max-width: 479px) {
-  .logo {
-    display: none;
-  }
 
   .mobile-logo {
     display: block !important;
@@ -400,7 +395,7 @@ function onPressMogera() {
   }
 
   .header-language {
-    display: block;
+    display: none;
   }
 
   .header-login {
@@ -435,7 +430,7 @@ function onPressMogera() {
   }
 
   .header-language {
-    display: block;
+    display: none;
   }
 
   .header-login {
@@ -452,10 +447,6 @@ function onPressMogera() {
     display: none;
   }
 
-  .header>dl {
-    width: 90%;
-  }
-
   .header-login {
     display: block !important;
 
@@ -466,18 +457,23 @@ function onPressMogera() {
 }
 
 @media all and (min-width: 992px) and (max-width: 1199px) {
-  .mobile-logo {
-    display: none;
-  }
+  .header {
+    dl {
+      width: 100%;
+    }
 
-  .header-login {
-    display: block !important;
-
-    i {
+    .mobile-logo {
       display: none;
     }
-  }
 
+    .header-login {
+      display: block !important;
+
+      i {
+        display: none;
+      }
+    }
+  }
 }
 
 @media all and (min-width: 1200px) {
