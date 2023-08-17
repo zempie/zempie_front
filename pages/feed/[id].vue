@@ -100,15 +100,15 @@
                     <UserAvatarSk style="width: 40px; height: 40px" />
                   </dt>
                   <dd>
-                    <h2 class="gray-text skeleton-animation mb10" style="width: 300px; ">
+                    <h2 class="grey-text skeleton-animation mb10" style="width: 300px; ">
                     </h2>
-                    <p class="gray-text skeleton-animation mb10" style="width: 150px; "></p>
+                    <p class="grey-text skeleton-animation mb10" style="width: 150px; "></p>
                   </dd>
                 </dl>
               </dt>
             </dl>
 
-            <div class="tapl-content gray-text skeleton-animation" style="margin: 20px; padding: 20px"></div>
+            <div class="tapl-content grey-text skeleton-animation" style="margin: 20px; padding: 20px"></div>
             <ul class="tapl-option">
               <li>
                 <ul>

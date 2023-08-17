@@ -2,6 +2,11 @@
   <NuxtLayout>
     <noscript v-html="tmIframeCode"></noscript>
     <NuxtPage />
+    <div :class="['zemtown-frame', String(route.name).includes('zemtown') ? 'on' : 'off']">
+      <ClientOnly>
+        <iframe ref="zemtownRef" :src="zemtownUrl" style="width: 100%; height: 99%;" />
+      </ClientOnly>
+    </div>
   </NuxtLayout>
 </template>
 <script setup lang="ts">
@@ -17,6 +22,9 @@ const router = useRouter()
 
 const cookie = useCookie(config.COOKIE_NAME)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+const isLoading = computed(() => useUser().user.value.isLoading)
+const zemtownUrl = computed(() => fUser.value ? `${config.ZEMTOWN_URL}?token=${fUser.value.accessToken}` : `${config.ZEMTOWN_URL}`)
+const fUser = computed(() => useUser().user.value.fUser)
 
 const tmIframeCode = `<iframe src="https://www.googletagmanager.com/ns.html?id=${config.TAG_MANAGER_ID}"
 height="0" width="0" style="display:none;visibility:hidden"></iframe>`
@@ -34,7 +42,6 @@ provide(ID_INJECTION_KEY, {
   prefix: 100,
   current: 0,
 })
-
 
 onBeforeMount(async () => {
   await useMobile().setMobileState()
@@ -126,6 +133,47 @@ body {
 
       input[type='checkbox']+label {
         color: #0d0c13 !important;
+      }
+    }
+  }
+
+
+  .zemtown-frame {
+    position: relative;
+    width: 100%;
+    min-height: calc(100vh - 215px - 74px) !important;
+    top: 74px;
+    background-color: #000;
+    margin-bottom: 74px;
+
+    &.on {
+      display: flex;
+      height: calc(100vh - 74px);
+    }
+
+    &.off {
+      display: none;
+    }
+  }
+
+
+  @media all and (max-width: 479px) {
+
+    .zemtown-frame {
+      top: 0px;
+
+      &.on {
+        height: 100vh;
+      }
+    }
+  }
+
+  @media all and (min-width: 480px) and (max-width: 767px) {
+    .zemtown-frame {
+      top: 0px;
+
+      &.on {
+        height: 100vh;
       }
     }
   }

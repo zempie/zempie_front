@@ -1,6 +1,9 @@
 <template>
   <div class="mobile-menu">
     <button class="mr10" @click="openMyProfile"><span class="material-icons">
+        home
+      </span></button>
+    <button class="mr10" @click="openMyProfile"><span class="material-icons">
         account_circle
       </span></button>
 
@@ -9,9 +12,9 @@
         sports_esports
       </span></button>
 
-    <button @click="$router.push($localePath('/zemtown'))">
+    <!-- <button @click="$router.push($localePath('/zemtown'))">
       <img src="/images/zempie_logo_154_155.png" alt="zempie-logo" loading="lazy" height="25" />
-    </button>
+    </button> -->
 
     <button :class="[$route.name?.toString().includes('community-list') && 'active', 'mr10']"
       @click="$router.push($localePath('/community/list'))">
@@ -41,13 +44,14 @@ function openMyProfile() {
   useZemtown().closeDm()
   if (!loginCheck()) return
 
+  console.log('isZemtown.value', isZemtown.value)
+
   if (!isZemtown.value) {
     router.push($localePath('/zemtown'))
     useZemtown().openMyProfile()
   } else {
     if (useZemtown().zemtown.value.isOpenMyProfile) {
       useZemtown().closeMyProfile()
-
     } else {
       useZemtown().openMyProfile()
     }

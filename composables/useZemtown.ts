@@ -9,6 +9,7 @@ export default function () {
   }
 
   const closeMyProfile = () => {
+    console.log('close')
     zemtown.value.isOpenMyProfile = false
   }
 

@@ -1,4 +1,5 @@
 <template>
+  <!-- card list -->
   <transition name="component-fade" mode="out-in">
     <ul v-if="isPending" class="card-member">
       <UserCardSk v-for="user in 4" />

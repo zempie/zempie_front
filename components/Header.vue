@@ -11,9 +11,9 @@
                 height="25" />
             </NuxtLink>
           </p>
-          <!-- <button class="btn-circle-none" @click="isHeaderSideMobile = true" v-if="showHamburger">
+          <button class="btn-circle-none" @click="isHeaderSideMobile = true" v-if="showHamburger">
             <i class="uil uil-bars"></i>
-          </button> -->
+          </button>
           <ul class="menu">
             <li class="uppercase">
               <NuxtLink :to="$localePath('/community/list')"
@@ -82,6 +82,10 @@
               <NuxtLink :to="$localePath('/game/list')" @click.native="isHeaderSideMobile = false"><i
                   class="uil uil-robot"></i> Games
               </NuxtLink>
+              <a class="pointer" id="zempieWorldMenu" @click="moveZemWorld">
+                <i class="uil uil-globe"></i>
+                Zempie world
+              </a>
             </div>
           </div>
           <div class="header-side-bg-mobile" :style="isHeaderSideBgMobile && 'display:block;'" id="headerSideBgMobile">
@@ -112,6 +116,7 @@
     </el-dialog>
   </div>
   <MobileMenu />
+
 </template>
 
 <script setup lang="ts">
@@ -142,6 +147,7 @@ const fUser = computed(() => useUser().user.value.fUser)
 const searchInput = ref()
 const isHeaderSideMobile = ref(false)
 const isHeaderSideBgMobile = ref(false)
+const showMogera = ref(false)
 
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 const unreadMsgCount = computed(() => {
@@ -187,6 +193,7 @@ watch(
 onMounted(() => {
   nextTick(() => {
     onResize()
+    onPressMogera()
   })
   window.addEventListener("resize", onResize)
 })
@@ -223,9 +230,6 @@ async function moveZemWorld() {
   }
 }
 
-async function moveMogera() {
-  window.open(`${config.MOGERA_URL}?key=${fUser.value.accessToken}`, "_blank");
-}
 
 async function getGameToken() {
   if (isLogin.value) {
@@ -235,11 +239,21 @@ async function getGameToken() {
   }
 }
 
+
+
+function onPressMogera() {
+  window.addEventListener('keydown', (e) => {
+
+    if (e.which === 13 && e.ctrlKey) {
+      showMogera.value = !showMogera.value
+    }
+  })
+}
+
 </script>
 
 <style lang="scss" scoped>
 .header {
-
   .header-info {
     display: flex;
     align-items: center;
@@ -398,10 +412,6 @@ async function getGameToken() {
       display: none;
     }
   }
-
-
-
-
 }
 
 .new-dm-badge {
@@ -437,14 +447,15 @@ async function getGameToken() {
       display: none;
     }
   }
-
-
-
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
   .mobile-logo {
     display: none;
+  }
+
+  .header>dl {
+    width: 90%;
   }
 
   .header-login {

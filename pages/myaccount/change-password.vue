@@ -68,6 +68,8 @@ definePageMeta({
   title: 'change-pwd',
   name: 'changePwd',
   middleware: 'auth',
+  layout: 'header-only',
+
 })
 
 shared.createHeadMeta(t('seo.profile.change.pwd.title'), t('seo.profile.change.pwd.desc'))

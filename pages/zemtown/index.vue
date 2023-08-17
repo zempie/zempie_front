@@ -58,8 +58,6 @@ function openMyProfile() {
   targetUser.value = useUser().user.value.info
   isOpenGame.value = false
   closeDm()
-
-
 }
 
 function openDm() {
@@ -134,8 +132,8 @@ async function onMessage(msg: MessageEvent) {
         break;
 
       default:
-        closeMyProfile()
-        closeDm()
+        // closeMyProfile()
+        // closeDm()
         isOpenDm.value = false
         isOpenGame.value = false
 

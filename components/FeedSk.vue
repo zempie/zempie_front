@@ -8,8 +8,8 @@
           </dt>
 
           <dd>
-            <h2 class="bg-gray-1 gray-text" style="width:300px"></h2>
-            <p class="bg-gray-1 gray-text" style="width:100px"><i class="uis uis-clock" style="color:#c1c1c1;"></i> </p>
+            <h2 class="bg-grey-1 grey-text" style="width:300px"></h2>
+            <p class="bg-grey-1 grey-text" style="width:100px"><i class="uis uis-clock" style="color:#c1c1c1;"></i> </p>
           </dd>
         </dl>
       </dt>
@@ -48,13 +48,14 @@
 
 
   </li>
+
 </template>
 
 <script setup lang="ts">
 </script>
 
 <style lang="scss" scoped>
-.gray-text {
+.grey-text {
   height: 16px;
   border-radius: 10px;
 }

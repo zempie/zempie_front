@@ -6,8 +6,8 @@
       </dl>
       <ul>
         <li class="pb20">
-          <p style="width:100%" class="gray-text  skeleton-animation"></p>
-          <h2 style="width:100%" class="gray-text mt10 skeleton-animation "></h2>
+          <p style="width:100%" class="grey-text  skeleton-animation"></p>
+          <h2 style="width:100%" class="grey-text mt10 skeleton-animation "></h2>
         </li>
       </ul>
     </div> -->

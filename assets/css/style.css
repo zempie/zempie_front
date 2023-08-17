@@ -149,7 +149,7 @@ body {
   height: 100%;
   min-width: 320px;
   word-break: keep-all;
-  /* background: #000000; */
+  background: #f4f0eb;
 }
 
 body,
@@ -784,6 +784,25 @@ textarea:focus {
   cursor: pointer;
 }
 
+.inactive-btn {
+  display: inline-block;
+  background-color: #888;
+  opacity: 0.3;
+  pointer-events: none;
+  cursor: not-allowed;
+  height: 40px;
+  padding: 13px 20px;
+  text-align: center;
+  font-size: 16px;
+  line-height: 14px;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  background: #999;
+  transition: all 0.4s ease-in-out;
+  cursor: pointer;
+}
+
 .btn-gray:hover {
   color: #f97316;
   background: #ffe2d1;
@@ -941,6 +960,8 @@ textarea:focus {
   border: #ffbcbc 1px solid;
   background: #ffbcbc;
 }
+
+
 
 /* 라벨 ******************************************************** */
 .label-white {
@@ -2346,4 +2367,8 @@ textarea:focus {
 
 .fontColor-17 {
   color: #343a40 !important;
+}
+
+.fontColor-black {
+  color: #000 !important;
 }

@@ -1,21 +1,25 @@
 <template>
-  <li class="tap-list bg-gray-1">
+  <li class="tap-list bg-grey-1">
     <dl class="tapl-title" style="justify-content: flex-start">
       <dt>
         <dl>
-          <dt>
-            <UserAvatarSk style="width: 40px; height: 40px" />
-          </dt>
+          <dt><UserAvatarSk style="width: 40px; height: 40px" /></dt>
         </dl>
       </dt>
       <dd>
-        <h2 class="user-name gray-text skeleton-animation" style="width: 150px; margin-bottom: 10px"></h2>
-        <p class="gray-text skeleton-animation" style="width: 80px"></p>
+        <h2
+          class="user-name grey-text skeleton-animation"
+          style="width: 150px; margin-bottom: 10px"
+        ></h2>
+        <p class="grey-text skeleton-animation" style="width: 80px"></p>
       </dd>
       <dd></dd>
     </dl>
     <div>
-      <div class="tapl-content gray-text skeleton-animation" style="margin: 20px; padding: 20px"></div>
+      <div
+        class="tapl-content grey-text skeleton-animation"
+        style="margin: 20px; padding: 20px"
+      ></div>
     </div>
     <ul class="tapl-option">
       <li style="min-height: 20px">
