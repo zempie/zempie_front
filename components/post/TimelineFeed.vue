@@ -524,42 +524,4 @@ function updateBlind(img) {
     }
   }
 }
-
-.comment-modal {
-  max-height: 100%;
-
-  .mobile-back-btn {
-    display: none;
-  }
-
-  .close-btn {
-    display: block;
-  }
-
-  .ma-header {
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-  }
-
-  :deep(.tap-list) {
-    margin: 0px;
-  }
-}
-
-@media all and (max-width: 767px) {
-  .comment-modal {
-
-    .ma-header {
-
-      .mobile-back-btn {
-        display: block;
-      }
-
-      .close-btn {
-        display: none;
-      }
-
-    }
-  }
-}
 </style>
