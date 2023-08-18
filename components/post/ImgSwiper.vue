@@ -1,5 +1,5 @@
 <template>
-  {{ feed.attatchment_files }}
+  {{ feed }}
   <swiper class="swiper" :modules="[Pagination]" style="height: 350px" :pagination="{ clickable: true }"
     :options="swiperOption">
     <swiper-slide v-for="file in attatchment_files" class="flex items-center content-center w100p" style="height:88%;">

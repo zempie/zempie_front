@@ -54,13 +54,11 @@
         <p>
           {{ $t('comment') }} {{ commentCount }}{{ $t('comment.count.unit') }}
         </p>
-
         <ul>
           <Comment v-for="comment in comments" :key="comment.content" :comment="comment" :isEdit="isCommentEdit"
             @refresh="commentRefresh" @editComment="editComment" @deleteComment="deleteComment" @recomment="getRecomment"
             :newRecomments="newRecomments" />
         </ul>
-
       </div>
       <div class="comment-input-container">
         <CommentInput :postId="feed?.id" @addComment="addComment" :recomment="recomment" />
