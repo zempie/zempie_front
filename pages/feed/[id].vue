@@ -26,7 +26,7 @@
             feed?.attatchment_files.length > 0
             ">
             <div class="tapl-movie-img" v-if="feed?.attatchment_files[0].type === 'image'">
-              <PostImgSwiper :feed="feed" />
+              <PostImgSwiper :images="attatchment_files" />
             </div>
             <div class="tapl-movie-img" v-else>
               <div v-for="file in feed?.attatchment_files" :key="file.id">
@@ -171,6 +171,13 @@ const newRecomments = ref([])
 const isExist = ref(true)
 
 
+
+const attatchment_files = computed(() => {
+  return feed.value.attatchment_files
+    && (Array.isArray(feed.value.attatchment_files)
+      ? feed.value.attatchment_files
+      : JSON.parse(feed.value.attatchment_files))
+})
 
 definePageMeta({
   layout: 'header-only',

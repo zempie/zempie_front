@@ -24,8 +24,8 @@
           feed?.attatchment_files &&
           feed?.attatchment_files.length > 0
           ">
-          <div class="tapl-movie-img" v-if="feed?.attatchment_files[0].type === 'image'">
-            <PostImgSwiper :feed="feed" />
+          <div class="tapl-movie-img" v-if="attatchment_files[0].type === 'image'">
+            <PostImgSwiper :images="attatchment_files" />
           </div>
           <div class="tapl-movie-img" v-else>
             <div v-for="file in feed?.attatchment_files" :key="file.id">
@@ -105,6 +105,12 @@ const isAddData = ref(false)
 const isCommentEdit = ref(false)
 const totalComment = ref(0)
 
+const attatchment_files = computed(() => {
+  return props.feed.attatchment_files
+    && (Array.isArray(props.feed.attatchment_files)
+      ? props.feed.attatchment_files
+      : JSON.parse(props.feed.attatchment_files))
+})
 
 useInfiniteScroll(
   commentEl,
