@@ -1188,6 +1188,9 @@ $zempie-main-color-hover: #f974162a;
 
 
 .dlc-send-message {
+  background-color: #fff;
+
+
   div {
     justify-content: space-between;
   }
@@ -1483,6 +1486,10 @@ $zempie-main-color-hover: #f974162a;
 
 @media all and (max-width: 479px) {
   .dlc-send-message {
+    position: fixed;
+    bottom: 50px;
+    width: 96%;
+
     .msg-container {
       width: 98% !important;
 
@@ -1503,6 +1510,11 @@ $zempie-main-color-hover: #f974162a;
 @media all and (min-width: 480px) and (max-width: 767px) {
 
   .dlc-send-message {
+
+    position: fixed;
+    bottom: 50px;
+    width: 96%;
+
     .msg-container {
       width: 100% !important;
 
