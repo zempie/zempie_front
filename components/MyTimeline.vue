@@ -2,8 +2,10 @@
   <NuxtLayout name="my-timeline">
     <dl class="three-area">
       <dt>
-        <ChannelInfoBox :key="channelInfo.channel_id" />
-        <ChannelGameBox :key="channelInfo.channel_id" :isLoading="isChannelLoading" />
+        <div class="my-info">
+          <ChannelInfoBox :key="channelInfo.channel_id" />
+          <ChannelGameBox :key="channelInfo.channel_id" :isLoading="isChannelLoading" />
+        </div>
       </dt>
       <dd>
         <PostTimeline type="userAll" :isMine="true" />
@@ -73,9 +75,21 @@ onMounted(async () => {
 }
 
 
-@media all and (max-width: 479px) {}
+@media all and (max-width: 479px) {
+  .my-info {
+    display: none;
+  }
+
+  .ta-message-send {
+    margin-top: 70px !important;
+  }
+}
 
 @media all and (min-width: 480px) and (max-width: 767px) {
+  .my-info {
+    display: none;
+  }
+
 
 
   .area-title,

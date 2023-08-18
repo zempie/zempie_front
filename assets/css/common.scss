@@ -1307,6 +1307,137 @@ $zempie-main-color-hover: #f974162a;
 
 }
 
+
+.dm-list {
+  &.off {
+    display: block;
+
+  }
+}
+
+@media all and (max-width: 767px) {
+
+  .dm-list {
+    padding: 0px 10px 00px 10px;
+    margin: 0px;
+    width: 100%;
+    height: calc(100vh - 70px - 50px);
+    border-radius: 0px;
+    box-shadow: none;
+
+
+    .dl-title {
+      display: flex;
+      flex-direction: row;
+
+      .mobile-btn {
+        border: none;
+        background: transparent;
+        padding: 0px;
+        color: #333;
+        font-size: 25px;
+
+        &.off {
+          display: none !important;
+        }
+
+        &.on {
+          display: inline !important;
+        }
+      }
+    }
+
+    .dl-content {
+      border: none;
+      margin-top: 10px !important;
+      height: 92% !important;
+
+      .dm-info-box {
+        width: 55% !important;
+      }
+
+      .room-container {
+        &.off {
+          display: none;
+        }
+
+        &.on {
+          display: block;
+        }
+
+        .msg-list {
+          padding: 0px;
+          height: 100%;
+          overflow-y: scroll;
+        }
+      }
+
+      .msg-container {
+
+        &.off {
+          display: none;
+        }
+
+        &.on {
+          display: flex;
+          border: 1px solid #eee;
+          border-radius: 10px;
+        }
+
+
+        .dlc-chat-content {
+          height: auto;
+          flex: 1;
+          overflow-x: hidden;
+          overflow-y: auto;
+          position: relative;
+          right: 0
+        }
+
+        .dlc-send-message {
+          // height: 50px;
+
+          div {
+            // width: 90%;
+          }
+
+          button {
+            height: 30px;
+            width: 30px;
+          }
+
+        }
+
+      }
+    }
+  }
+}
+
+@media all and (min-width: 768px) and (max-width: 991px) {
+  .content {
+    .msg-list {
+      :deep(.picture) {
+        width: 40px;
+        height: 40px;
+      }
+
+      .dm-info-box {
+        width: 50% !important;
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+@media all and (min-width: 992px) and (max-width: 1199px) {
+
+  .content {
+    .dm-info-box {
+      width: 55% !important;
+    }
+  }
+}
+
 @media all and (max-width: 479px) {
   .dlc-send-message {
     .msg-container {
@@ -1536,127 +1667,6 @@ $zempie-main-color-hover: #f974162a;
 
 }
 
-@media all and (max-width: 767px) {
-
-  .dm-list {
-    padding: 20px 10px 10px 10px;
-    margin: 0px;
-    width: 100%;
-    height: 100%;
-    border-radius: 0px;
-    box-shadow: none;
-
-    .dl-title {
-      display: flex;
-      flex-direction: row;
-
-      .mobile-btn {
-        border: none;
-        background: transparent;
-        padding: 0px;
-        color: #333;
-        font-size: 25px;
-
-        &.off {
-          display: none !important;
-        }
-
-        &.on {
-          display: inline !important;
-        }
-      }
-    }
-
-    .dl-content {
-      border: none;
-      margin-top: 10px;
-      height: 85%;
-
-      .dm-info-box {
-        width: 55% !important;
-      }
-
-      .room-container {
-        &.off {
-          display: none;
-        }
-
-        &.on {
-          display: block;
-        }
-
-        .msg-list {
-          padding: 0px;
-          height: 100%;
-          overflow-y: scroll;
-        }
-      }
-
-      .msg-container {
-
-        &.off {
-          display: none;
-        }
-
-        &.on {
-          display: flex;
-          border: 1px solid #eee;
-          border-radius: 10px;
-        }
-
-
-        ::v-deep(.dlc-chat-content) {
-          height: auto;
-          flex: 1;
-          overflow-x: hidden;
-          overflow-y: auto;
-          position: relative;
-          right: 0
-        }
-
-        ::v-deep(.dlc-send-message) {
-          // height: 50px;
-
-          div {
-            // width: 90%;
-          }
-
-          button {
-            height: 30px;
-            width: 30px;
-          }
-
-        }
-
-      }
-    }
-  }
-}
-
-@media all and (min-width: 768px) and (max-width: 991px) {
-  .content {
-    .msg-list {
-      :deep(.picture) {
-        width: 40px;
-        height: 40px;
-      }
-
-      .dm-info-box {
-        width: 50% !important;
-        font-size: 12px;
-      }
-    }
-  }
-}
-
-@media all and (min-width: 992px) and (max-width: 1199px) {
-
-  .content {
-    .dm-info-box {
-      width: 55% !important;
-    }
-  }
-}
 
 /* zemtown */
 

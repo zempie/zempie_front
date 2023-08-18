@@ -39,6 +39,7 @@ const isMine = computed(() => {
 definePageMeta({
   title: 'user-channel',
   name: 'userChannel',
+  layout: 'header-only',
 })
 
 

@@ -1,6 +1,6 @@
 <template>
   <div class="mobile-menu">
-    <button class="mr10" @click="openMyProfile"><span class="material-icons">
+    <button class="mr10" @click="router.push($localePath('/zemtown'))"><span class="material-icons">
         home
       </span></button>
     <button class="mr10" @click="openMyProfile"><span class="material-icons">

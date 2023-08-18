@@ -25,15 +25,7 @@
           feed?.attatchment_files.length > 0
           ">
           <div class="tapl-movie-img" v-if="feed?.attatchment_files[0].type === 'image'">
-            <swiper class="swiper" :options="swiperOption" style="height: 350px">
-              <template v-for="file in feed?.attatchment_files">
-                <swiper-slide>
-                  <img style="height: 88%; margin: 0 auto; display: flex" v-if="file.type === 'image'" :src="file.url"
-                    class="feed-img mt-3" />
-                </swiper-slide>
-              </template>
-              <div class="swiper-pagination" slot="pagination"></div>
-            </swiper>
+            <PostImgSwiper :feed="feed" />
           </div>
           <div class="tapl-movie-img" v-else>
             <div v-for="file in feed?.attatchment_files" :key="file.id">
@@ -81,9 +73,6 @@
 import _ from 'lodash'
 import { PropType } from 'vue'
 import { IComment, IFeed } from '~~/types'
-import { Pagination } from 'swiper'
-import { Swiper, SwiperSlide } from 'swiper/vue'
-import { ElMessage, ElDialog } from 'element-plus'
 
 import 'swiper/css/pagination';
 import 'swiper/css';

@@ -45,18 +45,7 @@
         <p>{{ file.name }}</p>
       </div>
       <PostImage v-else-if="attatchment_files?.length === 1" :img="attatchment_files[0]" @update-blind="updateBlind" />
-
-      <swiper v-else class="swiper" :modules="[Pagination]" style="height: 350px" :pagination="{ clickable: true }"
-        :options="swiperOption">
-        <swiper-slide v-for="file in attatchment_files" class="flex items-center content-center w100p"
-          style="height:88%;">
-          <PostImage v-if="file.type === 'image'" :img="file" @update-blind="updateBlind" />
-          <!-- <img v-if="file.type === 'image'" style="max-height:100%; margin: 0 auto; display: flex" :src="file.url"
-            class="feed-img mt-3" /> -->
-        </swiper-slide>
-        <div class="swiper-pagination" style="bottom: 10px; left: 0; width: 100%;" slot="pagination"></div>
-      </swiper>
-
+      <PostImgSwiper v-else :feed="feed" />
     </template>
 
     <a v-if="!isObjEmpty(feed.metadata)" :href="feed.metadata?.url" target="_blank">
@@ -128,8 +117,6 @@
 import _ from 'lodash'
 import { PropType } from 'vue'
 import { IComment, IFeed } from '~~/types'
-import { Pagination } from 'swiper'
-import { Swiper, SwiperSlide } from 'swiper/vue'
 import { ElMessage, ElDialog } from 'element-plus'
 
 import 'swiper/css/pagination';
@@ -198,11 +185,6 @@ const props = defineProps({
 
 const commentCount = ref(props.feed?.comment_cnt || 0)
 
-const swiperOption = ref({
-  pagination: {
-    el: '.swiper-pagination',
-  },
-})
 const user = ref(props.feed?.user)
 
 const feedContent = ref(props.feed?.content || '')

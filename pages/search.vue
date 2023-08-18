@@ -68,6 +68,7 @@ const postList = computed(() => useSearch().search.value.results?.posts)
 
 definePageMeta({
   name: 'search',
+  layout: 'header-only',
 })
 
 if (!useSearch().search.value.results) {

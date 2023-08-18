@@ -43,7 +43,9 @@ provide(ID_INJECTION_KEY, {
   current: 0,
 })
 
+
 onBeforeMount(async () => {
+  colorLog('===App start===', 'red')
   await useMobile().setMobileState()
 
   try {

@@ -135,9 +135,7 @@
 import _ from 'lodash'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
-
 import { Swiper, SwiperSlide } from 'swiper/vue'
-
 import { dateFormat, execCommandCopy, getFirstDomElementByServer, stringToDomElemByServer, isObjEmpty, } from '~~/scripts/utils'
 import shared from '~~/scripts/shared'
 import { IComment } from '~~/types'
@@ -179,6 +177,11 @@ const newRecomments = ref([])
 //에러
 const isExist = ref(true)
 
+
+
+definePageMeta({
+  layout: 'header-only',
+})
 
 useInfiniteScroll(
   commentEl,
