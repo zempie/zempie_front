@@ -1,5 +1,5 @@
 <template>
-  {{ attatchment_files }}
+  {{ feed.attatchment_files }}
   <swiper class="swiper" :modules="[Pagination]" style="height: 350px" :pagination="{ clickable: true }"
     :options="swiperOption">
 
@@ -25,11 +25,10 @@ const props = defineProps({
 
 
 const attatchment_files = computed(() => {
-  return props.feed.attatchment_files && props.feed.attatchment_files.length
-    ? Array.isArray(props.feed.attatchment_files)
+  return props.feed.attatchment_files
+    && (Array.isArray(props.feed.attatchment_files)
       ? props.feed.attatchment_files
-      : JSON.parse(props.feed.attatchment_files as string)
-    : null
+      : JSON.parse(props.feed.attatchment_files))
 })
 </script>
 <style scoped lang="scss"></style>
