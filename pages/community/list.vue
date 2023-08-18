@@ -70,9 +70,6 @@ const isAddData = ref(false)
 const isSubModal = ref()
 
 const triggerDiv = ref<Element>()
-definePageMeta({
-  layout: 'header-only',
-})
 
 shared.createHeadMeta(t('communityList'), t('communityList.desc'))
 

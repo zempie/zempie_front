@@ -237,7 +237,6 @@ const postedGame = (posted_at) => {
 }
 
 onMounted(async () => {
-
   await commentFetch()
 })
 

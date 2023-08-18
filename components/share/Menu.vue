@@ -26,20 +26,31 @@
   </ClientOnly>
 </template>
 <script setup lang="ts">
+import { PropType } from 'vue';
 import { ElDropdown, ElDropdownItem, ElDropdownMenu, ElMessage } from 'element-plus'
 import { Icon } from '@iconify/vue';
 import { execCommandCopy } from '~~/scripts/utils';
 import { openCenteredPopup } from '~~/scripts/ui-utils';
 import { useGtag } from 'vue-gtag-next';
+import { IUser } from '~~/types';
 
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
 const gtag = useGtag()
 
+
+interface IShareInfo {
+  img_url: string,
+  title: string,
+  desc: string,
+  user: IUser,
+  url: string
+}
+
 const props = defineProps({
   url: String,
   type: String,
-  shareInfo: Object
+  shareInfo: Object as PropType<IShareInfo>
 })
 
 

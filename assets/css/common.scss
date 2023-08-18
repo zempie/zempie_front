@@ -91,6 +91,10 @@ $zempie-main-color-hover: #f974162a;
   background-color: #e4e6ef;
 }
 
+.bg-white {
+  background-color: #fff;
+}
+
 .text-left {
   text-align: left;
 }
@@ -1534,7 +1538,6 @@ $zempie-main-color-hover: #f974162a;
 
 @media all and (max-width: 767px) {
 
-
   .dm-list {
     padding: 20px 10px 10px 10px;
     margin: 0px;
@@ -1548,7 +1551,6 @@ $zempie-main-color-hover: #f974162a;
       flex-direction: row;
 
       .mobile-btn {
-        display: inline;
         border: none;
         background: transparent;
         padding: 0px;
@@ -1556,11 +1558,11 @@ $zempie-main-color-hover: #f974162a;
         font-size: 25px;
 
         &.off {
-          display: none;
+          display: none !important;
         }
 
         &.on {
-          display: inline;
+          display: inline !important;
         }
       }
     }
@@ -1568,8 +1570,11 @@ $zempie-main-color-hover: #f974162a;
     .dl-content {
       border: none;
       margin-top: 10px;
+      height: 85%;
 
-      height: 90%;
+      .dm-info-box {
+        width: 55% !important;
+      }
 
       .room-container {
         &.off {
@@ -1584,11 +1589,6 @@ $zempie-main-color-hover: #f974162a;
           padding: 0px;
           height: 100%;
           overflow-y: scroll;
-          max-height: 500px;
-
-          li {
-            // margin: 0px;
-          }
         }
       }
 
@@ -1599,20 +1599,26 @@ $zempie-main-color-hover: #f974162a;
         }
 
         &.on {
-          display: block;
+          display: flex;
           border: 1px solid #eee;
           border-radius: 10px;
         }
 
+
         ::v-deep(.dlc-chat-content) {
-          height: calc(100% - 120px);
+          height: auto;
+          flex: 1;
+          overflow-x: hidden;
+          overflow-y: auto;
+          position: relative;
+          right: 0
         }
 
         ::v-deep(.dlc-send-message) {
           // height: 50px;
 
           div {
-            width: 90%;
+            // width: 90%;
           }
 
           button {
@@ -1625,12 +1631,32 @@ $zempie-main-color-hover: #f974162a;
       }
     }
   }
+}
 
-  ::v-deep(.new-msg-modal) {
-    border-radius: 0px !important;
+@media all and (min-width: 768px) and (max-width: 991px) {
+  .content {
+    .msg-list {
+      :deep(.picture) {
+        width: 40px;
+        height: 40px;
+      }
+
+      .dm-info-box {
+        width: 50% !important;
+        font-size: 12px;
+      }
+    }
   }
 }
 
+@media all and (min-width: 992px) and (max-width: 1199px) {
+
+  .content {
+    .dm-info-box {
+      width: 55% !important;
+    }
+  }
+}
 
 /* zemtown */
 
@@ -1662,9 +1688,6 @@ $zempie-main-color-hover: #f974162a;
 @media all and (min-width: 480px) and (max-width: 767px) {
   .zemtown-modal {
 
-    >div {
-      // width: 80%;
-
-    }
+    >div {}
   }
 }

@@ -21,6 +21,9 @@ const zemtown = computed(() => useZemtown().zemtown.value)
 const isLogin = computed(() => useUser().user.value.isLogin)
 
 
+definePageMeta({
+  layout: 'header-only',
+})
 watch(() =>
   (zemtown.value.isOpenMyProfile), (state) => {
     if (state) {
