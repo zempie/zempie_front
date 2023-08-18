@@ -45,7 +45,7 @@
         <p>{{ file.name }}</p>
       </div>
       <PostImage v-else-if="attatchment_files?.length === 1" :img="attatchment_files[0]" @update-blind="updateBlind" />
-      <PostImgSwiper v-else :images="attatchment_files" />
+      <PostImgSwiper v-else :images="attatchment_files" @update-blind="updateBlind" />
     </template>
 
     <a v-if="!isObjEmpty(feed.metadata)" :href="feed.metadata?.url" target="_blank">
@@ -102,7 +102,7 @@
             </dd>
           </dl>
           <div>
-            <PostFeed :feed="feed" />
+            <PostFeed :feed="feed" @update-blind="updateBlind" />
           </div>
         </div>
       </el-dialog>

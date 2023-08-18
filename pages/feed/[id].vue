@@ -26,7 +26,7 @@
             feed?.attatchment_files.length > 0
             ">
             <div class="tapl-movie-img" v-if="feed?.attatchment_files[0].type === 'image'">
-              <PostImgSwiper :images="attatchment_files" />
+              <PostImgSwiper :images="attatchment_files" @update-blind="updateBlind" />
             </div>
             <div class="tapl-movie-img" v-else>
               <div v-for="file in feed?.attatchment_files" :key="file.id">
@@ -432,6 +432,21 @@ function commentInit() {
   limit.value = COMMENT_LIMIT
   offset.value = 0
   sort.value = null
+}
+
+function updateBlind(img) {
+  const attFiles = shared.toArray(feed.value.attatchment_files)
+
+  feed.value.attatchment_files = attFiles
+    .map((file) => {
+      if (file.url === img.url) {
+        return {
+          ...file,
+          is_blind: !file.is_blind
+        }
+      }
+      return file
+    })
 }
 </script>
 

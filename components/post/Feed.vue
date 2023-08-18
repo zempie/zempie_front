@@ -25,7 +25,7 @@
           feed?.attatchment_files.length > 0
           ">
           <div class="tapl-movie-img" v-if="attatchment_files[0].type === 'image'">
-            <PostImgSwiper :images="attatchment_files" />
+            <PostImgSwiper :images="attatchment_files" @update-blind="updateBlind" />
           </div>
           <div class="tapl-movie-img" v-else>
             <div v-for="file in feed?.attatchment_files" :key="file.id">
@@ -150,6 +150,11 @@ async function commentRefresh(comment?: any) {
   isCommentEdit.value = !isCommentEdit.value
   commentInit()
   await commentFetch()
+}
+
+function updateBlind(img) {
+  emit('updateBlind', img)
+
 }
 
 function addComment(comment: IComment) {
