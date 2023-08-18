@@ -210,11 +210,6 @@ svg {
   .card-timeline {
     width: 100%;
   }
-
-  .card-timeline>li {
-    width: 100%;
-    margin: 2% 0 2% 0;
-  }
 }
 
 .uil-times {

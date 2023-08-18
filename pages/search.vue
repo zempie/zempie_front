@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="content" style="height: 100vh;">
     <div class="visual-title">
       <h1>
         '{{ keyword }}'
@@ -68,7 +68,7 @@ const postList = computed(() => useSearch().search.value.results?.posts)
 
 definePageMeta({
   name: 'search',
-  // layout: 'header-only',
+  layout: 'header-only',
 })
 
 if (!useSearch().search.value.results) {
