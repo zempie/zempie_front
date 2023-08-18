@@ -45,13 +45,13 @@
       <ul class="ta-post">
         <PostFeedSk v-if="isPending" v-for="feed in 6" :key="feed" />
         <TransitionGroup name="fade" v-else-if="!isPending && feeds?.length">
-          <PostFeed v-for="feed in feeds" :feed="feed" :key="feed.id" @refresh="refresh"
+          <PostTimelineFeed v-for="feed in feeds" :feed="feed" :key="feed.id" @refresh="refresh"
             @update-blind="(img) => updateBlind(feed, img)">
             <template #followBtn>
               <UserFollowBtn :user="feed.user" :key="`${feed.user.is_following}`" class="follow-btn-feed"
                 @refresh="refreshFollow" />
             </template>
-          </PostFeed>
+          </PostTimelineFeed>
         </TransitionGroup>
         <div v-else class="ta-post-none">
           <p>

@@ -91,6 +91,10 @@ $zempie-main-color-hover: #f974162a;
   background-color: #e4e6ef;
 }
 
+.bg-white {
+  background-color: #fff;
+}
+
 .text-left {
   text-align: left;
 }
@@ -571,6 +575,7 @@ $zempie-main-color-hover: #f974162a;
 }
 
 .tapl-content {
+  max-height: 500px;
 
   .el-card {
     box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);
@@ -1027,6 +1032,13 @@ $zempie-main-color-hover: #f974162a;
 }
 
 
+@media all and (max-width: 767px) {
+  .main-bg {
+    margin-top: -70px;
+  }
+
+}
+
 /* 게임 코멘트 */
 
 .ta-coment-list {
@@ -1251,6 +1263,14 @@ $zempie-main-color-hover: #f974162a;
   overflow-y: hidden;
   max-height: 100px;
   margin: 0px 10px 15px 10px;
+}
+
+.swiper-wrapper {
+  .img-container {
+
+    border: 1px solid #d5d5d5;
+    border-radius: 10px;
+  }
 }
 
 .input-container {
@@ -1514,4 +1534,162 @@ $zempie-main-color-hover: #f974162a;
 
 
 
+}
+
+@media all and (max-width: 767px) {
+
+  .dm-list {
+    padding: 20px 10px 10px 10px;
+    margin: 0px;
+    width: 100%;
+    height: 100%;
+    border-radius: 0px;
+    box-shadow: none;
+
+    .dl-title {
+      display: flex;
+      flex-direction: row;
+
+      .mobile-btn {
+        border: none;
+        background: transparent;
+        padding: 0px;
+        color: #333;
+        font-size: 25px;
+
+        &.off {
+          display: none !important;
+        }
+
+        &.on {
+          display: inline !important;
+        }
+      }
+    }
+
+    .dl-content {
+      border: none;
+      margin-top: 10px;
+      height: 85%;
+
+      .dm-info-box {
+        width: 55% !important;
+      }
+
+      .room-container {
+        &.off {
+          display: none;
+        }
+
+        &.on {
+          display: block;
+        }
+
+        .msg-list {
+          padding: 0px;
+          height: 100%;
+          overflow-y: scroll;
+
+        }
+      }
+
+      .msg-container {
+
+
+        &.off {
+          display: none;
+        }
+
+        &.on {
+          display: flex;
+          border: 1px solid #eee;
+          border-radius: 10px;
+        }
+
+
+        ::v-deep(.dlc-chat-content) {
+          height: auto;
+          flex: 1;
+          overflow-x: hidden;
+          overflow-y: auto;
+          position: relative;
+          right: 0
+        }
+
+        ::v-deep(.dlc-send-message) {
+          // height: 50px;
+
+          div {
+            // width: 90%;
+          }
+
+          button {
+            height: 30px;
+            width: 30px;
+          }
+
+        }
+
+      }
+    }
+  }
+}
+
+@media all and (min-width: 768px) and (max-width: 991px) {
+  .content {
+    .msg-list {
+      :deep(.picture) {
+        width: 40px;
+        height: 40px;
+      }
+
+      .dm-info-box {
+        width: 50% !important;
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+@media all and (min-width: 992px) and (max-width: 1199px) {
+
+  .content {
+    .dm-info-box {
+      width: 55% !important;
+    }
+  }
+}
+
+/* zemtown */
+
+
+.zemtown-modal {
+  position: fixed;
+  bottom: 70px;
+  width: auto;
+  z-index: 999;
+  left: 50%;
+  transform: translateX(-50%);
+
+  >div {
+    width: 100%;
+  }
+}
+
+
+@media all and (max-width: 479px) {
+  .zemtown-modal {
+
+    >div {
+      width: 100%;
+
+    }
+  }
+}
+
+@media all and (min-width: 480px) and (max-width: 767px) {
+  .zemtown-modal {
+
+    >div {}
+  }
 }

@@ -716,7 +716,6 @@ function updateGroupName(roomName: string) {
 
     .mobile-btn {
       display: none;
-
     }
 
     .dl-content {
@@ -756,14 +755,15 @@ function updateGroupName(roomName: string) {
 
     }
   }
-}
 
-.new-msg-btn-icon {
-  &.inactive {
-    opacity: 0.3;
-    pointer-events: none;
-    cursor: not-allowed
+  .new-msg-btn-icon {
+    &.inactive {
+      opacity: 0.3;
+      pointer-events: none;
+      cursor: not-allowed
+    }
   }
+
 }
 
 .new-msg-btn {
@@ -815,136 +815,5 @@ function updateGroupName(roomName: string) {
     }
   }
 
-}
-
-@media all and (max-width: 767px) {
-  .content {
-    height: 100vh;
-    padding-bottom: 0px;
-
-    .dm-list {
-      padding: 20px 10px 10px 10px;
-      margin: 0px;
-      width: 100%;
-      height: 100%;
-      border-radius: 0px;
-      box-shadow: none;
-
-      .dl-title {
-        display: flex;
-        flex-direction: row;
-
-        .mobile-btn {
-          display: inline;
-          border: none;
-          background: transparent;
-          padding: 0px;
-          color: #333;
-          font-size: 25px;
-
-          &.off {
-            display: none;
-          }
-
-          &.on {
-            display: inline;
-          }
-        }
-      }
-
-      .dl-content {
-        border: none;
-        margin-top: 10px;
-        height: 85%;
-
-        .dm-info-box {
-          width: 55% !important;
-        }
-
-        .room-container {
-          &.off {
-            display: none;
-          }
-
-          &.on {
-            display: block;
-          }
-
-          .msg-list {
-            padding: 0px;
-            height: 100%;
-            overflow-y: scroll;
-
-          }
-        }
-
-        .msg-container {
-
-
-          &.off {
-            display: none;
-          }
-
-          &.on {
-            display: flex;
-            border: 1px solid #eee;
-            border-radius: 10px;
-          }
-
-
-          ::v-deep(.dlc-chat-content) {
-            height: auto;
-            flex: 1;
-            overflow-x: hidden;
-            overflow-y: auto;
-            position: relative;
-            right: 0
-          }
-
-          ::v-deep(.dlc-send-message) {
-            // height: 50px;
-
-            div {
-              // width: 90%;
-            }
-
-            button {
-              height: 30px;
-              width: 30px;
-            }
-
-          }
-
-        }
-      }
-    }
-
-
-  }
-}
-
-@media all and (min-width: 768px) and (max-width: 991px) {
-  .content {
-    .msg-list {
-      :deep(.picture) {
-        width: 40px;
-        height: 40px;
-      }
-
-      .dm-info-box {
-        width: 50% !important;
-        font-size: 12px;
-      }
-    }
-  }
-}
-
-@media all and (min-width: 992px) and (max-width: 1199px) {
-
-  .content {
-    .dm-info-box {
-      width: 55% !important;
-    }
-  }
 }
 </style>

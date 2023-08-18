@@ -5183,7 +5183,7 @@
 }
 
 .dl-content>dd>ul {
-  height: 650px;
+  min-height: 650px;
   padding: 10px 25px;
   overflow: auto;
 }

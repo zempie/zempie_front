@@ -46,7 +46,7 @@
     <div class="ta-search-post" v-if="postList?.length" :style="postList?.length ? 'padding:0px ;' : ''">
       <ul class="ta-post">
         <div v-for="feed in postList" :key="feed.id">
-          <PostFeed :feed="feed" @update-blind="(img) => updateBlind(feed, img)"></PostFeed>
+          <PostTimelineFeed :feed="feed" @update-blind="(img) => updateBlind(feed, img)"></PostTimelineFeed>
         </div>
       </ul>
     </div>
