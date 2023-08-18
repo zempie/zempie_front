@@ -68,7 +68,7 @@ const postList = computed(() => useSearch().search.value.results?.posts)
 
 definePageMeta({
   name: 'search',
-  layout: 'header-only',
+  // layout: 'header-only',
 })
 
 if (!useSearch().search.value.results) {
@@ -191,8 +191,4 @@ function updateBlind(feed, img) {
     width: 100%;
   }
 }
-
-@media all and (min-width: 768px) and (max-width: 991px) {}
-
-@media all and (min-width: 992px) and (max-width: 1199px) {}
 </style>

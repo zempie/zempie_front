@@ -3,7 +3,7 @@
     <div class="input-search-line">
       <i class="uil uil-search"></i>
       <div>
-        <ClientOnly v-if="!isSearchPage">
+        <ClientOnly>
           <el-dropdown ref="searchDropdown" trigger="click">
             <button v-if="isMobile" class="mobile-btn btn-circle-icon flex items-center content-center">
               <i class="uil uil-search"></i>
@@ -15,7 +15,7 @@
                 <input type="text" title="keywords" class="w100p" :placeholder="$t('needSearchInput')"
                   v-model="searchInput" @input="onInputDebounce" @keyup.enter="moveSearchPage" autocomplete="off" />
               </div>
-              <el-dropdown-menu class="header-search-list" style="min-width: 260px">
+              <el-dropdown-menu class="header-search-list" style="min-width: 260px" v-if="!isSearchPage">
                 <div :class="hasResearchResult || 'no-result'">
                   <template v-if="userList?.length">
                     <h2>{{ $t('user') }}</h2>
@@ -72,8 +72,6 @@
             </template>
           </el-dropdown>
         </ClientOnly>
-        <input v-else type="text" title="keywords" :placeholder="$t('needSearchInput')" v-model="searchInput"
-          @keyup.enter="onEnterSearch" autocomplete="off" />
       </div>
     </div>
   </div>

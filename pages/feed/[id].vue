@@ -26,15 +26,7 @@
             feed?.attatchment_files.length > 0
             ">
             <div class="tapl-movie-img" v-if="feed?.attatchment_files[0].type === 'image'">
-              <swiper class="swiper" :options="swiperOption" style="height: 350px">
-                <template v-for="file in feed?.attatchment_files">
-                  <swiper-slide>
-                    <img style="height: 88%; margin: 0 auto; display: flex" v-if="file.type === 'image'" :src="file.url"
-                      class="feed-img mt-3" />
-                  </swiper-slide>
-                </template>
-                <div class="swiper-pagination" slot="pagination"></div>
-              </swiper>
+              <PostImgSwiper :feed="feed" />
             </div>
             <div class="tapl-movie-img" v-else>
               <div v-for="file in feed?.attatchment_files" :key="file.id">
@@ -48,7 +40,10 @@
               </div>
             </div>
           </template>
-          <PostLinkPreview v-if="!isObjEmpty(feed.metadata)" :tag-info="feed.metadata" :is-edit="false" />
+          <a v-if="!isObjEmpty(feed.metadata)" :href="feed.metadata?.url" target="_blank">
+
+            <PostLinkPreview v-if="!isObjEmpty(feed.metadata)" :tag-info="feed.metadata" :is-edit="false" />
+          </a>
 
           <CommunityTarget :communities="postedCommunity(feed?.posted_at)" :games="postedGame(feed?.posted_at)" />
 
@@ -65,7 +60,6 @@
               }}{{ $t('comment.count.unit') }}
             </p>
 
-            <!-- <CommentList :comments="comments" @addComment="addComment" /> -->
             <ul ref="commentEl" style="max-height:700px; overflow-y: scroll;">
               <Comment v-for="comment in comments" :key="comment.content" :comment="comment" :isEdit="isCommentEdit"
                 @refresh="commentRefresh" @editComment="editComment" @deleteComment="deleteComment"
@@ -74,7 +68,6 @@
             <CommentInput :postId="feed?.id" @addComment="addComment" :recomment="recomment" />
 
           </div>
-          <!-- <div ref="triggerDiv"></div> -->
         </li>
       </ul>
       <ul class="ta-post" v-else>
