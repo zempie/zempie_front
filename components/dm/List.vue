@@ -719,51 +719,6 @@ function updateGroupName(roomName: string) {
 }
 </script>
 <style scoped lang="scss">
-.dm-list {
-
-  .mobile-btn {
-    display: none;
-
-  }
-
-  .dl-content {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin-top: 30px;
-    border: 1px solid #e5e5e5;
-    border-radius: 10px;
-    overflow: hidden;
-
-    dd {
-
-      ul {
-        overflow-y: auto;
-
-        li {
-          padding: 13px;
-
-          &:hover {
-            background-color: #F9f9f9;
-          }
-
-          dl {
-            dd {
-              width: 15%;
-            }
-
-            dt {
-              width: 70%;
-            }
-          }
-        }
-      }
-    }
-
-
-  }
-}
-
 .new-msg-btn-icon {
   &.inactive {
     opacity: 0.3;
