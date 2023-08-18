@@ -1,5 +1,5 @@
 <template>
-  <div class="content" style="height: auto">
+  <div class="content" style="height: 100vh">
     <div class="dm-list">
       <div class="dl-title">
         <div>

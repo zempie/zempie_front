@@ -479,7 +479,7 @@ async function onDeleteMsg() {
 }
 
 async function onFocus() {
-  inputRef.value.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  inputRef.value.scrollIntoView({ behavior: 'smooth', block: 'end' });
   if (isFlutter.value) {
     const kbHeight = await FlutterBridge().getKeyHight()
     emit('openKeyboard', Number(kbHeight))

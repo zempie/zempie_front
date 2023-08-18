@@ -70,9 +70,6 @@ const isAddData = ref(false)
 const isSubModal = ref()
 
 const triggerDiv = ref<Element>()
-definePageMeta({
-  layout: 'default',
-})
 
 shared.createHeadMeta(t('communityList'), t('communityList.desc'))
 
@@ -212,11 +209,6 @@ svg {
 @media all and (max-width: 479px) {
   .card-timeline {
     width: 100%;
-  }
-
-  .card-timeline>li {
-    width: 100%;
-    margin: 2% 0 2% 0;
   }
 }
 

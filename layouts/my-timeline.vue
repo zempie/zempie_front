@@ -1,5 +1,5 @@
 <template>
-  <div class="content" style="padding-top: 65px">
+  <div class="content" style="padding-top: 65px;">
     <slot />
   </div>
 </template>
@@ -13,12 +13,10 @@ const userInfo = ref<IUserChannel>()
 const isPending = ref(true)
 const channelId = computed(() => route.params.id as string)
 
-// watch(
-//   () => useUser().user.value.info,
-//   async (userInfo) => {
-//     await getChannelHeaderInfo()
-//   }
-// )
+
+definePageMeta({
+  layout: "header-only"
+})
 
 onMounted(async () => {
   await getChannelHeaderInfo()
