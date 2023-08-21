@@ -11,6 +11,7 @@
         <PostTimeline type="userAll" :isMine="true" />
       </dd>
       <dt>
+
         <div class="ta-groups" style="margin-top: 0px">
           <h2>{{ $t('community') }}</h2>
           <CommunityList :communities="channelInfo?.communities" :isLoading="isChannelLoading" />
@@ -83,7 +84,7 @@ onMounted(async () => {
     display: none;
   }
 
-  .ta-message-send {
+  :deep(.ta-message-send) {
     margin-top: 70px !important;
   }
 }

@@ -1429,12 +1429,16 @@ $zempie-main-color-hover: #f974162a;
           display: flex;
           border: 1px solid #eee;
           border-radius: 10px;
+
         }
 
+        .active-room-container {
+          flex: 0.1;
+        }
 
         .dlc-chat-content {
           height: auto;
-          flex: 1;
+          flex: 0.8;
           overflow-x: hidden;
           overflow-y: auto;
           position: relative;
@@ -1442,7 +1446,7 @@ $zempie-main-color-hover: #f974162a;
         }
 
         .dlc-send-message {
-          // height: 50px;
+          flex: 0.1;
 
           div {
             // width: 90%;

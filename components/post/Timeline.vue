@@ -460,7 +460,7 @@ input[type='radio'] {
 
 @media all and (max-width: 479px) {
   .ta-message-send {
-    margin-top: 70px;
+    margin-top: 20px;
   }
 
   .tab-search-swiper {
