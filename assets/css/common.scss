@@ -1728,7 +1728,7 @@ $zempie-main-color-hover: #f974162a;
 
 .zemtown-modal {
   position: fixed;
-  bottom: 70px;
+  bottom: 50px;
   width: auto;
   z-index: 999;
   left: 50%;
@@ -1745,6 +1745,8 @@ $zempie-main-color-hover: #f974162a;
 
     >div {
       width: 100%;
+      border-radius: 0px !important;
+
 
     }
   }

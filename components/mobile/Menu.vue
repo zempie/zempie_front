@@ -1,6 +1,6 @@
 <template>
   <div class="mobile-menu">
-    <button class="mr10" @click="router.push($localePath('/zemtown'))"><span class="material-icons">
+    <button class="mr10" @click="openZemtown"><span class="material-icons">
         home
       </span></button>
     <button class="mr10" @click="openMyProfile"><span class="material-icons">
@@ -39,6 +39,13 @@ const isOpenDm = ref(false)
 
 const isZemtown = computed(() => String(route.name).includes('zemtown'))
 const isLogin = computed(() => useUser().user.value.isLogin)
+
+function openZemtown() {
+  router.push($localePath('/zemtown'))
+  useZemtown().closeDm()
+  useZemtown().closeMyProfile()
+
+}
 
 function openMyProfile() {
   useZemtown().closeDm()

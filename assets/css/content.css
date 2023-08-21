@@ -2593,6 +2593,8 @@
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
+
+
   .ta-message-send>p {
     width: 10%;
   }
@@ -5490,6 +5492,7 @@
 
   .dl-content>dd>ul {
     padding: 0px 10px;
+    height: 100%;
   }
 
   .dl-content>dd>ul>li {

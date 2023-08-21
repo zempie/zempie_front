@@ -474,7 +474,7 @@ input[type='radio'] {
 
 @media all and (min-width: 480px) and (max-width: 767px) {
   .ta-message-send {
-    margin-top: 20px;
+    margin-top: 10px;
   }
 
   .tab-search-swiper {
@@ -487,9 +487,6 @@ input[type='radio'] {
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
-  .ta-message-send {
-    margin-top: 20px;
-  }
 
   .tab-search-swiper {
     &.mobile {
@@ -499,6 +496,4 @@ input[type='radio'] {
     }
   }
 }
-
-@media all and (min-width: 992px) and (max-width: 1199px) {}
 </style>

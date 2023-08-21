@@ -1,6 +1,6 @@
 <template>
   <div class="zemtown-modal">
-    <DmList v-if="isOpen"  />
+    <DmList v-if="isOpen" />
   </div>
 </template>
 <script setup lang="ts">
@@ -28,15 +28,16 @@ const props = defineProps({
 
 
       .dl-content {
-        .active-room-container{
-          height:10%;
+        .active-room-container {
+          height: 10%;
         }
-        // height: calc(100vh - 100px);
-        .dlc-chat-content{
-          height:80%;
+
+        .dlc-chat-content {
+          height: 80%;
         }
-        .dlc-send-message{
-          height:10%;
+
+        .dlc-send-message {
+          height: 10%;
         }
       }
 
@@ -47,5 +48,18 @@ const props = defineProps({
   :deep(.new-msg-modal) {
     border-radius: 0px !important;
   }
+}
+
+
+@media all and (max-width: 479px) {
+  .zemtown-modal {
+    width: 100vw;
+
+    .dm-list {
+      height: 100%;
+
+    }
+  }
+
 }
 </style>

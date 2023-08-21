@@ -22,7 +22,6 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { isObjEmpty } from '~~/scripts/utils';
 
 const { $localePath } = useNuxtApp()
 const config = useRuntimeConfig()
@@ -37,6 +36,10 @@ const channelInfo = computed(() => useChannel().userChannel.value.info)
 const isChannelLoading = computed(
   () => useChannel().userChannel.value.isLoading
 )
+
+definePageMeta({
+  layout: 'header-only',
+})
 
 watch(
   () => userInfo.value,
@@ -90,17 +93,15 @@ onMounted(async () => {
     display: none;
   }
 
-
-
   .area-title,
   .card-game {
     width: 100%;
   }
 }
 
-@media all and (min-width: 768px) and (max-width: 991px) {}
-
-@media all and (min-width: 992px) and (max-width: 1199px) {}
-
-@media all and (min-width: 1200px) {}
+@media all and (min-width: 768px) and (max-width: 991px) {
+  .my-info {
+    display: none;
+  }
+}
 </style>

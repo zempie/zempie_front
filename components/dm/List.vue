@@ -34,7 +34,7 @@
           </li>
         </ul>
         <template v-else>
-          <ul v-if="roomList" class="msg-list" ref="msgEl">
+          <ul v-if="roomList && roomList.length" class="msg-list" ref="msgEl">
             <!-- <el-scrollbar tag="ul" wrap-class="msg-list" height="650px"> -->
             <li v-for="room in roomList" :key="room.id" @click="onClickRoom(room)"
               :class="{ active: room?.id === selectedRoom?.id }">
