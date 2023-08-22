@@ -27,11 +27,13 @@ const cookie = useCookie(config.COOKIE_NAME)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 const isLoading = computed(() => useUser().user.value.isLoading)
 
+alert(isFlutter.value)
+
 const zemtownUrl = computed(async () => {
   if (isFlutter.value) {
     const response = await FlutterBridge().getFbCurrentUser()
     FlutterBridge().webLog(response)
-    FlutterBridge().webLog(`${config.ZEMTOWN_URL}?token=${response.value.message.idToken}`)
+    FlutterBridge().webLog(`${config.ZEMTOWN_URL}?token=${response.value?.message?.idToken}`)
 
     return `${config.ZEMTOWN_URL}?token=${response.value.message.idToken}`
   } else {
