@@ -37,7 +37,7 @@ export default function () {
 
     },
     async getFbCurrentUser() {
-      await callHandler("currentUser");
+      const response = await callHandler("currentUser");
       return JSON.parse(response);
 
     },

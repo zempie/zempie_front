@@ -29,7 +29,6 @@ const isLoading = computed(() => useUser().user.value.isLoading)
 
 
 const zemtownUrl = computed(async () => {
-  alert(isFlutter.value)
   if (isFlutter.value) {
     const response = await FlutterBridge().getFbCurrentUser()
     FlutterBridge().webLog(response)
