@@ -14,4 +14,10 @@ definePageMeta({
 })
 
 </script>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+@media all and (min-width: 480px) and (max-width: 767px) {
+  .content {
+    padding: 70px 0 30px 0;
+  }
+}
+</style>

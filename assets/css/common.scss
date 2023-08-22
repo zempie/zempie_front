@@ -1437,7 +1437,7 @@ $zempie-main-color-hover: #f974162a;
     .dl-content {
       border: none;
       margin-top: 10px !important;
-      height: 92% !important;
+      height: 91% !important;
 
       .dm-info-box {
         width: 55% !important;
@@ -1469,7 +1469,6 @@ $zempie-main-color-hover: #f974162a;
           display: flex;
           border: 1px solid #eee;
           border-radius: 10px;
-
         }
 
         .active-room-container {
@@ -1537,6 +1536,8 @@ $zempie-main-color-hover: #f974162a;
 
         &.on {
           display: inline !important;
+          margin-bottom: 20px;
+
         }
       }
     }
@@ -1544,7 +1545,7 @@ $zempie-main-color-hover: #f974162a;
     .dl-content {
       border: none;
       margin-top: 10px !important;
-      height: 92% !important;
+      height: 88% !important;
 
       .dm-info-box {
         width: 55% !important;
@@ -1576,7 +1577,6 @@ $zempie-main-color-hover: #f974162a;
           display: flex;
           border: 1px solid #eee;
           border-radius: 10px;
-
         }
 
         .active-room-container {
@@ -1593,6 +1593,7 @@ $zempie-main-color-hover: #f974162a;
 
         .dlc-send-message {
           flex: 0.1;
+          border-top: 0px;
 
           div {
             // width: 90%;
@@ -1681,6 +1682,8 @@ $zempie-main-color-hover: #f974162a;
 
     .msg-container {
       width: 100% !important;
+      margin-bottom: 10px;
+
 
       .input-container {
         margin-right: 10px;
