@@ -90,12 +90,19 @@ onBeforeMount(async () => {
   }
 })
 
+onMounted(() => {
+  nextTick(() => {
+    FlutterBridge().webLog(zemtownUrl.value)
+  })
+})
+
 function handleFullscreenChange() {
   var isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
 
   if (isFullscreen) {
     console.log('The browser is in fullscreen mode.');
     FlutterBridge().sendFullscreenMode(true)
+
   } else {
     console.log('The browser is not in fullscreen mode.');
     FlutterBridge().sendFullscreenMode(false)
