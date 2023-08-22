@@ -9,7 +9,7 @@
           <h3 class="font16 text-left ">{{ user.name }}</h3>
           <p class="font13 nickname text-left text-ellipsis">@{{ user.nickname }}</p>
         </dt>
-        <UserFollowBtn v-if="isLogin" :user="user" />
+        <UserFollowBtn v-if="isLogin" :user="user" class="mt0" />
       </div>
     </dl>
   </li>

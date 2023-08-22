@@ -233,43 +233,6 @@ $zempie-main-color-hover: #f974162a;
   }
 }
 
-//like animation
-
-// .like-icon {
-//   &:hover {
-//     -webkit-animation: like 1s ease;
-//     animation: like 1s ease;
-//     -webkit-animation-iteration-count: 1;
-//     animation-iteration-count: 1;
-//   }
-// }
-
-// @keyframes like {
-//   15% {
-//     -webkit-transform: translateY(5px);
-//     transform: translateY(5px);
-//   }
-//   30% {
-//     -webkit-transform: translateY(-5px);
-//     transform: translateY(-5px);
-//   }
-//   50% {
-//     -webkit-transform: translateY(3px);
-//     transform: translateY(3px);
-//   }
-//   65% {
-//     -webkit-transform: translateY(-3px);
-//     transform: translateY(-3px);
-//   }
-//   80% {
-//     -webkit-transform: translateY(2px);
-//     transform: translateY(2px);
-//   }
-//   100% {
-//     -webkit-transform: translateY(0);
-//     transform: translateY(0);
-//   }
-// }
 
 @media all and (max-width: 479px) {
   .post-modal {
@@ -1410,7 +1373,7 @@ $zempie-main-color-hover: #f974162a;
 
     .active-room-container {
       .more-list {
-        right: -200px;
+        right: -150px;
       }
 
     }
@@ -1955,6 +1918,7 @@ $zempie-main-color-hover: #f974162a;
 
 @media all and (max-width: 767px) {
   .comment-modal {
+    height: 100%;
 
     .ma-header {
 
@@ -1966,6 +1930,10 @@ $zempie-main-color-hover: #f974162a;
         display: none;
       }
 
+    }
+
+    .tap-list {
+      margin-bottom: 0px;
     }
   }
 }

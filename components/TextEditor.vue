@@ -106,8 +106,8 @@
         </dd>
 
       </dl>
-      <p>
-        <small class="auto-save-mobile" v-if="showSavedTime" style="color: #999">{{ t('autosave') }} <span>
+      <p style="min-height:20px">
+        <small v-if="showSavedTime" class="auto-save-mobile" style="color: #999">11{{ t('autosave') }} <span>
             {{
               savedTime
             }}</span></small>
@@ -124,7 +124,7 @@
             </button>
           </dd>
         </dl>
-        <div class="ma-content">
+        <div class="ma-content draft-container">
           <ul>
             <li v-for="(draft, index) in draftList" class="draft" @click="selectDraft(draft, index)">
               <div>
