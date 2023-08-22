@@ -26,7 +26,8 @@ const router = useRouter()
 const cookie = useCookie(config.COOKIE_NAME)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 const isLoading = computed(() => useUser().user.value.isLoading)
-const zemtownUrl = computed(() => {
+
+const zemtownUrl = computed(async () => {
   if (isFlutter.value) {
     const response = await FlutterBridge().getFbCurrentUser()
     return `${config.ZEMTOWN_URL}?token=${response.value.idToken}`
