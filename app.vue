@@ -14,6 +14,9 @@ import { ID_INJECTION_KEY } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import flutterBridge from './scripts/flutterBridge';
 import shared from './scripts/shared';
+import FlutterBridge from '~~/scripts/flutterBridge'
+
+
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
 const switchLocalePath = useSwitchLocalePath()
@@ -76,6 +79,37 @@ onBeforeMount(async () => {
     shared.switchLang(lang)
   }
 
+
+  // route.name.includes("en")
+  if (document.fullscreenEnabled || document.webkitFullscreenEnabled || document.mozFullScreenEnabled || document.msFullscreenEnabled) {
+    // Add an event listener to detect fullscreen changes
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+  }
+})
+
+function handleFullscreenChange() {
+  var isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+
+  if (isFullscreen) {
+    console.log('The browser is in fullscreen mode.');
+    FlutterBridge().sendFullscreenMode(true)
+  } else {
+    console.log('The browser is not in fullscreen mode.');
+    FlutterBridge().sendFullscreenMode(false)
+  }
+}
+
+onBeforeUnmount(() => {
+  if (document.fullscreenEnabled || document.webkitFullscreenEnabled || document.mozFullScreenEnabled || document.msFullscreenEnabled) {
+    // Add an event listener to detect fullscreen changes
+    document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
+  }
 })
 
 function notiPerCheck() {
