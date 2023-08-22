@@ -719,8 +719,6 @@ function updateGroupName(roomName: string) {
 }
 </script>
 <style scoped lang="scss">
-@import '~/assets/css/dm.scss';
-
 .new-msg-btn-icon {
   &.inactive {
     opacity: 0.3;
