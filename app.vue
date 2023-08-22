@@ -32,9 +32,9 @@ const zemtownUrl = computed(async () => {
   if (isFlutter.value) {
     const response = await FlutterBridge().getFbCurrentUser()
     FlutterBridge().webLog(response)
-    FlutterBridge().webLog(`${config.ZEMTOWN_URL}?token=${response.value?.message?.idToken}`)
+    FlutterBridge().webLog(`${config.ZEMTOWN_URL}?token=${response?.message?.idToken}`)
 
-    return `${config.ZEMTOWN_URL}?token=${response.value.message.idToken}`
+    return `${config.ZEMTOWN_URL}?token=${response.message.idToken}`
   } else {
     return fUser.value ? `${config.ZEMTOWN_URL}?token=${fUser.value.accessToken}` : `${config.ZEMTOWN_URL}`
   }
