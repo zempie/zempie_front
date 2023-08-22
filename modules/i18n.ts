@@ -10,20 +10,22 @@ const messages = Object.assign(languages)
 
 export const i18n = {
   strategy: 'prefix_except_default',
-  locales: [{
-    code: 'en',
-    iso: 'en-US'
-  },
-  {
-    code: 'ko',
-    iso: 'kr'
-  },],
-  defaultLocale: 'ko',
+  locales: [
+    {
+      code: 'ko',
+      iso: 'kr'
+    },
+    {
+      code: 'en',
+      iso: 'en-US'
+    },
+  ],
+  defaultLocale: 'en',
 
   vueI18n: {
     legacy: false,
     silentTranslationWarn: true,
-    fallbackLocale: 'ko',
+    fallbackLocale: 'en',
     messages
   }
 
