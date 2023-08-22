@@ -1,6 +1,6 @@
 <template>
   <li v-if="users?.length" v-for="user in users" :key="user.id" class="pointer mb10" @click="onClickUser(user)">
-    <dl class="row">
+    <dl class="row items-center">
       <dd class="mr10">
         <UserAvatar :user="user" tag="p" style="width:45px; height:45px; border-radius: 50%;" />
       </dd>

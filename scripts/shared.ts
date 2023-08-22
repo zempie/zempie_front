@@ -259,6 +259,7 @@ export default {
    * @returns 
    */
   switchLang: (to: string) => {
+    console.log('to', to)
     const route = useRoute()
     const router = useRouter()
     const { $i18n } = useNuxtApp()

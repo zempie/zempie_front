@@ -118,16 +118,16 @@
               </dl>
             </li>
           </ul>
-          <ul v-else-if="!followPending" class="user-list" ref="userListEl">
+          <ul v-if="findUserPending" class="flex row content-center">
+            <ClipLoader color='#ff6e17' size="20px" />
+          </ul>
+          <ul class="user-list" ref="userListEl">
             <UserOdList v-if="userList?.length" :users="userList" @onClickUser="onClickUser" />
             <li v-else>
               {{ $t('not.found.user') }}
             </li>
           </ul>
-          <ul v-if="findUserPending" class="flex row content-center">
-            <ClipLoader color='#ff6e17' size="20px" />
-          </ul>
-          <!-- selectedUsers -->
+
           <button :class="[selectedUsers ? 'btn-default' : 'inactive-btn', 'mt20 w100p']" @click="startChat">{{
             $t('chatting') }}</button>
         </div>
@@ -285,7 +285,8 @@ watch(
 watch(
   () => userKeyword.value,
   async (val) => {
-    if (val && isFlutter.value) {
+    if (val) {
+      isAddUserData.value = false
       onInputUser()
     }
   }
@@ -428,8 +429,6 @@ const onInputUser = debounce(async () => {
 }, 300)
 
 async function getUsers() {
-  //   userOffset = ref(0)
-  // const isAddUserData
   let isPending = true
   findUserPending.value = true
 
@@ -444,6 +443,7 @@ async function getUsers() {
     try {
       const { data, error, pending } = await useCustomAsyncFetch<{ totalCount: number, result: IUser[] }>(createQueryUrl(`/search`, payload), getComFetchOptions('get', false))
 
+      console.log('data', data.value)
       if (data.value) {
         const { result, totalCount } = data.value
         if (isAddUserData.value) {
@@ -719,6 +719,8 @@ function updateGroupName(roomName: string) {
 }
 </script>
 <style scoped lang="scss">
+@import '~/assets/css/dm.scss';
+
 .new-msg-btn-icon {
   &.inactive {
     opacity: 0.3;
@@ -739,42 +741,5 @@ function updateGroupName(roomName: string) {
 
 ::v-deep(.new-msg-modal) {
   max-height: 90vh;
-}
-
-.new-msg-modal {
-
-  .ma-content {
-    .input-search-default {
-      justify-content: left
-    }
-
-    .user-list {
-      max-height: 500px;
-      overflow-y: scroll;
-      padding-top: 20px;
-
-      li {
-        padding: 13px;
-        border: 1px solid #ededed;
-        border-radius: 10px;
-        text-align: left;
-
-        dt {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-
-          h3 {
-            font-weight: 600;
-          }
-
-          .nickname {
-            color: #888
-          }
-        }
-      }
-    }
-  }
-
 }
 </style>

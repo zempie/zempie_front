@@ -22,7 +22,5 @@ const props = defineProps({
 })
 const emit = defineEmits(['updateBlind'])
 
-
-
 </script>
 <style scoped lang="scss"></style>

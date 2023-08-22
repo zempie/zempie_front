@@ -27,7 +27,7 @@
     </ul>
 
     <ClientOnly>
-      <el-dialog v-model="showCommentModal" class="modal-area-type" width="500px">
+      <el-dialog v-model="showCommentModal" class="modal-area-type" width="380px" :fullscreen="isFullScreen">
         <div class="modal-alert">
           <dl class="ma-header">
             <dt>{{ $t('comments') }} <span class="count">({{ count }})</span></dt>
@@ -37,14 +37,15 @@
               </button>
             </dd>
           </dl>
-          <div class="ma-content ta-coment-list">
-            <ul ref="commentEl">
+          <div class="ma-content ta-coment-list" ref="commentEl">
+            <ul>
               <GameCommentItem v-if="comments.length" v-for="comment in comments" :comment="comment" :key="comment.id"
                 :game-id="game.id" @delete-comment="deleteComment" @update-comment="updateComment" />
             </ul>
-            <div>
-              <CommonInput @send-input="sendComment" ref="modalInputRef" placeholder="Message" />
-            </div>
+
+          </div>
+          <div class="game-cmt-input-container">
+            <CommonInput @send-input="sendComment" ref="modalInputRef" placeholder="Message" />
           </div>
         </div>
       </el-dialog>
@@ -58,7 +59,7 @@ import { IGame, IReply } from '~~/types'
 import { useInfiniteScroll } from '@vueuse/core'
 import { debounce } from '~~/scripts/utils'
 
-const COMMENT_LIMIT = 10
+const COMMENT_LIMIT = 15
 const inputRef = ref()
 const modalInputRef = ref()
 const partialComments = ref<IReply[]>([])
@@ -79,6 +80,12 @@ const isLogin = computed(() => useUser().user.value.isLogin)
 //중복 클릭 방지용
 let cmtAcceessableCnt = 2
 
+//반응형
+const isFullScreen = ref(false)
+
+const isMobile = computed(() =>
+  window.matchMedia('screen and (max-width: 767px)')
+)
 const props = defineProps({
   game: Object as PropType<IGame>
 })
@@ -97,6 +104,9 @@ useInfiniteScroll(
 
 onMounted(async () => {
   await initFetch()
+  onResize()
+  window.addEventListener('resize', onResize)
+
 })
 
 const initFetch = debounce(async () => {
@@ -108,8 +118,14 @@ const initFetch = debounce(async () => {
   }
 }, 300)
 
+
+function onResize() {
+
+  isFullScreen.value = isMobile.value.matches ? true : false
+}
+
+
 async function getComments() {
-  console.log('props', props.game)
   const payload = {
     game_id: props.game.id,
     limit: limit.value,

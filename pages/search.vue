@@ -71,16 +71,24 @@ definePageMeta({
   layout: 'header-only',
 })
 
+
+console.log(useSearch().search.value.results)
+
+
+
 if (!useSearch().search.value.results) {
-  useSearch().getSearch(keyword.value)
-  console.log('no', useSearch().search.value)
+
+  nextTick(async () => {
+    await useSearch().getSearch(keyword.value)
+  })
 }
+
 
 shared.createHeadMeta(`${keyword.value}${t('seo.search.title')}`, `${t('seo.search.desc1')}${keyword.value}${t('seo.search.desc2')}`)
 
 
 function updateBlind(feed, img) {
-  useSearch().updateResult(feed, img)
+  useSearch().updateResultPost(feed, img)
 }
 </script>
 

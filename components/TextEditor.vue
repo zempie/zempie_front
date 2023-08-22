@@ -1,7 +1,7 @@
 <template>
   <div class="modal-post">
     <ul class="mp-header">
-      <li v-if="isFullScreen" @click="closeTextEditor" style="width: 50px">
+      <li v-if="isFullScreen" @click="closeTextEditor" class="mobile-back-btn">
         <i class="uil uil-angle-left-b"></i>
       </li>
       <li class="title">
@@ -84,9 +84,7 @@
             </div>
           </div>
         </dt>
-        <!--
-           1분마다 자동 저장
-         -->
+
         <Transition name="component-fade" mode="out-in">
           <small class="auto-save" v-if="showSavedTime" style="color: #999">{{ t('autosave') }} <span> {{
             savedTime
@@ -106,7 +104,14 @@
             {{ $t('save.post') }}
           </button>
         </dd>
+
       </dl>
+      <p>
+        <small class="auto-save-mobile" v-if="showSavedTime" style="color: #999">{{ t('autosave') }} <span>
+            {{
+              savedTime
+            }}</span></small>
+      </p>
     </div>
 
     <el-dialog v-model="showDraftList" append-to-body class="modal-area-type" width="380px" :close-on-click-modal="false">
@@ -1411,33 +1416,40 @@ function blindImg(index: number) {
   opacity: 0;
 }
 
-.title {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  padding: 22px 20px 20px 20px;
-  text-align: center;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 16px;
-  border-bottom: #fff 2px solid;
-  cursor: default;
-  transition: all 0.4s ease-in-out;
-}
+.mp-header {
+  .mobile-back-btn {
 
-.close-btn {
-  padding: 22px 20px 20px 20px;
-  position: absolute;
-  right: 0;
-  cursor: pointer;
+    padding: 22px 20px 20px 20px;
+  }
+
+  .title {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 22px 20px 20px 20px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 16px;
+    border-bottom: #fff 2px solid;
+    cursor: default;
+    transition: all 0.4s ease-in-out;
+  }
+
+  .close-btn {
+    padding: 22px 20px 20px 20px;
+    position: absolute;
+    right: 0;
+    cursor: pointer;
 
 
-}
+  }
 
-.close-btn:hover {
-  color: #f97316;
+  .close-btn:hover {
+    color: #f97316;
 
+  }
 }
 
 .modal-post {
@@ -1666,6 +1678,10 @@ function blindImg(index: number) {
   }
 }
 
+.auto-save-mobile {
+  display: none;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(150px, 2fr));
@@ -1734,6 +1750,15 @@ function blindImg(index: number) {
 }
 
 @media all and (max-width: 479px) {
+  .modal-post {
+    .mp-header {
+      .title {
+        position: absolute;
+        width: 100%;
+      }
+    }
+  }
+
   .mp-category {
     .btn-line-small {
       span:nth-child(3) {
@@ -1743,14 +1768,28 @@ function blindImg(index: number) {
   }
 
   .auto-save {
-    span {
-      display: block;
-    }
+    display: none;
+  }
+
+  .auto-save-mobile {
+    display: block;
+    padding: 0px 20px;
   }
 
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
+  .modal-post {
+    .mp-header {
+      .title {
+
+        position: absolute;
+        width: 100%;
+
+      }
+    }
+  }
+
   .mp-category {
     .btn-line-small {
       span:nth-child(3) {

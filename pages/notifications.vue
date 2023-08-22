@@ -20,19 +20,13 @@
       </div>
 
       <dl class="dl-content">
-        <!-- <div>
-            <div class="input-search-default">
-              <p><i class="uil uil-search"></i></p>
-              <div><input type="text" name="" title="keywords" placeholder="검색어를 입력하세요." /></div>
-            </div>
-          </div> -->
         <ul ref="listEl">
           <TransitionGroup name="list">
             <li v-for="noti in list" :key="noti.id" :class="!noti.is_read && 'is-read-active'"
               @click.stop="clickNoti(noti)">
               <dl>
                 <dd>
-                  <UserAvatar :tag="'p'" :user="noti.user" :hasRouter="true" />
+                  <UserAvatar tag="p" :user="noti.user" :hasRouter="true" />
                 </dd>
                 <dt>
                   <h3><span @click.stop="$router.push($localePath(`/${noti.user.nickname}`))">{{ noti.user.nickname
@@ -118,7 +112,7 @@ async function fetch() {
 }
 
 async function clickNoti(noti: INotification) {
- 
+
   await useCustomFetch('/notification', getComFetchOptions('put', true, { id: noti.id }))
   shared.moveNoti(noti)
 
