@@ -27,9 +27,9 @@ const cookie = useCookie(config.COOKIE_NAME)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 const isLoading = computed(() => useUser().user.value.isLoading)
 
-alert(isFlutter.value)
 
 const zemtownUrl = computed(async () => {
+  alert(isFlutter.value)
   if (isFlutter.value) {
     const response = await FlutterBridge().getFbCurrentUser()
     FlutterBridge().webLog(response)
