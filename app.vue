@@ -26,7 +26,14 @@ const router = useRouter()
 const cookie = useCookie(config.COOKIE_NAME)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 const isLoading = computed(() => useUser().user.value.isLoading)
-const zemtownUrl = computed(() => fUser.value ? `${config.ZEMTOWN_URL}?token=${fUser.value.accessToken}` : `${config.ZEMTOWN_URL}`)
+const zemtownUrl = computed(() => {
+  if (isFlutter.value) {
+    const response = await FlutterBridge().getFbCurrentUser()
+    return `${config.ZEMTOWN_URL}?token=${response.value.idToken}`
+  } else {
+    return fUser.value ? `${config.ZEMTOWN_URL}?token=${fUser.value.accessToken}` : `${config.ZEMTOWN_URL}`
+  }
+})
 
 const fUser = computed(() => useUser().user.value.fUser)
 
@@ -60,9 +67,6 @@ onBeforeMount(async () => {
 
     if (isFlutter.value && fUser && !userInfo.value) {
       await useUser().setUserInfo()
-      const response = await FlutterBridge().getFbCurrentUser()
-      FlutterBridge().webLog(response)
-
 
 
     }
