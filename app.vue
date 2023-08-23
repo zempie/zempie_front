@@ -4,7 +4,7 @@
     <NuxtPage />
     <div :class="['zemtown-frame', String(route.name).includes('zemtown') ? 'on' : 'off']">
       <ClientOnly>
-        <iframe ref="zemtownRef" :src="zemtownUrl" style="width: 100%; height: 99%;" />
+        <iframe ref="zemtownRef" :src="zemtownUrl" style="width: 100%; height: 99%;" :key="zemtownUrl" />
       </ClientOnly>
     </div>
   </NuxtLayout>
@@ -28,19 +28,8 @@ const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 const isLoading = computed(() => useUser().user.value.isLoading)
 
 
-
-
-// const fUser = computed(() => useUser().user.value.fUser)
 const zemtownUrl = ref(config.ZEMTOWN_URL)
 
-// const zemtownUrl = computed({
-//   get() {
-//     return zemUrl.value
-//   },
-//   set(value) {
-//     zemUrl.value = value;
-//   }
-// })
 
 const tmIframeCode = `<iframe src="https://www.googletagmanager.com/ns.html?id=${config.TAG_MANAGER_ID}"
 height="0" width="0" style="display:none;visibility:hidden"></iframe>`
@@ -64,26 +53,23 @@ onBeforeMount(async () => {
   colorLog('===App start===', 'red')
   await useMobile().setMobileState()
 
-
   try {
     const fUser = await getCurrentUser()
-    console.log(fUser)
 
     if (!fUser) {
       useUser().setLoadDone()
     } else {
-      console.log(fUser.value)
       zemtownUrl.value = `${config.ZEMTOWN_URL}?token=${fUser?.accessToken}`
     }
 
     if (isFlutter.value && fUser && !userInfo.value) {
       await useUser().setUserInfo()
-      zemtownUrl.value = `${config.ZEMTOWN_URL}?token=${fUser?.accessToken}`
+
     }
 
   }
   catch (err: any) {
-    console.log('err?', err)
+    console.log('err', err)
   }
   finally {
     useUser().setLoadDone()
@@ -103,14 +89,6 @@ onBeforeMount(async () => {
   }
 
 
-  // route.name.includes("en")
-  if (document.fullscreenEnabled || document.webkitFullscreenEnabled || document.mozFullScreenEnabled || document.msFullscreenEnabled) {
-    // Add an event listener to detect fullscreen changes
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
-    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
-  }
 })
 
 onMounted(() => {
@@ -119,28 +97,6 @@ onMounted(() => {
   })
 })
 
-function handleFullscreenChange() {
-  var isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
-
-  if (isFullscreen) {
-    console.log('The browser is in fullscreen mode.');
-    FlutterBridge().sendFullscreenMode(true)
-
-  } else {
-    console.log('The browser is not in fullscreen mode.');
-    FlutterBridge().sendFullscreenMode(false)
-  }
-}
-
-onBeforeUnmount(() => {
-  if (document.fullscreenEnabled || document.webkitFullscreenEnabled || document.mozFullScreenEnabled || document.msFullscreenEnabled) {
-    // Add an event listener to detect fullscreen changes
-    document.removeEventListener('fullscreenchange', handleFullscreenChange);
-    document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
-    document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
-    document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
-  }
-})
 
 function notiPerCheck() {
   const permissionCheck = Notification.permission;

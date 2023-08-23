@@ -259,7 +259,6 @@ export default {
    * @returns 
    */
   switchLang: (to: string) => {
-    console.log('to', to)
     const route = useRoute()
     const router = useRouter()
     const { $i18n } = useNuxtApp()
@@ -274,6 +273,7 @@ export default {
         router.replace(`/ko${route.fullPath}`);
       }
     } else {
+
       if (route.path.startsWith('/ko')) {
         router.replace(`/${to}${route.fullPath.replace(/^\/ko/, '')}`);
       } else {

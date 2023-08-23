@@ -5134,11 +5134,7 @@
 }
 
 @media all and (max-width: 479px) {
-  .dm-list {
-    width: 90%;
-    margin: 20px auto;
-    padding: 30px 20px;
-  }
+
 
   .dm-list .dl-title {
     display: block;
@@ -5155,10 +5151,7 @@
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
-  .dm-list {
-    width: 90vw;
-    /* padding: 30px 25px; */
-  }
+
 
   .dm-list .dl-title>div {
     width: 60%;

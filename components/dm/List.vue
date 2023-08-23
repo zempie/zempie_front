@@ -1,7 +1,9 @@
 <template>
   <div :class="['dm-list', selectedRoom ? 'on' : 'off']">
     <div class="dl-title">
-      <div>
+      <div class="row items-center">
+        <button v-if="isFullScreen && !selectedRoom" class="mobile-back-btn pointer" @click="onClickBackBtn"><i
+            class="uil uil-arrow-left"></i></button>
         <h2> <button :class="['mobile-btn', selectedRoom ? 'on' : 'off']" @click="initSelect"><i
               class="uil uil-arrow-left"></i></button> {{
                 $t('dm') }}</h2>
@@ -213,13 +215,6 @@ const userListRef = ref<HTMLElement | null>(null)
 
 let createRoomCount = 2
 
-
-definePageMeta({
-  title: 'dm',
-  name: 'dm',
-  middleware: 'auth',
-  layout: 'header-only',
-})
 
 useInfiniteScroll(
   userListEl,
@@ -716,6 +711,10 @@ function updateGroupName(roomName: string) {
     return room
 
   })
+}
+
+function onClickBackBtn() {
+  router.back()
 }
 </script>
 <style scoped lang="scss">

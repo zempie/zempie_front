@@ -1363,12 +1363,7 @@ $zempie-main-color-hover: #f974162a;
 @media all and (max-width: 479px) {
 
   .dm-list {
-    padding: 0px 10px 00px 10px;
-    margin: 0px;
-    width: 100%;
-    height: calc(100vh - 70px - 50px);
-    border-radius: 0px;
-    box-shadow: none;
+
 
     .active-room-container {
       .more-list {
@@ -1442,7 +1437,6 @@ $zempie-main-color-hover: #f974162a;
 
         .dlc-chat-content {
           height: auto;
-          flex: 0.85;
           overflow-x: hidden;
           overflow-y: auto;
           position: relative;
@@ -1476,13 +1470,6 @@ $zempie-main-color-hover: #f974162a;
 
 
   .dm-list {
-    padding: 0px 10px 00px 10px;
-    margin: 0px;
-    width: 100%;
-    height: calc(100vh - 70px - 50px);
-    border-radius: 0px;
-    box-shadow: none;
-
 
     .dl-title {
       display: flex;
@@ -1510,7 +1497,6 @@ $zempie-main-color-hover: #f974162a;
     .dl-content {
       border: none;
       margin-top: 10px !important;
-      height: 88% !important;
 
       .dm-info-box {
         width: 55% !important;

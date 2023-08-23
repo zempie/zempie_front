@@ -1,23 +1,54 @@
 <template>
-  <div class="content" style="height: auto">
-    <DmList />
-  </div>
+  <NuxtLayout :name="layout">
+    <div :class="['content', isMobile && 'mobile']">
+      <DmList />
+    </div>
+  </NuxtLayout>
 </template>
 <script setup lang="ts">
+const isFullScreen = ref(false)
 
+const isMobile = computed(() =>
+  window.matchMedia('screen and (max-width: 767px)')
+)
+const layout = computed(() => {
+  return isFullScreen.value ? 'layout-none' : 'header-only'
+}
+)
 
 definePageMeta({
   title: 'dm',
   name: 'dm',
   middleware: 'auth',
-  layout: 'header-only',
+  layout: false
 })
 
+onMounted(async () => {
+  nextTick(() => {
+    onResize()
+  })
+  window.addEventListener('resize', onResize)
+})
+
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', onResize)
+})
+
+function onResize() {
+  isFullScreen.value = isMobile.value.matches ? true : false
+}
 </script>
 <style scoped lang="scss">
-@media all and (min-width: 480px) and (max-width: 767px) {
+.content {
+  height: auto;
+}
+
+@media all and (max-width: 767px) {
   .content {
-    padding: 70px 0 30px 0;
+    padding: 0px;
+    height: 100vh;
+
   }
 }
 </style>

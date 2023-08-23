@@ -189,7 +189,6 @@ export async function getCurrentUser() {
     const result = await FlutterBridge().getFbCurrentUser()
 
     if (result) {
-
       const info = {
         ...result,
         accessToken: result.idToken

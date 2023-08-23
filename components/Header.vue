@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <dl>
+    <dl style="min-height: 70px;">
       <dt>
         <div class="header-logo-menu">
           <p>
@@ -186,6 +186,7 @@ async function moveSearchPage() {
   router.push({ path: $localePath(`/search`), query: { q: searchInput.value } })
   searchInput.value = ""
 }
+
 function clickOutside() {
   if (isHeaderSideMobile.value) {
     isHeaderSideMobile.value = false
