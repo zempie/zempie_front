@@ -28,23 +28,24 @@ const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 const isLoading = computed(() => useUser().user.value.isLoading)
 
 
-const zemtownUrl = computed(async () => {
+
+
+const fUser = computed(() => useUser().user.value.fUser)
+
+await getCurrentUser()
+
+const zemtownUrl = computed(() => {
   if (isFlutter.value) {
-    const response = await FlutterBridge().getFbCurrentUser()
 
-    FlutterBridge().webLog(`typeof :  ${typeof response.message}`)
-    FlutterBridge().webLog(response && response.idToken)
+    FlutterBridge().webLog(`${config.ZEMTOWN_URL}?token=${fUser.value?.accessToken}`)
+    FlutterBridge().webLog(fUser.value)
 
-
-    FlutterBridge().webLog(`${config.ZEMTOWN_URL}?token=${response?.idToken}`)
-
-    return `${config.ZEMTOWN_URL}?token=${response.idToken}`
+    return `${config.ZEMTOWN_URL}?token=${fUser.value?.accessToken}`
   } else {
     return fUser.value ? `${config.ZEMTOWN_URL}?token=${fUser.value.accessToken}` : `${config.ZEMTOWN_URL}`
   }
 })
-
-const fUser = computed(() => useUser().user.value.fUser)
+console.log('zemtownUrl', zemtownUrl.value)
 
 const tmIframeCode = `<iframe src="https://www.googletagmanager.com/ns.html?id=${config.TAG_MANAGER_ID}"
 height="0" width="0" style="display:none;visibility:hidden"></iframe>`

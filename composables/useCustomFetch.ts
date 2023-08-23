@@ -189,7 +189,12 @@ export async function getCurrentUser() {
     const result = await FlutterBridge().getFbCurrentUser()
 
     if (result) {
-      useUser().setFirebaseUser(result.message)
+
+      const info = {
+        ...result,
+        accessToken: result.idToken
+      }
+      useUser().setFirebaseUser(info)
     }
     useUser().setLoadDone()
     return result || null
