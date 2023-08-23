@@ -33,7 +33,9 @@ const zemtownUrl = computed(async () => {
     const response = await FlutterBridge().getFbCurrentUser()
 
     FlutterBridge().webLog(`typeof :  ${typeof response.message}`)
-    FlutterBridge().webLog(response.message)
+    FlutterBridge().webLog(response)
+    FlutterBridge().webLog(response && response.message)
+
 
     FlutterBridge().webLog(`${config.ZEMTOWN_URL}?token=${response?.message?.idToken}`)
 
