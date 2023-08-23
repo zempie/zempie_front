@@ -30,22 +30,17 @@ const isLoading = computed(() => useUser().user.value.isLoading)
 
 
 
-const fUser = computed(() => useUser().user.value.fUser)
+// const fUser = computed(() => useUser().user.value.fUser)
+const zemtownUrl = ref(config.ZEMTOWN_URL)
 
-await getCurrentUser()
-
-const zemtownUrl = computed(() => {
-  if (isFlutter.value) {
-
-    FlutterBridge().webLog(`${config.ZEMTOWN_URL}?token=${fUser.value?.accessToken}`)
-    FlutterBridge().webLog(fUser.value)
-
-    return `${config.ZEMTOWN_URL}?token=${fUser.value?.accessToken}`
-  } else {
-    return fUser.value ? `${config.ZEMTOWN_URL}?token=${fUser.value.accessToken}` : `${config.ZEMTOWN_URL}`
-  }
-})
-console.log('zemtownUrl', zemtownUrl.value)
+// const zemtownUrl = computed({
+//   get() {
+//     return zemUrl.value
+//   },
+//   set(value) {
+//     zemUrl.value = value;
+//   }
+// })
 
 const tmIframeCode = `<iframe src="https://www.googletagmanager.com/ns.html?id=${config.TAG_MANAGER_ID}"
 height="0" width="0" style="display:none;visibility:hidden"></iframe>`
@@ -69,22 +64,30 @@ onBeforeMount(async () => {
   colorLog('===App start===', 'red')
   await useMobile().setMobileState()
 
+
   try {
     const fUser = await getCurrentUser()
+    console.log(fUser)
+
     if (!fUser) {
       useUser().setLoadDone()
+    } else {
+      console.log(fUser.value)
+      zemtownUrl.value = `${config.ZEMTOWN_URL}?token=${fUser?.accessToken}`
     }
 
     if (isFlutter.value && fUser && !userInfo.value) {
       await useUser().setUserInfo()
-
-
+      zemtownUrl.value = `${config.ZEMTOWN_URL}?token=${fUser?.accessToken}`
     }
 
-  } finally {
+  }
+  catch (err: any) {
+    console.log('err?', err)
+  }
+  finally {
     useUser().setLoadDone()
   }
-
   //기존에 사용하던 쿠키가 있으면 삭제 -> 더 이상 사용하지 않음(기존 유저브라우저에 쿠키가 남았을 여부를 생각해서 남겨둠)
   if (cookie.value) {
     cookie.value = null
