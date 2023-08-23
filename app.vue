@@ -38,6 +38,10 @@ const userSetting = computed(() => useCommon().setting.value)
 
 const userInfo = computed(() => useUser().user.value.info)
 
+const isMobileSize = computed(() =>
+  window.matchMedia('screen and (max-width: 767px)')
+)
+
 shared.createHeadMeta(
   t('seo.landing.title'),
   t('seo.landing.description')
@@ -93,10 +97,24 @@ onBeforeMount(async () => {
 
 onMounted(() => {
   nextTick(() => {
-    FlutterBridge().webLog(zemtownUrl.value)
+    onResize()
+    window.addEventListener('resize', onResize)
+
   })
+
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', onResize)
 })
 
+function onResize() {
+  if (isMobileSize.value.matches) {
+    useCommon().setMobile(true)
+  } else {
+    useCommon().setMobile(false)
+
+  }
+}
 
 function notiPerCheck() {
   const permissionCheck = Notification.permission;
@@ -134,6 +152,8 @@ function notiPerCheck() {
 @import '~/assets/css/swiper.scss';
 @import '~/assets/css/pagination.scss';
 
+$header-height: 70px;
+$mobile-nabigation-height: 50px;
 
 body {
   margin: 0px !important;
@@ -163,14 +183,13 @@ body {
   .zemtown-frame {
     position: relative;
     width: 100%;
-    min-height: calc(100vh - 215px - 74px) !important;
     top: 74px;
     background-color: #000;
     margin-bottom: 74px;
 
     &.on {
       display: flex;
-      height: calc(100vh - 74px);
+      height: calc(100vh - #{$header-height});
     }
 
     &.off {
@@ -182,20 +201,20 @@ body {
   @media all and (max-width: 479px) {
 
     .zemtown-frame {
-      top: 0px;
+      top: #{$header-height};
 
       &.on {
-        height: 100vh;
+        height: calc(100vh - #{$header-height} - #{$mobile-nabigation-height});
       }
     }
   }
 
   @media all and (min-width: 480px) and (max-width: 767px) {
     .zemtown-frame {
-      top: 0px;
+      top: #{$header-height};
 
       &.on {
-        height: 100vh;
+        height: calc(100vh - #{$header-height} - #{$mobile-nabigation-height});
       }
     }
   }

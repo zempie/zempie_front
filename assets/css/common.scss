@@ -1308,96 +1308,12 @@ $zempie-main-color-hover: #f974162a;
 
 }
 
-
-.dm-list {
-  &.off {
-    display: block;
-
-  }
-
-  .mobile-btn {
-    display: none;
-
-  }
-
-  .dl-content {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin-top: 30px;
-    border: 1px solid #e5e5e5;
-    border-radius: 10px;
-    overflow: hidden;
-
-    dd {
-
-      ul {
-        overflow-y: auto;
-
-        li {
-          padding: 13px;
-
-          &:hover {
-            background-color: #F9f9f9;
-          }
-
-          dl {
-            dd {
-              width: 15%;
-            }
-
-            dt {
-              width: 70%;
-            }
-          }
-        }
-      }
-    }
-
-
-  }
-
-
-}
-
 @media all and (max-width: 479px) {
 
   .dm-list {
 
 
-    .active-room-container {
-      .more-list {
-        right: -150px;
-      }
-
-    }
-
-
-    .dl-title {
-      display: flex;
-      flex-direction: row;
-
-      .mobile-btn {
-        border: none;
-        background: transparent;
-        padding: 0px;
-        color: #333;
-        font-size: 25px;
-
-        &.off {
-          display: none !important;
-        }
-
-        &.on {
-          display: inline !important;
-        }
-      }
-    }
-
     .dl-content {
-      border: none;
-      margin-top: 10px !important;
-      height: 91% !important;
 
       .dm-info-box {
         width: 55% !important;

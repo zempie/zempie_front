@@ -37,27 +37,110 @@
 }
 
 /* dm 채팅창 */
+
+
+.dm-list {
+  &.off {
+    display: block;
+
+  }
+
+  .mobile-btn {
+    display: none;
+
+  }
+
+  .dl-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 30px;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    overflow: hidden;
+
+    dd {
+
+      ul {
+        overflow-y: auto;
+
+        li {
+          padding: 13px;
+
+          &:hover {
+            background-color: #F9f9f9;
+          }
+
+          dl {
+            dd {
+              width: 20%;
+            }
+
+            dt {
+              width: 70%;
+            }
+          }
+        }
+      }
+    }
+
+
+  }
+
+
+}
+
+
 @media all and (max-width: 479px) {
   .dm-list {
     padding: 30px 20px;
     height: 100%;
 
     .dl-title {
+      display: flex;
+      flex-direction: row;
+
       .mobile-back-btn {
         background: transparent;
         border: none;
         color: #0d0d0d;
         font-size: 25px;
       }
+
+
+      .mobile-btn {
+        border: none;
+        background: transparent;
+        padding: 0px;
+        color: #333;
+        font-size: 25px;
+
+        &.off {
+          display: none !important;
+        }
+
+        &.on {
+          display: inline !important;
+        }
+      }
     }
 
     .dl-content {
-      height: 95%;
+      height: calc((100vh - 150px));
+      border: none;
+      margin-top: 10px !important;
 
       .msg-container {
         .dlc-send-message {
           bottom: 20px
         }
+      }
+
+    }
+
+    .active-room-container {
+      .more-list {
+        right: -150px;
       }
 
     }
@@ -80,7 +163,8 @@
     }
 
     .dl-content {
-      height: 95%;
+      height: calc((100vh - 180px));
+
 
       .msg-container {
         .dlc-send-message {

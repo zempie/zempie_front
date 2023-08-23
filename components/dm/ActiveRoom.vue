@@ -5,7 +5,10 @@
     </dd>
     <dt>
       <div>
-        <CommonDropdown :is-custom-btn="true" ref="memDropdownRef" style="width:auto">
+        <h2 v-if="isMobile" class="font16 text-bold fontColor-black" @click="opJoinedUserModal = true"> {{
+          getJoinedUserName(selectedRoom) }}
+        </h2>
+        <CommonDropdown v-else :is-custom-btn="true" ref="memDropdownRef" style="width:auto">
           <template #btn>
             <h2 class="font16 text-bold fontColor-black" @click="memDropdownRef.toggleDropdown"> {{
               getJoinedUserName(selectedRoom) }}
@@ -17,6 +20,7 @@
             <!-- <li @click="onDeleteMsg">{{ $t('delete.msg') }}</li> -->
           </template>
         </CommonDropdown>
+
         <p v-if="!selectedRoom.is_group_room">{{ selectedRoom?.joined_users[0]?.name }}</p>
       </div>
     </dt>
@@ -93,6 +97,24 @@
         </div>
       </div>
     </el-dialog>
+    <el-dialog v-model="opJoinedUserModal" class="modal-area-type" width="380px" :fullscreen="true">
+      <div class="modal-alert">
+        <dl class="ma-header">
+          <!-- <UserOdList :users="selectedRoom.joined_users" /> -->
+          <dt> {{ t('joined.users') }} </dt>
+          <dd>
+            <button class="pointer" @click="opJoinedUserModal = false">
+              <i class="uil uil-times"></i>
+            </button>
+          </dd>
+        </dl>
+        <div class="ma-content">
+          <ul class="user-list" ref="userListEl">
+            <UserOdList :users="selectedRoom.joined_users" />
+          </ul>
+        </div>
+      </div>
+    </el-dialog>
 
     <ImageOriginModal :imgInfo="activeMsg" :open-modal="showOriginImg" @close-modal="showOriginImg = false" />
 
@@ -142,12 +164,14 @@ const videoUploaderRef = ref()
 const recorderRef = ref()
 
 const memDropdownRef = ref()
+const opJoinedUserModal = ref()
 
 
 const userInfo = computed(() => useUser().user.value.info)
 const isFbSupported = computed(() => useCommon().setting.value.isFbSupported)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 const unreadStartId = computed(() => props.selectedRoom.unread_start_id)
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
 
 const { getJoinedUserName } = inject('joinedUser')
@@ -536,4 +560,6 @@ function uploadRecord(record) {
   console.log('rec', record)
   attr.value = record
 }
+
+
 </script>

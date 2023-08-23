@@ -1,9 +1,9 @@
 <template>
   <div class="mobile-menu">
-    <button class="mr10" @click="openZemtown"><span class="material-icons">
+    <button :class="[route.meta.name === 'main' && 'active']" @click="openTimeline"><span class="material-icons">
         home
       </span></button>
-    <button class="mr10" @click="openMyProfile"><span class="material-icons">
+    <button class=" mr10" @click="openMyProfile"><span class="material-icons">
         account_circle
       </span></button>
 
@@ -22,9 +22,9 @@
         groups
       </span>
     </button>
-    <button class="mr10" @click="openDm">
+    <button class="mr10" @click="openZemtown" :class="[$route.name?.toString().includes('zemtown') && 'active', 'mr10']">
       <span class="material-icons">
-        sms
+        attractions
       </span>
     </button>
   </div>
@@ -40,11 +40,19 @@ const isOpenDm = ref(false)
 const isZemtown = computed(() => String(route.name).includes('zemtown'))
 const isLogin = computed(() => useUser().user.value.isLogin)
 
+
+function openTimeline() {
+  router.push($localePath('/'))
+
+  useZemtown().closeDm()
+  useZemtown().closeMyProfile
+}
+
 function openZemtown() {
   router.push($localePath('/zemtown'))
-  useZemtown().closeDm()
-  useZemtown().closeMyProfile()
 
+  useZemtown().closeDm()
+  useZemtown().closeMyProfile
 }
 
 function openMyProfile() {
