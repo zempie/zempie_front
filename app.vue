@@ -31,8 +31,11 @@ const isLoading = computed(() => useUser().user.value.isLoading)
 const zemtownUrl = computed(async () => {
   if (isFlutter.value) {
     const response = await FlutterBridge().getFbCurrentUser()
-    FlutterBridge().webLog(response.message)
-    FlutterBridge().webLog(`${config.ZEMTOWN_URL}?token=${response?.message?.idToken}`)
+
+    FlutterBridge().webLog(`typeof :  ${typeof response}`)
+    const res = JSON.parse(response)
+    FlutterBridge().webLog(res.message)
+    FlutterBridge().webLog(`${config.ZEMTOWN_URL}?token=${res?.message?.idToken}`)
 
     return `${config.ZEMTOWN_URL}?token=${response.message.idToken}`
   } else {
