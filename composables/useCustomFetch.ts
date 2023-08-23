@@ -195,9 +195,12 @@ export async function getCurrentUser() {
         accessToken: result.idToken
       }
       useUser().setFirebaseUser(info)
+      useUser().setLoadDone()
+      return info
+    } else {
+      useUser().setLoadDone()
+      return null
     }
-    useUser().setLoadDone()
-    return result || null
   } else {
     const auth = getAuth()
 
