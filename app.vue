@@ -53,6 +53,7 @@ onBeforeMount(async () => {
     if (!fUser) {
       useUser().setLoadDone()
     }
+    flutterBridge().webLog(`fuser: ${fUser}`)
     console.log(fUser)
     useZemtown().setUrl(`${config.ZEMTOWN_URL}?token=${fUser?.accessToken}`)
 
