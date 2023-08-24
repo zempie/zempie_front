@@ -89,6 +89,7 @@ async function onMessage(msg: MessageEvent) {
   try {
     const { type, target_type, data: parsedData } = JSON.parse(msg.data)
 
+    console.log('msg', msg)
 
     switch (target_type) {
       case 'thumbnail':
@@ -97,9 +98,6 @@ async function onMessage(msg: MessageEvent) {
         closeMyProfile()
 
         isOpenGame.value = true
-
-
-
         const { data: gameData, error, pending } = await useAsyncData<any>('game', () =>
           $fetch(`/launch/game/${gameId}`, {
             baseURL: 'https://api.zempie.com/api/v1',
@@ -109,11 +107,6 @@ async function onMessage(msg: MessageEvent) {
             initialCache: false
           }
         )
-
-
-        // const { data: gameData, error, pending } = await useCustomAsyncFetch<{
-        //   result: { game: {}; my_emotions: {}; my_heart: boolean }
-        // }>(`/launch/game/${gameId}`, getZempieFetchOptions('get', false))
 
         if (gameData.value) {
           const { game, my_emotions, my_heart } = gameData.value.result
@@ -136,8 +129,7 @@ async function onMessage(msg: MessageEvent) {
         break;
 
       default:
-        // closeMyProfile()
-        // closeDm()
+        isOpenProfile.value = false
         isOpenDm.value = false
         isOpenGame.value = false
 
@@ -147,8 +139,6 @@ async function onMessage(msg: MessageEvent) {
   } catch (err) {
 
   }
-
-
 }
 
 

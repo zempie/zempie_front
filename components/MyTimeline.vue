@@ -1,6 +1,6 @@
 <template>
   <NuxtLayout name="my-timeline">
-    <dl class="three-area">
+    <dl class="my-tl-container three-area">
       <dt>
         <div class="my-info">
           <ChannelInfoBox :key="channelInfo.channel_id" />
@@ -55,50 +55,3 @@ onMounted(async () => {
   isPending.value = false
 })
 </script>
-
-<style lang="scss" scoped>
-.ta-myinfo {
-  margin-bottom: 20px;
-}
-
-.swiper-slide {
-  display: inline-block;
-}
-
-.no-game {
-  height: 60px;
-  padding: 20px 20px 0 20px;
-
-  li {
-    margin-top: 0px;
-  }
-}
-
-
-@media all and (max-width: 479px) {
-  .my-info {
-    display: none;
-  }
-
-  :deep(.ta-message-send) {
-    margin-top: 70px !important;
-  }
-}
-
-@media all and (min-width: 480px) and (max-width: 767px) {
-  .my-info {
-    display: none;
-  }
-
-  .area-title,
-  .card-game {
-    width: 100%;
-  }
-}
-
-@media all and (min-width: 768px) and (max-width: 991px) {
-  .my-info {
-    display: none;
-  }
-}
-</style>

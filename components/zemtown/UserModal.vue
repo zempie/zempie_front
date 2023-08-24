@@ -2,14 +2,12 @@
   <div class="zemtown-modal">
     <div v-if="isOpen" class="info-container">
       <div class="user-header">
-        <NuxtLink class="user-link font20 mb10" :to="$localePath('/')">{{ user?.nickname }}</NuxtLink>
-        <NuxtLink class="user-link mt5 mb10" :to="$localePath('/')">{{ user?.email }}</NuxtLink>
+        <NuxtLink class="user-link font20 mb10" :to="$localePath(`/${user?.nickname}`)">{{ user?.nickname }}</NuxtLink>
+        <NuxtLink class="user-link mt5 mb10" :to="$localePath(`/${user?.nickname}`)">{{ user?.email }}</NuxtLink>
       </div>
       <div v-if="isMine" class="user-body">
         <UserMenuProfile :user="user" />
-        <a @click="logout">{{
-          $t('logout')
-        }}</a>
+        <a @click="logout">{{ $t('logout') }}</a>
       </div>
       <div v-else class="user-actions">
         <UserFollowBtn :user="user" class="action-btn" />

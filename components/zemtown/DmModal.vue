@@ -13,7 +13,6 @@ const props = defineProps({
 </script>
 <style scoped lang="scss">
 .zemtown-modal {
-  // max-height: calc(100vh - 70px);
   padding-bottom: 0px;
   min-width: 350px;
 
