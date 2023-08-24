@@ -111,8 +111,6 @@ const route = useRoute()
 const isLogin = computed(() => useUser().user.value.isLogin)
 const isLoading = computed(() => useUser().user.value.isLoading)
 const user = computed(() => useUser().user.value.info)
-const fUser = computed(() => useUser().user.value.fUser)
-const zemtownUrl = computed(() => useZemtown().zemtown.value.url)
 
 const searchInput = ref()
 const isHeaderSideMobile = ref(false)
