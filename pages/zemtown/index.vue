@@ -8,7 +8,9 @@
 </template>
 <script setup lang="ts">
 const router = useRouter()
+
 const { $localePath } = useNuxtApp()
+const config = useRuntimeConfig()
 
 
 const targetUser = ref()
@@ -45,6 +47,12 @@ watch(() =>
       closeDm()
     }
   })
+
+watch(() => (useUser().user.value.fUser), (fUser) => {
+  if (fUser) {
+    useZemtown().setUrl(`${config.ZEMTOWN_URL}?token=${fUser?.accessToken}`)
+  }
+})
 onMounted(() => {
   if (zemtown.value.isOpenMyProfile) {
     openMyProfile()
