@@ -1049,5 +1049,7 @@
   "set.group.chat.name.info": "당신이 속한 그룹명이 수정됩니다.",
   "set.name": "이름을 작성해주세요.",
   "dm.sent.img": "사진을 보냈습니다.",
-  "chatting": "채팅"
+  "chatting": "채팅",
+  "not.support.ext": "해당 파일 확장자는 지원하지 않는 형식입니다.",
+  "joined.users": "__STRING_NOT_TRANSLATED__"
 }

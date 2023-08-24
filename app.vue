@@ -9,6 +9,7 @@ import { ID_INJECTION_KEY } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import flutterBridge from './scripts/flutterBridge';
 import shared from './scripts/shared';
+
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
 const switchLocalePath = useSwitchLocalePath()
@@ -17,6 +18,7 @@ const router = useRouter()
 
 const cookie = useCookie(config.COOKIE_NAME)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+const isLoading = computed(() => useUser().user.value.isLoading)
 
 const tmIframeCode = `<iframe src="https://www.googletagmanager.com/ns.html?id=${config.TAG_MANAGER_ID}"
 height="0" width="0" style="display:none;visibility:hidden"></iframe>`
@@ -24,6 +26,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>`
 const userSetting = computed(() => useCommon().setting.value)
 
 const userInfo = computed(() => useUser().user.value.info)
+
+const isMobileSize = computed(() =>
+  window.matchMedia('screen and (max-width: 767px)')
+)
 
 shared.createHeadMeta(
   t('seo.landing.title'),
@@ -37,22 +43,30 @@ provide(ID_INJECTION_KEY, {
 
 
 onBeforeMount(async () => {
+  colorLog('===App start===', 'red')
   await useMobile().setMobileState()
 
   try {
     const fUser = await getCurrentUser()
+
+
     if (!fUser) {
       useUser().setLoadDone()
     }
+    console.log('fuser from web', fUser && fUser.accessToken)
+    useZemtown().setUrl(`${config.ZEMTOWN_URL}?token=${fUser?.accessToken}`)
 
     if (isFlutter.value && fUser && !userInfo.value) {
       await useUser().setUserInfo()
     }
 
-  } finally {
+  }
+  catch (err: any) {
+    console.log('err', err)
+  }
+  finally {
     useUser().setLoadDone()
   }
-
   //기존에 사용하던 쿠키가 있으면 삭제 -> 더 이상 사용하지 않음(기존 유저브라우저에 쿠키가 남았을 여부를 생각해서 남겨둠)
   if (cookie.value) {
     cookie.value = null
@@ -67,7 +81,28 @@ onBeforeMount(async () => {
     shared.switchLang(lang)
   }
 
+
 })
+
+onMounted(() => {
+  nextTick(() => {
+    onResize()
+    window.addEventListener('resize', onResize)
+
+  })
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', onResize)
+})
+
+function onResize() {
+  if (isMobileSize.value.matches) {
+    useCommon().setMobile(true)
+  } else {
+    useCommon().setMobile(false)
+
+  }
+}
 
 function notiPerCheck() {
   const permissionCheck = Notification.permission;
@@ -127,6 +162,52 @@ body {
       input[type='checkbox']+label {
         color: #0d0c13 !important;
       }
+    }
+  }
+
+
+}
+
+
+$header-height: 70px;
+$mobile-nabigation-height: 50px;
+
+.zemtown-frame {
+  position: relative;
+  width: 100%;
+  top: 74px;
+  background-color: #000;
+  margin-bottom: 74px;
+
+  &.on {
+    display: flex;
+    height: calc(100vh - #{$header-height});
+  }
+
+  &.off {
+    // visibility: hidden;
+    display: none;
+  }
+}
+
+
+@media all and (max-width: 479px) {
+
+  .zemtown-frame {
+    top: #{$header-height};
+
+    &.on {
+      height: calc(100vh - #{$header-height} - #{$mobile-nabigation-height});
+    }
+  }
+}
+
+@media all and (min-width: 480px) and (max-width: 767px) {
+  .zemtown-frame {
+    top: #{$header-height};
+
+    &.on {
+      height: calc(100vh - #{$header-height} - #{$mobile-nabigation-height});
     }
   }
 }

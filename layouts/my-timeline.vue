@@ -1,5 +1,5 @@
 <template>
-  <div class="content" style="padding-top: 65px">
+  <div class="content">
     <slot />
   </div>
 </template>
@@ -12,13 +12,6 @@ const userInfo = ref<IUserChannel>()
 
 const isPending = ref(true)
 const channelId = computed(() => route.params.id as string)
-
-// watch(
-//   () => useUser().user.value.info,
-//   async (userInfo) => {
-//     await getChannelHeaderInfo()
-//   }
-// )
 
 onMounted(async () => {
   await getChannelHeaderInfo()
@@ -69,6 +62,11 @@ async function getChannelHeaderInfo() {
 }
 
 @media all and (max-width: 479px) {
+
+  .content {
+    padding-top: 0px;
+  }
+
   .tab-search-swiper {
     .swiper-slide {
       .mobile {

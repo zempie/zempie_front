@@ -26,15 +26,7 @@
             feed?.attatchment_files.length > 0
             ">
             <div class="tapl-movie-img" v-if="feed?.attatchment_files[0].type === 'image'">
-              <swiper class="swiper" :options="swiperOption" style="height: 350px">
-                <template v-for="file in feed?.attatchment_files">
-                  <swiper-slide>
-                    <img style="height: 88%; margin: 0 auto; display: flex" v-if="file.type === 'image'" :src="file.url"
-                      class="feed-img mt-3" />
-                  </swiper-slide>
-                </template>
-                <div class="swiper-pagination" slot="pagination"></div>
-              </swiper>
+              <PostImgSwiper :images="attatchment_files" @update-blind="updateBlind" />
             </div>
             <div class="tapl-movie-img" v-else>
               <div v-for="file in feed?.attatchment_files" :key="file.id">
@@ -48,25 +40,15 @@
               </div>
             </div>
           </template>
-          <PostLinkPreview v-if="!isObjEmpty(feed.metadata)" :tag-info="feed.metadata" :is-edit="false" />
+          <a v-if="!isObjEmpty(feed.metadata)" :href="feed.metadata?.url" target="_blank">
+
+            <PostLinkPreview v-if="!isObjEmpty(feed.metadata)" :tag-info="feed.metadata" :is-edit="false" />
+          </a>
 
           <CommunityTarget :communities="postedCommunity(feed?.posted_at)" :games="postedGame(feed?.posted_at)" />
 
           <ul class="tapl-option">
             <PostActions :feed="feed" :comment-cnt="commentCount" />
-            <!-- <li>
-              <ul>
-                <LikeBtn v-if="feed" :feed="feed" />
-                <li>
-                  <i class="uil uil-comment-alt-dots" style="font-size: 22px"></i>&nbsp;
-                  {{ feed?.comment_cnt }}
-                </li>
-                <li>
-                  <ShareMenu :feed="feed" />
-                </li>
-              </ul>
-            </li> -->
-
             <li>
               <PostDropdown :feed="feed" @deletePost="$router.back()" @refresh="refresh" />
             </li>
@@ -78,7 +60,6 @@
               }}{{ $t('comment.count.unit') }}
             </p>
 
-            <!-- <CommentList :comments="comments" @addComment="addComment" /> -->
             <ul ref="commentEl" style="max-height:700px; overflow-y: scroll;">
               <Comment v-for="comment in comments" :key="comment.content" :comment="comment" :isEdit="isCommentEdit"
                 @refresh="commentRefresh" @editComment="editComment" @deleteComment="deleteComment"
@@ -87,7 +68,6 @@
             <CommentInput :postId="feed?.id" @addComment="addComment" :recomment="recomment" />
 
           </div>
-          <!-- <div ref="triggerDiv"></div> -->
         </li>
       </ul>
       <ul class="ta-post" v-else>
@@ -148,9 +128,7 @@
 import _ from 'lodash'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
-
 import { Swiper, SwiperSlide } from 'swiper/vue'
-
 import { dateFormat, execCommandCopy, getFirstDomElementByServer, stringToDomElemByServer, isObjEmpty, } from '~~/scripts/utils'
 import shared from '~~/scripts/shared'
 import { IComment } from '~~/types'
@@ -192,6 +170,14 @@ const newRecomments = ref([])
 //에러
 const isExist = ref(true)
 
+
+
+const attatchment_files = computed(() => {
+  return feed.value.attatchment_files
+    && (Array.isArray(feed.value.attatchment_files)
+      ? feed.value.attatchment_files
+      : JSON.parse(feed.value.attatchment_files))
+})
 
 useInfiniteScroll(
   commentEl,
@@ -250,7 +236,6 @@ const postedGame = (posted_at) => {
 }
 
 onMounted(async () => {
-
   await commentFetch()
 })
 
@@ -443,6 +428,21 @@ function commentInit() {
   limit.value = COMMENT_LIMIT
   offset.value = 0
   sort.value = null
+}
+
+function updateBlind(img) {
+  const attFiles = shared.toArray(feed.value.attatchment_files)
+
+  feed.value.attatchment_files = attFiles
+    .map((file) => {
+      if (file.url === img.url) {
+        return {
+          ...file,
+          is_blind: !file.is_blind
+        }
+      }
+      return file
+    })
 }
 </script>
 

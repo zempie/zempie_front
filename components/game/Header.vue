@@ -1,31 +1,18 @@
 <template>
-  <div v-if="gameInfo" class="visual-info-left" :style="prevBanner
+  <div v-if="gameInfo" class="visual-info-left pos-relative" :style="prevBanner
     ? `background: url(${prevBanner + `?_=${Date.now()}`
     }) center center / cover no-repeat; background-size: cover;`
     : 'background-color: #f973165c'
     ">
-    <GameStageTag v-if="gameInfo.stage" :stage="gameInfo.stage" />
-    <div v-if="isMine" style="display: flex; justify-content: flex-end; margin: 20px">
+    <GameStageTag v-if="gameInfo.stage" :stage="gameInfo.stage" class="pos-absolute" style="top:10px; left: 10px;" />
+    <div v-if="isMine" class="pos-absolute banner-btn-container">
       <div style="height: 0px; overflow: hidden">
         <input type="file" @change="onBannerChange"
           accept="image/jpeg, image/png, image/svg, image/jpg, image/webp, image/bmp," ref="bannerImg" name="fileInput" />
       </div>
 
-      <span style="
-                     border-radius: 50%;
-                     background-color: #888;
-                     width: 30px;
-                     height: 30px;
-                     display: flex;
-                     cursor: pointer;
-                     align-items: center;
-                   " @click="uploadBanner">
-        <i class="uil uil-image-edit" style="
-           font-size: 20px;
-           margin-right: 10px;
-           color: #fff;
-           margin: 0 auto;
-         "></i>
+      <span class="banner-btn" @click="uploadBanner">
+        <i class="uil uil-image-edit"></i>
       </span>
     </div>
     <dl>
@@ -44,15 +31,14 @@
               </h2>
               <div class="menu">
                 <div class="like-btn row">
-                  <i v-if="!isLike" class="xi-heart-o like-icon pointer mr5" style="font-size: 22px; color: #ff6e17; "
-                    @click="setLike">
+                  <i v-if="!isLike" class="xi-heart-o like-icon pointer mr5 font20 zem-color" @click="setLike">
                   </i>
-                  <i v-else class="xi-heart like-icon pointer" style="font-size: 22px; color: #ff6e17; "
-                    @click="unsetLike">
+                  <i v-else class="xi-heart like-icon pointer mr5 font20 zem-color" @click="unsetLike">
                   </i>
-                  <p style="color: #fff">{{ likeCnt }}</p>
+                  <p class="fontColor-white">{{ likeCnt }}</p>
                 </div>
-                <CommonDropdown class="flex">
+                <ShareMenu :shareInfo="shareInfo" type="game" />
+                <CommonDropdown style="display: flex;">
                   <template #options>
                     <li @click="onClickReport">{{ $t('report.game') }}</li>
                   </template>
@@ -91,7 +77,7 @@
         <dl class="ma-header">
           <dt>{{ t('banner.photo') }}</dt>
           <dd>
-            <button @click="showChangeBanner = false">
+            <button class="pointer" @click="showChangeBanner = false">
               <i class="uil uil-times"></i>
             </button>
           </dd>
@@ -126,7 +112,7 @@
         <dl class="ma-header">
           <dt>{{ t('information') }}</dt>
           <dd>
-            <button @click="showDeleteBanner = false">
+            <button class="pointer" @click="showDeleteBanner = false">
               <i class="uil uil-times"></i>
             </button>
           </dd>
@@ -159,15 +145,25 @@ import { PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const IMAGE_MAX_SIZE = 4
+
+const config = useRuntimeConfig()
 const { $localePath } = useNuxtApp()
 
 const { t, locale } = useI18n()
 
 const router = useRouter()
 
-const gameInfo = computed(() => useGame().game.value.info)
+// const gameInfo = computed(() => useGame().game.value.info)
 
-console.log('gameInfo:', gameInfo.value)
+
+const gameInfo = computed({
+  get() {
+    return useGame().game.value.info
+  },
+  set(value) {
+    useGame().game.value.info = value;
+  }
+})
 
 const hashtags = computed(
   () =>
@@ -181,7 +177,7 @@ const isLike = ref(gameInfo.value?.is_like)
 const likeCnt = ref(gameInfo.value?.count_heart)
 const bannerImg = ref()
 const bannerFile = ref<File>()
-const prevBanner = ref<String | ArrayBuffer>(gameInfo.value?.banner_img)
+// const prevBanner = ref<String | ArrayBuffer>(gameInfo.value?.banner_img)
 
 const showChangeBanner = ref(false)
 const editBanner = ref()
@@ -197,6 +193,30 @@ let likeAcceessableCnt = 2
 let unlikeAcceessableCnt = 2
 
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+const isLogin = computed(() => useUser().user.value.isLogin)
+
+const prevBanner = computed({
+  get() {
+    return gameInfo.value?.url_banner
+  },
+  set(value) {
+    gameInfo.value = {
+      ...gameInfo.value,
+      url_banner: value
+    };
+  }
+})
+
+
+const shareInfo = computed(() => {
+  return {
+    img_url: gameInfo.value.url_thumb,
+    title: gameInfo.value.title,
+    desc: gameInfo.value.description,
+    user: gameInfo.value.user,
+    url: `${config.ZEMPIE_URL}/play/${gameInfo.value.pathname}}`
+  }
+})
 
 
 function playGame() {
@@ -205,6 +225,10 @@ function playGame() {
 
 
 async function setLike() {
+  if (!isLogin.value) {
+    useModal().openLoginModal()
+    return
+  }
   likeAcceessableCnt -= 1
 
   isLike.value = true
@@ -224,6 +248,10 @@ async function setLike() {
 
 }
 async function unsetLike() {
+  if (!isLogin.value) {
+    useModal().openLoginModal()
+    return
+  }
   unlikeAcceessableCnt -= 1
 
   isLike.value = false
@@ -312,7 +340,7 @@ async function updateBannerImg() {
     )
     if (data.value) {
       const { result } = data.value
-      prevBanner.value = result.banner_img + `?_=${Date.now()}`
+      prevBanner.value = result.url_banner + `?_=${Date.now()}`
     }
   })
 
@@ -346,7 +374,7 @@ function saveBannerImg() {
     )
     if (data.value) {
       const { result } = data.value
-      prevBanner.value = result.banner_img + `?_=${Date.now()}`
+      prevBanner.value = result.url_banner + `?_=${Date.now()}`
     }
   })
 
@@ -411,6 +439,52 @@ function onClickReport() {
 </script>
 
 <style lang="scss" scoped>
+.visual-info-left {
+  .banner-btn-container {
+    display: flex;
+    justify-content: flex-end;
+    top: 10px;
+    right: 10px;
+
+    .banner-btn {
+      border-radius: 50%;
+      background-color: #888;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      cursor: pointer;
+      align-items: center;
+
+      i {
+        font-size: 20px;
+        margin-right: 10px;
+        color: #fff;
+        margin: 0 auto;
+      }
+    }
+  }
+}
+
+:deep(.share-menu) {
+  a {
+    color: #888;
+    border: none;
+
+    &:hover {
+      color: #f97316;
+    }
+  }
+
+}
+
+:deep(.custom-dropdown) {
+  button {
+    &:hover {
+      color: #f97316;
+    }
+  }
+}
+
 .header-left {
 
   &.dev-header {

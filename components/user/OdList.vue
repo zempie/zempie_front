@@ -1,6 +1,6 @@
 <template>
   <li v-if="users?.length" v-for="user in users" :key="user.id" class="pointer mb10" @click="onClickUser(user)">
-    <dl class="row">
+    <dl class="row items-center">
       <dd class="mr10">
         <UserAvatar :user="user" tag="p" style="width:45px; height:45px; border-radius: 50%;" />
       </dd>
@@ -9,7 +9,7 @@
           <h3 class="font16 text-left ">{{ user.name }}</h3>
           <p class="font13 nickname text-left text-ellipsis">@{{ user.nickname }}</p>
         </dt>
-        <UserFollowBtn v-if="isLogin" :user="user" />
+        <UserFollowBtn v-if="isLogin" :user="user" class="mt0" />
       </div>
     </dl>
   </li>

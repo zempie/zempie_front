@@ -1,0 +1,180 @@
+/* 새 메세지 */
+
+.new-msg-modal {
+
+  .ma-content {
+    .input-search-default {
+      justify-content: left
+    }
+
+    .user-list {
+      max-height: 500px;
+      overflow-y: scroll;
+      padding-top: 20px;
+
+      li {
+        padding: 13px;
+        border: 1px solid #ededed;
+        border-radius: 10px;
+        text-align: left;
+
+        dt {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+
+          h3 {
+            font-weight: 600;
+          }
+
+          .nickname {
+            color: #888
+          }
+        }
+      }
+    }
+  }
+}
+
+/* dm 채팅창 */
+
+
+.dm-list {
+  &.off {
+    display: block;
+
+  }
+
+  .mobile-btn {
+    display: none;
+
+  }
+
+  .dl-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 30px;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    overflow: hidden;
+
+    dd {
+
+      ul {
+        overflow-y: auto;
+
+        li {
+          padding: 13px;
+
+          &:hover {
+            background-color: #F9f9f9;
+          }
+
+          dl {
+            dd {
+              width: 20%;
+            }
+
+            dt {
+              width: 70%;
+            }
+          }
+        }
+      }
+    }
+
+
+  }
+
+
+}
+
+
+@media all and (max-width: 479px) {
+  .dm-list {
+    padding: 30px 20px;
+    height: 100%;
+
+    .dl-title {
+      display: flex;
+      flex-direction: row;
+
+      .mobile-back-btn {
+        background: transparent;
+        border: none;
+        color: #0d0d0d;
+        font-size: 25px;
+      }
+
+
+      .mobile-btn {
+        border: none;
+        background: transparent;
+        padding: 0px;
+        color: #333;
+        font-size: 25px;
+
+        &.off {
+          display: none !important;
+        }
+
+        &.on {
+          display: inline !important;
+        }
+      }
+    }
+
+    .dl-content {
+      height: calc((100vh - 150px));
+      border: none;
+      margin-top: 10px !important;
+
+      .msg-container {
+        .dlc-send-message {
+          bottom: 20px
+        }
+      }
+
+    }
+
+    .active-room-container {
+      .more-list {
+        right: -150px;
+      }
+
+    }
+  }
+}
+
+@media all and (min-width: 480px) and (max-width: 767px) {
+
+  .dm-list {
+
+    height: 100%;
+
+    .dl-title {
+      .mobile-back-btn {
+        background: transparent;
+        border: none;
+        color: #0d0d0d;
+        font-size: 20px;
+      }
+    }
+
+    .dl-content {
+      height: calc((100vh - 180px));
+
+
+      .msg-container {
+        .dlc-send-message {
+          width: 100%;
+          bottom: 20px;
+          left: 0px;
+          padding: 0px 40px 0px 40px;
+        }
+      }
+
+    }
+  }
+}

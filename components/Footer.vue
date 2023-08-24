@@ -51,6 +51,10 @@ const isPurchase = computed(() => (route.name as string).includes('purchase'))
 </script>
 
 <style scoped lang="scss">
+.footer {
+  background-color: #000;
+}
+
 .insta-icon:hover {
   color: #c13584;
 }

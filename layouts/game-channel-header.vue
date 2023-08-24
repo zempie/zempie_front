@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <GameHeaderSk v-if="isPending" />
-    <GameHeader v-else :gameInfo="gameInfo" />
+    <GameHeader v-else />
     <slot />
   </div>
 </template>

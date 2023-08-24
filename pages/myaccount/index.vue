@@ -230,6 +230,10 @@ async function uploadBannerFile() {
 async function onProfileFileChange(event: Event) {
   const [file] = (event.target as HTMLInputElement).files
 
+  if (file.type === 'image/gif') {
+    alert(t('not.support.ext'))
+    return
+  }
   if (isPassFileSize(file)) {
     profileFileName.value = file.name
     updateProfileFile.value = file
@@ -241,6 +245,11 @@ async function onProfileFileChange(event: Event) {
 
 async function onBannerFileChange(event: Event) {
   const [file] = (event.target as HTMLInputElement).files
+
+  if (file.type === 'image/gif') {
+    alert(t('not.support.ext'))
+    return
+  }
 
   if (isPassFileSize(file)) {
     bannerFileName.value = file.name

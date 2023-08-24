@@ -1,0 +1,21 @@
+/* my timeline*/
+@media all and (max-width: 479px) {
+  .my-tl-container {
+
+    .my-info {
+      display: none;
+    }
+
+    .ta-message-send {
+      margin-top: 70px !important;
+    }
+  }
+}
+
+@media all and (min-width: 768px) and (max-width: 991px) {
+  .my-tl-container {
+    .my-info {
+      display: none;
+    }
+  }
+}

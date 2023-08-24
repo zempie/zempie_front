@@ -68,10 +68,6 @@ import shared from '~~/scripts/shared';
 
 const { t, locale } = useI18n()
 
-definePageMeta({
-  layout: 'default',
-})
-
 shared.createHeadMeta(t('seo.game.list.title'), t('seo.game.list.desc'))
 
 const LIMIT_SIZE = 20
@@ -123,6 +119,7 @@ const stageOptions = [
 
 ]
 const selectedFilter = ref('')
+
 
 onMounted(async () => {
   createObserver()
