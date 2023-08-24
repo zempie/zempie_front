@@ -69,7 +69,7 @@
         <dl class="ma-header">
           <dt>{{ t('information') }}</dt>
           <dd>
-            <button @click="useModal().closeLoginModal()">
+            <button class="pointer" @click="useModal().closeLoginModal()">
               <i class="uil uil-times"></i>
             </button>
           </dd>
@@ -91,7 +91,6 @@
 
 <script setup lang="ts">
 import _ from 'lodash'
-import { vOnClickOutside } from "@vueuse/components"
 import { useI18n } from "vue-i18n"
 import {
   ElSelect,
@@ -113,6 +112,7 @@ const isLogin = computed(() => useUser().user.value.isLogin)
 const isLoading = computed(() => useUser().user.value.isLoading)
 const user = computed(() => useUser().user.value.info)
 const fUser = computed(() => useUser().user.value.fUser)
+const zemtownUrl = computed(() => useZemtown().zemtown.value.url)
 
 const searchInput = ref()
 const isHeaderSideMobile = ref(false)
@@ -120,6 +120,7 @@ const isHeaderSideBgMobile = ref(false)
 const showMogera = ref(false)
 
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+
 const unreadMsgCount = computed(() => {
   return user.value?.unread_msg_cnt > 99 ? '99+' : user.value.unread_msg_cnt
 })

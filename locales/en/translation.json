@@ -1052,5 +1052,6 @@
   "set.name": "Please set your name.",
   "dm.sent.img": "Image is sent.",
   "chatting": "Chat",
-  "not.support.ext": "__STRING_NOT_TRANSLATED__"
+  "not.support.ext": "__STRING_NOT_TRANSLATED__",
+  "joined.users": "__STRING_NOT_TRANSLATED__"
 }

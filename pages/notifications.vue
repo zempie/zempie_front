@@ -15,7 +15,8 @@
       <div class="dl-title" style="align-items: flex-end;">
         <p>
           <a @click="readAll"><i class="uil uil-comment-alt"></i> <em> {{ t('mark.all') }} </em></a>
-          <NuxtLink :to="$localePath(`/myaccount`)"><i class="uil uil-setting"></i> <em>{{ t('setting') }}</em></NuxtLink>
+          <NuxtLink :to="$localePath(`/myaccount`)"><i class="uil uil-setting"></i> <em>{{ t('setting') }}</em>
+          </NuxtLink>
         </p>
       </div>
 
@@ -41,7 +42,7 @@
 
             <BeatLoader v-if="isLoading" :color="'#ff6e17'" size="20px" />
           </TransitionGroup>
-          <li v-if="(!isLoading && !list.length)">
+          <li v-if="(!isLoading && !list.length)" style="border:none">
             <dl>{{ t('no.alarm') }}</dl>
           </li>
         </ul>
@@ -56,7 +57,6 @@ import { INotification, eNotificationType } from '~~/types';
 import { useInfiniteScroll } from '@vueuse/core'
 import { dateFormat } from '~/scripts/utils'
 import shared from '~~/scripts/shared';
-import { localePath } from 'vue-i18n-routing';
 
 const { $localePath } = useNuxtApp()
 const router = useRouter()
@@ -71,9 +71,6 @@ const isAddData = ref(false)
 const listEl = ref<HTMLElement | null>(null)
 const isLoading = ref(false)
 const readCount = ref()
-
-const newNoti = ref(useAlarm().alarm.value.newNoti)
-
 
 useInfiniteScroll(
   listEl,
@@ -185,7 +182,11 @@ async function readAll() {
 }
 
 .dm-list {
+  width: 1200px;
+
   .dl-title {
+    justify-content: flex-end;
+
     p {
       padding-top: 30px;
 

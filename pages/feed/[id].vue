@@ -179,10 +179,6 @@ const attatchment_files = computed(() => {
       : JSON.parse(feed.value.attatchment_files))
 })
 
-definePageMeta({
-  layout: 'header-only',
-})
-
 useInfiniteScroll(
   commentEl,
   async () => {

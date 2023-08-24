@@ -216,6 +216,9 @@ const userListRef = ref<HTMLElement | null>(null)
 let createRoomCount = 2
 
 
+definePageMeta({
+  name: 'community-list'
+})
 useInfiniteScroll(
   userListEl,
   async () => {

@@ -1,23 +1,14 @@
 <template>
-  <NuxtLayout :name="layout">
-
-    <div :class="['content', isMobile && 'mobile']">
-      <DmList />
-    </div>
-  </NuxtLayout>
+  <div :class="['content dm-page', isMobile && 'mobile']">
+    <DmList />
+  </div>
 </template>
 <script setup lang="ts">
-const isMobile = computed(() => useCommon().common.value.isMobile)
-
-const layout = computed(() => {
-  return isMobile.value ? 'layout-none' : 'header-only'
-})
 
 definePageMeta({
   title: 'dm',
   name: 'dm',
   middleware: 'auth',
-  layout: false
 })
 
 </script>

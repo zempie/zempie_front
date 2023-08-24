@@ -193,6 +193,7 @@ let likeAcceessableCnt = 2
 let unlikeAcceessableCnt = 2
 
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+const isLogin = computed(() => useUser().user.value.isLogin)
 
 const prevBanner = computed({
   get() {
@@ -224,6 +225,10 @@ function playGame() {
 
 
 async function setLike() {
+  if (!isLogin.value) {
+    useModal().openLoginModal()
+    return
+  }
   likeAcceessableCnt -= 1
 
   isLike.value = true
@@ -243,6 +248,10 @@ async function setLike() {
 
 }
 async function unsetLike() {
+  if (!isLogin.value) {
+    useModal().openLoginModal()
+    return
+  }
   unlikeAcceessableCnt -= 1
 
   isLike.value = false

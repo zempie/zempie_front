@@ -38,10 +38,6 @@ const isChannelLoading = computed(
   () => useChannel().userChannel.value.isLoading
 )
 
-definePageMeta({
-  layout: 'header-only',
-})
-
 watch(
   () => userInfo.value,
   async (info) => {

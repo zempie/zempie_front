@@ -22,8 +22,9 @@ const isLogin = computed(() => useUser().user.value.isLogin)
 
 
 definePageMeta({
-  layout: 'header-only',
+  name: 'zemtown'
 })
+
 watch(() =>
   (zemtown.value.isOpenMyProfile), (state) => {
     if (state) {

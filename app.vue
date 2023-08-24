@@ -2,11 +2,6 @@
   <NuxtLayout>
     <noscript v-html="tmIframeCode"></noscript>
     <NuxtPage />
-    <div :class="['zemtown-frame', String(route.name).includes('zemtown') ? 'on' : 'off']">
-      <ClientOnly>
-        <iframe ref="zemtownRef" :src="zemtownUrl" style="width: 100%; height: 99%;" :key="zemtownUrl" />
-      </ClientOnly>
-    </div>
   </NuxtLayout>
 </template>
 <script setup lang="ts">
@@ -14,8 +9,6 @@ import { ID_INJECTION_KEY } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import flutterBridge from './scripts/flutterBridge';
 import shared from './scripts/shared';
-import FlutterBridge from '~~/scripts/flutterBridge'
-
 
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
@@ -26,10 +19,6 @@ const router = useRouter()
 const cookie = useCookie(config.COOKIE_NAME)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 const isLoading = computed(() => useUser().user.value.isLoading)
-
-
-const zemtownUrl = ref(config.ZEMTOWN_URL)
-
 
 const tmIframeCode = `<iframe src="https://www.googletagmanager.com/ns.html?id=${config.TAG_MANAGER_ID}"
 height="0" width="0" style="display:none;visibility:hidden"></iframe>`
@@ -60,15 +49,15 @@ onBeforeMount(async () => {
   try {
     const fUser = await getCurrentUser()
 
+
     if (!fUser) {
       useUser().setLoadDone()
-    } else {
-      zemtownUrl.value = `${config.ZEMTOWN_URL}?token=${fUser?.accessToken}`
     }
+    console.log(fUser)
+    useZemtown().setUrl(`${config.ZEMTOWN_URL}?token=${fUser?.accessToken}`)
 
     if (isFlutter.value && fUser && !userInfo.value) {
       await useUser().setUserInfo()
-
     }
 
   }
@@ -101,7 +90,6 @@ onMounted(() => {
     window.addEventListener('resize', onResize)
 
   })
-
 })
 onBeforeUnmount(() => {
   window.removeEventListener('resize', onResize)
@@ -152,8 +140,6 @@ function notiPerCheck() {
 @import '~/assets/css/swiper.scss';
 @import '~/assets/css/pagination.scss';
 
-$header-height: 70px;
-$mobile-nabigation-height: 50px;
 
 body {
   margin: 0px !important;
@@ -180,42 +166,48 @@ body {
   }
 
 
+}
+
+
+$header-height: 70px;
+$mobile-nabigation-height: 50px;
+
+.zemtown-frame {
+  position: relative;
+  width: 100%;
+  top: 74px;
+  background-color: #000;
+  margin-bottom: 74px;
+
+  &.on {
+    display: flex;
+    height: calc(100vh - #{$header-height});
+  }
+
+  &.off {
+    // visibility: hidden;
+    display: none;
+  }
+}
+
+
+@media all and (max-width: 479px) {
+
   .zemtown-frame {
-    position: relative;
-    width: 100%;
-    top: 74px;
-    background-color: #000;
-    margin-bottom: 74px;
+    top: #{$header-height};
 
     &.on {
-      display: flex;
-      height: calc(100vh - #{$header-height});
-    }
-
-    &.off {
-      display: none;
+      height: calc(100vh - #{$header-height} - #{$mobile-nabigation-height});
     }
   }
+}
 
+@media all and (min-width: 480px) and (max-width: 767px) {
+  .zemtown-frame {
+    top: #{$header-height};
 
-  @media all and (max-width: 479px) {
-
-    .zemtown-frame {
-      top: #{$header-height};
-
-      &.on {
-        height: calc(100vh - #{$header-height} - #{$mobile-nabigation-height});
-      }
-    }
-  }
-
-  @media all and (min-width: 480px) and (max-width: 767px) {
-    .zemtown-frame {
-      top: #{$header-height};
-
-      &.on {
-        height: calc(100vh - #{$header-height} - #{$mobile-nabigation-height});
-      }
+    &.on {
+      height: calc(100vh - #{$header-height} - #{$mobile-nabigation-height});
     }
   }
 }

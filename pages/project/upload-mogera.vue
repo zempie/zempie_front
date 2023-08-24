@@ -33,7 +33,6 @@ const showSavedInfo = ref(false)
 
 definePageMeta({
   middleware: 'auth',
-  layout: 'header-only',
 })
 
 onMounted(async () => {

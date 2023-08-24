@@ -13,11 +13,6 @@ const userInfo = ref<IUserChannel>()
 const isPending = ref(true)
 const channelId = computed(() => route.params.id as string)
 
-
-definePageMeta({
-  layout: "header-only"
-})
-
 onMounted(async () => {
   await getChannelHeaderInfo()
 })

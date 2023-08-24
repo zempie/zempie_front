@@ -19,7 +19,6 @@ const config = useRuntimeConfig()
 
 definePageMeta({
   middleware: 'auth',
-  layout: 'header-only',
 })
 
 shared.createHeadMeta(t('seo.project.upload.title'), t('seo.project.upload.desc'))

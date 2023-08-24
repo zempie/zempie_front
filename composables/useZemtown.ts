@@ -1,7 +1,10 @@
 export default function () {
+  const config = useRuntimeConfig()
+
   const zemtown = useState('zemtown', () => ({
     isOpenMyProfile: false,
-    isOpenDm: false
+    isOpenDm: false,
+    url: config.ZEMTOWN_URL
   }))
 
   const openMyProfile = () => {
@@ -9,7 +12,6 @@ export default function () {
   }
 
   const closeMyProfile = () => {
-    console.log('close')
     zemtown.value.isOpenMyProfile = false
   }
 
@@ -21,6 +23,9 @@ export default function () {
   const closeDm = () => {
     zemtown.value.isOpenDm = false
   }
+  const setUrl = (url) => {
+    zemtown.value.url = url
+  }
 
 
   return {
@@ -28,7 +33,8 @@ export default function () {
     openMyProfile,
     closeMyProfile,
     openDm,
-    closeDm
+    closeDm,
+    setUrl
   }
 
 }

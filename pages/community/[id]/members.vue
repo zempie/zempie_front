@@ -47,10 +47,6 @@ const isAddData = ref(false)
 const members = ref()
 const totalCount = ref(0)
 
-definePageMeta({
-  layout: 'header-only',
-})
-
 
 /**
  * seo 반영은 함수안에서 되지 않으므로 최상단에서 진행함

@@ -100,7 +100,6 @@ const createdDate = computed(() =>
 definePageMeta({
   title: 'community-channel',
   name: 'communityChannel',
-  layout: 'header-only',
 })
 
 /**
