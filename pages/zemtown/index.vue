@@ -90,10 +90,18 @@ async function onMessage(msg: MessageEvent) {
 
     // type loading parsedData.success
 
-    if (type === 'loading') {
-      if (!parsedData.success) {
-        needRefresh.value = true
-      }
+
+    switch (type) {
+      case 'loading':
+        if (!parsedData.success) {
+          needRefresh.value = true
+        }
+        break;
+      case 'login':
+        if (!parsedData.success && isLogin.value) {
+          needRefresh.value = true
+        }
+        break;
     }
 
 
