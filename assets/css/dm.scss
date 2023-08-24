@@ -38,6 +38,9 @@
 
 /* dm 채팅창 */
 
+.new-msg-modal {
+  max-height: 90vh;
+}
 
 .dm-list {
   &.off {
@@ -47,7 +50,14 @@
 
   .mobile-btn {
     display: none;
+  }
 
+  .new-msg-btn-icon {
+    &.inactive {
+      opacity: 0.3;
+      pointer-events: none;
+      cursor: not-allowed
+    }
   }
 
   .dl-content {
@@ -84,6 +94,16 @@
       }
     }
 
+    .new-msg-btn {
+      &.inactive {
+        background-color: #888;
+        opacity: 0.3;
+        pointer-events: none;
+        cursor: not-allowed
+      }
+    }
+
+
 
   }
 
@@ -99,6 +119,7 @@
     .dl-title {
       display: flex;
       flex-direction: row;
+      align-items: center;
 
       .mobile-back-btn {
         background: transparent;
@@ -154,11 +175,13 @@
     height: 100%;
 
     .dl-title {
+      align-items: center;
+
       .mobile-back-btn {
         background: transparent;
         border: none;
         color: #0d0d0d;
-        font-size: 20px;
+        font-size: 25px;
       }
     }
 

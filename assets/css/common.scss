@@ -1405,7 +1405,6 @@ $zempie-main-color-hover: #f974162a;
 
         &.on {
           display: inline !important;
-          margin-bottom: 20px;
 
         }
       }
@@ -1445,6 +1444,7 @@ $zempie-main-color-hover: #f974162a;
           display: flex;
           border: 1px solid #eee;
           border-radius: 10px;
+          margin-top: 10px;
         }
 
         .active-room-container {
@@ -1863,8 +1863,10 @@ $zempie-main-color-hover: #f974162a;
       background-color: #fff;
       position: fixed;
       bottom: 0px;
-      width: 100%;
+      width: 99%;
       border-radius: 20px;
+      left: 50%;
+      transform: translateX(-50%);
     }
   }
 

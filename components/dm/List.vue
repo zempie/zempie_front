@@ -720,26 +720,3 @@ function onClickBackBtn() {
   router.back()
 }
 </script>
-<style scoped lang="scss">
-.new-msg-btn-icon {
-  &.inactive {
-    opacity: 0.3;
-    pointer-events: none;
-    cursor: not-allowed
-  }
-}
-
-.new-msg-btn {
-  &.inactive {
-    background-color: #888;
-    opacity: 0.3;
-    pointer-events: none;
-    cursor: not-allowed
-  }
-
-}
-
-::v-deep(.new-msg-modal) {
-  max-height: 90vh;
-}
-</style>
