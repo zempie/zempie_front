@@ -1,6 +1,6 @@
 <template>
-  <swiper :modules="[Mousewheel]" class="swiper-area" :slides-per-view="5" :space-between="10" direction="horizontal"
-    :mousewheel="true">
+  <swiper :modules="[Mousewheel]" class="swiper-area" :slides-per-view="isMobile ? 3 : 5" :space-between="0"
+    direction="horizontal" :mousewheel="true">
     <swiper-slide v-for="(img, idx) in imgArr" :src="img.url" :key="idx" style="">
       <div class="img-container" :class="img.is_blind ? 'blur' : ''">
         <img :src="img.url">
@@ -35,6 +35,32 @@ const imgArr = computed({
   }
 })
 
+
+
+const isMobileSize = computed(() =>
+  window.matchMedia('screen and (max-width: 479px)')
+)
+const isMobile = ref(false)
+
+
+onMounted(() => {
+  nextTick(() => {
+    onResize()
+  })
+  window.addEventListener('resize', onResize)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', onResize)
+})
+
+function onResize() {
+  if (isMobileSize.value.matches) {
+    isMobile.value = true
+  } else {
+    isMobile.value = false
+  }
+}
 function deleteImg(idx: number) {
   imgArr.value.splice(idx, 1)
   emit('deleteImage', idx)

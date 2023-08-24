@@ -78,6 +78,7 @@ export default function () {
       } else {
         await signOut($firebaseAuth);
       }
+      user.value.isLogin = false
 
     } catch (error) {
       ElMessage({

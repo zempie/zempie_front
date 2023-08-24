@@ -201,6 +201,7 @@ async function onSubmit() {
     try {
       const result = await FlutterBridge().signInEmail({ email: form.email, password: form.password })
       currUser.value = result
+      isLoading.value = false
       router.push($localePath('/'))
       await useUser().setUserInfo()
       await setFirebaseToken()

@@ -31,7 +31,7 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
     async onResponse({ request, response, options }) {
       useCommon().setLoadingDone()
       console.log('[fetch response]', response._data)
-      
+
       isFetching.value = false
 
     },
@@ -189,10 +189,17 @@ export async function getCurrentUser() {
     const result = await FlutterBridge().getFbCurrentUser()
 
     if (result) {
-      useUser().setFirebaseUser(result)
+      const info = {
+        ...result,
+        accessToken: result.idToken
+      }
+      useUser().setFirebaseUser(info)
+      useUser().setLoadDone()
+      return info
+    } else {
+      useUser().setLoadDone()
+      return null
     }
-    useUser().setLoadDone()
-    return result || null
   } else {
     const auth = getAuth()
 

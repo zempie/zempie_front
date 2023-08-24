@@ -13,7 +13,7 @@
               <a @click="readAll"><i class="uil uil-comment-alt"></i><em>{{ t('mark.all') }}</em></a>
             </dd>
           </dl>
-          <ul>
+          <ul class="noti-list">
             <li v-if="isNotiLoading" v-for="noti in 4">
               <dl>
                 <dd>
@@ -21,7 +21,7 @@
                 </dd>
                 <dt>
                   <h3 class="grey-text skeleton-animation" style="height:20px"></h3>
-                  <p class="grey-text skeleton-animation" style="height:20px; width: 300px;"></p>
+                  <p class="grey-text skeleton-animation" style="height:20px; width: 250px;"></p>
                 </dt>
                 <dd>
                 </dd>
@@ -30,11 +30,12 @@
             <template v-else>
               <li v-if="notiList?.length" v-for="noti in notiList" :key="noti.id"
                 :class="!noti.is_read && 'is-read-active'">
-                <dl @click.stop="moveAlarm(noti)">
+                <dl class="flex items-center" @click.stop="moveAlarm(noti)">
                   <dd>
-                    <UserAvatar :user="noti.user" :tag="'span'" :hasRouter="true" />
+                    <UserAvatar :user="noti.user" tag="p" :hasRouter="true"
+                      style="width:50px; height:50px;border-radius: 50%;" />
                   </dd>
-                  <dt>
+                  <dt class="ml10">
                     <h3><span @click.stop="moveUserPage(noti.user.nickname)">{{
                       noti.user.nickname
                     }}&nbsp;</span>{{ noti.type_text }}
@@ -155,9 +156,21 @@ function moveUserPage(nickname: string) {
 </script>
 <style scoped lang="scss">
 .header-message {
-  ul {
+  .noti-list {
     li {
-      width: 400px;
+      max-width: 400px;
+
+      dl {
+        display: flex;
+
+        dd {
+          flex: 0.1;
+        }
+
+        dt {
+          flex: 0.9;
+        }
+      }
 
       &.is-read-active {
         border-left: 3px solid #ff6e17;

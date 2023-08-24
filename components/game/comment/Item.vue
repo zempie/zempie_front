@@ -3,7 +3,7 @@
     <div class="user-info row items-center w100p">
       <UserAvatar :user="comment.user" :has-router="true" tag="p" />
       <div class="column right w100p">
-        <div class="flex row justify-between w100p align-center" style="margin-top:0px">
+        <div class="flex row justify-between w100p align-center pl10" style="margin-top:0px">
           <div style="margin-top:0px">
             <NuxtLink class="name" :to="$localePath(`/${comment.user?.nickname}`)">
               {{ comment.user?.nickname }}</NuxtLink>
@@ -198,7 +198,6 @@ li {
   ::v-deep(.picture) {
     height: 35px;
     width: 35px;
-    margin-right: 10px;
     border-radius: 100%;
   }
 

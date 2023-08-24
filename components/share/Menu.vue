@@ -1,6 +1,6 @@
 <template>
   <ClientOnly>
-    <el-dropdown trigger="click" customClass="share-menu">
+    <el-dropdown trigger="click" class="share-menu">
       <a class="pointer"><i class="uil uil-share-alt" style="font-size: 20px"></i></a>
       <template #dropdown>
         <el-dropdown-menu>
@@ -26,46 +26,46 @@
   </ClientOnly>
 </template>
 <script setup lang="ts">
+import { PropType } from 'vue';
 import { ElDropdown, ElDropdownItem, ElDropdownMenu, ElMessage } from 'element-plus'
 import { Icon } from '@iconify/vue';
 import { execCommandCopy } from '~~/scripts/utils';
-import { PropType } from 'vue';
-import { IFeed } from '~~/types';
-import shared from '~~/scripts/shared'
 import { openCenteredPopup } from '~~/scripts/ui-utils';
 import { useGtag } from 'vue-gtag-next';
-
-
+import { IUser } from '~~/types';
 
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
 const gtag = useGtag()
 
-const props = defineProps({
-  url: String,
-  feed: Object as PropType<IFeed>,
-  type: String
-})
 
-function getImgObj(): { url: string, name: string, size: number, type: string, priority: number } | null {
-
-  let attatchment_files = props.feed.attatchment_files
-    && (Array.isArray(props.feed.attatchment_files)
-      ? props.feed.attatchment_files
-      : JSON.parse(props.feed.attatchment_files))
-
-
-  if (attatchment_files && attatchment_files.length) {
-    console.log('here')
-    return attatchment_files.find((file: any) => file.type === 'image');
-  } else {
-    return null
-  }
-
+interface IShareInfo {
+  img_url: string,
+  title: string,
+  desc: string,
+  user: IUser,
+  url: string
 }
 
+const props = defineProps({
+  url: String,
+  type: String,
+  shareInfo: Object as PropType<IShareInfo>
+})
+
+
+const title = computed(() => {
+  switch (props.type) {
+    case 'game':
+      return `${props.shareInfo.user.nickname}${t('seo.channel.games.title')}`
+    default:
+      return `${props.shareInfo.user.nickname} ${t('seo.feed.title')} `
+  }
+
+})
+
 function copyUrl() {
-  const url = props.url
+  const url = props.shareInfo.url
   execCommandCopy(url)
   ElMessage({
     message: t('copied.clipboard'),
@@ -82,16 +82,15 @@ function copyUrl() {
 
 function shareSocial(social: string) {
 
+  const imageUrl = props.shareInfo.img_url || config.OG_IMG
 
-  const imageUrl = getImgObj()?.url || config.OG_IMG
+  let linkUrl = props.shareInfo.url ?? window.location.href
 
-  let linkUrl = props.url ?? window.location.href
-
-  const { title, desc } = shared.getFeedInfo(props.feed)
+  const { desc } = props.shareInfo
 
   gtag.event('click', {
     event_category: 'button',
-    event_label: `${social}_share`,
+    event_label: `${social} _share`,
     event_value: 1
   })
 
@@ -104,7 +103,7 @@ function shareSocial(social: string) {
       Kakao.Share.sendDefault({
         objectType: 'feed',
         content: {
-          title: `${t('share.zempie.title')} ${props.feed.user.nickname} ${t('share.zempie.nickname.title')}`,
+          title: title.value,
           description: desc,
           imageUrl,
           link: {
@@ -120,23 +119,16 @@ function shareSocial(social: string) {
               webUrl: linkUrl,
             },
           },
-          // {
-          //   title: '앱으로 이동',
-          //   link: {
-          //     mobileWebUrl: linkUrl,
-          //     webUrl: linkUrl,
-          //   },
-          // },
         ],
       })
       break;
     case 'facabook':
-      const popUrl = `${config.FACEBOOK_SHARE_URL}?app_id=${config.FACEBOOK_APP_ID}&display=popup&href=${linkUrl}&redirect_uri=${linkUrl}`
+      const popUrl = `${config.FACEBOOK_SHARE_URL}?app_id = ${config.FACEBOOK_APP_ID}& display=popup & href=${linkUrl}& redirect_uri=${linkUrl} `
       openCenteredPopup(popUrl, 'Facabook share', 500, 300)
       break;
     case 'twitter':
       const shareUrl = props.url
-      linkUrl = `${config.TWITTER_SHARE_URL}?url=${shareUrl}`
+      linkUrl = `${config.TWITTER_SHARE_URL}?url = ${shareUrl} `
       openCenteredPopup(linkUrl, 'Twitter share', 500, 300)
       break;
   }

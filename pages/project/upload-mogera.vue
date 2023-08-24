@@ -51,7 +51,6 @@ onBeforeRouteLeave((to, from, next) => {
 })
 
 function leavePage(event) {
-  console.log('lenave')
   event.returnValue = '';
 }
 

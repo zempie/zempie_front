@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="content" style="height: 100vh;">
     <div class="visual-title">
       <h1>
         '{{ keyword }}'
@@ -46,7 +46,7 @@
     <div class="ta-search-post" v-if="postList?.length" :style="postList?.length ? 'padding:0px ;' : ''">
       <ul class="ta-post">
         <div v-for="feed in postList" :key="feed.id">
-          <PostFeed :feed="feed" @update-blind="(img) => updateBlind(feed, img)"></PostFeed>
+          <PostTimelineFeed :feed="feed" @update-blind="(img) => updateBlind(feed, img)"></PostTimelineFeed>
         </div>
       </ul>
     </div>
@@ -70,16 +70,24 @@ definePageMeta({
   name: 'search',
 })
 
+
+console.log(useSearch().search.value.results)
+
+
+
 if (!useSearch().search.value.results) {
-  useSearch().getSearch(keyword.value)
-  console.log('no', useSearch().search.value)
+
+  nextTick(async () => {
+    await useSearch().getSearch(keyword.value)
+  })
 }
+
 
 shared.createHeadMeta(`${keyword.value}${t('seo.search.title')}`, `${t('seo.search.desc1')}${keyword.value}${t('seo.search.desc2')}`)
 
 
 function updateBlind(feed, img) {
-  useSearch().updateResult(feed, img)
+  useSearch().updateResultPost(feed, img)
 }
 </script>
 
@@ -190,8 +198,4 @@ function updateBlind(feed, img) {
     width: 100%;
   }
 }
-
-@media all and (min-width: 768px) and (max-width: 991px) {}
-
-@media all and (min-width: 992px) and (max-width: 1199px) {}
 </style>

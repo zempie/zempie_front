@@ -4,11 +4,16 @@ export default function () {
     lang: 'ko',
     isFbSupported: true,
     isNotiAllow: false,
-
   }))
+
   const loading = useState('loading', () => {
     return true
   })
+
+  const common = useState('common', () => ({
+    isMobile: false
+  }))
+
 
   const setLang = (lang: string) => {
     setting.value.lang = lang;
@@ -26,14 +31,19 @@ export default function () {
   const setNoti = (state: boolean) => {
     setting.value.isNotiAllow = state
   }
+  const setMobile = (state: boolean) => {
+    common.value.isMobile = state
+  }
 
   return {
     setting,
     loading,
+    common,
     setLang,
     setLoading,
     setLoadingDone,
     setSupport,
-    setNoti
+    setNoti,
+    setMobile
   }
 }

@@ -15,24 +15,19 @@
       <div class="dl-title" style="align-items: flex-end;">
         <p>
           <a @click="readAll"><i class="uil uil-comment-alt"></i> <em> {{ t('mark.all') }} </em></a>
-          <NuxtLink :to="$localePath(`/myaccount`)"><i class="uil uil-setting"></i> <em>{{ t('setting') }}</em></NuxtLink>
+          <NuxtLink :to="$localePath(`/myaccount`)"><i class="uil uil-setting"></i> <em>{{ t('setting') }}</em>
+          </NuxtLink>
         </p>
       </div>
 
       <dl class="dl-content">
-        <!-- <div>
-            <div class="input-search-default">
-              <p><i class="uil uil-search"></i></p>
-              <div><input type="text" name="" title="keywords" placeholder="검색어를 입력하세요." /></div>
-            </div>
-          </div> -->
         <ul ref="listEl">
           <TransitionGroup name="list">
             <li v-for="noti in list" :key="noti.id" :class="!noti.is_read && 'is-read-active'"
               @click.stop="clickNoti(noti)">
               <dl>
                 <dd>
-                  <UserAvatar :tag="'p'" :user="noti.user" :hasRouter="true" />
+                  <UserAvatar tag="p" :user="noti.user" :hasRouter="true" />
                 </dd>
                 <dt>
                   <h3><span @click.stop="$router.push($localePath(`/${noti.user.nickname}`))">{{ noti.user.nickname
@@ -47,7 +42,7 @@
 
             <BeatLoader v-if="isLoading" :color="'#ff6e17'" size="20px" />
           </TransitionGroup>
-          <li v-if="(!isLoading && !list.length)">
+          <li v-if="(!isLoading && !list.length)" style="border:none">
             <dl>{{ t('no.alarm') }}</dl>
           </li>
         </ul>
@@ -62,7 +57,6 @@ import { INotification, eNotificationType } from '~~/types';
 import { useInfiniteScroll } from '@vueuse/core'
 import { dateFormat } from '~/scripts/utils'
 import shared from '~~/scripts/shared';
-import { localePath } from 'vue-i18n-routing';
 
 const { $localePath } = useNuxtApp()
 const router = useRouter()
@@ -77,9 +71,6 @@ const isAddData = ref(false)
 const listEl = ref<HTMLElement | null>(null)
 const isLoading = ref(false)
 const readCount = ref()
-
-const newNoti = ref(useAlarm().alarm.value.newNoti)
-
 
 useInfiniteScroll(
   listEl,
@@ -118,7 +109,7 @@ async function fetch() {
 }
 
 async function clickNoti(noti: INotification) {
- 
+
   await useCustomFetch('/notification', getComFetchOptions('put', true, { id: noti.id }))
   shared.moveNoti(noti)
 
@@ -191,7 +182,11 @@ async function readAll() {
 }
 
 .dm-list {
+  width: 1200px;
+
   .dl-title {
+    justify-content: flex-end;
+
     p {
       padding-top: 30px;
 
