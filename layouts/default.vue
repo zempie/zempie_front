@@ -20,19 +20,22 @@ $mobile-nabigation-height: 50px;
 
 .zemtown-frame {
   position: relative;
-  width: 100%;
-  top: 70px;
-  background-color: #000;
-  margin-bottom: 74px;
+
 
   &.on {
     display: flex;
     height: calc(100vh - #{$header-height});
+    width: 100%;
+    top: 70px;
+    background-color: #000;
+    margin-bottom: 74px;
+    visibility: visible;
   }
 
   &.off {
-    // visibility: hidden;
-    display: none;
+    visibility: hidden;
+    height: 0px;
+    // display: none;
   }
 }
 

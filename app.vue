@@ -167,48 +167,4 @@ body {
 
 
 }
-
-
-$header-height: 70px;
-$mobile-nabigation-height: 50px;
-
-.zemtown-frame {
-  position: relative;
-  width: 100%;
-  top: 74px;
-  background-color: #000;
-  margin-bottom: 74px;
-
-  &.on {
-    display: flex;
-    height: calc(100vh - #{$header-height});
-  }
-
-  &.off {
-    // visibility: hidden;
-    display: none;
-  }
-}
-
-
-@media all and (max-width: 479px) {
-
-  .zemtown-frame {
-    top: #{$header-height};
-
-    &.on {
-      height: calc(100vh - #{$header-height} - #{$mobile-nabigation-height});
-    }
-  }
-}
-
-@media all and (min-width: 480px) and (max-width: 767px) {
-  .zemtown-frame {
-    top: #{$header-height};
-
-    &.on {
-      height: calc(100vh - #{$header-height} - #{$mobile-nabigation-height});
-    }
-  }
-}
 </style>
