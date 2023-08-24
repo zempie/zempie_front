@@ -48,7 +48,8 @@ watch(() =>
     }
   })
 
-watch(() => (useUser().user.value.fUser), (fUser) => {
+watch(() => (useUser().user.value.fUser),
+ (fUser) => {
   if (fUser) {
     useZemtown().setUrl(`${config.ZEMTOWN_URL}?token=${fUser?.accessToken}`)
   }
