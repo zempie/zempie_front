@@ -35,7 +35,7 @@ $mobile-nabigation-height: 50px;
   &.off {
     visibility: hidden;
     height: 0px;
-    // display: none;
+    top: -150px;
   }
 }
 
@@ -43,21 +43,23 @@ $mobile-nabigation-height: 50px;
 @media all and (max-width: 479px) {
 
   .zemtown-frame {
-    top: #{$header-height};
-
     &.on {
       height: calc(100vh - #{$header-height} - #{$mobile-nabigation-height});
+      top: #{$header-height};
     }
+
   }
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
   .zemtown-frame {
-    top: #{$header-height};
 
     &.on {
       height: calc(100vh - #{$header-height} - #{$mobile-nabigation-height});
+      top: #{$header-height};
+
     }
+
   }
 }
 </style>
