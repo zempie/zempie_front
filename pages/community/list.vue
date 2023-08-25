@@ -30,20 +30,18 @@
         </div>
       </dd>
     </dl>
-    <div class="result-container">
-      <div class="card-timeline" style="margin: 0 auto;">
-        <CommunityCardSk v-if="isPending" v-for="com in 4" />
-        <TransitionGroup v-else name="fade">
-          <CommunityCard v-for="community in communities" :community="community" :key="community.id"
-            :isSubModal="isSubModal" @is-sub-modal="(e) => isSubModal = e">
-            <template v-slot:subBtn>
-              <CommunitySubscribeBtn :community="community" @refresh="fetch" @is-sub-modal="(e) => isSubModal = e" />
-            </template>
-          </CommunityCard>
-        </TransitionGroup>
-        <div ref="triggerDiv"></div>
-      </div>
+    <div class="card-timeline" style="margin: 0 auto;">
+      <CommunityCardSk v-if="isPending" v-for="com in 4" />
+      <TransitionGroup v-else name="fade">
+        <CommunityCard v-for="community in communities" :community="community" :key="community.id"
+          :isSubModal="isSubModal" @is-sub-modal="(e) => isSubModal = e">
+          <template v-slot:subBtn>
+            <CommunitySubscribeBtn :community="community" @refresh="fetch" @is-sub-modal="(e) => isSubModal = e" />
+          </template>
+        </CommunityCard>
+      </TransitionGroup>
     </div>
+    <div ref="triggerDiv"></div>
   </div>
 </template>
 
@@ -75,15 +73,25 @@ shared.createHeadMeta(t('communityList'), t('communityList.desc'))
 
 
 onMounted(async () => {
+  createObserver()
+  nextTick(async () => {
+    await fetch()
+    isPending.value = false
+  })
+})
+
+
+
+function createObserver() {
   observer.value = new IntersectionObserver(
     (entries) => {
       handleIntersection(entries[0])
     },
-    { root: null, threshold: 1 }
+    { root: null, threshold: 1, rootMargin: '10px' }
   )
   observer.value.observe(triggerDiv.value)
-  // await fetch()
-})
+}
+
 
 async function handleIntersection(target) {
   if (target.isIntersecting) {
@@ -107,9 +115,10 @@ async function fetch() {
     getComFetchOptions('get', true)
   )
   if (data.value) {
+    isPending.value = false
     communities.value = data.value
+
   }
-  isPending.value = false
 }
 
 const sortGroups = _.debounce(async (sorted: number) => {
@@ -184,14 +193,13 @@ svg {
   }
 }
 
+
 @media all and (max-width: 479px) {
   .visual-img {
     width: 100% !important;
     border-radius: 0 !important;
   }
-}
 
-@media all and (max-width: 479px) {
   .area-search-sort {
     width: 100%;
   }

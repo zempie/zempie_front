@@ -37,6 +37,7 @@
                   </i>
                   <p class="fontColor-white">{{ likeCnt }}</p>
                 </div>
+
                 <ShareMenu :shareInfo="shareInfo" type="game" />
                 <CommonDropdown style="display: flex;">
                   <template #options>
@@ -214,10 +215,9 @@ const shareInfo = computed(() => {
     title: gameInfo.value.title,
     desc: gameInfo.value.description,
     user: gameInfo.value.user,
-    url: `${config.ZEMPIE_URL}/play/${gameInfo.value.pathname}}`
+    url: `${config.ZEMPIE_URL}/play/${gameInfo.value.pathname}`
   }
 })
-
 
 function playGame() {
   window.open(`/play/${gameInfo.value.pathname}`, '_blank')

@@ -24,7 +24,7 @@
           feed?.attatchment_files &&
           feed?.attatchment_files.length > 0
           ">
-          <div class="tapl-movie-img" v-if="attatchment_files[0].type === 'image'">
+          <div class="tapl-movie-img" v-if="attatchment_files && attatchment_files[0]?.type === 'image'">
             <PostImgSwiper :images="attatchment_files" @update-blind="updateBlind" />
           </div>
           <div class="tapl-movie-img" v-else>

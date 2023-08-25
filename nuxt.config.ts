@@ -61,6 +61,10 @@ export default defineNuxtConfig({
         }
       }
     },
+    'webpack:config': (config) => {
+      console.log('config', config)
+
+    }
   },
   generate: {
     fallback: '404.html'
@@ -91,6 +95,9 @@ export default defineNuxtConfig({
 
   build: {
     extractCSS: true,
+    filenames: {
+      chunk: () => '[name].js'
+    }
   },
 
   publicRuntimeConfig: {

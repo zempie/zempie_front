@@ -123,12 +123,12 @@ function shareSocial(social: string) {
       })
       break;
     case 'facabook':
-      const popUrl = `${config.FACEBOOK_SHARE_URL}?app_id = ${config.FACEBOOK_APP_ID}& display=popup & href=${linkUrl}& redirect_uri=${linkUrl} `
+      const popUrl = `${config.FACEBOOK_SHARE_URL}?app_id=${config.FACEBOOK_APP_ID}&display=popup&href=${linkUrl}&redirect_uri=${linkUrl} `
       openCenteredPopup(popUrl, 'Facabook share', 500, 300)
       break;
     case 'twitter':
-      const shareUrl = props.url
-      linkUrl = `${config.TWITTER_SHARE_URL}?url = ${shareUrl} `
+      const shareUrl = props.shareInfo.url
+      linkUrl = `${config.TWITTER_SHARE_URL}?url=${shareUrl} `
       openCenteredPopup(linkUrl, 'Twitter share', 500, 300)
       break;
   }
