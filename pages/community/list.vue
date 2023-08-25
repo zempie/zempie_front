@@ -107,9 +107,10 @@ async function fetch() {
     getComFetchOptions('get', true)
   )
   if (data.value) {
+    isPending.value = false
     communities.value = data.value
+
   }
-  isPending.value = false
 }
 
 const sortGroups = _.debounce(async (sorted: number) => {
