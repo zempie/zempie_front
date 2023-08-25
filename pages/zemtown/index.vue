@@ -97,9 +97,6 @@ async function onMessage(msg: MessageEvent) {
   try {
     const { type, target_type, data: parsedData } = JSON.parse(msg.data)
 
-    // type loading parsedData.success
-
-
     switch (type) {
       case 'loading':
         if (!parsedData.success) {
@@ -108,6 +105,11 @@ async function onMessage(msg: MessageEvent) {
         break;
       case 'login':
         if (!parsedData.success && isLogin.value) {
+          needRefresh.value = true
+        }
+        break;
+      case 'server':
+        if ((parsedData.status as String).toLocaleLowerCase() === 'disconnected') { // connected, disconnected
           needRefresh.value = true
         }
         break;

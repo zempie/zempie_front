@@ -194,6 +194,8 @@ function createObserver() {
 }
 
 async function handleIntersection(target) {
+  console.log('target.isIntersecting', target.isIntersecting)
+
   if (target.isIntersecting) {
     if (isAddData.value) {
       offset.value += limit.value
