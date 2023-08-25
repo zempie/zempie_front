@@ -66,7 +66,6 @@ const visitCount = computed(() => numToKMB(props.community.visit_cnt))
 
 function goCommunity(e) {
   e.stopPropagation()
-  console.log('!!', props.isSubModal)
 
   if (props.isSubModal) {
 

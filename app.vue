@@ -9,6 +9,7 @@ import { ID_INJECTION_KEY } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import flutterBridge from './scripts/flutterBridge';
 import shared from './scripts/shared';
+import { onBeforeRouteLeave } from 'vue-router';
 
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
@@ -40,7 +41,6 @@ provide(ID_INJECTION_KEY, {
   prefix: 100,
   current: 0,
 })
-
 
 onBeforeMount(async () => {
   colorLog('===App start===', 'red')
@@ -83,7 +83,6 @@ onBeforeMount(async () => {
 
 
 })
-
 onMounted(() => {
   nextTick(() => {
     onResize()
@@ -106,8 +105,11 @@ function onResize() {
 }
 
 function onPopState() {
-  console.log('onPopState')
+  useCommon().setPopState(true)
+  console.log('onPopState', useCommon().common.value.isPopState)
+
 }
+
 
 function notiPerCheck() {
   const permissionCheck = Notification.permission;

@@ -23,7 +23,6 @@ definePageMeta({
 
 shared.createHeadMeta(t('seo.landing.title'), t('seo.landing.description'), config.OG_IMG)
 
-
 </script>
 
 <style scoped lang="scss"></style>
