@@ -3,7 +3,8 @@
     <button :class="[route.meta.name === 'main' && 'active']" @click="openTimeline"><span class="material-icons">
         home
       </span></button>
-    <button class=" mr10" @click="openMyProfile"><span class="material-icons">
+    <button class=" mr10" @click="openMyProfile" :class="isOpenProfile && 'active'">
+      <span class="material-icons">
         account_circle
       </span></button>
     <button class="mr10" :class="$route.name.toString().includes('game-list') && 'active'"
@@ -33,6 +34,7 @@ const isOpenDm = ref(false)
 
 const isZemtown = computed(() => String(route.name).includes('zemtown'))
 const isLogin = computed(() => useUser().user.value.isLogin)
+const isOpenProfile = computed(() => useZemtown().zemtown.value.isOpenMyProfile)
 
 
 function openTimeline() {
@@ -116,7 +118,6 @@ function loginCheck() {
     border: none;
     cursor: pointer;
 
-    &:hover,
     &.active {
       color: #e99415;
     }

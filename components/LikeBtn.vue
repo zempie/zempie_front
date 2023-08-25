@@ -52,7 +52,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['refresh'])
 
-const LIKE_LIMIT = 5
+const LIKE_LIMIT = 10
 
 const isLiked = ref(props.feed.liked)
 const likeCnt = ref(props.feed.like_cnt)

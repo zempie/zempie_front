@@ -11,9 +11,6 @@
                 height="25" />
             </NuxtLink>
           </p>
-          <!-- <button class="btn-circle-none" @click="isHeaderSideMobile = true" v-if="showHamburger">
-            <i class="uil uil-bars"></i>
-          </button> -->
           <ul class="menu">
             <li class="uppercase">
               <NuxtLink :to="$localePath('/community/list')"
@@ -112,9 +109,6 @@ const isLogin = computed(() => useUser().user.value.isLogin)
 const isLoading = computed(() => useUser().user.value.isLoading)
 const user = computed(() => useUser().user.value.info)
 
-const searchInput = ref()
-const isHeaderSideMobile = ref(false)
-const isHeaderSideBgMobile = ref(false)
 const showMogera = ref(false)
 
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
@@ -175,29 +169,6 @@ onBeforeUnmount(() => {
 function onResize() {
   showMobileLogo.value = isMobileSize.value.matches ? true : false
   showHamburger.value = isTablet.value.matches ? true : false
-}
-
-
-async function moveSearchPage() {
-  isHeaderSideMobile.value = false
-  await useSearch().getSearch(searchInput.value)
-
-  router.push({ path: $localePath(`/search`), query: { q: searchInput.value } })
-  searchInput.value = ""
-}
-
-function clickOutside() {
-  if (isHeaderSideMobile.value) {
-    isHeaderSideMobile.value = false
-  }
-}
-
-
-async function moveZemWorld() {
-  const { result } = await getGameToken()
-  if (result) {
-    window.open(`${config.ZEMPIE_METAVERSE}?key=${result.token}`, "_blank");
-  }
 }
 
 

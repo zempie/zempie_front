@@ -215,7 +215,7 @@ const shareInfo = computed(() => {
     title: gameInfo.value.title,
     desc: gameInfo.value.description,
     user: gameInfo.value.user,
-    url: `${config.ZEMPIE_URL}/play/${gameInfo.value.pathname}}`
+    url: `${config.ZEMPIE_URL}/play/${gameInfo.value.pathname}`
   }
 })
 
