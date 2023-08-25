@@ -1,7 +1,7 @@
 <template>
   <ClientOnly>
     <div class="footer">
-    <dl>
+      <dl>
         <dt>
           <p>
             <a :href="config.FTR_PAGE_URL" target="_blank" aria-label="Fromthered website">{{ $t('company.info.title')

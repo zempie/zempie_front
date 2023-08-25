@@ -7,6 +7,8 @@
   </div>
 </template>
 <script setup lang="ts">
+import { onBeforeRouteLeave } from 'vue-router';
+
 const router = useRouter()
 
 const { $localePath } = useNuxtApp()
@@ -54,6 +56,12 @@ onMounted(() => {
     openDm()
   }
   window.addEventListener('message', onMessage)
+})
+
+onBeforeRouteLeave((to, from, next) => {
+  closeDm()
+  closeMyProfile()
+  next()
 })
 
 
