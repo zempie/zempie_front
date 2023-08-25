@@ -88,11 +88,12 @@ onMounted(() => {
   nextTick(() => {
     onResize()
     window.addEventListener('resize', onResize)
-
+    window.addEventListener('popstate', onPopState)
   })
 })
 onBeforeUnmount(() => {
   window.removeEventListener('resize', onResize)
+  window.removeEventListener('popstate', onPopState)
 })
 
 function onResize() {
@@ -102,6 +103,10 @@ function onResize() {
     useCommon().setMobile(false)
 
   }
+}
+
+function onPopState() {
+  console.log('onPopState')
 }
 
 function notiPerCheck() {

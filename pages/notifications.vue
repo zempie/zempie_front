@@ -318,6 +318,7 @@ async function readAll() {
   }
 
   .dm-list {
+    width: 100%;
     margin: 0px auto;
   }
 
@@ -325,7 +326,7 @@ async function readAll() {
 
 @media all and (min-width: 480px) and (max-width: 767px) {
   .noti-visual-title {
-    width: 470px;
+    width: 100%;
     height: 120px;
   }
 
@@ -338,6 +339,7 @@ async function readAll() {
   }
 
   .dm-list {
+    width: 100%;
     padding-top: 0px;
   }
 
@@ -355,6 +357,11 @@ async function readAll() {
       width: 100%;
     }
   }
+
+  .dm-list {
+    width: 750px;
+    padding-top: 0px;
+  }
 }
 
 @media all and (min-width: 992px) and (max-width: 1199px) {
@@ -368,6 +375,10 @@ async function readAll() {
     p {
       width: 100%;
     }
+  }
+
+  .dm-list {
+    width: 970px;
   }
 }
 
