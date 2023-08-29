@@ -1,12 +1,13 @@
 <template>
   <a v-if="!community?.is_subscribed" class="btn-default mr10 mt20 w100p" :community="community"
     @click.stop="subscribe">{{ t('subscribe.btn') }}</a>
-  <a v-else class="btn-sub mr10 mt20 w100p" @click.stop="isModalOpen = true; emit('isSubModal', true)">{{
+
+  <a v-else class="btn-sub mr10 mt20 w100p" @click.stop="isModalOpen = true; emit('isSubModal', true);">{{
     $t('isSubscribing')
   }}</a>
 
   <ClientOnly>
-    <el-dialog v-model="isModalOpen" class="modal-area-type" :show-close="false" width="380px">
+    <el-dialog v-model="isModalOpen" class="modal-area-type" :show-close="false" width="380px" @close="onCloseModal">
       <div class="modal-alert">
         <dl class="ma-header">
           <dt class="mt0" style="order:1; text-align: left;">{{ t('information') }}</dt>
@@ -53,10 +54,7 @@ const emit = defineEmits(['refresh', 'isSubModal'])
 
 const isLogin = computed(() => useUser().user.value.isLogin)
 const communityId = computed(() => props.community.id)
-
-watch(() => isModalOpen.value, (state) => {
-  useCommon().setPopState(state)
-})
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
 
 async function subscribe() {
@@ -90,5 +88,9 @@ async function unsubscribe() {
     emit('refresh')
     isModalOpen.value = false
   }
+}
+
+function onCloseModal() {
+  useCommon().setPopState(false)
 }
 </script>

@@ -83,18 +83,12 @@ onBeforeMount(async () => {
 
 
 })
+
 onMounted(() => {
   nextTick(() => {
     onResize()
-    window.addEventListener('resize', onResize)
-    window.addEventListener('popstate', onPopState)
   })
 })
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', onResize)
-  window.removeEventListener('popstate', onPopState)
-})
-
 function onResize() {
   if (isMobileSize.value.matches) {
     useCommon().setMobile(true)
@@ -104,11 +98,6 @@ function onResize() {
   }
 }
 
-function onPopState() {
-  useCommon().setPopState(true)
-  console.log('onPopState', useCommon().common.value.isPopState)
-
-}
 
 
 function notiPerCheck() {

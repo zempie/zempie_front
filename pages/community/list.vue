@@ -36,7 +36,7 @@
         <CommunityCard v-for="community in communities" :community="community" :key="community.id"
           :isSubModal="isSubModal" @is-sub-modal="(e) => isSubModal = e">
           <template v-slot:subBtn>
-            <CommunitySubscribeBtn :community="community" @refresh="fetch" @is-sub-modal="(e) => isSubModal = e" />
+            <CommunitySubscribeBtn :community="community" @refresh="fetch" @is-sub-modal="(e) => subModalState(e)" />
           </template>
         </CommunityCard>
       </TransitionGroup>
@@ -69,6 +69,10 @@ const isSubModal = ref()
 
 const triggerDiv = ref<Element>()
 
+const isMobile = computed(() => useCommon().common.value.isMobile)
+const isModalOpen = ref(false)
+
+
 shared.createHeadMeta(t('communityList'), t('communityList.desc'))
 
 useRouterLeave()
@@ -76,10 +80,12 @@ useRouterLeave()
 onMounted(async () => {
   createObserver()
   nextTick(async () => {
+
     await fetch()
     isPending.value = false
   })
 })
+
 
 
 function createObserver() {
@@ -133,6 +139,14 @@ const sortGroups = _.debounce(async (sorted: number) => {
     await fetch()
   }
 }, 300)
+
+
+function subModalState(e) {
+  isSubModal.value = e;
+  if (e) {
+    useCommon().setPopState(true)
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -203,4 +217,3 @@ const sortGroups = _.debounce(async (sorted: number) => {
   }
 }
 </style>
-~~/composables/useCustomRouter

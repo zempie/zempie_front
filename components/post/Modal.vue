@@ -19,6 +19,7 @@ import {
 const isEditorDestroy = ref(false)
 const isFullScreen = ref(false)
 
+
 const props = defineProps({
   isTextEditorOpen: Boolean,
 })
