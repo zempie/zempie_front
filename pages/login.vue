@@ -207,15 +207,9 @@ async function onSubmit() {
       await setFirebaseToken()
     }
     catch (err) {
-      console.log('error: ', err)
-      console.log('error type: ', typeof err)
-      console.log('error err: ', err.Error)
-      console.log('err ex: ', err.Exception)
-      console.log('err error: ', err.error)
 
-
-
-      firebaseLoginErr(String(err))
+      //ISSUE: 에러가 object 로 넘어오는데 파싱이 안됨 스트링으로 변환후 사용
+      firebaseLoginErr({ message: String(err) })
     }
     finally {
       isLoading.value = false
@@ -395,23 +389,32 @@ function firebaseLoginErr(err: any) {
   const errorMessage = err.message
   let message = errorCode ? errorCode : errorMessage
 
+  if (errorCode) {
+    switch (errorCode) {
+      case 'auth/weak-password':
+        message = `${t('login.pwd.format.err')}`
+        break
+      case 'auth/wrong-password':
+        ElMessage.error(`${t('fb.wrong.info')}`)
+        break
+      case 'auth/user-not-found':
+        ElMessage.error(`${t('fb.not.found')}`)
+        break
+      default:
+        ElMessage.error(err)
+        break
+    }
+  } else {
 
-  ElMessage.error(err)
-  throw { err }
-
-  switch (errorCode) {
-    case 'auth/weak-password':
+    if (err && err.message.includes('auth/weak-password')) {
       message = `${t('login.pwd.format.err')}`
-      break
-    case 'auth/wrong-password':
+
+    } else if (err && err.message.includes('auth/wrong-password')) {
       ElMessage.error(`${t('fb.wrong.info')}`)
-      break
-    case 'auth/user-not-found':
+
+    } else if (err && err.message.includes('auth/user-not-found')) {
       ElMessage.error(`${t('fb.not.found')}`)
-      break
-    default:
-      ElMessage.error(err)
-      break
+    }
   }
   throw { message }
 }
