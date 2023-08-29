@@ -211,8 +211,11 @@ async function onSubmit() {
       console.log('error type: ', typeof err)
       console.log('error err: ', err.Error)
       console.log('err ex: ', err.Exception)
+      console.log('err error: ', err.error)
 
-      firebaseLoginErr(err)
+
+
+      firebaseLoginErr(String(err))
     }
     finally {
       isLoading.value = false
