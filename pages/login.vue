@@ -207,6 +207,7 @@ async function onSubmit() {
       await setFirebaseToken()
     }
     catch (err) {
+      console.log(err)
       firebaseLoginErr(err)
     }
     finally {
