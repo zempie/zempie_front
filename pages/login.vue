@@ -384,9 +384,14 @@ function firebaseJoinErr(err: any) {
 }
 
 function firebaseLoginErr(err: any) {
+
   const errorCode = err.code
   const errorMessage = err.message
   let message = errorCode ? errorCode : errorMessage
+
+
+  ElMessage.error(err)
+  throw { err }
 
   switch (errorCode) {
     case 'auth/weak-password':
