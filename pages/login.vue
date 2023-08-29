@@ -207,9 +207,12 @@ async function onSubmit() {
       await setFirebaseToken()
     }
     catch (err) {
+      console.log('error: ', err)
+      console.log('error json: ', JSON.parse(err))
       console.log('error type: ', typeof err)
-      console.log('error: ', err.Error)
+      console.log('error err: ', err.Error)
       console.log('err ex: ', err.Exception)
+
       firebaseLoginErr(err)
     }
     finally {
@@ -363,11 +366,9 @@ async function flutterSocialLogin(type: string) {
 }
 
 async function socialLogin(provider: AuthProvider) {
-  console.log('socialLogin1')
 
   try {
     const res = await signInWithPopup($firebaseAuth, provider)
-    console.log('socialLogin', res)
     router.push($localePath('/'))
 
   } catch (err) {
