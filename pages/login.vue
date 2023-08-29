@@ -208,7 +208,6 @@ async function onSubmit() {
     }
     catch (err) {
       console.log('error: ', err)
-      console.log('error json: ', JSON.parse(err))
       console.log('error type: ', typeof err)
       console.log('error err: ', err.Error)
       console.log('err ex: ', err.Exception)
