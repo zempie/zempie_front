@@ -11,7 +11,8 @@ export default function () {
   })
 
   const common = useState('common', () => ({
-    isMobile: false
+    isMobile: false,
+    isPopState: false
   }))
 
 
@@ -34,6 +35,10 @@ export default function () {
   const setMobile = (state: boolean) => {
     common.value.isMobile = state
   }
+  const setPopState = (state: boolean) => {
+    common.value.isPopState = state
+  }
+
 
   return {
     setting,
@@ -44,6 +49,7 @@ export default function () {
     setLoadingDone,
     setSupport,
     setNoti,
-    setMobile
+    setMobile,
+    setPopState
   }
 }

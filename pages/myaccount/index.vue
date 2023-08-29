@@ -147,7 +147,6 @@ definePageMeta({
   title: 'my-account',
   name: 'myAccount',
   middleware: 'auth',
-  layout: 'header-only',
 })
 
 shared.createHeadMeta(t('seo.profile.info.title'), t('seo.profile.info.desc'))
