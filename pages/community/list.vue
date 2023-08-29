@@ -16,15 +16,15 @@
       <dt></dt>
       <dd>
         <div class="sort-default">
-          <a @click="sortGroups(0)" :class="filter === 0 && 'active'"><i class="uis uis-check"></i>
+          <a @click="sortGroups(0)" :class="[filter === 0 && 'active', 'pointer']"><i class="uis uis-check"></i>
             {{ t('filter.recent') }}
           </a>
           <span>·</span>
-          <a @click="sortGroups(1)" :class="filter === 1 && 'active'"><i class="uis uis-check"></i>
+          <a @click="sortGroups(1)" :class="[filter === 1 && 'active', 'pointer']"><i class="uis uis-check"></i>
             {{ t('filter.subscribe') }}
           </a>
           <span>·</span>
-          <a @click="sortGroups(2)" :class="filter === 2 && 'active'"><i class="uis uis-check"></i>
+          <a @click="sortGroups(2)" :class="[filter === 2 && 'active', 'pointer']"><i class="uis uis-check"></i>
             {{ t('filter.alphabet') }}
           </a>
         </div>
@@ -49,6 +49,7 @@
 import shared from '~~/scripts/shared';
 import _ from 'lodash'
 import { useI18n } from 'vue-i18n'
+const MAX_LIMIT = 20
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -58,9 +59,8 @@ const communities: any = ref([])
 const filter = ref(0)
 const isPending = ref(true)
 
-const limit = ref(20)
+const limit = ref(MAX_LIMIT)
 const offset = ref(0)
-const community = ref('')
 const sort = ref('')
 const observer = ref<IntersectionObserver>(null)
 const isAddData = ref(false)
@@ -71,6 +71,7 @@ const triggerDiv = ref<Element>()
 
 shared.createHeadMeta(t('communityList'), t('communityList.desc'))
 
+useRouterLeave()
 
 onMounted(async () => {
   createObserver()
@@ -79,7 +80,6 @@ onMounted(async () => {
     isPending.value = false
   })
 })
-
 
 
 function createObserver() {
@@ -97,10 +97,8 @@ async function handleIntersection(target) {
   if (target.isIntersecting) {
     if (isAddData.value) {
       offset.value += limit.value
-      await fetch()
-    } else {
-      await fetch()
     }
+    await fetch()
   }
 }
 
@@ -138,39 +136,6 @@ const sortGroups = _.debounce(async (sorted: number) => {
 </script>
 
 <style scoped lang="scss">
-svg {
-  overflow: hidden;
-  vertical-align: middle;
-}
-
-.search.button {
-  width: 64px !important;
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-
-/* transition */
-
-.list-complete-item {
-  transition: all 1s;
-  display: inline-block;
-  margin-right: 10px;
-}
-
-.list-complete-enter,
-.list-complete-leave-to
-
-/* .list-complete-leave-active below version 2.1.8 */
-  {
-  opacity: 0;
-  transform: translateY(30px);
-}
-
-.list-complete-leave-active {
-  position: absolute;
-}
-
 .visual-img {
   color: #fff;
   display: flex;
@@ -237,28 +202,5 @@ svg {
     margin-bottom: 10px;
   }
 }
-
-//transition
-.component-fade-enter-active,
-.component-fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.component-fade-enter,
-.component-fade-leave-to
-
-/* .component-fade-leave-active below version 2.1.8 */
-  {
-  opacity: 0;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.15s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
 </style>
+~~/composables/useCustomRouter

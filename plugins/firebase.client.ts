@@ -68,7 +68,6 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         useAlarm().setNewNoti(payload)
       }
     });
-
   }
 
   nuxtApp.provide('firebaseApp', app);

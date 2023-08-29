@@ -27,7 +27,8 @@
     </ul>
 
     <ClientOnly>
-      <el-dialog v-model="showCommentModal" class="modal-area-type" width="380px" :fullscreen="isFullScreen">
+      <el-dialog v-model="showCommentModal" class="modal-area-type game-cmt-conatiner" width="380px"
+        :fullscreen="isFullScreen">
         <div class="modal-alert">
           <dl class="ma-header">
             <dt>{{ $t('comments') }} <span class="count">({{ count }})</span></dt>

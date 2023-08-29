@@ -51,6 +51,8 @@
       </div>
 
       <div class="tapl-comment" v-if="comments">
+        isPopState{{ isPopState }}
+
         <p>
           {{ $t('comment') }} {{ commentCount }}{{ $t('comment.count.unit') }}
         </p>
@@ -86,6 +88,7 @@ import {
 import { useI18n } from 'vue-i18n'
 
 import { useWindowScroll, useInfiniteScroll } from '@vueuse/core'
+const isPopState = computed(() => useCommon().common.value.isPopState)
 
 const { $localePath } = useNuxtApp()
 const { x, y } = useWindowScroll()
