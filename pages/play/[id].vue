@@ -78,7 +78,7 @@ onMounted(async () => {
       type: 'info',
     })
       .then(() => {
-        document.documentElement.requestFullscreen()
+        openFullScreenMode()
       })
 
 
@@ -90,6 +90,19 @@ onMounted(async () => {
 
   // await fetch()
 })
+
+function openFullScreenMode() {
+  const doc = document.documentElement;
+
+  if (doc.requestFullscreen)
+    doc.requestFullscreen();
+  else if (doc.webkitRequestFullscreen) // Chrome, Safari (webkit)
+    doc.webkitRequestFullscreen();
+  else if (doc.mozRequestFullScreen) // Firefox
+    doc.mozRequestFullScreen();
+  else if (doc.msRequestFullscreen) // IE or Edge
+    doc.msRequestFullscreen();
+}
 
 onBeforeUnmount(() => {
   window.removeEventListener('message', onMessage)
