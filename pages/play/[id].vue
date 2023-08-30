@@ -14,7 +14,9 @@ import { getIdToken } from 'firebase/auth'
 import { useI18n } from 'vue-i18n'
 import shared from '~~/scripts/shared';
 import { IGame } from '~~/types';
-
+import {
+  ElMessageBox,
+} from 'element-plus'
 const HOURTOSEC = 60 * 60
 
 const { t, locale } = useI18n()
@@ -35,7 +37,6 @@ const fUser = computed(() => useUser().user.value.fUser)
 definePageMeta({
   layout: 'layout-none',
 })
-
 
 /**
  * seo 반영은 함수안에서 되지 않으므로 최상단에서 진행함
@@ -70,6 +71,18 @@ watch(
 
 onMounted(async () => {
   if (process.client) {
+
+    ElMessageBox.confirm(`전체화면으로 전환하시겠습니까?`, {
+      confirmButtonText: 'YES',
+      cancelButtonText: 'Cancel',
+      type: 'info',
+    })
+      .then(() => {
+        document.documentElement.requestFullscreen()
+      })
+
+
+
     window.addEventListener('message', onMessage)
     window.addEventListener('resize', onResize)
     onResize()
