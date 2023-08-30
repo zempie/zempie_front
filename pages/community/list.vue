@@ -34,9 +34,10 @@
       <CommunityCardSk v-if="isPending" v-for="com in 4" />
       <TransitionGroup v-else name="fade">
         <CommunityCard v-for="community in communities" :community="community" :key="community.id"
-          :isSubModal="isSubModal" @is-sub-modal="(e) => isSubModal = e">
+          :isSubModal="isSubModal" @is-sub-modal="(e) => subModalState(e)">
           <template v-slot:subBtn>
-            <CommunitySubscribeBtn :community="community" @refresh="fetch" @is-sub-modal="(e) => subModalState(e)" />
+            <CommunitySubscribeBtn ref="subBtnRef" :community="community" @refresh="fetch"
+              @is-sub-modal="(e) => subModalState(e)" />
           </template>
         </CommunityCard>
       </TransitionGroup>
@@ -49,6 +50,8 @@
 import shared from '~~/scripts/shared';
 import _ from 'lodash'
 import { useI18n } from 'vue-i18n'
+import { onBeforeRouteLeave } from 'vue-router';
+
 const MAX_LIMIT = 20
 
 const { t, locale } = useI18n()
@@ -69,18 +72,31 @@ const isSubModal = ref()
 
 const triggerDiv = ref<Element>()
 
+const subBtnRef = ref()
 const isMobile = computed(() => useCommon().common.value.isMobile)
-const isModalOpen = ref(false)
+
 
 
 shared.createHeadMeta(t('communityList'), t('communityList.desc'))
 
-useRouterLeave()
+
+
+onBeforeRouteLeave((to, from, next) => {
+
+  if (useCommon().common.value.isPopState) {
+    subBtnRef.value.forEach(element => {
+      element.closeModal()
+    });
+    next(false)
+  } else {
+    next()
+  }
+})
+
 
 onMounted(async () => {
   createObserver()
   nextTick(async () => {
-
     await fetch()
     isPending.value = false
   })
@@ -144,7 +160,7 @@ const sortGroups = _.debounce(async (sorted: number) => {
 function subModalState(e) {
   isSubModal.value = e;
   if (e) {
-    useCommon().setPopState(true)
+    // useCommon().setPopState(true)
   }
 }
 </script>

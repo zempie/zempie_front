@@ -166,6 +166,13 @@
 
     }
   }
+
+  .modal-area-type {
+    &.new-msg-modal {
+      max-height: 100vh;
+      border-radius: 0px !important;
+    }
+  }
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
@@ -198,6 +205,13 @@
         }
       }
 
+    }
+  }
+
+  .modal-area-type {
+    &.new-msg-modal {
+      max-height: 100vh;
+      border-radius: 0px !important;
     }
   }
 }

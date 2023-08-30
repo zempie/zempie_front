@@ -1,5 +1,4 @@
 <template>
-  searchInput{{ searchInput }}
   <div class="header-search">
     <div class="input-search-line">
       <i class="uil uil-search"></i>

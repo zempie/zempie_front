@@ -1,7 +1,5 @@
 <template>
   <div class="header">
-    isPopState {{ useCommon().common.value.isPopState }}
-
     <dl style="min-height: 70px;">
       <dt>
         <div class="header-logo-menu">

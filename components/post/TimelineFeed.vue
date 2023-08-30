@@ -56,37 +56,9 @@
     <ul class="tapl-option">
       <PostActions :feed="feed" :is-comment-closed="true" @open-comment="openComments" :comment-cnt="commentCount" />
     </ul>
+
     <ClientOnly>
-      <el-dialog v-model="showDeletePostModal" class="modal-area-type" width="380px">
-        <div class="modal-alert">
-          <dl class="ma-header">
-            <dt>{{ t('information') }}</dt>
-            <dd>
-              <button @click="showDeletePostModal = false">
-                <i class="uil uil-times"></i>
-              </button>
-            </dd>
-          </dl>
-          <div class="ma-content">
-            <h2>
-              {{ t('post.delete.modal.text1') }} <br />{{
-                t('post.delete.modal.text2')
-              }}
-            </h2>
-            <div>
-              <button class="btn-default w48p" @click="deletePost">
-                {{ t('delete') }}
-              </button>
-              <button class="btn-gray w48p" @click="showDeletePostModal = false">
-                {{ t('no') }}
-              </button>
-            </div>
-          </div>
-        </div>
-      </el-dialog>
-    </ClientOnly>
-    <ClientOnly>
-      <el-dialog v-model="isOpenedComments" class="modal-area-type" width="650px" :fullscreen="isFullScreen"
+      <el-dialog v-model="isOpenedComments" class="modal-area-type" width="650px" :fullscreen="isMobile"
         @close="openComments(false)">
         <div class="modal-alert comment-modal bg-white">
           <dl class="ma-header bg-white">
@@ -162,12 +134,8 @@ const isAddData = ref(false)
 const isCommentEdit = ref(false)
 const totalComment = ref(0)
 
-//반응형
-const isFullScreen = ref(false)
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
-const isMobile = computed(() =>
-  window.matchMedia('screen and (max-width: 767px)')
-)
 useInfiniteScroll(
   commentEl,
   async () => {
@@ -212,15 +180,7 @@ const isOverflow = computed(() => {
 
 onMounted(() => {
   const dom = props.feed?.content && htmlToDomElem(props.feed.content)
-  onResize()
-  window.addEventListener('resize', onResize)
-
-
 })
-
-function onResize() {
-  isFullScreen.value = isMobile.value.matches ? true : false
-}
 
 async function openComments(isOpenComment: boolean) {
   isOpenedComments.value = isOpenComment
@@ -280,7 +240,7 @@ async function deletePost() {
     })
     emit('refresh')
   }
-  showDeletePostModal.value = false
+  closeDeletePostModal()
 }
 
 

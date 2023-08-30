@@ -41,6 +41,7 @@ import { dmDateFormat } from '~~/scripts/utils'
 const props = defineProps({
   msg: Object as PropType<IMessage>
 })
+const emit = defineEmits(['deleteMsg'])
 
 const showMsgMenu = ref(false)
 
@@ -55,7 +56,13 @@ function openMenu() {
 
 function closeMenu() {
   showMsgMenu.value = false
+}
+
+
+function deleteMsg() {
+  emit('deleteMsg', props.msg)
 
 }
+
 </script>
 <style scoped lang="scss"></style>

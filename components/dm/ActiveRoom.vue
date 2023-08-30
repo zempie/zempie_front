@@ -35,7 +35,7 @@
       <div :class="msg.sender?.id === userInfo.id ? 'receiver-chat' : 'sender-chat'" v-for="( msg, index ) in  msgList "
         :ref="el => { divs[msg.id] = el }" :key="index">
         <template v-if="msg?.chat_idx !== -1">
-          <DmMessage :msg="msg" />
+          <DmMessage :msg="msg" @delete-msg="deleteMsg" />
         </template>
       </div>
     </div>

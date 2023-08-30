@@ -21,7 +21,7 @@
                       <a @click="isCommentEdit = !isCommentEdit" class="pointer">{{
                         $t('comment.edit')
                       }}</a>
-                      <a @click="showDeleteModal = true" class="pointer">
+                      <a @click="openDeleteModal" class="pointer">
                         {{ $t('comment.delete') }}
                       </a>
                     </template>
@@ -80,7 +80,7 @@
             <dl class="ma-header">
               <dt>{{ $t('information') }}</dt>
               <dd>
-                <button @click="showDeleteModal = false">
+                <button @click="closeDeleteModal">
                   <i class="uil uil-times"></i>
                 </button>
               </dd>
@@ -91,7 +91,7 @@
                 <button class="btn-default w48p" @click="deleteComment">
                   {{ $t('delete') }}
                 </button>
-                <button class="btn-gray w48p" @click="showDeleteModal = false">
+                <button class="btn-gray w48p" @click="closeDeleteModal">
                   {{ $t('no') }}
                 </button>
               </div>
@@ -114,6 +114,7 @@ import { ElDropdown, ElDialog } from 'element-plus'
 import { IComment, eReportType } from '~~/types';
 import { dateFormat } from '~~/scripts/utils'
 import { PropType } from 'vue';
+
 const { t, locale } = useI18n()
 
 const { $localePath } = useNuxtApp()
@@ -124,6 +125,7 @@ const parentUser = reactive({
 
 const showDeleteModal = ref(false)
 const isCommentEdit = ref(false)
+
 const props = defineProps({
   comment: Object as PropType<IComment>,
   isEdit: {
@@ -136,6 +138,7 @@ const props = defineProps({
 
 const recomments = ref(props.comment?.children_comments)
 const commentContent = ref(commentCheck(props.comment) || '')
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
 
 const emit = defineEmits(['refresh', 'editComment', 'deleteComment', 'recomment', 'deleteRecomment'])
@@ -174,11 +177,9 @@ const showComment = computed(() => {
   } else {
     return false
   }
-  // (comment.deleted_at && recomments?.length > 0) && comment && !isCommentEdit
 })
 
 const { info: user, isLogin } = useUser().user.value
-
 
 function commentCheck(cmt: IComment) {
 
@@ -336,6 +337,19 @@ function onClickReport() {
   showReportModal.value = true
 }
 
+function openDeleteModal() {
+  showDeleteModal.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
+function closeDeleteModal() {
+  showDeleteModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
+}
 
 </script>
 

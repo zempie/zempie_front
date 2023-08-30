@@ -229,7 +229,7 @@ async function onSubmit() {
             }
           })
           .catch((err: any) => {
-            firebaseLoginErr(err)
+            firebaseLoginErr({ message: String(err) })
           })
           .finally(() => {
             isLoading.value = false
@@ -400,6 +400,9 @@ function firebaseLoginErr(err: any) {
       case 'auth/user-not-found':
         ElMessage.error(`${t('fb.not.found')}`)
         break
+      case 'auth/too-many-requests':
+        ElMessage.error(`${t('try.later')}`)
+        break
       default:
         ElMessage.error(err)
         break
@@ -408,12 +411,12 @@ function firebaseLoginErr(err: any) {
 
     if (err && err.message.includes('auth/weak-password')) {
       message = `${t('login.pwd.format.err')}`
-
     } else if (err && err.message.includes('auth/wrong-password')) {
       ElMessage.error(`${t('fb.wrong.info')}`)
-
     } else if (err && err.message.includes('auth/user-not-found')) {
       ElMessage.error(`${t('fb.not.found')}`)
+    } else if (err && err.message.includes('auth/too-many-requests')) {
+      ElMessage.error(`${t('try.later')}`)
     }
   }
   throw { message }

@@ -1,9 +1,7 @@
 <template>
   <div class="modal-post">
     <ul class="mp-header">
-      <li v-if="isFullScreen" @click="closeTextEditor" class="mobile-back-btn">
-        <i class="uil uil-angle-left-b"></i>
-      </li>
+
       <li class="title">
         {{ isEdit ? $t('edit.post') : $t('new.post') }}
       </li>
@@ -193,7 +191,6 @@ const props = defineProps({
   },
   feed: Object as PropType<IFeed>,
   channelInfo: Object,
-  isFullScreen: Boolean,
   multiple: {
     type: Boolean,
     default: true,
@@ -262,6 +259,7 @@ const isIOS = ref(false)
 const gameInfo = computed(() => useGame().game.value.info)
 const communityInfo = computed(() => useCommunity().community.value.info)
 const userGames = computed(() => useUser().user.value.info.games)
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
 await communityFetch()
 
@@ -1096,6 +1094,7 @@ function setCategoryPayload(payload: { post_contents?: string; post_state?: stri
 }
 
 function closeTextEditor() {
+  console.log('cloick close')
   snsAttachFiles.value.img = _.cloneDeep(initFiles)
 
   //작성한 글이 있는 경우 임시저장 처리

@@ -23,7 +23,7 @@
     <el-dialog v-model="showDeletePostModal" append-to-body class="modal-area-type" width="380px">
       <div class="modal-alert">
         <dl class="ma-header">
-          <dt>{{ t('information') }}</dt>
+          <dt>{{ t('information') }}</dt>11
           <dd>
             <button @click="showDeletePostModal = false">
               <i class="uil uil-times"></i>
@@ -52,7 +52,7 @@
   <PostModal :isTextEditorOpen="isTextEditorOpen">
     <template #textEditor>
       <TextEditor @closeModal="closeEditor" :isEdit="true" :feed="feed" @refresh="emit('refresh')"
-        :isFullScreen="usePost().post.value.isFullScreen" />
+        :isFullScreen="isMobile" />
     </template>
   </PostModal>
 
@@ -81,6 +81,7 @@ const showDeletePostModal = ref(false)
 const showReportModal = ref(false)
 const showUserReportModal = ref(false)
 const reportInfo = ref()
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
 const props = defineProps({
   feed: Object as PropType<IFeed>,

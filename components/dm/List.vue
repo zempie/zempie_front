@@ -2,7 +2,7 @@
   <div :class="['dm-list', selectedRoom ? 'on' : 'off']">
     <div class="dl-title">
       <div class="row items-center">
-        <button v-if="isFullScreen && !selectedRoom" class="mobile-back-btn pointer" @click="onClickBackBtn"><i
+        <button v-if="isMobile && !selectedRoom" class="mobile-back-btn pointer" @click="onClickBackBtn"><i
             class="uil uil-arrow-left"></i></button>
         <h2> <button :class="['mobile-btn', selectedRoom ? 'on' : 'off']" @click="initSelect"><i
               class="uil uil-arrow-left"></i></button> {{
@@ -83,7 +83,7 @@
   </div>
   <ClientOnly>
     <el-dialog v-model="openNewMsg" class="modal-area-type new-msg-modal" :show-close="false" width="450px"
-      @close="closeModal" :fullscreen="isFullScreen">
+      @close="closeModal" :fullscreen="isMobile">
       <div class="modal-alert">
         <dl class="ma-header">
           <dt>{{ t('new.message') }}</dt>
@@ -100,8 +100,8 @@
             <div class="mt0">
               <CommonChipInput ref="chipRef" @currChip="getCurrChip" class="mt0">
                 <template #input>
-                  <input class="chip-input" v-model="userKeyword" type="text" name="" title="keywords"
-                    :placeholder="$t('enter.keyword')" @blur="saveChip" @keyup.enter="saveChip"
+                  <input class="chip-input" :value="userKeyword" type="text" name="" title="keywords"
+                    :placeholder="$t('enter.keyword')" @blur="saveChip" @keyup.enter="saveChip" @input="onInputDebounce"
                     @keydown.delete="backspaceDelete" />
                 </template>
               </CommonChipInput>
@@ -179,7 +179,6 @@ const msgEl = ref<HTMLElement | null>(null)
 const roomPending = ref(true)
 const followPending = ref(true)
 const findUserPending = ref(false)
-const fromId = ref(0)
 const isAddData = ref()
 const offset = ref(0)
 
@@ -193,32 +192,28 @@ const followingList = computed(() => userList.value)
 //polling
 const roomPolling = ref(null)
 
-//반응형
-const isFullScreen = ref(false)
-
 const componentKey = ref(0);
 
-const isMobile = computed(() =>
-  window.matchMedia('screen and (max-width: 767px)')
-)
+const isMobile = computed(() => useCommon().common.value.isMobile)
 const isFbSupported = computed(() => useCommon().setting.value.isFbSupported)
 
-
 const totalRoomCnt = ref(0)
-
 
 const userOffset = ref(0)
 const isAddUserData = ref(false)
 const userListRef = ref<HTMLElement | null>(null)
 
-
-
 let createRoomCount = 2
 
-
-definePageMeta({
-  name: 'community-list'
+onBeforeRouteLeave((to, from, next) => {
+  if (useCommon().common.value.isPopState) {
+    openNewMsg.value = false
+    next(false)
+  } else {
+    next()
+  }
 })
+
 useInfiniteScroll(
   userListEl,
   async () => {
@@ -296,7 +291,6 @@ onMounted(async () => {
   clearInterval(roomPolling.value)
 
   nextTick(async () => {
-    onResize()
     await fetch()
     if (!userInfo.value.setting.dm_alarm || !isFbSupported.value || !useCommon().setting.value.isNotiAllow) {
       await pollingRoom()
@@ -304,13 +298,9 @@ onMounted(async () => {
     const userId = getQuery('user')
     if (userId) { await findRoom([Number(userId)]) }
   })
-
-  window.addEventListener('resize', onResize)
-
 })
 
 onBeforeRouteLeave((to, from, next) => {
-  window.removeEventListener('resize', onResize)
   clearInterval(roomPolling.value)
   next()
 })
@@ -319,9 +309,6 @@ function getQuery(query: string) {
   return route.query ? route.query[query] : null
 }
 
-function onResize() {
-  isFullScreen.value = isMobile.value.matches ? true : false
-}
 
 async function fetch(isPolling: boolean = false, customOffset?: number) {
 
@@ -441,7 +428,6 @@ async function getUsers() {
     try {
       const { data, error, pending } = await useCustomAsyncFetch<{ totalCount: number, result: IUser[] }>(createQueryUrl(`/search`, payload), getComFetchOptions('get', false))
 
-      console.log('data', data.value)
       if (data.value) {
         const { result, totalCount } = data.value
         if (isAddUserData.value) {
@@ -473,6 +459,9 @@ async function getUsers() {
 async function showNewMsg() {
   if (!userInfo.value) return
   openNewMsg.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
   await getFollowings()
 }
 
@@ -599,9 +588,6 @@ async function createRoom(receiver_ids: Number[]) {
     })
 
   }
-
-
-
 }
 
 function closeModal() {
@@ -610,6 +596,9 @@ function closeModal() {
   chipRef.value.clearArr()
   isAddUserData.value = false
   userOffset.value = 0
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
 }
 
 function onDeletedRoom(room: IChat) {
@@ -717,6 +706,10 @@ function updateGroupName(roomName: string) {
 }
 
 function onClickBackBtn() {
-  router.back()
+  router.go(-1)
+}
+
+function onInputDebounce(e) {
+  userKeyword.value = e.target.value
 }
 </script>
