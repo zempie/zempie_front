@@ -1860,20 +1860,15 @@
   color: #333;
 }
 
-.card-timeline>li>div.ct-info>div {
-  /* margin-top: 30px; */
-}
 
 @media all and (max-width: 479px) {
-  .card-timeline {
-    width: 90%;
-    margin: 0 auto;
-  }
 
   .card-timeline>li {
-    width: 100%;
-    margin: 2% 0 2% 0;
+    width: 48%;
+    margin: 1%;
   }
+
+
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
@@ -3132,24 +3127,8 @@
 /* 포스트 */
 .modal-post .mp-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   border-bottom: #e9e9e9 1px solid;
-}
-
-.modal-post .title {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  padding: 22px 20px 20px 20px;
-  text-align: center;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 16px;
-  border-bottom: #fff 2px solid;
-  cursor: default;
-  transition: all 0.4s ease-in-out;
 }
 
 .modal-post .close-btn {

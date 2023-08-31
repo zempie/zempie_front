@@ -273,6 +273,7 @@ export default {
         router.replace(`/ko${route.fullPath}`);
       }
     } else {
+
       if (route.path.startsWith('/ko')) {
         router.replace(`/${to}${route.fullPath.replace(/^\/ko/, '')}`);
       } else {

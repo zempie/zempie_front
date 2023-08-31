@@ -3,7 +3,6 @@
     <dl class="area-title">
       <dt>Manage Community</dt>
     </dl>
-
     <Transition name="component-fade" mode="out-in">
       <ul class="card-timeline">
         <CommunityCardSk v-if="isPending" v-for="community in 4" :key="community" />
@@ -39,7 +38,6 @@ definePageMeta({
   title: 'my-communities',
   name: 'myCommunities',
   middleware: 'auth',
-  layout: 'header-only',
 })
 
 shared.createHeadMeta(t('seo.profile.communities.title'), t('seo.profile.communities.desc'))
@@ -108,5 +106,16 @@ async function fetch() {
 .component-fade-enter-from,
 .component-fade-leave-to {
   opacity: 0;
+}
+
+@media all and (max-width: 479px) {
+  .area-title {
+    margin-left: 10px;
+  }
+
+  .card-timeline {
+    width: 100%;
+  }
+
 }
 </style>

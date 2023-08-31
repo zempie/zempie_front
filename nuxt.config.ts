@@ -61,6 +61,10 @@ export default defineNuxtConfig({
         }
       }
     },
+    'webpack:config': (config) => {
+      console.log('config', config)
+
+    }
   },
   generate: {
     fallback: '404.html'
@@ -91,6 +95,9 @@ export default defineNuxtConfig({
 
   build: {
     extractCSS: true,
+    filenames: {
+      chunk: () => '[name].js'
+    }
   },
 
   publicRuntimeConfig: {
@@ -130,6 +137,7 @@ export default defineNuxtConfig({
     HOTJAR_ID: process.env.HOTJAR_ID,
     BOOTPAY_JS_KEY: process.env.BOOTPAY_JS_KEY,
     TAG_MANAGER_ID: process.env.TAG_MANAGER_ID,
+    ZEMTOWN_URL: process.env.ZEMTOWN_URL,
     MOGERA_URL: process.env.MOGERA_URL
 
   },

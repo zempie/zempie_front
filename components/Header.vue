@@ -1,19 +1,16 @@
 <template>
   <div class="header">
-    <dl>
+    <dl style="min-height: 70px;">
       <dt>
         <div class="header-logo-menu">
           <p>
             <NuxtLink :to="$localePath('/')">
-              <img v-if="showMobileLogo" class="mobile-logo" src="/images/zempie_logo_154_155.png" alt="zempie-logo"
-                loading="lazy" height="25" width="120" />
-              <img v-else class="logo" src="/images/zempie-logo-black.png" alt="zempie-logo" loading="lazy" width="120"
+              <!-- <img v-if="showMobileLogo" class="mobile-logo" src="/images/zempie_logo_154_155.png" alt="zempie-logo"
+                loading="lazy" height="25" width="120" /> -->
+              <img class="logo" src="/images/zempie-logo-black.png" alt="zempie-logo" loading="lazy" width="120"
                 height="25" />
             </NuxtLink>
           </p>
-          <button class="btn-circle-none" @click="isHeaderSideMobile = true" v-if="showHamburger">
-            <i class="uil uil-bars"></i>
-          </button>
           <ul class="menu">
             <li class="uppercase">
               <NuxtLink :to="$localePath('/community/list')"
@@ -28,9 +25,9 @@
               </NuxtLink>
             </li>
             <li class="uppercase pointer">
-              <a id="zempieWorldMenu" @click="moveZemWorld">
-                Z-world
-              </a>
+              <NuxtLink id="zemtownMenu" to="/zemtown">
+                Zemtown
+              </NuxtLink>
             </li>
           </ul>
         </div>
@@ -38,12 +35,13 @@
 
       <ClientOnly>
         <dd>
-          <SearchHeader />
-          <div class="header-language">
+          <div class="header-language mr10">
             <el-select class="hl-select-box" v-model="selectedLang" :placeholder="t('korean')">
               <el-option v-for="item in options" :key="item.code" :label="item.label" :value="item.code" />
             </el-select>
           </div>
+          <SearchHeader />
+
           <div class="header-info ml0" v-if="!isLoading && isLogin" :key="user.id">
             <NotificationHeaderButton />
             <button class="btn-circle-icon ml10 flex items-center content-center"
@@ -51,7 +49,7 @@
               <i class="uil uil-comment-alt"></i>
               <span class="new-dm-badge" v-if="unreadMsgCount">{{ unreadMsgCount }}</span>
             </button>
-            <UserMenu />
+            <UserMenu class="user-menu-btn" />
           </div>
           <div v-else-if="!isLoading && !isLogin" class="header-login">
             <NuxtLink :to="$localePath('/login')">
@@ -59,36 +57,6 @@
                 <i class="uil uil-user"></i>{{ t('login') }}
               </button>
             </NuxtLink>
-          </div>
-          <div v-if="showHamburger" class="header-side-mobile" :style="isHeaderSideMobile && 'left:0px;'"
-            id="headerSideMobile" v-on-click-outside="clickOutside">
-            <div class="hsm-close">
-              <i class="uil uil-times" @click="isHeaderSideMobile = false"></i>
-            </div>
-            <div class="hsm-search">
-              <div class="input-search-line-mobile">
-                <p><i class="uil uil-search"></i></p>
-                <div>
-                  <input type="text" name="" title="keywords" v-model="searchInput" @keyup.enter="moveSearchPage"
-                    :placeholder="t('needSearchInput')" />
-                </div>
-              </div>
-            </div>
-            <div class="hsm-menu">
-              <NuxtLink :to="$localePath('/community/list')" @click.native="isHeaderSideMobile = false"><i
-                  class="uil uil-comment"></i>
-                Community
-              </NuxtLink>
-              <NuxtLink :to="$localePath('/game/list')" @click.native="isHeaderSideMobile = false"><i
-                  class="uil uil-robot"></i> Games
-              </NuxtLink>
-              <a class="pointer" id="zempieWorldMenu" @click="moveZemWorld">
-                <i class="uil uil-globe"></i>
-                Zempie world
-              </a>
-            </div>
-          </div>
-          <div class="header-side-bg-mobile" :style="isHeaderSideBgMobile && 'display:block;'" id="headerSideBgMobile">
           </div>
         </dd>
       </ClientOnly>
@@ -98,7 +66,7 @@
         <dl class="ma-header">
           <dt>{{ t('information') }}</dt>
           <dd>
-            <button @click="useModal().closeLoginModal()">
+            <button class="pointer" @click="useModal().closeLoginModal()">
               <i class="uil uil-times"></i>
             </button>
           </dd>
@@ -115,11 +83,11 @@
       </div>
     </el-dialog>
   </div>
+  <MobileMenu />
 </template>
 
 <script setup lang="ts">
 import _ from 'lodash'
-import { vOnClickOutside } from "@vueuse/components"
 import { useI18n } from "vue-i18n"
 import {
   ElSelect,
@@ -140,14 +108,11 @@ const route = useRoute()
 const isLogin = computed(() => useUser().user.value.isLogin)
 const isLoading = computed(() => useUser().user.value.isLoading)
 const user = computed(() => useUser().user.value.info)
-const fUser = computed(() => useUser().user.value.fUser)
 
-const searchInput = ref()
-const isHeaderSideMobile = ref(false)
-const isHeaderSideBgMobile = ref(false)
 const showMogera = ref(false)
 
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+
 const unreadMsgCount = computed(() => {
   return user.value?.unread_msg_cnt > 99 ? '99+' : user.value.unread_msg_cnt
 })
@@ -204,28 +169,6 @@ onBeforeUnmount(() => {
 function onResize() {
   showMobileLogo.value = isMobileSize.value.matches ? true : false
   showHamburger.value = isTablet.value.matches ? true : false
-}
-
-
-async function moveSearchPage() {
-  isHeaderSideMobile.value = false
-  await useSearch().getSearch(searchInput.value)
-
-  router.push({ path: $localePath(`/search`), query: { q: searchInput.value } })
-  searchInput.value = ""
-}
-function clickOutside() {
-  if (isHeaderSideMobile.value) {
-    isHeaderSideMobile.value = false
-  }
-}
-
-
-async function moveZemWorld() {
-  const { result } = await getGameToken()
-  if (result) {
-    window.open(`${config.ZEMPIE_METAVERSE}?key=${result.token}`, "_blank");
-  }
 }
 
 
@@ -382,10 +325,17 @@ function onPressMogera() {
   cursor: pointer;
 }
 
+.new-dm-badge {
+  font-size: 12px;
+  padding: 0px 5px;
+  color: white;
+  width: auto;
+  height: auto;
+  z-index: 99;
+  border-radius: 10px;
+}
+
 @media all and (max-width: 479px) {
-  .logo {
-    display: none;
-  }
 
   .mobile-logo {
     display: block !important;
@@ -400,7 +350,7 @@ function onPressMogera() {
   }
 
   .header-language {
-    display: block;
+    display: none;
   }
 
   .header-login {
@@ -410,16 +360,10 @@ function onPressMogera() {
       display: none;
     }
   }
-}
 
-.new-dm-badge {
-  font-size: 12px;
-  padding: 0px 5px;
-  color: white;
-  width: auto;
-  height: auto;
-  z-index: 99;
-  border-radius: 10px;
+  .user-menu-btn {
+    display: none;
+  }
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
@@ -435,7 +379,7 @@ function onPressMogera() {
   }
 
   .header-language {
-    display: block;
+    display: none;
   }
 
   .header-login {
@@ -445,6 +389,10 @@ function onPressMogera() {
       display: none;
     }
   }
+
+  .user-menu-btn {
+    display: none;
+  }
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
@@ -452,8 +400,8 @@ function onPressMogera() {
     display: none;
   }
 
-  .header>dl {
-    width: 90%;
+  .header-language {
+    display: none;
   }
 
   .header-login {
@@ -466,18 +414,23 @@ function onPressMogera() {
 }
 
 @media all and (min-width: 992px) and (max-width: 1199px) {
-  .mobile-logo {
-    display: none;
-  }
+  .header {
+    dl {
+      width: 100%;
+    }
 
-  .header-login {
-    display: block !important;
-
-    i {
+    .mobile-logo {
       display: none;
     }
-  }
 
+    .header-login {
+      display: block !important;
+
+      i {
+        display: none;
+      }
+    }
+  }
 }
 
 @media all and (min-width: 1200px) {

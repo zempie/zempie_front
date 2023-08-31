@@ -45,13 +45,13 @@
       <ul class="ta-post">
         <PostFeedSk v-if="isPending" v-for="feed in 6" :key="feed" />
         <TransitionGroup name="fade" v-else-if="!isPending && feeds?.length">
-          <PostFeed v-for="feed in feeds" :feed="feed" :key="feed.id" @refresh="refresh"
+          <PostTimelineFeed v-for="feed in feeds" :feed="feed" :key="feed.id" @refresh="refresh"
             @update-blind="(img) => updateBlind(feed, img)">
             <template #followBtn>
               <UserFollowBtn :user="feed.user" :key="`${feed.user.is_following}`" class="follow-btn-feed"
                 @refresh="refreshFollow" />
             </template>
-          </PostFeed>
+          </PostTimelineFeed>
         </TransitionGroup>
         <div v-else class="ta-post-none">
           <p>
@@ -129,10 +129,6 @@ const props = defineProps({
     default: true,
   },
 })
-
-const isMobile = computed(() =>
-  window.matchMedia('screen and (max-width: 767px)')
-)
 
 
 const watcher = watch(
@@ -478,7 +474,7 @@ input[type='radio'] {
 
 @media all and (min-width: 480px) and (max-width: 767px) {
   .ta-message-send {
-    margin-top: 20px;
+    margin-top: 10px;
   }
 
   .tab-search-swiper {
@@ -491,9 +487,6 @@ input[type='radio'] {
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
-  .ta-message-send {
-    margin-top: 20px;
-  }
 
   .tab-search-swiper {
     &.mobile {
@@ -503,6 +496,4 @@ input[type='radio'] {
     }
   }
 }
-
-@media all and (min-width: 992px) and (max-width: 1199px) {}
 </style>

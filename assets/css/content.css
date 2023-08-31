@@ -2435,9 +2435,17 @@
 
 @media all and (max-width: 479px) {}
 
-@media all and (min-width: 480px) and (max-width: 767px) {}
+@media all and (min-width: 480px) and (max-width: 767px) {
+  .ta-channel-list {
+    margin-bottom: 10px;
+  }
+}
 
-@media all and (min-width: 768px) and (max-width: 991px) {}
+@media all and (min-width: 768px) and (max-width: 991px) {
+  .ta-channel-list {
+    margin-bottom: 20px;
+  }
+}
 
 @media all and (min-width: 992px) and (max-width: 1199px) {}
 
@@ -2593,6 +2601,8 @@
 }
 
 @media all and (min-width: 768px) and (max-width: 991px) {
+
+
   .ta-message-send>p {
     width: 10%;
   }
@@ -2978,9 +2988,6 @@
   margin-top: 15px;
 }
 
-.ta-post .tap-list .tapl-content {
-  padding: 20px 20px 0 20px;
-}
 
 .ta-post .tap-list .tapl-hash {
   display: flex;
@@ -5127,11 +5134,7 @@
 }
 
 @media all and (max-width: 479px) {
-  .dm-list {
-    width: 90%;
-    margin: 20px auto;
-    padding: 30px 20px;
-  }
+
 
   .dm-list .dl-title {
     display: block;
@@ -5148,10 +5151,7 @@
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
-  .dm-list {
-    width: 90vw;
-    /* padding: 30px 25px; */
-  }
+
 
   .dm-list .dl-title>div {
     width: 60%;
@@ -5493,6 +5493,7 @@
 
   .dl-content>dd>ul {
     padding: 0px 10px;
+    height: 100%;
   }
 
   .dl-content>dd>ul>li {
@@ -5541,7 +5542,7 @@
   }
 
   .dl-content>dt .dlc-send-message>div {
-    width: 80%;
+    width: 100%;
   }
 
   .dl-content>dt .dlc-send-message>div input {
@@ -5605,7 +5606,7 @@
   }
 
   .dl-content>dt .dlc-send-message>div {
-    width: 85%;
+    width: 100%;
   }
 
   .dl-content>dt .dlc-send-message>div input {
@@ -5673,7 +5674,7 @@
   }
 
   .dl-content>dt .dlc-send-message>div {
-    width: 85%;
+    width: 100%;
   }
 
   .dl-content>dt .dlc-send-message>div input {
@@ -5712,7 +5713,7 @@
   }
 
   .dl-content>dt .dlc-send-message>div {
-    width: 87%;
+    width: 100%;
   }
 
   .dl-content>dt .dlc-send-message>div input {

@@ -37,7 +37,9 @@
                   </i>
                   <p class="fontColor-white">{{ likeCnt }}</p>
                 </div>
-                <CommonDropdown class="flex ">
+
+                <ShareMenu :shareInfo="shareInfo" type="game" />
+                <CommonDropdown style="display: flex;">
                   <template #options>
                     <li @click="onClickReport">{{ $t('report.game') }}</li>
                   </template>
@@ -144,6 +146,8 @@ import { PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const IMAGE_MAX_SIZE = 4
+
+const config = useRuntimeConfig()
 const { $localePath } = useNuxtApp()
 
 const { t, locale } = useI18n()
@@ -190,6 +194,7 @@ let likeAcceessableCnt = 2
 let unlikeAcceessableCnt = 2
 
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+const isLogin = computed(() => useUser().user.value.isLogin)
 
 const prevBanner = computed({
   get() {
@@ -204,12 +209,26 @@ const prevBanner = computed({
 })
 
 
+const shareInfo = computed(() => {
+  return {
+    img_url: gameInfo.value.url_thumb,
+    title: gameInfo.value.title,
+    desc: gameInfo.value.description,
+    user: gameInfo.value.user,
+    url: `${config.ZEMPIE_URL}/play/${gameInfo.value.pathname}`
+  }
+})
+
 function playGame() {
   window.open(`/play/${gameInfo.value.pathname}`, '_blank')
 }
 
 
 async function setLike() {
+  if (!isLogin.value) {
+    useModal().openLoginModal()
+    return
+  }
   likeAcceessableCnt -= 1
 
   isLike.value = true
@@ -229,6 +248,10 @@ async function setLike() {
 
 }
 async function unsetLike() {
+  if (!isLogin.value) {
+    useModal().openLoginModal()
+    return
+  }
   unlikeAcceessableCnt -= 1
 
   isLike.value = false
@@ -438,6 +461,26 @@ function onClickReport() {
         color: #fff;
         margin: 0 auto;
       }
+    }
+  }
+}
+
+:deep(.share-menu) {
+  a {
+    color: #888;
+    border: none;
+
+    &:hover {
+      color: #f97316;
+    }
+  }
+
+}
+
+:deep(.custom-dropdown) {
+  button {
+    &:hover {
+      color: #f97316;
     }
   }
 }

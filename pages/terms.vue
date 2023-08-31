@@ -1286,8 +1286,6 @@ import shared from '~/scripts/shared'
 
 
 const { t, locale } = useI18n()
-const route = useRoute()
-const config = useRuntimeConfig()
 
 shared.createHeadMeta(t('seo.terms.title'), t('seo.terms.desc'))
 

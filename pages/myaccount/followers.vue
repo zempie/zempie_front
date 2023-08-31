@@ -29,7 +29,6 @@ definePageMeta({
   title: 'my-follower',
   name: 'myFollowers',
   middleware: 'auth',
-  layout: 'header-only',
 })
 
 shared.createHeadMeta(t('seo.profile.followers.title'), t('seo.profile.followers.desc'))

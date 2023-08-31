@@ -1,7 +1,7 @@
 <template>
   <div class="modal-post">
     <ul class="mp-header">
-      <li v-if="isFullScreen" @click="closeTextEditor" style="width: 50px">
+      <li v-if="isFullScreen" @click="closeTextEditor" class="mobile-back-btn">
         <i class="uil uil-angle-left-b"></i>
       </li>
       <li class="title">
@@ -84,9 +84,7 @@
             </div>
           </div>
         </dt>
-        <!--
-           1분마다 자동 저장
-         -->
+
         <Transition name="component-fade" mode="out-in">
           <small class="auto-save" v-if="showSavedTime" style="color: #999">{{ t('autosave') }} <span> {{
             savedTime
@@ -106,7 +104,14 @@
             {{ $t('save.post') }}
           </button>
         </dd>
+
       </dl>
+      <p style="min-height:20px">
+        <small v-if="showSavedTime" class="auto-save-mobile" style="color: #999">11{{ t('autosave') }} <span>
+            {{
+              savedTime
+            }}</span></small>
+      </p>
     </div>
 
     <el-dialog v-model="showDraftList" append-to-body class="modal-area-type" width="380px" :close-on-click-modal="false">
@@ -119,7 +124,7 @@
             </button>
           </dd>
         </dl>
-        <div class="ma-content">
+        <div class="ma-content draft-container">
           <ul>
             <li v-for="(draft, index) in draftList" class="draft" @click="selectDraft(draft, index)">
               <div>
@@ -1399,370 +1404,3 @@ function blindImg(index: number) {
 
 }
 </script>
-
-<style scoped lang="scss">
-.component-fade-enter-active,
-.component-fade-leave-active {
-  transition: opacity 0.5s ease;
-}
-
-.component-fade-enter-from,
-.component-fade-leave-to {
-  opacity: 0;
-}
-
-.title {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  padding: 22px 20px 20px 20px;
-  text-align: center;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 16px;
-  border-bottom: #fff 2px solid;
-  cursor: default;
-  transition: all 0.4s ease-in-out;
-}
-
-.close-btn {
-  padding: 22px 20px 20px 20px;
-  position: absolute;
-  right: 0;
-  cursor: pointer;
-
-
-}
-
-.close-btn:hover {
-  color: #f97316;
-
-}
-
-.modal-post {
-
-  .mp-category {
-    width: 100%;
-    display: inline-flex;
-    padding: 20px;
-    border-bottom: 0px;
-    border-top: #e9e9e9 1px solid;
-  }
-
-  .video-loading {
-    height: 150px;
-    background-color: #ededed;
-    margin: 20px;
-    border-radius: 10px;
-
-    div {
-      display: flex;
-      height: 100%;
-      align-items: center;
-      justify-content: center;
-
-      .v-clip {
-        height: 50px !important;
-        width: 50px !important;
-      }
-    }
-  }
-
-  .mp-midi {
-    max-height: 315px;
-
-    .delete-video-btn {
-      display: flex;
-      justify-content: flex-end;
-      font-size: 20px;
-      color: #333;
-      cursor: pointer;
-
-      &:hover {
-        color: #f97316;
-      }
-    }
-
-    video {
-      max-height: 315px;
-    }
-
-    .audio-wrapper {
-      display: flex;
-      align-items: center;
-      border-radius: 5px;
-      background: #f5f5f5;
-      flex-direction: column;
-
-      .btn-container {
-        padding-bottom: 0px !important;
-        width: 100%;
-        padding-top: 0px !important;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: auto !important;
-      }
-
-      .delete-audio-btn {
-        font-size: 20px;
-        color: #333;
-        cursor: pointer;
-        display: flex;
-        justify-content: flex-end;
-
-        &:hover {
-          color: #f97316;
-        }
-      }
-
-      audio {
-        width: 100%;
-      }
-
-      p {
-        width: 100%;
-        height: 30px;
-        padding-left: 20px;
-      }
-    }
-  }
-
-  .cancel-btn {
-    margin-right: 10px;
-    background-color: #dc3545;
-  }
-
-  .cancel-btn:hover {
-    color: #dc3545;
-    background: rgba(220, 53, 69, 0.27);
-  }
-}
-
-.category-group {
-  width: 100%;
-  margin: 10px 10px 0px 0px;
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 5px;
-  background: #f5f5f5;
-  border: none;
-  cursor: pointer;
-
-  &.group-btn {
-    &.off {
-      display: none !important;
-    }
-  }
-}
-
-.back-group-btn {
-  .category-group {
-    justify-content: flex-start;
-    color: #0d0d0d;
-  }
-
-  .uil-arrow-circle-left {
-    font-size: 20px;
-    color: #f97316;
-    display: flex;
-  }
-}
-
-.channel-btn {
-  &.off {
-    display: none !important;
-  }
-}
-
-.community-slide {
-  .category-select-finish {
-    height: 30px;
-    justify-content: space-around;
-
-    div {
-      margin-left: 10px;
-
-      span {
-        text-overflow: ellipsis;
-        max-width: 50px;
-        overflow: hidden;
-        white-space: nowrap;
-        display: inline-block;
-      }
-
-      em {
-        max-width: 40px;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-        display: inline-block;
-      }
-    }
-
-    .cross-btn {
-      cursor: pointer;
-    }
-  }
-}
-
-.ma-header {
-  padding: 10px 20px 10px 20px !important;
-}
-
-.ma-content {
-  padding: 10px 20px 10px 20px !important;
-
-  div {
-    margin-top: 0px !important;
-  }
-
-  ul {
-    li {
-      display: flex;
-      justify-content: space-between;
-      min-height: 50px;
-      margin: 10px 0px 10px 0px;
-
-      div {
-        text-align: left;
-        justify-content: center !important;
-        flex-direction: column;
-
-        i {
-          font-size: 20px;
-        }
-      }
-    }
-
-    li:not(:last-child) {
-      border-bottom: 1px solid #999;
-    }
-  }
-
-  .draft {
-    div {
-      p {
-        height: 65px;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-      }
-    }
-  }
-}
-
-.mp-type {
-  dd {
-    button {
-      padding: 0px;
-      width: 70px !important;
-    }
-  }
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(150px, 2fr));
-  grid-template-rows: repeat(1, minmax(150px, 2fr));
-  grid-column-gap: 10px;
-  grid-row-gap: 10px;
-
-  .img-container {
-    position: relative;
-
-    span {
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      font-size: 20px;
-      color: #333;
-
-      &:hover {
-        color: #f97316;
-
-      }
-    }
-
-    img {
-      display: flex;
-      width: 100%;
-      object-fit: cover;
-      height: 150px;
-      border-radius: 10px;
-    }
-  }
-}
-
-.mul-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(150px, 2fr));
-  grid-template-rows: repeat(2, minmax(150px, 2fr));
-  grid-column-gap: 10px;
-  grid-row-gap: 10px;
-
-
-  .img-container {
-    position: relative;
-
-    span {
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      font-size: 20px;
-      color: #333;
-
-      &:hover {
-        color: #f97316;
-
-      }
-    }
-
-    img {
-      display: flex;
-      width: 100%;
-      object-fit: cover;
-      height: 150px;
-      border-radius: 10px;
-    }
-  }
-}
-
-@media all and (max-width: 479px) {
-  .mp-category {
-    .btn-line-small {
-      span:nth-child(3) {
-        display: none;
-      }
-    }
-  }
-
-  .auto-save {
-    span {
-      display: block;
-    }
-  }
-
-}
-
-@media all and (min-width: 480px) and (max-width: 767px) {
-  .mp-category {
-    .btn-line-small {
-      span:nth-child(3) {
-        display: none;
-      }
-    }
-  }
-}
-
-@media all and (min-width: 768px) and (max-width: 991px) {}
-
-@media all and (min-width: 992px) and (max-width: 1199px) {}
-
-@media all and (min-width: 1200px) {}
-</style>

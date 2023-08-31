@@ -1,14 +1,17 @@
 <template>
   <NuxtLayout name="my-timeline">
-    <dl class="three-area">
+    <dl class="my-tl-container three-area">
       <dt>
-        <ChannelInfoBox :key="channelInfo.channel_id" />
-        <ChannelGameBox :key="channelInfo.channel_id" :isLoading="isChannelLoading" />
+        <div class="my-info">
+          <ChannelInfoBox :key="channelInfo.channel_id" />
+          <ChannelGameBox :key="channelInfo.channel_id" :isLoading="isChannelLoading" />
+        </div>
       </dt>
       <dd>
         <PostTimeline type="userAll" :isMine="true" />
       </dd>
       <dt>
+
         <div class="ta-groups" style="margin-top: 0px">
           <h2>{{ $t('community') }}</h2>
           <CommunityList :communities="channelInfo?.communities" :isLoading="isChannelLoading" />
@@ -20,7 +23,6 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { isObjEmpty } from '~~/scripts/utils';
 
 const { $localePath } = useNuxtApp()
 const config = useRuntimeConfig()
@@ -53,40 +55,3 @@ onMounted(async () => {
   isPending.value = false
 })
 </script>
-
-<style lang="scss" scoped>
-.ta-myinfo {
-  margin-bottom: 20px;
-}
-
-.swiper-slide {
-  display: inline-block;
-}
-
-.no-game {
-  height: 60px;
-  padding: 20px 20px 0 20px;
-
-  li {
-    margin-top: 0px;
-  }
-}
-
-
-@media all and (max-width: 479px) {}
-
-@media all and (min-width: 480px) and (max-width: 767px) {
-
-
-  .area-title,
-  .card-game {
-    width: 100%;
-  }
-}
-
-@media all and (min-width: 768px) and (max-width: 991px) {}
-
-@media all and (min-width: 992px) and (max-width: 1199px) {}
-
-@media all and (min-width: 1200px) {}
-</style>

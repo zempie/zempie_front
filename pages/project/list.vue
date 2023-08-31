@@ -1,6 +1,6 @@
 <template>
   <NuxtLayout name="studio">
-    <div class="content-studio" style="min-height: calc(100vh - 200px)">
+    <div class="content-studio">
       <div class="studio-banner bg03">
         <h2>{{ $t('projectList.banner.text') }}</h2>
         <p>{{ $t('projectList.banner.info') }}</p>
