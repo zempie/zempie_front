@@ -2,6 +2,9 @@ import { i18n } from './modules/i18n'
 import { resolve } from 'pathe'
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
+  webpack: {
+    analyze: true,
+  },
   app: {
     head: {
       meta: [
@@ -51,13 +54,19 @@ export default defineNuxtConfig({
       })
     },
     'build:manifest': (manifest) => {
-      // find the app entry, css list
-      const css = manifest['node_modules/nuxt/dist/app/entry.js']?.css
-      if (css) {
-        // start from the end of the array and go to the beginning
-        for (let i = css.length - 1; i >= 0; i--) {
-          // if it starts with 'entry', remove it from the list
-          if (css[i].startsWith('entry')) css.splice(i, 1)
+      const keysToRemove = []
+
+      for (const key in manifest) {
+        const file = manifest[key]
+
+        if (file.assets) {
+          file.assets = file.assets
+            .filter(
+              (asset: string) =>
+                !asset.endsWith('.webp') &&
+                !asset.endsWith('.jpg') &&
+                !asset.endsWith('.png')
+            )
         }
       }
     },
@@ -87,19 +96,15 @@ export default defineNuxtConfig({
     ['@nuxtjs/i18n', i18n],
     '@vueuse/nuxt',
     ['nuxt-compress', { gzip: { threshold: 8192 } }],
+    'nuxt-purgecss',
   ],
   nitro: {
-    compressPublicAssets: true,
-    minify: true
-  },
+    compressPublicAssets: {
+      brotli: true
+    },
+    minify: true,
 
-  build: {
-    extractCSS: true,
-    filenames: {
-      chunk: () => '[name].js'
-    }
   },
-
   publicRuntimeConfig: {
     ENV: process.env.ENV,
     COOKIE_NAME: process.env.COOKIE_NAME,
