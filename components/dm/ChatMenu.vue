@@ -138,6 +138,7 @@ function isEmptyGroupName() {
 async function setGroupName() {
   if (isEmptyGroupName()) return
   if (isGroupNameErr.value) return
+
   try {
     const payload = {
       room_id: props.selectedRoom.id,

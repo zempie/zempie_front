@@ -5,7 +5,10 @@
     </dd>
     <dt>
       <div>
-        <CommonDropdown :is-custom-btn="true" ref="memDropdownRef" style="width:auto">
+        <h2 v-if="isMobile" class="font16 text-bold fontColor-black" @click="opJoinedUserModal = true"> {{
+          getJoinedUserName(selectedRoom) }}
+        </h2>
+        <CommonDropdown v-else :is-custom-btn="true" ref="memDropdownRef" style="width:auto">
           <template #btn>
             <h2 class="font16 text-bold fontColor-black" @click="memDropdownRef.toggleDropdown"> {{
               getJoinedUserName(selectedRoom) }}
@@ -16,6 +19,7 @@
             <UserOdList :users="selectedRoom.joined_users" />
           </template>
         </CommonDropdown>
+
         <p v-if="!selectedRoom.is_group_room">{{ selectedRoom?.joined_users[0]?.name }}</p>
       </div>
     </dt>
@@ -65,7 +69,55 @@
       <button @click="onSubmitMsg"><img src="/images/send_icon.png" alt="" title="" /></button>
     </div>
   </div>
-  <ImageOriginModal :imgInfo="activeMsg" :open-modal="showOriginImg" @close-modal="showOriginImg = false" />
+  <ClientOnly>
+
+    <el-dialog v-model="opDeleteMsgModal" class="modal-area-type" width="380px">
+      <div class="modal-alert">
+        <dl class="ma-header">
+          <dt> {{ t('leave.msg') }} </dt>
+          <dd>
+            <button class="pointer" @click="opDeleteMsgModal = false">
+              <i class="uil uil-times"></i>
+            </button>
+          </dd>
+        </dl>
+        <div class="ma-content">
+          <h2>
+            {{ t('leave.msg.alert') }}
+          </h2>
+          <div>
+            <button class="btn-gray w48p" @click="onDeleteMsg">
+              {{ $t('yes') }}
+            </button>
+            <button class="btn-default w48p" @click="opDeleteMsgModal = false">
+              {{ $t('no') }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
+    <el-dialog v-model="opJoinedUserModal" class="modal-area-type" width="380px" :fullscreen="true">
+      <div class="modal-alert">
+        <dl class="ma-header">
+          <!-- <UserOdList :users="selectedRoom.joined_users" /> -->
+          <dt> {{ t('joined.users') }} </dt>
+          <dd>
+            <button class="pointer" @click="opJoinedUserModal = false">
+              <i class="uil uil-times"></i>
+            </button>
+          </dd>
+        </dl>
+        <div class="ma-content">
+          <ul class="user-list" ref="userListEl">
+            <UserOdList :users="selectedRoom.joined_users" />
+          </ul>
+        </div>
+      </div>
+    </el-dialog>
+
+    <ImageOriginModal :imgInfo="activeMsg" :open-modal="showOriginImg" @close-modal="showOriginImg = false" />
+
+  </ClientOnly>
 </template>
 <script setup lang="ts">
 import _ from 'lodash'
@@ -111,12 +163,14 @@ const videoUploaderRef = ref()
 const recorderRef = ref()
 
 const memDropdownRef = ref()
+const opJoinedUserModal = ref()
 
 
 const userInfo = computed(() => useUser().user.value.info)
 const isFbSupported = computed(() => useCommon().setting.value.isFbSupported)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 const unreadStartId = computed(() => props.selectedRoom.unread_start_id)
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
 
 //pages > dm > list에서 provide됨 
@@ -503,7 +557,4 @@ function uploadRecord(record) {
   attr.value = record
 }
 
-function deleteVideo(idx: number) {
-  videoUploaderRef.value.deleteVideo(idx)
-}
 </script>

@@ -1,6 +1,7 @@
 export default function () {
   const search = useState('search', () => ({
     results: null,
+    pending: false
   }))
 
   const getSearch = async (keyword: string) => {
@@ -8,10 +9,11 @@ export default function () {
       resetResults()
       return
     }
-    const { data, error, pending } = await useCustomAsyncFetch(`/search?q=${keyword}`, getComFetchOptions('get', false))
+    const { data, error, pending } = await useCustomAsyncFetch<any>(`/search?q=${keyword}`, getComFetchOptions('get', false))
+
     if (data.value) {
-      console.log(keyword, data.value)
       setResults(data.value)
+
     }
   }
 
@@ -27,7 +29,7 @@ export default function () {
   const resetResults = () => {
     search.value.results = null
   }
-  const updateResult = (feed, img) => {
+  const updateResultPost = (feed, img) => {
 
     search.value.results.posts = search.value.results.posts
       .map((feed1) => {
@@ -55,7 +57,7 @@ export default function () {
     setResults,
     getSearch,
     resetResults,
-    updateResult
+    updateResultPost
 
   }
 }

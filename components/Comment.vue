@@ -153,6 +153,10 @@ const reportInfo = ref()
 const commentUser = computed(() => props.comment?.user)
 
 
+let likeAcceessableCount = 2
+let unlikeAcceessableCount = 2
+
+
 const filteredRecomments = computed(() => {
   const result = props.newRecomments?.filter((cmt) => {
     return cmt.parent_id === props.comment.id
@@ -174,6 +178,7 @@ const showComment = computed(() => {
 })
 
 const { info: user, isLogin } = useUser().user.value
+
 
 function commentCheck(cmt: IComment) {
 
@@ -215,29 +220,44 @@ function editComment(cmt: IComment) {
   }
   emit('editComment', cmt)
 }
-const setLike = _.debounce(async () => {
-  const { data, pending, error } = await useCustomAsyncFetch(
-    `/post/${props.comment.post_id}/comment/${props.comment.id}/like`,
-    getComFetchOptions('post', true)
-  )
 
-  if (!error.value) {
-    likeCnt.value++
+
+async function setLike() {
+  if (!isLogin) {
+    useModal().openLoginModal()
+    return
+  }
+  likeAcceessableCount = likeAcceessableCount - 1
+  if (likeAcceessableCount > 0) {
     isLiked.value = true
+    likeCnt.value++
+    const { data, pending, error } = await useCustomAsyncFetch(
+      `/post/${props.comment.post_id}/comment/${props.comment.id}/like`,
+      getComFetchOptions('post', true)
+    )
   }
-}, 300)
+  likeAcceessableCount = likeAcceessableCount + 1
 
-const unsetLike = _.debounce(async () => {
-  const { data, pending, error } = await useCustomAsyncFetch(
-    `/post/${props.comment.post_id}/comment/${props.comment.id}/unlike`,
-    getComFetchOptions('post', true)
-  )
+}
 
-  if (!error.value) {
-    likeCnt.value--
+
+async function unsetLike() {
+  if (!isLogin) {
+    useModal().openLoginModal()
+    return
+  }
+  unlikeAcceessableCount = unlikeAcceessableCount - 1
+  if (unlikeAcceessableCount > 0) {
     isLiked.value = false
+    likeCnt.value--
+    const { data, pending, error } = await useCustomAsyncFetch(
+      `/post/${props.comment.post_id}/comment/${props.comment.id}/unlike`,
+      getComFetchOptions('post', true)
+    )
   }
-}, 300)
+  unlikeAcceessableCount = unlikeAcceessableCount + 1
+
+}
 
 async function deleteComment() {
 

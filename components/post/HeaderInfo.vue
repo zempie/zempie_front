@@ -4,7 +4,7 @@
       <UserAvatar :user="feed.user" tag='span' :hasRouter="true" />
     </dt>
     <dd class="column content-center">
-      <div class="row" style="align-items: center; min-height: 40px;" v-if="feed.user.id">
+      <div class="row" style="align-items: center; min-height: 40px;" v-if="feed.user?.id">
         <h2 class="user-name pr5 text-ellipsis pointer" @click="moveUserPage"> {{ feed.user?.nickname }} </h2>
         <slot name="followBtn" />
       </div>

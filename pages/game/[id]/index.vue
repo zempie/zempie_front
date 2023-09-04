@@ -84,10 +84,6 @@ watch(
   }
 )
 
-definePageMeta({
-  layout: 'header-only',
-})
-
 const isMine = computed(
   () => gameInfo.value?.user?.id === useUser().user.value?.info?.id
 )

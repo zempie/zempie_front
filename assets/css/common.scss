@@ -1,3 +1,7 @@
+@import "~/assets/css/textEditor.scss";
+@import '~/assets/css/dm.scss';
+@import '~/assets/css/timeline.scss';
+
 $zempie-main-color: #f97316;
 $zempie-main-color-hover: #f974162a;
 
@@ -89,6 +93,10 @@ $zempie-main-color-hover: #f974162a;
 
 .bg-grey-3 {
   background-color: #e4e6ef;
+}
+
+.bg-white {
+  background-color: #fff;
 }
 
 .text-left {
@@ -226,43 +234,6 @@ $zempie-main-color-hover: #f974162a;
   }
 }
 
-//like animation
-
-// .like-icon {
-//   &:hover {
-//     -webkit-animation: like 1s ease;
-//     animation: like 1s ease;
-//     -webkit-animation-iteration-count: 1;
-//     animation-iteration-count: 1;
-//   }
-// }
-
-// @keyframes like {
-//   15% {
-//     -webkit-transform: translateY(5px);
-//     transform: translateY(5px);
-//   }
-//   30% {
-//     -webkit-transform: translateY(-5px);
-//     transform: translateY(-5px);
-//   }
-//   50% {
-//     -webkit-transform: translateY(3px);
-//     transform: translateY(3px);
-//   }
-//   65% {
-//     -webkit-transform: translateY(-3px);
-//     transform: translateY(-3px);
-//   }
-//   80% {
-//     -webkit-transform: translateY(2px);
-//     transform: translateY(2px);
-//   }
-//   100% {
-//     -webkit-transform: translateY(0);
-//     transform: translateY(0);
-//   }
-// }
 
 @media all and (max-width: 479px) {
   .post-modal {
@@ -758,8 +729,7 @@ $zempie-main-color-hover: #f974162a;
     width: 100%;
 
     .card-timeline {
-      width: 40px auto;
-      width: 100%;
+      width: auto;
     }
 
     .card-game {
@@ -1028,9 +998,19 @@ $zempie-main-color-hover: #f974162a;
 }
 
 
+@media all and (max-width: 767px) {
+  .main-bg {
+    margin-top: -70px;
+  }
+
+}
+
 /* 게임 코멘트 */
 
 .ta-coment-list {
+  max-height: 700px;
+  overflow-y: scroll;
+
   .skeleton-animation {
     border-radius: 10px;
   }
@@ -1091,9 +1071,9 @@ $zempie-main-color-hover: #f974162a;
 
 .modal-area-type {
 
+
   .ta-coment-list {
     ul {
-      max-height: 700px;
       overflow-y: auto;
       padding: 0px;
 
@@ -1118,6 +1098,35 @@ $zempie-main-color-hover: #f974162a;
         }
 
       }
+    }
+  }
+}
+
+@media all and (max-width: 767px) {
+  .modal-alert {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    .ma-header {
+      flex: 0.03;
+    }
+
+    .ta-coment-list {
+      position: relative;
+      flex: 0.9;
+      overflow-x: hidden;
+      overflow-y: auto;
+      max-height: 100vh;
+    }
+
+    .game-cmt-input-container {
+      flex: 0.07;
+      position: absolute;
+      bottom: 0px;
+      width: 100%;
+      padding: 20px;
+      background-color: #fff;
     }
   }
 }
@@ -1156,6 +1165,7 @@ $zempie-main-color-hover: #f974162a;
     width: 100%;
     padding: 30px;
     overflow: auto;
+    left: 0px;
 
     li {
       margin-top: 5px;
@@ -1178,6 +1188,9 @@ $zempie-main-color-hover: #f974162a;
 
 
 .dlc-send-message {
+  background-color: #fff;
+
+
   div {
     justify-content: space-between;
   }
@@ -1250,8 +1263,15 @@ $zempie-main-color-hover: #f974162a;
 
 .img-container {
   overflow-y: hidden;
-  max-height: 100px;
   margin: 0px 10px 15px 10px;
+}
+
+.swiper-wrapper {
+  .img-container {
+
+    border: 1px solid #d5d5d5;
+    border-radius: 10px;
+  }
 }
 
 .input-container {
@@ -1261,6 +1281,7 @@ $zempie-main-color-hover: #f974162a;
   padding: 2px 0px 2px 10px;
   border: 1.5px solid #e5e5e5;
   border-radius: 8px;
+  background-color: #fff;
 }
 
 .msg-img-container {
@@ -1289,9 +1310,221 @@ $zempie-main-color-hover: #f974162a;
 }
 
 @media all and (max-width: 479px) {
+
+
+  .dm-list {
+
+
+    .dl-content {
+
+      .dm-info-box {
+        width: 55% !important;
+      }
+
+      .room-container {
+        &.off {
+          display: none;
+        }
+
+        &.on {
+          display: block;
+        }
+
+        .msg-list {
+          padding: 0px;
+          height: 100%;
+          overflow-y: scroll;
+        }
+      }
+
+      .msg-container {
+
+        &.off {
+          display: none;
+        }
+
+        &.on {
+          display: flex;
+          border: 1px solid #eee;
+          border-radius: 10px;
+        }
+
+        .active-room-container {
+          flex: 0.1;
+        }
+
+        .dlc-chat-content {
+          height: auto;
+          overflow-x: hidden;
+          overflow-y: auto;
+          position: relative;
+          right: 0;
+
+        }
+
+        .dlc-send-message {
+          width: 100%;
+          left: 0px;
+          flex: 0.1;
+          border-top: 0px;
+
+          div {
+            // width: 90%;
+          }
+
+          button {
+            height: 30px;
+            width: 30px;
+          }
+
+        }
+
+      }
+    }
+  }
+}
+
+@media all and (min-width: 480px) and (max-width: 767px) {
+
+  .dm-list {
+
+    .dl-title {
+      display: flex;
+      flex-direction: row;
+
+      .mobile-btn {
+        border: none;
+        background: transparent;
+        padding: 0px;
+        color: #333;
+        font-size: 25px;
+
+        &.off {
+          display: none !important;
+        }
+
+        &.on {
+          display: inline !important;
+
+        }
+      }
+    }
+
+    .dl-content {
+      border: none;
+      margin-top: 10px !important;
+
+      .dm-info-box {
+        width: 55% !important;
+      }
+
+      .room-container {
+        &.off {
+          display: none;
+        }
+
+        &.on {
+          display: block;
+        }
+
+        .msg-list {
+          padding: 0px;
+          height: 100%;
+          overflow-y: scroll;
+        }
+      }
+
+      .msg-container {
+
+        &.off {
+          display: none;
+        }
+
+        &.on {
+          display: flex;
+          border: 1px solid #eee;
+          border-radius: 10px;
+          margin-top: 10px;
+        }
+
+        .active-room-container {
+          flex: 0.05;
+        }
+
+        .dlc-chat-content {
+          height: auto;
+          overflow-x: hidden;
+          overflow-y: auto;
+          position: relative;
+          right: 0
+        }
+
+        .dlc-send-message {
+          flex: 0.1;
+          border-top: 0px;
+
+          div {
+            // width: 90%;
+          }
+
+          button {
+            height: 30px;
+            width: 30px;
+          }
+
+        }
+
+      }
+    }
+  }
+}
+
+@media all and (min-width: 768px) and (max-width: 991px) {
+  .content {
+    .msg-list {
+      :deep(.picture) {
+        width: 40px;
+        height: 40px;
+      }
+
+      .dm-info-box {
+        width: 50% !important;
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+@media all and (min-width: 992px) and (max-width: 1199px) {
+
+  .content {
+    .dm-info-box {
+      width: 55% !important;
+    }
+  }
+}
+
+@media all and (max-width: 479px) {
   .dlc-send-message {
+    position: fixed;
+    bottom: 50px;
+    width: 96%;
+
     .msg-container {
       width: 98% !important;
+
+      .active-room-container {
+        flex: 0.1;
+      }
+
+      .dlc-chat-content {
+        flex: 0.8;
+      }
+
+      .dlc-send-message {
+        flex: 0.1;
+      }
+
 
       .input-container {
         margin-right: 10px;
@@ -1310,8 +1543,15 @@ $zempie-main-color-hover: #f974162a;
 @media all and (min-width: 480px) and (max-width: 767px) {
 
   .dlc-send-message {
+
+    position: fixed;
+    bottom: 50px;
+    width: 96%;
+
     .msg-container {
       width: 100% !important;
+      margin-bottom: 10px;
+
 
       .input-container {
         margin-right: 10px;
@@ -1514,5 +1754,208 @@ $zempie-main-color-hover: #f974162a;
   }
 
 
+
+}
+
+
+/* zemtown */
+
+
+.zemtown-modal {
+  position: fixed;
+  bottom: 50px;
+  width: auto;
+  z-index: 999;
+  left: 50%;
+  transform: translateX(-50%);
+
+  >div {
+    width: 100%;
+  }
+}
+
+
+@media all and (max-width: 479px) {
+  .zemtown-modal {
+
+    >div {
+      width: 100%;
+      border-radius: 0px !important;
+
+
+    }
+  }
+}
+
+@media all and (min-width: 480px) and (max-width: 767px) {
+  .zemtown-modal {
+
+    >div {}
+  }
+}
+
+
+/* 포스팅 댓글 */
+
+.comment-modal {
+  max-height: 100%;
+
+  .mobile-back-btn {
+    display: none;
+  }
+
+  .close-btn {
+    display: block;
+  }
+
+  .ma-header {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+  }
+
+  :deep(.tap-list) {
+    margin: 0px;
+  }
+}
+
+@media all and (max-width: 767px) {
+  .comment-modal {
+    height: 100%;
+
+    .ma-header {
+
+      .mobile-back-btn {
+        display: block;
+      }
+
+      .close-btn {
+        display: none;
+      }
+
+    }
+
+    .tap-list {
+      margin-bottom: 0px;
+    }
+  }
+}
+
+
+/* 포스팅 컴포넌트*/
+.post-ul {
+  padding-bottom: 5px;
+
+  .tap-list {
+    max-height: calc(100vh - 50px - 70px);
+    overflow-y: auto;
+
+    .tapl-comment {
+      .comment:nth-child(1) {
+        border-top: 0px;
+      }
+
+      ul {
+        margin-bottom: 40px;
+      }
+    }
+
+    .comment-input-container {
+      background-color: #fff;
+      position: fixed;
+      bottom: 0px;
+      width: 99%;
+      border-radius: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+
+  .tapl-movie-img {
+    padding-bottom: 0px !important;
+    height: auto !important;
+
+    div {
+      audio {
+        display: flex;
+        align-items: center;
+        border-radius: 5px;
+        background: #f5f5f5;
+        flex-direction: column;
+        width: 95%;
+        margin: 20px auto;
+
+        p {
+          width: 100%;
+          height: 30px;
+          padding-left: 20px;
+        }
+      }
+    }
+  }
+
+  .feed-img {
+    max-width: 100%;
+  }
+
+  .sns-img {
+    width: 100%;
+  }
+
+  .audio {
+    margin: 20px 20px 0 20px;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    background: #f5f5f5;
+    flex-direction: column;
+
+    audio {
+      width: 100%;
+    }
+
+    p {
+      width: 100%;
+      height: 30px;
+      padding-left: 20px;
+    }
+  }
+
+  input[type='radio']+label {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    text-align: center;
+    font-size: 15px;
+    color: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  input[type='radio']:checked+label {
+    color: #fff;
+    background: #ff6e17;
+    border-color: #ff6e17;
+  }
+
+  input[type='radio'] {
+    display: none;
+  }
+
+
+}
+
+
+@media all and (max-width: 767px) {
+  .post-ul {
+
+    .content-area {
+      display: none;
+    }
+
+    .tap-list {
+      height: 100vh;
+    }
+  }
 
 }

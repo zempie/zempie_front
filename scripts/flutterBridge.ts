@@ -131,7 +131,9 @@ export default function () {
     async getKeyHight() {
       return await callHandler("getKeyHight");
     },
-
+    async sendFullscreenMode(status: Boolean) {
+      await callHandler('checkFullScreen', status)
+    },
 
   };
 

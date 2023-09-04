@@ -2,7 +2,8 @@
   <dl class="input-container row w100p items-center ">
     <slot name="userAvatar"></slot>
     <dt>
-      <input type="text" v-model="inputText" @keyup.enter="$emit('sendInput', inputText)" :placeholder="placeholder" />
+      <input type="text" v-model="inputText" @keyup.enter="$emit('sendInput', inputText)" :placeholder="placeholder"
+        @focus="onFocus" ref="inputRef" />
     </dt>
     <dd>
       <a class="pointer" @click="$emit('sendInput', inputText)">
@@ -11,7 +12,9 @@
   </dl>
 </template>
 <script setup lang="ts">
+
 const inputText = ref('')
+const inputRef = ref(null)
 
 defineEmits(['sendInput'])
 defineExpose({ initInput })
@@ -31,6 +34,11 @@ function initInput() {
   inputText.value = ''
 }
 
+
+function onFocus() {
+  inputRef.value.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+}
 
 </script>
 <style scoped lang="scss">

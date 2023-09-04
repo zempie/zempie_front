@@ -54,9 +54,6 @@ onBeforeRouteLeave((to, from, next) => {
   display: inline-block;
 }
 
-
-@media all and (max-width: 479px) {}
-
 @media all and (min-width: 480px) and (max-width: 767px) {
 
 
@@ -66,10 +63,4 @@ onBeforeRouteLeave((to, from, next) => {
     width: 100%;
   }
 }
-
-@media all and (min-width: 768px) and (max-width: 991px) {}
-
-@media all and (min-width: 992px) and (max-width: 1199px) {}
-
-@media all and (min-width: 1200px) {}
 </style>

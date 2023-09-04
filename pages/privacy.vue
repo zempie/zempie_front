@@ -298,9 +298,6 @@ import { useI18n } from 'vue-i18n'
 import shared from '~/scripts/shared'
 
 const { t, locale } = useI18n()
-const route = useRoute()
-const config = useRuntimeConfig()
-
 
 shared.createHeadMeta(`${t('term.private')}`, `Zempie ${t('term.private')}`)
 
