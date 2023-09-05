@@ -65,20 +65,21 @@
 
       <dl class="mp-type">
         <dt>
-          <div style="width: 30px" @click="uploadImageFile">
+          <ImageUploader style="width: 30px" ref="imgUploaderRef" :maxLimit="5" @uploadImage="uploadImage" />
+          <!-- <div style="width: 30px" @click="uploadImageFile">
             <a><i class="uil uil-scenery pointer"></i></a>
             <div style="height: 0px; overflow: hidden">
               <input type="file" @change="onSelectImageFile" multiple id="image-selector" accept=image/* ref="image" />
             </div>
-          </div>
+          </div> -->
           <div v-if="!isIOS" style="width: 30px" @click="uploaVideoFile">
-            <a><i class="uil uil-play-circle pointer"></i></a>
+            <button><i class="uil uil-play-circle pointer"></i></button>
             <div style="height: 0px; overflow: hidden">
               <input type="file" @change="onSelectVideoFile" accept=video/* ref="video" />
             </div>
           </div>
           <div style="width: 30px" @click="uploadAudioFile">
-            <a><i class="uil uil-music pointer"></i></a>
+            <button><i class="uil uil-music pointer"></i></button>
             <div style="height: 0px; overflow: hidden">
               <input type="file" @change="onSelectAudioFile" multiple accept=".mp3" ref="audio" />
             </div>
@@ -182,6 +183,9 @@ const { t, locale } = useI18n()
 const route = useRoute()
 const isVideoUploading = ref(false)
 const isAudioUploading = ref(false)
+
+
+const imgUploaderRef = ref()
 
 const emit = defineEmits(['closeModal', 'refresh'])
 
@@ -489,7 +493,6 @@ async function onSubmit() {
     customClass: 'loading-spinner',
     background: 'rgba(0, 0, 0, 0.7)',
   })
-  console.log('snsAttachF111`1les', snsAttachFiles.value)
 
   const dom = htmlToDomElem(form.post_contents)
 
@@ -506,32 +509,35 @@ async function onSubmit() {
     const formData = new FormData()
 
     if (snsAttachFiles.value.img) {
-      for (const img of snsAttachFiles.value.img) {
-        formData.append(img.name, img.file)
-        formData.append('is_blind', img.is_blind)
-      }
+      // for (const img of snsAttachFiles.value.img) {
+      //   formData.append(img.name, img.file)
+      //   formData.append('is_blind', img.is_blind)
+
+
+      // }
+      const result = await imgUploaderRef.value.fetchImage()
+      console.log('result :', result)
+      payload['attatchment_files'] = result
+
     }
 
     if (snsAttachFiles.value.audio) {
       for (const audio of snsAttachFiles.value.audio) {
         formData.append(audio.name, audio.file)
       }
+
+
+      const { data, error, pending } = await useCustomAsyncFetch<{ result: [] }>(
+        '/community/att',
+        getZempieFetchOptions('post', true, formData)
+      )
+      payload['attatchment_files'] = data.value?.result
+
     }
 
 
-    const { data, error, pending } = await useCustomAsyncFetch<{ result: [] }>(
-      '/community/att',
-      getZempieFetchOptions('post', true, formData)
-    )
-
-    payload['attatchment_files'] = data.value?.result
-
     if (snsAttachFiles.value.video) {
       payload['attatchment_files'] = [snsAttachFiles.value.video]
-      // formData.append(
-      //   snsAttachFiles.value.video.name,
-      //   snsAttachFiles.value.video.file
-      // )
     }
   }
   switch (props.type) {
@@ -1402,5 +1408,9 @@ function getFirstPostContent(content: string) {
 function blindImg(index: number) {
   snsAttachFiles.value.img[index]['is_blind'] = !snsAttachFiles.value.img[index]['is_blind']
 
+}
+
+function uploadImage(images) {
+  snsAttachFiles.value.img = [...(snsAttachFiles.value.img || []), ...images]
 }
 </script>

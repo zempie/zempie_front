@@ -15,7 +15,11 @@
 import { ElMessage } from 'element-plus'
 import { eChatType } from '~~/types'
 
-const MAX_LIMIT = 10
+const props = defineProps({
+  maxLimit: Number
+})
+
+const MAX_LIMIT = props.maxLimit
 
 const { t } = useI18n()
 
