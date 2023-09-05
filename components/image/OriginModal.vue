@@ -40,7 +40,6 @@
 <script setup lang="ts">
 import { ElDialog } from 'element-plus';
 import { onClickOutside } from '@vueuse/core'
-import { PropType } from 'nuxt/dist/app/compat/capi';
 import { dmDateFormat } from '~~/scripts/utils'
 import { IMessage } from '~~/types';
 
