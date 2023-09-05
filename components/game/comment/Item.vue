@@ -195,7 +195,7 @@ li {
     border: none;
   }
 
-  ::v-deep(.picture) {
+  :deep(.picture) {
     height: 35px;
     width: 35px;
     border-radius: 100%;
