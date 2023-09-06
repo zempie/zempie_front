@@ -92,19 +92,12 @@ export default defineNuxtConfig({
     ['@nuxtjs/i18n', i18n],
     '@vueuse/nuxt',
     ['nuxt-compress', { gzip: { threshold: 8192 } }],
-    'nuxt-purgecss',
   ],
   nitro: {
     compressPublicAssets: {
       brotli: true
     },
     minify: true,
-  },
-  build: {
-    extractCSS: true,
-    filenames: {
-      chunk: () => '[name].js'
-    }
   },
   publicRuntimeConfig: {
     ENV: process.env.ENV,
