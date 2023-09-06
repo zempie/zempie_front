@@ -1301,10 +1301,12 @@ $zempie-main-color-hover: #f974162a;
 
 .msg-video-container {
   border-radius: 10px;
+  max-width: 100%;
 
   video {
     border-radius: 10px;
     height: 100%;
+    max-width: 100%;
   }
 
 }
