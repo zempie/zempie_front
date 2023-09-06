@@ -70,10 +70,6 @@ export default defineNuxtConfig({
         }
       }
     },
-    'webpack:config': (config) => {
-      console.log('config', config)
-
-    }
   },
   generate: {
     fallback: '404.html'
@@ -99,10 +95,10 @@ export default defineNuxtConfig({
     'nuxt-purgecss',
   ],
   nitro: {
-    // compressPublicAssets: {
-    //   brotli: true
-    // },
-    // minify: true,
+    compressPublicAssets: {
+      brotli: true
+    },
+    minify: true,
   },
   publicRuntimeConfig: {
     ENV: process.env.ENV,
