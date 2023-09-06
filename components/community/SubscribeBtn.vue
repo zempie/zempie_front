@@ -54,6 +54,9 @@ const emit = defineEmits(['refresh', 'isSubModal'])
 const isLogin = computed(() => useUser().user.value.isLogin)
 const communityId = computed(() => props.community.id)
 
+watch(() => isModalOpen.value, (state) => {
+  useCommon().setPopState(state)
+})
 
 
 async function subscribe() {
@@ -89,5 +92,3 @@ async function unsubscribe() {
   }
 }
 </script>
-
-<style scoped lang="scss"></style>

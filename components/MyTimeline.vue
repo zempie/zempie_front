@@ -1,6 +1,8 @@
 <template>
   <NuxtLayout name="my-timeline">
     <dl class="my-tl-container three-area">
+      isPopState{{ isPopState }}
+
       <dt>
         <div class="my-info">
           <ChannelInfoBox :key="channelInfo.channel_id" />
@@ -34,9 +36,9 @@ const games = ref()
 
 const userInfo = computed(() => useUser().user.value.info)
 const channelInfo = computed(() => useChannel().userChannel.value.info)
-const isChannelLoading = computed(
-  () => useChannel().userChannel.value.isLoading
-)
+const isChannelLoading = computed(() => useChannel().userChannel.value.isLoading)
+const isPopState = computed(() => useCommon().common.value.isPopState)
+
 
 watch(
   () => userInfo.value,
@@ -48,10 +50,17 @@ watch(
   }
 )
 
+
+watch(
+  () => isPopState.value,
+  async (state) => {
+    console.log('pop', state)
+  }
+)
 onMounted(async () => {
-  // if (!useCookie(config.COOKIE_NAME).value) navigateTo('/')
   await useChannel().getChannelInfo(userInfo.value.nickname)
   games.value = channelInfo.value?.games
   isPending.value = false
 })
+
 </script>
