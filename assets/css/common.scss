@@ -1362,6 +1362,15 @@ $zempie-main-color-hover: #f974162a;
           position: relative;
           right: 0;
 
+          .msg-video-container {
+            max-width: 100%;
+
+            video {
+              width: 100%;
+
+            }
+          }
+
         }
 
         .dlc-send-message {
