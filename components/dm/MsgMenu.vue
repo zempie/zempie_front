@@ -27,7 +27,6 @@ async function onDeleteMsg() {
   isShow.value = false
 }
 
-
 </script>
 <style scoped lang="scss">
 li {

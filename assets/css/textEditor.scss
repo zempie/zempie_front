@@ -73,6 +73,23 @@
     }
   }
 
+  .mp-type {
+    dt {
+      button {
+        background: transparent;
+        border: none;
+        transition: 0.3s;
+        font-size: 25px;
+        cursor: pointer;
+
+        &:hover {
+          color: #f97316
+        }
+      }
+    }
+  }
+
+
   .mp-midi {
     max-height: 315px;
 

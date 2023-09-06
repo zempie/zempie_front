@@ -14,7 +14,8 @@ import { getIdToken } from 'firebase/auth'
 import { useI18n } from 'vue-i18n'
 import shared from '~~/scripts/shared';
 import { IGame } from '~~/types';
-
+import { ElMessageBox, } from 'element-plus'
+import { openFullScreen } from '~~/scripts/utils'
 const HOURTOSEC = 60 * 60
 
 const { t, locale } = useI18n()
@@ -70,6 +71,18 @@ watch(
 
 onMounted(async () => {
   if (process.client) {
+
+    ElMessageBox.confirm(`전체화면으로 전환하시겠습니까?`, {
+      confirmButtonText: 'YES',
+      cancelButtonText: 'Cancel',
+      type: 'info',
+    })
+      .then(() => {
+        openFullScreen()
+      })
+
+
+
     window.addEventListener('message', onMessage)
     window.addEventListener('resize', onResize)
     onResize()

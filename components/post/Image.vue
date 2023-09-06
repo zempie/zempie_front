@@ -1,7 +1,7 @@
 <template>
   <div class="post-img">
     <div :class="[isBlind ? 'blur' : '', 'feed-img mt-3']">
-      <img :src="img.url" @click="onClickImg" />
+      <img :src="img.thumbnail ? img.thumbnail : img.url" @click="onClickImg" />
     </div>
     <button class="expand-btn" @click="onClickImg">
       <i class="uil uil-expand-arrows"></i>
@@ -17,13 +17,12 @@
 <script setup lang="ts">
 import _ from 'lodash'
 import { PropType } from 'vue';
-import { IMessage } from '~~/types';
 
 const emit = defineEmits(['updateBlind'])
 
 
 const props = defineProps({
-  img: Object as PropType<{ is_blind: boolean, url: string }>
+  img: Object as PropType<{ is_blind: boolean, url: string, thumbnail: string }>
 })
 
 const showOriginImg = ref(false)

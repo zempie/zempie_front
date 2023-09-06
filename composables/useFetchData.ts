@@ -1,12 +1,15 @@
 import { getAuth, getIdToken } from "firebase/auth";
 
+
+
 function baseOption(method: string, withCredentials: boolean, body?: object) {
   const config = useRuntimeConfig();
+  const accessToken = useUser().user.value.fUser?.accessToken
 
   const options = {
     key: `${Date.now()}`,
     method: method,
-    headers: {},
+    headers: withCredentials ? { 'Authorization': `Bearer ${accessToken}` } : {},
     initialCache: false,
     // credentials: withCredentials
   }
@@ -39,7 +42,6 @@ export const fetchOptions = (target = 'zempie', method = 'get', withCredentials 
       break;
     case 'mogera':
       options['baseURL'] = config.BASE_API
-      options.headers['Authorization'] = `Bearer ${token}`
   }
 
   return options
@@ -49,6 +51,7 @@ export const getZempieFetchOptions = (method = 'get', withCredentials = false, b
   const config = useRuntimeConfig();
   const options = baseOption(method, withCredentials, body)
   options['baseURL'] = config.BASE_API
+
   return options
 }
 

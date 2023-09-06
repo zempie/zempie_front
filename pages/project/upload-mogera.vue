@@ -33,6 +33,7 @@ const showSavedInfo = ref(false)
 
 definePageMeta({
   middleware: 'auth',
+  layout: 'header-only',
 })
 
 onMounted(async () => {
@@ -59,6 +60,7 @@ async function getMogeraFile() {
 
   if (data.value) {
     const { result } = data.value
+    console.log(result.length)
 
     if (result.length) {
       const [firstSaved, second] = result

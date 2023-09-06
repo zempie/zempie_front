@@ -15,7 +15,11 @@
 import { ElMessage } from 'element-plus'
 import { eChatType } from '~~/types'
 
-const MAX_LIMIT = 10
+const props = defineProps({
+  maxLimit: Number
+})
+
+const MAX_LIMIT = props.maxLimit
 
 const { t } = useI18n()
 
@@ -116,7 +120,6 @@ async function fetchImage() {
   let result = []
 
   for (const file of rawFiles.value) {
-    console.log(file)
 
     formData.append(
       file.name,

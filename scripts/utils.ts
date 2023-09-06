@@ -218,3 +218,16 @@ export const isMobile = () => {
 
   return regexp.test(details);
 }
+
+export const openFullScreen = () => {
+  const doc = document.documentElement;
+
+  if (doc.requestFullscreen)
+    doc.requestFullscreen();
+  else if (doc.webkitRequestFullscreen) // Chrome, Safari (webkit)
+    doc.webkitRequestFullscreen();
+  else if (doc.mozRequestFullScreen) // Firefox
+    doc.mozRequestFullScreen();
+  else if (doc.msRequestFullscreen) // IE or Edge
+    doc.msRequestFullscreen();
+}

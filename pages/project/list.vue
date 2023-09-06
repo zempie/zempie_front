@@ -7,9 +7,9 @@
       </div>
 
       <div class="mogera-info">
-        <p><span class="mogera-color">Mogera(모게라)</span>와 함께라면, 게임 개발은 어렵지 않습니다. </p>
-        <p>코딩을 할 필요 없이, 간단한 선택과 조작만으로 게임을 만들 수 있습니다. <span @click="moveMogera" class="mogera-color pointer underline">무료로
-            시작하기 ></span></p>
+        <p><span class="mogera-color">Mogera(모게라)</span>{{ $t('mogera.info1') }}</p>
+        <p>{{ $t('mogera.info2') }} <span @click="moveMogera" class="mogera-color pointer underline">{{ $t('mogera.cta')
+        }} ></span></p>
       </div>
 
       <div class="studio-all-game">
@@ -175,6 +175,7 @@ const { $localePath } = useNuxtApp()
 
 definePageMeta({
   middleware: 'auth',
+  layout: 'header-only',
 })
 
 const projects = ref([])

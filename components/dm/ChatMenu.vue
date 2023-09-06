@@ -40,7 +40,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog v-model="opSetGroupChatName" class="modal-area-type" width="380px">
+    <el-dialog v-model="opSetGroupChatName" class="modal-area-type" width="380px" @close="closeModal">
       <div class="modal-alert">
         <dl class="ma-header">
           <dt>{{ t('set.group.chat.name') }}</dt>
@@ -119,7 +119,7 @@ function onChangeName() {
 
   if (groupName.value.length > MAX_NAME_LIMIT) {
     isGroupNameErr.value = true
-    groupNameErr.value = '그룹명은 50자 이내만 가능합니다.'
+    groupNameErr.value = t('group.name.err.msg1')
     groupName.value = groupName.value.slice(0, 50)
   } else {
     isGroupNameErr.value = false
@@ -127,9 +127,9 @@ function onChangeName() {
 }
 
 function isEmptyGroupName() {
-  if (!groupName.value.length) {
+  if (groupName.value.length === 0) {
     isGroupNameErr.value = true
-    groupNameErr.value = '빈 칸으로는 설정할 수 없습니다. 다시 설정해주세요.'
+    groupNameErr.value = t('group.name.err.msg2')
     return true
   }
   return false
@@ -154,6 +154,12 @@ async function setGroupName() {
     opSetGroupChatName.value = false
   }
 
+}
+
+function closeModal() {
+  groupName.value = ''
+  isGroupNameErr.value = false
+  groupNameErr.value = ''
 }
 
 </script>

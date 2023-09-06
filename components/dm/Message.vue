@@ -7,13 +7,13 @@
         <UserAvatar v-if="msg.sender?.id !== userInfo.id" :user="msg.sender" tag="span"
           style="width:40px; height:40px; position:absolute; top:0px;" class="mr5" />
         <template v-if="msg.sender?.id === userInfo.id" class="mr5">
-          <DmMsgMenu v-if="showMsgMenu" :msg="msg" @delete-msg="deleteMsg" style="max-height: 100px;" />
+          <DmMsgMenu v-if="showMsgMenu" :msg="msg" @delete-msg="opDeleteMsgModal = true" style="max-height: 100px;" />
           <h4 class="mr5">{{
             dmDateFormat(msg.created_at) }}</h4>
         </template>
         <span v-if="msg.type === eChatType.TEXT" style="max-width: 85%;"
           :style="msg.sender?.id !== userInfo.id && 'margin-left:45px'">{{
-            msg.contents }}</span>
+            msgContent }}</span>
         <div class="msg-img-container" v-else-if="msg.type === eChatType.IMAGE"
           :style="msg.sender?.id !== userInfo.id && 'margin-left:45px'">
           <img class="pointer" :src="msg.contents" @click="onClickImg(msg)" />
@@ -32,30 +32,90 @@
       </div>
     </li>
   </ul>
+
+  <ClientOnly>
+    <el-dialog v-model="opDeleteMsgModal" class="modal-area-type" width="380px">
+      <div class="modal-alert">
+        <dl class="ma-header">
+          <dt> {{ t('leave.msg') }} </dt>
+          <dd>
+            <button class="pointer" @click="opDeleteMsgModal = false">
+              <i class="uil uil-times"></i>
+            </button>
+          </dd>
+        </dl>
+        <div class="ma-content">
+          <h2>
+            {{ t('leave.msg.alert') }}
+          </h2>
+          <div>
+            <button class="btn-gray w48p" @click="onDeleteMsg">
+              {{ $t('yes') }}
+            </button>
+            <button class="btn-default w48p" @click="opDeleteMsgModal = false">
+              {{ $t('no') }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
+  </ClientOnly>
 </template>
 <script setup lang="ts">
+import { ElProgress, ElDialog, ElMessage } from 'element-plus';
 import { PropType } from 'vue';
 import { IMessage, eChatType } from '~~/types';
 import { dmDateFormat } from '~~/scripts/utils'
 
+const { t, locale } = useI18n()
+
+
 const props = defineProps({
   msg: Object as PropType<IMessage>
 })
+const emit = defineEmits(['deleteMsg'])
 
 const showMsgMenu = ref(false)
+const opDeleteMsgModal = ref(false)
 
 const userInfo = computed(() => useUser().user.value.info)
+
+const msgContent = computed(() => {
+
+  if (props.msg.sender.is_blocked) {
+    return 'Blocked User'
+  }
+  return props.msg.contents
+})
 
 function openMenu() {
   if (props.msg.sender.id === userInfo.value.id) {
     showMsgMenu.value = true
   }
-
 }
 
 function closeMenu() {
   showMsgMenu.value = false
-
 }
+
+async function onDeleteMsg() {
+
+  try {
+    const { data, error } = await useCustomAsyncFetch(`/chat/room/${props.msg.id}`, getComFetchOptions('delete', true))
+    if (data.value) {
+      emit('deleteMsg', props.msg)
+
+
+
+    }
+
+  } catch (error) {
+    ElMessage.error(error.message)
+  }
+  finally {
+    opDeleteMsgModal.value = false
+  }
+}
+
 </script>
 <style scoped lang="scss"></style>

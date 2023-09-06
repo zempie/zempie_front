@@ -25,7 +25,6 @@ definePageMeta({
   title: 'blockList',
   name: 'blockList',
   middleware: 'auth',
-  layout: 'header-only',
 })
 
 shared.createHeadMeta(t('seo.profile.block.title'), t('seo.profile.block.desc'))
