@@ -100,6 +100,12 @@ export default defineNuxtConfig({
     },
     minify: true,
   },
+  build: {
+    extractCSS: true,
+    filenames: {
+      chunk: () => '[name].js'
+    }
+  },
   publicRuntimeConfig: {
     ENV: process.env.ENV,
     COOKIE_NAME: process.env.COOKIE_NAME,
