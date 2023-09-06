@@ -1546,7 +1546,9 @@ $zempie-main-color-hover: #f974162a;
     .dm-uploader-btn {
       width: 50px !important;
 
-
+      button {
+        padding: 0px;
+      }
     }
   }
 }
