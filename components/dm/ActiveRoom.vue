@@ -188,9 +188,8 @@ const lastMsg = computed({
 
 const isLastMsg = computed(() => {
 
-  console.log(msgList.value.at(-1).id, lastMsg.value.id)
   if (msgList.value) {
-    return msgList.value.at(-1).id === lastMsg.value.id
+    return msgList.value?.at(-1).id === lastMsg.value.id
   }
 })
 
@@ -442,7 +441,7 @@ async function sendMsg(payload: any) {
   const content = _.cloneDeep(inputMsg.value)
   if (payload.type === eChatType.TEXT) {
 
-    const prevMsg = { id: msgList.value.at(-1).id + 1, room_id: props.selectedRoom.id, contents: content, sender: userInfo.value, type: payload.type, created_at: Date.now() }
+    const prevMsg = { id: msgList.value?.at(-1).id + 1, room_id: props.selectedRoom.id, contents: content, sender: userInfo.value, type: payload.type, created_at: Date.now() }
 
     //optimistic ui
     addMsg(prevMsg)

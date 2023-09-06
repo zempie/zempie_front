@@ -13,7 +13,7 @@
         </template>
         <span v-if="msg.type === eChatType.TEXT" style="max-width: 85%;"
           :style="msg.sender?.id !== userInfo.id && 'margin-left:45px'">{{
-            msg.contents }}</span>
+            msgContent }}</span>
         <div class="msg-img-container" v-else-if="msg.type === eChatType.IMAGE"
           :style="msg.sender?.id !== userInfo.id && 'margin-left:45px'">
           <img class="pointer" :src="msg.contents" @click="onClickImg(msg)" />
@@ -66,7 +66,6 @@ import { ElProgress, ElDialog, ElMessage } from 'element-plus';
 import { PropType } from 'vue';
 import { IMessage, eChatType } from '~~/types';
 import { dmDateFormat } from '~~/scripts/utils'
-import { emit } from 'process';
 
 const { t, locale } = useI18n()
 
@@ -81,11 +80,18 @@ const opDeleteMsgModal = ref(false)
 
 const userInfo = computed(() => useUser().user.value.info)
 
+const msgContent = computed(() => {
+
+  if (props.msg.sender.is_blocked) {
+    return 'Blocked User'
+  }
+  return props.msg.contents
+})
+
 function openMenu() {
   if (props.msg.sender.id === userInfo.value.id) {
     showMsgMenu.value = true
   }
-
 }
 
 function closeMenu() {
