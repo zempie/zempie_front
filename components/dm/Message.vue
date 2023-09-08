@@ -98,23 +98,9 @@ function closeMenu() {
   showMsgMenu.value = false
 }
 
-async function onDeleteMsg() {
+function deleteMsg() {
+  emit('deleteMsg', props.msg)
 
-  try {
-    const { data, error } = await useCustomAsyncFetch(`/chat/room/${props.msg.id}`, getComFetchOptions('delete', true))
-    if (data.value) {
-      emit('deleteMsg', props.msg)
-
-
-
-    }
-
-  } catch (error) {
-    ElMessage.error(error.message)
-  }
-  finally {
-    opDeleteMsgModal.value = false
-  }
 }
 
 </script>

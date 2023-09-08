@@ -9,11 +9,11 @@
               <i class="uil uil-search"></i>
             </button>
             <input v-else class="input-btn" type="text" title="keywords" :placeholder="$t('needSearchInput')"
-              v-model="searchInput" @input="onInputDebounce" @keyup.enter="moveSearchPage" autocomplete="off" />
+              :value="searchInput" @input="onInputDebounce" @keyup.enter="moveSearchPage" autocomplete="off" />
             <template #dropdown>
               <div v-if="isMobile" style="padding:10px" class="w100p">
                 <input type="text" title="keywords" class="w100p" :placeholder="$t('needSearchInput')"
-                  v-model="searchInput" @input="onInputDebounce" @keyup.enter="moveSearchPage" autocomplete="off" />
+                  :value="searchInput" @input="onInputDebounce" @keyup.enter="moveSearchPage" autocomplete="off" />
               </div>
               <el-dropdown-menu class="header-search-list" style="min-width: 260px" v-if="!isSearchPage">
                 <div :class="hasResearchResult || 'no-result'">
@@ -138,7 +138,12 @@ function moveGamePage(pathname: string) {
   router.push($localePath(`/game/${pathname}`))
 }
 
-const onInputDebounce = debounce(async () => {
+async function onInputDebounce(e: any) {
+  searchInput.value = e.target.value
+  await onSearchDebounce()
+}
+
+const onSearchDebounce = debounce(async () => {
   await search()
 }, 300)
 

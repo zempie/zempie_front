@@ -6,8 +6,8 @@
       </dd>
       <div class="row justify-between w100p mt0">
         <dt class="w50p">
-          <h3 class="font16 text-left ">{{ user.name }}</h3>
-          <p class="font13 nickname text-left text-ellipsis">@{{ user.nickname }}</p>
+          <h3 class="font16 text-left ">{{ user.nickname }}</h3>
+          <p class="font13 nickname text-left text-ellipsis">{{ user.name }}</p>
         </dt>
         <UserFollowBtn v-if="isLogin" :user="user" class="mt0" />
       </div>

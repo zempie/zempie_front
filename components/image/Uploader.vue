@@ -133,7 +133,8 @@ async function fetchImage() {
           url: string
           type: string
           name: string
-          size: number
+          size: number,
+          thumbnail?: string
         }[]
       }>('/community/att', getZempieFetchOptions('post', true, formData))
 

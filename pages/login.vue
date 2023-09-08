@@ -207,7 +207,9 @@ async function onSubmit() {
       await setFirebaseToken()
     }
     catch (err) {
-      firebaseLoginErr(err)
+
+      //ISSUE: 에러가 object 로 넘어오는데 파싱이 안됨 스트링으로 변환후 사용
+      firebaseLoginErr({ message: String(err) })
     }
     finally {
       isLoading.value = false
@@ -227,7 +229,7 @@ async function onSubmit() {
             }
           })
           .catch((err: any) => {
-            firebaseLoginErr(err)
+            firebaseLoginErr({ message: String(err) })
           })
           .finally(() => {
             isLoading.value = false
@@ -360,11 +362,9 @@ async function flutterSocialLogin(type: string) {
 }
 
 async function socialLogin(provider: AuthProvider) {
-  console.log('socialLogin1')
 
   try {
     const res = await signInWithPopup($firebaseAuth, provider)
-    console.log('socialLogin', res)
     router.push($localePath('/'))
 
   } catch (err) {
@@ -384,23 +384,40 @@ function firebaseJoinErr(err: any) {
 }
 
 function firebaseLoginErr(err: any) {
+
   const errorCode = err.code
   const errorMessage = err.message
   let message = errorCode ? errorCode : errorMessage
 
-  switch (errorCode) {
-    case 'auth/weak-password':
+  if (errorCode) {
+    switch (errorCode) {
+      case 'auth/weak-password':
+        message = `${t('login.pwd.format.err')}`
+        break
+      case 'auth/wrong-password':
+        ElMessage.error(`${t('fb.wrong.info')}`)
+        break
+      case 'auth/user-not-found':
+        ElMessage.error(`${t('fb.not.found')}`)
+        break
+      case 'auth/too-many-requests':
+        ElMessage.error(`${t('try.later')}`)
+        break
+      default:
+        ElMessage.error(err)
+        break
+    }
+  } else {
+
+    if (err && err.message.includes('auth/weak-password')) {
       message = `${t('login.pwd.format.err')}`
-      break
-    case 'auth/wrong-password':
+    } else if (err && err.message.includes('auth/wrong-password')) {
       ElMessage.error(`${t('fb.wrong.info')}`)
-      break
-    case 'auth/user-not-found':
+    } else if (err && err.message.includes('auth/user-not-found')) {
       ElMessage.error(`${t('fb.not.found')}`)
-      break
-    default:
-      ElMessage.error(err)
-      break
+    } else if (err && err.message.includes('auth/too-many-requests')) {
+      ElMessage.error(`${t('try.later')}`)
+    }
   }
   throw { message }
 }

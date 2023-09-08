@@ -37,7 +37,6 @@ definePageMeta({
   layout: 'layout-none',
 })
 
-
 /**
  * seo 반영은 함수안에서 되지 않으므로 최상단에서 진행함
  */

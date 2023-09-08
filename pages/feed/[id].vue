@@ -171,7 +171,6 @@ const newRecomments = ref([])
 const isExist = ref(true)
 
 
-
 const attatchment_files = computed(() => {
   return feed.value.attatchment_files
     && (Array.isArray(feed.value.attatchment_files)

@@ -359,8 +359,15 @@
 }
 
 @media all and (max-width: 479px) {
+
   .modal-post {
+    .editor-container {
+      font-size: 16px;
+    }
+
     .mp-header {
+      height: 60px;
+
       .title {
         position: absolute;
         width: 100%;
@@ -394,6 +401,8 @@
 @media all and (min-width: 480px) and (max-width: 767px) {
   .modal-post {
     .mp-header {
+      height: 60px;
+
       .title {
 
         position: absolute;

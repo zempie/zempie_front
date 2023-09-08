@@ -199,7 +199,7 @@ $zempie-main-color-hover: #f974162a;
 //포스팅 작성 모달
 .post-modal {
   max-width: 700px;
-  border-radius: 10px !important;
+  border-radius: 10px;
   position: absolute !important;
   left: 50%;
   top: 50%;
@@ -238,12 +238,15 @@ $zempie-main-color-hover: #f974162a;
 @media all and (max-width: 479px) {
   .post-modal {
     min-width: 100%;
+    border-radius: 0%;
   }
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
   .post-modal {
     min-width: 100%;
+    border-radius: 0%;
+
   }
 }
 
@@ -350,11 +353,6 @@ $zempie-main-color-hover: #f974162a;
     }
   }
 
-  .modal-post {
-    .editor-container {
-      font-size: 16px;
-    }
-  }
 
   input,
   select,
@@ -1145,6 +1143,8 @@ $zempie-main-color-hover: #f974162a;
 
 @media all and (max-width: 767px) {
   .game-cmt-conatiner {
+    border-radius: 0% !important;
+
     .modal-alert {
       height: 100vh;
       display: flex;
