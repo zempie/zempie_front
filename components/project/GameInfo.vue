@@ -1,6 +1,6 @@
 <template>
   <div class="studio-upload-input">
-  
+
     <div class="sui-input">
       <div class="suii-title">{{ $t('addGameInfo.title') }}</div>
       <dl class="suii-content">
@@ -13,7 +13,7 @@
             :placeholder="$t('addGameInfo.game.title')" class="w100p" />
           <TransitionGroup name="fade">
             <p class="input-errors" v-for="error of v$.name.$errors" :key="error.$uid">
-              <i class="uil uil-check"></i>{{ error.$message }}
+              {{ error.$message }}
             </p>
           </TransitionGroup>
         </dd>
@@ -29,7 +29,7 @@
 
           <TransitionGroup name="fade">
             <p class="input-errors" v-for="error of v$.description.$errors" :key="error.$uid">
-              <i class="uil uil-check"></i>{{ error.$message }}
+              {{ error.$message }}
             </p>
           </TransitionGroup>
         </dd>
@@ -42,7 +42,9 @@
           <div class="chip-container">
             <div class="chip" v-for="(chip, i) of hashtagsArr" :key="chip.id">
               {{ chip }}
-              <i class="uil uil-times" @click="deleteChip(i)"></i>
+              <i @click="deleteChip(i)" class="flex content-center items-center">
+                <IconClose color="#fff" />
+              </i>
             </div>
 
             <input id="gameTag" v-model="chipInput" @blur="saveChip" @keyup.enter="saveChip"
@@ -50,7 +52,7 @@
           </div>
           <TransitionGroup name="fade">
             <p class="input-errors" v-for="error of v$.hashtags.$errors" :key="error.$uid">
-              <i class="uil uil-check"></i>{{ error.$message }}
+              {{ error.$message }}
             </p>
           </TransitionGroup>
           <p class="mt10">
@@ -255,7 +257,7 @@ const rules = computed(() => {
 const v$ = useVuelidate(rules, form)
 
 const props = defineProps({
-  savedFileId:Number
+  savedFileId: Number
 })
 function saveChip() {
   if (
@@ -280,7 +282,7 @@ function loadAutoSave() {
 
 }
 
-async function uploadGame( ){
+async function uploadGame() {
   const formData = new FormData()
 
 
@@ -300,8 +302,8 @@ async function uploadGame( ){
     customClass: 'loading-spinner',
     background: 'rgba(0, 0, 0, 0.7)',
   })
-    //onUploadProgress 사용을 위해서 axios 사용.. ohmyfetch가 지원하면 그때 수정
-    axios('/studio/project', {
+  //onUploadProgress 사용을 위해서 axios 사용.. ohmyfetch가 지원하면 그때 수정
+  axios('/studio/project', {
     method: 'post',
     baseURL: config.STUDIO_API,
     data: formData,
@@ -328,8 +330,6 @@ async function uploadGame( ){
 }
 </script>
 <style scoped lang="scss">
-
-
 .chip-container {
   min-height: 48px;
   padding: 0 15px;

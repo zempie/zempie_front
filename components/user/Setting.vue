@@ -28,7 +28,6 @@ const props = defineProps({
 
 function closeModal() {
   showReportComModal.value = false
-
 }
 
 

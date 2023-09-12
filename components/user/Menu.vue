@@ -16,16 +16,13 @@
             <h2>{{ $t('myProfile') }}</h2>
             <div>
               <NuxtLink id="myChannel" :to="$localePath(`/${user?.nickname}`)">
-                <!-- <i class="uil uil-user"></i> -->
                 {{ $t('myChannel') }}
               </NuxtLink>
               <NuxtLink id="gameStudio" :to="$localePath('/project/list')">
-                <!-- <i class="uil uil-robot"></i> -->
                 {{ $t('gameStudio') }}
               </NuxtLink>
 
               <NuxtLink :to="$localePath(`/myaccount`)">
-                <!-- <i class="uil uil-setting"></i> -->
                 {{ $t('my.account') }}
               </NuxtLink>
             </div>
@@ -34,7 +31,6 @@
             <h2>{{ $t('group') }}</h2>
             <div>
               <NuxtLink :to="$localePath(`/myaccount/communities`)">
-                <!-- <i class="uil uil-users-alt"></i> -->
                 {{ $t('joined.group') }}
               </NuxtLink>
             </div>

@@ -1,7 +1,10 @@
 <template>
   <dd>
     <p class="upload-file-container">
-      <label for="game-file"><i class="uil uil-file-plus" style="font-size: 18px"></i> &nbsp;
+      <label for="game-file">
+        <i class="uil uil-file-plus" style="font-size: 18px">
+          <IconUpload />
+        </i> &nbsp;
         {{ $t('fileUpload') }}</label>
       <input @change="onFileChange" type="file" ref="gameFile" id="game-file" accept=".zip" />
 

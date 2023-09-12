@@ -29,11 +29,15 @@
           </template>
 
           <li v-if="gameInfo.game_type === eGameType.Download" style="margin-top: 2px;">
-            <i class="uil uil-file-download"></i>
+            <i>
+              <IconFileDownload color="#0092E4" />
+            </i>
           </li>
 
           <li v-if="gameInfo.game_type === eGameType.Html" style="margin-top: 2px;">
-            <i class="uil uil-html5-alt"></i>
+            <i>
+              <IconHtml5 />
+            </i>
           </li>
         </ul>
       </dd>

@@ -40,7 +40,7 @@
           <dt> {{ t('leave.msg') }} </dt>
           <dd>
             <button class="pointer" @click="opDeleteMsgModal = false">
-              <i class="uil uil-times"></i>
+              <IconClose />
             </button>
           </dd>
         </dl>

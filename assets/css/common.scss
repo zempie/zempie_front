@@ -136,6 +136,21 @@ $zempie-main-color-hover: #f974162a;
   min-height: 16px;
 }
 
+.square-btn {
+  display: inline-block;
+  height: 40px;
+  padding: 13px 20px;
+  text-align: center;
+  font-size: 16px;
+  line-height: 14px;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  background: #f97316;
+  transition: all 0.4s ease-in-out;
+  cursor: pointer;
+}
+
 .el-popper {
   .el-popper__arrow {
     display: none;

@@ -2,7 +2,9 @@
 <template>
   <div>
     <div class="input-search-default" @input="onInputMsg">
-      <p><i class="uil uil-search"></i>
+      <p><i>
+          <IconSearch />
+        </i>
       </p>
       <div><input v-model="dmKeyword" type="text" name="" title="keywords" placeholder="검색어를 입력하세요." /></div>
     </div>

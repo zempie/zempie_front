@@ -27,7 +27,7 @@
                 :placeholder="$t('addGameInfo.game.title')" class="w100p" />
               <TransitionGroup name="fade">
                 <p class="input-errors" v-for="error of v$.name.$errors" :key="error.$uid">
-                  <i class="uil uil-check"></i>{{ error.$message }}
+                  {{ error.$message }}
                 </p>
               </TransitionGroup>
             </dd>
@@ -43,7 +43,7 @@
 
               <TransitionGroup name="fade">
                 <p class="input-errors" v-for="error of v$.description.$errors" :key="error.$uid">
-                  <i class="uil uil-check"></i>{{ error.$message }}
+                  {{ error.$message }}
                 </p>
               </TransitionGroup>
             </dd>
@@ -56,7 +56,9 @@
               <div class="chip-container">
                 <div class="chip" v-for="(chip, i) of hashtagsArr" :key="chip.id">
                   {{ chip }}
-                  <i class="uil uil-times" @click="deleteChip(i)"></i>
+                  <i @click="deleteChip(i)" class="flex content-center items-center">
+                    <IconClose color="#fff" />
+                  </i>
                 </div>
 
                 <input id="gameTag" v-model="chipInput" @blur="saveChip" @keyup.enter="saveChip"
@@ -64,7 +66,7 @@
               </div>
               <TransitionGroup name="fade">
                 <p class="input-errors" v-for="error of v$.hashtags.$errors" :key="error.$uid">
-                  <i class="uil uil-check"></i>{{ error.$message }}
+                  {{ error.$message }}
                 </p>
               </TransitionGroup>
               <p class="mt10">
@@ -96,7 +98,9 @@
                         name="fileInput" />
                     </div>
                     <template v-if="!prevThumbnail">
-                      <p><i class="uil uil-image-v"></i></p>
+                      <p><i>
+                          <IconScenery width="40px" height="40px" color="#888" />
+                        </i></p>
                       <h2>
                         {{ $t('addGameInfo.game.thumbnail.size') }} 512* 512<br />
                         (up to 4MB)
@@ -114,12 +118,17 @@
                                                                                                  display: flex;
                                                                                                  justify-content: space-around;
                                                                                                ">
-                    <button class="btn-gray" @click="uploadThumbnail">
-                      <i class="uil uil-upload"></i>&nbsp;
+                    <button class="btn-gray flex row item-center content-center" @click="uploadThumbnail">
+                      <i>
+                        <IconUpload color="#fff" height="20px" width="20px" />
+
+                      </i>&nbsp;
                       {{ $t('addGameInfo.game.thumbnail') }}
                     </button>
                     <button v-if="prevThumbnail" class="btn-circle-icon" @click="deleteThumbnail">
-                      <i class="uil uil-trash-alt"></i>
+                      <i>
+                        <IconTrash />
+                      </i>
                     </button>
                   </p>
                 </li>
@@ -128,10 +137,14 @@
           </dl>
           <dl class="suii-content">
             <dt>
-              {{ $t('previewImage.title') }}
-              <el-tooltip effect="customized" :content="$t('studio.preview.info')" placement="bottom">
-                <i class="uil uil-question-circle" style="color: #999"></i>
-              </el-tooltip>
+              <p class="flex row items-center">
+                <span>{{ $t('previewImage.title') }}</span>
+                <el-tooltip effect="customized" :content="$t('studio.preview.info')" placement="bottom">
+                  <i class="mt2">
+                    <IconQuestionCircle width="18px" height="16px" />
+                  </i>
+                </el-tooltip>
+              </p>
             </dt>
 
             <dd>
@@ -150,24 +163,27 @@
                       <input type="file" @change="onGifChange" accept=image/gif ref="gifThumbnail" name="fileInput" />
                     </div>
                     <template v-if="!prevGif">
-                      <p><i class="uil uil-image-v"></i></p>
+                      <p><i>
+                          <IconScenery width="40px" height="40px" color="#888" />
+                        </i></p>
                       <h2>
                         {{ $t('addGameInfo.game.thumbnail.size') }} 512* 512<br />
                         (up to 4MB)
                       </h2>
                     </template>
                   </div>
-                  <p style="
-                                                                                  width: 100%;
-                                                                                  display: flex;
-                                                                                  justify-content: space-around;
+                  <p class="w100p flex" style="justify-content: space-around;
                                                                                 ">
-                    <button class="btn-gray" @click="uploadGif">
-                      <i class="uil uil-upload"></i>
+                    <button class="btn-gray flex row item-center content-center" @click="uploadGif">
+                      <i>
+                        <IconUpload color="#fff" height="20px" width="20px" />
+                      </i>
                       {{ $t('addGameInfo.game.thumbnail') }}
                     </button>
                     <button v-if="prevGif" class="btn-circle-icon" @click="deleteGif">
-                      <i class="uil uil-trash-alt"></i>
+                      <i>
+                        <IconTrash />
+                      </i>
                     </button>
                   </p>
                 </li>
@@ -208,7 +224,10 @@
         </div>
         <ul class="sui-btn">
           <li>
-            <a v-if="!isMogera" @click="prevPage" class="btn-line w150"><i class="uil uil-angle-left-b"></i>
+            <a v-if="!isMogera" @click="prevPage" class="btn-line w150 flex content-center items-center">
+              <i>
+                <IconAngleLeft />
+              </i>
               {{ $t('previous') }}
             </a>
           </li>
@@ -220,9 +239,11 @@
               class="btn-default w150">
               {{ $t('upload') }}
             </a>
-            <a v-else @click="save" class="btn-default w150">
+            <a v-else @click="save" class="btn-default w150 flex items-center content-center">
               {{ $t('next') }}
-              <i class="uil uil-angle-right-b"></i></a>
+              <i>
+                <IconAngleRight color="#fff" />
+              </i></a>
           </li>
         </ul>
         <div v-if="editProject.info?.id" class="sui-input" style="margin-top: 100px">
@@ -250,7 +271,7 @@
           </dt>
           <dd>
             <button @click="isDeleteModalOpen = false">
-              <i class="uil uil-times"></i>
+              <IconClose />
             </button>
           </dd>
         </dl>
@@ -480,17 +501,8 @@ async function checkPathName() {
 
 
 async function save() {
-  // form.hashtags = hashtagsArr.value.toString()
-  // form.project_picture = thumbFile.value
-  // form.project_picture2 = gifThumFile.value
-  // await createGamePath()
-  // const isValid = await v$.value.$validate()
-
-  // if (!thumbFile.value) isThumbErr.value = true
-
-  // if (!isValid || isThumbErr.value) return
   const res = await saveForm()
-  if (!res) return
+  if (!res) return false
 
   setForm(form)
   isFormDone.value = true
@@ -522,11 +534,14 @@ async function uploadGame() {
     await mogeraUpload()
     return
   }
+
+
   form.hashtags = hashtagsArr.value.toString()
 
   if (uploadProject.value.form.stage !== eGameStage.DEV) return
 
-  await save()
+  const result = await save()
+  if (!result) return
 
   //  const {gameInfoObj, gameFileInfoObj, uploadGameFiles} = this.$store.getters;
   const formData = new FormData()
@@ -534,6 +549,7 @@ async function uploadGame() {
   for (let k in form) {
     formData.append(k, form[k])
   }
+
   const loading = ElLoading.service({
     lock: true,
     text: 'Loading',

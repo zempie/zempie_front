@@ -15,7 +15,7 @@
           <dd style="order:2;text-align: right;">
 
             <button @click.stop="closeModal" ref="closeBtnRef">
-              <i class="uil uil-times"></i>
+              <IconClose />
             </button>
           </dd>
         </dl>

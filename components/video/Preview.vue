@@ -1,6 +1,8 @@
 <template>
   <div class="video-pre-container" v-for="(video, idx) of videos">
-    <span @click="deleteVideo(idx)" class="delete-video-btn"><i class="uil uil-times-circle"></i></span>
+    <span @click="deleteVideo(idx)" class="delete-video-btn">
+      <IconCloseCircle />
+    </span>
     <video :src="video.url" width="320" height="240" controls />
   </div>
 </template>

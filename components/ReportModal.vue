@@ -4,7 +4,9 @@
       <dl class="mr-header">
         <dt>{{ reportInfo.title }}</dt>
         <dd>
-          <button class="pointer" @click="emit('closeModal')"><i class="uil uil-times"></i></button>
+          <button class="pointer" @click="emit('closeModal')">
+            <IconClose />
+          </button>
         </dd>
       </dl>
       <div class="mr-content">

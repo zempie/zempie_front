@@ -49,7 +49,7 @@
             <dt>{{ $t('information') }}</dt>
             <dd>
               <button @click="openModal = false">
-                <i class="uil uil-times"></i>
+                <IconClose />
               </button>
             </dd>
           </dl>

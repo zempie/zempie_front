@@ -1055,8 +1055,9 @@
   "mogera.info1": "와 함께라면, 게임 개발은 어렵지 않습니다.",
   "mogera.info2": "코딩을 할 필요 없이, 간단한 선택과 조작만으로 게임을 만들 수 있습니다.",
   "mogera.cta": "무료로 시작하기",
-  "dm.sent.video": "동영상을 보냈습니다.",
   "not.support.ext": "해당 파일 확장자는 지원하지 않는 형식입니다.",
+  "joined.user": "대화 상대",
   "joined.users": "대화 상대",
-  "user.post.title":"님의 게시물"
+  "dm.sent.video": "동영상을 보냈습니다.",
+  "user.post.title": "님의 게시물",
 }

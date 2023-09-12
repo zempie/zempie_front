@@ -14,7 +14,9 @@
                 <span class="font13">{{ dateFormat(comment.created_at) }}</span>
               </h2>
               <el-dropdown trigger="click" ref="feedMenu" popper-class="tapl-more-dropdown">
-                <a slot="trigger"><i class="uil uil-ellipsis-h font25 pointer"></i></a>
+                <a slot="trigger">
+                  <IconEllipsisH />
+                </a>
                 <template #dropdown>
                   <div slot="body" class="more-list">
                     <template v-if="comment.user?.uid === user?.uid">
@@ -44,17 +46,18 @@
             <template v-if="!comment.deleted_at">
               <p style="display: inline-block">
                 <i v-if="isLiked" @click="unsetLike()" class="xi-heart like-icon pointer" style="color: red"></i>
-                <i v-else class="uil uil-heart-sign pointer" @click="setLike()"></i>
+                <i v-else class="xi-heart-o" @click="setLike()"></i>
                 <span class="ml5">{{ $t('like') }} {{ likeCnt }}{{ $t('like.unit') }}</span>
               </p>
               <span class="pointer ml10" @click="emit('recomment', comment)">
-                <i class="uil uil-edit-alt"></i>{{ $t('write.recomment') }}</span>
+                {{ $t('write.recomment') }}</span>
               <TranslateBtn :text="commentContent" @translatedText="translate" @untranslatedText="untranslatedText" />
             </template>
 
-            <p class="zem-color pointer" v-if="recomments?.length" @click="onClickRecomment"
+            <p class="zem-color pointer flex items-center" v-if="recomments?.length" @click="onClickRecomment"
               :style="comment.deleted_at ? 'margin-left:35px' : ''">
-              <i :class="isRecommentOpen ? 'uil uil-angle-up' : 'uil uil-angle-down'"></i>
+              <IconAngleUp v-if="isRecommentOpen" color="#f97316" width="15px" />
+              <IconAngleDown v-else color="#f97316" width="15px" />
               {{ $t('recomment') }} {{ recomments?.length }}{{ $t('unit') }}
             </p>
           </dd>
@@ -81,7 +84,7 @@
               <dt>{{ $t('information') }}</dt>
               <dd>
                 <button @click="closeDeleteModal">
-                  <i class="uil uil-times"></i>
+                  <IconClose />
                 </button>
               </dd>
             </dl>

@@ -1,7 +1,9 @@
 <template>
   <ClientOnly>
     <el-dropdown trigger="click">
-      <button class="room-btn pointer"> <i class="uil uil-ellipsis-h font25"></i></button>
+      <button class="room-btn pointer">
+        <IconEllipsisH />
+      </button>
       <template #dropdown>
         <div class="more-list fixed" style="min-width: 150px">
           <a @click="opLeaveChatModal = true" id="editFeed" class="pointer">{{ t('remove.chat') }}</a>
@@ -20,7 +22,7 @@
           <dt>{{ t('leave.chat') }}</dt>
           <dd>
             <button class="pointer" @click="opLeaveChatModal = false">
-              <i class="uil uil-times"></i>
+              <IconClose />
             </button>
           </dd>
         </dl>
@@ -46,7 +48,7 @@
           <dt>{{ t('set.group.chat.name') }}</dt>
           <dd>
             <button class="pointer" @click="opSetGroupChatName = false">
-              <i class="uil uil-times"></i>
+              <IconClose />
             </button>
           </dd>
         </dl>

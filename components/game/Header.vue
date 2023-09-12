@@ -79,7 +79,7 @@
           <dt>{{ t('banner.photo') }}</dt>
           <dd>
             <button class="pointer" @click="showChangeBanner = false">
-              <i class="uil uil-times"></i>
+              <IconClose />
             </button>
           </dd>
         </dl>
@@ -114,7 +114,7 @@
           <dt>{{ t('information') }}</dt>
           <dd>
             <button class="pointer" @click="showDeleteBanner = false">
-              <i class="uil uil-times"></i>
+              <IconClose />
             </button>
           </dd>
         </dl>

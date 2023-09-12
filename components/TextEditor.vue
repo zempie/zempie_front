@@ -21,8 +21,12 @@
                 <img :src="img.url">
               </div>
               <div>
-                <span @click="deleteImg(idx)"><i class="uil uil-times-circle"></i></span>
-                <span @click="blindImg(idx)"><i class="uil uil-eye"></i></span>
+                <span @click="deleteImg(idx)">
+                  <IconCloseCircle width="20px" />
+                </span>
+                <span @click="blindImg(idx)">
+                  <IconEye width="20px" />
+                </span>
               </div>
             </swiper-slide>
             <div class="swiper-pagination" slot="pagination"></div>
@@ -33,7 +37,9 @@
         <BeatLoader :color="'#ff6e17'" size="20px" />
       </div>
       <div v-else-if="!isVideoUploading && snsAttachFiles.video?.url" class="mp-midi">
-        <span @click="deleteVideo" class="delete-video-btn"><i class="uil uil-times-circle"></i></span>
+        <span @click="deleteVideo" class="delete-video-btn">
+          <IconCloseCircle />
+        </span>
 
         <video style="width: 100%" :src="snsAttachFiles.video?.url" title="YouTube video player" frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -47,7 +53,9 @@
         <ul v-for="(audio, idx) in snsAttachFiles.audio" class="audio-wrapper">
           <div class="btn-container">
             <audio controls :src="audio.url"></audio>
-            <span class="delete-audio-btn" @click="deleteAudio(idx)"><i class="uil uil-times-circle"></i></span>
+            <span class="delete-audio-btn" @click="deleteAudio(idx)">
+              <IconCloseCircle />
+            </span>
           </div>
           <p>{{ audio.name || audio.file.name }}</p>
         </ul>
@@ -110,39 +118,6 @@
       </p> -->
     </div>
 
-    <el-dialog v-model="showDraftList" append-to-body class="modal-area-type" width="380px" :close-on-click-modal="false">
-      <div class="modal-alert">
-        <dl class="ma-header">
-          <dt>{{ t('draft') }}</dt>
-          <dd>
-            <button @click="showDraftList = false">
-              <i class="uil uil-times"></i>
-            </button>
-          </dd>
-        </dl>
-        <div class="ma-content draft-container">
-          <ul>
-            <li v-for="(draft, index) in draftList" class="draft" @click="selectDraft(draft, index)">
-              <div>
-                <p>
-                  {{ getFirstPostContent(draft.post_contents) }}
-                </p>
-                <small>{{
-                  dayjs(draft.time).format('YYYY.MM.DD HH:mm')
-                }}</small>
-              </div>
-              <div>
-                <i @click.stop="deleteDraft(draft, index)" class="uil uil-trash-alt"></i>
-              </div>
-            </li>
-
-            <li v-if="draftList.length === 0" style="align-items: center">
-              <p>{{ $t('no.draft.data') }}</p>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </el-dialog>
   </div>
 </template>
 

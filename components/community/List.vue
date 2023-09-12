@@ -14,8 +14,11 @@
         </dt>
         <dd>
           <h2 class="pt10">{{ community.name }}</h2>
-          <h3>
-            <i class="uil uil-chat-bubble-user"></i>{{ community.member_cnt }}
+          <h3 class="flex items-center ">
+            <i class="mt2 mr5">
+              <IconUser color="#888" width="15px" height="15px" />
+            </i>
+            {{ community.member_cnt }}
           </h3>
         </dd>
       </dl>

@@ -5,7 +5,7 @@
         <dt>{{ title }}</dt>
         <dd>
           <button @click="closeModal" class="pointer">
-            <i class="uil uil-times"></i>
+            <IconClose />
           </button>
         </dd>
       </dl>

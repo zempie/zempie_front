@@ -76,9 +76,12 @@ const subBtnRef = ref()
 const isMobile = computed(() => useCommon().common.value.isMobile)
 
 
-
 shared.createHeadMeta(t('communityList'), t('communityList.desc'))
 
+
+definePageMeta({
+  name: 'community-list'
+})
 
 
 onBeforeRouteLeave((to, from, next) => {

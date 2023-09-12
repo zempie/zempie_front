@@ -3,7 +3,8 @@
     <slot v-if="isCustomBtn" name="btn"></slot>
 
     <button v-else class="menu-btn" @click="toggleDropdown">
-      <i class="uil uil-ellipsis-h font25"></i>
+      <IconEllipsisH />
+
     </button>
     <ul v-if="isDropdownOpen" class="more-list" @click="onClickOption">
       <slot name="options"></slot>

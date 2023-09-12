@@ -88,7 +88,7 @@
           <dt>{{ t('new.message') }}</dt>
           <dd>
             <button class="pointer" @click="openNewMsg = false">
-              <i class="uil uil-times"></i>
+              <IconClose />
             </button>
           </dd>
         </dl>

@@ -46,15 +46,15 @@
             <NotificationHeaderButton />
             <button class="btn-circle-icon ml10 flex items-center content-center"
               @click="$router.push($localePath('/dm/list'))">
-              <i class="uil uil-comment-alt"></i>
+              <IconMessage width="20px" />
               <span class="new-dm-badge" v-if="unreadMsgCount">{{ unreadMsgCount }}</span>
             </button>
             <UserMenu class="user-menu-btn" />
           </div>
           <div v-else-if="!isLoading && !isLogin" class="header-login">
             <NuxtLink :to="$localePath('/login')">
-              <button class="btn-default" id="loginBtn" style="display: flex;">
-                <i class="uil uil-user"></i>{{ t('login') }}
+              <button class="btn-default flex" id="loginBtn" style="display: flex;">
+                {{ t('login') }}
               </button>
             </NuxtLink>
           </div>
@@ -67,11 +67,10 @@
           <dt>{{ t('information') }}</dt>
           <dd>
             <button class="pointer" @click="useModal().closeLoginModal()">
-              <i class="uil uil-times"></i>
+              <IconClose />
             </button>
           </dd>
         </dl>
-
         <div class="ma-content">
           <h2>{{ t('needLogin.text1') }}<br />{{ t('needLogin.text2') }}</h2>
           <div>

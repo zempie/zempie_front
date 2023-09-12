@@ -62,14 +62,14 @@
         @close="openComments(false)">
         <div class="modal-alert comment-modal bg-white">
           <dl class="ma-header bg-white">
-            <button @click="isOpenedComments = false" class="pointer mobile-back-btn"
+            <button @click="isOpenedComments = false" class="pointer mobile-back-btn pa0"
               style="background-color: transparent; border: none; font-size: 24px; color:#333">
-              <i class="uil uil-angle-left-b"></i>
+              <IconLeftArrow />
             </button>
-            <dt>{{ feed.user.nickname }}님의 게시물</dt>
+            <dt>{{ feed.user.nickname }}{{ $t('user.post.title') }}</dt>
             <dd>
               <button @click="isOpenedComments = false" class="pointer close-btn">
-                <i class="uil uil-times"></i>
+                <IconClose />
               </button>
             </dd>
           </dl>

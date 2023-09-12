@@ -72,7 +72,7 @@
               <dt>{{ $t('information') }}</dt>
               <dd>
                 <button @click="showUndeployModal = false">
-                  <i class="uil uil-times"></i>
+                  <IconClose />
                 </button>
               </dd>
             </dl>
@@ -95,7 +95,7 @@
               <dt>{{ $t('information') }}</dt>
               <dd>
                 <button @click="showSelectStageModal = false">
-                  <i class="uil uil-times"></i>
+                  <IconClose />
                 </button>
               </dd>
             </dl>

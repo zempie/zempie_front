@@ -2,7 +2,7 @@
   <div class="chip-container">
     <div class="chip" v-for="(chip, i) of chipsArr" :key="chip?.id">
       {{ chip.name }}
-      <i class="uil uil-times" @click="deleteChip(i)"></i>
+      <IconClose @click="deleteChip(i)" color="#fff" class="pointer" />
     </div>
     <slot name="input"></slot>
   </div>

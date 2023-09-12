@@ -1,6 +1,8 @@
 <template>
   <el-dropdown trigger="click" popper-class="tapl-more-dropdown" style="margin-top:0px" ref="menuRef">
-    <a slot="trigger"><i class="uil uil-ellipsis-h font25 pointer"></i></a>
+    <a slot="trigger">
+      <IconEllipsisH />
+    </a>
     <template #dropdown>
       <div slot="body" class="more-list">
         <template v-if="comment.user?.uid === user?.uid">
@@ -25,7 +27,7 @@
           <dt>{{ $t('information') }}</dt>
           <dd>
             <button class="pointer" @click="showDeleteModal = false">
-              <i class="uil uil-times"></i>
+              <IconClose />
             </button>
           </dd>
         </dl>

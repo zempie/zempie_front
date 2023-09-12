@@ -4,7 +4,9 @@
     <swiper-slide v-for="(img, idx) in imgArr" :src="img.url" :key="idx" style="">
       <div class="img-container" :class="img.is_blind ? 'blur' : ''">
         <img :src="img.url">
-        <span class="delete-btn" @click="deleteImg(idx)"><i class="uil uil-times-circle"></i></span>
+        <span class="delete-btn" @click="deleteImg(idx)">
+          <IconCloseCircle />
+        </span>
       </div>
     </swiper-slide>
 

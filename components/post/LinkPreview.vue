@@ -2,7 +2,7 @@
   <el-card class="link-card pos-relative" :body-style="{ padding: '0px' }">
     <div class="pos-absolute" style="right:10px; top:10px" v-if="isEdit">
       <span class="pointer" @click="onClickRemove" style="font-size: 20px;">
-        <i class="uil uil-times-circle"></i>
+        <IconCloseCircle />
       </span>
     </div>
     <div class="img-container" v-if="tagInfo.img">

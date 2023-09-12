@@ -13,7 +13,7 @@
           <dt>{{ $t('like') }}</dt>
           <dd>
             <button @click="closeHistory" class="pointer">
-              <i class="uil uil-times"></i>
+              <IconClose />
             </button>
           </dd>
         </dl>

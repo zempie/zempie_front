@@ -26,7 +26,7 @@
           <dt>{{ t('information') }}</dt>11
           <dd>
             <button @click="showDeletePostModal = false">
-              <i class="uil uil-times"></i>
+              <IconClose />
             </button>
           </dd>
         </dl>

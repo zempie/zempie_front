@@ -40,7 +40,9 @@
         <dl class="ma-header">
           <dt>{{ $t('information') }}</dt>
           <dd>
-            <button @click="closeModal"><i class="uil uil-times"></i></button>
+            <button @click="closeModal">
+              <IconClose />
+            </button>
           </dd>
         </dl>
         <div class="ma-content">
