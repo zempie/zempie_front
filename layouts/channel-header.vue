@@ -86,17 +86,7 @@ try {
   }
 }
 
-@media all and (max-width: 479px) {
-  .tab-search-swiper {
-    .swiper-slide {
-      .mobile {
-        span {
-          display: none !important;
-        }
-      }
-    }
-  }
-}
+@media all and (max-width: 479px) {}
 
 @media all and (min-width: 480px) and (max-width: 767px) {
   .content {
@@ -105,13 +95,6 @@ try {
     .tab-search-swiper {
       width: 100%;
 
-      .swiper-slide {
-        .mobile {
-          span {
-            display: none !important;
-          }
-        }
-      }
     }
   }
 }

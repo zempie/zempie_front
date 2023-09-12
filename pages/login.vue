@@ -259,14 +259,6 @@ async function googleLogin() {
   isLoading.value = true
   if (isFlutter.value) {
     flutterSocialLogin('google')
-    // try {
-    //   const result = await FlutterBridge().signInGoogle()
-    //   await flutterSocialLogin(result)
-    // } catch (err) {
-    //   if (err.message.includes('auth/account-exists-with-different-credential')) {
-    //     ElMessage.error(`${t('exist.wt.diff.email')}`)
-    //   }
-    // }
   }
   else {
     const provider = new GoogleAuthProvider()
@@ -279,16 +271,6 @@ async function facebookLogin() {
 
   if (isFlutter.value) {
     flutterSocialLogin('facebook')
-
-    // try {
-    //   const result = await FlutterBridge().signInFacebook()
-    //   await flutterSocialLogin(result)
-    // } catch (err) {
-    //   if (err.message.includes('auth/account-exists-with-different-credential')) {
-    //     ElMessage.error(`${t('exist.wt.diff.email')}`)
-    //   }
-    // }
-
   } else {
     const provider = new FacebookAuthProvider()
     provider.addScope('email')
@@ -303,15 +285,6 @@ async function appleLogin() {
 
   if (isFlutter.value) {
     flutterSocialLogin('apple')
-
-    // try {
-    //   const result = await FlutterBridge().signInApple()
-    //   await flutterSocialLogin(result)
-    // } catch (err) {
-    //   if (err.message.includes('auth/account-exists-with-different-credential')) {
-    //     ElMessage.error(`${t('exist.wt.diff.email')}`)
-    //   }
-    // }
   } else {
     const provider = new OAuthProvider('apple.com')
     provider.addScope('email')
@@ -368,6 +341,7 @@ async function socialLogin(provider: AuthProvider) {
     router.push($localePath('/'))
 
   } catch (err) {
+
     firebaseJoinErr(err)
   }
   finally {
@@ -376,10 +350,11 @@ async function socialLogin(provider: AuthProvider) {
 }
 
 function firebaseJoinErr(err: any) {
-  if (err && err.message?.includes('auth/account-exists-with-different-credential')) {
+
+  if (err && err.message.includes('auth/account-exists-with-different-credential')) {
     ElMessage.error(`${t('exist.wt.diff.email')}`)
   } else {
-    ElMessage.error(err)
+    ElMessage.error(err.message)
   }
 }
 
@@ -388,6 +363,7 @@ function firebaseLoginErr(err: any) {
   const errorCode = err.code
   const errorMessage = err.message
   let message = errorCode ? errorCode : errorMessage
+
 
   if (errorCode) {
     switch (errorCode) {
