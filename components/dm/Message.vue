@@ -10,20 +10,25 @@
           <DmMsgMenu v-if="showMsgMenu" :msg="msg" @delete-msg="openDeleteMsgModal" style="max-height: 100px;" />
           <h4 class="mr5">{{ dmDateFormat(msg.created_at) }}</h4>
         </template>
+
         <span v-if="msg.type === eChatType.TEXT" style="max-width: 85%;"
           :style="msg.sender?.id !== userInfo.id && 'margin-left:45px'">{{
             msgContent }}</span>
         <div class="msg-img-container" v-else-if="msg.type === eChatType.IMAGE"
           :style="msg.sender?.id !== userInfo.id && 'margin-left:45px'">
           <template v-if="msg.sender.is_blocked">
-            {{ msgContent }}
+            <span style="max-width: 85%;" :style="msg.sender?.id !== userInfo.id && 'margin-left:45px'">
+              {{ msgContent }}
+            </span>
           </template>
           <img v-else class="pointer" :src="msg.contents" @click="onClickImg(msg)" />
         </div>
         <div class="msg-video-container" v-else-if="msg.type === eChatType.VIDEO"
           :style="msg.sender?.id !== userInfo.id && 'margin-left:45px'">
           <template v-if="msg.sender.is_blocked">
-            {{ msgContent }}
+            <span style="max-width: 85%;" :style="msg.sender?.id !== userInfo.id && 'margin-left:45px'">
+              {{ msgContent }}
+            </span>
           </template>
           <video v-else :src="msg.contents" width="320" height="240" controls />
         </div>
