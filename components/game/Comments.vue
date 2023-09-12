@@ -34,7 +34,9 @@
             <dt>{{ $t('comments') }} <span class="count">({{ count }})</span></dt>
             <dd>
               <button @click="closeCommentModal">
-                <i class="uil uil-times pointer"></i>
+                <i class="pointer">
+                  <IconClose />
+                </i>
               </button>
             </dd>
           </dl>

@@ -1,17 +1,27 @@
 <template>
   <div :class="['dm-list', selectedRoom ? 'on' : 'off']">
     <div class="dl-title">
+      <!-- TODO: 디자인 수정할때 영역 맞춰야됨 -->
       <div class="row items-center">
-        <button v-if="isFullScreen && !selectedRoom" class="mobile-back-btn pointer" @click="onClickBackBtn"><i
-            class="uil uil-arrow-left"></i></button>
-        <h2> <button :class="['mobile-btn', selectedRoom ? 'on' : 'off']" @click="initSelect"><i
-              class="uil uil-arrow-left"></i></button> {{
-                $t('dm') }}</h2>
+        <button v-if="isFullScreen && !selectedRoom" class="mobile-back-btn pointer" @click="onClickBackBtn"><i>
+            <IconLeftArrow />
+          </i></button>
+        <h2 class="flex items-center">
+          <button :class="['mobile-btn', selectedRoom ? 'on' : 'off']" @click="initSelect">
+            <i>
+              <IconLeftArrow />
+            </i></button> {{
+              $t('dm') }}
+        </h2>
       </div>
       <p>
-        <a :class="['pointer new-msg-btn-icon', { 'inactive': roomPending }]" @click="showNewMsg"><i
-            class="uil uil-comment-alt-plus"></i> </a>
-        <NuxtLink :to="$localePath(`/myaccount`)"><i class="uil uil-setting"></i> </NuxtLink>
+        <a :class="['pointer new-msg-btn-icon', { 'inactive': roomPending }]" @click="showNewMsg">
+          <i>
+            <IconPlus />
+          </i> </a>
+        <NuxtLink :to="$localePath(`/myaccount`)"><i>
+            <IconSetting />
+          </i> </NuxtLink>
       </p>
     </div>
 
@@ -71,7 +81,9 @@
           @open-keyboard="openkeyboard" @update-last-msg="updateLastMsg" @close-keyboard="closeKeyboard"
           :key="componentKey" @update-group-name="updateGroupName" ref="activeRoomRef" />
         <div v-else class="dlc-chat-emptied">
-          <p><i class="uil uil-comment-alt-dots" style="font-size:40px; color:#fff;"></i></p>
+          <p><i>
+              <IconComment color="#fff" width="40px" height="40px" />
+            </i></p>
           <h2> {{ $t('no.selected.msg') }} </h2>
           <h3> {{ $t('new.msg.info') }} </h3>
           <div><button @click="showNewMsg" :class="['btn-default new-msg-btn', { 'inactive': roomPending }]"
@@ -94,7 +106,9 @@
         </dl>
         <div class="ma-content">
           <div class="input-search-default mt0" @input="onInputUser">
-            <p><i class="uil uil-search"></i>
+            <p><i>
+                <IconSearch />
+              </i>
             </p>
             <div class="mt0">
               <CommonChipInput ref="chipRef" @currChip="getCurrChip" class="mt0">

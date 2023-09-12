@@ -47,7 +47,7 @@
     </div>
     <!-- TODO: 음성녹음 -->
     <!-- <div class="msg-record-container flex items-center content-cent" v-else-if="recorderRef?.formattedRecordingTime">
-      <i class="uil uil-play font20 mr10 zem-color"></i>
+      <i class="font20 mr10 zem-color"></i>
       <el-progress :percentage="recordingProgressPercentage">
         <span class="font15 ml10"> {{ recorderRef?.formattedRecordingTime }}</span>
       </el-progress>
