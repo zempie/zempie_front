@@ -165,10 +165,13 @@ function moveUserPage(nickname: string) {
 }
 
 function handleVisible(visible: boolean) {
+  console.log('visible no', visible)
   if (!isMobile.value) return
   if (visible) {
+    notiDropdown.value.handleOpen()
     useCommon().setPopState(true)
   } else {
+    notiDropdown.value.handleClose()
     useCommon().setPopState(false)
   }
 }

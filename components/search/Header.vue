@@ -179,8 +179,10 @@ function initSearchData() {
 function handleVisible(visible: boolean) {
   if (!isMobile.value) return
   if (visible) {
+    searchDropdown.value.handleOpen()
     useCommon().setPopState(true)
   } else {
+    searchDropdown.value.handleClose()
     useCommon().setPopState(false)
   }
 }

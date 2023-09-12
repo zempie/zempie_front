@@ -109,7 +109,6 @@ definePageMeta({
 })
 
 onMounted(() => {
-  console.log("rerouterleave run in custom router composabl")
   useRouterLeave()
 })
 

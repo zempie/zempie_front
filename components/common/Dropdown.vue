@@ -37,6 +37,8 @@ watch(
   })
 
 onMounted(() => {
+  // page에서 작동을 안해서 임시 추가
+  useRouterLeave()
   document.addEventListener("click", handleClickOutside);
 })
 onBeforeMount(() => {

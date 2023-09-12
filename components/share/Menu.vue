@@ -62,6 +62,7 @@ const isMobile = computed(() => useCommon().common.value.isMobile)
 watch(
   () => useCommon().common.value.isPopState,
   (val) => {
+    console.log('share menu watch')
     if (!val) {
       shareMenu.value.handleClose()
     }
@@ -74,6 +75,12 @@ const title = computed(() => {
     default:
       return `${props.shareInfo.user.nickname} ${t('seo.feed.title')} `
   }
+
+})
+
+onMounted(() => {
+  // page에서 작동을 안해서 임시 추가
+  useRouterLeave()
 
 })
 

@@ -148,6 +148,7 @@ import { ePlatformType, eGameStage, eGameType, eReportType } from '~~/types'
 
 import { PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { onBeforeRouteLeave } from 'vue-router';
 
 const IMAGE_MAX_SIZE = 4
 

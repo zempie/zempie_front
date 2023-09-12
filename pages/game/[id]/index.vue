@@ -74,14 +74,16 @@ onMounted(() => {
   useRouterLeave()
 })
 
-// onBeforeRouteLeave((to, from, next) => {
-//   if (useCommon().common.value.isPopState) {
-//     commentRef.value.closeCommentModal()
-//     next(false)
-//   } else {
-//     next()
-//   }
-// })
+onBeforeRouteLeave((to, from, next) => {
+  if (useCommon().common.value.isPopState) {
+    commentRef.value.closeCommentModal()
+    next(false)
+  } else {
+    next()
+  }
+})
+
+
 
 watch(
   () => gameInfo.value,

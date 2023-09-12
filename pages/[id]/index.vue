@@ -49,7 +49,6 @@ definePageMeta({
 onBeforeRouteLeave((to, from, next) => {
   if (useCommon().common.value.isPopState) {
     next(false)
-    console.log("back")
     useCommon().setPopState(false)
   } else {
     next()
