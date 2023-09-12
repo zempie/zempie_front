@@ -120,6 +120,14 @@ const props = defineProps({
   },
 })
 
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeTextEditor()
+    }
+  })
+
 defineExpose({ closeTextEditor, feedRef })
 
 const watcher = watch(
@@ -355,6 +363,7 @@ function updateBlind(feed: IFeed, img) {
 
 function openTextEditor() {
   isTextEditorOpen.value = true
+  console.log('isMobile.value ispop', isMobile.value)
   if (isMobile.value) {
     useCommon().setPopState(true)
   }

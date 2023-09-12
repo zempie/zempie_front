@@ -37,6 +37,7 @@ definePageMeta({
 })
 
 onMounted(async () => {
+  useRouterLeave()
 
   await getMogeraFile()
   window.addEventListener('beforeunload', leavePage)
@@ -45,10 +46,6 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
   window.removeEventListener('beforeunload', leavePage)
-})
-
-onBeforeRouteLeave((to, from, next) => {
-  next()
 })
 
 function leavePage(event) {

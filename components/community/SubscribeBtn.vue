@@ -60,6 +60,13 @@ const emit = defineEmits(['refresh', 'isSubModal'])
 
 defineExpose({ closeModal })
 
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeModal()
+    }
+  })
 
 async function subscribe() {
   if (isLogin.value) {

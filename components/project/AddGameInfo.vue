@@ -231,7 +231,7 @@
               {{ $t('addGameInfo.delete.game') }}
             </dt>
             <dd class="game-delete-btn">
-              <a @click="isDeleteModalOpen = true" class="btn-default w150">
+              <a @click="openDeleteModalOpen" class="btn-default w150">
                 {{ $t('addGameInfo.delete') }}
               </a>
             </dd>
@@ -249,7 +249,7 @@
             {{ $t('addGameInfo.info') }}
           </dt>
           <dd>
-            <button @click="isDeleteModalOpen = false">
+            <button @click="closeDeleteModalOpen">
               <i class="uil uil-times"></i>
             </button>
           </dd>
@@ -264,7 +264,7 @@
             <button class="btn-default w48p" @click="deleteProject">
               {{ $t('yes') }}
             </button>
-            <button class="btn-gray w48p" @click="isDeleteModalOpen = false">
+            <button class="btn-gray w48p" @click="closeDeleteModalOpen">
               {{ $t('no') }}
             </button>
           </div>
@@ -328,6 +328,8 @@ const prevGif = ref<String | ArrayBuffer>('')
 
 const uploadStage = computed(() => uploadProject.value.form.stage)
 
+const isMobile = computed(() => useCommon().common.value.isMobile)
+
 //게임 id(pathname)
 const hasPathnameErr = ref(false)
 const pathnameValidErrMsg = ref()
@@ -370,6 +372,14 @@ const v$ = useVuelidate(rules, form)
 const waitGamePath = ref(false)
 
 const isDeleteModalOpen = ref(false)
+
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeDeleteModalOpen()
+    }
+  })
 
 const props = defineProps({
   savedFile: Object,
@@ -751,7 +761,7 @@ async function deleteProject() {
 
   if (data.value) {
     resetProjectInfo()
-    isDeleteModalOpen.value = false
+    closeDeleteModalOpen()
     router.replace($localePath('/project/list'))
 
     ElMessage({
@@ -760,6 +770,20 @@ async function deleteProject() {
     })
   } else if (error.value) {
     ElMessage.error(t('deleted.game.fail.msg'))
+  }
+}
+
+function openDeleteModalOpen() {
+  isDeleteModalOpen.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
+function closeDeleteModalOpen() {
+  isDeleteModalOpen.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
   }
 }
 </script>

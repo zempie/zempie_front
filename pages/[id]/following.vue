@@ -19,6 +19,7 @@
 import { useI18n } from 'vue-i18n'
 import shared from '~~/scripts/shared';
 import { IFollowUser, IUserChannel } from '~~/types'
+import { onBeforeRouteLeave } from 'vue-router';
 
 const { t } = useI18n()
 const route = useRoute()
@@ -48,6 +49,7 @@ const { target: channelInfo } = data.value?.result;
 shared.createHeadMeta(`${channelInfo.name}${t('seo.channel.following.title')}`, `${channelInfo.name}${t('seo.channel.following.desc')}`, channelInfo.picture)
 
 onMounted(async () => {
+  useRouterLeave()
   if (channelInfo.id) await fetch()
 
 })

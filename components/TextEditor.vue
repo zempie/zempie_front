@@ -115,7 +115,7 @@
         <dl class="ma-header">
           <dt>{{ t('draft') }}</dt>
           <dd>
-            <button @click="showDraftList = false">
+            <button @click="closeDraftList()">
               <i class="uil uil-times"></i>
             </button>
           </dd>
@@ -200,6 +200,16 @@ const props = defineProps({
 
 })
 
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeDraftList()
+      closeMsgBox()
+    }
+  })
+
+
 const initFiles = _.cloneDeep(props.feed?.attatchment_files)
 
 const attachFileArr = computed(() => {
@@ -265,21 +275,15 @@ const isMobile = computed(() => useCommon().common.value.isMobile)
 
 await communityFetch()
 
-
-onBeforeRouteLeave((to, from, next) => {
-  if (useCommon().common.value.isPopState) {
-    ElMessageBox.close()
-  } else {
-    next()
-  }
-})
-
 onBeforeMount(() => {
   // getDraftList()
   // autoSave()
 
   //유저가 직접 저장하지 않은 경우
   if (draftList.value[0]?.save_type === 'cancel') {
+    if (isMobile.value) {
+      useCommon().setPopState(true)
+    }
     ElMessageBox.confirm(`${t('ask.load.draft.post')}`, {
       confirmButtonText: 'YES',
       cancelButtonText: 'Cancel',
@@ -287,6 +291,9 @@ onBeforeMount(() => {
     })
       .then(() => {
         insertContet(draftList.value[0])
+        if (isMobile.value) {
+          useCommon().setPopState(false)
+        }
       })
       .catch(() => { })
       .finally(() => {
@@ -1012,6 +1019,9 @@ function closeTextEditor() {
 
   //작성한 글이 있는 경우 임시저장 처리
   if (!editor.value.isEmpty) {
+    if (isMobile.value) {
+      useCommon().setPopState(true)
+    }
     ElMessageBox.confirm(`${t('ask.save.draft.post')}`, {
       confirmButtonText: t('save'),
       cancelButtonText: t('close'),
@@ -1222,10 +1232,16 @@ function getDraftList() {
 
 function onLoadPost() {
   showDraftList.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
 }
 
 function deleteDraft(draft: IDraft, index: number) {
 
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
   ElMessageBox.confirm(`${t('ask.delete.draft')}`, {
     confirmButtonText: 'YES',
     cancelButtonText: 'Cancel',
@@ -1233,7 +1249,10 @@ function deleteDraft(draft: IDraft, index: number) {
   })
     .then(() => {
       insertContet(draft)
-      showDraftList.value = false
+      closeDraftList()
+      if (isMobile.value) {
+        useCommon().setPopState(false)
+      }
       ElMessage({
         message: t('delete.draft.done'),
         type: 'success',
@@ -1245,6 +1264,9 @@ function deleteDraft(draft: IDraft, index: number) {
 
 function selectDraft(draft: IDraft, index: number) {
   //작성 중인 글 있는 지 확인
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
   if (!editor.value.isEmpty) {
     ElMessageBox.confirm(`${t('ask.overwrite.draft')}`, {
       confirmButtonText: 'YES',
@@ -1253,7 +1275,10 @@ function selectDraft(draft: IDraft, index: number) {
     })
       .then(() => {
         insertContet(draft)
-        showDraftList.value = false
+        closeDraftList()
+        if (isMobile.value) {
+          useCommon().setPopState(false)
+        }
         localStorage.removeItem(draft.key)
         draftList.value.splice(index, 1)
       })
@@ -1261,7 +1286,10 @@ function selectDraft(draft: IDraft, index: number) {
       .finally(() => { })
   } else {
     insertContet(draft)
-    showDraftList.value = false
+    closeDraftList()
+    if (isMobile.value) {
+      useCommon().setPopState(false)
+    }
     localStorage.removeItem(draft.key)
     draftList.value.splice(index, 1)
   }
@@ -1326,5 +1354,12 @@ function uploadImage(images) {
   console.log('sns: ', snsAttachFiles.value.img)
 
 
+}
+
+function closeDraftList() {
+  showDraftList.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
 }
 </script>

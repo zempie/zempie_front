@@ -132,6 +132,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue'
 import { dateFormat, execCommandCopy, getFirstDomElementByServer, stringToDomElemByServer, isObjEmpty, } from '~~/scripts/utils'
 import shared from '~~/scripts/shared'
 import { IComment } from '~~/types'
+import { onBeforeRouteLeave } from 'vue-router';
 
 const { $localePath } = useNuxtApp()
 
@@ -177,6 +178,7 @@ const attatchment_files = computed(() => {
       ? feed.value.attatchment_files
       : JSON.parse(feed.value.attatchment_files))
 })
+
 
 useInfiniteScroll(
   commentEl,
@@ -235,6 +237,7 @@ const postedGame = (posted_at) => {
 }
 
 onMounted(async () => {
+  useRouterLeave()
   await commentFetch()
 })
 

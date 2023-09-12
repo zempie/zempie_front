@@ -76,6 +76,7 @@ import { ElMessage, ElMessageBox, ElLoading } from 'element-plus'
 import { IVersion, eGameStage, eGameType } from '~~/types'
 import Version from '~~/scripts/version'
 import { useI18n } from 'vue-i18n'
+import { onBeforeRouteLeave } from 'vue-router';
 
 const { t, locale } = useI18n()
 const router = useRouter()
@@ -151,6 +152,20 @@ definePageMeta({
   title: 'Add version',
   name: 'addVersion',
   middleware: 'auth',
+})
+
+/*
+ page 단위에서 isPopState 검사 후 true라면 false로 변경
+ 이후 component에서 watch로 받아 팝업닫기
+*/
+onBeforeRouteLeave((to, from, next) => {
+  if (useCommon().common.value.isPopState) {
+    next(false)
+    ElMessageBox.close()
+    useCommon().setPopState(false)
+  } else {
+    next()
+  }
 })
 
 watch(

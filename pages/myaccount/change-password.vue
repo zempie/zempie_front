@@ -21,12 +21,12 @@
         </p>
       </dl>
     </div>
-    <el-dialog v-model="openModal" append-to-body class="modal-area-type" :show-close="false">
+    <el-dialog v-model="showModal" append-to-body class="modal-area-type" :show-close="false">
       <div class="modal-alert">
         <dl class="ma-header">
           <dt>{{ t('information') }}</dt>
           <dd>
-            <button @click="openModal = false">
+            <button @click="closeModal">
               <i class="uil uil-times"></i>
             </button>
           </dd>
@@ -37,7 +37,7 @@
             {{ t('send.email.info2') }}
           </h2>
           <div>
-            <button class="btn-default" style="width: 100%" @click="openModal = false">
+            <button class="btn-default" style="width: 100%" @click="closeModal">
               {{ t('confirm') }}
             </button>
           </div>
@@ -53,21 +53,34 @@ import { sendPasswordResetEmail } from 'firebase/auth'
 
 import { useI18n } from 'vue-i18n'
 import shared from '~~/scripts/shared';
+import { onBeforeRouteLeave } from 'vue-router';
 
 const { $firebaseAuth } = useNuxtApp()
 const { t } = useI18n()
 
 const email = ref('')
 const isEmailErr = ref(false)
-const openModal = ref(false)
+const showModal = ref(false)
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
 const user = computed(() => useUser().user.value.info)
 
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeModal()
+    }
+  })
 
 definePageMeta({
   title: 'change-pwd',
   name: 'changePwd',
   middleware: 'auth',
+})
+
+onMounted(() => {
+  useRouterLeave()
 })
 
 shared.createHeadMeta(t('seo.profile.change.pwd.title'), t('seo.profile.change.pwd.desc'))
@@ -88,12 +101,26 @@ async function sendEmail() {
 
   try {
     await sendPasswordResetEmail($firebaseAuth, email.value)
-    openModal.value = true
+    openModal()
   } catch (error: any) {
     ElMessage({
       message: error.message,
       type: 'error',
     })
+  }
+}
+
+function openModal() {
+  showModal.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
+function closeModal() {
+  showModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
   }
 }
 </script>

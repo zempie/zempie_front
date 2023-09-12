@@ -26,6 +26,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import shared from '~~/scripts/shared';
+import { onBeforeRouteLeave } from 'vue-router';
 
 const { t } = useI18n()
 const { $localePath } = useNuxtApp()
@@ -47,6 +48,7 @@ watch(
   }
 )
 onMounted(() => {
+  useRouterLeave()
   if (useProject().editProject.value.info?.id) {
     project.value = useProject().editProject.value.info
   }

@@ -30,6 +30,7 @@
 import { useI18n } from 'vue-i18n'
 import shared from '~~/scripts/shared';
 import { IUserChannel } from '~~/types';
+import { onBeforeRouteLeave } from 'vue-router';
 
 const { t } = useI18n()
 const route = useRoute()
@@ -47,6 +48,9 @@ const isMine = computed(() => {
   return route.params.id === useUser().user.value.info?.channel_id
 })
 
+onMounted(() => {
+  useRouterLeave()
+})
 
 /**
  * seo 반영은 함수안에서 되지 않으므로 최상단에서 진행함

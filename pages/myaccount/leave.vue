@@ -43,12 +43,12 @@
     </div>
 
     <ClientOnly>
-      <el-dialog v-model="openModal" append-to-body class="modal-area-type" :show-close="false" width="500px">
+      <el-dialog v-model="showModal" append-to-body class="modal-area-type" :show-close="false" width="500px">
         <div class="modal-alert">
           <dl class="ma-header">
             <dt>{{ $t('information') }}</dt>
             <dd>
-              <button @click="openModal = false">
+              <button @click="closeModal">
                 <i class="uil uil-times"></i>
               </button>
             </dd>
@@ -63,7 +63,7 @@
               <button class="btn-default w48p" @click="leave">
                 {{ $t('yes') }}
               </button>
-              <button class="btn-gray w48p" @click="openModal = false">
+              <button class="btn-gray w48p" @click="closeModal">
                 {{ $t('no') }}
               </button>
             </div>
@@ -78,6 +78,7 @@
 import { ElDialog, ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import shared from '~~/scripts/shared';
+import { onBeforeRouteLeave } from 'vue-router';
 
 const { t } = useI18n()
 const router = useRouter()
@@ -86,8 +87,16 @@ const { $localePath } = useNuxtApp()
 const reason = ref('')
 const isAgree = ref(false)
 const isAgreeError = ref(false)
-const openModal = ref(false)
+const showModal = ref(false)
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeModal()
+    }
+  })
 
 definePageMeta({
   title: 'leave-account',
@@ -97,12 +106,16 @@ definePageMeta({
 
 shared.createHeadMeta(t('seo.leave.title'), t('seo.leave.desc'))
 
+onMounted(() => {
+  useRouterLeave()
+})
+
 async function openConfirnModal() {
   if (!isAgree.value) {
     isAgreeError.value = true
     return
   }
-  openModal.value = true
+  openModal()
 }
 
 async function leave() {
@@ -127,6 +140,20 @@ async function leave() {
       message: (error as any).error?.message,
       type: 'error',
     })
+  }
+}
+
+function openModal() {
+  showModal.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
+function closeModal() {
+  showModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
   }
 }
 </script>

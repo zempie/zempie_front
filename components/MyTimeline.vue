@@ -21,6 +21,7 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import { onBeforeRouteLeave } from 'vue-router';
 
 const { $localePath } = useNuxtApp()
 const config = useRuntimeConfig()

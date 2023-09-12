@@ -4,12 +4,12 @@
       <button class="room-btn pointer"> <i class="uil uil-ellipsis-h font25"></i></button>
       <template #dropdown>
         <div class="more-list fixed" style="min-width: 150px">
-          <a @click="opLeaveChatModal = true" id="editFeed" class="pointer">{{ t('remove.chat') }}</a>
+          <a @click="openLeaveChatModal" id="editFeed" class="pointer">{{ t('remove.chat') }}</a>
           <template v-if="!selectedRoom?.is_group_room">
             <a @click="onBlockUser" class="pointer">{{ t('block.user') }}</a>
-            <a @click="opReportModal = true" class="pointer">{{ t('report.user') }}</a>
+            <a @click="openReportModal" class="pointer">{{ t('report.user') }}</a>
           </template>
-          <a v-else @click="opSetGroupChatName = true" class="pointer">{{ t('set.group.chat.name') }}</a>
+          <a v-else @click="openSetGroupChatName" class="pointer">{{ t('set.group.chat.name') }}</a>
         </div>
       </template>
     </el-dropdown>
@@ -19,7 +19,7 @@
         <dl class="ma-header">
           <dt>{{ t('leave.chat') }}</dt>
           <dd>
-            <button class="pointer" @click="opLeaveChatModal = false">
+            <button class="pointer" @click="closeLeaveChatModal">
               <i class="uil uil-times"></i>
             </button>
           </dd>
@@ -32,7 +32,7 @@
             <button class="btn-gray w48p" @click="leaveChat">
               {{ $t('yes') }}
             </button>
-            <button class="btn-default w48p" @click="opLeaveChatModal = false">
+            <button class="btn-default w48p" @click="closeLeaveChatModal">
               {{ $t('no') }}
             </button>
           </div>
@@ -45,7 +45,7 @@
         <dl class="ma-header">
           <dt>{{ t('set.group.chat.name') }}</dt>
           <dd>
-            <button class="pointer" @click="opSetGroupChatName = false">
+            <button class="pointer" @click="closeSetGroupChatName">
               <i class="uil uil-times"></i>
             </button>
           </dd>
@@ -57,7 +57,7 @@
             <small v-if="isGroupNameErr" class="text-red text-left">{{ groupNameErr }}</small>
           </div>
           <div>
-            <button class="btn-gray w48p" @click="opSetGroupChatName = false">
+            <button class="btn-gray w48p" @click="closeSetGroupChatName">
               {{ $t('cancel') }}
             </button>
             <button class="btn-default w48p" @click="setGroupName">
@@ -68,7 +68,7 @@
       </div>
     </el-dialog>
 
-    <UserReportModal :openModal="opReportModal" @closeModal="opReportModal = false"
+    <UserReportModal :openModal="opReportModal" @closeModal="closeReportModal"
       :user="props.selectedRoom?.joined_users[0]" />
   </ClientOnly>
 </template>
@@ -85,6 +85,8 @@ const emit = defineEmits(['deletedRoom', 'updateGroupName'])
 const MAX_NAME_LIMIT = 50
 const { t, locale } = useI18n()
 
+const isMobile = computed(() => useCommon().common.value.isMobile)
+
 const opLeaveChatModal = ref(false)
 const opReportModal = ref(false)
 const opSetGroupChatName = ref(false)
@@ -92,6 +94,16 @@ const opSetGroupChatName = ref(false)
 const groupName = ref(props.selectedRoom.name)
 const isGroupNameErr = ref(false)
 const groupNameErr = ref('')
+
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeLeaveChatModal()
+      closeSetGroupChatName()
+      closeReportModal()
+    }
+  })
 
 async function leaveChat() {
 
@@ -102,7 +114,7 @@ async function leaveChat() {
       emit('deletedRoom', props.selectedRoom)
     }
   } finally {
-    opLeaveChatModal.value = false
+    closeLeaveChatModal()
   }
 
 }
@@ -151,7 +163,7 @@ async function setGroupName() {
 
     }
   } finally {
-    opSetGroupChatName.value = false
+    closeSetGroupChatName()
   }
 
 }
@@ -160,6 +172,47 @@ function closeModal() {
   groupName.value = ''
   isGroupNameErr.value = false
   groupNameErr.value = ''
+}
+
+function openLeaveChatModal() {
+  opLeaveChatModal.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
+function closeLeaveChatModal() {
+  opLeaveChatModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
+}
+
+function openSetGroupChatName() {
+  opSetGroupChatName.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
+function closeSetGroupChatName() {
+  opSetGroupChatName.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
+}
+
+function openReportModal() {
+  opReportModal.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+function closeReportModal() {
+  opReportModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
 }
 
 </script>

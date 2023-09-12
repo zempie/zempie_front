@@ -166,6 +166,7 @@ import dayjs from 'dayjs'
 import { IProject, eGameStage, eGameType } from '~~/types'
 import { useI18n } from 'vue-i18n'
 import shared from '~~/scripts/shared'
+import { onBeforeRouteLeave } from 'vue-router';
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -198,7 +199,9 @@ const fUser = computed(() => useUser().user.value.fUser)
 
 shared.createHeadMeta(t('seo.project.list.title'), t('seo.project.list.desc'))
 
+
 onMounted(async () => {
+  useRouterLeave()
   fetch()
   isPending.value = false
 })

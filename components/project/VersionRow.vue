@@ -62,7 +62,7 @@
         <dl class="ma-header">
           <dt>{{ $t('information') }}</dt>
           <dd>
-            <button @click="showDeleteModal = false">
+            <button @click="closeDeleteModal">
               <i class="uil uil-times"></i>
             </button>
           </dd>
@@ -77,7 +77,7 @@
             <button class="btn-default w48p" @click="deleteOneVersion">
               {{ $t('delete') }}
             </button>
-            <button class="btn-gray w48p" @click="showDeleteModal = false">
+            <button class="btn-gray w48p" @click="closeDeleteModal">
               {{ $t('no') }}
             </button>
           </div>
@@ -96,9 +96,18 @@ import { useI18n } from 'vue-i18n'
 const route = useRoute()
 const { t, locale } = useI18n()
 
+const isMobile = computed(() => useCommon().common.value.isMobile)
 const isOpenDelete = ref(false)
 const showDeleteModal = ref(false)
 const projectId = computed(() => route.params.id as string)
+
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeDeleteModal()
+    }
+  })
 
 const props = defineProps({
   version: Object as PropType<IVersion>,
@@ -112,7 +121,7 @@ function deleteVersion() {
     ElMessage.error(t('versionManage.delete.deployVersion.'))
     return
   } else {
-    showDeleteModal.value = true
+    openDeleteModal()
   }
 }
 
@@ -128,9 +137,23 @@ async function deleteOneVersion() {
       type: 'success',
     })
     useProject().getProjectInfo(projectId.value)
-    showDeleteModal.value = false
+    closeDeleteModal()
     isOpenDelete.value = false
     // emit('refresh')
+  }
+}
+
+function openDeleteModal() {
+  showDeleteModal.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
+function closeDeleteModal() {
+  showDeleteModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
   }
 }
 </script>

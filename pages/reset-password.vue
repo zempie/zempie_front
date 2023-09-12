@@ -35,7 +35,7 @@
       </div>
     </div>
 
-    <el-dialog v-model="openModal" append-to-body class="modal-area-type" :show-close="false" width="380px">
+    <el-dialog v-model="showModal" append-to-body class="modal-area-type" :show-close="false" width="380px">
       <div class="modal-alert">
         <dl class="ma-header">
           <dt>{{ $t('information') }}</dt>
@@ -64,6 +64,7 @@ import { ElDialog, ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import { sendPasswordResetEmail } from 'firebase/auth'
 import shared from '~/scripts/shared'
+import { onBeforeRouteLeave } from 'vue-router';
 
 const route = useRoute()
 const config = useRuntimeConfig()
@@ -71,16 +72,27 @@ const { t, locale } = useI18n()
 const { $firebaseAuth, $localePath } = useNuxtApp()
 const router = useRouter()
 
-const openModal = ref(false)
+const showModal = ref(false)
 const email = ref('')
 const isEmailErr = ref(false)
-
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
 shared.createHeadMeta(t('seo.reset.pwd.title'), t('seo.reset.pwd.desc'))
 
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeModal()
+    }
+  })
 
 definePageMeta({
   layout: 'layout-none',
+})
+
+onMounted(() => {
+  useRouterLeave()
 })
 
 async function sendEmail() {
@@ -97,7 +109,7 @@ async function sendEmail() {
   if (data.value.result) {
     try {
       await sendPasswordResetEmail($firebaseAuth, email.value)
-      openModal.value = true
+      openModal()
     } catch (error: any) {
       ElMessage({
         message: error.message,
@@ -112,8 +124,19 @@ async function sendEmail() {
   }
 }
 
+
+function openModal() {
+  showModal.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
 function closeModal() {
-  openModal.value = false
+  showModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
   router.push($localePath(`/login`))
 }
 </script>

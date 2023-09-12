@@ -42,10 +42,19 @@ definePageMeta({
 })
 
 
-
+/*
+ page 단위에서 isPopState 검사 후 true라면 false로 변경
+ 이후 component에서 watch로 받아 팝업닫기
+*/
 onBeforeRouteLeave((to, from, next) => {
+  if (useCommon().common.value.isPopState) {
+    next(false)
+    console.log("back")
+    useCommon().setPopState(false)
+  } else {
+    next()
+  }
   useChannel().resetUserChannel()
-  next()
 })
 </script>
 

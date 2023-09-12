@@ -30,7 +30,7 @@
     </div>
   </el-dialog>
   <CommonModal :openModal="showReportComModal" :title="`${$t('finish.report.title')}`"
-    :desc="`${$t('finish.report.desc')}`" @closeModal="showReportComModal = false" :isAppendBody="true" />
+    :desc="`${$t('finish.report.desc')}`" @closeModal="closeReportComModal" :isAppendBody="true" />
 </template>
 <script setup lang="ts">
 import { ElDialog } from 'element-plus'
@@ -40,6 +40,7 @@ import { eReportType } from '~~/types';
 const reportReason = ref()
 const showReportComModal = ref(false)
 const additionalReportReason = ref()
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
 const props = defineProps({
   isAppendBody: {
@@ -56,6 +57,13 @@ const props = defineProps({
 const emit = defineEmits(['closeModal'])
 const showModal = computed(() => props.openModal)
 
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeReportComModal()
+    }
+  })
 
 async function onSubmitReport() {
   if (!reportReason.value) return
@@ -70,7 +78,7 @@ async function onSubmitReport() {
       }
       const { data, error, pending } = await useCustomAsyncFetch(`/post/report`, getComFetchOptions('post', true, payload))
       if (data.value) {
-        showReportComModal.value = true
+        openReportComModal()
       }
       break;
     case eReportType.comment:
@@ -82,12 +90,12 @@ async function onSubmitReport() {
       }
       const { data: cmtData } = await useCustomAsyncFetch(`/comment/report`, getComFetchOptions('post', true, payload))
       if (cmtData.value) {
-        showReportComModal.value = true
+        openReportComModal()
       }
       break;
     default:
       //TODO: 임시
-      showReportComModal.value = true
+      openReportComModal()
       break;
   }
 
@@ -99,6 +107,19 @@ function initData() {
   reportReason.value = null
   additionalReportReason.value = null
   emit('closeModal')
+}
+
+function openReportComModal() {
+  showReportComModal.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+function closeReportComModal() {
+  showReportComModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
 }
 
 </script>

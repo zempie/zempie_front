@@ -26,7 +26,7 @@
                 justify-content: center;
                 align-items: center;
                 padding: 0px;
-              " @click="showUndeployModal = true">{{ $t('deployManage.undeploy.title') }}</a>
+              " @click="openUndeployModal">{{ $t('deployManage.undeploy.title') }}</a>
           </li>
         </ol>
       </div>
@@ -71,7 +71,7 @@
             <dl class="ma-header">
               <dt>{{ $t('information') }}</dt>
               <dd>
-                <button @click="showUndeployModal = false">
+                <button @click="closeUndeployModal">
                   <i class="uil uil-times"></i>
                 </button>
               </dd>
@@ -82,7 +82,7 @@
                 <button class="btn-default w48p" @click="undeploy">
                   {{ $t('undeploy') }}
                 </button>
-                <button class="btn-gray w48p" @click="showUndeployModal = false">
+                <button class="btn-gray w48p" @click="closeUndeployModal">
                   {{ $t('no') }}
                 </button>
               </div>
@@ -94,7 +94,7 @@
             <dl class="ma-header">
               <dt>{{ $t('information') }}</dt>
               <dd>
-                <button @click="showSelectStageModal = false">
+                <button @click="closeSelectStageModal">
                   <i class="uil uil-times"></i>
                 </button>
               </dd>
@@ -118,7 +118,7 @@
                 <button class="btn-default w48p" @click="changeStage">
                   {{ $t('change') }}
                 </button>
-                <button class="btn-gray w48p" @click="showSelectStageModal = false">
+                <button class="btn-gray w48p" @click="closeSelectStageModal">
                   {{ $t('cancel') }}
                 </button>
               </div>
@@ -135,6 +135,7 @@ import { ElMessage, ElDialog, ElLoading } from 'element-plus'
 import { eGameStage, IProject, IVersion } from '~~/types'
 import { useI18n } from 'vue-i18n'
 import shared from '~~/scripts/shared';
+import { onBeforeRouteLeave } from 'vue-router';
 
 const { t } = useI18n()
 const route = useRoute()
@@ -151,6 +152,8 @@ const stageOptions = [
 ]
 
 const projectId = computed(() => route.params.id as string)
+
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
 const emit = defineEmits(['refresh'])
 
@@ -173,6 +176,7 @@ watch(
 )
 
 onMounted(() => {
+  useRouterLeave()
   if (editProject.value.info.id) {
     setVersionInfo(editProject.value.info)
   }
@@ -212,14 +216,14 @@ async function undeploy() {
   if (!error.value) {
     getProjectInfo(projectId.value)
   }
-  showUndeployModal.value = false
+  closeUndeployModal()
 }
 
 async function deploy() {
 
 
   if (editProject.value.info.stage === eGameStage.DEV) {
-    showSelectStageModal.value = true
+    openSelectStageModal()
     return
   }
 
@@ -276,6 +280,34 @@ async function changeStage() {
       type: 'success',
     })
     showSelectStageModal.value = false
+  }
+}
+
+function openUndeployModal() {
+  showUndeployModal.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
+function closeUndeployModal() {
+  showUndeployModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
+}
+
+function openSelectStageModal() {
+  showSelectStageModal.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
+function closeSelectStageModal() {
+  showSelectStageModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
   }
 }
 </script>
