@@ -46,7 +46,9 @@
             <NotificationHeaderButton />
             <button class="btn-circle-icon ml10 flex items-center content-center"
               @click="$router.push($localePath('/dm/list'))">
-              <IconMessage width="20px" height="20px" />
+              <i>
+                <IconMessage />
+              </i>
               <span class="new-dm-badge" v-if="unreadMsgCount">{{ unreadMsgCount }}</span>
             </button>
             <UserMenu class="user-menu-btn" />
