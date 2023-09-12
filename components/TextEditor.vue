@@ -1,7 +1,7 @@
 <template>
   <div class="modal-post">
     <ul class="mp-header">
-      <li class="pl10 flex h100p items-center pointer" @click="closeTextEditor" style="z-index: 99;">
+      <li class="pl10 flex h100p items-center pointer prev-btn" @click="closeTextEditor" style="z-index: 99;">
         <IconLeftArrow />
       </li>
       <li class="title">
