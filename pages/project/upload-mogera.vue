@@ -7,7 +7,9 @@
       </div>
       <dl class="studio-upload-area">
         <div v-if="showSavedInfo" class="save-notice">
-          <p><i class="uil uil-info-circle"></i> {{ dayjs(savedFile?.created_at).format('YYYY-MM-DD HH:MM:ss') }}에 자동 저장된
+          <p class="flex items-center"><i>
+              <LazyIconInfoCircle width="20px" class="mr3" />
+            </i> {{ dayjs(savedFile?.created_at).format('YYYY-MM-DD HH:MM:ss') }}에 자동 저장된
             파일이 있습니다.</p>
           <p class="ml15">저장된 파일을 불러와 이어서 작성할 수 있습니다. <span @click="loadAutoSave">이어서 작성하기 ></span></p>
         </div>

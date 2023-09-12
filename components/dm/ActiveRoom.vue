@@ -64,7 +64,6 @@
         <ImageUploader @uploadImage="uploadImage" ref="imgUploaderRef" class="dm-uploader-btn" />
         <VideoUploader @uploadVideo="uploadVideo" ref="videoUploaderRef" class="dm-uploader-btn" />
         <!-- <DmRecorder @uploadRecord="uploadRecord" ref="recorderRef" class="dm-uploader-btn" /> -->
-
       </div>
       <button @click="onSubmitMsg"><img src="/images/send_icon.png" alt="" title="" /></button>
     </div>
@@ -78,7 +77,6 @@
           <dd>
             <button class="pointer" @click="closeDeleteMsgModal">
               <IconClose />
-
             </button>
           </dd>
         </dl>
@@ -402,7 +400,6 @@ async function onSubmitMsg() {
       addMsg(prevMsg)
 
       const videoUrls = await videoUploaderRef.value.fetchVideo()
-      console.log(videoUrls)
       for (const video of videoUrls) {
 
         payload.contents = video.url
@@ -432,7 +429,6 @@ async function onSubmitMsg() {
     }
   }
 
-
   //빈 텍스트는 보내지 않음
   if (!inputMsg.value) return
 
@@ -444,6 +440,9 @@ async function onSubmitMsg() {
   inputMsg.value = ''
 
   isSending.value = false
+
+
+
 }
 
 async function sendMsg(payload: any) {

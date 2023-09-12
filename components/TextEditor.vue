@@ -490,6 +490,14 @@ async function onSubmit() {
       for (const audio of snsAttachFiles.value.audio) {
         formData.append(audio.name, audio.file)
       }
+
+
+      const { data, error, pending } = await useCustomAsyncFetch<{ result: [] }>(
+        '/community/att',
+        getZempieFetchOptions('post', true, formData)
+      )
+      payload['attatchment_files'] = data.value?.result
+
     }
 
 

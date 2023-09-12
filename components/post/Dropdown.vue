@@ -1,7 +1,10 @@
 <template>
   <ClientOnly>
     <el-dropdown trigger="click" ref="feedMenu" popper-class="feed-menu">
-      <a class="btn-circle-none pt6" slot="trigger"><i class="uil uil-ellipsis-h font25" id="feedMenu"></i></a>
+      <a class="btn-circle-none pt6" slot="trigger">
+        <i class="flex items-center content-center font25" id="feedMenu">
+          <LazyIconEllipsisH />
+        </i></a>
       <template #dropdown>
         <div slot="body" class="more-list fixed" style="min-width: 150px">
           <template v-if="user && user.id === (feed?.user && feed?.user.id)">

@@ -10,7 +10,7 @@
           </dl>
           <div v-if="editProject.info.game?.game_type === eGameType.Html" class="suii-open"
             :class="isAdvancedOpen ? 'open' : 'close'" @click="isAdvancedOpen = !isAdvancedOpen">
-            <span> {{ $t('advanced.setting') }}</span> &nbsp;<i class="uil uil-sliders-v-alt"></i>
+            <span> {{ $t('advanced.setting') }}</span>
           </div>
           <transition name="component-fade" mode="out-in">
             <div v-show="isAdvancedOpen">
@@ -53,7 +53,7 @@
               </dl>
               <div class="suii-close">
                 <button class="btn-line" @click="isAdvancedOpen = !isAdvancedOpen">
-                  {{ $t('close') }} &nbsp;&nbsp;<i class="uil uil-angle-up"></i>
+                  {{ $t('close') }}
                 </button>
               </div>
             </div>

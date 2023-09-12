@@ -5,10 +5,6 @@
         <dt>
           {{ t('games') }} <span>{{ games?.length }}</span>
         </dt>
-        <dd>
-          <NuxtLink :to="$localePath(`/project/upload`)" v-if="isMine" class="btn-default-samll">
-            {{ t('add.game') }}<i class="uil uil-plus"></i></NuxtLink>
-        </dd>
       </dl>
       <transition name="component-fade" mode="out-in">
         <ul class="card-game">

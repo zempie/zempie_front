@@ -10,7 +10,9 @@
       </div>
       <div class="pf-content">
         <div>
-          <i class="uil uil-info-circle" style="font-size: 16px; line-height: 24px"></i>&nbsp;&nbsp;{{
+          <i style="font-size: 16px;">
+            <LazyIconInfoCircle width="15px" class="pt10" />
+          </i>&nbsp;&nbsp;{{
             $t('find.pwd.input.text')
           }}
           <p style="margin-left:22px">{{ $t('find.pwd.input.info') }}</p>
@@ -21,7 +23,7 @@
               <input v-model="email" @input="email ? (isEmailErr = false) : (isEmailErr = true)" @keyup.enter="sendEmail"
                 type="text" :placeholder="$t('login.email.placeholder')" class="w100p h60" />
               <h3 class="input-errors" v-if="isEmailErr">
-                <i class="uil uil-check"></i>{{ $t('login.empty.email') }}
+                {{ $t('login.empty.email') }}
               </h3>
             </div>
           </li>

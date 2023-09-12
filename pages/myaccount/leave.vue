@@ -28,7 +28,9 @@
           <div>
             <input @click="isAgree ? (isAgreeError = true) : (isAgreeError = false)" type="checkbox" v-model="isAgree"
               id="agree" />
-            <label for="agree"><i class="uil uil-check"></i></label><span>{{ $t('leave.account.agreement') }}</span>
+            <label for="agree"><i>
+                <LazyIconCheck />
+              </i></label><span>{{ $t('leave.account.agreement') }}</span>
           </div>
           <p class="mt10" v-if="isAgreeError" style="color: red">
             {{ $t('agreement.leave.text') }}

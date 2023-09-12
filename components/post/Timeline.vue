@@ -15,7 +15,6 @@
             <slot v-else name="communityInput" />
           </dt>
           <dd>
-            <!-- <a><i class="uil uil-message"></i></a> -->
           </dd>
         </dl>
       </div>
@@ -24,12 +23,12 @@
         <div class="swiper-area uppercase">
           <div class="swiper-slide" style="width: 50%; cursor: pointer">
             <a :class="media ?? 'active'">
-              <p><i class="uil uil-clock-three"></i>TIMELINE</p>
+              <p>TIMELINE</p>
             </a>
           </div>
           <div class="swiper-slide" style="width: 50%; cursor: pointer">
             <NuxtLink :to="$localePath(`/${paramId}/games`)" :class="media === 'game' ? 'active' : ''">
-              <p><i class="uil uil-map-pin-alt"></i>GAME</p>
+              <p>GAME</p>
             </NuxtLink>
           </div>
         </div>
@@ -47,7 +46,10 @@
         </TransitionGroup>
         <div v-else class="ta-post-none">
           <p>
-            <span><i class="uil uil-layers-slash"></i></span>
+            <span class="flex items-center">
+              <i>
+                <LazyIconComment color="#888" />
+              </i></span>
           </p>
           <h2>{{ t('timeline.noPost') }}</h2>
         </div>

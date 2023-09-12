@@ -7,15 +7,19 @@
     </div>
     <div v-if="useAlarm().alarm.value.newNoti" class="noti-toast">
 
-      <p>{{ t('got.new.msg') }} {{ t('need.refresh') }}&nbsp;<i class="uil uil-sync"></i></p>
+      <p>{{ t('got.new.msg') }} {{ t('need.refresh') }}&nbsp;</p>
     </div>
     <div class="dm-list"
       :style="useAlarm().alarm.value.newNoti ? 'border-top-left-radius: 0;border-top-right-radius: 0;' : 'border-top-left-radius: 10px;border-top-right-radius: 10px;'">
 
       <div class="dl-title" style="align-items: flex-end;">
         <p>
-          <a @click="readAll"><i class="uil uil-comment-alt"></i> <em> {{ t('mark.all') }} </em></a>
-          <NuxtLink :to="$localePath(`/myaccount`)"><i class="uil uil-setting"></i> <em>{{ t('setting') }}</em>
+          <a @click="readAll"><i>
+              <LazyIconComment width="20px" />
+            </i> <em> {{ t('mark.all') }} </em></a>
+          <NuxtLink :to="$localePath(`/myaccount`)"><i>
+              <LazyIconSetting width="20px" />
+            </i> <em>{{ t('setting') }}</em>
           </NuxtLink>
         </p>
       </div>

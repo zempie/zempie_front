@@ -2,7 +2,9 @@
   <client-only>
     <el-dropdown ref="notiDropdown" id="notiList" trigger="click">
       <button class="btn-circle-icon ml10 flex items-center content-center" @click="showAlarmList">
-        <i class="uil uil-bell" style="font-size:21px;"></i>
+        <i style="font-size:20px;">
+          <LazyIconBell />
+        </i>
         <span v-if="hasNewNoti"></span>
       </button>
       <template #dropdown>
@@ -10,7 +12,8 @@
           <dl>
             <dt> {{ t('notification') }}</dt>
             <dd>
-              <a @click="readAll"><i class="uil uil-comment-alt"></i><em>{{ t('mark.all') }}</em></a>
+              <a @click="readAll">
+                <em>{{ t('mark.all') }}</em></a>
             </dd>
           </dl>
           <ul class="noti-list">

@@ -1,10 +1,8 @@
 <template>
   <div class="custom-dropdown" ref="dropdownContainer">
     <slot v-if="isCustomBtn" name="btn"></slot>
-
     <button v-else class="menu-btn" @click="toggleDropdown">
-      <IconEllipsisH />
-
+      <IconEllipsisH :color="color" />
     </button>
     <ul v-if="isDropdownOpen" class="more-list" @click="onClickOption">
       <slot name="options"></slot>
@@ -20,6 +18,10 @@ defineProps({
   isCustomBtn: {
     type: Boolean,
     default: false
+  },
+  color: {
+    type: String,
+    default: '#fff'
   }
 })
 

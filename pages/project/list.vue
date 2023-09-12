@@ -26,8 +26,11 @@
             </div>
           </dt>
           <dd>
-            <NuxtLink id="gameUploadBtn" :to="$localePath('/project/upload')" class="btn-default ml20"><i
-                class="uil uil-plus"></i>{{ $t('gameUpload') }}</NuxtLink>
+            <NuxtLink id="gameUploadBtn" :to="$localePath('/project/upload')" class="btn-default ml20 flex items-center">
+              <i>
+                <LazyIconPlus color="#fff" />
+              </i>{{ $t('gameUpload') }}
+            </NuxtLink>
           </dd>
         </dl>
 

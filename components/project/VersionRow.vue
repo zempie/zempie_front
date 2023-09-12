@@ -22,8 +22,12 @@
         }}
       </li>
       <li @click="isOpenDelete = !isOpenDelete">
-        <i v-if="isOpenDelete === false" class="uil uil-angle-down" style="font-size: 22px; cursor: pointer"></i>
-        <i v-else class="uil uil-angle-up" style="font-size: 22px; cursor: pointer"></i>
+        <i v-if="isOpenDelete === false">
+          <LazyIconAngleDown />
+        </i>
+        <i v-else>
+          <LazyIconAngleUp />
+        </i>
       </li>
     </ul>
     <ul class="gv-toggle" v-if="isOpenDelete">

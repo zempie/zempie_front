@@ -1,7 +1,10 @@
 <template>
   <ClientOnly>
     <el-dropdown trigger="click" class="share-menu">
-      <a class="pointer"><i class="uil uil-share-alt" style="font-size: 20px"></i></a>
+      <a class="pointer">
+        <i>
+          <LazyIconShare />
+        </i></a>
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item @click="copyUrl">

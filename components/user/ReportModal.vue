@@ -4,7 +4,10 @@
       <dl class="mr-header">
         <dt>{{ $t('user.report') }}</dt>
         <dd>
-          <button class="pointer" @click="emit('closeModal')"><i class="uil uil-times"></i></button>
+          <button class="pointer" @click="emit('closeModal')">
+            <i>
+              <LazyIconClose />
+            </i></button>
         </dd>
       </dl>
       <div class="mr-content">
@@ -12,7 +15,6 @@
         <ul>
           <li>
             <input type="radio" v-model="reportReason" value="1" id="report1" />
-
             <span><label for="report1">{{ $t('report.user.info1') }} </label></span>
           </li>
           <li>

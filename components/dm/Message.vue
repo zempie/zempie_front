@@ -1,6 +1,6 @@
 <template>
   <ul>
-    <li class="flex column" style="overflow:visible; word-break: break-all; width: 100%; " @mousemove="openMenu"
+    <li class="flex column w100p" style="overflow:visible; word-break: break-all;" @mousemove="openMenu"
       @mouseleave="closeMenu">
       <p class="mb5" v-if="msg.sender?.id !== userInfo.id">{{ msg.sender.nickname }}</p>
       <div class="flex pos-relative msg-box ">
@@ -22,10 +22,6 @@
           :style="msg.sender?.id !== userInfo.id && 'margin-left:45px'">
           <video :src="msg.contents" width="320" height="240" controls />
         </div>
-
-        <!-- <div v-if="msg.attached_files" v-for="file in msg.attached_files">
-                  <img :src="file.url" style="height:150px; width:150px" />
-                </div> -->
         <h4 class="ml5" v-if="msg.sender?.id !== userInfo.id">{{
           dmDateFormat(msg.created_at)
         }}</h4>
@@ -127,5 +123,20 @@ function closeDeleteMsgModal() {
   }
 }
 
+async function onDeleteMsg() {
+
+  try {
+    const { data, error } = await useCustomAsyncFetch(`/chat/room/${props.msg.id}`, getComFetchOptions('delete', true))
+    if (data.value) {
+      emit('deleteMsg', props.msg)
+    }
+
+  } catch (error) {
+    ElMessage.error(error.message)
+  }
+  finally {
+    opDeleteMsgModal.value = false
+  }
+}
 </script>
 <style scoped lang="scss"></style>

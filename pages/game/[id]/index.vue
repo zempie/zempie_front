@@ -45,9 +45,6 @@
             <dd>{{ gameInfo?.version }}</dd>
           </dl>
         </div>
-        <div class="ta-copy-link">
-          <a @click="copyUrl"><em>{{ $t('game.link.copy') }}</em> <span><i class="uil uil-link"></i></span></a>
-        </div>
       </dt>
     </dl>
   </NuxtLayout>

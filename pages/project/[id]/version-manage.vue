@@ -4,8 +4,10 @@
       <dl>
         <dt></dt>
         <dd>
-          <NuxtLink :to="$localePath(`/project/${$route.params.id}/add-version`)" class="btn-default"><i
-              class="uil uil-plus"></i> {{ $t('versionManage.addVersion') }}
+          <NuxtLink :to="$localePath(`/project/${$route.params.id}/add-version`)" class="btn-default flex items-center">
+            <i>
+              <LazyIconPlus color="#fff" />
+            </i> {{ $t('versionManage.addVersion') }}
           </NuxtLink>
         </dd>
       </dl>

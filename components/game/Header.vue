@@ -12,7 +12,9 @@
       </div>
 
       <span class="banner-btn" @click="uploadBanner">
-        <i class="uil uil-image-edit"></i>
+        <i class="flex items-center">
+          <IconScenery color="#fff" height="20px" width="20px" />
+        </i>
       </span>
     </div>
     <dl>
@@ -54,7 +56,9 @@
                 class="btn-default mr10">{{ $t('playgame') }}
 
                 <li v-if="gameInfo.game_type === eGameType.Html" style="margin-top: 2px;">
-                  <i class="uil uil-html5-alt"></i>
+                  <i>
+                    <IconHtml5 color="#fff" />
+                  </i>
                 </li>
               </a>
 
@@ -80,7 +84,6 @@
           <dd>
             <button class="pointer" @click="closeChangeBanner">
               <IconClose />
-
             </button>
           </dd>
         </dl>

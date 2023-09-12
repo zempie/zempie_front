@@ -23,7 +23,7 @@
           {{ gameInfo.title }}
         </h2>
         <p @click="moveUserPage">{{ gameInfo.user?.nickname }}</p>
-        <ul>
+        <ul class="flex items-center">
           <template v-for="  platform   in   support_platforms  ">
             <GamePlatformIcon :platform="platform" color="#000" />
           </template>

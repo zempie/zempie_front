@@ -1,5 +1,5 @@
 <template>
-  <CommonDropdown>
+  <CommonDropdown color="#888">
     <template #options>
       <li @click="onDeleteMsg">{{ $t('delete.msg') }}</li>
     </template>

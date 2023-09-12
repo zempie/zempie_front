@@ -15,22 +15,30 @@
           <div style="height: 0px; overflow: hidden">
             <input type="file" @change="onProfileFileChange" accept=image/* ref="profileImg" name="fileInput" />
           </div>
-          <p><i class="uil uil-image-plus"></i></p>
+          <p><i class="flex">
+              <LazyIconScenery color="#888" width="50px" height="50px" />
+            </i></p>
           <h2>{{ $t('change.profile') }}</h2>
           <h3>{{ profileFileName }}</h3>
           <div @click.stop="deleteProfileImg">
-            <a><i class="uil uil-trash-alt"></i></a>
+            <a><i>
+                <LazyIconTrash color="#fff" />
+              </i></a>
           </div>
         </dd>
         <dd @click="uploadBannerFile">
           <div style="height: 0px; overflow: hidden">
             <input type="file" @change="onBannerFileChange" accept=image/* ref="bannerImg" name="fileInput" />
           </div>
-          <p><i class="uil uil-image-plus"></i></p>
+          <p><i class="flex">
+              <LazyIconScenery color="#888" width="50px" height="50px" />
+            </i></p>
           <h2>{{ $t('change.banner') }}</h2>
           <h3>{{ bannerFileName }}</h3>
           <div @click.stop="deleteBannerImg">
-            <a><i class="uil uil-trash-alt"></i></a>
+            <a><i>
+                <LazyIconTrash color="#fff" />
+              </i></a>
           </div>
         </dd>
       </dl>
@@ -43,9 +51,11 @@
           <li>&nbsp;</li>
         </ol>
         <ol>
-          <li>{{ $t('name') }}
+          <li class="flex items-center">{{ $t('name') }}
             <el-tooltip :content="$t('name.info')">
-              <i class="uil uil-question-circle" style="color:#888"></i>
+              <i class="ml5">
+                <LazyIconInfoCircle width="20px" />
+              </i>
             </el-tooltip>
           </li>
           <li>
@@ -53,9 +63,11 @@
           </li>
         </ol>
         <ol>
-          <li>{{ $t('nickname') }}
+          <li class="flex items-center">{{ $t('nickname') }}
             <el-tooltip :content="$t('nickname.info')">
-              <i class="uil uil-question-circle" style="color:#888"></i>
+              <i class="ml5">
+                <LazyIconInfoCircle width="20px" />
+              </i>
             </el-tooltip>
           </li>
           <li>

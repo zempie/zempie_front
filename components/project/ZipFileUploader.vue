@@ -1,16 +1,15 @@
 <template>
   <dd>
-    <p class="upload-file-container">
+    <p class="upload-file-container flex">
       <label for="game-file">
-        <i class="uil uil-file-plus" style="font-size: 18px">
-          <IconUpload />
-        </i> &nbsp;
         {{ $t('fileUpload') }}</label>
       <input @change="onFileChange" type="file" ref="gameFile" id="game-file" accept=".zip" />
 
       <ClipLoader v-if="isLoadingFile" :color="'#ff6e17'" :size="'20px'" />
       <button class="btn-circle-icon" @click="deleteFile" v-if="fileName">
-        <i class="uil uil-trash-alt"></i>
+        <i>
+          <LazyIconTrash />
+        </i>
       </button>
     </p>
     <Transition name="component-fade" mode="out-in">
@@ -80,6 +79,7 @@ async function onFileChange(e: any) {
     fileName.value = e.target.files[0].name
 
     e.target.value = ''
+    isFileEmpty.value = false
 
     return
   }
@@ -124,26 +124,14 @@ async function onFileChange(e: any) {
   }
 
   if (startFileOptions.value.length) {
-    // this.uploadGameFileError = '';
     fileName.value = e.target.files[0].name
   } else {
     ElMessage.error(t('notFoundHtml'))
     deleteFile()
     return
-    // this.uploadGameFileError = this.$t('projectAddVersion.error.notFoundHtml').toString();
   }
 
-  // if (
-  //     uploadGameFiles.value.length > 0 &&        startFileOptions.value.length > 0
-  // ) {
-  //     this.$store.commit("sendGameFileDone", true);
-
-  //     this.$store.commit("uploadGameFiles", this.uploadGameFiles);
   isFileEmpty.value = false
-  // }
-  // else {
-  //     this.$store.commit("sendGameFileDone", false);
-  // }
   const gameFileInfo = {
     startFileList: startFileOptions.value,
     startFile: startFile.value,
@@ -159,14 +147,6 @@ async function onFileChange(e: any) {
 function deleteFile() {
   fileName.value = ''
   isFileEmpty.value = true
-
-  //     this.$store.commit("uploadGameFiles", []);
-  //     this.zipFile = null;
-  //     this.uploadGameFiles = [];
-  //     this.startFile = '';
-  //     this.startFileOptions = [];
-  //     this.totalSize = 0;
-  //     (this.$refs.gameFile as any).value = '';
 }
 </script>
 

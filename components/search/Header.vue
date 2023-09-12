@@ -1,12 +1,16 @@
 <template>
   <div class="header-search">
     <div class="input-search-line">
-      <i class="uil uil-search"></i>
+      <i class=flex>
+        <LazyIconSearch height="20px" />
+      </i>
       <div>
         <ClientOnly>
           <el-dropdown ref="searchDropdown" trigger="click">
             <button v-if="isMobile" class="mobile-btn btn-circle-icon flex items-center content-center">
-              <i class="uil uil-search"></i>
+              <i>
+                <LazyIconSearch />
+              </i>
             </button>
             <input v-else class="input-btn" type="text" title="keywords" :placeholder="$t('needSearchInput')"
               :value="searchInput" @input="onInputDebounce" @keyup.enter="moveSearchPage" autocomplete="off" />
@@ -29,7 +33,7 @@
                               <h3>{{ user?.name }}</h3>
                             </div>
                           </dt>
-                          <dd><i class="uil uil-user"></i></dd>
+
                         </dl>
                       </div>
                     </el-dropdown-item>
@@ -44,7 +48,6 @@
                               }) center center / cover no-repeat; background-size:cover;`"></span>
                             {{ game.title }}
                           </dt>
-                          <dd><i class="uil uil-robot"></i></dd>
                         </dl>
                       </div>
                     </el-dropdown-item>
@@ -59,7 +62,6 @@
                               :style="`background:url(${community.profile_img}) center center / cover no-repeat; background-size:cover;`"></span>
                             {{ community?.name }}
                           </dt>
-                          <dd><i class="uil uil-comments"></i></dd>
                         </dl>
                       </div>
                     </el-dropdown-item>
