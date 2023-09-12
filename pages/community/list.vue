@@ -91,6 +91,7 @@ onBeforeRouteLeave((to, from, next) => {
       element.closeModal()
     });
     next(false)
+    useCommon().setPopState(false)
   } else {
     next()
   }

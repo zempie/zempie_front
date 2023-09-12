@@ -74,6 +74,12 @@ const title = computed(() => {
 
 })
 
+onMounted(() => {
+  // page에서 작동을 안해서 임시 추가
+  useRouterLeave()
+
+})
+
 function copyUrl() {
   const url = props.shareInfo.url
   execCommandCopy(url)
