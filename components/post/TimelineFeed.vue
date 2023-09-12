@@ -62,13 +62,13 @@
         @close="openComments(false)">
         <div class="modal-alert comment-modal bg-white">
           <dl class="ma-header bg-white">
-            <button @click="isOpenedComments = false" class="pointer mobile-back-btn pa0"
+            <button @click="closeOpenedComments" class="pointer mobile-back-btn pa0"
               style="background-color: transparent; border: none; font-size: 24px; color:#333">
               <IconLeftArrow />
             </button>
             <dt>{{ feed.user.nickname }}{{ $t('user.post.title') }}</dt>
             <dd>
-              <button @click="isOpenedComments = false" class="pointer close-btn">
+              <button @click="closeOpenedComments" class="pointer close-btn">
                 <IconClose />
               </button>
             </dd>
@@ -178,12 +178,25 @@ const isOverflow = computed(() => {
 
 // const initFiles = _.cloneDeep(attatchment_files.value)
 
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeOpenedComments()
+    }
+  })
+
 onMounted(() => {
   const dom = props.feed?.content && htmlToDomElem(props.feed.content)
 })
 
 async function openComments(isOpenComment: boolean) {
-  isOpenedComments.value = isOpenComment
+  if (isOpenComment) {
+    openOpenedComments()
+  }
+  else {
+    closeOpenedComments()
+  }
 
 }
 
@@ -240,7 +253,6 @@ async function deletePost() {
     })
     emit('refresh')
   }
-  closeDeletePostModal()
 }
 
 
@@ -283,6 +295,20 @@ function getRecomment(comment: IComment) {
 function updateBlind(img) {
   emit('updateBlind', img)
 
+}
+
+function openOpenedComments() {
+  isOpenedComments.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
+function closeOpenedComments() {
+  isOpenedComments.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
 }
 
 </script>

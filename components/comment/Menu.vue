@@ -9,7 +9,7 @@
           <a @click="editComment" class="pointer">{{
             $t('comment.edit')
           }}</a>
-          <a @click="showDeleteModal = true" class="pointer">
+          <a @click="openDeleteModal" class="pointer">
             {{ $t('comment.delete') }}
           </a>
         </template>
@@ -26,7 +26,7 @@
         <dl class="ma-header">
           <dt>{{ $t('information') }}</dt>
           <dd>
-            <button class="pointer" @click="showDeleteModal = false">
+            <button class="pointer" @click="closeDeleteModal">
               <IconClose />
             </button>
           </dd>
@@ -37,7 +37,7 @@
             <button class="btn-default w48p" @click="$emit('deleteComment')">
               {{ $t('delete') }}
             </button>
-            <button class="btn-gray w48p" @click="showDeleteModal = false">
+            <button class="btn-gray w48p" @click="closeDeleteModal">
               {{ $t('no') }}
             </button>
           </div>
@@ -45,7 +45,7 @@
       </div>
     </el-dialog>
   </ClientOnly>
-  <ReportModal :openModal="showReportModal" :reportInfo="reportInfo" @closeModal="showReportModal = false" />
+  <ReportModal :openModal="showReportModal" :reportInfo="reportInfo" @closeModal="closeReportModal" />
 </template>
 <script setup lang="ts">
 import { ElDropdown, ElDialog } from 'element-plus';
@@ -66,9 +66,29 @@ const menuRef = ref()
 const showReportModal = ref(false)
 const reportInfo = ref()
 const user = computed(() => useUser().user.value.info)
+const isMobile = computed(() => useCommon().common.value.isMobile)
+
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeDeleteModal()
+      closeReportModal()
+    }
+  })
+
+function openDeleteModal() {
+  showDeleteModal.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
 
 function closeDeleteModal() {
   showDeleteModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
 }
 
 function editComment() {
@@ -111,7 +131,20 @@ function onClickReport() {
 
     ]
   }
+  openReportModal()
+}
+
+function openReportModal() {
   showReportModal.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+function closeReportModal() {
+  showReportModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
 }
 
 </script>

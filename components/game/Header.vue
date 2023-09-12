@@ -78,8 +78,9 @@
         <dl class="ma-header">
           <dt>{{ t('banner.photo') }}</dt>
           <dd>
-            <button class="pointer" @click="showChangeBanner = false">
+            <button class="pointer" @click="closeChangeBanner">
               <IconClose />
+
             </button>
           </dd>
         </dl>
@@ -88,7 +89,7 @@
         </div>
         <div class="btn-container">
           <div>
-            <button v-if="prevBanner" class="btn-gray uppercase" @click="showDeleteBanner = true">
+            <button v-if="prevBanner" class="btn-gray uppercase" @click="openDeleteBanner">
               {{ $t('delete') }} <span> {{ $t('banner') }} </span>
             </button>
           </div>
@@ -113,7 +114,7 @@
         <dl class="ma-header">
           <dt>{{ t('information') }}</dt>
           <dd>
-            <button class="pointer" @click="showDeleteBanner = false">
+            <button class="pointer" @click="closeDeleteBanner">
               <IconClose />
             </button>
           </dd>
@@ -124,7 +125,7 @@
             <button class="btn-default w48p" @click="deleteBanner">
               {{ t('delete') }}
             </button>
-            <button class="btn-gray w48p" @click="showDeleteBanner = false">
+            <button class="btn-gray w48p" @click="closeDeleteBanner">
               {{ t('no') }}
             </button>
           </div>
@@ -132,7 +133,7 @@
       </div>
     </el-dialog>
   </div>
-  <ReportModal :openModal="showReportModal" :reportInfo="reportInfo" @closeModal="showReportModal = false" />
+  <ReportModal :openModal="showReportModal" :reportInfo="reportInfo" @closeModal="closeReportModal" />
 </template>
 
 <script setup lang="ts">
@@ -153,6 +154,8 @@ const { $localePath } = useNuxtApp()
 const { t, locale } = useI18n()
 
 const router = useRouter()
+
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
 // const gameInfo = computed(() => useGame().game.value.info)
 
@@ -219,6 +222,16 @@ const shareInfo = computed(() => {
   }
 })
 
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeChangeBanner()
+      closeDeleteBanner()
+      closeReportModal()
+    }
+  })
+
 function playGame() {
   window.open(`/play/${gameInfo.value.pathname}`, '_blank')
 }
@@ -274,7 +287,7 @@ async function unsetLike() {
 
 async function uploadBanner() {
   if (prevBanner.value) {
-    showChangeBanner.value = true
+    openChangeBanner()
     editBannerUrl.value = prevBanner.value
     openCropper()
   } else {
@@ -286,7 +299,7 @@ function onBannerChange(event: any) {
   const file = event.target.files[0]
 
   if (file.size < 1024 * 1024 * IMAGE_MAX_SIZE) {
-    showChangeBanner.value = true
+    openChangeBanner()
     bannerFile.value = file
     const reader = new FileReader()
     reader.onload = (e) => {
@@ -344,7 +357,7 @@ async function updateBannerImg() {
     }
   })
 
-  showChangeBanner.value = false
+  closeChangeBanner()
 }
 
 async function deleteBanner() {
@@ -356,8 +369,8 @@ async function deleteBanner() {
   if (data.value) {
     prevBanner.value = null
   }
-  showChangeBanner.value = false
-  showDeleteBanner.value = false
+  closeChangeBanner()
+  closeDeleteBanner()
 }
 
 function saveBannerImg() {
@@ -378,7 +391,7 @@ function saveBannerImg() {
     }
   })
 
-  showChangeBanner.value = false
+  closeChangeBanner()
 }
 
 function moveUserPage() {
@@ -433,9 +446,49 @@ function onClickReport() {
 
     ]
   }
-  showReportModal.value = true
+  openReportModal()
 }
 
+function openChangeBanner() {
+  showChangeBanner.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
+function closeChangeBanner() {
+  showChangeBanner.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
+}
+
+function openDeleteBanner() {
+  showDeleteBanner.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
+function closeDeleteBanner() {
+  showDeleteBanner.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
+}
+
+function openReportModal() {
+  showReportModal.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+function closeReportModal() {
+  showReportModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
+}
 </script>
 
 <style lang="scss" scoped>

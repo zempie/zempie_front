@@ -25,7 +25,9 @@ definePageMeta({
 shared.createHeadMeta(t('seo.landing.title'), t('seo.landing.description'), config.OG_IMG)
 
 
-
+onMounted(() => {
+  useRouterLeave()
+})
 
 </script>
 

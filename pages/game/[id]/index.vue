@@ -73,14 +73,18 @@ const gamePath = computed(() => route.params.id as string)
 const gameInfo = computed(() => useGame().game.value.info)
 
 
-onBeforeRouteLeave((to, from, next) => {
-  if (useCommon().common.value.isPopState) {
-    commentRef.value.closeCommentModal()
-    next(false)
-  } else {
-    next()
-  }
+onMounted(() => {
+  useRouterLeave()
 })
+
+// onBeforeRouteLeave((to, from, next) => {
+//   if (useCommon().common.value.isPopState) {
+//     commentRef.value.closeCommentModal()
+//     next(false)
+//   } else {
+//     next()
+//   }
+// })
 
 watch(
   () => gameInfo.value,

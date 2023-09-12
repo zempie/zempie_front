@@ -81,13 +81,13 @@
     </dl>
   </div>
   <ClientOnly>
-    <el-dialog v-model="openNewMsg" class="modal-area-type new-msg-modal" :show-close="false" width="450px"
+    <el-dialog v-model="opNewMsg" class="modal-area-type new-msg-modal" :show-close="false" width="450px"
       @close="closeModal" :fullscreen="isFullScreen">
       <div class="modal-alert">
         <dl class="ma-header">
           <dt>{{ t('new.message') }}</dt>
           <dd>
-            <button class="pointer" @click="openNewMsg = false">
+            <button class="pointer" @click="openNewMsg">
               <IconClose />
             </button>
           </dd>
@@ -166,7 +166,7 @@ const dmKeyword = ref('')
 
 const inputMsg = ref('')
 
-const openNewMsg = ref(false)
+const opNewMsg = ref(false)
 const userKeyword = ref('')
 const chipRef = ref()
 const userList = ref<IUser[]>()
@@ -287,6 +287,13 @@ watch(
   }
 )
 
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeNewMsg()
+    }
+  })
 
 onMounted(async () => {
 
@@ -469,7 +476,7 @@ async function getUsers() {
 
 async function showNewMsg() {
   if (!userInfo.value) return
-  openNewMsg.value = true
+  openNewMsg()
   await getFollowings()
 }
 
@@ -563,7 +570,7 @@ async function findRoom(user_ids: Number[]) {
       }
     }
   } finally {
-    openNewMsg.value = false
+    closeNewMsg()
 
   }
 
@@ -715,5 +722,19 @@ function updateGroupName(roomName: string) {
 
 function onClickBackBtn() {
   router.back()
+}
+
+function openNewMsg() {
+  opNewMsg.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
+function closeNewMsg() {
+  opNewMsg.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
 }
 </script>

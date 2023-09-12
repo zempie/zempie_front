@@ -33,6 +33,14 @@ const props = defineProps({
   }
 })
 
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeModal()
+    }
+  })
+
 const showModal = computed(() => props.openModal)
 
 function closeModal() {

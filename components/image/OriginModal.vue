@@ -54,6 +54,14 @@ const props = defineProps({
 })
 const emit = defineEmits(['closeModal'])
 
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeModal()
+    }
+  })
+
 const target = ref(null)
 const ignoreElRef = ref(null)
 

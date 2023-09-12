@@ -133,6 +133,7 @@ import { removeFcmToken, resigterFcmToken } from '~~/scripts/firebase-fcm';
 import shared from '~/scripts/shared'
 import { fileReader, nicknameRegex } from '~/scripts/utils'
 import { eNotificationType } from '~~/types';
+import { onBeforeRouteLeave } from 'vue-router';
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -150,6 +151,10 @@ definePageMeta({
 })
 
 shared.createHeadMeta(t('seo.profile.info.title'), t('seo.profile.info.desc'))
+
+onMounted(() => {
+  useRouterLeave()
+})
 
 const isUpdating = ref(false)
 

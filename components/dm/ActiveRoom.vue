@@ -5,7 +5,7 @@
     </dd>
     <dt>
       <div>
-        <h2 v-if="isMobile" class="font16 text-bold fontColor-black" @click="opJoinedUserModal = true"> {{
+        <h2 v-if="isMobile" class="font16 text-bold fontColor-black" @click="openJoinedUserModal"> {{
           getJoinedUserName(selectedRoom) }}
         </h2>
         <CommonDropdown v-else :is-custom-btn="true" ref="memDropdownRef" style="width:auto">
@@ -76,8 +76,9 @@
         <dl class="ma-header">
           <dt> {{ t('leave.msg') }} </dt>
           <dd>
-            <button class="pointer" @click="opDeleteMsgModal = false">
+            <button class="pointer" @click="closeDeleteMsgModal">
               <IconClose />
+
             </button>
           </dd>
         </dl>
@@ -89,7 +90,7 @@
             <button class="btn-gray w48p" @click="onDeleteMsg">
               {{ $t('yes') }}
             </button>
-            <button class="btn-default w48p" @click="opDeleteMsgModal = false">
+            <button class="btn-default w48p" @click="closeDeleteMsgModal">
               {{ $t('no') }}
             </button>
           </div>
@@ -102,7 +103,7 @@
           <!-- <UserOdList :users="selectedRoom.joined_users" /> -->
           <dt> {{ t('joined.users') }} </dt>
           <dd>
-            <button class="pointer" @click="opJoinedUserModal = false">
+            <button class="pointer" @click="closeJoinedUserModal">
               <IconClose />
             </button>
           </dd>
@@ -173,7 +174,7 @@ const unreadStartId = computed(() => props.selectedRoom.unread_start_id)
 const isMobile = computed(() => useCommon().common.value.isMobile)
 
 
-//pages > dm > list에서 provide됨 
+//pages > dm > list에서 provide됨
 const { getJoinedUserName } = inject('joinedUser')
 
 
@@ -212,6 +213,15 @@ const { top, bottom } = toRefs(arrivedState)
 const emit = defineEmits(['deletedRoom', 'updateGroupName', 'openKeyboard', 'closeKeyboard', 'updateLastMsg'])
 
 defineExpose({ addMsg })
+
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeJoinedUserModal()
+      closeDeleteMsgModal()
+    }
+  })
 
 watch(
   () => top.value,
@@ -554,6 +564,34 @@ function uploadVideo(video) {
 function uploadRecord(record) {
   console.log('rec', record)
   attr.value = record
+}
+
+function openJoinedUserModal() {
+  opJoinedUserModal.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
+function closeJoinedUserModal() {
+  opJoinedUserModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
+}
+
+function openDeleteMsgModal() {
+  opDeleteMsgModal.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
+function closeDeleteMsgModal() {
+  opDeleteMsgModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
 }
 
 </script>

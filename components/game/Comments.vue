@@ -84,6 +84,14 @@ const props = defineProps({
   game: Object as PropType<IGame>
 })
 
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeCommentModal()
+    }
+  })
+
 defineExpose({ closeCommentModal })
 
 useInfiniteScroll(

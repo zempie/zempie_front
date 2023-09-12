@@ -94,14 +94,13 @@ const createdDate = computed(() =>
 )
 const isMobile = computed(() => useCommon().common.value.isMobile)
 
-onBeforeRouteLeave((to, from, next) => {
-  if (useCommon().common.value.isPopState) {
-    closeSubModal()
-    // timelineRef.value.closeTextEditor()
-  } else {
-    next()
-  }
-})
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeSubModal()
+    }
+  })
 
 definePageMeta({
   title: 'community-channel',
@@ -109,7 +108,9 @@ definePageMeta({
   layout: 'header-only',
 })
 
-
+onMounted(() => {
+  useRouterLeave()
+})
 
 /**
  * seo 반영은 함수안에서 되지 않으므로 최상단에서 진행함
@@ -148,7 +149,7 @@ async function subscribe() {
 
   if (!error.value) {
     useCommunity().setSubscribe()
-    needSubscribe.value = false
+    closeSubModal()
   }
 }
 

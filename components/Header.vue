@@ -94,7 +94,6 @@ import {
   ElDialog,
 } from "element-plus"
 
-import { isMobile } from "../scripts/utils"
 import shared from '~/scripts/shared'
 
 const config = useRuntimeConfig()
@@ -125,7 +124,7 @@ const isTablet = computed(() =>
   window.matchMedia("screen and (max-width: 767px)")
 )
 
-const isMob = computed(() => isMobile())
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
 const showMobileLogo = ref(false)
 const showHamburger = ref(false)
@@ -144,11 +143,23 @@ const selectedLang = computed({
 const isOpen = ref(false)
 const { loginModal } = useModal()
 
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      isOpen.value = false
+    }
+  })
 
 watch(
   () => loginModal.value.isOpen,
   (state: boolean) => {
     isOpen.value = state
+    if (state) {
+      if (isMobile.value) {
+        useCommon().setPopState(true)
+      }
+    }
   }
 )
 

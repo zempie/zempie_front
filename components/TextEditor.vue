@@ -88,19 +88,7 @@
             </div>
           </div>
         </dt>
-
-        <!-- <Transition name="component-fade" mode="out-in">
-          <small class="auto-save" v-if="showSavedTime" style="color: #999">{{ t('autosave') }} <span> {{
-            savedTime
-          }}</span></small> -->
-        <!-- </Transition> -->
         <dd class="post-btn-container">
-          <!-- <button v-if="draftList.length > 0" class="btn-line-small w100 mr10" id="loadPostBtn" @click="onLoadPost">
-            {{ $t('load.post') }}
-          </button> -->
-          <!-- <button class="btn-line-small w100 mr10" id="draftPostBtn" @click="saveDraftCloseModal">
-            {{ $t('draft.post') }}
-          </button> -->
           <button v-if="isEdit" class="btn-default-samll w100" id="updatePostBtn" @click="onUpdatePost">
             {{ $t('update.post') }}
           </button>
@@ -108,16 +96,8 @@
             {{ $t('save.post') }}
           </button>
         </dd>
-
       </dl>
-      <!-- <p style="min-height:20px">
-        <small v-if="showSavedTime" class="auto-save-mobile" style="color: #999">11{{ t('autosave') }} <span>
-            {{
-              savedTime
-            }}</span></small>
-      </p> -->
     </div>
-
   </div>
 </template>
 
@@ -174,6 +154,16 @@ const props = defineProps({
   },
 
 })
+
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeDraftList()
+      closeMsgBox()
+    }
+  })
+
 
 const initFiles = _.cloneDeep(props.feed?.attatchment_files)
 
@@ -240,21 +230,15 @@ const isMobile = computed(() => useCommon().common.value.isMobile)
 
 await communityFetch()
 
-
-onBeforeRouteLeave((to, from, next) => {
-  if (useCommon().common.value.isPopState) {
-    ElMessageBox.close()
-  } else {
-    next()
-  }
-})
-
 onBeforeMount(() => {
   // getDraftList()
   // autoSave()
 
   //유저가 직접 저장하지 않은 경우
   if (draftList.value[0]?.save_type === 'cancel') {
+    if (isMobile.value) {
+      useCommon().setPopState(true)
+    }
     ElMessageBox.confirm(`${t('ask.load.draft.post')}`, {
       confirmButtonText: 'YES',
       cancelButtonText: 'Cancel',
@@ -262,6 +246,9 @@ onBeforeMount(() => {
     })
       .then(() => {
         insertContet(draftList.value[0])
+        if (isMobile.value) {
+          useCommon().setPopState(false)
+        }
       })
       .catch(() => { })
       .finally(() => {
@@ -987,6 +974,9 @@ function closeTextEditor() {
 
   //작성한 글이 있는 경우 임시저장 처리
   if (!editor.value.isEmpty) {
+    if (isMobile.value) {
+      useCommon().setPopState(true)
+    }
     ElMessageBox.confirm(`${t('ask.save.draft.post')}`, {
       confirmButtonText: t('save'),
       cancelButtonText: t('close'),
@@ -1197,10 +1187,16 @@ function getDraftList() {
 
 function onLoadPost() {
   showDraftList.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
 }
 
 function deleteDraft(draft: IDraft, index: number) {
 
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
   ElMessageBox.confirm(`${t('ask.delete.draft')}`, {
     confirmButtonText: 'YES',
     cancelButtonText: 'Cancel',
@@ -1208,7 +1204,10 @@ function deleteDraft(draft: IDraft, index: number) {
   })
     .then(() => {
       insertContet(draft)
-      showDraftList.value = false
+      closeDraftList()
+      if (isMobile.value) {
+        useCommon().setPopState(false)
+      }
       ElMessage({
         message: t('delete.draft.done'),
         type: 'success',
@@ -1220,6 +1219,9 @@ function deleteDraft(draft: IDraft, index: number) {
 
 function selectDraft(draft: IDraft, index: number) {
   //작성 중인 글 있는 지 확인
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
   if (!editor.value.isEmpty) {
     ElMessageBox.confirm(`${t('ask.overwrite.draft')}`, {
       confirmButtonText: 'YES',
@@ -1228,7 +1230,10 @@ function selectDraft(draft: IDraft, index: number) {
     })
       .then(() => {
         insertContet(draft)
-        showDraftList.value = false
+        closeDraftList()
+        if (isMobile.value) {
+          useCommon().setPopState(false)
+        }
         localStorage.removeItem(draft.key)
         draftList.value.splice(index, 1)
       })
@@ -1236,7 +1241,10 @@ function selectDraft(draft: IDraft, index: number) {
       .finally(() => { })
   } else {
     insertContet(draft)
-    showDraftList.value = false
+    closeDraftList()
+    if (isMobile.value) {
+      useCommon().setPopState(false)
+    }
     localStorage.removeItem(draft.key)
     draftList.value.splice(index, 1)
   }
@@ -1301,5 +1309,12 @@ function uploadImage(images) {
   console.log('sns: ', snsAttachFiles.value.img)
 
 
+}
+
+function closeDraftList() {
+  showDraftList.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
 }
 </script>

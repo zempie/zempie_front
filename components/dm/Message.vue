@@ -7,7 +7,7 @@
         <UserAvatar v-if="msg.sender?.id !== userInfo.id" :user="msg.sender" tag="span"
           style="width:40px; height:40px; position:absolute; top:0px;" class="mr5" />
         <template v-if="msg.sender?.id === userInfo.id" class="mr5">
-          <DmMsgMenu v-if="showMsgMenu" :msg="msg" @delete-msg="opDeleteMsgModal = true" style="max-height: 100px;" />
+          <DmMsgMenu v-if="showMsgMenu" :msg="msg" @delete-msg="openDeleteMsgModal" style="max-height: 100px;" />
           <h4 class="mr5">{{
             dmDateFormat(msg.created_at) }}</h4>
         </template>
@@ -39,7 +39,7 @@
         <dl class="ma-header">
           <dt> {{ t('leave.msg') }} </dt>
           <dd>
-            <button class="pointer" @click="opDeleteMsgModal = false">
+            <button class="pointer" @click="closeDeleteMsgModal">
               <IconClose />
             </button>
           </dd>
@@ -52,7 +52,7 @@
             <button class="btn-gray w48p" @click="onDeleteMsg">
               {{ $t('yes') }}
             </button>
-            <button class="btn-default w48p" @click="opDeleteMsgModal = false">
+            <button class="btn-default w48p" @click="closeDeleteMsgModal">
               {{ $t('no') }}
             </button>
           </div>
@@ -75,6 +75,8 @@ const props = defineProps({
 })
 const emit = defineEmits(['deleteMsg'])
 
+const isMobile = computed(() => useCommon().common.value.isMobile)
+
 const showMsgMenu = ref(false)
 const opDeleteMsgModal = ref(false)
 
@@ -87,6 +89,14 @@ const msgContent = computed(() => {
   }
   return props.msg.contents
 })
+
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeDeleteMsgModal()
+    }
+  })
 
 function openMenu() {
   if (props.msg.sender.id === userInfo.value.id) {
@@ -101,6 +111,20 @@ function closeMenu() {
 function deleteMsg() {
   emit('deleteMsg', props.msg)
 
+}
+
+function openDeleteMsgModal() {
+  opDeleteMsgModal.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
+function closeDeleteMsgModal() {
+  opDeleteMsgModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
 }
 
 </script>

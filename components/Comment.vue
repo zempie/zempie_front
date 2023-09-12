@@ -108,7 +108,7 @@
   <CommentInput v-if="isCommentEdit" @refresh="refresh" @editComment="editComment" :postId="comment.post_id"
     :comment="comment" :isEdit="true" />
 
-  <ReportModal :openModal="showReportModal" :reportInfo="reportInfo" @closeModal="showReportModal = false" />
+  <ReportModal :openModal="showReportModal" :reportInfo="reportInfo" @closeModal="closeReportModal" />
 </template>
 
 <script setup lang="ts">
@@ -128,6 +128,15 @@ const parentUser = reactive({
 
 const showDeleteModal = ref(false)
 const isCommentEdit = ref(false)
+
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeDeleteModal()
+      closeReportModal()
+    }
+  })
 
 const props = defineProps({
   comment: Object as PropType<IComment>,
@@ -338,6 +347,9 @@ function onClickReport() {
     ]
   }
   showReportModal.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
 }
 
 function openDeleteModal() {
@@ -349,6 +361,13 @@ function openDeleteModal() {
 
 function closeDeleteModal() {
   showDeleteModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
+}
+
+function closeReportModal() {
+  showReportModal.value = false
   if (isMobile.value) {
     useCommon().setPopState(false)
   }

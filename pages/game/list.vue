@@ -65,6 +65,7 @@ import { eGameCategory, IGame, eGameType, ePlatformType } from '~~/types'
 import { useI18n } from 'vue-i18n'
 import { ElSelect, ElOption } from 'element-plus';
 import shared from '~~/scripts/shared';
+import { onBeforeRouteLeave } from 'vue-router';
 
 const { t, locale } = useI18n()
 
@@ -122,6 +123,7 @@ const selectedFilter = ref('')
 
 
 onMounted(async () => {
+  useRouterLeave()
   createObserver()
   nextTick(async () => {
     await fetch()
