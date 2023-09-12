@@ -1,6 +1,6 @@
 <template>
   <ClientOnly>
-    <el-dropdown trigger="click">
+    <el-dropdown trigger="click" ref="moreList" @visible-change="handleVisible">
       <button class="room-btn pointer">
         <IconEllipsisH />
       </button>
@@ -89,6 +89,7 @@ const { t, locale } = useI18n()
 
 const isMobile = computed(() => useCommon().common.value.isMobile)
 
+const moreList = ref()
 const opLeaveChatModal = ref(false)
 const opReportModal = ref(false)
 const opSetGroupChatName = ref(false)
@@ -104,6 +105,7 @@ watch(
       closeLeaveChatModal()
       closeSetGroupChatName()
       closeReportModal()
+      moreList.value.handleClose()
     }
   })
 
@@ -217,6 +219,14 @@ function closeReportModal() {
   }
 }
 
+function handleVisible(visible: boolean) {
+  if (!isMobile.value) return
+  if (visible) {
+    useCommon().setPopState(true)
+  } else {
+    useCommon().setPopState(false)
+  }
+}
 </script>
 <style scoped lang="scss">
 .ma-content {

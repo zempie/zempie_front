@@ -99,7 +99,8 @@
         <dl class="ma-header">
           <dt>{{ t('new.message') }}</dt>
           <dd>
-            <button class="pointer" @click="openNewMsg">
+            {{ opNewMsg }}
+            <button class="pointer" @click="closeNewMsg">
               <IconClose />
             </button>
           </dd>

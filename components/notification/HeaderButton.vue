@@ -1,6 +1,6 @@
 <template>
   <client-only>
-    <el-dropdown ref="notiDropdown" id="notiList" trigger="click">
+    <el-dropdown ref="notiDropdown" id="notiList" trigger="click" @visible-change="handleVisible">
       <button class="btn-circle-icon ml10 flex items-center content-center" @click="showAlarmList">
         <i style="font-size:20px;">
           <LazyIconBell />
@@ -80,6 +80,7 @@ const isNotiLoading = ref(false)
 const notiList = ref<INotification[]>()
 const needAlarmRefresh = ref(false)
 const notiDropdown = ref()
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
 watch(
   () => useAlarm().alarm.value.newNoti,
@@ -96,6 +97,13 @@ watch(
   }
 )
 
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      notiDropdown.value.handleClose()
+    }
+  })
 
 async function showAlarmList() {
 
@@ -154,8 +162,17 @@ function goNotiList() {
 function moveUserPage(nickname: string) {
   router.push($localePath(`/${nickname}`))
   notiDropdown.value.handleClose()
-
 }
+
+function handleVisible(visible: boolean) {
+  if (!isMobile.value) return
+  if (visible) {
+    useCommon().setPopState(true)
+  } else {
+    useCommon().setPopState(false)
+  }
+}
+
 </script>
 <style scoped lang="scss">
 .header-message {

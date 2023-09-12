@@ -1,6 +1,6 @@
 <template>
   <ClientOnly>
-    <el-dropdown trigger="click" class="share-menu">
+    <el-dropdown ref="shareMenu" trigger="click" class="share-menu" @visible-change="handleVisible">
       <a class="pointer">
         <i>
           <LazyIconShare />
@@ -56,6 +56,16 @@ const props = defineProps({
   shareInfo: Object as PropType<IShareInfo>
 })
 
+const shareMenu = ref()
+const isMobile = computed(() => useCommon().common.value.isMobile)
+
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      shareMenu.value.handleClose()
+    }
+  })
 
 const title = computed(() => {
   switch (props.type) {
@@ -138,7 +148,14 @@ function shareSocial(social: string) {
 
 }
 
-
+function handleVisible(visible: boolean) {
+  if (!isMobile.value) return
+  if (visible) {
+    useCommon().setPopState(true)
+  } else {
+    useCommon().setPopState(false)
+  }
+}
 </script>
 <style scoped lang="scss">
 .icon {

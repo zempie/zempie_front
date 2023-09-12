@@ -1,5 +1,6 @@
 <template>
-  <el-dropdown trigger="click" popper-class="tapl-more-dropdown" style="margin-top:0px" ref="menuRef">
+  <el-dropdown trigger="click" popper-class="tapl-more-dropdown" style="margin-top:0px" ref="menuRef"
+    @visible-change="handleVisible">
     <a slot="trigger">
       <IconEllipsisH />
     </a>
@@ -74,6 +75,7 @@ watch(
     if (!val) {
       closeDeleteModal()
       closeReportModal()
+      menuRef.value.handleClose()
     }
   })
 
@@ -147,5 +149,13 @@ function closeReportModal() {
   }
 }
 
+function handleVisible(visible: boolean) {
+  if (!isMobile.value) return
+  if (visible) {
+    useCommon().setPopState(true)
+  } else {
+    useCommon().setPopState(false)
+  }
+}
 </script>
 <style scoped lang="scss"></style>

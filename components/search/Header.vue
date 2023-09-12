@@ -6,7 +6,7 @@
       </i>
       <div>
         <ClientOnly>
-          <el-dropdown ref="searchDropdown" trigger="click">
+          <el-dropdown ref="searchDropdown" trigger="click" @visible-change="handleVisible">
             <button v-if="isMobile" class="mobile-btn btn-circle-icon flex items-center content-center">
               <i>
                 <LazyIconSearch />
@@ -110,6 +110,13 @@ const isMobileSize = computed(() =>
 )
 const isMobile = ref()
 
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      searchDropdown.value.handleClose()
+    }
+  })
 
 onMounted(() => {
   nextTick(() => {
@@ -167,6 +174,15 @@ function initSearchData() {
   searchInput.value = ''
   searchDropdown.value.handleClose()
   useSearch().resetResults()
+}
+
+function handleVisible(visible: boolean) {
+  if (!isMobile.value) return
+  if (visible) {
+    useCommon().setPopState(true)
+  } else {
+    useCommon().setPopState(false)
+  }
 }
 </script>
 <style scoped lang="scss">
