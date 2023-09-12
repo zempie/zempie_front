@@ -1,6 +1,6 @@
 <template>
   <div class="ml10" id="userMenu">
-    <el-dropdown trigger="click" ref="userMenu" id="userMenu">
+    <el-dropdown trigger="click" ref="userMenu" id="userMenu" @visible-change="handleVisible">
       <UserAvatar style="width: 30px; height: 30px" :user="user" :key="user?.picture" />
       <template #dropdown>
         <div slot="body" class="header-setting" style="min-width: 250px" @click="userMenu?.handleClose()">
@@ -67,13 +67,30 @@ const userMenu = ref()
 
 const user = computed(() => useUser().user.value.info)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      userMenu.value.handleClose()
+    }
+  })
 
 function logout() {
   if (route.meta.middleware === 'auth' || route.meta.name === 'main') {
     router.replace($localePath('/'))
   }
   useUser().logout()
+}
+
+function handleVisible(visible: boolean) {
+  if (!isMobile.value) return
+  if (visible) {
+    useCommon().setPopState(true)
+  } else {
+    useCommon().setPopState(false)
+  }
 }
 </script>
 <style scoped lang="scss">

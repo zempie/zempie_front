@@ -13,7 +13,7 @@
                   {{ commentUser.nickname }}</NuxtLink>
                 <span class="font13">{{ dateFormat(comment.created_at) }}</span>
               </h2>
-              <el-dropdown trigger="click" ref="feedMenu" popper-class="tapl-more-dropdown">
+              <el-dropdown trigger="click" ref="feedMenu" popper-class="tapl-more-dropdown" @visible-change="handleVisible">
                 <a slot="trigger">
                   <IconEllipsisH />
                 </a>
@@ -128,6 +128,7 @@ const parentUser = reactive({
 
 const showDeleteModal = ref(false)
 const isCommentEdit = ref(false)
+const feedMenu = ref()
 
 watch(
   () => useCommon().common.value.isPopState,
@@ -135,6 +136,7 @@ watch(
     if (!val) {
       closeDeleteModal()
       closeReportModal()
+      feedMenu.value.handleClose()
     }
   })
 
@@ -373,6 +375,14 @@ function closeReportModal() {
   }
 }
 
+function handleVisible(visible: boolean) {
+  if (!isMobile.value) return
+  if (visible) {
+    useCommon().setPopState(true)
+  } else {
+    useCommon().setPopState(false)
+  }
+}
 </script>
 
 <style lang="scss" scoped>

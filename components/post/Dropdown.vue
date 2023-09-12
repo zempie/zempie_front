@@ -1,6 +1,6 @@
 <template>
   <ClientOnly>
-    <el-dropdown trigger="click" ref="feedMenu" popper-class="feed-menu">
+    <el-dropdown trigger="click" ref="feedMenu" popper-class="feed-menu" @visible-change="handleVisible">
       <a class="btn-circle-none pt6" slot="trigger"><i class="uil uil-ellipsis-h font25" id="feedMenu"></i></a>
       <template #dropdown>
         <div slot="body" class="more-list fixed" style="min-width: 150px">
@@ -77,6 +77,7 @@ const { t, locale } = useI18n()
 
 const isTextEditorOpen = ref(false)
 const showDeletePostModal = ref(false)
+const feedMenu = ref()
 
 const showReportModal = ref(false)
 const showUserReportModal = ref(false)
@@ -99,6 +100,7 @@ watch(
       closeDeleteModal()
       closeReportModal()
       closeUserReportModal()
+      feedMenu.value.handleClose()
     }
   })
 
@@ -160,6 +162,9 @@ function onClickDelete() {
 
 function closeDeleteModal() {
   showDeletePostModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
 }
 
 function onClickReport() {
@@ -233,6 +238,15 @@ async function onUserBlock() {
     })
 
 
+}
+
+function handleVisible(visible: boolean) {
+  if (!isMobile.value) return
+  if (visible) {
+    useCommon().setPopState(true)
+  } else {
+    useCommon().setPopState(false)
+  }
 }
 </script>
 

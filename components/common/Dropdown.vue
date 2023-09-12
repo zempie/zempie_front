@@ -14,6 +14,7 @@
 <script setup lang="ts">
 const isDropdownOpen = ref(false)
 const dropdownContainer = ref()
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
 defineProps({
   options: Array<String>,
@@ -25,6 +26,14 @@ defineProps({
 
 defineExpose({ toggleDropdown })
 
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeDropdown()
+    }
+  })
+
 onMounted(() => {
   document.addEventListener("click", handleClickOutside);
 })
@@ -34,8 +43,19 @@ onBeforeMount(() => {
 
 function toggleDropdown() {
   isDropdownOpen.value = !isDropdownOpen.value;
+
+  if (isMobile.value && !isDropdownOpen.value) {
+    useCommon().setPopState(true)
+  }
 }
 
+function closeDropdown() {
+  isDropdownOpen.value
+
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
+}
 
 function handleClickOutside(event) {
   const container = dropdownContainer.value;

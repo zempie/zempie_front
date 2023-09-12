@@ -108,6 +108,8 @@ useInfiniteScroll(
 )
 
 onMounted(async () => {
+  // page에서 작동을 안해서 임시 추가
+  useRouterLeave()
   await initFetch()
 
 })
