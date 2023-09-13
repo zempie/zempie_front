@@ -1,10 +1,8 @@
 <template>
-  <div class="chip-container horizontal">
-    <div class="chip-list mt0">
-      <div class="chip" v-for="(chip, i) of chipsArr" :key="chip?.id">
-        {{ chip.name }}
-        <IconClose @click="deleteChip(i)" color="#fff" class="pointer" />
-      </div>
+  <div class="chip-container">
+    <div class="chip" v-for="(chip, i) of chipsArr" :key="chip?.id">
+      {{ chip.name }}
+      <IconClose @click="deleteChip(i)" color="#fff" class="pointer" />
     </div>
     <slot name="input"></slot>
   </div>
