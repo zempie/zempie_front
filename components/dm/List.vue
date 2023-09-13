@@ -61,7 +61,9 @@
                 <dt class="dm-info-box">
                   <h3>{{ getJoinedUserName(room) }}</h3>
                   <p v-if="room?.last_message?.type === eChatType.IMAGE">{{ $t('dm.sent.img') }}</p>
-                  <p v-else-if="room?.last_message?.type === eChatType.TEXT">{{ room?.last_message?.contents }}</p>
+
+                  <p v-else-if="room?.last_message?.type === eChatType.TEXT">
+                    {{ room?.last_message?.sender.is_blocked ? 'Blocked User' : room?.last_message?.contents }}</p>
                 </dt>
                 <dd>
                   <h4 class="font12"><i class="uis uis-clock" style="color:#c1c1c1;"></i>
