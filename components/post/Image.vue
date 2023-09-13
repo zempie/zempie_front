@@ -10,7 +10,7 @@
     </template>
   </div>
 
-  <ImageOriginModal :imgInfo="imgInfo" :open-modal="showOriginImg" @close-modal="showOriginImg = false" />
+  <ImageOriginModal :imgInfo="imgInfo" :open-modal="showOriginImg" @close-modal="closeImgModal" />
 </template>
 <script setup lang="ts">
 import _ from 'lodash'
@@ -28,9 +28,17 @@ const imgInfo = ref()
 
 const isBlind = computed(() => props.img.is_blind)
 const initStatus = _.cloneDeep(props.img.is_blind)
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
 const validImg = ref(null)
 
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeImgModal()
+    }
+  })
 
 onMounted(() => {
   validateImage()
@@ -63,7 +71,23 @@ function onClickImg() {
   }
 
   imgInfo.value = info
+  showImgModal()
+}
+
+function showImgModal() {
   showOriginImg.value = true
+
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
+function closeImgModal() {
+  showOriginImg.value = false
+
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
 }
 </script>
 <style scoped lang="scss">

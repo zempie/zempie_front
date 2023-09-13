@@ -1,5 +1,5 @@
 <template>
-  <div class="header">
+  <div class="header" :class="headerShowClass">
     <dl style="min-height: 70px;">
       <dt>
         <div class="header-logo-menu">
@@ -145,6 +145,15 @@ const selectedLang = computed({
 const isOpen = ref(false)
 const { loginModal } = useModal()
 
+
+const scrollDirection = ref(true); // true: scroll up, false :scroll down
+const scrollTrace = ref(0);
+
+const headerShowClass = computed(() => {
+  if (!scrollDirection.value && isMobile) return 'header-off';
+  return '';
+});
+
 watch(
   () => useCommon().common.value.isPopState,
   (val) => {
@@ -169,13 +178,16 @@ onMounted(() => {
   nextTick(() => {
     onResize()
     onPressMogera()
+    scrollHandler()
   })
   window.addEventListener("resize", onResize)
+  document.addEventListener('scroll', scrollHandler);
 })
 
 
 onBeforeUnmount(() => {
   window.removeEventListener("resize", onResize)
+  document.removeEventListener('scroll', scrollHandler);
 })
 
 function onResize() {
@@ -201,6 +213,14 @@ function onPressMogera() {
       showMogera.value = !showMogera.value
     }
   })
+}
+
+
+function scrollHandler() {
+  const currentScroll = window.scrollY;
+  if (currentScroll > scrollTrace.value) scrollDirection.value = false;
+  else if (currentScroll < scrollTrace.value) scrollDirection.value = true;
+  scrollTrace.value = currentScroll;
 }
 
 </script>

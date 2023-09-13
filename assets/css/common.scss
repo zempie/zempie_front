@@ -1678,6 +1678,25 @@ $zempie-main-color-hover: #f974162a;
   margin-top: 0px !important;
   justify-content: flex-start !important;
 
+  &.horizontal {
+    flex-wrap: nowrap;
+    flex-direction: column;
+    align-items: start;
+  }
+
+  .chip-list {
+    display: flex;
+    overflow-x: auto;
+
+    .chip {
+      flex: 0 0 auto;
+    }
+  }
+
+  .chip-list::-webkit-scrollbar {
+    height: 10px;
+  }
+
   .chip {
     height: 30px;
     color: #fff;
@@ -1697,7 +1716,7 @@ $zempie-main-color-hover: #f974162a;
 
   :deep(.chip-input) {
     flex: 1 1 auto;
-    // width: 30px;
+    // height: 30px;
     border: none;
     outline: none;
     padding: 4px;
