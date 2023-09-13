@@ -26,7 +26,7 @@
     <el-dialog v-model="showDeletePostModal" append-to-body class="modal-area-type" width="380px">
       <div class="modal-alert">
         <dl class="ma-header">
-          <dt>{{ t('information') }}</dt>11
+          <dt>{{ t('information') }}</dt>
           <dd>
             <button @click="showDeletePostModal = false">
               <IconClose />
