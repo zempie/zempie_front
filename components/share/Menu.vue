@@ -7,7 +7,7 @@
         </i></a>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item @click="webShare" v-if="navigator.share">
+          <el-dropdown-item @click="webShare" v-if="navigator && navigator.share">
             <Icon icon="ri-links-line" class="icon" />
             <span class="text">모바일공유</span>
           </el-dropdown-item>
