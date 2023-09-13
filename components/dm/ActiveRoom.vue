@@ -114,7 +114,7 @@
       </div>
     </el-dialog>
 
-    <ImageOriginModal :imgInfo="activeMsg" :open-modal="showOriginImg" @close-modal="showOriginImg = false" />
+    <ImageOriginModal :imgInfo="activeMsg" :open-modal="showOriginImg" @close-modal="closeImgModal" />
 
   </ClientOnly>
 </template>
@@ -218,6 +218,7 @@ watch(
     if (!val) {
       closeJoinedUserModal()
       closeDeleteMsgModal()
+      closeImgModal()
     }
   })
 
@@ -551,7 +552,7 @@ function onClickImg(msg: IMessage) {
     created_at: msg.created_at
   }
 
-  showOriginImg.value = true
+  showImgModal()
 }
 
 function uploadVideo(video) {
@@ -593,4 +594,19 @@ function closeDeleteMsgModal() {
   }
 }
 
+function showImgModal() {
+  showOriginImg.value = true
+
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
+function closeImgModal() {
+  showOriginImg.value = false
+
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
+}
 </script>
