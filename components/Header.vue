@@ -150,7 +150,7 @@ const scrollDirection = ref(true); // true: scroll up, false :scroll down
 const scrollTrace = ref(0);
 
 const headerShowClass = computed(() => {
-  if (!scrollDirection.value) return 'header-off';
+  if (!scrollDirection.value && isMobile) return 'header-off';
   return '';
 });
 
