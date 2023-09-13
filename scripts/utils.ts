@@ -218,3 +218,35 @@ export const isMobile = () => {
 
   return regexp.test(details);
 }
+
+export const openFullScreen = () => {
+  const doc = document.documentElement;
+
+  if (doc.requestFullscreen)
+    doc.requestFullscreen();
+  else if (doc.webkitRequestFullscreen) // Chrome, Safari (webkit)
+    doc.webkitRequestFullscreen();
+  else if (doc.mozRequestFullScreen) // Firefox
+    doc.mozRequestFullScreen();
+  else if (doc.msRequestFullscreen) // IE or Edge
+    doc.msRequestFullscreen();
+}
+
+
+/**
+ * 
+ * @param url : 검사할 이미지 url
+ * @param callback : 콜백
+ */
+export const isImageURLValid = (url: string, callback: Function) => {
+  var img = new Image();
+  img.onload = function () {
+    // 이미지 로드에 성공한 경우
+    callback(true);
+  };
+  img.onerror = function () {
+    // 이미지 로드에 실패한 경우
+    callback(false);
+  };
+  img.src = url;
+}

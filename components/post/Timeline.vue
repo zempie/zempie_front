@@ -1,7 +1,5 @@
 <template>
   <ul class="ta-post">
-    <!-- <iframe id="player" type="text/html" width="640" height="360" src="https://www.youtube.com/embed/P18SutoOFPE"
-      frameborder="0"></iframe> -->
     <dd>
       <div class="ta-message-send" v-if="isMine">
         <p>
@@ -11,13 +9,12 @@
           <dt>
             <input v-if="isSubscribed" type="text" :placeholder="t('postModalInput')" readonly @click="
               isLogin
-                ? (isTextEditorOpen = true)
+                ? openTextEditor()
                 : useModal().openLoginModal()
               " />
             <slot v-else name="communityInput" />
           </dt>
           <dd>
-            <!-- <a><i class="uil uil-message"></i></a> -->
           </dd>
         </dl>
       </div>
@@ -26,27 +23,21 @@
         <div class="swiper-area uppercase">
           <div class="swiper-slide" style="width: 50%; cursor: pointer">
             <a :class="media ?? 'active'">
-              <p><i class="uil uil-clock-three"></i>TIMELINE</p>
+              <p>TIMELINE</p>
             </a>
           </div>
           <div class="swiper-slide" style="width: 50%; cursor: pointer">
             <NuxtLink :to="$localePath(`/${paramId}/games`)" :class="media === 'game' ? 'active' : ''">
-              <p><i class="uil uil-map-pin-alt"></i>GAME</p>
+              <p>GAME</p>
             </NuxtLink>
           </div>
         </div>
       </div>
-
-      <!-- TODO: 차단 기능 추가시 적용 -->
-      <!-- <div class="ta-message-block" v-else-if="ableToPost() === 'block'">
-                <i class="uil uil-exclamation-triangle"></i>
-                {{ t('post.modal.block.text') }}
-            </div> -->
       <ul class="ta-post">
         <PostFeedSk v-if="isPending" v-for="feed in 6" :key="feed" />
         <TransitionGroup name="fade" v-else-if="!isPending && feeds?.length">
           <PostTimelineFeed v-for="feed in feeds" :feed="feed" :key="feed.id" @refresh="refresh"
-            @update-blind="(img) => updateBlind(feed, img)">
+            @update-blind="(img) => updateBlind(feed, img)" ref="feedRef">
             <template #followBtn>
               <UserFollowBtn :user="feed.user" :key="`${feed.user.is_following}`" class="follow-btn-feed"
                 @refresh="refreshFollow" />
@@ -55,7 +46,10 @@
         </TransitionGroup>
         <div v-else class="ta-post-none">
           <p>
-            <span><i class="uil uil-layers-slash"></i></span>
+            <span class="flex items-center">
+              <i>
+                <LazyIconComment color="#888" />
+              </i></span>
           </p>
           <h2>{{ t('timeline.noPost') }}</h2>
         </div>
@@ -65,9 +59,7 @@
 
     <PostModal :isTextEditorOpen="isTextEditorOpen">
       <template #textEditor>
-        <TextEditor @closeModal="isTextEditorOpen = false" :type="type" @refresh="refresh"
-          :isFullScreen="usePost().post.value.isFullScreen" />
-        <!-- :channelInfo="channelInfo" -->
+        <TextEditor @closeModal="closeTextEditor" :type="type" @refresh="refresh" />
       </template>
     </PostModal>
   </ul>
@@ -79,6 +71,8 @@ import { PropType } from 'vue'
 import { IComChannel, ICommunity, IFeed } from '~~/types'
 import { useI18n } from 'vue-i18n'
 import shared from '~~/scripts/shared'
+import { onBeforeRouteLeave } from 'vue-router';
+
 const { t, locale } = useI18n()
 
 const LIMIT_SIZE = 10
@@ -97,22 +91,20 @@ const observer = ref<IntersectionObserver>(null)
 const triggerDiv = ref<Element>()
 const limit = ref(LIMIT_SIZE)
 const offset = ref(0)
-const media = computed(() => route.query?.media || null)
 const isAddData = ref(false)
+const feedRef = ref()
 
+const media = computed(() => route.query?.media || null)
 const user = computed(() => useUser().user.value.info)
 const isLogin = computed(() => useUser().user.value.isLogin)
 
 const paramId = computed(() => route.params.id as string)
 
 const isBlocked = computed(() => {
-  console.log('useChannel().userChannel.valu', useChannel().userChannel.value)
   return useChannel().userChannel.value.info.is_blocked
 })
 
-
-
-// const gameId = computed(() => route.params.id as string)
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
 const props = defineProps({
   type: String,
@@ -130,6 +122,15 @@ const props = defineProps({
   },
 })
 
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeTextEditor()
+    }
+  })
+
+defineExpose({ closeTextEditor, feedRef })
 
 const watcher = watch(
   () => route.query,
@@ -154,7 +155,6 @@ const userWatcher = watch(
 )
 
 onMounted(async () => {
-  console.log('isBlocked', isBlocked)
   if (isBlocked.value) {
     isPending.value = false
     return
@@ -170,6 +170,12 @@ onMounted(async () => {
     )
 
     observer.value.observe(triggerDiv.value)
+  }
+})
+onBeforeRouteLeave((to, from, next) => {
+  if (useCommon().common.value.isPopState) {
+  } else {
+    next()
   }
 })
 
@@ -355,6 +361,22 @@ function updateBlind(feed: IFeed, img) {
       }
       return feed1
     })
+}
+
+function openTextEditor() {
+  isTextEditorOpen.value = true
+  console.log('isMobile.value ispop', isMobile.value)
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
+function closeTextEditor() {
+  console.log('jere?')
+  isTextEditorOpen.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
 }
 </script>
 

@@ -21,7 +21,9 @@
           <ul class="platform-list" v-if="selectedType.value === 2">
             <li v-for="pf of platforms">
               <input type="checkbox" :id="pf.value" :value="pf.value" :name="pf.name" v-model="selectedPlatform">
-              <label :for="pf.value"><i class="uil uil-check"></i></label>
+              <label :for="pf.value"><i class="flex items-center">
+                  <IconCheck color="#fff" />
+                </i></label>
               <span><label :for="pf.value">{{ pf.name }}</label>
               </span>
             </li>
@@ -38,18 +40,18 @@
           <dd>
             <p class="upload-file-container">
               <template v-if="selectedType.value === eGameType.Html">
-                <label for="game-file"><i class="uil uil-file-plus" style="font-size: 18px"></i> &nbsp;
+                <label for="game-file">
                   {{ $t('fileUpload') }}</label>
                 <input @change="onFileChange" type="file" id="game-file" accept=".zip" />
               </template>
               <template v-else>
-                <label for="game-file"><i class="uil uil-file-plus" style="font-size: 18px"></i> &nbsp;
+                <label for="game-file">
                   {{ $t('fileUpload') }}</label>
                 <input @change="onDownloadFileChange" type="file" id="game-file" accept=".zip" />
               </template>
               <ClipLoader v-if="isLoadingFile" :color="'#ff6e17'" :size="'20px'"></ClipLoader>
               <button class="btn-circle-icon" @click="deleteFile" v-if="fileName">
-                <i class="uil uil-trash-alt"></i>
+                <IconTrash />
               </button>
             </p>
 
@@ -76,7 +78,7 @@
       </Transition>
 
       <div v-if="selectedType.value === eGameType.Html" class="suii-open" @click="isAdvancedOpen = !isAdvancedOpen">
-        <span>{{ $t('advanced.setting') }}</span> &nbsp;<i class="uil uil-sliders-v-alt"></i>
+        <span>{{ $t('advanced.setting') }}</span>
       </div>
       <Transition name="component-fade" mode="out-in">
         <div v-if="isAdvancedOpen">
@@ -114,9 +116,11 @@
             </dd>
           </dl>
 
-          <div class="suii-close">
-            <button class="btn-line" @click="isAdvancedOpen = !isAdvancedOpen">
-              {{ $t('close') }} &nbsp;&nbsp;<i class="uil uil-angle-up"></i>
+          <div class="suii-close flex content-center">
+            <button class="btn-line flex items-center content-center " @click="isAdvancedOpen = !isAdvancedOpen">
+              {{ $t('close') }} &nbsp;&nbsp;<i>
+                <IconAngleUp />
+              </i>
             </button>
           </div>
         </div>
@@ -124,7 +128,9 @@
     </div>
     <ul class="sui-btn">
       <li>
-        <a @click="prevPage" class="btn-line w150"><i class="uil uil-angle-left-b"></i> {{ $t('previous') }}
+        <a @click="prevPage" class="btn-line w150 flex items-center"><i>
+            <IconAngleLeft />
+          </i> {{ $t('previous') }}
         </a>
       </li>
       <li>

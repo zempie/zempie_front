@@ -49,6 +49,7 @@ watch(() =>
   })
 
 onMounted(() => {
+  useRouterLeave()
   if (zemtown.value.isOpenMyProfile) {
     openMyProfile()
   }
@@ -58,11 +59,11 @@ onMounted(() => {
   window.addEventListener('message', onMessage)
 })
 
-onBeforeRouteLeave((to, from, next) => {
-  closeDm()
-  closeMyProfile()
-  next()
-})
+// onBeforeRouteLeave((to, from, next) => {
+//   closeDm()
+//   closeMyProfile()
+//   next()
+// })
 
 
 function openMyProfile() {

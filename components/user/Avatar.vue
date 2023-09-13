@@ -1,5 +1,4 @@
 <template>
-  <!-- {{ user.picture }} -->
   <div v-if="tag === 'div'" :class="[hasRouter && 'pointer', user?.uid && 'user-avatar']" :style="profileStyle"
     @click.stop="moveUserPage"></div>
   <span v-else-if="tag === 'span'" :class="[hasRouter && 'pointer', 'picture']" :style="profileStyle"

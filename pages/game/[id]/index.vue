@@ -2,7 +2,7 @@
   <NuxtLayout name="game-channel-header">
     <dl class="three-area">
       <dt>
-        <GameComments v-if="gameInfo" class="mb20" :game="gameInfo" />
+        <GameComments v-if="gameInfo" class="mb20" :game="gameInfo" ref="commentRef" />
         <div class="ta-game-list">
           <dl>
             <dt>{{ $t('game') }}</dt>
@@ -32,7 +32,7 @@
 
       </dt>
       <dd>
-        <PostTimeline type="game" :isMine="isMine" />
+        <PostTimeline type="game" :isMine="isMine" ref="timelineRef" />
       </dd>
       <dt>
         <div class="ta-about">
@@ -45,9 +45,6 @@
             <dd>{{ gameInfo?.version }}</dd>
           </dl>
         </div>
-        <div class="ta-copy-link">
-          <a @click="copyUrl"><em>{{ $t('game.link.copy') }}</em> <span><i class="uil uil-link"></i></span></a>
-        </div>
       </dt>
     </dl>
   </NuxtLayout>
@@ -59,6 +56,7 @@ import { execCommandCopy } from '~/scripts/utils'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import shared from '~~/scripts/shared';
+import { onBeforeRouteLeave } from 'vue-router';
 
 const { $localePath } = useNuxtApp()
 const config = useRuntimeConfig()
@@ -66,9 +64,26 @@ const route = useRoute()
 const { t, locale } = useI18n()
 
 const games = ref()
+const commentRef = ref()
 
 const gamePath = computed(() => route.params.id as string)
 const gameInfo = computed(() => useGame().game.value.info)
+
+
+onMounted(() => {
+  useRouterLeave()
+})
+
+onBeforeRouteLeave((to, from, next) => {
+  if (useCommon().common.value.isPopState) {
+    commentRef.value.closeCommentModal()
+    next(false)
+  } else {
+    next()
+  }
+})
+
+
 
 watch(
   () => gameInfo.value,

@@ -23,17 +23,16 @@
               {{ config.SUPPORT_EMAIL }}</a><br />
             ⓒ FROMtheRED Inc. All rights reserved.
           </div>
-
         </dt>
         <dd class="link">
           <a :href="config.ZEMPIE_INSTA_URL" target="_blank" class="insta-icon" aria-label="Zempie instagram">
-            <i class="uil uil-instagram"></i>
+            <IconInstagram />
           </a>
           <a :href="config.ZEMPIE_YOUTUBE_URL" target="_blank" class="youtube-icon" aria-label="Zempie youtube">
-            <i class="uil uil-youtube"></i>
+            <IconYoutube />
           </a>
           <a :href="config.ZEMPIE_FACEBOOK_URL" target="_blank" class="facebook-icon" aria-label="Zempie facebook">
-            <i class="uil uil-facebook"></i>
+            <IconFacebook />
           </a>
         </dd>
       </dl>

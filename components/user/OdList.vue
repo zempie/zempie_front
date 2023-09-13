@@ -4,10 +4,10 @@
       <dd class="mr10">
         <UserAvatar :user="user" tag="p" style="width:45px; height:45px; border-radius: 50%;" />
       </dd>
-      <div class="row justify-between w100p mt0">
-        <dt class="w50p">
-          <h3 class="font16 text-left ">{{ user.name }}</h3>
-          <p class="font13 nickname text-left text-ellipsis">@{{ user.nickname }}</p>
+      <div class="row justify-between w85p mt0">
+        <dt style="max-width: 50%;">
+          <h3 class="font16 text-left text-ellipsis">{{ user.nickname }}</h3>
+          <p class="font13 nickname text-left text-ellipsis">{{ user.name }}</p>
         </dt>
         <UserFollowBtn v-if="isLogin" :user="user" class="mt0" />
       </div>

@@ -1,19 +1,23 @@
 <template>
   <div class="header-search">
     <div class="input-search-line">
-      <i class="uil uil-search"></i>
+      <i class=flex>
+        <LazyIconSearch height="20px" />
+      </i>
       <div>
         <ClientOnly>
-          <el-dropdown ref="searchDropdown" trigger="click">
+          <el-dropdown ref="searchDropdown" trigger="click" @visible-change="handleVisible">
             <button v-if="isMobile" class="mobile-btn btn-circle-icon flex items-center content-center">
-              <i class="uil uil-search"></i>
+              <i>
+                <LazyIconSearch />
+              </i>
             </button>
             <input v-else class="input-btn" type="text" title="keywords" :placeholder="$t('needSearchInput')"
-              v-model="searchInput" @input="onInputDebounce" @keyup.enter="moveSearchPage" autocomplete="off" />
+              :value="searchInput" @input="onInputDebounce" @keyup.enter="moveSearchPage" autocomplete="off" />
             <template #dropdown>
               <div v-if="isMobile" style="padding:10px" class="w100p">
                 <input type="text" title="keywords" class="w100p" :placeholder="$t('needSearchInput')"
-                  v-model="searchInput" @input="onInputDebounce" @keyup.enter="moveSearchPage" autocomplete="off" />
+                  :value="searchInput" @input="onInputDebounce" @keyup.enter="moveSearchPage" autocomplete="off" />
               </div>
               <el-dropdown-menu class="header-search-list" style="min-width: 260px" v-if="!isSearchPage">
                 <div :class="hasResearchResult || 'no-result'">
@@ -29,7 +33,7 @@
                               <h3>{{ user?.name }}</h3>
                             </div>
                           </dt>
-                          <dd><i class="uil uil-user"></i></dd>
+
                         </dl>
                       </div>
                     </el-dropdown-item>
@@ -44,7 +48,6 @@
                               }) center center / cover no-repeat; background-size:cover;`"></span>
                             {{ game.title }}
                           </dt>
-                          <dd><i class="uil uil-robot"></i></dd>
                         </dl>
                       </div>
                     </el-dropdown-item>
@@ -59,7 +62,6 @@
                               :style="`background:url(${community.profile_img}) center center / cover no-repeat; background-size:cover;`"></span>
                             {{ community?.name }}
                           </dt>
-                          <dd><i class="uil uil-comments"></i></dd>
                         </dl>
                       </div>
                     </el-dropdown-item>
@@ -108,6 +110,13 @@ const isMobileSize = computed(() =>
 )
 const isMobile = ref()
 
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      searchDropdown.value.handleClose()
+    }
+  })
 
 onMounted(() => {
   nextTick(() => {
@@ -138,7 +147,12 @@ function moveGamePage(pathname: string) {
   router.push($localePath(`/game/${pathname}`))
 }
 
-const onInputDebounce = debounce(async () => {
+async function onInputDebounce(e: any) {
+  searchInput.value = e.target.value
+  await onSearchDebounce()
+}
+
+const onSearchDebounce = debounce(async () => {
   await search()
 }, 300)
 
@@ -160,6 +174,17 @@ function initSearchData() {
   searchInput.value = ''
   searchDropdown.value.handleClose()
   useSearch().resetResults()
+}
+
+function handleVisible(visible: boolean) {
+  if (!isMobile.value) return
+  if (visible) {
+    searchDropdown.value.handleOpen()
+    useCommon().setPopState(true)
+  } else {
+    searchDropdown.value.handleClose()
+    useCommon().setPopState(false)
+  }
 }
 </script>
 <style scoped lang="scss">

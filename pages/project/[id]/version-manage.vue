@@ -4,8 +4,10 @@
       <dl>
         <dt></dt>
         <dd>
-          <NuxtLink :to="$localePath(`/project/${$route.params.id}/add-version`)" class="btn-default"><i
-              class="uil uil-plus"></i> {{ $t('versionManage.addVersion') }}
+          <NuxtLink :to="$localePath(`/project/${$route.params.id}/add-version`)" class="btn-default flex items-center">
+            <i>
+              <LazyIconPlus color="#fff" />
+            </i> {{ $t('versionManage.addVersion') }}
           </NuxtLink>
         </dd>
       </dl>
@@ -26,6 +28,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import shared from '~~/scripts/shared';
+import { onBeforeRouteLeave } from 'vue-router';
 
 const { t } = useI18n()
 const { $localePath } = useNuxtApp()
@@ -47,6 +50,7 @@ watch(
   }
 )
 onMounted(() => {
+  useRouterLeave()
   if (useProject().editProject.value.info?.id) {
     project.value = useProject().editProject.value.info
   }

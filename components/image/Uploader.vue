@@ -1,6 +1,8 @@
 <template>
   <div @click="uploadImageFile">
-    <button><i class="uil uil-scenery font25"></i></button>
+    <button>
+      <IconScenery color="#888" />
+    </button>
     <div style="height: 0px; overflow: hidden">
       <input type="file" @change="onSelectImageFile" multiple accept="image/*" ref="image" />
     </div>
@@ -15,7 +17,11 @@
 import { ElMessage } from 'element-plus'
 import { eChatType } from '~~/types'
 
-const MAX_LIMIT = 10
+const props = defineProps({
+  maxLimit: Number
+})
+
+const MAX_LIMIT = props.maxLimit
 
 const { t } = useI18n()
 
@@ -116,7 +122,6 @@ async function fetchImage() {
   let result = []
 
   for (const file of rawFiles.value) {
-    console.log(file)
 
     formData.append(
       file.name,
@@ -130,7 +135,8 @@ async function fetchImage() {
           url: string
           type: string
           name: string
-          size: number
+          size: number,
+          thumbnail?: string
         }[]
       }>('/community/att', getZempieFetchOptions('post', true, formData))
 

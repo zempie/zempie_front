@@ -1,5 +1,5 @@
 <template>
-  <CommonDropdown>
+  <CommonDropdown color="#888">
     <template #options>
       <li @click="onDeleteMsg">{{ $t('delete.msg') }}</li>
     </template>
@@ -26,7 +26,6 @@ async function onDeleteMsg() {
   emit('deleteMsg', props.msg)
   isShow.value = false
 }
-
 
 </script>
 <style scoped lang="scss">

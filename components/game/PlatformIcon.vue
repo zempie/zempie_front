@@ -1,17 +1,17 @@
 <template>
   <li v-if="Number(platform) === ePlatformType.Android">
-    <i class="uil uil-android" :style="{ 'color': color }"></i>
+    <i>
+      <LazyIconAndroid color="#3ddc84" />
+    </i>
   </li>
   <li v-if="Number(platform) === ePlatformType.Window">
     <IconWindow :color="color" />
-    <!-- <img src="/icons/window_os.svg" alt="window" /> -->
   </li>
   <li v-if="Number(platform) === ePlatformType.Mac">
-    <i class="uil uil-apple" :style="{ 'color': color }"></i>
+    <LazyIconApple />
   </li>
   <li v-if="Number(platform) === ePlatformType.Ios">
     <IconIos :color="color" />
-    <!-- <img src="/images/ios.svg" alt="ios" /> -->
   </li>
 </template>
 <script setup lang="ts">

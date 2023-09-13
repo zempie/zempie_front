@@ -6,8 +6,11 @@
           align-items: center;
           justify-content: space-between;">
         <h2 style="padding: 20px; font-weight: 600; font-size: 18px; line-height: 18px;color: #333;">Channel</h2>
-        <i style="font-size: 20px; padding: 20px;" @click="showChannelList = !showChannelList"
-          :class="showChannelList ? 'uil uil-angle-up' : 'uil uil-angle-down'"></i>
+
+        <i style="font-size: 20px; padding: 20px;" @click="showChannelList = !showChannelList">
+          <IconAngleUp v-if=showChannelList />
+          <IconAngleDown v-else />
+        </i>
       </div>
       <TransitionGroup name="list">
         <ul v-if="showChannelList">

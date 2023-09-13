@@ -9,6 +9,7 @@ import { ID_INJECTION_KEY } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import flutterBridge from './scripts/flutterBridge';
 import shared from './scripts/shared';
+import { onBeforeRouteLeave } from 'vue-router';
 
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
@@ -40,7 +41,6 @@ provide(ID_INJECTION_KEY, {
   prefix: 100,
   current: 0,
 })
-
 
 onBeforeMount(async () => {
   colorLog('===App start===', 'red')
@@ -87,15 +87,8 @@ onBeforeMount(async () => {
 onMounted(() => {
   nextTick(() => {
     onResize()
-    window.addEventListener('resize', onResize)
-    window.addEventListener('popstate', onPopState)
   })
 })
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', onResize)
-  window.removeEventListener('popstate', onPopState)
-})
-
 function onResize() {
   if (isMobileSize.value.matches) {
     useCommon().setMobile(true)
@@ -105,9 +98,7 @@ function onResize() {
   }
 }
 
-function onPopState() {
-  console.log('onPopState')
-}
+
 
 function notiPerCheck() {
   const permissionCheck = Notification.permission;

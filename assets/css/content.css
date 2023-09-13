@@ -5186,7 +5186,7 @@
 }
 
 .dl-content>dd>ul {
-  height: 650px;
+  max-height: 830px;
   padding: 10px 25px;
   overflow: auto;
 }

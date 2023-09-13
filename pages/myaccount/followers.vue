@@ -20,6 +20,7 @@
 import { IUser } from '~~/types'
 import { useI18n } from 'vue-i18n'
 import shared from '~/scripts/shared'
+import { onBeforeRouteLeave } from 'vue-router';
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -56,7 +57,9 @@ watch(
   }
 )
 
+
 onMounted(async () => {
+  useRouterLeave()
   if (userInfo.value?.id) {
     await fetch()
   }

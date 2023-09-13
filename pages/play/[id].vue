@@ -14,7 +14,9 @@ import { getIdToken } from 'firebase/auth'
 import { useI18n } from 'vue-i18n'
 import shared from '~~/scripts/shared';
 import { IGame } from '~~/types';
-
+import { ElMessageBox, } from 'element-plus'
+import { openFullScreen } from '~~/scripts/utils'
+import { onBeforeRouteLeave } from 'vue-router';
 const HOURTOSEC = 60 * 60
 
 const { t, locale } = useI18n()
@@ -31,11 +33,11 @@ const gameData = computed(() => data.value.result.game)
 const gamePath = computed(() => route.params.id)
 const userInfo = computed(() => useUser().user.value.info)
 const fUser = computed(() => useUser().user.value.fUser)
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
 definePageMeta({
   layout: 'layout-none',
 })
-
 
 /**
  * seo 반영은 함수안에서 되지 않으므로 최상단에서 진행함
@@ -67,9 +69,34 @@ watch(
   }
 )
 
+/*
+ page 단위에서 isPopState 검사 후 true라면 false로 변경
+ 이후 component에서 watch로 받아 팝업닫기
+*/
+onBeforeRouteLeave((to, from, next) => {
+  if (useCommon().common.value.isPopState) {
+    next(false)
+    ElMessageBox.close()
+    useCommon().setPopState(false)
+  } else {
+    next()
+  }
+})
 
 onMounted(async () => {
   if (process.client) {
+
+    ElMessageBox.confirm(`전체화면으로 전환하시겠습니까?`, {
+      confirmButtonText: 'YES',
+      cancelButtonText: 'Cancel',
+      type: 'info',
+    })
+      .then(() => {
+        openFullScreen()
+      })
+
+
+
     window.addEventListener('message', onMessage)
     window.addEventListener('resize', onResize)
     onResize()

@@ -13,7 +13,7 @@
           <dt>{{ $t('like') }}</dt>
           <dd>
             <button @click="closeHistory" class="pointer">
-              <i class="uil uil-times"></i>
+              <IconClose />
             </button>
           </dd>
         </dl>
@@ -65,9 +65,19 @@ const limit = ref(LIKE_LIMIT)
 const offset = ref(0)
 
 const isLogin = computed(() => useUser().user.value.isLogin)
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
 let likeAcceessableCount = 2
 let unlikeAcceessableCount = 2
+
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      onCloseLike()
+      closeHistory()
+    }
+  })
 
 
 useInfiniteScroll(
@@ -83,6 +93,9 @@ useInfiniteScroll(
 
 function onCloseLike() {
   isLikeHistoryOpen.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
   resetList()
 }
 
@@ -126,7 +139,7 @@ const showLikeFetch = debounce(async () => {
     limit: limit.value,
   }
 
-  isLikeHistoryOpen.value = true
+  openLikeHistory()
 
   const { data, error, refresh } = await useCustomAsyncFetch<{ id: string, post_id: string, user: IUser }[]>(
     createQueryUrl(`/post/${props.feed.id}/like/list`, query),
@@ -152,8 +165,18 @@ function moveUserChannel(nickname: string) {
   router.push($localePath(`/${nickname}`))
 }
 
+function openLikeHistory() {
+  isLikeHistoryOpen.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
 function closeHistory() {
   isLikeHistoryOpen.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
 
   resetList()
 

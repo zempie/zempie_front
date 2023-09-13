@@ -1,16 +1,11 @@
 <template>
   <div class="modal-post">
     <ul class="mp-header">
-      <li v-if="isFullScreen" @click="closeTextEditor" class="mobile-back-btn">
-        <i class="uil uil-angle-left-b"></i>
+      <li class="pl10 flex h100p items-center pointer prev-btn" @click="closeTextEditor" style="z-index: 99;">
+        <IconLeftArrow />
       </li>
       <li class="title">
         {{ isEdit ? $t('edit.post') : $t('new.post') }}
-      </li>
-      <li class="close-btn" @click="closeTextEditor">
-        <span>
-          <i class="uil uil-multiply"></i>
-        </span>
       </li>
     </ul>
     <div>
@@ -26,8 +21,12 @@
                 <img :src="img.url">
               </div>
               <div>
-                <span @click="deleteImg(idx)"><i class="uil uil-times-circle"></i></span>
-                <span @click="blindImg(idx)"><i class="uil uil-eye"></i></span>
+                <span @click="deleteImg(idx)">
+                  <IconCloseCircle width="20px" />
+                </span>
+                <span @click="blindImg(idx)">
+                  <IconEye width="20px" />
+                </span>
               </div>
             </swiper-slide>
             <div class="swiper-pagination" slot="pagination"></div>
@@ -38,7 +37,9 @@
         <BeatLoader :color="'#ff6e17'" size="20px" />
       </div>
       <div v-else-if="!isVideoUploading && snsAttachFiles.video?.url" class="mp-midi">
-        <span @click="deleteVideo" class="delete-video-btn"><i class="uis uis-times-circle"></i></span>
+        <span @click="deleteVideo" class="delete-video-btn">
+          <IconCloseCircle />
+        </span>
 
         <video style="width: 100%" :src="snsAttachFiles.video?.url" title="YouTube video player" frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -52,7 +53,9 @@
         <ul v-for="(audio, idx) in snsAttachFiles.audio" class="audio-wrapper">
           <div class="btn-container">
             <audio controls :src="audio.url"></audio>
-            <span class="delete-audio-btn" @click="deleteAudio(idx)"><i class="uis uis-times-circle"></i></span>
+            <span class="delete-audio-btn" @click="deleteAudio(idx)">
+              <IconCloseCircle />
+            </span>
           </div>
           <p>{{ audio.name || audio.file.name }}</p>
         </ul>
@@ -65,38 +68,27 @@
 
       <dl class="mp-type">
         <dt>
+          <!-- <ImageUploader style="width: 30px" ref="imgUploaderRef" :maxLimit="5" @uploadImage="uploadImage" /> -->
           <div style="width: 30px" @click="uploadImageFile">
-            <a><i class="uil uil-scenery pointer"></i></a>
+            <IconScenery color="#888" />
             <div style="height: 0px; overflow: hidden">
               <input type="file" @change="onSelectImageFile" multiple id="image-selector" accept=image/* ref="image" />
             </div>
           </div>
           <div v-if="!isIOS" style="width: 30px" @click="uploaVideoFile">
-            <a><i class="uil uil-play-circle pointer"></i></a>
+            <IconPlayCircle color="#888" />
             <div style="height: 0px; overflow: hidden">
               <input type="file" @change="onSelectVideoFile" accept=video/* ref="video" />
             </div>
           </div>
           <div style="width: 30px" @click="uploadAudioFile">
-            <a><i class="uil uil-music pointer"></i></a>
+            <IconMusic color="#888" />
             <div style="height: 0px; overflow: hidden">
               <input type="file" @change="onSelectAudioFile" multiple accept=".mp3" ref="audio" />
             </div>
           </div>
         </dt>
-
-        <Transition name="component-fade" mode="out-in">
-          <small class="auto-save" v-if="showSavedTime" style="color: #999">{{ t('autosave') }} <span> {{
-            savedTime
-          }}</span></small>
-        </Transition>
         <dd class="post-btn-container">
-          <button v-if="draftList.length > 0" class="btn-line-small w100 mr10" id="loadPostBtn" @click="onLoadPost">
-            {{ $t('load.post') }}
-          </button>
-          <button class="btn-line-small w100 mr10" id="draftPostBtn" @click="saveDraftCloseModal">
-            {{ $t('draft.post') }}
-          </button>
           <button v-if="isEdit" class="btn-default-samll w100" id="updatePostBtn" @click="onUpdatePost">
             {{ $t('update.post') }}
           </button>
@@ -104,49 +96,8 @@
             {{ $t('save.post') }}
           </button>
         </dd>
-
       </dl>
-      <p style="min-height:20px">
-        <small v-if="showSavedTime" class="auto-save-mobile" style="color: #999">11{{ t('autosave') }} <span>
-            {{
-              savedTime
-            }}</span></small>
-      </p>
     </div>
-
-    <el-dialog v-model="showDraftList" append-to-body class="modal-area-type" width="380px" :close-on-click-modal="false">
-      <div class="modal-alert">
-        <dl class="ma-header">
-          <dt>{{ t('draft') }}</dt>
-          <dd>
-            <button @click="showDraftList = false">
-              <i class="uil uil-times"></i>
-            </button>
-          </dd>
-        </dl>
-        <div class="ma-content draft-container">
-          <ul>
-            <li v-for="(draft, index) in draftList" class="draft" @click="selectDraft(draft, index)">
-              <div>
-                <p>
-                  {{ getFirstPostContent(draft.post_contents) }}
-                </p>
-                <small>{{
-                  dayjs(draft.time).format('YYYY.MM.DD HH:mm')
-                }}</small>
-              </div>
-              <div>
-                <i @click.stop="deleteDraft(draft, index)" class="uil uil-trash-alt"></i>
-              </div>
-            </li>
-
-            <li v-if="draftList.length === 0" style="align-items: center">
-              <p>{{ $t('no.draft.data') }}</p>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -170,6 +121,7 @@ import {
 import { useI18n } from 'vue-i18n'
 import { htmlToDomElem, stringToDomElem, isImageUrl } from '~~/scripts/utils'
 import { fileUpload } from '~~/scripts/fileManager'
+import { onBeforeRouteLeave } from 'vue-router';
 
 interface IDraft {
   time: number
@@ -183,6 +135,9 @@ const route = useRoute()
 const isVideoUploading = ref(false)
 const isAudioUploading = ref(false)
 
+
+const imgUploaderRef = ref()
+
 const emit = defineEmits(['closeModal', 'refresh'])
 
 const props = defineProps({
@@ -193,13 +148,22 @@ const props = defineProps({
   },
   feed: Object as PropType<IFeed>,
   channelInfo: Object,
-  isFullScreen: Boolean,
   multiple: {
     type: Boolean,
     default: true,
   },
 
 })
+
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeDraftList()
+      closeMsgBox()
+    }
+  })
+
 
 const initFiles = _.cloneDeep(props.feed?.attatchment_files)
 
@@ -262,15 +226,19 @@ const isIOS = ref(false)
 const gameInfo = computed(() => useGame().game.value.info)
 const communityInfo = computed(() => useCommunity().community.value.info)
 const userGames = computed(() => useUser().user.value.info.games)
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
 await communityFetch()
 
 onBeforeMount(() => {
-  getDraftList()
-  autoSave()
+  // getDraftList()
+  // autoSave()
 
   //유저가 직접 저장하지 않은 경우
   if (draftList.value[0]?.save_type === 'cancel') {
+    if (isMobile.value) {
+      useCommon().setPopState(true)
+    }
     ElMessageBox.confirm(`${t('ask.load.draft.post')}`, {
       confirmButtonText: 'YES',
       cancelButtonText: 'Cancel',
@@ -278,6 +246,9 @@ onBeforeMount(() => {
     })
       .then(() => {
         insertContet(draftList.value[0])
+        if (isMobile.value) {
+          useCommon().setPopState(false)
+        }
       })
       .catch(() => { })
       .finally(() => {
@@ -293,7 +264,6 @@ onMounted(async () => {
     // navigator.userAgent.includes('kakao') || navigator.userAgent.includes('naver')
   })
 
-  colorLog('text editor', 'pink')
   //새로고침 시 알람
   window.addEventListener('beforeunload', refreshPage)
 
@@ -489,7 +459,6 @@ async function onSubmit() {
     customClass: 'loading-spinner',
     background: 'rgba(0, 0, 0, 0.7)',
   })
-  console.log('snsAttachF111`1les', snsAttachFiles.value)
 
   const dom = htmlToDomElem(form.post_contents)
 
@@ -506,16 +475,29 @@ async function onSubmit() {
     const formData = new FormData()
 
     if (snsAttachFiles.value.img) {
+      // const result = await imgUploaderRef.value.fetchImage()
+      // console.log('result :', result)
+      // payload['attatchment_files'] = result
+
       for (const img of snsAttachFiles.value.img) {
         formData.append(img.name, img.file)
         formData.append('is_blind', img.is_blind)
       }
+
     }
 
     if (snsAttachFiles.value.audio) {
       for (const audio of snsAttachFiles.value.audio) {
         formData.append(audio.name, audio.file)
       }
+
+
+      const { data, error, pending } = await useCustomAsyncFetch<{ result: [] }>(
+        '/community/att',
+        getZempieFetchOptions('post', true, formData)
+      )
+      payload['attatchment_files'] = data.value?.result
+
     }
 
 
@@ -524,14 +506,31 @@ async function onSubmit() {
       getZempieFetchOptions('post', true, formData)
     )
 
-    payload['attatchment_files'] = data.value?.result
+
+
+    const thumbRes = data.value.result.map((attr) => {
+      if (attr.type === 'image') {
+        const urlParts = attr.url.split("/");
+        urlParts.splice(3, 0, "thumbnail");
+
+        // Reconstruct the URL
+        const modifiedUrl = urlParts.join("/");
+        console.log('modifiedUrl', modifiedUrl)
+
+        return {
+          ...attr,
+          thumbnail: modifiedUrl
+        }
+      } else {
+        return attr
+      }
+    })
+
+    payload['attatchment_files'] = thumbRes
 
     if (snsAttachFiles.value.video) {
       payload['attatchment_files'] = [snsAttachFiles.value.video]
-      // formData.append(
-      //   snsAttachFiles.value.video.name,
-      //   snsAttachFiles.value.video.file
-      // )
+
     }
   }
   switch (props.type) {
@@ -794,243 +793,126 @@ async function onUpdatePost() {
     background: 'rgba(0, 0, 0, 0.7)',
   })
 
-  switch (activeTab.value.toLocaleUpperCase()) {
-    case 'BLOG':
-      const imgFiles = []
-      const videoFiles = []
-      const audioFiles = []
-      //블로그 수정 시 이미지가 있는 경우
-      for (const img of imgArr.value) {
 
-        //s3 업로드가 필요한 경우
-        if (img.src.search('blob:') !== -1 || img.src.search('data:') !== -1) {
-          const formData = new FormData()
-          await fetch(img.src).then(async (result) => {
-            formData.append(img.title, await result.blob())
+  const formData = new FormData()
+
+  if (snsAttachFiles.value.img?.length > 0) {
+    for (const img of snsAttachFiles.value.img) {
+      //이미지 파일 중 s3 업로드가 필요한 파일 formdata append
+      if (
+        img.url.search('blob:') !== -1 ||
+        img.url.search('data:') !== -1
+      ) {
+        formData.append(img.name, img.file)
+        formData.append('is_blind', img.is_blind)
+      } else {
+        img['is_blind'] = img['is_blind'] || false;
+        attachedFile.push(img)
+      }
+    }
+    if (!!formData.entries().next().value) {
+      const { data, error, pending } = await useCustomAsyncFetch<{
+        result: {
+          priority: number
+          url: string
+          type: string
+          name: string
+          size: number,
+          is_blind: boolean
+        }[]
+      }>('/community/att', getZempieFetchOptions('post', true, formData))
+
+      if (data.value) {
+        const { result } = data.value
+
+        for (const data of result) {
+          attachedFile.push({
+            priority: data.priority,
+            url: data.url,
+            type: data.type,
+            name: data.name,
+            size: data.size,
+            is_blind: data.is_blind
           })
-          const { data, error, pending } = await useCustomAsyncFetch<any>(
-            '/community/att',
-            getZempieFetchOptions('post', true, formData)
-          )
-          if (data.value) {
-            form.post_contents = form.post_contents.replace(
-              img.src,
-              data.value.result[0].url
-            )
-            imgFiles.push(...data.value.result)
-          }
-        }
-        //필요없는 경우
-        else {
-          if (!attatchment_files) {
-            //기존 파일에서 찾아서 push
-            const file = attatchment_files.find((file: { url: any }) => {
-              return file.url === img.src
-            })
-            imgFiles.push(file)
-          }
-
-          imgFiles.push({
-            url: img.src,
-            type: 'image',
-            priority: 0
-          })
-
         }
       }
-      attachedFile.push(...imgFiles)
+    }
+  } else if (snsAttachFiles.value.audio?.length > 0) {
+    for (const sound of snsAttachFiles.value.audio) {
+      if (
+        sound.url.search('blob:') !== -1 ||
+        sound.url.search('data:') !== -1
+      ) {
+        formData.append(sound.name, sound.file)
+      } else {
+        attachedFile.push(sound)
+      }
+    }
+    if (!!formData.entries().next().value) {
+      const { data, error, pending } = await useCustomAsyncFetch<{
+        result: {
+          priority: number
+          url: string
+          type: string
+          name: string
+          size: number
+        }[]
+      }>('/community/att', getZempieFetchOptions('post', true, formData))
 
-      //이미지 로직과 동일
-      for (const video of videoArr.value) {
-        if (
-          video.src.search('blob:') !== -1 ||
-          video.src.search('data:') !== -1
-        ) {
-          const formData = new FormData()
-          await fetch(video.src).then(async (result) => {
-            formData.append(video.title, await result.blob())
+      if (data.value) {
+        const { result } = data.value
+        for (const data of result) {
+          attachedFile.push({
+            priority: data.priority,
+            url: data.url,
+            type: data.type,
+            name: data.name,
+            size: data.size,
           })
-          const { data, error, pending } = await useCustomAsyncFetch<any>(
-            '/community/att',
-            getZempieFetchOptions('post', true, formData)
-          )
-          if (data.value) {
-            form.post_contents = form.post_contents.replace(
-              video.src,
-              data.value.result[0].url
-            )
-            videoFiles.push(...data.value.result)
-          }
-        } else {
-          //기존 파일에서 찾아서 push
+        }
+      }
+    }
+  } else if (snsAttachFiles.value.video) {
+    if (
+      snsAttachFiles.value.video.url.search('blob:') !== -1 ||
+      snsAttachFiles.value.video.url.search('data:') !== -1
+    ) {
+      formData.append(
+        snsAttachFiles.value.video.name,
+        snsAttachFiles.value.video.file
+      )
 
-          const file = attatchment_files.find((file: { url: any }) => {
-            return file.url === video.src
+      const { data, error, pending } = await useCustomAsyncFetch<{
+        result: {
+          priority: number
+          url: string
+          type: string
+          name: string
+          size: number
+        }[]
+      }>('/community/att', getZempieFetchOptions('post', true, formData))
+
+      if (data.value) {
+        const { result } = data.value
+        for (const data of result) {
+          attachedFile.push({
+            priority: data.priority,
+            url: data.url,
+            type: data.type,
+            name: data.name,
+            size: data.size,
+
           })
-          videoFiles.push(file)
         }
       }
-
-      attachedFile.push(...videoFiles)
-
-      //이미지 로직과 동일
-      for (const audio of audioArr.value) {
-        if (
-          audio.src.search('blob:') !== -1 ||
-          audio.src.search('data:') !== -1
-        ) {
-          //블로그 수정 시 이미지가 있는 경우
-          const formData = new FormData()
-          await fetch(audio.src).then(async (result) => {
-            formData.append(audio.title, await result.blob())
-          })
-          const { data, error, pending } = await useCustomAsyncFetch<any>(
-            '/community/att',
-            getZempieFetchOptions('post', true, formData)
-          )
-          if (data.value) {
-            form.post_contents = form.post_contents.replace(
-              audio.src,
-              data.value.result[0].url
-            )
-            audioFiles.push(...data.value.result)
-          } else {
-            //기존 파일에서 찾아서 push
-            const file = attatchment_files.find((file: { url: any }) => {
-              return file.url === audio.src
-            })
-            audioFiles.push(file)
-          }
-        }
-      }
-      attachedFile.push(...audioFiles)
-
-
-      break
-
-    case 'SNS':
-      const formData = new FormData()
-
-      if (snsAttachFiles.value.img?.length > 0) {
-        for (const img of snsAttachFiles.value.img) {
-          //이미지 파일 중 s3 업로드가 필요한 파일 formdata append
-          if (
-            img.url.search('blob:') !== -1 ||
-            img.url.search('data:') !== -1
-          ) {
-            formData.append(img.name, img.file)
-            formData.append('is_blind', img.is_blind)
-          } else {
-            img['is_blind'] = img['is_blind'] || false;
-            attachedFile.push(img)
-          }
-        }
-        if (!!formData.entries().next().value) {
-          const { data, error, pending } = await useCustomAsyncFetch<{
-            result: {
-              priority: number
-              url: string
-              type: string
-              name: string
-              size: number,
-              is_blind: boolean
-            }[]
-          }>('/community/att', getZempieFetchOptions('post', true, formData))
-
-          if (data.value) {
-            const { result } = data.value
-
-            for (const data of result) {
-              attachedFile.push({
-                priority: data.priority,
-                url: data.url,
-                type: data.type,
-                name: data.name,
-                size: data.size,
-                is_blind: data.is_blind
-              })
-            }
-          }
-        }
-      } else if (snsAttachFiles.value.audio?.length > 0) {
-        for (const sound of snsAttachFiles.value.audio) {
-          if (
-            sound.url.search('blob:') !== -1 ||
-            sound.url.search('data:') !== -1
-          ) {
-            formData.append(sound.name, sound.file)
-          } else {
-            attachedFile.push(sound)
-          }
-        }
-        if (!!formData.entries().next().value) {
-          const { data, error, pending } = await useCustomAsyncFetch<{
-            result: {
-              priority: number
-              url: string
-              type: string
-              name: string
-              size: number
-            }[]
-          }>('/community/att', getZempieFetchOptions('post', true, formData))
-
-          if (data.value) {
-            const { result } = data.value
-            for (const data of result) {
-              attachedFile.push({
-                priority: data.priority,
-                url: data.url,
-                type: data.type,
-                name: data.name,
-                size: data.size,
-              })
-            }
-          }
-        }
-      } else if (snsAttachFiles.value.video) {
-        if (
-          snsAttachFiles.value.video.url.search('blob:') !== -1 ||
-          snsAttachFiles.value.video.url.search('data:') !== -1
-        ) {
-          formData.append(
-            snsAttachFiles.value.video.name,
-            snsAttachFiles.value.video.file
-          )
-
-          const { data, error, pending } = await useCustomAsyncFetch<{
-            result: {
-              priority: number
-              url: string
-              type: string
-              name: string
-              size: number
-            }[]
-          }>('/community/att', getZempieFetchOptions('post', true, formData))
-
-          if (data.value) {
-            const { result } = data.value
-            for (const data of result) {
-              attachedFile.push({
-                priority: data.priority,
-                url: data.url,
-                type: data.type,
-                name: data.name,
-                size: data.size,
-
-              })
-            }
-          }
-        } else {
-          attachedFile.push(snsAttachFiles.value.video)
-        }
-      }
-      if (snsAttachFiles.value.audio?.length) {
-      } else if (snsAttachFiles.value.video) {
-      }
-      break
-    default:
-      break
+    } else {
+      attachedFile.push(snsAttachFiles.value.video)
+    }
   }
+  if (snsAttachFiles.value.audio?.length) {
+  } else if (snsAttachFiles.value.video) {
+  }
+
 
   Array.isArray(attachedFile) ? attachedFile : JSON.parse(attatchment_files)
 
@@ -1100,6 +982,9 @@ function closeTextEditor() {
 
   //작성한 글이 있는 경우 임시저장 처리
   if (!editor.value.isEmpty) {
+    if (isMobile.value) {
+      useCommon().setPopState(true)
+    }
     ElMessageBox.confirm(`${t('ask.save.draft.post')}`, {
       confirmButtonText: t('save'),
       cancelButtonText: t('close'),
@@ -1120,6 +1005,10 @@ function closeTextEditor() {
   } else {
     emit('closeModal')
   }
+}
+
+function closeMsgBox() {
+  ElMessageBox.close()
 }
 
 async function communityFetch() {
@@ -1306,10 +1195,16 @@ function getDraftList() {
 
 function onLoadPost() {
   showDraftList.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
 }
 
 function deleteDraft(draft: IDraft, index: number) {
 
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
   ElMessageBox.confirm(`${t('ask.delete.draft')}`, {
     confirmButtonText: 'YES',
     cancelButtonText: 'Cancel',
@@ -1317,7 +1212,10 @@ function deleteDraft(draft: IDraft, index: number) {
   })
     .then(() => {
       insertContet(draft)
-      showDraftList.value = false
+      closeDraftList()
+      if (isMobile.value) {
+        useCommon().setPopState(false)
+      }
       ElMessage({
         message: t('delete.draft.done'),
         type: 'success',
@@ -1329,6 +1227,9 @@ function deleteDraft(draft: IDraft, index: number) {
 
 function selectDraft(draft: IDraft, index: number) {
   //작성 중인 글 있는 지 확인
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
   if (!editor.value.isEmpty) {
     ElMessageBox.confirm(`${t('ask.overwrite.draft')}`, {
       confirmButtonText: 'YES',
@@ -1337,7 +1238,10 @@ function selectDraft(draft: IDraft, index: number) {
     })
       .then(() => {
         insertContet(draft)
-        showDraftList.value = false
+        closeDraftList()
+        if (isMobile.value) {
+          useCommon().setPopState(false)
+        }
         localStorage.removeItem(draft.key)
         draftList.value.splice(index, 1)
       })
@@ -1345,7 +1249,10 @@ function selectDraft(draft: IDraft, index: number) {
       .finally(() => { })
   } else {
     insertContet(draft)
-    showDraftList.value = false
+    closeDraftList()
+    if (isMobile.value) {
+      useCommon().setPopState(false)
+    }
     localStorage.removeItem(draft.key)
     draftList.value.splice(index, 1)
   }
@@ -1402,5 +1309,20 @@ function getFirstPostContent(content: string) {
 function blindImg(index: number) {
   snsAttachFiles.value.img[index]['is_blind'] = !snsAttachFiles.value.img[index]['is_blind']
 
+}
+
+function uploadImage(images) {
+  snsAttachFiles.value.img = [...(snsAttachFiles.value.img || []), ...images]
+
+  console.log('sns: ', snsAttachFiles.value.img)
+
+
+}
+
+function closeDraftList() {
+  showDraftList.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
 }
 </script>

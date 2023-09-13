@@ -1,11 +1,9 @@
 <template>
   <div class="post-img">
     <div :class="[isBlind ? 'blur' : '', 'feed-img mt-3']">
-      <img :src="img.url" @click="onClickImg" />
+      <img :src="validImg" @click="onClickImg" class="pointer" />
     </div>
-    <button class="expand-btn" @click="onClickImg">
-      <i class="uil uil-expand-arrows"></i>
-    </button>
+
     <template v-if="initStatus">
       <button v-if="isBlind" class="btn-default-samll show-btn" @click="openBlind">{{ $t('violent.contents') }}</button>
       <button v-else class="btn-default-samll hide-btn" @click="openBlind">{{ $t('hide') }}</button>
@@ -17,13 +15,12 @@
 <script setup lang="ts">
 import _ from 'lodash'
 import { PropType } from 'vue';
-import { IMessage } from '~~/types';
+import { isImageURLValid } from '~~/scripts/utils';
 
 const emit = defineEmits(['updateBlind'])
 
-
 const props = defineProps({
-  img: Object as PropType<{ is_blind: boolean, url: string }>
+  img: Object as PropType<{ is_blind: boolean, url: string, thumbnail: string }>
 })
 
 const showOriginImg = ref(false)
@@ -31,6 +28,26 @@ const imgInfo = ref()
 
 const isBlind = computed(() => props.img.is_blind)
 const initStatus = _.cloneDeep(props.img.is_blind)
+
+const validImg = ref(null)
+
+
+onMounted(() => {
+  validateImage()
+})
+
+
+function validateImage() {
+  isImageURLValid((props.img.thumbnail), (isValid: Boolean) => {
+    if (isValid) {
+      validImg.value = props.img.thumbnail
+      console.log('valid', validImg.value)
+    } else {
+      validImg.value = props.img.url
+    }
+  })
+}
+
 
 function openBlind() {
   emit('updateBlind', props.img)
@@ -83,23 +100,6 @@ function onClickImg() {
       bottom: 10%;
       right: 10%;
     }
-  }
-}
-
-.expand-btn {
-  position: absolute;
-  bottom: 5px;
-  right: 5px;
-  background: #ffffff44;
-  border: none;
-  font-size: 16px;
-  color: #000;
-  border-radius: 5px;
-  cursor: pointer;
-
-  &:hover {
-    color: #f97316;
-    background-color: #fff;
   }
 }
 </style>

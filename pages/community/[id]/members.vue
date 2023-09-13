@@ -28,6 +28,7 @@
 import { ICommunity, IUser } from '~~/types'
 import { useI18n } from 'vue-i18n'
 import shared from '~~/scripts/shared';
+import { onBeforeRouteLeave } from 'vue-router';
 
 const LIMIT = 10
 
@@ -47,6 +48,10 @@ const isAddData = ref(false)
 const members = ref()
 const totalCount = ref(0)
 
+definePageMeta({
+  layout: 'header-only',
+})
+
 
 /**
  * seo 반영은 함수안에서 되지 않으므로 최상단에서 진행함
@@ -62,6 +67,7 @@ shared.createHeadMeta(`${communityInfo.value.name} ${t('members')} `, `${communi
 
 
 onMounted(async () => {
+  useRouterLeave()
 
   observer.value = new IntersectionObserver(
     async (entries) => {

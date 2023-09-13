@@ -73,6 +73,23 @@
     }
   }
 
+  .mp-type {
+    dt {
+      button {
+        background: transparent;
+        border: none;
+        transition: 0.3s;
+        font-size: 25px;
+        cursor: pointer;
+
+        &:hover {
+          color: #f97316
+        }
+      }
+    }
+  }
+
+
   .mp-midi {
     max-height: 315px;
 
@@ -342,8 +359,15 @@
 }
 
 @media all and (max-width: 479px) {
+
   .modal-post {
+    .editor-container {
+      font-size: 16px;
+    }
+
     .mp-header {
+      height: 60px;
+
       .title {
         position: absolute;
         width: 100%;
@@ -377,6 +401,8 @@
 @media all and (min-width: 480px) and (max-width: 767px) {
   .modal-post {
     .mp-header {
+      height: 60px;
+
       .title {
 
         position: absolute;

@@ -267,7 +267,7 @@
   "dashboard.update.info": "Dashboard service will be updated in the mid-February",
   "posting.placeholder": "Share your cool ideas",
   "maxFile.count.text1": "Maximum number of files is ",
-  "maxFile.count.text2": "",
+  "maxFile.count.text2": "[ number ]",
   "maxFile.count.ten.text": "Maximum number of files is 10",
   "maxFile.size.ten.text": "Maximum file size is 10mb",
   "delete": "Delete",
@@ -1052,6 +1052,14 @@
   "set.name": "Please set your name.",
   "dm.sent.img": "Image is sent.",
   "chatting": "Chat",
-  "not.support.ext": "__STRING_NOT_TRANSLATED__",
-  "joined.users": "__STRING_NOT_TRANSLATED__"
+  "group.name.err.msg1": "The group name can only be up to 50 characters.",
+  "group.name.err.msg2": "Cannot be set to blank. Please reset it.",
+  "mogera.info1": "game development is not difficult.",
+  "mogera.info2": "You don't need to code, you can create a game with simple choices and manipulations.",
+  "mogera.cta": "Getting Started for Free",
+  "not.support.ext": "The file extension is of an unsupported format.",
+  "joined.user": "chat participant",
+  "joined.users": "chat participant",
+  "dm.sent.video": "Sent Video",
+  "user.post.title": "'s Posts"
 }

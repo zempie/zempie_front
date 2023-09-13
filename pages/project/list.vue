@@ -7,16 +7,18 @@
       </div>
 
       <div class="mogera-info">
-        <p><span class="mogera-color">Mogera(모게라)</span>와 함께라면, 게임 개발은 어렵지 않습니다. </p>
-        <p>코딩을 할 필요 없이, 간단한 선택과 조작만으로 게임을 만들 수 있습니다. <span @click="moveMogera" class="mogera-color pointer underline">무료로
-            시작하기 ></span></p>
+        <p><span class="mogera-color">Mogera(모게라)</span>{{ $t('mogera.info1') }}</p>
+        <p>{{ $t('mogera.info2') }} <span @click="moveMogera" class="mogera-color pointer underline">{{ $t('mogera.cta')
+        }} ></span></p>
       </div>
 
       <div class="studio-all-game">
         <dl>
           <dt>
             <div class="input-search-default">
-              <p><i class="uil uil-search"></i></p>
+              <p class="flex items-center"><i>
+                  <IconSearch />
+                </i></p>
               <div>
                 <input type="text" name="" title="keywords" :placeholder="$t('needSearchInput')" @input="searchProject"
                   v-model="searchKeyword" />
@@ -24,57 +26,81 @@
             </div>
           </dt>
           <dd>
-            <NuxtLink id="gameUploadBtn" :to="$localePath('/project/upload')" class="btn-default ml20"><i
-                class="uil uil-plus"></i>{{ $t('gameUpload') }}</NuxtLink>
+            <NuxtLink id="gameUploadBtn" :to="$localePath('/project/upload')" class="btn-default ml20 flex items-center">
+              <i>
+                <LazyIconPlus color="#fff" />
+              </i>{{ $t('gameUpload') }}
+            </NuxtLink>
           </dd>
         </dl>
 
         <ul class="ag-title">
           <li>{{ $t('game.thumbnail') }}</li>
-          <li class="game-title">
+          <li class="game-title  row items-center">
             {{ $t('game.title') }}
-            <i v-if="isTitleSortAsc" class="uil uil-angle-up" style="font-size: 20px; cursor: pointer"
-              @click="sortAscList('name'), (isTitleSortAsc = !isTitleSortAsc)"></i>
-            <i v-else class="uil uil-angle-down" style="font-size: 20px; cursor: pointer"
-              @click="sortDescList('name'), (isTitleSortAsc = !isTitleSortAsc)"></i>
+
+            <i v-if="isTitleSortAsc" style="font-size: 20px; cursor: pointer"
+              @click="sortAscList('name'), (isTitleSortAsc = !isTitleSortAsc)">
+              <IconAngleUp />
+            </i>
+            <i v-else style="font-size: 20px; cursor: pointer"
+              @click="sortDescList('name'), (isTitleSortAsc = !isTitleSortAsc)">
+              <IconAngleDown />
+            </i>
           </li>
-          <li>
+          <li class="row items-center content-center">
             {{ $t('game.uploadDate') }}
-            <i v-if="isDateSortAsc" class="uil uil-angle-up" style="font-size: 20px; cursor: pointer" @click="
+            <i v-if="isDateSortAsc" style="font-size: 20px; cursor: pointer" @click="
               sortAscList('created_at'), (isDateSortAsc = !isDateSortAsc)
-              "></i>
-            <i v-else class="uil uil-angle-down" style="font-size: 20px; cursor: pointer" @click="
+              ">
+              <IconAngleUp />
+            </i>
+            <i v-else style="font-size: 20px; cursor: pointer" @click="
               sortDescList('created_at'), (isDateSortAsc = !isDateSortAsc)
-              "></i>
+              ">
+              <IconAngleDown />
+            </i>
           </li>
-          <li>
+          <li class="row items-center content-center">
             {{ $t('game.status') }}
-            <i v-if="isStageSortAsc" class="uil uil-angle-up" style="font-size: 20px; cursor: pointer"
-              @click="sortAscList('stage'), (isStageSortAsc = !isStageSortAsc)"></i>
-            <i v-else class="uil uil-angle-down" style="font-size: 20px; cursor: pointer"
-              @click="sortDescList('stage'), (isStageSortAsc = !isStageSortAsc)"></i>
+            <i v-if="isStageSortAsc" style="font-size: 20px; cursor: pointer"
+              @click="sortAscList('stage'), (isStageSortAsc = !isStageSortAsc)">
+              <IconAngleUp />
+            </i>
+            <i v-else style="font-size: 20px; cursor: pointer"
+              @click="sortDescList('stage'), (isStageSortAsc = !isStageSortAsc)">
+              <IconAngleDown />
+            </i>
           </li>
-          <li>
+          <li class="row items-center content-center">
             {{ $t('game.playCnt') }}
-            <i v-if="isPlayCountSortAsc" class="uil uil-angle-up" style="font-size: 20px; cursor: pointer" @click="
+            <i v-if="isPlayCountSortAsc" style="font-size: 20px; cursor: pointer" @click="
               sortAscListByGame('count_start'),
               (isPlayCountSortAsc = !isPlayCountSortAsc)
-              "></i>
-            <i v-else class="uil uil-angle-down" style="font-size: 20px; cursor: pointer" @click="
+              ">
+              <IconAngleUp />
+            </i>
+            <i v-else style="font-size: 20px; cursor: pointer" @click="
               sortDescListByGame('count_start'),
               (isPlayCountSortAsc = !isPlayCountSortAsc)
-              "></i>
+              ">
+              <IconAngleDown />
+            </i>
           </li>
-          <li>
+          <li class="row items-center content-center">
             {{ $t('game.likeCnt') }}
-            <i v-if="isLikeCountSortAsc" class="uil uil-angle-up" style="font-size: 20px; cursor: pointer" @click="
+            <i v-if="isLikeCountSortAsc" style="font-size: 20px; cursor: pointer" @click="
               sortAscListByGame('count_heart'),
               (isLikeCountSortAsc = !isLikeCountSortAsc)
-              "></i>
-            <i v-else class="uil uil-angle-down" style="font-size: 20px; cursor: pointer" @click="
+              ">
+              <IconAngleUp />
+            </i>
+            <i v-else style="font-size: 20px; cursor: pointer" @click="
               sortDescListByGame('count_heart'),
               (isLikeCountSortAsc = !isLikeCountSortAsc)
-              "></i>
+              ">
+              <IconAngleDown />
+            </i>
           </li>
         </ul>
 
@@ -133,16 +159,24 @@
           <div class="studio-pagination">
             <dl>
               <dd>{{ currPage }}-{{ totalPage }} of {{ totalCount }}</dd>
-              <dd>
+              <dd class="flex items-center">
                 <span @click="firstPage()" :class="[currPage === 1 && 'disabled', 'prev-btn']">
-                  <i class="uil uil-angle-double-left"></i>
+                  <i>
+                    <IconAngleDoubleLeft />
+                  </i>
                 </span>
-                <span @click="prevPage()" :class="[currPage === 1 && 'disabled', 'prev-btn']"><i
-                    class="uil uil-angle-left"></i></span>&nbsp;&nbsp;
+                <span @click="prevPage()" :class="[currPage === 1 && 'disabled', 'prev-btn']">
+                  <i>
+                    <IconAngleLeft />
+                  </i></span>&nbsp;&nbsp;
                 <span @click="nextPage()" :class="[currPage === totalPage && 'disabled', 'next-btn']">
-                  <i class="uil uil-angle-right"></i></span>
+                  <i>
+                    <IconAngleRight />
+                  </i></span>
                 <span @click="lastPage()" :class="[currPage === totalPage && 'disabled', 'next-btn']">
-                  <i class="uil uil-angle-double-right"></i>
+                  <i>
+                    <IconAngleDoubleRight />
+                  </i>
                 </span>
               </dd>
             </dl>
@@ -166,6 +200,7 @@ import dayjs from 'dayjs'
 import { IProject, eGameStage, eGameType } from '~~/types'
 import { useI18n } from 'vue-i18n'
 import shared from '~~/scripts/shared'
+import { onBeforeRouteLeave } from 'vue-router';
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -175,6 +210,7 @@ const { $localePath } = useNuxtApp()
 
 definePageMeta({
   middleware: 'auth',
+  layout: 'header-only',
 })
 
 const projects = ref([])
@@ -197,7 +233,9 @@ const fUser = computed(() => useUser().user.value.fUser)
 
 shared.createHeadMeta(t('seo.project.list.title'), t('seo.project.list.desc'))
 
+
 onMounted(async () => {
+  useRouterLeave()
   fetch()
   isPending.value = false
 })

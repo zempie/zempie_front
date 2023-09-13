@@ -93,10 +93,12 @@
               <li>
                 <ul>
                   <li>
-                    <i class="uil uil-comment-alt-dots" style="font-size: 22px"></i>&nbsp;
+                    <i>
+
+                    </i>&nbsp;
                   </li>
                   <li>
-                    <a><i class="uil uil-share-alt" style="font-size: 20px"></i>
+                    <a><i style="font-size: 20px"></i>
                     </a>
                   </li>
                 </ul>
@@ -114,7 +116,9 @@
         content-center" style="min-height: 500px;">
           <div class="flex content-center items-center "
             style="background-color:#ededed; height: 70px; width:70px; border-radius: 50%;">
-            <i class="uil uil-exclamation-triangle font30 zem-color"></i>
+            <i>
+              <LazyIconWarningTriangle width="30px" color="#f97316" />
+            </i>
           </div>
           <p class="mt30 mb30 text-bold font16"> {{ $t('not.exist.post') }}</p>
           <button class="btn-default" @click="$router.push($localePath('/'))">{{ $t('to.home') }}</button>
@@ -132,6 +136,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue'
 import { dateFormat, execCommandCopy, getFirstDomElementByServer, stringToDomElemByServer, isObjEmpty, } from '~~/scripts/utils'
 import shared from '~~/scripts/shared'
 import { IComment } from '~~/types'
+import { onBeforeRouteLeave } from 'vue-router';
 
 const { $localePath } = useNuxtApp()
 
@@ -171,13 +176,13 @@ const newRecomments = ref([])
 const isExist = ref(true)
 
 
-
 const attatchment_files = computed(() => {
   return feed.value.attatchment_files
     && (Array.isArray(feed.value.attatchment_files)
       ? feed.value.attatchment_files
       : JSON.parse(feed.value.attatchment_files))
 })
+
 
 useInfiniteScroll(
   commentEl,
@@ -236,6 +241,7 @@ const postedGame = (posted_at) => {
 }
 
 onMounted(async () => {
+  useRouterLeave()
   await commentFetch()
 })
 
