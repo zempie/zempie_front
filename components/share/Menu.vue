@@ -7,10 +7,10 @@
         </i></a>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item @click="webShare">
+          <!-- <el-dropdown-item @click="webShare">
             <Icon icon="ri-links-line" class="icon" />
             <span class="text">모바일공유</span>
-          </el-dropdown-item>
+          </el-dropdown-item> -->
           <el-dropdown-item @click="copyUrl">
             <Icon icon="ri-links-line" class="icon" />
             <span class="text">{{ $t('share.link.url') }}</span>
