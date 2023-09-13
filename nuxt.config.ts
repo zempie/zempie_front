@@ -2,6 +2,7 @@ import { i18n } from './modules/i18n'
 import { resolve } from 'pathe'
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
+  target: 'static',
   app: {
     head: {
       meta: [
@@ -60,9 +61,11 @@ export default defineNuxtConfig({
         }
       }
     },
-    'webpack:config': (config) => {
-      console.log('config', config)
-
+    'vite:extendConfig'(config, { isClient }) {
+      if (process.env.NODE_ENV !== 'development' && isClient) {
+        config.build.rollupOptions.output.chunkFileNames = '_nuxt/[hash].js'
+        config.build.rollupOptions.output.entryFileNames = '_nuxt/entry.[hash].js'
+      }
     }
   },
   generate: {
