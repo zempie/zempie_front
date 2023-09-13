@@ -7,6 +7,14 @@
         </i></a>
       <template #dropdown>
         <el-dropdown-menu>
+          <el-dropdown-item @click="webShare" v-if="navigator.share">
+            <Icon icon="ri-links-line" class="icon" />
+            <span class="text">모바일공유</span>
+          </el-dropdown-item>
+          <el-dropdown-item @click="copyUrl">
+            <Icon icon="ri-links-line" class="icon" />
+            <span class="text">{{ $t('share.link.url') }}</span>
+          </el-dropdown-item>
           <el-dropdown-item @click="copyUrl">
             <Icon icon="ri-links-line" class="icon" />
             <span class="text">{{ $t('share.link.url') }}</span>
@@ -161,6 +169,21 @@ function handleVisible(visible: boolean) {
     useCommon().setPopState(true)
   } else {
     useCommon().setPopState(false)
+  }
+}
+
+async function webShare() {
+  const shareData = {
+    title: "MDN",
+    text: "Learn web development on MDN!",
+    url: "https://developer.mozilla.org",
+  };
+
+  try {
+    await navigator.share(shareData);
+    // resultPara.textContent = "MDN shared successfully";
+  } catch (err) {
+    // resultPara.textContent = `Error: ${err}`;
   }
 }
 </script>
