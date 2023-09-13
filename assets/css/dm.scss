@@ -4,7 +4,8 @@
 
   .ma-content {
     .input-search-default {
-      justify-content: left
+      justify-content: left;
+      overflow-x: hidden;
     }
 
     .user-list {
