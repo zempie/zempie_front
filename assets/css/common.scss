@@ -1678,24 +1678,28 @@ $zempie-main-color-hover: #f974162a;
   margin-top: 0px !important;
   justify-content: flex-start !important;
 
-  // &.horizontal {
-  //   flex-wrap: nowrap;
-  //   flex-direction: column;
-  //   align-items: start;
-  // }
+  &.horizontal {
+    flex-wrap: nowrap;
+    flex-direction: column;
+    align-items: start;
+    padding: 5px 0;
+  }
 
-  // .chip-list {
-  //   display: flex;
-  //   overflow-x: auto;
+  .chip-list {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start !important;
+    overflow-x: auto;
+    cursor: pointer;
 
-  //   .chip {
-  //     flex: 0 0 auto;
-  //   }
-  // }
+    .chip {
+      flex: 0 0 auto;
+    }
+  }
 
-  // .chip-list::-webkit-scrollbar {
-  //   height: 10px;
-  // }
+  .chip-list::-webkit-scrollbar {
+    display: none;
+  }
 
   .chip {
     height: 30px;

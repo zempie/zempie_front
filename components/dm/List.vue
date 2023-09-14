@@ -110,7 +110,7 @@
                 <IconSearch />
               </i>
             </p>
-            <div class="mt0">
+            <div class="mt0 pr10" style="overflow: auto;">
               <CommonChipInput ref="chipRef" @currChip="getCurrChip" class="mt0">
                 <template #input>
                   <input class="chip-input" v-model="userKeyword" type="text" name="" title="keywords"
@@ -367,7 +367,7 @@ async function fetch(isPolling: boolean = false, customOffset?: number) {
 
               room.updated_message.map((msg) => {
 
-                //CASE 1: 삭제된 메세지가 업데이트 된 경우 : chat_idx : -1인 경우 삭제된 메세지임 
+                //CASE 1: 삭제된 메세지가 업데이트 된 경우 : chat_idx : -1인 경우 삭제된 메세지임
                 if (msg.chat_idx === -1 && (targetRoom.last_message.id === msg.id)) {
                   roomList.value = roomList.value.map((room3) => {
                     if (room3.id === room.id) {
@@ -455,7 +455,7 @@ async function getUsers() {
   }
 
   if (userKeyword.value) {
-    //TODO: 무한 스크롤 처리 해야됨 
+    //TODO: 무한 스크롤 처리 해야됨
     try {
       const { data, error, pending } = await useCustomAsyncFetch<{ totalCount: number, result: IUser[] }>(createQueryUrl(`/search`, payload), getComFetchOptions('get', false))
 
@@ -498,7 +498,7 @@ async function getFollowings() {
   let isPending = true
 
   try {
-    //TODO: 무한 스크롤 처리 해야됨 
+    //TODO: 무한 스크롤 처리 해야됨
     const { data, error, pending } = await useCustomAsyncFetch<{ totalCount: number, result: IUser[] }>(`/user/${userInfo.value?.id}/list/following`, getComFetchOptions('get', false))
 
     console.table(data.value)
