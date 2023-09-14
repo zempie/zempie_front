@@ -41,7 +41,6 @@ function onMouseMove(event) {
   const x = event.pageX - chipList.value.offsetLeft;
   const distance = (x - startX.value) * 2;
   chipList.value.scrollLeft = scrollLeft.value - distance;
-  console.log(chipList.value.scrollLeft, chipList.value.clientWidth, chipList.value.scrollWidth)
 }
 
 function onMouseUp() {
