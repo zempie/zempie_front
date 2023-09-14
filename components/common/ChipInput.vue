@@ -61,6 +61,15 @@ onBeforeUnmount(() => {
 const chipsArr = ref<IChip[]>([])
 defineExpose({ saveChip, backspaceDelete, chipsArr, clearArr })
 
+// watch(chipsArr.value)
+watch(
+  () => chipsArr.value,
+  (val) => {
+    setTimeout(() => {
+      chipList.value.scrollLeft = chipList.value.scrollWidth - chipList.value.clientWidth
+    }, 300)
+  }
+)
 
 function deleteChip(index: number) {
   chipsArr.value.splice(index, 1)
