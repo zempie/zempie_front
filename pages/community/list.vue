@@ -56,6 +56,7 @@ const MAX_LIMIT = 20
 
 const { t, locale } = useI18n()
 const route = useRoute()
+const router = useRouter()
 const config = useRuntimeConfig()
 
 const communities: any = ref([])
@@ -81,6 +82,26 @@ shared.createHeadMeta(t('communityList'), t('communityList.desc'))
 
 definePageMeta({
   name: 'community-list'
+})
+
+useRouter().afterEach((to, from, failure) => {
+  if (failure) {
+    window.location.reload()
+  }
+  // console.log(to, from, failure)
+})
+
+useRouter().onError((error) => {
+  const messages = [
+    "Importing a module script failed",
+    "Failed to fetch dynamically imported module",
+  ];
+  if (messages.some((message) => error?.message.includes(message))) {
+    (async () => {
+      window.location.reload()
+    })();
+  }
+
 })
 
 
