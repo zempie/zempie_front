@@ -185,6 +185,9 @@ onBeforeMount(() => {
       const localVersion = localStorage.getItem(config.LOCAL_VERSION_NAME)
       const currentVersion = config.VERSION
 
+      console.log('localVersion:', localVersion)
+
+
       if (!localVersion || currentVersion !== localVersion) {
         localStorage.setItem(config.LOCAL_VERSION_NAME, currentVersion);
         window.location.reload();
