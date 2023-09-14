@@ -165,11 +165,16 @@ const memDropdownRef = ref()
 const opJoinedUserModal = ref()
 
 
+const deleteMsgPolling = ref()
+
+
 const userInfo = computed(() => useUser().user.value.info)
 const isFbSupported = computed(() => useCommon().setting.value.isFbSupported)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 const unreadStartId = computed(() => props.selectedRoom.unread_start_id)
 const isMobile = computed(() => useCommon().common.value.isMobile)
+
+
 
 
 //pages > dm > list에서 provide됨
@@ -188,7 +193,7 @@ const lastMsg = computed({
 const isLastMsg = computed(() => {
 
   if (msgList.value) {
-  return msgList.value?.at(-1).id === lastMsg.value.id
+    return msgList.value.find((msg) => msg.id === lastMsg.value.id)
   }
 })
 
@@ -287,6 +292,9 @@ onMounted(async () => {
   })
 
 
+  //삭제된 메세지는 계속 polling fcm 여부 상관없음
+  await pollingDeleteMsg()
+
   if (!userInfo.value.setting.dm_alarm || !isFbSupported.value || !useCommon().setting.value.isNotiAllow) {
     clearInterval(msgPolling.value)
 
@@ -307,8 +315,10 @@ onMounted(async () => {
 })
 
 
+
 onBeforeUnmount(() => {
   clearInterval(msgPolling.value)
+  clearInterval(deleteMsgPolling.value)
 })
 
 
@@ -367,8 +377,8 @@ async function msgFetch(customOffset?: number) {
 
 function scrollToPrev(yPos: number) {
   scrollContent.value.scrollTop = scrollContent.value?.scrollHeight - yPos
-
 }
+
 
 async function onSubmitMsg() {
 
@@ -608,5 +618,38 @@ function closeImgModal() {
   if (isMobile.value) {
     useCommon().setPopState(false)
   }
+}
+
+
+async function getDeletedMsg() {
+
+  const body = {
+    offset: -1,
+    limit: -1,
+    order: 'asc',
+    start_id: msgList.value[0].id,
+    end_id: msgList.value[msgList.value.length - 1].id
+  }
+
+  const { data, error } = await useCustomAsyncFetch<{ result: any }>(`/chat/room/${props.selectedRoom.id}/deleted`,
+    getComFetchOptions('get', true, body))
+
+  if (data.value) {
+
+    const deletedMsgs = data.value.result
+
+    msgList.value = msgList.value.filter((msg) => !deletedMsgs.some(deletedMsg => deletedMsg.id === msg.id)
+    )
+
+
+  }
+}
+
+async function pollingDeleteMsg() {
+
+  deleteMsgPolling.value = setInterval(async () => {
+    await getDeletedMsg()
+  }, 5000)
+
 }
 </script>

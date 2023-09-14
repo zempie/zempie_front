@@ -16,19 +16,6 @@ const { t } = useI18n()
 
 const userInfo = computed(() => useUser().user.value.info)
 
-useRouter().onError((error) => {
-  const messages = [
-    "Importing a module script failed",
-    "Failed to fetch dynamically imported module",
-  ];
-  if (messages.some((message) => error?.message.includes(message))) {
-    (async () => {
-      window.location.reload()
-    })();
-  }
-
-})
-
 
 definePageMeta({
   title: 'main',
