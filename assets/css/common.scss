@@ -1682,11 +1682,15 @@ $zempie-main-color-hover: #f974162a;
     flex-wrap: nowrap;
     flex-direction: column;
     align-items: start;
+    padding: 5px 0;
   }
 
   .chip-list {
+    width: 100%;
     display: flex;
+    justify-content: flex-start !important;
     overflow-x: auto;
+    cursor: pointer;
 
     .chip {
       flex: 0 0 auto;
@@ -1694,7 +1698,7 @@ $zempie-main-color-hover: #f974162a;
   }
 
   .chip-list::-webkit-scrollbar {
-    height: 10px;
+    display: none;
   }
 
   .chip {
@@ -1716,7 +1720,7 @@ $zempie-main-color-hover: #f974162a;
 
   :deep(.chip-input) {
     flex: 1 1 auto;
-    // height: 30px;
+    // width: 30px;
     border: none;
     outline: none;
     padding: 4px;

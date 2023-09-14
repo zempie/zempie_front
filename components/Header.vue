@@ -150,7 +150,7 @@ const scrollDirection = ref(true); // true: scroll up, false :scroll down
 const scrollTrace = ref(0);
 
 const headerShowClass = computed(() => {
-  if (!scrollDirection.value && isMobile) return 'header-off';
+  if (!scrollDirection.value) return 'header-off';
   return '';
 });
 
@@ -217,10 +217,17 @@ function onPressMogera() {
 
 
 function scrollHandler() {
+  const headerHeight = 70;
+  const space = 40;
   const currentScroll = window.scrollY;
-  if (currentScroll > scrollTrace.value) scrollDirection.value = false;
-  else if (currentScroll < scrollTrace.value) scrollDirection.value = true;
-  scrollTrace.value = currentScroll;
+  
+  if (window.scrollY <= headerHeight || currentScroll + space < scrollTrace.value) {
+    scrollDirection.value = true;
+    scrollTrace.value = currentScroll;
+  } else if (currentScroll - space > scrollTrace.value) {
+    scrollDirection.value = false;
+    scrollTrace.value = currentScroll;
+  }
 }
 
 </script>
