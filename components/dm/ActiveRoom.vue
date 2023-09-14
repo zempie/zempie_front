@@ -188,7 +188,7 @@ const lastMsg = computed({
 const isLastMsg = computed(() => {
 
   if (msgList.value) {
-    return msgList.value?.at(-1).id === lastMsg.value.id
+  return msgList.value?.at(-1).id === lastMsg.value.id
   }
 })
 

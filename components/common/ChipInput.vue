@@ -41,6 +41,7 @@ function onMouseMove(event) {
   const x = event.pageX - chipList.value.offsetLeft;
   const distance = (x - startX.value) * 2;
   chipList.value.scrollLeft = scrollLeft.value - distance;
+  console.log(chipList.value.scrollLeft, chipList.value.clientWidth, chipList.value.scrollWidth)
 }
 
 function onMouseUp() {
@@ -61,6 +62,15 @@ onBeforeUnmount(() => {
 const chipsArr = ref<IChip[]>([])
 defineExpose({ saveChip, backspaceDelete, chipsArr, clearArr })
 
+// watch(chipsArr.value)
+watch(
+  () => chipsArr.value,
+  (val) => {
+    setTimeout(() => {
+      chipList.value.scrollLeft = chipList.value.scrollWidth - chipList.value.clientWidth
+    }, 300)
+  }
+)
 
 function deleteChip(index: number) {
   chipsArr.value.splice(index, 1)
