@@ -128,6 +128,7 @@ const isTablet = computed(() =>
 
 const isMobile = computed(() => useCommon().common.value.isMobile)
 
+
 const showMobileLogo = ref(false)
 const showHamburger = ref(false)
 const options = [
@@ -148,6 +149,8 @@ const { loginModal } = useModal()
 
 const scrollDirection = ref(true); // true: scroll up, false :scroll down
 const scrollTrace = ref(0);
+
+const versionCheckerInterval = ref()
 
 const headerShowClass = computed(() => {
   if (!scrollDirection.value) return 'header-off';
@@ -173,6 +176,23 @@ watch(
     }
   }
 )
+
+onBeforeMount(() => {
+  if (!versionCheckerInterval.value) {
+    colorLog('[vue] Header component setInterval is running', 'violet')
+    //30초마다 확인하고 리로드 
+    versionCheckerInterval.value = setInterval(() => {
+      const localVersion = localStorage.getItem(config.LOCAL_VERSION_NAME)
+      const currentVersion = config.VERSION
+
+      if (!localVersion || currentVersion !== localVersion) {
+        localStorage.setItem(config.LOCAL_VERSION_NAME, currentVersion);
+        window.location.reload();
+      }
+    }, 30000)
+  }
+
+})
 
 onMounted(() => {
   nextTick(() => {
@@ -220,7 +240,7 @@ function scrollHandler() {
   const headerHeight = 70;
   const space = 40;
   const currentScroll = window.scrollY;
-  
+
   if (window.scrollY <= headerHeight || currentScroll + space < scrollTrace.value) {
     scrollDirection.value = true;
     scrollTrace.value = currentScroll;

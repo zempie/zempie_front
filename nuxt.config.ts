@@ -61,12 +61,12 @@ export default defineNuxtConfig({
         }
       }
     },
-    'vite:extendConfig'(config, { isClient }) {
-      if (process.env.NODE_ENV !== 'development' && isClient) {
-        config.build.rollupOptions.output.chunkFileNames = '_nuxt/[hash].js'
-        config.build.rollupOptions.output.entryFileNames = '_nuxt/entry.[hash].js'
-      }
-    }
+    // 'vite:extendConfig'(config, { isClient }) {
+    //   if (process.env.NODE_ENV !== 'development' && isClient) {
+    //     config.build.rollupOptions.output.chunkFileNames = '_nuxt/[hash].js'
+    //     config.build.rollupOptions.output.entryFileNames = '_nuxt/entry.[hash].js'
+    //   }
+    // }
   },
   generate: {
     fallback: '404.html'
@@ -140,9 +140,9 @@ export default defineNuxtConfig({
     BOOTPAY_JS_KEY: process.env.BOOTPAY_JS_KEY,
     TAG_MANAGER_ID: process.env.TAG_MANAGER_ID,
     ZEMTOWN_URL: process.env.ZEMTOWN_URL,
-    MOGERA_URL: process.env.MOGERA_URL
-
-  },
-
+    MOGERA_URL: process.env.MOGERA_URL,
+    VERSION: process.env.VERSION,
+    LOCAL_VERSION_NAME: process.env.LOCAL_VERSION_NAME
+  }
 })
 

@@ -84,13 +84,6 @@ definePageMeta({
   name: 'community-list'
 })
 
-useRouter().afterEach((to, from, failure) => {
-  if (failure) {
-    window.location.reload()
-  }
-  // console.log(to, from, failure)
-})
-
 useRouter().onError((error) => {
   const messages = [
     "Importing a module script failed",
