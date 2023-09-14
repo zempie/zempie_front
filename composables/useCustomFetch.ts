@@ -47,7 +47,6 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
             break;
           case 10001:
             useUser().removeUserState()
-            shared.removeCookies()
             break;
           default:
             if (retryCount < 3) {
@@ -56,7 +55,6 @@ export const useCustomAsyncFetch = async <T>(url: string, options?: FetchOptions
               console.log('remove cookie')
 
               useUser().removeUserState()
-              shared.removeCookies()
               console.log('check', config.public.ENV, 'env:', config.env === 'development', config.env == 'development')
             }
             break;
@@ -132,7 +130,6 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
           break;
         case 10001:
           await useUser().logout()
-          shared.removeCookies()
           break;
         default:
           if (retryCount < 3) {
@@ -142,7 +139,6 @@ export const useCustomFetch = async <T>(url: string, options?: FetchOptions, ret
           } else {
             console.log('remove cookie')
             await useUser().logout()
-            shared.removeCookies()
 
           }
           break;
@@ -302,7 +298,6 @@ export async function getRefreshToken() {
     return result
 
   } catch (error: any) {
-    shared.removeCookies()
 
   }
 }

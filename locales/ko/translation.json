@@ -1050,6 +1050,14 @@
   "set.name": "이름을 작성해주세요.",
   "dm.sent.img": "사진을 보냈습니다.",
   "chatting": "채팅",
+  "group.name.err.msg1": "그룹명은 50자 이내만 가능합니다.",
+  "group.name.err.msg2": "빈 칸으로는 설정할 수 없습니다. 다시 설정해주세요.",
+  "mogera.info1": "와 함께라면, 게임 개발은 어렵지 않습니다.",
+  "mogera.info2": "코딩을 할 필요 없이, 간단한 선택과 조작만으로 게임을 만들 수 있습니다.",
+  "mogera.cta": "무료로 시작하기",
   "not.support.ext": "해당 파일 확장자는 지원하지 않는 형식입니다.",
-  "joined.users": "대화 상대"
+  "joined.user": "대화 상대",
+  "joined.users": "대화 상대",
+  "dm.sent.video": "동영상을 보냈습니다.",
+  "user.post.title": "님의 게시물"
 }

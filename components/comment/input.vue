@@ -1,21 +1,23 @@
 <template>
-  <dl class="mt15" @click="isLogin || useModal().openLoginModal()">
-    <UserAvatar :user="user" :tag="'p'" class="user" />
-    <dt>
-      <div class="chip-container ">
-        <div class="chip" v-if="parentComment?.user?.nickname">
-          {{ '@' + parentComment?.user?.nickname }}
+  <div class="flex w100p items-center mt15 mb10 ">
+    <dl class="mt0 w100p mr10" @click="isLogin || useModal().openLoginModal()">
+      <UserAvatar :user="user" :tag="'p'" class="user" />
+      <dt>
+        <div class="chip-container ">
+          <div class="chip" v-if="parentComment?.user?.nickname">
+            {{ '@' + parentComment?.user?.nickname }}
+          </div>
+          <input type="text" v-model="content" :placeholder="parentComment?.id ? '' : $t('comment.input.placeholder')"
+            :readonly="!isLogin" @input="onInputComment" @keydown.delete="backspaceDelete"
+            @keyup.enter="isEdit ? editComment() : sendComment()" ref="commentInput" />
         </div>
-        <input type="text" v-model="content" :placeholder="parentComment?.id ? '' : $t('comment.input.placeholder')"
-          :readonly="!isLogin" @input="onInputComment" @keydown.delete="backspaceDelete"
-          @keyup.enter="isEdit ? editComment() : sendComment()" ref="commentInput" />
-      </div>
-    </dt>
-    <dd>
-      <a @click="isEdit ? editComment() : sendComment()" :class="isActive ? 'active' : 'inactive'">
-        <i class="uil uil-message"></i></a>
-    </dd>
-  </dl>
+      </dt>
+
+    </dl>
+    <button @click="isEdit ? editComment() : sendComment()" :class="['square-btn', isActive ? 'active' : 'inactive']">
+      {{ $t('posting') }}
+    </button>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -195,6 +197,10 @@ function backspaceDelete({ which }) {
 </script>
 
 <style lang="scss" scoped>
+.square-btn {
+  height: 50px;
+}
+
 .chip-container {
   min-height: 48px;
   padding: 0 15px;

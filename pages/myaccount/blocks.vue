@@ -18,6 +18,7 @@
 <script setup lang="ts">
 import shared from '~/scripts/shared'
 import { IUser } from '~~/types'
+import { onBeforeRouteLeave } from 'vue-router';
 
 const { t, locale } = useI18n()
 
@@ -46,6 +47,7 @@ const userInfo = computed(() => useUser().user.value.info)
 
 
 onMounted(async () => {
+  useRouterLeave()
   await fetch()
 })
 

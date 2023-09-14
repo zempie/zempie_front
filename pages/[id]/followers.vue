@@ -19,6 +19,7 @@
 import { useI18n } from 'vue-i18n'
 import { IFollowUser, IUserChannel } from '~~/types'
 import shared from '~/scripts/shared'
+import { onBeforeRouteLeave } from 'vue-router';
 
 const { t } = useI18n()
 const route = useRoute()
@@ -28,28 +29,24 @@ const totalCount = ref(0)
 const users = ref([])
 
 const userId = computed(() => route.params.id as string)
+const channelInfo = computed(() => useChannel().userChannel.value.info)
 
 definePageMeta({
   title: 'user-followers',
   name: 'userFollowers',
 })
 
-/**
- * seo 반영은 함수안에서 되지 않으므로 최상단에서 진행함
- */
-const { data } = await useAsyncData<{ result: { target: IUserChannel } }>('channelInfo', () =>
-  $fetch(`/user/${userId.value}`, getZempieFetchOptions('get', true)),
-  {
-    initialCache: false
-  }
-)
-const { target: channelInfo } = data.value?.result;
+shared.createHeadMeta(`${channelInfo.value.name}${t('seo.channel.followers.title')}`, `${channelInfo.value.name}${t('seo.channel.followers.desc')}`, channelInfo.value.picture)
 
-shared.createHeadMeta(`${channelInfo.name}${t('seo.channel.followers.title')}`, `${channelInfo.name}${t('seo.channel.followers.desc')}`, channelInfo.picture)
 
+watch(() => (channelInfo.value),
+  async (value) => {
+    await fetch()
+  })
 
 onMounted(async () => {
-  if (channelInfo.id) await fetch()
+  useRouterLeave()
+  if (channelInfo.value.id) await fetch()
 })
 
 async function fetch() {
@@ -58,7 +55,7 @@ async function fetch() {
     result: []
     pageInfo: {}
   }>(
-    `/user/${channelInfo.id}/list/follower`,
+    `/user/${channelInfo.value.id}/list/follower`,
     getComFetchOptions('get', true)
   )
 

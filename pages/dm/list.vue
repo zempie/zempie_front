@@ -4,11 +4,16 @@
   </div>
 </template>
 <script setup lang="ts">
+import { onBeforeRouteLeave } from 'vue-router';
 
 definePageMeta({
   title: 'dm',
   name: 'dm',
   middleware: 'auth',
+})
+
+onMounted(() => {
+  useRouterLeave()
 })
 
 </script>

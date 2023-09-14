@@ -19,21 +19,6 @@
     </p>
     <CommonInput v-else ref="inputRef" @send-input="updateComment" class="mt10 justify-between pr10" />
     <div class="options" v-if="hasOptions" style="justify-content: flex-start;">
-      <!-- TODO: 2차 대댓글  -->
-      <!-- <p style="display: inline-block">
-                      <i v-if="isLiked" @click="unsetLike()" class="xi-heart like-icon pointer" style="color: red"></i>
-                      <i v-else class="uil uil-heart-sign pointer" @click="setLike()"></i>
-                      <span class="ml5">{{ $t('like') }} {{ likeCnt }}{{ $t('like.unit') }}</span>
-                    </p> 
-      <p class="zem-color pointer mr10" v-if="comment?.count_reply" @click="onClickRecomment"
-        :style="comment.deleted_at ? 'margin-left:35px' : ''">
-        <i :class="isRecommentOpen ? 'uil uil-angle-up' : 'uil uil-angle-down'"></i>
-        {{ $t('recomment') }} {{ replyCount }}{{ $t('unit') }}
-      </p>
-      <span class="pointer" @click="opRecomment">
-        <i class="uil uil-edit-alt"></i>{{ $t('write.recomment') }}
-      </span>-->
-
     </div>
     <ul class="recomment" v-if="isRecommentOpen">
       <GameCommentItem v-for="cmt in recommentList" :comment="cmt" @delete-comment="deleteRecomment"
@@ -195,7 +180,7 @@ li {
     border: none;
   }
 
-  ::v-deep(.picture) {
+  :deep(.picture) {
     height: 35px;
     width: 35px;
     border-radius: 100%;
@@ -217,4 +202,4 @@ li {
 .recomment {
   margin-left: 45px;
 }
-</style>``₩
+</style>

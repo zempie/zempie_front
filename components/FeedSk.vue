@@ -20,35 +20,24 @@
     <div>
       <div class="tapl-content"></div>
     </div>
-
-
-
     <ul class="tapl-option">
       <li>
         <ul>
-
-          <li><i class="uil uil-comment-alt-dots comment-icon" style="font-size:22px;"></i>&nbsp;
-
+          <li>
+            &nbsp;
           </li>
-
-          <li><a><i class="uil uil-share-alt" style="font-size:20px;"></i></a></li>
+          <li><a>
+            </a></li>
         </ul>
       </li>
     </ul>
-
     <div>
       <ul>
-
         <li>
         </li>
       </ul>
     </div>
-
-
-
-
   </li>
-
 </template>
 
 <script setup lang="ts">

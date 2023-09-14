@@ -639,9 +639,11 @@ pre {
 
 
 
-
-
 @media all and (max-width: 479px) {
+  .editor-container {
+    max-height: 75vh;
+  }
+
   .post-btn-container {
     button {
       padding: 0px;
@@ -652,6 +654,10 @@ pre {
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
+  .editor-container {
+    max-height: 75vh;
+  }
+
   .post-btn-container {
     button {
       padding: 0px;

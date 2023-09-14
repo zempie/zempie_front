@@ -2,7 +2,7 @@
   <el-dialog v-model="showModal" class="img-modal-area" :show-close="false" append-to-body>
     <div class="column">
       <button class="close-btn pointer" @click="closeModal">
-        <i class="uil uil-times"></i>
+        <IconClose />
       </button>
       <div class="user-info row w100p pb15">
         <button class="mr10 pointer"><span class="material-icons">
@@ -40,7 +40,6 @@
 <script setup lang="ts">
 import { ElDialog } from 'element-plus';
 import { onClickOutside } from '@vueuse/core'
-import { PropType } from 'nuxt/dist/app/compat/capi';
 import { dmDateFormat } from '~~/scripts/utils'
 import { IMessage } from '~~/types';
 
@@ -54,6 +53,14 @@ const props = defineProps({
   },
 })
 const emit = defineEmits(['closeModal'])
+
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeModal()
+    }
+  })
 
 const target = ref(null)
 const ignoreElRef = ref(null)

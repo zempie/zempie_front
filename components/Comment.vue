@@ -13,15 +13,17 @@
                   {{ commentUser.nickname }}</NuxtLink>
                 <span class="font13">{{ dateFormat(comment.created_at) }}</span>
               </h2>
-              <el-dropdown trigger="click" ref="feedMenu" popper-class="tapl-more-dropdown">
-                <a slot="trigger"><i class="uil uil-ellipsis-h font25 pointer"></i></a>
+              <el-dropdown trigger="click" ref="feedMenu" popper-class="tapl-more-dropdown" @visible-change="handleVisible">
+                <a slot="trigger">
+                  <IconEllipsisH />
+                </a>
                 <template #dropdown>
                   <div slot="body" class="more-list">
                     <template v-if="comment.user?.uid === user?.uid">
                       <a @click="isCommentEdit = !isCommentEdit" class="pointer">{{
                         $t('comment.edit')
                       }}</a>
-                      <a @click="showDeleteModal = true" class="pointer">
+                      <a @click="openDeleteModal" class="pointer">
                         {{ $t('comment.delete') }}
                       </a>
                     </template>
@@ -44,17 +46,18 @@
             <template v-if="!comment.deleted_at">
               <p style="display: inline-block">
                 <i v-if="isLiked" @click="unsetLike()" class="xi-heart like-icon pointer" style="color: red"></i>
-                <i v-else class="uil uil-heart-sign pointer" @click="setLike()"></i>
+                <i v-else class="xi-heart-o" @click="setLike()"></i>
                 <span class="ml5">{{ $t('like') }} {{ likeCnt }}{{ $t('like.unit') }}</span>
               </p>
               <span class="pointer ml10" @click="emit('recomment', comment)">
-                <i class="uil uil-edit-alt"></i>{{ $t('write.recomment') }}</span>
+                {{ $t('write.recomment') }}</span>
               <TranslateBtn :text="commentContent" @translatedText="translate" @untranslatedText="untranslatedText" />
             </template>
 
-            <p class="zem-color pointer" v-if="recomments?.length" @click="onClickRecomment"
+            <p class="zem-color pointer flex items-center" v-if="recomments?.length" @click="onClickRecomment"
               :style="comment.deleted_at ? 'margin-left:35px' : ''">
-              <i :class="isRecommentOpen ? 'uil uil-angle-up' : 'uil uil-angle-down'"></i>
+              <IconAngleUp v-if="isRecommentOpen" color="#f97316" width="15px" />
+              <IconAngleDown v-else color="#f97316" width="15px" />
               {{ $t('recomment') }} {{ recomments?.length }}{{ $t('unit') }}
             </p>
           </dd>
@@ -80,8 +83,8 @@
             <dl class="ma-header">
               <dt>{{ $t('information') }}</dt>
               <dd>
-                <button @click="showDeleteModal = false">
-                  <i class="uil uil-times"></i>
+                <button @click="closeDeleteModal">
+                  <IconClose />
                 </button>
               </dd>
             </dl>
@@ -91,7 +94,7 @@
                 <button class="btn-default w48p" @click="deleteComment">
                   {{ $t('delete') }}
                 </button>
-                <button class="btn-gray w48p" @click="showDeleteModal = false">
+                <button class="btn-gray w48p" @click="closeDeleteModal">
                   {{ $t('no') }}
                 </button>
               </div>
@@ -105,7 +108,7 @@
   <CommentInput v-if="isCommentEdit" @refresh="refresh" @editComment="editComment" :postId="comment.post_id"
     :comment="comment" :isEdit="true" />
 
-  <ReportModal :openModal="showReportModal" :reportInfo="reportInfo" @closeModal="showReportModal = false" />
+  <ReportModal :openModal="showReportModal" :reportInfo="reportInfo" @closeModal="closeReportModal" />
 </template>
 
 <script setup lang="ts">
@@ -114,6 +117,7 @@ import { ElDropdown, ElDialog } from 'element-plus'
 import { IComment, eReportType } from '~~/types';
 import { dateFormat } from '~~/scripts/utils'
 import { PropType } from 'vue';
+
 const { t, locale } = useI18n()
 
 const { $localePath } = useNuxtApp()
@@ -124,6 +128,18 @@ const parentUser = reactive({
 
 const showDeleteModal = ref(false)
 const isCommentEdit = ref(false)
+const feedMenu = ref()
+
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeDeleteModal()
+      closeReportModal()
+      feedMenu.value.handleClose()
+    }
+  })
+
 const props = defineProps({
   comment: Object as PropType<IComment>,
   isEdit: {
@@ -136,6 +152,7 @@ const props = defineProps({
 
 const recomments = ref(props.comment?.children_comments)
 const commentContent = ref(commentCheck(props.comment) || '')
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
 
 const emit = defineEmits(['refresh', 'editComment', 'deleteComment', 'recomment', 'deleteRecomment'])
@@ -174,11 +191,9 @@ const showComment = computed(() => {
   } else {
     return false
   }
-  // (comment.deleted_at && recomments?.length > 0) && comment && !isCommentEdit
 })
 
 const { info: user, isLogin } = useUser().user.value
-
 
 function commentCheck(cmt: IComment) {
 
@@ -334,9 +349,40 @@ function onClickReport() {
     ]
   }
   showReportModal.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
 }
 
+function openDeleteModal() {
+  showDeleteModal.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
 
+function closeDeleteModal() {
+  showDeleteModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
+}
+
+function closeReportModal() {
+  showReportModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
+}
+
+function handleVisible(visible: boolean) {
+  if (!isMobile.value) return
+  if (visible) {
+    useCommon().setPopState(true)
+  } else {
+    useCommon().setPopState(false)
+  }
+}
 </script>
 
 <style lang="scss" scoped>

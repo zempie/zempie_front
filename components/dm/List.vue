@@ -1,17 +1,27 @@
 <template>
   <div :class="['dm-list', selectedRoom ? 'on' : 'off']">
     <div class="dl-title">
+      <!-- TODO: 디자인 수정할때 영역 맞춰야됨 -->
       <div class="row items-center">
-        <button v-if="isFullScreen && !selectedRoom" class="mobile-back-btn pointer" @click="onClickBackBtn"><i
-            class="uil uil-arrow-left"></i></button>
-        <h2> <button :class="['mobile-btn', selectedRoom ? 'on' : 'off']" @click="initSelect"><i
-              class="uil uil-arrow-left"></i></button> {{
-                $t('dm') }}</h2>
+        <button v-if="isFullScreen && !selectedRoom" class="mobile-back-btn pointer" @click="onClickBackBtn"><i>
+            <IconLeftArrow />
+          </i></button>
+        <h2 class="flex items-center">
+          <button :class="['mobile-btn', selectedRoom ? 'on' : 'off']" @click="initSelect">
+            <i>
+              <IconLeftArrow />
+            </i></button> {{
+              $t('dm') }}
+        </h2>
       </div>
       <p>
-        <a :class="['pointer new-msg-btn-icon', { 'inactive': roomPending }]" @click="showNewMsg"><i
-            class="uil uil-comment-alt-plus"></i> </a>
-        <NuxtLink :to="$localePath(`/myaccount`)"><i class="uil uil-setting"></i> </NuxtLink>
+        <a :class="['pointer new-msg-btn-icon', { 'inactive': roomPending }]" @click="showNewMsg">
+          <i>
+            <IconPlus />
+          </i> </a>
+        <NuxtLink :to="$localePath(`/myaccount`)"><i>
+            <IconSetting />
+          </i> </NuxtLink>
       </p>
     </div>
 
@@ -37,7 +47,6 @@
         </ul>
         <template v-else>
           <ul v-if="roomList && roomList.length" class="msg-list" ref="msgEl">
-            <!-- <el-scrollbar tag="ul" wrap-class="msg-list" height="650px"> -->
             <li v-for="room in roomList" :key="room.id" @click="onClickRoom(room)"
               :class="{ active: room?.id === selectedRoom?.id }">
               <dl>
@@ -52,7 +61,9 @@
                 <dt class="dm-info-box">
                   <h3>{{ getJoinedUserName(room) }}</h3>
                   <p v-if="room?.last_message?.type === eChatType.IMAGE">{{ $t('dm.sent.img') }}</p>
-                  <p v-else-if="room?.last_message?.type === eChatType.TEXT">{{ room?.last_message?.contents }}</p>
+
+                  <p v-else-if="room?.last_message?.type === eChatType.TEXT">
+                    {{ room?.last_message?.sender.is_blocked ? 'Blocked User' : room?.last_message?.contents }}</p>
                 </dt>
                 <dd>
                   <h4 class="font12"><i class="uis uis-clock" style="color:#c1c1c1;"></i>
@@ -72,7 +83,9 @@
           @open-keyboard="openkeyboard" @update-last-msg="updateLastMsg" @close-keyboard="closeKeyboard"
           :key="componentKey" @update-group-name="updateGroupName" ref="activeRoomRef" />
         <div v-else class="dlc-chat-emptied">
-          <p><i class="uil uil-comment-alt-dots" style="font-size:40px; color:#fff;"></i></p>
+          <p><i>
+              <IconComment color="#fff" width="40px" height="40px" />
+            </i></p>
           <h2> {{ $t('no.selected.msg') }} </h2>
           <h3> {{ $t('new.msg.info') }} </h3>
           <div><button @click="showNewMsg" :class="['btn-default new-msg-btn', { 'inactive': roomPending }]"
@@ -82,22 +95,24 @@
     </dl>
   </div>
   <ClientOnly>
-    <el-dialog v-model="openNewMsg" class="modal-area-type new-msg-modal" :show-close="false" width="450px"
+    <el-dialog v-model="opNewMsg" class="modal-area-type new-msg-modal" :show-close="false" width="450px"
       @close="closeModal" :fullscreen="isFullScreen">
       <div class="modal-alert">
         <dl class="ma-header">
           <dt>{{ t('new.message') }}</dt>
           <dd>
-            <button class="pointer" @click="openNewMsg = false">
-              <i class="uil uil-times"></i>
+            <button class="pointer" @click="closeNewMsg">
+              <IconClose />
             </button>
           </dd>
         </dl>
         <div class="ma-content">
           <div class="input-search-default mt0" @input="onInputUser">
-            <p><i class="uil uil-search"></i>
+            <p><i>
+                <IconSearch />
+              </i>
             </p>
-            <div class="mt0">
+            <div class="mt0 pr10" style="overflow: auto;">
               <CommonChipInput ref="chipRef" @currChip="getCurrChip" class="mt0">
                 <template #input>
                   <input class="chip-input" v-model="userKeyword" type="text" name="" title="keywords"
@@ -167,7 +182,7 @@ const dmKeyword = ref('')
 
 const inputMsg = ref('')
 
-const openNewMsg = ref(false)
+const opNewMsg = ref(false)
 const userKeyword = ref('')
 const chipRef = ref()
 const userList = ref<IUser[]>()
@@ -211,14 +226,12 @@ const userOffset = ref(0)
 const isAddUserData = ref(false)
 const userListRef = ref<HTMLElement | null>(null)
 
-
-
 let createRoomCount = 2
-
 
 definePageMeta({
   name: 'community-list'
 })
+
 useInfiniteScroll(
   userListEl,
   async () => {
@@ -290,6 +303,13 @@ watch(
   }
 )
 
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeNewMsg()
+    }
+  })
 
 onMounted(async () => {
 
@@ -349,7 +369,7 @@ async function fetch(isPolling: boolean = false, customOffset?: number) {
 
               room.updated_message.map((msg) => {
 
-                //CASE 1: 삭제된 메세지가 업데이트 된 경우 : chat_idx : -1인 경우 삭제된 메세지임 
+                //CASE 1: 삭제된 메세지가 업데이트 된 경우 : chat_idx : -1인 경우 삭제된 메세지임
                 if (msg.chat_idx === -1 && (targetRoom.last_message.id === msg.id)) {
                   roomList.value = roomList.value.map((room3) => {
                     if (room3.id === room.id) {
@@ -437,7 +457,7 @@ async function getUsers() {
   }
 
   if (userKeyword.value) {
-    //TODO: 무한 스크롤 처리 해야됨 
+    //TODO: 무한 스크롤 처리 해야됨
     try {
       const { data, error, pending } = await useCustomAsyncFetch<{ totalCount: number, result: IUser[] }>(createQueryUrl(`/search`, payload), getComFetchOptions('get', false))
 
@@ -472,7 +492,7 @@ async function getUsers() {
 
 async function showNewMsg() {
   if (!userInfo.value) return
-  openNewMsg.value = true
+  openNewMsg()
   await getFollowings()
 }
 
@@ -480,7 +500,7 @@ async function getFollowings() {
   let isPending = true
 
   try {
-    //TODO: 무한 스크롤 처리 해야됨 
+    //TODO: 무한 스크롤 처리 해야됨
     const { data, error, pending } = await useCustomAsyncFetch<{ totalCount: number, result: IUser[] }>(`/user/${userInfo.value?.id}/list/following`, getComFetchOptions('get', false))
 
     console.table(data.value)
@@ -566,7 +586,7 @@ async function findRoom(user_ids: Number[]) {
       }
     }
   } finally {
-    openNewMsg.value = false
+    closeNewMsg()
 
   }
 
@@ -718,5 +738,19 @@ function updateGroupName(roomName: string) {
 
 function onClickBackBtn() {
   router.back()
+}
+
+function openNewMsg() {
+  opNewMsg.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
+function closeNewMsg() {
+  opNewMsg.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
 }
 </script>

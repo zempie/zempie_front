@@ -12,7 +12,7 @@ export default function () {
 
   const common = useState('common', () => ({
     isMobile: false,
-    isPopState: false
+    isPopState: false,
   }))
 
 
@@ -50,6 +50,6 @@ export default function () {
     setSupport,
     setNoti,
     setMobile,
-    setPopState
+    setPopState,
   }
 }

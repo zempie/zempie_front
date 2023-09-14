@@ -1,13 +1,16 @@
 <template>
-  <el-dropdown trigger="click" popper-class="tapl-more-dropdown" style="margin-top:0px" ref="menuRef">
-    <a slot="trigger"><i class="uil uil-ellipsis-h font25 pointer"></i></a>
+  <el-dropdown trigger="click" popper-class="tapl-more-dropdown" style="margin-top:0px" ref="menuRef"
+    @visible-change="handleVisible">
+    <a slot="trigger">
+      <IconEllipsisH />
+    </a>
     <template #dropdown>
       <div slot="body" class="more-list">
         <template v-if="comment.user?.uid === user?.uid">
           <a @click="editComment" class="pointer">{{
             $t('comment.edit')
           }}</a>
-          <a @click="showDeleteModal = true" class="pointer">
+          <a @click="openDeleteModal" class="pointer">
             {{ $t('comment.delete') }}
           </a>
         </template>
@@ -24,8 +27,8 @@
         <dl class="ma-header">
           <dt>{{ $t('information') }}</dt>
           <dd>
-            <button class="pointer" @click="showDeleteModal = false">
-              <i class="uil uil-times"></i>
+            <button class="pointer" @click="closeDeleteModal">
+              <IconClose />
             </button>
           </dd>
         </dl>
@@ -35,7 +38,7 @@
             <button class="btn-default w48p" @click="$emit('deleteComment')">
               {{ $t('delete') }}
             </button>
-            <button class="btn-gray w48p" @click="showDeleteModal = false">
+            <button class="btn-gray w48p" @click="closeDeleteModal">
               {{ $t('no') }}
             </button>
           </div>
@@ -43,7 +46,7 @@
       </div>
     </el-dialog>
   </ClientOnly>
-  <ReportModal :openModal="showReportModal" :reportInfo="reportInfo" @closeModal="showReportModal = false" />
+  <ReportModal :openModal="showReportModal" :reportInfo="reportInfo" @closeModal="closeReportModal" />
 </template>
 <script setup lang="ts">
 import { ElDropdown, ElDialog } from 'element-plus';
@@ -64,9 +67,30 @@ const menuRef = ref()
 const showReportModal = ref(false)
 const reportInfo = ref()
 const user = computed(() => useUser().user.value.info)
+const isMobile = computed(() => useCommon().common.value.isMobile)
+
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeDeleteModal()
+      closeReportModal()
+      menuRef.value.handleClose()
+    }
+  })
+
+function openDeleteModal() {
+  showDeleteModal.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
 
 function closeDeleteModal() {
   showDeleteModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
 }
 
 function editComment() {
@@ -109,8 +133,29 @@ function onClickReport() {
 
     ]
   }
-  showReportModal.value = true
+  openReportModal()
 }
 
+function openReportModal() {
+  showReportModal.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+function closeReportModal() {
+  showReportModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
+}
+
+function handleVisible(visible: boolean) {
+  if (!isMobile.value) return
+  if (visible) {
+    useCommon().setPopState(true)
+  } else {
+    useCommon().setPopState(false)
+  }
+}
 </script>
 <style scoped lang="scss"></style>

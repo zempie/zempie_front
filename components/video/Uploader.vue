@@ -1,6 +1,10 @@
 <template>
   <div @click="uploaVideoFile">
-    <button><i class="uil uil-play-circle font25"></i></button>
+    <button>
+      <i class="font25">
+        <LazyIconPlayCircle color="#888" />
+      </i>
+    </button>
     <div style="height: 0px; overflow: hidden">
       <input type="file" @change="onSelectVideoFile" accept=video/* ref="video" />
     </div>
@@ -9,6 +13,7 @@
 <script setup lang="ts">
 import { ElMessage } from 'element-plus'
 import { eChatType } from '~~/types'
+import { fileUpload } from '~~/scripts/fileManager'
 
 const MAX_LIMIT = 10
 
@@ -16,11 +21,14 @@ const { t } = useI18n()
 
 
 const video = ref<HTMLElement>()
-const imageFiles = ref([])
+const videoFiles = ref([])
+const rawFiles = ref()
 const isImgUploading = ref(false)
 
 
 const emit = defineEmits(['uploadVideo'])
+
+defineExpose({ fetchVideo, deleteVideo })
 
 
 function uploaVideoFile() {
@@ -29,59 +37,60 @@ function uploaVideoFile() {
 
 async function onSelectVideoFile(event: any) {
 
-  console.log(event.target)
 
-  const [file] = event.target.files;
+  const files = event.target.files;
+  const newFiles = Array.from(files)
+  rawFiles.value = newFiles
 
-  const formData = new FormData();
+  for (const file of newFiles) {
+    const reader = new FileReader()
 
-  formData.append(
-    file.name,
-    file
-  )
+    reader.onload = async (e) => {
 
+      const url = e.target!.result as string
 
-  const { data, error, pending } = await useCustomAsyncFetch<{
-    result: {
-      priority: number
-      url: string
-      type: string
-      name: string
-      size: number
-    }[]
-  }>('/community/att', getZempieFetchOptions('post', true, formData))
+      emit('uploadVideo', [{ file, name: file.name, type: eChatType.VIDEO, url }])
 
-  if (data.value) {
+    }
 
-
-    emit('uploadVideo', data.value.result)
-
-
+    reader.readAsDataURL(file);
   }
+
 
   (event.target as HTMLInputElement).value = ''
 }
 
 
 
-function isValidImgCount(images: File[]) {
-  //첨부하는 이미지의 갯수는 max를 넘길 수 없음
-  if ((images && images.length) > MAX_LIMIT) {
-    return false
+async function fetchVideo() {
+  let result: any = []
+
+  try {
+    for (const file of rawFiles.value) {
+      const { result: response } = await fileUpload(file)
+      result = response
+    }
+
+  } catch (err) {
+    console.error(err)
+  } finally {
+    initFiles()
+
   }
-
-  if (imageFiles.value.length > MAX_LIMIT) {
-    return false
-  }
-  if (images.length + imageFiles.value.length > MAX_LIMIT) {
-    console.log(MAX_LIMIT - imageFiles.value.length)
-    images.slice(0, MAX_LIMIT - imageFiles.value.length - 1)
-    return false
-  }
-
-
-  return true
-
+  return result
 }
+function initFiles() {
+  rawFiles.value = undefined
+  videoFiles.value = []
+}
+
+
+
+function deleteVideo(idx: number) {
+  rawFiles.value.splice(idx, 1)
+}
+
+
+
 </script>
 <style scoped lang="scss"></style>

@@ -13,6 +13,8 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import shared from '~/scripts/shared'
+import { onBeforeRouteLeave } from 'vue-router';
+
 const { t, locale } = useI18n()
 const route = useRoute()
 const config = useRuntimeConfig()
@@ -23,6 +25,10 @@ definePageMeta({
 })
 
 shared.createHeadMeta(t('seo.project.upload.title'), t('seo.project.upload.desc'))
+
+onMounted(() => {
+  useRouterLeave()
+})
 
 onBeforeMount(() => {
   useProject().setStepOne()

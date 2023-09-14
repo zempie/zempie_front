@@ -4,6 +4,7 @@
 
 - 디자인 : 퍼블리싱 외주로 진행
   Element ui framework 사용 
+  font는 리소스 제한으로 Notosans font-weight 400, 500, 700만 사용
 
 - 환경변수 : env.sample 참고 ( 로컬 환경 기준으로 작성해두었습니다. 테스트 환경, 실서버 환경은 업로드된 서버에서 직접 확인해주세요 )
 

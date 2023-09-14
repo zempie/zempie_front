@@ -50,13 +50,14 @@
       </li>
     </ul>
     <ul class="sui-btn">
-          <li>
-            <a @click="prevPage" class="btn-line w150"
-              ><i class="uil uil-angle-left-b"></i>
-              {{ $t('previous') }}
-            </a>
-          </li>
-         
+      <li>
+        <a @click="prevPage" class="btn-line w150 flex items-center content-center"><i>
+            <IconAngleLeft />
+          </i>
+          {{ $t('previous') }}
+        </a>
+      </li>
+
     </ul>
   </dd>
 </template>
@@ -74,7 +75,7 @@ function selectStage(stage: number) {
   useProject().setStepThree()
 }
 
-function prevPage(){
+function prevPage() {
   useProject().setStepOne()
   useProject().setPurpose(eGameCategory.NONE)
 }
@@ -82,11 +83,12 @@ function prevPage(){
 </script>
 
 <style scoped lang="scss">
-.sui-btn{
-  li{
+.sui-btn {
+  li {
     margin-top: 30px;
   }
 }
+
 input[type="radio"] {
   display: none;
 }
@@ -110,12 +112,13 @@ input[type="radio"]+label {
 }
 
 
-.studio-game-step{
+.studio-game-step {
   li:hover:not(:last-child) {
     box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.2);
     cursor: pointer;
   }
-  li:last-child{
+
+  li:last-child {
     opacity: 0.5;
   }
 }

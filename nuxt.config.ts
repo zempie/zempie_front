@@ -2,9 +2,7 @@ import { i18n } from './modules/i18n'
 import { resolve } from 'pathe'
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
-  webpack: {
-    analyze: true,
-  },
+  target: 'static',
   app: {
     head: {
       meta: [
@@ -25,7 +23,6 @@ export default defineNuxtConfig({
       link: [
         { hid: 'icon', rel: 'icon', type: 'image/x-icon', href: '~/static/favicon.ico' },
         { rel: 'stylesheet', href: 'https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Two+Tone' },
-        { rel: 'stylesheet', href: 'https://unicons.iconscout.com/release/v3.0.3/css/line.css' },
         { rel: "apple-touch-icon", href: 'https://s3.ap-northeast-2.amazonaws.com/zempie.com/icons/favicon-32x32.png' },
         { rel: "apple-touch-icon-precomposed", href: 'https://s3.ap-northeast-2.amazonaws.com/zempie.com/icons/favicon-32x32.png' },
       ],
@@ -54,25 +51,21 @@ export default defineNuxtConfig({
       })
     },
     'build:manifest': (manifest) => {
-      const keysToRemove = []
-
-      for (const key in manifest) {
-        const file = manifest[key]
-
-        if (file.assets) {
-          file.assets = file.assets
-            .filter(
-              (asset: string) =>
-                !asset.endsWith('.webp') &&
-                !asset.endsWith('.jpg') &&
-                !asset.endsWith('.png')
-            )
+      // find the app entry, css list
+      const css = manifest['node_modules/nuxt/dist/app/entry.js']?.css
+      if (css) {
+        // start from the end of the array and go to the beginning
+        for (let i = css.length - 1; i >= 0; i--) {
+          // if it starts with 'entry', remove it from the list
+          if (css[i].startsWith('entry')) css.splice(i, 1)
         }
       }
     },
-    'webpack:config': (config) => {
-      console.log('config', config)
-
+    'vite:extendConfig'(config, { isClient }) {
+      if (process.env.NODE_ENV !== 'development' && isClient) {
+        config.build.rollupOptions.output.chunkFileNames = '_nuxt/[hash].js'
+        config.build.rollupOptions.output.entryFileNames = '_nuxt/entry.[hash].js'
+      }
     }
   },
   generate: {
@@ -96,15 +89,19 @@ export default defineNuxtConfig({
     ['@nuxtjs/i18n', i18n],
     '@vueuse/nuxt',
     ['nuxt-compress', { gzip: { threshold: 8192 } }],
-    'nuxt-purgecss',
   ],
   nitro: {
-    compressPublicAssets: {
-      brotli: true
-    },
-    minify: true,
-
+    compressPublicAssets: true,
+    minify: true
   },
+
+  build: {
+    extractCSS: true,
+    filenames: {
+      chunk: () => '[name].js'
+    }
+  },
+
   publicRuntimeConfig: {
     ENV: process.env.ENV,
     COOKIE_NAME: process.env.COOKIE_NAME,

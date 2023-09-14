@@ -1,9 +1,16 @@
 <template>
   <ClientOnly>
-    <el-dropdown trigger="click" class="share-menu">
-      <a class="pointer"><i class="uil uil-share-alt" style="font-size: 20px"></i></a>
+    <el-dropdown ref="shareMenu" trigger="click" class="share-menu" @visible-change="handleVisible">
+      <a class="pointer">
+        <i>
+          <LazyIconShare />
+        </i></a>
       <template #dropdown>
         <el-dropdown-menu>
+          <!-- <el-dropdown-item @click="webShare">
+            <Icon icon="ri-links-line" class="icon" />
+            <span class="text">모바일공유</span>
+          </el-dropdown-item> -->
           <el-dropdown-item @click="copyUrl">
             <Icon icon="ri-links-line" class="icon" />
             <span class="text">{{ $t('share.link.url') }}</span>
@@ -53,6 +60,17 @@ const props = defineProps({
   shareInfo: Object as PropType<IShareInfo>
 })
 
+const shareMenu = ref()
+const isMobile = computed(() => useCommon().common.value.isMobile)
+
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    console.log('share menu watch')
+    if (!val) {
+      shareMenu.value.handleClose()
+    }
+  })
 
 const title = computed(() => {
   switch (props.type) {
@@ -61,6 +79,12 @@ const title = computed(() => {
     default:
       return `${props.shareInfo.user.nickname} ${t('seo.feed.title')} `
   }
+
+})
+
+onMounted(() => {
+  // page에서 작동을 안해서 임시 추가
+  useRouterLeave()
 
 })
 
@@ -135,7 +159,29 @@ function shareSocial(social: string) {
 
 }
 
+function handleVisible(visible: boolean) {
+  if (!isMobile.value) return
+  if (visible) {
+    useCommon().setPopState(true)
+  } else {
+    useCommon().setPopState(false)
+  }
+}
 
+async function webShare() {
+  const shareData = {
+    title: "MDN",
+    text: "Learn web development on MDN!",
+    url: "https://developer.mozilla.org",
+  };
+
+  try {
+    await navigator.share(shareData);
+    // resultPara.textContent = "MDN shared successfully";
+  } catch (err) {
+    // resultPara.textContent = `Error: ${err}`;
+  }
+}
 </script>
 <style scoped lang="scss">
 .icon {

@@ -7,14 +7,14 @@
             :placeholder="$t('login.email.placeholder')" class="w100p h60" style="margin-bottom: 10px"
             autocomplete="user-email" @keyup.enter="onSubmit" />
           <h2 class="input-errors" v-for="error of v$.email.$errors" :key="error.$uid">
-            <i class="uil uil-check"></i>{{ error.$message }}
+            {{ error.$message }}
           </h2>
           <input type="password" v-model="v$.password.$model" name="login-password" title=""
             autocomplete="current-password" :placeholder="$t('login.pwd.placeholder')" class="w100p h60"
             style="margin-bottom: 10px" @keyup.enter="onSubmit" />
 
           <h2 class="input-errors" v-for="error of v$.password.$errors" :key="error.$uid">
-            <i class="uil uil-check"></i>{{ error.$message }}
+            {{ error.$message }}
           </h2>
         </form>
         <p @click="onSubmit">

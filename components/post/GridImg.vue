@@ -1,8 +1,7 @@
 <template>
   <div :class="images?.length > 2 ? 'mul-grid' : images?.length === 1 ? 'single' : 'grid'">
     <div class="img-container" v-for="(img, idx) in images" :key="idx">
-      <span v-if="isDelete" @click="deleteImage(idx)" class="pointer zem-color"><i
-          class="uil uil-times-circle"></i></span>
+      <span v-if="isDelete" @click="deleteImage(idx)" class="pointer zem-color"><i></i></span>
       <img :src="img.url" />
     </div>
   </div>

@@ -87,6 +87,7 @@ import { useI18n } from 'vue-i18n'
 
 import { useWindowScroll, useInfiniteScroll } from '@vueuse/core'
 
+
 const { $localePath } = useNuxtApp()
 const { x, y } = useWindowScroll()
 const config = useRuntimeConfig()

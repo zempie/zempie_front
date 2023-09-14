@@ -2,21 +2,15 @@
   <NuxtLayout name="community">
     <ClientOnly>
       <div>
-        <!-- <dl class="three-area" v-if="pending">
-          <CommunityChannelListSk />
-          <dd>
-            <TimelineSk />
-          </dd>
-          <CommunityAboutSk />
-        </dl> -->
         <dl class="three-area">
           <CommunityChannelList :community="communityInfo" />
           <dd>
-            <PostTimeline type="community" :isSubscribed="communityInfo?.is_subscribed" :key="communityInfo?.id">
+            <PostTimeline type="community" :isSubscribed="communityInfo?.is_subscribed" :key="communityInfo?.id"
+              ref="timelineRef">
               <template #communityInput>
                 <input type="text" :placeholder="t('postModalInput')" readonly @click="
                   isLogin
-                    ? !communityInfo?.is_subscribed && (needSubscribe = true)
+                    ? !communityInfo?.is_subscribed && openSubModal()
                     : useModal().openLoginModal()
                   " />
               </template>
@@ -46,8 +40,8 @@
           <dl class="ma-header">
             <dt>{{ t('information') }}</dt>
             <dd>
-              <button @click="needSubscribe = false">
-                <i class="uil uil-times"></i>
+              <button @click="closeSubModal">
+                <IconClose />
               </button>
             </dd>
           </dl>
@@ -61,7 +55,7 @@
               <button class="btn-default w48p" @click="subscribe">
                 {{ t('yes') }}
               </button>
-              <button class="btn-gray w48p" @click="needSubscribe = false">
+              <button class="btn-gray w48p" @click="closeSubModal">
                 {{ t('no') }}
               </button>
             </div>
@@ -74,10 +68,11 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 import { useWindowScroll } from '@vueuse/core'
-import { ElDialog } from 'element-plus'
+import { ElDialog, ElMessageBox } from 'element-plus'
 import { ICommunity } from '~~/types'
 import { useI18n } from 'vue-i18n'
 import shared from '~~/scripts/shared'
+import { onBeforeRouteLeave } from 'vue-router';
 
 const MAX_LIST_SIZE = 5
 
@@ -87,6 +82,7 @@ const route = useRoute()
 
 const limit = ref(MAX_LIST_SIZE)
 const needSubscribe = ref(false)
+const timelineRef = ref()
 
 const isLogin = computed(() => useUser().user.value.isLogin)
 const communityId = computed(() => route.params.id as string)
@@ -96,11 +92,24 @@ const createdDate = computed(() =>
     'YYYY / MM / DD'
   )
 )
+const isMobile = computed(() => useCommon().common.value.isMobile)
+
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeSubModal()
+    }
+  })
 
 definePageMeta({
   title: 'community-channel',
   name: 'communityChannel',
   layout: 'header-only',
+})
+
+onMounted(() => {
+  useRouterLeave()
 })
 
 /**
@@ -140,12 +149,21 @@ async function subscribe() {
 
   if (!error.value) {
     useCommunity().setSubscribe()
-    needSubscribe.value = false
-  } else {
-    // ElMessage({
-    //   message: error.value,
-    //   type: 'error'
-    // })
+    closeSubModal()
+  }
+}
+
+function openSubModal() {
+  needSubscribe.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
+function closeSubModal() {
+  needSubscribe.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
   }
 }
 </script>

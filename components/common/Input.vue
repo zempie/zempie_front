@@ -6,8 +6,7 @@
         @focus="onFocus" ref="inputRef" />
     </dt>
     <dd>
-      <a class="pointer" @click="$emit('sendInput', inputText)">
-        <i class=" uil uil-message"></i></a>
+      <button class="pointer send-btn" @click="$emit('sendInput', inputText)">게시 </button>
     </dd>
   </dl>
 </template>
@@ -60,8 +59,13 @@ function onFocus() {
   }
 
   dd {
-    a {
-      font-size: 16px;
+    .send-btn {
+      background-color: transparent;
+      border: none;
+
+      &:hover {
+        color: #f97316
+      }
     }
   }
 

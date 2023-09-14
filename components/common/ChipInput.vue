@@ -1,8 +1,11 @@
 <template>
-  <div class="chip-container">
-    <div class="chip" v-for="(chip, i) of chipsArr" :key="chip?.id">
-      {{ chip.name }}
-      <i class="uil uil-times" @click="deleteChip(i)"></i>
+  <div class="chip-container horizontal ">
+    <div ref="chipList" class="chip-list mt0" @mousewheel="scrollX" @mousedown="onMouseDown" @mousemove="onMouseMove"
+      @mouseup="onMouseUp">
+      <div class="chip" v-for="(chip, i) of chipsArr" :key="chip?.id">
+        {{ chip.name }}
+        <IconClose @click="deleteChip(i)" color="#fff" class="pointer" />
+      </div>
     </div>
     <slot name="input"></slot>
   </div>
@@ -19,6 +22,41 @@ interface IChip {
   name: String,
 }
 
+const chipList = ref()
+const isDragging = ref(false)
+const startX = ref()
+const scrollLeft = ref()
+
+function scrollX(e) {
+  chipList.value.scrollLeft += e.deltaY;
+}
+function onMouseDown(event) {
+  isDragging.value = true;
+  startX.value = event.pageX - chipList.value.offsetLeft;
+  scrollLeft.value = chipList.value.scrollLeft;
+}
+function onMouseMove(event) {
+  if (!isDragging.value) return;
+  event.preventDefault();
+  const x = event.pageX - chipList.value.offsetLeft;
+  const distance = (x - startX.value) * 2;
+  chipList.value.scrollLeft = scrollLeft.value - distance;
+}
+
+function onMouseUp() {
+  isDragging.value = false;
+}
+
+onMounted(() => {
+  nextTick(() => {
+    onMouseUp()
+  })
+  window.addEventListener("mouseup", onMouseUp)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('mouseup', onMouseUp)
+})
 
 const chipsArr = ref<IChip[]>([])
 defineExpose({ saveChip, backspaceDelete, chipsArr, clearArr })

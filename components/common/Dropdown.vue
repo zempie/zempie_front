@@ -1,9 +1,8 @@
 <template>
   <div class="custom-dropdown" ref="dropdownContainer">
     <slot v-if="isCustomBtn" name="btn"></slot>
-
     <button v-else class="menu-btn" @click="toggleDropdown">
-      <i class="uil uil-ellipsis-h font25"></i>
+      <IconEllipsisH :color="color" />
     </button>
     <ul v-if="isDropdownOpen" class="more-list" @click="onClickOption">
       <slot name="options"></slot>
@@ -13,18 +12,33 @@
 <script setup lang="ts">
 const isDropdownOpen = ref(false)
 const dropdownContainer = ref()
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
 defineProps({
   options: Array<String>,
   isCustomBtn: {
     type: Boolean,
     default: false
+  },
+  color: {
+    type: String,
+    default: '#fff'
   }
 })
 
 defineExpose({ toggleDropdown })
 
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeDropdown()
+    }
+  })
+
 onMounted(() => {
+  // page에서 작동을 안해서 임시 추가
+  useRouterLeave()
   document.addEventListener("click", handleClickOutside);
 })
 onBeforeMount(() => {
@@ -33,8 +47,19 @@ onBeforeMount(() => {
 
 function toggleDropdown() {
   isDropdownOpen.value = !isDropdownOpen.value;
+
+  if (isMobile.value && !isDropdownOpen.value) {
+    useCommon().setPopState(true)
+  }
 }
 
+function closeDropdown() {
+  isDropdownOpen.value
+
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
+}
 
 function handleClickOutside(event) {
   const container = dropdownContainer.value;

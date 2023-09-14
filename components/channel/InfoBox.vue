@@ -30,21 +30,18 @@
     <ul>
       <li>
         <NuxtLink :to="$localePath(`/${userId}`)">
-          <ChannelPostIcon />
           <h2>{{ channelInfo?.post_cnt }}</h2>
           <h3>{{ $t('posts') }}</h3>
         </NuxtLink>
       </li>
       <li>
         <NuxtLink :to="$localePath(`/${userId}/followers`)">
-          <ChannelFollowIcon />
           <h2>{{ channelInfo?.follower_cnt }}</h2>
           <h3>{{ $t('follower') }}</h3>
         </NuxtLink>
       </li>
       <li>
         <NuxtLink :to="$localePath(`/${userId}/following`)">
-          <ChannelFollowIcon />
           <h2>{{ channelInfo?.following_cnt }}</h2>
           <h3>{{ $t('following') }}</h3>
         </NuxtLink>

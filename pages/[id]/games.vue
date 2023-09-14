@@ -5,10 +5,6 @@
         <dt>
           {{ t('games') }} <span>{{ games?.length }}</span>
         </dt>
-        <dd>
-          <NuxtLink :to="$localePath(`/project/upload`)" v-if="isMine" class="btn-default-samll">
-            {{ t('add.game') }}<i class="uil uil-plus"></i></NuxtLink>
-        </dd>
       </dl>
       <transition name="component-fade" mode="out-in">
         <ul class="card-game">
@@ -30,6 +26,7 @@
 import { useI18n } from 'vue-i18n'
 import shared from '~~/scripts/shared';
 import { IUserChannel } from '~~/types';
+import { onBeforeRouteLeave } from 'vue-router';
 
 const { t } = useI18n()
 const route = useRoute()
@@ -47,6 +44,9 @@ const isMine = computed(() => {
   return route.params.id === useUser().user.value.info?.channel_id
 })
 
+onMounted(() => {
+  useRouterLeave()
+})
 
 /**
  * seo 반영은 함수안에서 되지 않으므로 최상단에서 진행함

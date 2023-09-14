@@ -20,6 +20,15 @@ const { t, locale } = useI18n()
 const showReportModal = ref(false)
 const showReportComModal = ref(false)
 
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeReportModal()
+      closeModal()
+    }
+  })
+
 
 const props = defineProps({
   user: Object as PropType<IUser>
@@ -28,7 +37,6 @@ const props = defineProps({
 
 function closeModal() {
   showReportComModal.value = false
-
 }
 
 

@@ -20,7 +20,7 @@
                 :placeholder="$t('login.email.placeholder')" class="w100p h60" :readonly="fUser ? true : false" />
 
               <h3 class="input-errors" v-for="error of v$.email.$errors" :key="error.$uid">
-                <i class="uil uil-check"></i>{{ error.$message }}
+                {{ error.$message }}
               </h3>
             </li>
             <li v-if="!fUser?.email">
@@ -28,14 +28,14 @@
                 :placeholder="$t('password')" class="w100p h60" autocomplete="off" />
 
               <h3 class="input-errors" v-for="error of v$.password.$errors" :key="error.$uid">
-                <i class="uil uil-check"></i>{{ error.$message }}
+                {{ error.$message }}
               </h3>
             </li>
             <li v-if="isFlutter === false">
               <input type="text" name="register-username" v-model="v$.username.$model" title="" :placeholder="$t('name')"
                 class="w100p h60" autocomplete="off" />
               <h3 class="input-errors" v-for="error of v$.username.$errors" :key="error.$uid">
-                <i class="uil uil-check"></i>{{ error.$message }}
+                {{ error.$message }}
               </h3>
             </li>
             <li>
@@ -45,7 +45,7 @@
                 :placeholder="$t('nickname')" />
               <small class="text-red" v-if="isUsernameErr">{{ userNameErr }}</small>
               <!-- <h3 class="input-errors" v-for="error of v$.nickname.$errors" :key="error.$uid">
-                <i class="uil uil-check"></i>{{ error.$message }}
+                {{ error.$message }}
               </h3> -->
             </li>
           </ul>
@@ -58,7 +58,7 @@
                       <input type="checkbox" name="policyAgreement" v-model="form.policyAgreement" title="" id="agree"
                         @click="form.policyAgreement ? errorAgree = true : errorAgree = false" />
 
-                      <label for="agree"><i class="uil uil-check"></i></label>
+                      <label for="agree"></label>
                       <span><label for="agree" class="ml5 underline">{{ $t('terms') }} ({{
                         $t('required')
                       }})</label></span>
@@ -68,7 +68,7 @@
                     </dd>
                   </dl>
                 </li>
-                <h3 :class="errorAgree ? 'error-agree' : 'agree'"><i class="uil uil-check"></i>{{
+                <h3 :class="errorAgree ? 'error-agree' : 'agree'">{{
                   $t('agreement.text')
                 }}
                 </h3>
