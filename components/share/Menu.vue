@@ -7,23 +7,24 @@
         </i></a>
       <template #dropdown>
         <el-dropdown-menu>
-          <!-- <el-dropdown-item @click="webShare">
+          <!-- TODO: 모바일 쉐어  -->
+          <el-dropdown-item @click="webShare" id="mobileShareBtn">
             <Icon icon="ri-links-line" class="icon" />
-            <span class="text">모바일공유</span>
-          </el-dropdown-item> -->
+            <span class="text">{{ $t('mobile.share') }}</span>
+          </el-dropdown-item>
           <el-dropdown-item @click="copyUrl">
-            <Icon icon="ri-links-line" class="icon" />
+            <Icon icon="ri-links-line" class="icon" id="linkShareBtn" />
             <span class="text">{{ $t('share.link.url') }}</span>
           </el-dropdown-item>
-          <el-dropdown-item @click="shareSocial('kakao')">
+          <el-dropdown-item @click="shareSocial('kakao')" id="kakaoShareBtn">
             <Icon icon="ri:kakao-talk-fill" class="icon" />
             <span class="text">{{ $t('share.link.kakao') }}</span>
           </el-dropdown-item>
-          <el-dropdown-item @click="shareSocial('twitter')">
+          <el-dropdown-item @click="shareSocial('twitter')" id="twitterShareBtn">
             <Icon icon="ri-twitter-fill" class="icon" />
             <span class="text">{{ $t('share.link.twitter') }}</span>
           </el-dropdown-item>
-          <el-dropdown-item @click="shareSocial('facabook')">
+          <el-dropdown-item @click="shareSocial('facabook')" id="facebookShareBtn">
             <Icon icon="ri-facebook-circle-fill" class="icon" />
             <span class="text"> {{ $t('share.link.facabook') }}</span>
           </el-dropdown-item>
@@ -40,6 +41,7 @@ import { execCommandCopy } from '~~/scripts/utils';
 import { openCenteredPopup } from '~~/scripts/ui-utils';
 import { useGtag } from 'vue-gtag-next';
 import { IUser } from '~~/types';
+import flutterBridge from '~~/scripts/flutterBridge';
 
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
@@ -62,11 +64,11 @@ const props = defineProps({
 
 const shareMenu = ref()
 const isMobile = computed(() => useCommon().common.value.isMobile)
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
 
 watch(
   () => useCommon().common.value.isPopState,
   (val) => {
-    console.log('share menu watch')
     if (!val) {
       shareMenu.value.handleClose()
     }
@@ -169,17 +171,24 @@ function handleVisible(visible: boolean) {
 }
 
 async function webShare() {
+
+
   const shareData = {
-    title: "MDN",
-    text: "Learn web development on MDN!",
-    url: "https://developer.mozilla.org",
+    // title: "MDN",
+    // text: "Learn web development on MDN!",
+    url: props.url,
   };
 
-  try {
-    await navigator.share(shareData);
-    // resultPara.textContent = "MDN shared successfully";
-  } catch (err) {
-    // resultPara.textContent = `Error: ${err}`;
+  if (isFlutter.value) {
+    flutterBridge().shareClick(shareData)
+
+  } else {
+    try {
+      await navigator.share(shareData);
+      // resultPara.textContent = "MDN shared successfully";
+    } catch (err) {
+      // resultPara.textContent = `Error: ${err}`;
+    }
   }
 }
 </script>
