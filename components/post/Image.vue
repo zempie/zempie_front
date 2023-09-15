@@ -1,21 +1,20 @@
 <template>
-  <div class="post-img">
+  <div class="post-img" :class="validImg.isHorizontal ? 'horizonal-img' : 'vertical-img'">
     <div :class="[isBlind ? 'blur' : '', 'feed-img mt-3']">
-      <img :src="validImg" @click="onClickImg" class="pointer" />
+      <img :src="validImg.url" @click="onClickImg" class="pointer" />
     </div>
-
     <template v-if="initStatus">
       <button v-if="isBlind" class="btn-default-samll show-btn" @click="openBlind">{{ $t('violent.contents') }}</button>
       <button v-else class="btn-default-samll hide-btn" @click="openBlind">{{ $t('hide') }}</button>
     </template>
   </div>
-
   <ImageOriginModal :imgInfo="imgInfo" :open-modal="showOriginImg" @close-modal="closeImgModal" />
 </template>
 <script setup lang="ts">
 import _ from 'lodash'
 import { PropType } from 'vue';
 import { isImageURLValid } from '~~/scripts/utils';
+
 
 const emit = defineEmits(['updateBlind'])
 
@@ -30,7 +29,10 @@ const isBlind = computed(() => props.img.is_blind)
 const initStatus = _.cloneDeep(props.img.is_blind)
 const isMobile = computed(() => useCommon().common.value.isMobile)
 
-const validImg = ref(null)
+const validImg = ref({
+  url: null,
+  isHorizontal: false
+})
 
 watch(
   () => useCommon().common.value.isPopState,
@@ -42,18 +44,30 @@ watch(
 
 onMounted(() => {
   validateImage()
+  checkImgRatio()
 })
 
 
 function validateImage() {
   isImageURLValid((props.img.thumbnail), (isValid: Boolean) => {
     if (isValid) {
-      validImg.value = props.img.thumbnail
-      console.log('valid', validImg.value)
+      validImg.value.url = props.img.thumbnail
     } else {
-      validImg.value = props.img.url
+      validImg.value.url = props.img.url
     }
   })
+}
+
+function checkImgRatio() {
+  var image = new Image();
+  image.src = props.img.url
+
+  image.onload = function (e) {
+    if (image.width >= image.height) {
+      validImg.value.isHorizontal = true
+    }
+  }
+
 }
 
 
@@ -94,9 +108,22 @@ function closeImgModal() {
 .post-img {
   position: relative;
 
+  &.vertical-img {
+    max-width: 552px;
+    width: 100%;
+    height: 0;
+    padding-bottom: 125%;
+    overflow: hidden;
+  }
+
   .feed-img {
-    max-height: 300px;
-    padding: 10px;
+
+    img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+
   }
 
   .blur {
@@ -107,6 +134,7 @@ function closeImgModal() {
   img {
     object-fit: contain;
     width: 100%;
+    // aspect-ratio: 4/5;
   }
 
   button {
