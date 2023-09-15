@@ -107,6 +107,7 @@ export default function () {
       return await callHandler("currentLanguage");
     },
     async currentPlatform() {
+      console.log('run currentPlatform')
       return await callHandler("currentPlatform");
     },
     async windowOpen(url) {

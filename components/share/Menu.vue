@@ -171,6 +171,9 @@ function handleVisible(visible: boolean) {
 }
 
 async function webShare() {
+  if (!platform.value) {
+    await useMobile().setMobilePlatform()
+  }
 
   if (isFlutter.value && platform.value.toLocaleLowerCase() === 'android') {
     flutterBridge().shareClick(props.shareInfo)

@@ -75,12 +75,13 @@ onBeforeMount(async () => {
   notiPerCheck()
 
 
-  //언어
   if (isFlutter.value) {
+    console.log('Flutter is running...')
+    //언어
     const lang = await flutterBridge().currentLanguage()
     shared.switchLang(lang)
+    //플랫폼
     await useMobile().setMobilePlatform()
-
   }
 
 
