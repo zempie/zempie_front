@@ -35,7 +35,7 @@ import { lowlight } from 'lowlight'
 import CodeBlockComponent from './CodeBlockComponent.vue'
 import { isObjEmpty } from '~~/scripts/utils'
 
-const emit = defineEmits(['editorContent', 'sendTagInfo'])
+const emit = defineEmits(['editorContent', 'sendTagInfo', 'pasteImageFile'])
 const { t, locale } = useI18n()
 
 
@@ -74,6 +74,18 @@ const editor = useEditor({
     Typography,
     Highlight,
   ],
+  editorProps: {
+    handlePaste: function (view, event, slice) {
+      const files = Array.from(event.clipboardData?.items || []);
+      for (const file of files) {
+        if (file.type.indexOf("image") === 0) {
+          emit('pasteImageFile', file)
+          return true;
+        }
+      }
+      return false;
+    }
+  },
 
   onUpdate: (edit) => {
     charCount.value = editor.value.storage.characterCount.characters()
