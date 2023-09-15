@@ -46,6 +46,8 @@ onBeforeMount(async () => {
   colorLog('===App start===', 'red')
   console.log('localstorage: ', localStorage.getItem(config.LOCAL_USER_STATE_KEY))
   await useMobile().setMobileState()
+  await useMobile().setMobilePlatform()
+
 
   try {
 

@@ -66,6 +66,7 @@ const props = defineProps({
 const shareMenu = ref()
 const isMobile = computed(() => useCommon().common.value.isMobile)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+const platform = computed(() => useMobile().mobile.value.platform)
 
 watch(
   () => useCommon().common.value.isPopState,
@@ -173,24 +174,22 @@ function handleVisible(visible: boolean) {
 
 async function webShare() {
 
+  console.log('platform : ', platform.value)
 
-  const shareData = {
-    // title: "MDN",
-    // text: "Learn web development on MDN!",
-    url: props.url,
-  };
 
-  console.log('shareData : ', props.shareInfo)
 
   if (isFlutter.value) {
     flutterBridge().shareClick(props.shareInfo)
 
   } else {
+    const shareData = {
+      title: props.shareInfo.title,
+      text: props.shareInfo.desc,
+      url: props.shareInfo.url,
+    };
     try {
       await navigator.share(shareData);
-      // resultPara.textContent = "MDN shared successfully";
     } catch (err) {
-      // resultPara.textContent = `Error: ${err}`;
     }
   }
 }

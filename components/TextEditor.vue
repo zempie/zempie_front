@@ -604,8 +604,8 @@ async function onSelectImageFile(event: Event) {
       continue
     }
 
-    const result = await exifr.parse(file)
-    console.log('exif result', result.orientation)
+
+
     // const result =new Exifr()
 
     const reader = new FileReader()
@@ -614,7 +614,10 @@ async function onSelectImageFile(event: Event) {
 
       const url = e.target!.result as string
 
-
+      const urlRes = await exifr.parse(url)
+      const result = await exifr.parse(file)
+      console.log('exif result', result.orientation)
+      console.log('exif urlRes', urlRes.orientation)
 
       snsAttachFiles.value.img = [...(snsAttachFiles.value.img || []),
       { file, name: file.name, url, is_blind: false }
