@@ -41,6 +41,7 @@
             </el-select>
           </div>
           <SearchHeader />
+
           <div class="header-info ml0" v-if="isLogin" :key="user.id">
             <NotificationHeaderButton />
             <button class="btn-circle-icon ml10 flex items-center content-center"
@@ -52,7 +53,7 @@
             </button>
             <UserMenu class="user-menu-btn" />
           </div>
-          <div v-else class="header-login">
+          <div v-else-if="localUserState === '0'" class="header-login">
             <!-- -if="localUserState === '0'"  -->
             <NuxtLink :to="$localePath('/login')">
               <button class="btn-default flex" id="loginBtn" style="display: flex;">

@@ -36,9 +36,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
 
   onIdTokenChanged(auth, async (user: any) => {
-    if (!auth.currentUser) {
-      localStorage.setItem(config.LOCAL_USER_STATE_KEY, '0')
-    }
+
     if (!isObjEmpty(useUser().user.value.info)) {
       useUser().setLoadDone()
     } else {

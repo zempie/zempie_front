@@ -7,8 +7,6 @@
         </i></a>
       <template #dropdown>
         <el-dropdown-menu>
-          {{ shareInfo }}
-          <!-- TODO: 모바일 쉐어  -->
           <el-dropdown-item @click="webShare" id="mobileShareBtn">
             <Icon icon="ri-links-line" class="icon" />
             <span class="text">{{ $t('mobile.share') }}</span>
@@ -174,13 +172,8 @@ function handleVisible(visible: boolean) {
 
 async function webShare() {
 
-  console.log('platform : ', platform.value)
-
-
-
-  if (isFlutter.value) {
+  if (isFlutter.value && platform.value.toLocaleLowerCase() === 'android') {
     flutterBridge().shareClick(props.shareInfo)
-
   } else {
     const shareData = {
       title: props.shareInfo.title,

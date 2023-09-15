@@ -107,9 +107,7 @@ export default function () {
       return await callHandler("currentLanguage");
     },
     async currentPlatform() {
-      const response = await callHandler("currentPlatform");
-      const result = JSON.parse(response);
-      return result;
+      return await callHandler("currentPlatform");
     },
     async windowOpen(url) {
       // const response = await webViewJavaScriptBridge.sendMessage({
@@ -135,9 +133,6 @@ export default function () {
       await callHandler('checkFullScreen', status)
     },
     async shareClick(params: { url: string }) {
-      console.log('params', params)
-      console.log('url', params.url)
-
       const response = await callHandler('shareClick', params)
       return JSON.parse(response)
     }
