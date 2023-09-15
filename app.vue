@@ -44,16 +44,17 @@ provide(ID_INJECTION_KEY, {
 
 onBeforeMount(async () => {
   colorLog('===App start===', 'red')
+  console.log('localstorage: ', localStorage.getItem(config.LOCAL_USER_STATE_KEY))
   await useMobile().setMobileState()
 
   try {
+
     const fUser = await getCurrentUser()
 
 
     if (!fUser) {
       useUser().setLoadDone()
     }
-    console.log('fuser from web', fUser && fUser.accessToken)
     useZemtown().setUrl(`${config.ZEMTOWN_URL}?token=${fUser?.accessToken}`)
 
     if (isFlutter.value && fUser && !userInfo.value) {
