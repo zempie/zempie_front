@@ -77,6 +77,7 @@ const editor = useEditor({
   editorProps: {
     handlePaste: function (view, event, slice) {
       const files = Array.from(event.clipboardData?.items || []);
+      alert(event.clipboardData)
       for (const file of files) {
         if (file.type.indexOf("image") === 0) {
           emit('pasteImageFile', file)
