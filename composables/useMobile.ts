@@ -11,6 +11,7 @@ export default function () {
   }
   const setMobilePlatform = async () => {
     mobile.value.platform = await flutterBridge().currentPlatform()
+    console.log('mobile.value.platform', mobile.value.platform)
   }
 
   const openMobileFile = async (options: { type: string, multiple: boolean }) => {

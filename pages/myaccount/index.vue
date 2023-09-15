@@ -154,7 +154,7 @@ const { $localePath } = useNuxtApp()
 
 const specialCharRegex = /[\{\}\[\]\/?,;:|\)*~`!^\-+<>@\#$%&\\\=\(\'\"]/;
 
-const MAX_FILE_SIZE = 3
+const MAX_FILE_SIZE = 10
 
 definePageMeta({
   title: 'my-account',
