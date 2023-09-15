@@ -41,8 +41,7 @@
             </el-select>
           </div>
           <SearchHeader />
-
-          <div class="header-info ml0" v-if="!isLoading && isLogin" :key="user.id">
+          <div class="header-info ml0" v-if="isLogin" :key="user.id">
             <NotificationHeaderButton />
             <button class="btn-circle-icon ml10 flex items-center content-center"
               @click="$router.push($localePath('/dm/list'))">
@@ -53,7 +52,8 @@
             </button>
             <UserMenu class="user-menu-btn" />
           </div>
-          <div v-else-if="!isLoading && !isLogin" class="header-login">
+          <div v-else class="header-login">
+            <!-- -if="localUserState === '0'"  -->
             <NuxtLink :to="$localePath('/login')">
               <button class="btn-default flex" id="loginBtn" style="display: flex;">
                 {{ t('login') }}
@@ -108,10 +108,12 @@ const route = useRoute()
 const isLogin = computed(() => useUser().user.value.isLogin)
 const isLoading = computed(() => useUser().user.value.isLoading)
 const user = computed(() => useUser().user.value.info)
+const fUser = computed(() => useUser().user.value.fUser)
 
 const showMogera = ref(false)
 
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+const localUserState = computed(() => localStorage.getItem(config.LOCAL_USER_STATE_KEY))
 
 const unreadMsgCount = computed(() => {
   return user.value?.unread_msg_cnt > 99 ? '99+' : user.value.unread_msg_cnt
@@ -220,7 +222,7 @@ function scrollHandler() {
   const headerHeight = 70;
   const space = 40;
   const currentScroll = window.scrollY;
-  
+
   if (window.scrollY <= headerHeight || currentScroll + space < scrollTrace.value) {
     scrollDirection.value = true;
     scrollTrace.value = currentScroll;
