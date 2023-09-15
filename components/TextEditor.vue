@@ -9,8 +9,9 @@
       </li>
     </ul>
     <div>
-      <Tiptap @editorContent="getEditorContent" @send-tag-info="getTagInfo" :postType="activeTab" :feed="feed"
-        :key="activeTab" ref="tiptapRef" />
+      <!-- {{ snsAttachFiles.img }} -->
+      <Tiptap @editorContent="getEditorContent" @send-tag-info="getTagInfo" @pasteImageFile="pasteImageFile"
+        :postType="activeTab" :feed="feed" :key="activeTab" ref="tiptapRef" />
 
       <div v-if="snsAttachFiles.img?.length" class="mp-image">
         <dd>
@@ -618,6 +619,40 @@ function onSelectImageFile(event: Event) {
   }
 
   (event.target as HTMLInputElement).value = ''
+}
+
+function pasteImageFile(file) {
+  if (!validatePasteImgCount(snsAttachFiles.value.img?.length)) return
+  if (file.type === 'image/svg+xml') {
+    alert('svg는 지원하지 않는 확장자 형식입니다')
+    return
+  }
+
+  const blob = file.getAsFile();
+
+  const reader = new FileReader()
+
+  reader.onload = async (e) => {
+    const url = e.target!.result as string
+
+    snsAttachFiles.value.img = [...(snsAttachFiles.value.img || []),
+    { file: blob, name: blob.name, url, is_blind: false }
+    ]
+  }
+
+  reader.readAsDataURL(blob)
+}
+
+function validatePasteImgCount(count: number) {
+  if (count >= MAX_IMG_COUNT) {
+    ElMessage({
+      message: `${t('maxFile.count.text1')} ${MAX_IMG_COUNT}${t('maxFile.count.text2')}`,
+      type: 'warning',
+    })
+    return false
+  } else {
+    return true
+  }
 }
 
 function validateImgCount(images: [] | FileList) {
