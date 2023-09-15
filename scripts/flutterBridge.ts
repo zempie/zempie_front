@@ -135,6 +135,9 @@ export default function () {
       await callHandler('checkFullScreen', status)
     },
     async shareClick(params: { url: string }) {
+      console.log('params', params)
+      console.log('url', params.url)
+
       const response = await callHandler('shareClick', params)
       return JSON.parse(response)
     }

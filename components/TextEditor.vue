@@ -123,6 +123,7 @@ import { useI18n } from 'vue-i18n'
 import { htmlToDomElem, stringToDomElem, isImageUrl } from '~~/scripts/utils'
 import { fileUpload } from '~~/scripts/fileManager'
 import { onBeforeRouteLeave } from 'vue-router';
+import exifr from 'exifr'
 
 interface IDraft {
   time: number
@@ -232,8 +233,6 @@ const isMobile = computed(() => useCommon().common.value.isMobile)
 await communityFetch()
 
 onBeforeMount(() => {
-  // getDraftList()
-  // autoSave()
 
   //유저가 직접 저장하지 않은 경우
   if (draftList.value[0]?.save_type === 'cancel') {
@@ -581,7 +580,7 @@ async function uploadImageFile() {
 
 
 
-function onSelectImageFile(event: Event) {
+async function onSelectImageFile(event: Event) {
 
   let files = (event.target as HTMLInputElement).files
 
@@ -599,15 +598,22 @@ function onSelectImageFile(event: Event) {
 
 
   for (const file of files) {
+
     if (file.type === 'image/svg+xml') {
       alert('svg는 지원하지 않는 확장자 형식입니다')
       continue
     }
+
+    const result = await exifr.parse(file)
+    console.log('exif result', result)
+    // const result =new Exifr()
+
     const reader = new FileReader()
 
     reader.onload = async (e) => {
 
       const url = e.target!.result as string
+
 
 
       snsAttachFiles.value.img = [...(snsAttachFiles.value.img || []),
