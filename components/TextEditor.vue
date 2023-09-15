@@ -605,7 +605,7 @@ async function onSelectImageFile(event: Event) {
     }
 
     const result = await exifr.parse(file)
-    console.log('exif result', result)
+    console.log('exif result', result.orientation)
     // const result =new Exifr()
 
     const reader = new FileReader()

@@ -7,6 +7,7 @@
         </i></a>
       <template #dropdown>
         <el-dropdown-menu>
+          {{ shareInfo }}
           <!-- TODO: 모바일 쉐어  -->
           <el-dropdown-item @click="webShare" id="mobileShareBtn">
             <Icon icon="ri-links-line" class="icon" />
@@ -179,8 +180,10 @@ async function webShare() {
     url: props.url,
   };
 
+  console.log('shareData : ', props.shareInfo)
+
   if (isFlutter.value) {
-    flutterBridge().shareClick(shareData)
+    flutterBridge().shareClick(props.shareInfo)
 
   } else {
     try {
