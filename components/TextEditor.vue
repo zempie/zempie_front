@@ -475,9 +475,6 @@ async function onSubmit() {
     const formData = new FormData()
 
     if (snsAttachFiles.value.img) {
-      // const result = await imgUploaderRef.value.fetchImage()
-      // console.log('result :', result)
-      // payload['attatchment_files'] = result
 
       for (const img of snsAttachFiles.value.img) {
         formData.append(img.name, img.file)
@@ -584,6 +581,8 @@ async function onSelectImageFile(event: Event) {
 
   let files = (event.target as HTMLInputElement).files
 
+
+
   if (!validateImgCount(files)) {
 
     const transfer = new DataTransfer();
@@ -596,7 +595,6 @@ async function onSelectImageFile(event: Event) {
   }
 
 
-
   for (const file of files) {
 
     if (file.type === 'image/svg+xml') {
@@ -604,33 +602,23 @@ async function onSelectImageFile(event: Event) {
       continue
     }
 
-
-
-    // const result =new Exifr()
-
     const reader = new FileReader()
 
     reader.onload = async (e) => {
 
       const url = e.target!.result as string
-
-      exifr.parse(url)
-        .then((url) => {
-          console.log('exif urlRes', url.orientation)
-        })
-
-      exifr.parse(file)
-        .then((file) => {
-          console.log('exif file', file.orientation)
-        })
+      console.log('orientation', await exifr.orientation(file))
 
 
       snsAttachFiles.value.img = [...(snsAttachFiles.value.img || []),
       { file, name: file.name, url, is_blind: false }
       ]
+
     }
 
+
     reader.readAsDataURL(file)
+
   }
 
   (event.target as HTMLInputElement).value = ''
