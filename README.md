@@ -16,3 +16,10 @@
 
 - 게임 플레이는 런처 실행 필요
 
+
+
+
+# ZEMTOWN
+https://zemtown.zempie.com/?token=
+
+리소스 호출 : postMessage(JSON.stringify({type:'view'}))

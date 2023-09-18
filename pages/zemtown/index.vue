@@ -48,6 +48,10 @@ watch(() =>
     }
   })
 
+onBeforeMount(() => {
+  window.postMessage(JSON.stringify({ type: 'view' }))
+})
+
 onMounted(() => {
   useRouterLeave()
   if (zemtown.value.isOpenMyProfile) {
