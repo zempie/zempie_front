@@ -1,19 +1,22 @@
 <template>
   <ClientOnly>
-    <el-dropdown trigger="click" ref="feedMenu" popper-class="feed-menu">
-      <a class="btn-circle-none pt6" slot="trigger"><i class="uil uil-ellipsis-h font25" id="feedMenu"></i></a>
+    <el-dropdown trigger="click" ref="feedMenu" popper-class="feed-menu" @visible-change="handleVisible">
+      <a class="btn-circle-none pt6" slot="trigger">
+        <i class="flex items-center content-center font25" id="feedMenu">
+          <LazyIconEllipsisH />
+        </i></a>
       <template #dropdown>
         <div slot="body" class="more-list fixed" style="min-width: 150px">
           <template v-if="user && user.id === (feed?.user && feed?.user.id)">
             <a @click="onClickEdit" id="editFeed" class="pointer">{{ t('feed.edit') }}</a>
-            <a @click="showDeletePostModal = true" class="pointer">{{ t('feed.delete') }}</a>
+            <a @click="onClickDelete" class="pointer">{{ t('feed.delete') }}</a>
           </template>
           <template v-else>
             <NuxtLink :to="$localePath(`/${feed.user && feed.user.nickname}`)">
               {{ t('visit.userChannel') }}
             </NuxtLink>
             <NuxtLink class="pointer" v-if="user" @click="onClickReport">{{ t('post.report') }}</NuxtLink>
-            <a v-if="user" class="pointer" @click="showUserReportModal = true">{{ t('user.report') }}</a>
+            <a v-if="user" class="pointer" @click="openUserReportModal">{{ t('user.report') }}</a>
             <a v-if="user" class="pointer" @click="onUserBlock">{{ t('block.user') }}</a>
           </template>
         </div>
@@ -26,7 +29,7 @@
           <dt>{{ t('information') }}</dt>
           <dd>
             <button @click="showDeletePostModal = false">
-              <i class="uil uil-times"></i>
+              <IconClose />
             </button>
           </dd>
         </dl>
@@ -52,11 +55,10 @@
   <PostModal :isTextEditorOpen="isTextEditorOpen">
     <template #textEditor>
       <TextEditor @closeModal="closeEditor" :isEdit="true" :feed="feed" @refresh="emit('refresh')"
-        :isFullScreen="usePost().post.value.isFullScreen" />
+        :isFullScreen="isMobile" />
     </template>
   </PostModal>
-
-  <ReportModal :openModal="showReportModal" :reportInfo="reportInfo" @closeModal="showReportModal = false" />
+  <ReportModal :openModal="showReportModal" :reportInfo="reportInfo" @closeModal="closeReportModal" />
 
   <UserReportModal :openModal="showUserReportModal" @closeModal="closeUserReportModal" :user="feed.user" />
 </template>
@@ -70,6 +72,7 @@ import {
   ElMessageBox,
 } from 'element-plus'
 import { useI18n } from 'vue-i18n'
+import { onBeforeRouteLeave } from 'vue-router';
 
 const { $localePath } = useNuxtApp()
 
@@ -77,10 +80,12 @@ const { t, locale } = useI18n()
 
 const isTextEditorOpen = ref(false)
 const showDeletePostModal = ref(false)
+const feedMenu = ref()
 
 const showReportModal = ref(false)
 const showUserReportModal = ref(false)
 const reportInfo = ref()
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
 const props = defineProps({
   feed: Object as PropType<IFeed>,
@@ -89,6 +94,19 @@ const props = defineProps({
 const emit = defineEmits(['refresh', 'deletePost'])
 
 const user = computed(() => useUser().user.value.info)
+
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      ElMessageBox.close()
+      closeDeleteModal()
+      closeReportModal()
+      closeUserReportModal()
+      feedMenu.value.handleClose()
+    }
+  })
+
 
 async function deletePost() {
   const { data, error, pending } = await useCustomAsyncFetch(`/post/${props.feed.id}`, getComFetchOptions('delete', true))
@@ -109,7 +127,9 @@ async function closeEditor() {
 }
 
 function onClickEdit() {
-
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
   if (props.feed.post_type === 'BLOG') {
     ElMessageBox.confirm(`${t('ask.edit.blog')}<br/>${t('confirm.edit')}`, {
       cancelButtonText: t('no'),
@@ -119,6 +139,9 @@ function onClickEdit() {
     })
       .then(() => {
         isTextEditorOpen.value = true
+        if (isMobile.value) {
+          useCommon().setPopState(true)
+        }
       })
       .catch(() => {
 
@@ -127,7 +150,23 @@ function onClickEdit() {
       })
   } else {
     isTextEditorOpen.value = true
+    if (isMobile.value) {
+      useCommon().setPopState(true)
+    }
+  }
+}
 
+function onClickDelete() {
+  showDeletePostModal.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
+function closeDeleteModal() {
+  showDeletePostModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
   }
 }
 
@@ -164,12 +203,35 @@ function onClickReport() {
       }
     ]
   }
-  showReportModal.value = true
+  openReportModal()
 }
 
+function openReportModal() {
+  showReportModal.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
+function closeReportModal() {
+  showReportModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
+}
+
+function openUserReportModal() {
+  showUserReportModal.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
 
 function closeUserReportModal() {
   showUserReportModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
 }
 
 async function onUserBlock() {
@@ -179,6 +241,15 @@ async function onUserBlock() {
     })
 
 
+}
+
+function handleVisible(visible: boolean) {
+  if (!isMobile.value) return
+  if (visible) {
+    useCommon().setPopState(true)
+  } else {
+    useCommon().setPopState(false)
+  }
 }
 </script>
 

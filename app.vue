@@ -47,13 +47,13 @@ onBeforeMount(async () => {
   await useMobile().setMobileState()
 
   try {
+
     const fUser = await getCurrentUser()
 
 
     if (!fUser) {
       useUser().setLoadDone()
     }
-    console.log('fuser from web', fUser && fUser.accessToken)
     useZemtown().setUrl(`${config.ZEMTOWN_URL}?token=${fUser?.accessToken}`)
 
     if (isFlutter.value && fUser && !userInfo.value) {
@@ -75,26 +75,23 @@ onBeforeMount(async () => {
   notiPerCheck()
 
 
-  //언어
   if (isFlutter.value) {
+    console.log('Flutter is running...')
+    //언어
     const lang = await flutterBridge().currentLanguage()
     shared.switchLang(lang)
+    //플랫폼
+    await useMobile().setMobilePlatform()
   }
 
 
 })
+
 onMounted(() => {
   nextTick(() => {
     onResize()
-    window.addEventListener('resize', onResize)
-    window.addEventListener('popstate', onPopState)
   })
 })
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', onResize)
-  window.removeEventListener('popstate', onPopState)
-})
-
 function onResize() {
   if (isMobileSize.value.matches) {
     useCommon().setMobile(true)
@@ -104,11 +101,6 @@ function onResize() {
   }
 }
 
-function onPopState() {
-  useCommon().setPopState(true)
-  console.log('onPopState', useCommon().common.value.isPopState)
-
-}
 
 
 function notiPerCheck() {

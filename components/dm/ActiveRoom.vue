@@ -5,7 +5,7 @@
     </dd>
     <dt>
       <div>
-        <h2 v-if="isMobile" class="font16 text-bold fontColor-black" @click="opJoinedUserModal = true"> {{
+        <h2 v-if="isMobile" class="font16 text-bold fontColor-black" @click="openJoinedUserModal"> {{
           getJoinedUserName(selectedRoom) }}
         </h2>
         <CommonDropdown v-else :is-custom-btn="true" ref="memDropdownRef" style="width:auto">
@@ -47,7 +47,7 @@
     </div>
     <!-- TODO: 음성녹음 -->
     <!-- <div class="msg-record-container flex items-center content-cent" v-else-if="recorderRef?.formattedRecordingTime">
-      <i class="uil uil-play font20 mr10 zem-color"></i>
+      <i class="font20 mr10 zem-color"></i>
       <el-progress :percentage="recordingProgressPercentage">
         <span class="font15 ml10"> {{ recorderRef?.formattedRecordingTime }}</span>
       </el-progress>
@@ -64,7 +64,6 @@
         <ImageUploader @uploadImage="uploadImage" ref="imgUploaderRef" class="dm-uploader-btn" />
         <VideoUploader @uploadVideo="uploadVideo" ref="videoUploaderRef" class="dm-uploader-btn" />
         <!-- <DmRecorder @uploadRecord="uploadRecord" ref="recorderRef" class="dm-uploader-btn" /> -->
-
       </div>
       <button @click="onSubmitMsg"><img src="/images/send_icon.png" alt="" title="" /></button>
     </div>
@@ -76,8 +75,8 @@
         <dl class="ma-header">
           <dt> {{ t('leave.msg') }} </dt>
           <dd>
-            <button class="pointer" @click="opDeleteMsgModal = false">
-              <i class="uil uil-times"></i>
+            <button class="pointer" @click="closeDeleteMsgModal">
+              <IconClose />
             </button>
           </dd>
         </dl>
@@ -89,7 +88,7 @@
             <button class="btn-gray w48p" @click="onDeleteMsg">
               {{ $t('yes') }}
             </button>
-            <button class="btn-default w48p" @click="opDeleteMsgModal = false">
+            <button class="btn-default w48p" @click="closeDeleteMsgModal">
               {{ $t('no') }}
             </button>
           </div>
@@ -102,8 +101,8 @@
           <!-- <UserOdList :users="selectedRoom.joined_users" /> -->
           <dt> {{ t('joined.users') }} </dt>
           <dd>
-            <button class="pointer" @click="opJoinedUserModal = false">
-              <i class="uil uil-times"></i>
+            <button class="pointer" @click="closeJoinedUserModal">
+              <IconClose />
             </button>
           </dd>
         </dl>
@@ -115,7 +114,7 @@
       </div>
     </el-dialog>
 
-    <ImageOriginModal :imgInfo="activeMsg" :open-modal="showOriginImg" @close-modal="showOriginImg = false" />
+    <ImageOriginModal :imgInfo="activeMsg" :open-modal="showOriginImg" @close-modal="closeImgModal" />
 
   </ClientOnly>
 </template>
@@ -166,6 +165,9 @@ const memDropdownRef = ref()
 const opJoinedUserModal = ref()
 
 
+const deleteMsgPolling = ref()
+
+
 const userInfo = computed(() => useUser().user.value.info)
 const isFbSupported = computed(() => useCommon().setting.value.isFbSupported)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
@@ -173,7 +175,9 @@ const unreadStartId = computed(() => props.selectedRoom.unread_start_id)
 const isMobile = computed(() => useCommon().common.value.isMobile)
 
 
-//pages > dm > list에서 provide됨 
+
+
+//pages > dm > list에서 provide됨
 const { getJoinedUserName } = inject('joinedUser')
 
 
@@ -189,7 +193,7 @@ const lastMsg = computed({
 const isLastMsg = computed(() => {
 
   if (msgList.value) {
-    return msgList.value?.at(-1).id === lastMsg.value.id
+    return msgList.value.find((msg) => msg.id === lastMsg.value.id)
   }
 })
 
@@ -212,6 +216,16 @@ const { top, bottom } = toRefs(arrivedState)
 const emit = defineEmits(['deletedRoom', 'updateGroupName', 'openKeyboard', 'closeKeyboard', 'updateLastMsg'])
 
 defineExpose({ addMsg })
+
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeJoinedUserModal()
+      closeDeleteMsgModal()
+      closeImgModal()
+    }
+  })
 
 watch(
   () => top.value,
@@ -278,6 +292,9 @@ onMounted(async () => {
   })
 
 
+  //삭제된 메세지는 계속 polling fcm 여부 상관없음
+  await pollingDeleteMsg()
+
   if (!userInfo.value.setting.dm_alarm || !isFbSupported.value || !useCommon().setting.value.isNotiAllow) {
     clearInterval(msgPolling.value)
 
@@ -298,8 +315,10 @@ onMounted(async () => {
 })
 
 
+
 onBeforeUnmount(() => {
   clearInterval(msgPolling.value)
+  clearInterval(deleteMsgPolling.value)
 })
 
 
@@ -358,8 +377,8 @@ async function msgFetch(customOffset?: number) {
 
 function scrollToPrev(yPos: number) {
   scrollContent.value.scrollTop = scrollContent.value?.scrollHeight - yPos
-
 }
+
 
 async function onSubmitMsg() {
 
@@ -392,7 +411,6 @@ async function onSubmitMsg() {
       addMsg(prevMsg)
 
       const videoUrls = await videoUploaderRef.value.fetchVideo()
-      console.log(videoUrls)
       for (const video of videoUrls) {
 
         payload.contents = video.url
@@ -422,7 +440,6 @@ async function onSubmitMsg() {
     }
   }
 
-
   //빈 텍스트는 보내지 않음
   if (!inputMsg.value) return
 
@@ -434,6 +451,9 @@ async function onSubmitMsg() {
   inputMsg.value = ''
 
   isSending.value = false
+
+
+
 }
 
 async function sendMsg(payload: any) {
@@ -542,7 +562,7 @@ function onClickImg(msg: IMessage) {
     created_at: msg.created_at
   }
 
-  showOriginImg.value = true
+  showImgModal()
 }
 
 function uploadVideo(video) {
@@ -556,4 +576,80 @@ function uploadRecord(record) {
   attr.value = record
 }
 
+function openJoinedUserModal() {
+  opJoinedUserModal.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
+function closeJoinedUserModal() {
+  opJoinedUserModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
+}
+
+function openDeleteMsgModal() {
+  opDeleteMsgModal.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
+function closeDeleteMsgModal() {
+  opDeleteMsgModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
+}
+
+function showImgModal() {
+  showOriginImg.value = true
+
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
+function closeImgModal() {
+  showOriginImg.value = false
+
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
+}
+
+
+async function getDeletedMsg() {
+
+  const body = {
+    offset: -1,
+    limit: -1,
+    order: 'asc',
+    start_id: msgList.value[0].id,
+    end_id: msgList.value[msgList.value.length - 1].id
+  }
+
+  const { data, error } = await useCustomAsyncFetch<{ result: any }>(`/chat/room/${props.selectedRoom.id}/deleted`,
+    getComFetchOptions('get', true, body))
+
+  if (data.value) {
+
+    const deletedMsgs = data.value.result
+
+    msgList.value = msgList.value.filter((msg) => !deletedMsgs.some(deletedMsg => deletedMsg.id === msg.id)
+    )
+
+
+  }
+}
+
+async function pollingDeleteMsg() {
+
+  deleteMsgPolling.value = setInterval(async () => {
+    await getDeletedMsg()
+  }, 5000)
+
+}
 </script>

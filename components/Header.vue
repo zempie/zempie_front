@@ -1,7 +1,5 @@
 <template>
-  <div class="header">
-    isPopState {{ useCommon().common.value.isPopState }}
-
+  <div class="header" :class="headerShowClass">
     <dl style="min-height: 70px;">
       <dt>
         <div class="header-logo-menu">
@@ -44,19 +42,22 @@
           </div>
           <SearchHeader />
 
-          <div class="header-info ml0" v-if="!isLoading && isLogin" :key="user.id">
+          <div class="header-info ml0" v-if="isLogin" :key="user.id">
             <NotificationHeaderButton />
             <button class="btn-circle-icon ml10 flex items-center content-center"
               @click="$router.push($localePath('/dm/list'))">
-              <i class="uil uil-comment-alt"></i>
+              <i>
+                <IconMessage />
+              </i>
               <span class="new-dm-badge" v-if="unreadMsgCount">{{ unreadMsgCount }}</span>
             </button>
             <UserMenu class="user-menu-btn" />
           </div>
-          <div v-else-if="!isLoading && !isLogin" class="header-login">
+          <div v-else-if="localUserState === '0'" class="header-login">
+            <!-- -if="localUserState === '0'"  -->
             <NuxtLink :to="$localePath('/login')">
-              <button class="btn-default" id="loginBtn" style="display: flex;">
-                <i class="uil uil-user"></i>{{ t('login') }}
+              <button class="btn-default flex" id="loginBtn" style="display: flex;">
+                {{ t('login') }}
               </button>
             </NuxtLink>
           </div>
@@ -69,11 +70,10 @@
           <dt>{{ t('information') }}</dt>
           <dd>
             <button class="pointer" @click="useModal().closeLoginModal()">
-              <i class="uil uil-times"></i>
+              <IconClose />
             </button>
           </dd>
         </dl>
-
         <div class="ma-content">
           <h2>{{ t('needLogin.text1') }}<br />{{ t('needLogin.text2') }}</h2>
           <div>
@@ -97,7 +97,6 @@ import {
   ElDialog,
 } from "element-plus"
 
-import { isMobile } from "../scripts/utils"
 import shared from '~/scripts/shared'
 
 const config = useRuntimeConfig()
@@ -110,10 +109,12 @@ const route = useRoute()
 const isLogin = computed(() => useUser().user.value.isLogin)
 const isLoading = computed(() => useUser().user.value.isLoading)
 const user = computed(() => useUser().user.value.info)
+const fUser = computed(() => useUser().user.value.fUser)
 
 const showMogera = ref(false)
 
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+const localUserState = computed(() => localStorage.getItem(config.LOCAL_USER_STATE_KEY))
 
 const unreadMsgCount = computed(() => {
   return user.value?.unread_msg_cnt > 99 ? '99+' : user.value.unread_msg_cnt
@@ -128,7 +129,7 @@ const isTablet = computed(() =>
   window.matchMedia("screen and (max-width: 767px)")
 )
 
-const isMob = computed(() => isMobile())
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
 const showMobileLogo = ref(false)
 const showHamburger = ref(false)
@@ -148,10 +149,31 @@ const isOpen = ref(false)
 const { loginModal } = useModal()
 
 
+const scrollDirection = ref(true); // true: scroll up, false :scroll down
+const scrollTrace = ref(0);
+
+const headerShowClass = computed(() => {
+  if (!scrollDirection.value) return 'header-off';
+  return '';
+});
+
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      isOpen.value = false
+    }
+  })
+
 watch(
   () => loginModal.value.isOpen,
   (state: boolean) => {
     isOpen.value = state
+    if (state) {
+      if (isMobile.value) {
+        useCommon().setPopState(true)
+      }
+    }
   }
 )
 
@@ -159,13 +181,16 @@ onMounted(() => {
   nextTick(() => {
     onResize()
     onPressMogera()
+    scrollHandler()
   })
   window.addEventListener("resize", onResize)
+  document.addEventListener('scroll', scrollHandler);
 })
 
 
 onBeforeUnmount(() => {
   window.removeEventListener("resize", onResize)
+  document.removeEventListener('scroll', scrollHandler);
 })
 
 function onResize() {
@@ -191,6 +216,21 @@ function onPressMogera() {
       showMogera.value = !showMogera.value
     }
   })
+}
+
+
+function scrollHandler() {
+  const headerHeight = 70;
+  const space = 40;
+  const currentScroll = window.scrollY;
+
+  if (window.scrollY <= headerHeight || currentScroll + space < scrollTrace.value) {
+    scrollDirection.value = true;
+    scrollTrace.value = currentScroll;
+  } else if (currentScroll - space > scrollTrace.value) {
+    scrollDirection.value = false;
+    scrollTrace.value = currentScroll;
+  }
 }
 
 </script>

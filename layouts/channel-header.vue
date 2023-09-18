@@ -7,7 +7,6 @@
             <div class="swiper-slide">
               <NuxtLink :to="$localePath(`/${userId}`)" :class="route.meta?.name === 'userChannel' && 'active'">
                 <p class="mobile">
-                  <i class="uil uil-clock-three"></i>
                   <span style="border: 0">{{ $t('timeline') }}</span>
                 </p>
               </NuxtLink>
@@ -16,7 +15,6 @@
               <NuxtLink :to="$localePath(`/${userId}/followers`)"
                 :class="route.meta?.name === 'userFollowers' && 'active'">
                 <p class="mobile">
-                  <i class="uil uil-users-alt"></i>
                   <span style="border: 0">{{ $t('follower') }}</span>
                 </p>
               </NuxtLink>
@@ -25,7 +23,6 @@
               <NuxtLink :to="$localePath(`/${userId}/following`)"
                 :class="route.meta?.name === 'userFollwoing' && 'active'">
                 <p class="mobile">
-                  <i class="uil uil-user-plus"></i>
                   <span style="border: 0">{{ $t('following') }}</span>
                 </p>
               </NuxtLink>
@@ -33,7 +30,6 @@
             <div class="swiper-slide">
               <NuxtLink :to="$localePath(`/${userId}/games`)" :class="route.meta?.name === 'userGame' && 'active'">
                 <p class="mobile">
-                  <i class="uil uil-map-pin-alt"></i>
                   <span style="border: 0">{{ $t('game') }}</span>
                 </p>
               </NuxtLink>
@@ -90,17 +86,7 @@ try {
   }
 }
 
-@media all and (max-width: 479px) {
-  .tab-search-swiper {
-    .swiper-slide {
-      .mobile {
-        span {
-          display: none !important;
-        }
-      }
-    }
-  }
-}
+@media all and (max-width: 479px) {}
 
 @media all and (min-width: 480px) and (max-width: 767px) {
   .content {
@@ -109,13 +95,6 @@ try {
     .tab-search-swiper {
       width: 100%;
 
-      .swiper-slide {
-        .mobile {
-          span {
-            display: none !important;
-          }
-        }
-      }
     }
   }
 }

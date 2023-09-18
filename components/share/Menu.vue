@@ -1,22 +1,29 @@
 <template>
   <ClientOnly>
-    <el-dropdown trigger="click" class="share-menu">
-      <a class="pointer"><i class="uil uil-share-alt" style="font-size: 20px"></i></a>
+    <el-dropdown ref="shareMenu" trigger="click" class="share-menu" @visible-change="handleVisible">
+      <a class="pointer">
+        <i>
+          <LazyIconShare />
+        </i></a>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item @click="copyUrl">
+          <el-dropdown-item @click="webShare" id="mobileShareBtn">
             <Icon icon="ri-links-line" class="icon" />
+            <span class="text">{{ $t('mobile.share') }}</span>
+          </el-dropdown-item>
+          <el-dropdown-item @click="copyUrl">
+            <Icon icon="ri-links-line" class="icon" id="linkShareBtn" />
             <span class="text">{{ $t('share.link.url') }}</span>
           </el-dropdown-item>
-          <el-dropdown-item @click="shareSocial('kakao')">
+          <el-dropdown-item @click="shareSocial('kakao')" id="kakaoShareBtn">
             <Icon icon="ri:kakao-talk-fill" class="icon" />
             <span class="text">{{ $t('share.link.kakao') }}</span>
           </el-dropdown-item>
-          <el-dropdown-item @click="shareSocial('twitter')">
+          <el-dropdown-item @click="shareSocial('twitter')" id="twitterShareBtn">
             <Icon icon="ri-twitter-fill" class="icon" />
             <span class="text">{{ $t('share.link.twitter') }}</span>
           </el-dropdown-item>
-          <el-dropdown-item @click="shareSocial('facabook')">
+          <el-dropdown-item @click="shareSocial('facabook')" id="facebookShareBtn">
             <Icon icon="ri-facebook-circle-fill" class="icon" />
             <span class="text"> {{ $t('share.link.facabook') }}</span>
           </el-dropdown-item>
@@ -33,6 +40,7 @@ import { execCommandCopy } from '~~/scripts/utils';
 import { openCenteredPopup } from '~~/scripts/ui-utils';
 import { useGtag } from 'vue-gtag-next';
 import { IUser } from '~~/types';
+import flutterBridge from '~~/scripts/flutterBridge';
 
 const { t, locale } = useI18n()
 const config = useRuntimeConfig()
@@ -53,6 +61,18 @@ const props = defineProps({
   shareInfo: Object as PropType<IShareInfo>
 })
 
+const shareMenu = ref()
+const isMobile = computed(() => useCommon().common.value.isMobile)
+const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+const platform = computed(() => useMobile().mobile.value.platform)
+
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      shareMenu.value.handleClose()
+    }
+  })
 
 const title = computed(() => {
   switch (props.type) {
@@ -61,6 +81,12 @@ const title = computed(() => {
     default:
       return `${props.shareInfo.user.nickname} ${t('seo.feed.title')} `
   }
+
+})
+
+onMounted(() => {
+  // page에서 작동을 안해서 임시 추가
+  useRouterLeave()
 
 })
 
@@ -135,7 +161,34 @@ function shareSocial(social: string) {
 
 }
 
+function handleVisible(visible: boolean) {
+  if (!isMobile.value) return
+  if (visible) {
+    useCommon().setPopState(true)
+  } else {
+    useCommon().setPopState(false)
+  }
+}
 
+async function webShare() {
+  if (!platform.value) {
+    await useMobile().setMobilePlatform()
+  }
+
+  if (isFlutter.value && platform.value.toLocaleLowerCase() === 'android') {
+    flutterBridge().shareClick(props.shareInfo)
+  } else {
+    const shareData = {
+      title: props.shareInfo.title,
+      text: props.shareInfo.desc,
+      url: props.shareInfo.url,
+    };
+    try {
+      await navigator.share(shareData);
+    } catch (err) {
+    }
+  }
+}
 </script>
 <style scoped lang="scss">
 .icon {

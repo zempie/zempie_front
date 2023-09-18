@@ -2,8 +2,10 @@
   <li>
     <ul>
       <LikeBtn v-if="feed" :feed="feed" />
-      <li @click="openComments">
-        <i :class="[isCommentClosed && 'pointer', 'uil uil-comment-alt-dots']" style="font-size: 22px"></i>&nbsp;
+      <li class="flex items-center" @click="openComments">
+        <i :class="isCommentClosed && 'pointer'">
+          <LazyIconComment width="22px" />
+        </i>&nbsp;
         {{ commentCnt }}
       </li>
       <li>

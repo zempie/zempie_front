@@ -4,7 +4,10 @@
       <dl class="mr-header">
         <dt>{{ $t('user.report') }}</dt>
         <dd>
-          <button class="pointer" @click="emit('closeModal')"><i class="uil uil-times"></i></button>
+          <button class="pointer" @click="emit('closeModal')">
+            <i>
+              <LazyIconClose />
+            </i></button>
         </dd>
       </dl>
       <div class="mr-content">
@@ -12,7 +15,6 @@
         <ul>
           <li>
             <input type="radio" v-model="reportReason" value="1" id="report1" />
-
             <span><label for="report1">{{ $t('report.user.info1') }} </label></span>
           </li>
           <li>
@@ -46,7 +48,7 @@
     </div>
   </el-dialog>
   <CommonModal :openModal="showReportComModal" :title="`${$t('finish.report.title')}`"
-    :desc="`${$t('finish.report.desc')}`" @closeModal="showReportComModal = false" :isAppendBody="true" />
+    :desc="`${$t('finish.report.desc')}`" @closeModal="closeReportComModal" :isAppendBody="true" />
 </template>
 <script setup lang="ts">
 import { ElDialog } from 'element-plus'
@@ -66,8 +68,17 @@ const props = defineProps({
 })
 const showModal = computed(() => props.openModal)
 const userInfo = computed(() => useUser().user.value.info)
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
 const emit = defineEmits(['closeModal'])
+
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeReportComModal()
+    }
+  })
 
 async function onSubmitReport() {
   if (!reportReason.value) return
@@ -82,11 +93,24 @@ async function onSubmitReport() {
 
   const { data } = await useCustomAsyncFetch('/report/user', getZempieFetchOptions('post', true, formData))
   if (data.value) {
-    showReportComModal.value = true
+    openReportComModal
     emit('closeModal')
   }
 
 
+}
+
+function openReportComModal() {
+  showReportComModal.value = true
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+function closeReportComModal() {
+  showReportComModal.value = false
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
 }
 
 </script>

@@ -34,7 +34,9 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     useUser().setLoadDone()
   }
 
+
   onIdTokenChanged(auth, async (user: any) => {
+
     if (!isObjEmpty(useUser().user.value.info)) {
       useUser().setLoadDone()
     } else {
@@ -61,7 +63,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
       if (payload.data?.meta) {
         const meta = JSON.parse(payload.data.meta)
-        if (meta.fcmType === String(eNotificationType.dm)) {
+        if (String(meta.fcmType) === String(eNotificationType.dm)) {
           useAlarm().setNewDm(payload)
         }
       } else {

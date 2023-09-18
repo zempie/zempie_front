@@ -2,6 +2,7 @@ import { i18n } from './modules/i18n'
 import { resolve } from 'pathe'
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
+  // target: 'static',
   app: {
     head: {
       meta: [
@@ -22,7 +23,6 @@ export default defineNuxtConfig({
       link: [
         { hid: 'icon', rel: 'icon', type: 'image/x-icon', href: '~/static/favicon.ico' },
         { rel: 'stylesheet', href: 'https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Two+Tone' },
-        { rel: 'stylesheet', href: 'https://unicons.iconscout.com/release/v3.0.3/css/line.css' },
         { rel: "apple-touch-icon", href: 'https://s3.ap-northeast-2.amazonaws.com/zempie.com/icons/favicon-32x32.png' },
         { rel: "apple-touch-icon-precomposed", href: 'https://s3.ap-northeast-2.amazonaws.com/zempie.com/icons/favicon-32x32.png' },
       ],
@@ -61,10 +61,12 @@ export default defineNuxtConfig({
         }
       }
     },
-    'webpack:config': (config) => {
-      console.log('config', config)
-
-    }
+    // 'vite:extendConfig'(config, { isClient }) {
+    //   if (process.env.NODE_ENV !== 'development' && isClient) {
+    //     config.build.rollupOptions.output.chunkFileNames = '_nuxt/[hash].js'
+    //     config.build.rollupOptions.output.entryFileNames = '_nuxt/entry.[hash].js'
+    //   }
+    // }
   },
   generate: {
     fallback: '404.html'
@@ -138,8 +140,8 @@ export default defineNuxtConfig({
     BOOTPAY_JS_KEY: process.env.BOOTPAY_JS_KEY,
     TAG_MANAGER_ID: process.env.TAG_MANAGER_ID,
     ZEMTOWN_URL: process.env.ZEMTOWN_URL,
-    MOGERA_URL: process.env.MOGERA_URL
-
+    MOGERA_URL: process.env.MOGERA_URL,
+    LOCAL_USER_STATE_KEY: process.env.LOCAL_USER_STATE_KEY
   },
 
 })

@@ -10,7 +10,7 @@
           </dl>
           <div v-if="editProject.info.game?.game_type === eGameType.Html" class="suii-open"
             :class="isAdvancedOpen ? 'open' : 'close'" @click="isAdvancedOpen = !isAdvancedOpen">
-            <span> {{ $t('advanced.setting') }}</span> &nbsp;<i class="uil uil-sliders-v-alt"></i>
+            <span> {{ $t('advanced.setting') }}</span>
           </div>
           <transition name="component-fade" mode="out-in">
             <div v-show="isAdvancedOpen">
@@ -53,7 +53,7 @@
               </dl>
               <div class="suii-close">
                 <button class="btn-line" @click="isAdvancedOpen = !isAdvancedOpen">
-                  {{ $t('close') }} &nbsp;&nbsp;<i class="uil uil-angle-up"></i>
+                  {{ $t('close') }}
                 </button>
               </div>
             </div>
@@ -76,6 +76,7 @@ import { ElMessage, ElMessageBox, ElLoading } from 'element-plus'
 import { IVersion, eGameStage, eGameType } from '~~/types'
 import Version from '~~/scripts/version'
 import { useI18n } from 'vue-i18n'
+import { onBeforeRouteLeave } from 'vue-router';
 
 const { t, locale } = useI18n()
 const router = useRouter()
@@ -151,6 +152,20 @@ definePageMeta({
   title: 'Add version',
   name: 'addVersion',
   middleware: 'auth',
+})
+
+/*
+ page 단위에서 isPopState 검사 후 true라면 false로 변경
+ 이후 component에서 watch로 받아 팝업닫기
+*/
+onBeforeRouteLeave((to, from, next) => {
+  if (useCommon().common.value.isPopState) {
+    next(false)
+    ElMessageBox.close()
+    useCommon().setPopState(false)
+  } else {
+    next()
+  }
 })
 
 watch(

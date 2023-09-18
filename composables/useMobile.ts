@@ -2,11 +2,16 @@ import flutterBridge from "~~/scripts/flutterBridge"
 
 export default function () {
   const mobile = useState('mobile', () => ({
-    isFlutter: false
+    isFlutter: false,
+    platform: undefined
   }))
 
   const setMobileState = async () => {
     mobile.value.isFlutter = await flutterBridge().isFlutter()
+  }
+  const setMobilePlatform = async () => {
+    mobile.value.platform = await flutterBridge().currentPlatform()
+    console.log('mobile.value.platform', mobile.value.platform)
   }
 
   const openMobileFile = async (options: { type: string, multiple: boolean }) => {
@@ -17,6 +22,7 @@ export default function () {
   return {
     mobile,
     setMobileState,
-    openMobileFile
+    openMobileFile,
+    setMobilePlatform
   }
 }

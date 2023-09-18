@@ -28,6 +28,7 @@
 import { ICommunity, IUser } from '~~/types'
 import { useI18n } from 'vue-i18n'
 import shared from '~~/scripts/shared';
+import { onBeforeRouteLeave } from 'vue-router';
 
 const LIMIT = 10
 
@@ -66,6 +67,7 @@ shared.createHeadMeta(`${communityInfo.value.name} ${t('members')} `, `${communi
 
 
 onMounted(async () => {
+  useRouterLeave()
 
   observer.value = new IntersectionObserver(
     async (entries) => {

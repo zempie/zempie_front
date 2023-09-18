@@ -1,6 +1,8 @@
 <template>
   <div @click="uploadImageFile">
-    <button><i class="uil uil-scenery font25"></i></button>
+    <button>
+      <IconScenery color="#888" />
+    </button>
     <div style="height: 0px; overflow: hidden">
       <input type="file" @change="onSelectImageFile" multiple accept="image/*" ref="image" />
     </div>
@@ -133,7 +135,8 @@ async function fetchImage() {
           url: string
           type: string
           name: string
-          size: number
+          size: number,
+          thumbnail?: string
         }[]
       }>('/community/att', getZempieFetchOptions('post', true, formData))
 

@@ -48,6 +48,7 @@ import { numToKMB } from '~/scripts/utils'
 const { $localePath } = useNuxtApp()
 const router = useRouter()
 
+
 const props = defineProps({
   community: Object,
   isSubModal: Boolean
@@ -64,11 +65,12 @@ const profileImg = computed(
 )
 const visitCount = computed(() => numToKMB(props.community.visit_cnt))
 
+
+
 function goCommunity(e) {
   e.stopPropagation()
 
   if (props.isSubModal) {
-
     emit('isSubModal', false)
     return
   }

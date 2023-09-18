@@ -1,8 +1,8 @@
 <template>
   <div class="record-container">
     <div class="dm-uploader-btn">
-      <button v-if="!isRecording" @click="startRecording"><i class="uil uil-record-audio font25"></i></button>
-      <button v-else @click="stopRecording"><i class="uil uil-record-audio font25 text-red"></i></button>
+      <button v-if="!isRecording" @click="startRecording"><i class=" font25"></i></button>
+      <button v-else @click="stopRecording"><i class=" font25 text-red"></i></button>
     </div>
 
     <!-- <audio :src="src" controls ref="audioPlayerRef" @timeupdate="updatePlaybackTime"></audio> -->

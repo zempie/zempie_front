@@ -7,6 +7,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import shared from '~~/scripts/shared';
+import { onBeforeRouteLeave } from 'vue-router';
 
 const { t } = useI18n()
 const route = useRoute()
@@ -21,6 +22,7 @@ definePageMeta({
   middleware: 'auth',
 })
 onMounted(async () => {
+  useRouterLeave()
   if (!useProject().editProject.value.info.id) await fetch()
 })
 

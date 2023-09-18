@@ -1,30 +1,27 @@
 <template>
-  <NuxtLayout name="my-timeline">
-    <dl class="my-tl-container three-area">
-      isPopState{{ isPopState }}
+  <dl class="my-tl-container three-area">
+    <dt>
+      <div class="my-info">
+        <ChannelInfoBox :key="channelInfo.channel_id" />
+        <ChannelGameBox :key="channelInfo.channel_id" :isLoading="isChannelLoading" />
+      </div>
+    </dt>
+    <dd>
+      <PostTimeline type="userAll" :isMine="true" />
+    </dd>
+    <dt>
 
-      <dt>
-        <div class="my-info">
-          <ChannelInfoBox :key="channelInfo.channel_id" />
-          <ChannelGameBox :key="channelInfo.channel_id" :isLoading="isChannelLoading" />
-        </div>
-      </dt>
-      <dd>
-        <PostTimeline type="userAll" :isMine="true" />
-      </dd>
-      <dt>
-
-        <div class="ta-groups" style="margin-top: 0px">
-          <h2>{{ $t('community') }}</h2>
-          <CommunityList :communities="channelInfo?.communities" :isLoading="isChannelLoading" />
-        </div>
-      </dt>
-    </dl>
-  </NuxtLayout>
+      <div class="ta-groups" style="margin-top: 0px">
+        <h2>{{ $t('community') }}</h2>
+        <CommunityList :communities="channelInfo?.communities" :isLoading="isChannelLoading" />
+      </div>
+    </dt>
+  </dl>
 </template>
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import { onBeforeRouteLeave } from 'vue-router';
 
 const { $localePath } = useNuxtApp()
 const config = useRuntimeConfig()
@@ -37,8 +34,6 @@ const games = ref()
 const userInfo = computed(() => useUser().user.value.info)
 const channelInfo = computed(() => useChannel().userChannel.value.info)
 const isChannelLoading = computed(() => useChannel().userChannel.value.isLoading)
-const isPopState = computed(() => useCommon().common.value.isPopState)
-
 
 watch(
   () => userInfo.value,
@@ -50,13 +45,6 @@ watch(
   }
 )
 
-
-watch(
-  () => isPopState.value,
-  async (state) => {
-    console.log('pop', state)
-  }
-)
 onMounted(async () => {
   await useChannel().getChannelInfo(userInfo.value.nickname)
   games.value = channelInfo.value?.games

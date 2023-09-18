@@ -136,6 +136,21 @@ $zempie-main-color-hover: #f974162a;
   min-height: 16px;
 }
 
+.square-btn {
+  display: inline-block;
+  height: 40px;
+  padding: 13px 20px;
+  text-align: center;
+  font-size: 16px;
+  line-height: 14px;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  background: #f97316;
+  transition: all 0.4s ease-in-out;
+  cursor: pointer;
+}
+
 .el-popper {
   .el-popper__arrow {
     display: none;
@@ -199,7 +214,7 @@ $zempie-main-color-hover: #f974162a;
 //포스팅 작성 모달
 .post-modal {
   max-width: 700px;
-  border-radius: 10px !important;
+  border-radius: 10px;
   position: absolute !important;
   left: 50%;
   top: 50%;
@@ -238,12 +253,15 @@ $zempie-main-color-hover: #f974162a;
 @media all and (max-width: 479px) {
   .post-modal {
     min-width: 100%;
+    border-radius: 0%;
   }
 }
 
 @media all and (min-width: 480px) and (max-width: 767px) {
   .post-modal {
     min-width: 100%;
+    border-radius: 0%;
+
   }
 }
 
@@ -350,11 +368,6 @@ $zempie-main-color-hover: #f974162a;
     }
   }
 
-  .modal-post {
-    .editor-container {
-      font-size: 16px;
-    }
-  }
 
   input,
   select,
@@ -595,14 +608,6 @@ $zempie-main-color-hover: #f974162a;
 .cancel-btn:hover {
   color: #dc3545;
   background: rgba(220, 53, 69, 0.27);
-}
-
-
-.feed-img {
-  max-width: 100%;
-  height: 88%;
-  margin: 0px auto;
-  display: flex;
 }
 
 .video {
@@ -1145,6 +1150,8 @@ $zempie-main-color-hover: #f974162a;
 
 @media all and (max-width: 767px) {
   .game-cmt-conatiner {
+    border-radius: 0% !important;
+
     .modal-alert {
       height: 100vh;
       display: flex;
@@ -1344,10 +1351,12 @@ $zempie-main-color-hover: #f974162a;
 
 .msg-video-container {
   border-radius: 10px;
+  max-width: 100%;
 
   video {
     border-radius: 10px;
     height: 100%;
+    max-width: 100%;
   }
 
 }
@@ -1402,6 +1411,15 @@ $zempie-main-color-hover: #f974162a;
           overflow-y: auto;
           position: relative;
           right: 0;
+
+          .msg-video-container {
+            max-width: 100%;
+
+            video {
+              width: 100%;
+
+            }
+          }
 
         }
 
@@ -1578,7 +1596,9 @@ $zempie-main-color-hover: #f974162a;
     .dm-uploader-btn {
       width: 50px !important;
 
-
+      button {
+        padding: 0px;
+      }
     }
   }
 }
@@ -1649,6 +1669,29 @@ $zempie-main-color-hover: #f974162a;
   align-items: center;
   margin-top: 0px !important;
   justify-content: flex-start !important;
+
+  &.horizontal {
+    flex-wrap: nowrap;
+    flex-direction: column;
+    align-items: start;
+    padding: 5px 0;
+  }
+
+  .chip-list {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start !important;
+    overflow-x: auto;
+    cursor: pointer;
+
+    .chip {
+      flex: 0 0 auto;
+    }
+  }
+
+  .chip-list::-webkit-scrollbar {
+    display: none;
+  }
 
   .chip {
     height: 30px;
@@ -1934,10 +1977,6 @@ $zempie-main-color-hover: #f974162a;
         }
       }
     }
-  }
-
-  .feed-img {
-    max-width: 100%;
   }
 
   .sns-img {

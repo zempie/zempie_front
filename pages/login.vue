@@ -17,14 +17,14 @@
             :placeholder="$t('login.email.placeholder')" class="w100p h60" style="margin-bottom: 10px"
             autocomplete="user-email" @keyup.enter="onSubmit" />
           <h2 class="input-errors" v-for="error of v$.email.$errors" :key="error.$uid">
-            <i class="uil uil-check"></i>{{ error.$message }}
+            {{ error.$message }}
           </h2>
           <input type="password" v-model="v$.password.$model" name="login-password" title=""
             autocomplete="current-password" :placeholder="$t('login.pwd.placeholder')" class="w100p h60"
             style="margin-bottom: 10px" @keyup.enter="onSubmit" />
 
           <h2 class="input-errors" v-for="error of v$.password.$errors" :key="error.$uid">
-            <i class="uil uil-check"></i>{{ error.$message }}
+            {{ error.$message }}
           </h2>
         </form>
         <p @click="onSubmit">
@@ -59,9 +59,9 @@
             <img src="/images/login/apple_login.jpg" alt="apple-login" title="" />
           </li>
         </ul>
-        <p>
-          <span><i class="uil uil-info-circle" style="font-size: 16px; line-height: 24px"></i></span>
-          {{ $t('login.text4') }}
+        <p class="flex content-center">
+          <LazyIconInfoCircle width="20px" />
+          <span class="mt3"> {{ $t('login.text4') }}</span>
         </p>
       </div>
     </div>
@@ -207,7 +207,9 @@ async function onSubmit() {
       await setFirebaseToken()
     }
     catch (err) {
-      firebaseLoginErr(err)
+
+      //ISSUE: 에러가 object 로 넘어오는데 파싱이 안됨 스트링으로 변환후 사용
+      firebaseLoginErr({ message: String(err) })
     }
     finally {
       isLoading.value = false
@@ -227,7 +229,7 @@ async function onSubmit() {
             }
           })
           .catch((err: any) => {
-            firebaseLoginErr(err)
+            firebaseLoginErr({ message: String(err) })
           })
           .finally(() => {
             isLoading.value = false
@@ -257,14 +259,6 @@ async function googleLogin() {
   isLoading.value = true
   if (isFlutter.value) {
     flutterSocialLogin('google')
-    // try {
-    //   const result = await FlutterBridge().signInGoogle()
-    //   await flutterSocialLogin(result)
-    // } catch (err) {
-    //   if (err.message.includes('auth/account-exists-with-different-credential')) {
-    //     ElMessage.error(`${t('exist.wt.diff.email')}`)
-    //   }
-    // }
   }
   else {
     const provider = new GoogleAuthProvider()
@@ -277,16 +271,6 @@ async function facebookLogin() {
 
   if (isFlutter.value) {
     flutterSocialLogin('facebook')
-
-    // try {
-    //   const result = await FlutterBridge().signInFacebook()
-    //   await flutterSocialLogin(result)
-    // } catch (err) {
-    //   if (err.message.includes('auth/account-exists-with-different-credential')) {
-    //     ElMessage.error(`${t('exist.wt.diff.email')}`)
-    //   }
-    // }
-
   } else {
     const provider = new FacebookAuthProvider()
     provider.addScope('email')
@@ -301,15 +285,6 @@ async function appleLogin() {
 
   if (isFlutter.value) {
     flutterSocialLogin('apple')
-
-    // try {
-    //   const result = await FlutterBridge().signInApple()
-    //   await flutterSocialLogin(result)
-    // } catch (err) {
-    //   if (err.message.includes('auth/account-exists-with-different-credential')) {
-    //     ElMessage.error(`${t('exist.wt.diff.email')}`)
-    //   }
-    // }
   } else {
     const provider = new OAuthProvider('apple.com')
     provider.addScope('email')
@@ -360,14 +335,13 @@ async function flutterSocialLogin(type: string) {
 }
 
 async function socialLogin(provider: AuthProvider) {
-  console.log('socialLogin1')
 
   try {
     const res = await signInWithPopup($firebaseAuth, provider)
-    console.log('socialLogin', res)
     router.push($localePath('/'))
 
   } catch (err) {
+
     firebaseJoinErr(err)
   }
   finally {
@@ -376,31 +350,50 @@ async function socialLogin(provider: AuthProvider) {
 }
 
 function firebaseJoinErr(err: any) {
-  if (err && err.message?.includes('auth/account-exists-with-different-credential')) {
+
+  if (err && err.message.includes('auth/account-exists-with-different-credential')) {
     ElMessage.error(`${t('exist.wt.diff.email')}`)
   } else {
-    ElMessage.error(err)
+    ElMessage.error(err.message)
   }
 }
 
 function firebaseLoginErr(err: any) {
+
   const errorCode = err.code
   const errorMessage = err.message
   let message = errorCode ? errorCode : errorMessage
 
-  switch (errorCode) {
-    case 'auth/weak-password':
+
+  if (errorCode) {
+    switch (errorCode) {
+      case 'auth/weak-password':
+        message = `${t('login.pwd.format.err')}`
+        break
+      case 'auth/wrong-password':
+        ElMessage.error(`${t('fb.wrong.info')}`)
+        break
+      case 'auth/user-not-found':
+        ElMessage.error(`${t('fb.not.found')}`)
+        break
+      case 'auth/too-many-requests':
+        ElMessage.error(`${t('try.later')}`)
+        break
+      default:
+        ElMessage.error(err)
+        break
+    }
+  } else {
+
+    if (err && err.message.includes('auth/weak-password')) {
       message = `${t('login.pwd.format.err')}`
-      break
-    case 'auth/wrong-password':
+    } else if (err && err.message.includes('auth/wrong-password')) {
       ElMessage.error(`${t('fb.wrong.info')}`)
-      break
-    case 'auth/user-not-found':
+    } else if (err && err.message.includes('auth/user-not-found')) {
       ElMessage.error(`${t('fb.not.found')}`)
-      break
-    default:
-      ElMessage.error(err)
-      break
+    } else if (err && err.message.includes('auth/too-many-requests')) {
+      ElMessage.error(`${t('try.later')}`)
+    }
   }
   throw { message }
 }

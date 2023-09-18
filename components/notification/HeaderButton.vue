@@ -1,16 +1,19 @@
 <template>
   <client-only>
-    <el-dropdown ref="notiDropdown" id="notiList" trigger="click">
-      <button class="btn-circle-icon ml10 flex items-center content-center" @click="showAlarmList">
-        <i class="uil uil-bell" style="font-size:21px;"></i>
-        <span v-if="hasNewNoti"></span>
-      </button>
-      <template #dropdown>
+    <!-- <el-dropdown ref="notiDropdown" id="notiList" trigger="click" @visible-change="handleVisible"> -->
+    <button class="btn-circle-icon ml10 flex items-center content-center" @click="goNotiList">
+      <i style="font-size:20px;">
+        <LazyIconBell />
+      </i>
+      <span v-if="hasNewNoti"></span>
+    </button>
+    <!-- <template #dropdown>
         <div slot="body" class="header-message" style="max-width:95vw; ">
           <dl>
             <dt> {{ t('notification') }}</dt>
             <dd>
-              <a @click="readAll"><i class="uil uil-comment-alt"></i><em>{{ t('mark.all') }}</em></a>
+              <a @click="readAll">
+                <em>{{ t('mark.all') }}</em></a>
             </dd>
           </dl>
           <ul class="noti-list">
@@ -56,8 +59,8 @@
           </ul>
           <p class="view-all" @click="goNotiList"><a>{{ t('view.all') }}</a></p>
         </div>
-      </template>
-    </el-dropdown>
+      </template> -->
+    <!-- </el-dropdown> -->
   </client-only>
 </template>
 <script setup lang="ts">
@@ -77,6 +80,7 @@ const isNotiLoading = ref(false)
 const notiList = ref<INotification[]>()
 const needAlarmRefresh = ref(false)
 const notiDropdown = ref()
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
 watch(
   () => useAlarm().alarm.value.newNoti,
@@ -93,6 +97,13 @@ watch(
   }
 )
 
+// watch(
+//   () => useCommon().common.value.isPopState,
+//   (val) => {
+//     if (!val) {
+//       notiDropdown.value.handleClose()
+//     }
+//   })
 
 async function showAlarmList() {
 
@@ -138,21 +149,33 @@ async function moveAlarm(noti: INotification) {
     }
   })
   shared.moveNoti(noti)
-  notiDropdown.value.handleClose()
+  // notiDropdown.value.handleClose()
   needAlarmRefresh.value = true
 }
 
 
 function goNotiList() {
+  useCommon().setPopState(false)
   router.push($localePath('/notifications'))
-  notiDropdown.value.handleClose()
 }
 
 function moveUserPage(nickname: string) {
   router.push($localePath(`/${nickname}`))
   notiDropdown.value.handleClose()
-
 }
+
+// function handleVisible(visible: boolean) {
+//   console.log('visible no', visible)
+//   if (!isMobile.value) return
+//   if (visible) {
+//     notiDropdown.value.handleOpen()
+//     useCommon().setPopState(true)
+//   } else {
+//     notiDropdown.value.handleClose()
+//     useCommon().setPopState(false)
+//   }
+// }
+
 </script>
 <style scoped lang="scss">
 .header-message {

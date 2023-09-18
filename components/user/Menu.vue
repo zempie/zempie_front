@@ -1,6 +1,6 @@
 <template>
   <div class="ml10" id="userMenu">
-    <el-dropdown trigger="click" ref="userMenu" id="userMenu">
+    <el-dropdown trigger="click" ref="userMenu" id="userMenu" @visible-change="handleVisible">
       <UserAvatar style="width: 30px; height: 30px" :user="user" :key="user?.picture" />
       <template #dropdown>
         <div slot="body" class="header-setting" style="min-width: 250px" @click="userMenu?.handleClose()">
@@ -16,16 +16,13 @@
             <h2>{{ $t('myProfile') }}</h2>
             <div>
               <NuxtLink id="myChannel" :to="$localePath(`/${user?.nickname}`)">
-                <!-- <i class="uil uil-user"></i> -->
                 {{ $t('myChannel') }}
               </NuxtLink>
               <NuxtLink id="gameStudio" :to="$localePath('/project/list')">
-                <!-- <i class="uil uil-robot"></i> -->
                 {{ $t('gameStudio') }}
               </NuxtLink>
 
               <NuxtLink :to="$localePath(`/myaccount`)">
-                <!-- <i class="uil uil-setting"></i> -->
                 {{ $t('my.account') }}
               </NuxtLink>
             </div>
@@ -34,11 +31,11 @@
             <h2>{{ $t('group') }}</h2>
             <div>
               <NuxtLink :to="$localePath(`/myaccount/communities`)">
-                <!-- <i class="uil uil-users-alt"></i> -->
                 {{ $t('joined.group') }}
               </NuxtLink>
             </div>
           </div>
+
           <!-- <div class="zem-coin">
             <h2>{{ $t('purchase') }}</h2>
             <div>
@@ -50,7 +47,8 @@
                 <Coin :coin="user?.coin?.zem" class="text-bold" />
               </div>
             </div>
-        </div> -->
+          </div> -->
+
           <p>
             <a class="btn-default w100p" @click="logout">{{
               $t('logout')
@@ -71,13 +69,30 @@ const userMenu = ref()
 
 const user = computed(() => useUser().user.value.info)
 const isFlutter = computed(() => useMobile().mobile.value.isFlutter)
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      userMenu.value.handleClose()
+    }
+  })
 
 function logout() {
   if (route.meta.middleware === 'auth' || route.meta.name === 'main') {
     router.replace($localePath('/'))
   }
   useUser().logout()
+}
+
+function handleVisible(visible: boolean) {
+  if (!isMobile.value) return
+  if (visible) {
+    useCommon().setPopState(true)
+  } else {
+    useCommon().setPopState(false)
+  }
 }
 </script>
 <style scoped lang="scss">

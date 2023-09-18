@@ -231,3 +231,22 @@ export const openFullScreen = () => {
   else if (doc.msRequestFullscreen) // IE or Edge
     doc.msRequestFullscreen();
 }
+
+
+/**
+ * 
+ * @param url : 검사할 이미지 url
+ * @param callback : 콜백
+ */
+export const isImageURLValid = (url: string, callback: Function) => {
+  var img = new Image();
+  img.onload = function () {
+    // 이미지 로드에 성공한 경우
+    callback(true);
+  };
+  img.onerror = function () {
+    // 이미지 로드에 실패한 경우
+    callback(false);
+  };
+  img.src = url;
+}

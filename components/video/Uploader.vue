@@ -1,6 +1,10 @@
 <template>
   <div @click="uploaVideoFile">
-    <button><i class="uil uil-play-circle font25"></i></button>
+    <button>
+      <i class="font25">
+        <LazyIconPlayCircle color="#888" />
+      </i>
+    </button>
     <div style="height: 0px; overflow: hidden">
       <input type="file" @change="onSelectVideoFile" accept=video/* ref="video" />
     </div>

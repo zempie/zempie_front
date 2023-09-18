@@ -2,7 +2,7 @@
   <div class="ta-coment-list">
     <dl class="title">
       <dt>{{ $t('comments') }} <span class="count">({{ count }})</span></dt>
-      <span class="pointer all-btn" @click="opCommentsModal">{{ $t('view.all') }}</span>
+      <span v-if="comments.length !== 0" class="pointer all-btn" @click="opCommentsModal">{{ $t('view.all') }}</span>
     </dl>
     <ul>
       <li class="mb10 comment-input">
@@ -28,13 +28,15 @@
 
     <ClientOnly>
       <el-dialog v-model="showCommentModal" class="modal-area-type game-cmt-conatiner" width="380px"
-        :fullscreen="isFullScreen">
+        :fullscreen="isMobile">
         <div class="modal-alert">
           <dl class="ma-header">
             <dt>{{ $t('comments') }} <span class="count">({{ count }})</span></dt>
             <dd>
-              <button @click="showCommentModal = false">
-                <i class="uil uil-times pointer"></i>
+              <button @click="closeCommentModal">
+                <i class="pointer">
+                  <IconClose />
+                </i>
               </button>
             </dd>
           </dl>
@@ -43,7 +45,6 @@
               <GameCommentItem v-if="comments.length" v-for="comment in comments" :comment="comment" :key="comment.id"
                 :game-id="game.id" @delete-comment="deleteComment" @update-comment="updateComment" />
             </ul>
-
           </div>
           <div class="game-cmt-input-container">
             <CommonInput @send-input="sendComment" ref="modalInputRef" placeholder="Message" />
@@ -76,21 +77,24 @@ const commentEl = ref<HTMLElement | null>(null)
 const isAddData = ref(false)
 
 const isLogin = computed(() => useUser().user.value.isLogin)
-
+const isMobile = computed(() => useCommon().common.value.isMobile)
 
 //중복 클릭 방지용
 let cmtAcceessableCnt = 2
 
-//반응형
-const isFullScreen = ref(false)
-
-const isMobile = computed(() =>
-  window.matchMedia('screen and (max-width: 767px)')
-)
 const props = defineProps({
   game: Object as PropType<IGame>
 })
 
+watch(
+  () => useCommon().common.value.isPopState,
+  (val) => {
+    if (!val) {
+      closeCommentModal()
+    }
+  })
+
+defineExpose({ closeCommentModal })
 
 useInfiniteScroll(
   commentEl,
@@ -104,9 +108,9 @@ useInfiniteScroll(
 )
 
 onMounted(async () => {
+  // page에서 작동을 안해서 임시 추가
+  useRouterLeave()
   await initFetch()
-  onResize()
-  window.addEventListener('resize', onResize)
 
 })
 
@@ -119,11 +123,6 @@ const initFetch = debounce(async () => {
   }
 }, 300)
 
-
-function onResize() {
-
-  isFullScreen.value = isMobile.value.matches ? true : false
-}
 
 
 async function getComments() {
@@ -189,12 +188,6 @@ async function sendComment(text: string) {
   cmtAcceessableCnt += 1
 }
 
-async function opCommentsModal() {
-  showCommentModal.value = true
-  initCommentList()
-  await getComments()
-  partialComments.value = comments.value.slice(0, 5)
-}
 
 function deleteComment(cmt) {
   comments.value = comments.value.filter((comment) => {
@@ -247,6 +240,25 @@ function updateComment(comment: IReply) {
 
   })
 
+}
+
+async function opCommentsModal() {
+  showCommentModal.value = true
+  initCommentList()
+  await getComments()
+  partialComments.value = comments.value.slice(0, 5)
+
+  if (isMobile.value) {
+    useCommon().setPopState(true)
+  }
+}
+
+function closeCommentModal() {
+  showCommentModal.value = false
+
+  if (isMobile.value) {
+    useCommon().setPopState(false)
+  }
 }
 
 </script>

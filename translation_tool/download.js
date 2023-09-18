@@ -51,7 +51,7 @@ function checkAndMakeLocaleDir(dirPath, subDirs) {
 }
 //json 파일 업데이트
 async function updateJsonFromSheet() {
-    await checkAndMakeLocaleDir(localesPath, lngs);
+    // await checkAndMakeLocaleDir(localesPath, lngs);
 
     const doc = await loadSpreadsheet();
     const lngsMap = await fetchTranslationsFromSheetToJson(doc);

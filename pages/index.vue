@@ -1,14 +1,15 @@
 <template>
-  <div>
+  <NuxtLayout :name="userInfo && 'my-timeline'">
     <ClientOnly>
       <MyTimeline v-if="userInfo" />
       <MainGuest v-else />
     </ClientOnly>
-  </div>
+  </NuxtLayout>
 </template>
 
 <script setup lang="ts" >
 import shared from '~~/scripts/shared'
+import { onBeforeRouteLeave } from 'vue-router';
 
 const config = useRuntimeConfig()
 const { t } = useI18n()
@@ -22,6 +23,11 @@ definePageMeta({
 })
 
 shared.createHeadMeta(t('seo.landing.title'), t('seo.landing.description'), config.OG_IMG)
+
+
+onMounted(() => {
+  useRouterLeave()
+})
 
 </script>
 

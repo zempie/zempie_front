@@ -8,10 +8,7 @@
   </ProjectStepMenu>
   <dd>
     <ul class="studio-game-step">
-      <li
-        @click="selectStage(eGameStage.DEV)"
-        :class="stage === 1 && 'active' "
-      >
+      <li @click="selectStage(eGameStage.DEV)" :class="stage === 1 && 'active'">
         <dl>
           <dt>
             <img src="/images/studio_icon01.png" :alt="$t('devLog')" title="" />
@@ -22,17 +19,10 @@
           </dd>
         </dl>
       </li>
-      <li
-        @click="selectStage(eGameStage.EARLY)"
-        :class="stage === 2 && 'active' "
-      >
+      <li @click="selectStage(eGameStage.EARLY)" :class="stage === 2 && 'active'">
         <dl>
           <dt>
-            <img
-              src="/images/studio_icon02.png"
-              :alt="$t('earlyAccess')"
-              title=""
-            />
+            <img src="/images/studio_icon02.png" :alt="$t('earlyAccess')" title="" />
           </dt>
           <dd>
             <h3>{{ $t('earlyAccess') }}</h3>
@@ -40,17 +30,10 @@
           </dd>
         </dl>
       </li>
-      <li
-        @click="selectStage(eGameStage.COMPLETE)"
-        :class="stage === 3 && 'active' "
-      >
+      <li @click="selectStage(eGameStage.COMPLETE)" :class="stage === 3 && 'active'">
         <dl>
           <dt>
-            <img
-              src="/images/studio_icon03.png"
-              :alt="$t('complete')"
-              title=""
-            />
+            <img src="/images/studio_icon03.png" :alt="$t('complete')" title="" />
           </dt>
           <dd>
             <h3>{{ $t('complete') }}</h3>
@@ -58,7 +41,7 @@
           </dd>
         </dl>
       </li>
-      <li :class="stage === 4 && 'active' ">
+      <li :class="stage === 4 && 'active'">
         <p></p>
         <dl>
           <dt><img src="/images/studio_icon04.png" alt="" title="" /></dt>
@@ -72,12 +55,13 @@
     </ul>
 
     <ul class="sui-btn">
-          <li>
-            <a @click="prevPage" class="btn-line w150"
-              ><i class="uil uil-angle-left-b"></i>
-              {{ $t('previous') }}
-            </a>
-          </li>         
+      <li>
+        <a @click="prevPage" class="btn-line w150 flex content-center items-center"><i>
+            <IconAngleLeft />
+          </i>
+          {{ $t('previous') }}
+        </a>
+      </li>
     </ul>
   </dd>
 </template>
@@ -92,7 +76,7 @@ const { t, locale } = useI18n()
 
 
 function selectStage(stage: number) {
-  if(!useProject().editProject.value.info.game.url_game  && stage !== eGameStage.DEV){
+  if (!useProject().editProject.value.info.game.url_game && stage !== eGameStage.DEV) {
     ElMessage({
       message: t('game.file.deploy.first'),
       type: 'warning',
@@ -100,11 +84,11 @@ function selectStage(stage: number) {
     return
   }
   useProject().setStageOnEdit(stage)
-  useProject().setStepThreeOnEdit()  
+  useProject().setStepThreeOnEdit()
 }
 
 
-function prevPage(){
+function prevPage() {
   useProject().setStepOneOnEdit()
   useProject().setStepOne()
   useProject().setPurpose(eGameCategory.NONE)
@@ -112,8 +96,8 @@ function prevPage(){
 </script>
 
 <style scoped lang="scss">
-.sui-btn{
-  li{
+.sui-btn {
+  li {
     margin-top: 30px;
   }
 }
@@ -122,13 +106,13 @@ input[type='radio'] {
   display: none;
 }
 
-input[type='radio']:checked + label {
+input[type='radio']:checked+label {
   color: #fff;
   background: #ff6e17;
   border-color: #ff6e17;
 }
 
-input[type='radio'] + label {
+input[type='radio']+label {
   display: inline-block;
   width: 22px;
   height: 22px;
@@ -140,7 +124,7 @@ input[type='radio'] + label {
   cursor: pointer;
 }
 
-.studio-game-step > li:hover {
+.studio-game-step>li:hover {
   box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.2);
   cursor: pointer;
 }

@@ -21,7 +21,7 @@
         <div>
         </div>
         <h2>
-          <em><i class="uil uil-lock-alt"></i></em>
+          <em></em>
           <p class="darker-text" style="width:50px;"></p>
         </h2>
         <h3 class="darker-text"> </h3>

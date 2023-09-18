@@ -57,7 +57,6 @@ export default function () {
 
   const updateUserSetting = (key: string, value?: any) => {
     user.value.info.setting[key] = value
-
   }
   const updateFbToken = (token: string) => {
     user.value.fUser.accessToken = token
@@ -65,7 +64,6 @@ export default function () {
   const updateUserCoin = (coin: { zem: number, pie: number }) => {
     user.value.info.coin.pie = coin.pie
     user.value.info.coin.zem = coin.zem
-
   }
 
   const logout = async () => {
@@ -79,6 +77,7 @@ export default function () {
         await signOut($firebaseAuth);
       }
       user.value.isLogin = false
+      localStorage.setItem(config.LOCAL_USER_STATE_KEY, '0')
 
     } catch (error) {
       ElMessage({
@@ -105,9 +104,9 @@ export default function () {
         const { result: userResult } = response
 
         user.value.info = { ...userResult.user }
-        console.log(user.value)
         user.value.isLogin = true;
         useUser().setLoadDone()
+        localStorage.setItem(config.LOCAL_USER_STATE_KEY, '1')
       }
       if (!isObjEmpty(user.value.fUser)) {
         useUser().setLoadDone()
