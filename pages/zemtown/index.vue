@@ -48,10 +48,6 @@ watch(() =>
     }
   })
 
-onBeforeMount(() => {
-  window.postMessage(JSON.stringify({ type: 'view' }))
-})
-
 onMounted(() => {
   useRouterLeave()
   if (zemtown.value.isOpenMyProfile) {
@@ -61,6 +57,11 @@ onMounted(() => {
     openDm()
   }
   window.addEventListener('message', onMessage)
+
+  nextTick(() => {
+    document.getElementById('zemtownId').contentWindow.postMessage(JSON.stringify({ type: 'view' }))
+
+  })
 })
 
 // onBeforeRouteLeave((to, from, next) => {
@@ -158,6 +159,9 @@ async function onMessage(msg: MessageEvent) {
           isOpenProfile.value = true
         }
 
+        break;
+      case 'thumbnail':
+        window.postMessage(JSON.stringify({ type: 'view' }))
         break;
 
       default:
